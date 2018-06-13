@@ -9,11 +9,13 @@
 import UIKit
 import BDStartUp
 import TTNetworkManager
+import RxSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let disposeBag = DisposeBag()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -21,18 +23,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BDStartUpManager.sharedInstance().channel = "Enterprise"
         BDStartUpManager.sharedInstance().appName = "Lark"
         BDStartUpManager.sharedInstance().start(with: application, options: launchOptions)
-
-        TTNetworkManager.shareInstance().requestForBinary(withURL: "http://www.baidu.com", params: [String: String](), method: "GET", needCommonParams: false) { (error, response) in
-            if error != nil {
-                print(error)
-            }
-
-            if let data = response as? Data {
-                let content = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-                print(content)
-            }
-        }
-
+//        TTNetworkManager.shareInstance().rx
+//            .requestForBinary(
+//                url: "http://localhost:3000/auth/test",
+//                params: ["username": "leo",
+//                         "password": "123"],
+//                method: "POST",
+//                needCommonParams: false)
+//            .map({ (data) -> NSString? in
+//                NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+//            })
+//            .subscribe(onNext: { (content) in
+//                print(content ?? "error")
+//            })
+//            .disposed(by: disposeBag)
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.backgroundColor = UIColor.white
+        let tabVC = TabViewController(nibName: nil, bundle: nil)
+        let rootNavController = UINavigationController(rootViewController: tabVC)
+        rootNavController.setNavigationBarHidden(true, animated: false)
+        window?.rootViewController = rootNavController
+        window?.makeKeyAndVisible()
         return true
     }
 

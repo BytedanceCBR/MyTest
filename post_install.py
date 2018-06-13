@@ -15,3 +15,5 @@ rewrite_file("./Pods/TTTracker/TTTracker/Core/TTTrackerProxy.m", "#import <TTNet
 rewrite_file("./Pods/TTTracker/TTTracker/Core/TTTrackerUtil.m", "#import <TTInstallUtil.h>", '#import "TTInstallUtil.h"')
 rewrite_file("./Pods/TTLocationManager/TTLocationManager/Classes/TTLocationManager.m", "#import <TTBaseMacro.h>", '#import "TTBaseMacro.h"')
 rewrite_file("./Pods/TTLocationManager/TTLocationManager/Classes/TTLocationManager.m", "#import <TTSandBoxHelper.h>", '#import "TTSandBoxHelper.h"')
+rewrite_file("./Pods/BDWebImage/BDWebImage/Classes/Decoder/BDImageDecoderWebP.m", "#import <webp/demux.h>", '#import "demux.h"')
+

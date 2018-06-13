@@ -59,9 +59,17 @@ target 'Bubble' do
   #owner  -> wusizhen.arch'
   #sumary -> 头条通用Hybrid容器 
   pod 'TTRexxar', '0.8.5'
+
+  #owner  -> xiejunyi'
+  #sumary -> 头条iOS通用基础图片库
+  pod 'BDWebImage', '0.2.8'
+
   pod 'RxSwift', '4.1.2'
   pod 'RxCocoa', '4.1.2'
   pod 'SnapKit', '4.0.0'
+  pod 'Alamofire'
+  pod 'RxAlamofire'
+  pod 'SwiftyJSON', '4.1.0'
 
   target 'BubbleTests' do
     inherit! :search_paths
