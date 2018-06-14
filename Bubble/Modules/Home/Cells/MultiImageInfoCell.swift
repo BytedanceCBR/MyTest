@@ -35,18 +35,26 @@ class MultiImageInfoCell: UITableViewCell {
     }
 
     func layout() {
-        self.contentView.addSubview(groupView)
-        groupView.snp.makeConstraints { (make) in
+        let scrollViewReactWrapper = UIView()
+        self.contentView.addSubview(scrollViewReactWrapper)
+        scrollViewReactWrapper.snp.makeConstraints { (make) in
             make.right.top.equalToSuperview()
             make.left.equalToSuperview().offset(5)
             make.height.equalTo(120)
         }
+        scrollViewReactWrapper.addSubview(groupView)
+
+        groupView.snp.makeConstraints { (make) in
+            make.right.left.top.bottom.equalToSuperview()
+        }
+        groupView.isUserInteractionEnabled = false
+        scrollViewReactWrapper.addGestureRecognizer(groupView.panGestureRecognizer)
         self.contentView.addSubview(primaryLabel)
-        primaryLabel.snp.makeConstraints { [unowned groupView] (make) in
+        primaryLabel.snp.makeConstraints { [unowned scrollViewReactWrapper] (make) in
             make.right.equalToSuperview()
             make.left.equalToSuperview().offset(5)
             make.height.equalTo(20)
-            make.top.equalTo(groupView.snp.bottom)
+            make.top.equalTo(scrollViewReactWrapper.snp.bottom)
         }
         primaryLabel.font = UIFont.systemFont(ofSize: 12)
         primaryLabel.text = "朝阳公园 南北通透四居 + 衣帽间"

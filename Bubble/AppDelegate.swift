@@ -40,8 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = UIColor.white
         let tabVC = TabViewController(nibName: nil, bundle: nil)
-        let rootNavController = UINavigationController(rootViewController: tabVC)
-        rootNavController.setNavigationBarHidden(true, animated: false)
+        let rootNavController = EnvContext.shared.rootNavController
+        rootNavController.viewControllers = [tabVC]
         window?.rootViewController = rootNavController
         window?.makeKeyAndVisible()
         return true

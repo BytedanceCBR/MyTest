@@ -8,65 +8,31 @@
 
 import UIKit
 
-typealias CGPointObserve = (CGPoint) -> Void
-
-struct CGPointObserver {
-    let observe: CGPointObserve
-    init(_ observe: @escaping CGPointObserve) {
-        self.observe = observe
-    }
+enum HomeHeaderState {
+    case normal
+    case suspend
 }
 
-extension CGPointObserver {
-    func join(_ observe: @escaping CGPointObserve) -> CGPointObserver {
-        return CGPointObserver() {(point) in
-            self.observe(point)
-            observe(point)
+class HomeHeaderStateControl {
+
+    private var state: HomeHeaderState = .suspend {
+        didSet {
+            print("HomeHeaderStateControl \(state)")
         }
     }
 
-    func filter(_ predict: @escaping (CGPoint) -> Bool) -> CGPointObserver {
-        return CGPointObserver() {(point) in
-            if predict(point) {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.observe(point)
-                })
-            }
-        }
-    }
-}
+    var onStateChanged: ((HomeHeaderState) -> Void)?
 
-func offsetCriticalPointThrottle(_ criticalPoint: CGFloat) -> (CGFloat) -> Bool {
-    var oldOffset: CGFloat = 0
-    return {(offset) in
-        let preOffset = oldOffset
-        oldOffset = offset
-        if (offset > criticalPoint && preOffset <= criticalPoint) ||
-            (offset < criticalPoint && preOffset >= criticalPoint) ||
-            preOffset == 0 {
-            return true
-        } else {
-            return false
-        }
-    }
-}
+    var onContentOffsetChanged: ((HomeHeaderState, CGPoint) -> Void)?
 
-func hiddenSearchItemByContentOffset(headerView: HomeHeaderSearchView) -> CGPointObserve {
-    return { [weak headerView] (contentOffset) in
-        if contentOffset.y > 0 {
-            headerView?.hiddenSearchItem()
-        } else {
-            headerView?.showSearchItem()
+    func scrollViewContentYOffsetObserve(offset: CGPoint) {
+        if offset.y > 0 && state == .suspend {
+            state = .normal
+            onStateChanged?(state)
+        } else if offset.y <= 0 && state == .normal {
+            state = .suspend
+            onStateChanged?(state)
         }
-    }
-}
-
-func adjustNavBarByContentOffset(navController: UINavigationController?) -> CGPointObserve {
-    return { [weak navController] (contentOffset) in
-        if contentOffset.y > 0 {
-            navController?.setNavigationBarHidden(false, animated: false)
-        } else {
-            navController?.setNavigationBarHidden(true, animated: false)
-        }
+        onContentOffsetChanged?(state, offset)
     }
 }

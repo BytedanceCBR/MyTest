@@ -11,5 +11,7 @@ import UIKit
 class EnvContext {
     static let shared = EnvContext()
 
-    lazy var rootNavController: UINavigationController() =
+    lazy var rootNavController: UINavigationController = {
+        BaseNavigationController()
+    }()
 }

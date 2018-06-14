@@ -7,7 +7,43 @@
 //
 
 import UIKit
+import SnapKit
 
 class HorseDetailPageVC: UIViewController {
+
+    lazy var slidePageViewPanel: SlidePageViewPanel = {
+        SlidePageViewPanel()
+    }()
+
+    override func viewDidLoad() {
+        self.automaticallyAdjustsScrollViewInsets = false
+
+        self.view.backgroundColor = UIColor.white
+        self.view.addSubview(slidePageViewPanel)
+        slidePageViewPanel.slidePageView.itemProvider = {
+            [WebImageItemView(),
+             WebImageItemView(),
+             WebImageItemView()]
+        }
+        slidePageViewPanel.snp.makeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(180)
+        }
+        slidePageViewPanel.slidePageView.loadData()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let navigationController = self.navigationController {
+            navigationController.view.sendSubview(toBack: navigationController.navigationBar)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let navigationController = self.navigationController {
+            navigationController.view.bringSubview(toFront: navigationController.navigationBar)
+        }
+    }
 
 }

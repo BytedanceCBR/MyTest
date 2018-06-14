@@ -10,9 +10,12 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+
 class HomeViewController: UIViewController, UITableViewDelegate {
 
     private var tableView: UITableView!
+
+    private var navBar: BubbleNavigationBar!
 
     private let dataSource: HomeViewTableViewDataSource!
 
@@ -21,6 +24,28 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     }
 
     let disposeBag = DisposeBag()
+
+    lazy var slidePageViewPanel: SlidePageViewPanel = {
+        SlidePageViewPanel()
+    }()
+
+    lazy var headerViewPanel: UIView = {
+        UIView(frame: CGRect(
+                x: 0,
+                y: 0,
+                width: self.view.frame.width,
+                height: 210))
+//        UIView()
+    }()
+
+    lazy var suspendSearchBar: SearchUITextField = {
+        SearchUITextField()
+    }()
+
+    lazy var homeSpringBoard: HomeSpringBoard = {
+        HomeSpringBoard()
+    }()
+
 
     init() {
         self.dataSource = HomeViewTableViewDataSource()
@@ -43,45 +68,84 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         }
         tableView.dataSource = dataSource
         tableView.delegate = self
-        let headerView = HomeHeaderSearchView(frame: CGRect(
-            x: 0,
-            y: 0,
-            width: self.view.bounds.width,
-            height: 120))
-        tableView.tableHeaderView = headerView
         registerCell(tableView)
-        headerView.snp.makeConstraints { (make) in
-            make.top.width.equalToSuperview()
-            make.height.equalTo(120)
-        }
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
-        let throttle = offsetCriticalPointThrottle(-1)
-        let observer = CGPointObserver(hiddenSearchItemByContentOffset(headerView: headerView))
-            .join(adjustNavBarByContentOffset(navController: self.navigationController))
-            .filter { throttle($0.y) }
+
+        setupNormalNavBar()
+
+        let stateControl = HomeHeaderStateControl()
+        stateControl.onStateChanged = { (state) in
+            switch state {
+            case .suspend:
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.navBar.isHidden = true
+                    self.suspendSearchBar.isHidden = false
+                })
+            default:
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.navBar.isHidden = false
+                    self.suspendSearchBar.isHidden = true
+                })
+            }
+        }
         tableView.rx.contentOffset
-            .subscribe(onNext: observer.observe)
-            .disposed(by: disposeBag)
+                .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
+                .disposed(by: disposeBag)
+    }
 
-        let searchView = UIView(frame: CGRect(
-            x: 0,
-            y: 0,
-            width: self.view.bounds.width - 20,
-            height: 44))
-        self.navigationItem.titleView = searchView
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.tableHeaderView = headerViewPanel
+        setupHeaderSlidePanel(tableView: tableView)
+        setupHomeSpringBoard()
+    }
 
-        let searchBar = SearchUITextField()
-        searchView.addSubview(searchBar)
-        searchBar.snp.makeConstraints { (make) in
-            make.center.width.equalToSuperview()
-            make.height.equalTo(30)
+    private func setupNormalNavBar() {
+        navBar = BubbleNavigationBar()
+        navBar.isHidden = true
+        self.view.addSubview(navBar)
+        navBar.snp.makeConstraints { (make) in
+            make.top.left.right.equalToSuperview()
+            make.height.equalTo(44 + 20)
         }
     }
 
+    private func setupHeaderSlidePanel(tableView: UITableView) {
+        headerViewPanel.addSubview(slidePageViewPanel)
+        slidePageViewPanel.snp.makeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+            maker.height.equalTo(120)
+        }
+        slidePageViewPanel.slidePageView.itemProvider = {
+            [WebImageItemView(),
+             WebImageItemView(),
+             WebImageItemView()]
+        }
+        slidePageViewPanel.slidePageView.loadData()
+        headerViewPanel.addSubview(suspendSearchBar)
+        suspendSearchBar.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.top.equalToSuperview().offset(20)
+            maker.width.equalToSuperview().offset(-40)
+            maker.height.equalTo(24)
+        }
+    }
+
+    private func setupHomeSpringBoard() {
+        headerViewPanel.addSubview(homeSpringBoard)
+        homeSpringBoard.snp.makeConstraints { [unowned slidePageViewPanel] maker in
+            maker.top.equalTo(slidePageViewPanel.snp.bottom)
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(90)
+         }
+        homeSpringBoard.loadData()
+        slidePageViewPanel.startCarousel()
+    }
+
     private func registerCell(_ tableView: UITableView) {
-        let cellTypeMap: [String: UITableViewCell.Type] = ["item": MultiImageInfoCell.self]
+        let cellTypeMap: [String: UITableViewCell.Type] = ["item": SingleImageInfoCell.self]
         cellTypeMap.forEach { (e) in
             let (identifier, cls) = e
             tableView.register(cls, forCellReuseIdentifier: identifier)
@@ -99,8 +163,27 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("tableView")
         let detailPage = HorseDetailPageVC()
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+}
+
+class BubbleNavigationBar: UIView {
+
+    let searchBar: SearchUITextField
+
+    init() {
+        searchBar = SearchUITextField()
+        super.init(frame: CGRect.zero)
+        backgroundColor = UIColor.white
+        addSubview(searchBar)
+        searchBar.snp.makeConstraints { (make) in
+            make.bottom.left.right.equalToSuperview()
+            make.height.equalTo(28)
+        }
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

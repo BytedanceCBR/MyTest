@@ -26,8 +26,12 @@ class TabViewController: UITabBarController {
         home.tabBarItem.image = #imageLiteral(resourceName: "tab_home")
         home.tabBarItem.selectedImage = #imageLiteral(resourceName: "tab_home_lite")
         home.tabBarItem.title = "首页"
-        let nav = BaseNavigationController(rootViewController: home)
-        self.addChildViewController(nav)
+        self.addChildViewController(home)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
     }
 
 }

@@ -8,15 +8,10 @@
 
 import UIKit
 import SnapKit
+
 class MarqueeItemView: UIView {
     init() {
         super.init(frame: CGRect.zero)
-        let label = UILabel()
-        addSubview(label)
-        label.snp.makeConstraints { (make) in
-            make.left.right.top.bottom.equalToSuperview()
-        }
-        label.text = "hello"
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -35,6 +30,8 @@ class MarqueeGroupView: UIScrollView {
         UIView()
     }()
 
+    var catulateQubeSize: ((MarqueeGroupView) -> CGSize)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(contentView)
@@ -42,9 +39,13 @@ class MarqueeGroupView: UIScrollView {
     }
 
     func loadData() {
-        subviews.forEach { $0.removeFromSuperview() }
+        itemViews?.forEach { itemView in
+            itemView.removeFromSuperview()
+        }
         itemViews = itemProvider?()
-        itemViews?.forEach { addSubview($0) }
+        itemViews?.forEach {
+            addSubview($0)
+        }
         layoutItems()
     }
 
@@ -52,34 +53,42 @@ class MarqueeGroupView: UIScrollView {
         let qubeSize = self.qubeSize()
         if let itemViews = itemViews {
             itemViews.enumerated()
-                .forEach({ (e) in
-                    let (index, ele) = e
-                    self.layoutItem(
-                        index: index,
-                        itemView: ele,
-                        qubeSize: qubeSize)
-                })
+                    .forEach({ (e) in
+                        let (index, ele) = e
+                        self.layoutItem(
+                                index: index,
+                                itemView: ele,
+                                qubeSize: qubeSize)
+                    })
+            resetContentSize()
+        }
+    }
+
+    func resetContentSize() {
+        let qubeSize = self.qubeSize()
+        if let itemViews = itemViews {
+
             self.contentSize = CGSize(
-                width: qubeSize.width * CGFloat(itemViews.count),
-                height: qubeSize.height)
+                    width: qubeSize.width * CGFloat(itemViews.count),
+                    height: qubeSize.height)
         }
     }
 
     func layoutItem(
-        index: Int,
-        itemView: MarqueeItemView,
-        qubeSize: CGSize) {
+            index: Int,
+            itemView: MarqueeItemView,
+            qubeSize: CGSize) {
         itemView.frame = CGRect(
-            x: qubeSize.width * CGFloat(index),
-            y: 0,
-            width: qubeSize.width,
-            height: qubeSize.height)
+                x: qubeSize.width * CGFloat(index),
+                y: 0,
+                width: qubeSize.width,
+                height: qubeSize.height)
     }
 
     func qubeSize() -> CGSize {
-        return CGSize(
-            width: self.bounds.height,
-            height: self.bounds.height)
+        return catulateQubeSize?(self) ?? CGSize(
+                width: self.bounds.height,
+                height: self.bounds.height)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -89,5 +98,8 @@ class MarqueeGroupView: UIScrollView {
     override func layoutSubviews() {
         layoutItems()
     }
-
+    
+    func count() -> Int {
+        return itemViews?.count ?? 0
+    }
 }

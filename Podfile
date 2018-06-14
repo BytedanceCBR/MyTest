@@ -70,6 +70,7 @@ target 'Bubble' do
   pod 'Alamofire'
   pod 'RxAlamofire'
   pod 'SwiftyJSON', '4.1.0'
+  pod 'ObjectMapper'
 
   target 'BubbleTests' do
     inherit! :search_paths

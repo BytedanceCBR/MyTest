@@ -31,7 +31,11 @@ open class SearchTextField: UIControl {
 
         // 搜索输入框
         let input = UITextField()
-        input.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
+        if #available(iOS 8.2, *) {
+            input.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.medium)
+        } else {
+            // Fallback on earlier versions
+        }
         input.clearButtonMode = .always
         input.returnKeyType = .search
         self.addSubview(input)
