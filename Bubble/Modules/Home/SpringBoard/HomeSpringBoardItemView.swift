@@ -30,15 +30,18 @@ class HomeSpringBoardItemView: MarqueeItemView {
         addSubview(imageView)
         imageView.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
-            maker.width.height.equalTo(30)
-            maker.top.equalToSuperview().offset(10)
+            maker.width.height.equalTo(66)
+            maker.top.equalToSuperview().offset(16)
         }
         addSubview(label)
         label.snp.makeConstraints { [unowned imageView] maker in
-            maker.left.right.bottom.equalToSuperview()
-            maker.top.equalTo(imageView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.top.equalToSuperview().offset(76)
+            maker.bottom.equalToSuperview().offset(-20)
+            maker.height.equalTo(20)
         }
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = hexStringToUIColor(hex: "#222222")
         label.textAlignment = .center
     }
 

@@ -34,7 +34,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
                 x: 0,
                 y: 0,
                 width: self.view.frame.width,
-                height: 210))
+                height: 327))
 //        UIView()
     }()
 
@@ -118,7 +118,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         headerViewPanel.addSubview(slidePageViewPanel)
         slidePageViewPanel.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(120)
+            maker.height.equalTo(211)
         }
         slidePageViewPanel.slidePageView.itemProvider = {
             [WebImageItemView(),
@@ -139,8 +139,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         headerViewPanel.addSubview(homeSpringBoard)
         homeSpringBoard.snp.makeConstraints { [unowned slidePageViewPanel] maker in
             maker.top.equalTo(slidePageViewPanel.snp.bottom)
-            maker.left.right.bottom.equalToSuperview()
-            maker.height.equalTo(90)
+            maker.bottom.equalToSuperview()
+            maker.left.equalToSuperview().offset(8)
+            maker.right.equalToSuperview().offset(-8)
+            maker.height.equalTo(116)
          }
         homeSpringBoardViewModel = HomeSpringBoardViewModel(springBoard: homeSpringBoard)
         homeSpringBoardViewModel.loadData()
