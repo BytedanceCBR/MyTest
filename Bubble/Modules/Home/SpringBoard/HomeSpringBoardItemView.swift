@@ -19,21 +19,25 @@ class HomeSpringBoardItemView: MarqueeItemView {
         UILabel()
     }()
 
+    lazy var clickGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer()
+        return gesture
+    }()
+
     override init() {
         super.init()
+        addGestureRecognizer(clickGesture)
         addSubview(imageView)
         imageView.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
             maker.width.height.equalTo(30)
             maker.top.equalToSuperview().offset(10)
         }
-        imageView.image = #imageLiteral(resourceName: "temp")
         addSubview(label)
         label.snp.makeConstraints { [unowned imageView] maker in
             maker.left.right.bottom.equalToSuperview()
             maker.top.equalTo(imageView.snp.bottom)
         }
-        label.text = "home"
         label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
     }

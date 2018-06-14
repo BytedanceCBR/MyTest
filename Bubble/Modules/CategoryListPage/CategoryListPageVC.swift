@@ -1,35 +1,24 @@
 //
-//  HorseDetailPageVC.swift
+//  CategoryListPageVC.swift
 //  Bubble
 //
-//  Created by linlin on 2018/6/13.
+//  Created by linlin on 2018/6/14.
 //  Copyright © 2018年 linlin. All rights reserved.
 //
 
 import UIKit
-import SnapKit
-import Charts
-class HorseDetailPageVC: UIViewController {
 
-    lazy var slidePageViewPanel: SlidePageViewPanel = {
-        SlidePageViewPanel()
-    }()
+class CategoryListPageVC: UIViewController {
 
     override func viewDidLoad() {
-        self.automaticallyAdjustsScrollViewInsets = false
-
+        super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
-        self.view.addSubview(slidePageViewPanel)
-        slidePageViewPanel.slidePageView.itemProvider = {
-            [WebImageItemView(),
-             WebImageItemView(),
-             WebImageItemView()]
-        }
-        slidePageViewPanel.snp.makeConstraints { maker in
-            maker.top.left.right.equalToSuperview()
-            maker.height.equalTo(247)
-        }
-        slidePageViewPanel.slidePageView.loadData()
+        self.navigationController?.navigationBar.isHidden = true
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -13,6 +13,7 @@
 		543CAABAC80EF62E2E4F7A7F /* libPods-Bubble.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */; };
 		B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CC20CF68E800C1060D /* TabViewController.swift */; };
 		B311A1CF20CF6A8B00C1060D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CE20CF6A8B00C1060D /* HomeViewController.swift */; };
+		B325CCA320D28D5100F891C5 /* CategoryListPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */; };
 		B32BCB2920CFAE370004A8D6 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */; };
 		B32BCB2B20CFB6CD0004A8D6 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB2A20CFB6CD0004A8D6 /* HomeHeaderSearchView.swift */; };
 		B32BCB2D20CFB8370004A8D6 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB2C20CFB8370004A8D6 /* HomeViewTableViewDataSource.swift */; };
@@ -72,6 +73,7 @@
 		6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bubble.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B311A1CC20CF68E800C1060D /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		B311A1CE20CF6A8B00C1060D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListPageVC.swift; sourceTree = "<group>"; };
 		B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 		B32BCB2A20CFB6CD0004A8D6 /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
 		B32BCB2C20CFB8370004A8D6 /* HomeViewTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 		B311A1C920CF689400C1060D /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				B325CCA120D28D1A00F891C5 /* CategoryListPage */,
 				B3F7AD8920D262EA002638EA /* Style */,
 				B3F7AD8520D2370E002638EA /* Api */,
 				B3F7AD7820D0E320002638EA /* HorseDetailPage */,
@@ -211,6 +214,14 @@
 				B3F7AD7B20D0EB86002638EA /* EnvContext.swift */,
 			);
 			path = Launch;
+			sourceTree = "<group>";
+		};
+		B325CCA120D28D1A00F891C5 /* CategoryListPage */ = {
+			isa = PBXGroup;
+			children = (
+				B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */,
+			);
+			path = CategoryListPage;
 			sourceTree = "<group>";
 		};
 		B32BCB3A20D00AA90004A8D6 /* Cells */ = {
@@ -552,6 +563,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */,
+				B325CCA320D28D5100F891C5 /* CategoryListPageVC.swift in Sources */,
 				B3F7AD8020D12E68002638EA /* SlidePageView.swift in Sources */,
 				B334EDD220CE9CC50052CF44 /* Curry.swift in Sources */,
 				B334EDD020CE9CC50052CF44 /* RxTTNetwork.swift in Sources */,

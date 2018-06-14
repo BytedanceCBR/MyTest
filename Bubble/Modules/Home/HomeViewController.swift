@@ -47,6 +47,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     }()
 
 
+    var homeSpringBoardViewModel: HomeSpringBoardViewModel!
+
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
@@ -140,7 +142,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(90)
          }
-        homeSpringBoard.loadData()
+        homeSpringBoardViewModel = HomeSpringBoardViewModel(springBoard: homeSpringBoard)
+        homeSpringBoardViewModel.loadData()
         slidePageViewPanel.startCarousel()
     }
 
