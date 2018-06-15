@@ -34,7 +34,7 @@ class HomeSpringBoardItemView: MarqueeItemView {
             maker.top.equalToSuperview().offset(16)
         }
         addSubview(label)
-        label.snp.makeConstraints { [unowned imageView] maker in
+        label.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalToSuperview().offset(76)
             maker.bottom.equalToSuperview().offset(-20)

@@ -23,6 +23,4 @@ class HomeViewTableViewDataSource: NSObject, UITableViewDataSource {
         cell?.selectionStyle = .none
         return cell ?? UITableViewCell()
     }
-
-
 }

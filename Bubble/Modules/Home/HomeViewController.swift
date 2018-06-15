@@ -19,8 +19,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     private let dataSource: HomeViewTableViewDataSource!
 
+    private let sectionHeader: CGFloat = 38
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
+        return .lightContent
     }
 
     let disposeBag = DisposeBag()
@@ -38,8 +40,8 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 //        UIView()
     }()
 
-    lazy var suspendSearchBar: SearchUITextField = {
-        SearchUITextField()
+    lazy var suspendSearchBar: HomePageSearchPanel = {
+        HomePageSearchPanel()
     }()
 
     lazy var homeSpringBoard: HomeSpringBoard = {
@@ -129,9 +131,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         headerViewPanel.addSubview(suspendSearchBar)
         suspendSearchBar.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
-            maker.top.equalToSuperview().offset(20)
-            maker.width.equalToSuperview().offset(-40)
-            maker.height.equalTo(24)
+            maker.top.equalToSuperview().offset(28)
+            maker.height.equalTo(40)
+            maker.left.equalToSuperview().offset(15)
+            maker.right.equalToSuperview().offset(-15)
         }
     }
 
@@ -170,6 +173,10 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailPage = HorseDetailPageVC()
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return CategorySectionView()
     }
 }
 
