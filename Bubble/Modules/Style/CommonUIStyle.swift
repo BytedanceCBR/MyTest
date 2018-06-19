@@ -18,4 +18,12 @@ class CommonUIStyle {
             UIFont(name: "PingFangSC-Medium", size: size)
         }
     }
+
+    class TabBar {
+        static let height: CGFloat = 48
+    }
+
+    class NavBar {
+        static let height: CGFloat = 64
+    }
 }

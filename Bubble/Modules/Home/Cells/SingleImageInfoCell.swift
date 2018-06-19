@@ -65,7 +65,7 @@ class SingleImageInfoCell: UITableViewCell {
 
         self.contentView.addSubview(lineView)
         lineView.snp.makeConstraints { maker in
-            maker.height.equalTo(1)
+            maker.height.equalTo(0.5)
             maker.bottom.equalToSuperview()
             maker.left.equalToSuperview().offset(15)
             maker.right.equalToSuperview().offset(-15)
@@ -129,4 +129,12 @@ class SingleImageInfoCell: UITableViewCell {
         }
         roomSpaceLabel.text = "56420元/平"
     }
+}
+
+func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemEntity) {
+    cell.majorTitle.text = item.displayTitle
+    cell.extendTitle.text = item.displaySubtitle
+    cell.areaLabel.text = item.displayDescription
+    cell.priceLabel.text = item.baseInfoMap?.pricing
+    cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
 }

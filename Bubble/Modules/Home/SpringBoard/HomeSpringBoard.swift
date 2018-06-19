@@ -47,6 +47,11 @@ class HomeSpringBoardViewModel {
                     .subscribe(onNext: { recognizer in
                         let categoryVC = CategoryListPageVC()
                         EnvContext.shared.rootNavController.pushViewController(categoryVC, animated: true)
+                        categoryVC.navBar.backBtn.rx.tap
+                                .subscribe(onNext: { void in
+                                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                                })
+                                .disposed(by: self.disposeBag)
                     })
                     .disposed(by: disposeBag)
         }

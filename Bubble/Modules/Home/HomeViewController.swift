@@ -63,12 +63,26 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         self.tableView = UITableView()
         super.viewDidLoad()
+        requestHouseRecommend()
+            .subscribe(onNext: { [unowned self] response in
+                if let data = response?.data {
+                    self.dataSource.onDataArrived(datas: data)
+                    self.tableView.reloadData()
+                }
+                }, onError: { error in
+                    print(error)
+            }, onCompleted: {
+
+            })
+            .disposed(by: disposeBag)
+        
         self.automaticallyAdjustsScrollViewInsets = false
 
         view.addSubview(tableView)
         tableView.separatorStyle = .none
         tableView.snp.makeConstraints { (make) in
-            make.top.bottom.left.right.equalToSuperview()
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
         }
         tableView.dataSource = dataSource
         tableView.delegate = self
@@ -97,6 +111,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         tableView.rx.contentOffset
                 .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
                 .disposed(by: disposeBag)
+        bindSearchEvent()
     }
 
     override func viewDidLayoutSubviews() {
@@ -146,7 +161,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
             maker.left.equalToSuperview().offset(8)
             maker.right.equalToSuperview().offset(-8)
             maker.height.equalTo(116)
-         }
+        }
         homeSpringBoardViewModel = HomeSpringBoardViewModel(springBoard: homeSpringBoard)
         homeSpringBoardViewModel.loadData()
         slidePageViewPanel.startCarousel()
@@ -163,6 +178,7 @@ class HomeViewController: UIViewController, UITableViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        UIApplication.shared.statusBarStyle = .lightContent
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -177,6 +193,32 @@ class HomeViewController: UIViewController, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return CategorySectionView()
+    }
+
+    private func bindSearchEvent() {
+        suspendSearchBar.changeCountryBtn.rx.tap
+                .subscribe(onNext: openCountryList)
+                .disposed(by: disposeBag)
+        suspendSearchBar.searchBtn.rx.tap
+                .subscribe(onNext: openSearchPanel)
+                .disposed(by: disposeBag)
+    }
+}
+
+
+extension HomeViewController {
+    private func openCountryList() {
+        print("openCountryList")
+        let vc = CountryListVC()
+        vc.onClose = {
+            $0.dismiss(animated: true)
+        }
+        let navVC = UINavigationController(rootViewController: vc)
+        EnvContext.shared.rootNavController.present(navVC, animated: true)
+    }
+
+    private func openSearchPanel() {
+        print("openSearchPanel")
     }
 }
 

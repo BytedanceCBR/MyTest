@@ -26,6 +26,7 @@ class CategorySectionView: UIView {
             maker.left.equalTo(15)
             maker.height.equalTo(22)
             maker.top.equalToSuperview().offset(16)
+            maker.bottom.equalToSuperview()
         }
     }
 

@@ -25,6 +25,11 @@ class HomePageSearchPanel: UIView {
         UIButton()
     }()
 
+
+    lazy var searchBtn: UIButton = {
+        UIButton()
+    }()
+
     lazy var triangleImage: UIImageView = {
         let view = UIImageView()
         view.image = #imageLiteral(resourceName: "icon-triangle-open")
@@ -76,7 +81,6 @@ class HomePageSearchPanel: UIView {
         self.layer.cornerRadius = 4
     }
 
-
     private func setupCountryLabel() {
         addSubview(countryLabel)
         countryLabel.snp.makeConstraints { maker in
@@ -94,6 +98,8 @@ class HomePageSearchPanel: UIView {
             maker.top.equalToSuperview().offset(16)
             maker.height.width.equalTo(9)
         }
+
+
     }
 
     private func setupVerticalLine() {
@@ -103,7 +109,13 @@ class HomePageSearchPanel: UIView {
             maker.top.equalTo(13)
             maker.width.equalTo(1)
             maker.height.equalTo(15)
-         }
+        }
+
+        addSubview(changeCountryBtn)
+        changeCountryBtn.snp.makeConstraints { maker in
+            maker.left.top.bottom.equalToSuperview()
+            maker.right.equalTo(verticalLineView.snp.left)
+        }
     }
 
     private func setSearchArea() {
@@ -112,7 +124,7 @@ class HomePageSearchPanel: UIView {
             maker.left.equalTo(verticalLineView.snp.right).offset(12)
             maker.top.equalTo(8)
             maker.width.height.equalTo(24)
-         }
+        }
 
         addSubview(categoryLabel)
         categoryLabel.snp.makeConstraints { maker in
@@ -120,6 +132,11 @@ class HomePageSearchPanel: UIView {
             maker.height.equalTo(20)
             maker.right.equalToSuperview()
             maker.top.equalTo(10)
-         }
+        }
+        addSubview(searchBtn)
+        searchBtn.snp.makeConstraints { maker in
+            maker.left.equalTo(verticalLineView.snp.right)
+            maker.top.bottom.right.equalToSuperview()
+        }
     }
 }
