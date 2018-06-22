@@ -11,6 +11,37 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
+class ConditionPanelState {
+    var currentIndex: Int
+    var isShowPanel: Bool
+
+    init() {
+        self.currentIndex = -1
+        self.isShowPanel = false
+    }
+}
+
+typealias ConditionSelectAction = (Int, [Node]) -> Void
+
+typealias ConditionPathParser = ([Node], String) -> String
+
+typealias ConditionFilterPanelGenerator = (Int, UIView?) -> Void
+
+struct ConditionAggregator {
+    let aggregator: (String) -> String
+}
+
+extension ConditionAggregator {
+    static func monoid() -> ConditionAggregator {
+        return ConditionAggregator { $0 }
+    }
+}
+
+precedencegroup SequencePrecedence {
+    associativity: left
+    higherThan: AdditionPrecedence
+}
+
 class CategoryListPageVC: UIViewController {
 
     lazy var navBar: SearchNavBar = {
@@ -34,17 +65,105 @@ class CategoryListPageVC: UIViewController {
         HomeViewTableViewDataSource()
     }()
 
-    let onClickFunc = {
-        print("onClickFunc")
-    }
+    lazy var conditionPanelView: UIView = {
+        let result = UIView()
+        result.backgroundColor = hexStringToUIColor(hex: "#222222", alpha: 0.3)
+        return result
+    }()
 
+    let conditionPanelState = ConditionPanelState()
+
+    let searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
 
     lazy var filterConditions: [SearchConditionItem] = {
-        [SearchConditionItem(label: "区域", onClick: onClickFunc),
-         SearchConditionItem(label: "总价", onClick: onClickFunc),
-         SearchConditionItem(label: "户型", onClick: onClickFunc),
-         SearchConditionItem(label: "更多", onClick: onClickFunc)]
+        var result: [SearchConditionItem] = []
+        var item = SearchConditionItem(label: "区域")
+        item.onClick = openConditionPanel(
+            state: conditionPanelState,
+            apply: constructAreaConditionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
+                print(nodes)
+                if !nodes.isEmpty {
+                    item.label = nodes.last!.label
+                    item.isHighlighted = true
+                    self?.reloadConditionPanel()
+                }
+            }))
+        result.append(item)
+
+        var item1 = SearchConditionItem(
+            label: "总价")
+        item1.onClick = openConditionPanel(
+            state: conditionPanelState,
+            apply: constructPriceListConditionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
+                print(nodes)
+                if !nodes.isEmpty {
+                    item1.label = nodes.last?.label ?? "总价"
+                    item1.isHighlighted = true
+                    self?.reloadConditionPanel()
+                }
+            }))
+        result.append(item1)
+
+        var item2 = SearchConditionItem(
+                label: "户型",
+                onClick: openConditionPanel(
+                        state: conditionPanelState,
+                        apply: constructBubbleSelectCollectionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
+                            print(nodes)
+                            self?.reloadConditionPanel()
+                        })))
+        result.append(item2)
+
+        var item3 = SearchConditionItem(
+                label: "更多",
+                onClick: openConditionPanel(
+                        state: conditionPanelState,
+                        apply: constructBubbleSelectCollectionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
+                            print(nodes)
+                            self?.reloadConditionPanel()
+                        })))
+        result.append(item3)
+        return result
     }()
+
+    func reloadConditionPanel() -> Void {
+        searchFilterPanel.setItems(items: filterConditions)
+        self.conditionPanelState.isShowPanel = false
+    }
+
+    func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
+        return { [weak self] (index, nodes) -> Void in
+            self?.conditionPanelView.subviews.forEach { view in
+                view.removeFromSuperview()
+            }
+            self?.conditionPanelView.isHidden = true
+            apply(index, nodes)
+        }
+
+    }
+
+    func openConditionPanel(state: ConditionPanelState, apply: @escaping ConditionFilterPanelGenerator) -> (Int) -> Void {
+        return { [weak self] (index) in
+            if state.isShowPanel, state.currentIndex == index {
+                self?.conditionPanelView.subviews.forEach { view in
+                    view.removeFromSuperview()
+                }
+                self?.conditionPanelView.isHidden = true
+                state.isShowPanel = false
+            } else if state.isShowPanel, state.currentIndex != index {
+                self?.conditionPanelView.subviews.forEach { view in
+                    view.removeFromSuperview()
+                }
+                apply(index, self?.conditionPanelView)
+                state.isShowPanel = true
+            } else if state.isShowPanel != true {
+                apply(index, self?.conditionPanelView)
+                self?.conditionPanelView.isHidden = false
+                state.isShowPanel = true
+            }
+            state.currentIndex = index
+        }
+    }
 
     let disposeBag = DisposeBag()
 
@@ -91,6 +210,13 @@ class CategoryListPageVC: UIViewController {
                 })
                 .disposed(by: disposeBag)
         searchFilterPanel.setItems(items: filterConditions)
+
+        view.addSubview(conditionPanelView)
+        conditionPanelView.snp.makeConstraints { maker in
+            maker.top.equalTo(searchFilterPanel.snp.bottom)
+            maker.left.right.bottom.equalToSuperview()
+        }
+        conditionPanelView.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {

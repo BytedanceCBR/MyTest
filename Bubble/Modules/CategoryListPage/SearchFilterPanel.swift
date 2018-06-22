@@ -12,6 +12,11 @@ import Foundation
 import RxCocoa
 import RxSwift
 
+enum ConditionItemType {
+    case noCondition(String)
+    case condition(String)
+}
+
 class SearchFilterPanel: UIView {
 
     var itemViews: [SearchConditionItemView] = []
@@ -23,13 +28,6 @@ class SearchFilterPanel: UIView {
         let color = hexStringToUIColor(hex: "#e8e8e8")
         self.lu.addTopBorder(color: color)
         self.lu.addBottomBorder(color: color)
-//        (0...3).forEach {_ in
-//            itemViews.append(SearchConditionItemView())
-//        }
-//
-//        itemViews.forEach { view in
-//            addSubview(view)
-//        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -60,14 +58,24 @@ class SearchFilterPanel: UIView {
         }
         itemViews = items.map { item -> SearchConditionItemView in
             let result = SearchConditionItemView()
-            result.setConditionLabelText(label: item.label)
-            result.clickBtn.rx.tap
-                    .subscribe(onNext: { void in
-                        item.onClick?()
-                    })
-                    .disposed(by: disposeBag)
+            if item.isHighlighted {
+                result.setConditionLabelText(label: item.label, color: hexStringToUIColor(hex: "#f85959"), icon: #imageLiteral(resourceName: "icon-triangle-retract"))
+            } else {
+                result.setConditionLabelText(label: item.label, color: hexStringToUIColor(hex: "#222222"), icon: #imageLiteral(resourceName: "icon-triangle-open"))
+            }
             return result
         }
+
+        zip(itemViews, items)
+                .enumerated()
+                .forEach { (e) in
+                    let (offset, (view, item)) = e
+                    view.clickBtn.rx.tap
+                            .subscribe(onNext: { void in
+                                item.onClick?(offset)
+                            })
+                            .disposed(by: disposeBag)
+                }
 
         itemViews.forEach { view in
             addSubview(view)
@@ -97,6 +105,8 @@ class SearchConditionItemView: UIView {
         UIButton()
     }()
 
+    var isHighlighted = false
+
     init() {
         super.init(frame: CGRect.zero)
         addSubview(conditionLabel)
@@ -115,12 +125,13 @@ class SearchConditionItemView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setConditionLabelText(label: String) {
+    func setConditionLabelText(label: String, color: UIColor, icon: UIImage) {
+        conditionLabel.textColor = color
         let attributeText = NSMutableAttributedString(string: label)
         let attributes: [NSAttributedStringKey: Any] = [.font: CommonUIStyle.Font.pingFangRegular(15)!]
         attributeText.setAttributes(attributes, range: NSRange(location: 0, length: label.count))
         let attachment = NSTextAttachment()
-        attachment.image = #imageLiteral(resourceName: "icon-triangle-open")
+        attachment.image = icon
         let attachmentText = NSAttributedString(attachment: attachment)
         attributeText.append(attachmentText)
         conditionLabel.attributedText = attributeText
@@ -128,7 +139,14 @@ class SearchConditionItemView: UIView {
 
 }
 
-struct SearchConditionItem {
-    let label: String
-    let onClick: (() -> Void)?
+class SearchConditionItem {
+    var label: String = ""
+    var onClick: ((Int) -> Void)? = nil
+    var isHighlighted: Bool
+
+    init(label: String, onClick: ((Int) -> Void)? = nil) {
+        self.isHighlighted = false
+        self.label = label
+        self.onClick = onClick
+    }
 }

@@ -62,6 +62,19 @@ public func iterateEnum<T: Hashable>(_: T.Type) -> AnyIterator<T> {
     }
 }
 
+
+extension Array {
+    var slice: ArraySlice<Element> {
+        return ArraySlice(self)
+    }
+}
+
+extension ArraySlice {
+    var decomposed: (Element, ArraySlice<Element>)? {
+        return isEmpty ? nil : (self[startIndex], self.dropFirst())
+    }
+}
+
 extension Array {
     public var decompose : (head: Element, tail: [Element])? {
         return isEmpty ? (self[0], Array(self[1..<count])) : nil

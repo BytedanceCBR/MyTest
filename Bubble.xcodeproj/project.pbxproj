@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A21637FC67B71B83871A9CF /* SearchAndConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F7BE7186484D3355E53 /* SearchAndConditionFilterViewModel.swift */; };
 		1A21676BF4B7193D13E571AD /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21604F236DF6B1A9E7A0BE /* UIKitExtension.swift */; };
 		1A216AEFCB35585A93716DB0 /* SingleImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CFA010216AD68E9EC9B /* SingleImageInfoCell.swift */; };
 		1A216B6EF2B0CA22C67A05F9 /* HouseItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216DC5BE7C703E4FB4F127 /* HouseItemEntity.swift */; };
+		1A216DBBE4F213478D3E7EEE /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216403CB05228192083299 /* AreaConditionFilterPanel.swift */; };
 		1A216F187BF07E239B635AEA /* RecommendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165B69D1D55D9155E2665 /* RecommendAPI.swift */; };
 		4B4464C9FA99D36770D9945D /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D916F4C9631A3DB92788BB /* libPods-BubbleUITests.a */; };
 		4DC673BF1C97DD850ACC397B /* libPods-BubbleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA01228B213AB2085CD68E8A /* libPods-BubbleTests.a */; };
@@ -32,6 +34,8 @@
 		B3305FE020D3A60600A47C8C /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3305FDF20D3A60600A47C8C /* CountryListVC.swift */; };
 		B3305FE320D3B86B00A47C8C /* SimpleNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3305FE220D3B86B00A47C8C /* SimpleNavBar.swift */; };
 		B3305FE620D8E28700A47C8C /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3305FE520D8E28700A47C8C /* SearchFilterPanel.swift */; };
+		B3324FE720DA691F004F354C /* BubbleSelectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3324FE620DA691F004F354C /* BubbleSelectCollectionView.swift */; };
+		B3324FE920DB641F004F354C /* PriceListFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3324FE820DB641F004F354C /* PriceListFilterPanel.swift */; };
 		B334EDD020CE9CC50052CF44 /* RxTTNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCC20CE9CC40052CF44 /* RxTTNetwork.swift */; };
 		B334EDD120CE9CC50052CF44 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCE20CE9CC40052CF44 /* Functional.swift */; };
 		B334EDD220CE9CC50052CF44 /* Curry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCF20CE9CC40052CF44 /* Curry.swift */; };
@@ -77,9 +81,11 @@
 /* Begin PBXFileReference section */
 		07DC59DFB029EF15FFE864CC /* Pods-BubbleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BubbleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BubbleUITests/Pods-BubbleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		1A21604F236DF6B1A9E7A0BE /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
+		1A216403CB05228192083299 /* AreaConditionFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaConditionFilterPanel.swift; sourceTree = "<group>"; };
 		1A2165B69D1D55D9155E2665 /* RecommendAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendAPI.swift; sourceTree = "<group>"; };
 		1A216CFA010216AD68E9EC9B /* SingleImageInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleImageInfoCell.swift; sourceTree = "<group>"; };
 		1A216DC5BE7C703E4FB4F127 /* HouseItemEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseItemEntity.swift; sourceTree = "<group>"; };
+		1A216F7BE7186484D3355E53 /* SearchAndConditionFilterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAndConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		22FB916E25E03D0F6C341524 /* Pods-Bubble.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bubble/Pods-Bubble.release.xcconfig"; sourceTree = "<group>"; };
 		69D916F4C9631A3DB92788BB /* libPods-BubbleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bubble.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +107,8 @@
 		B3305FDF20D3A60600A47C8C /* CountryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListVC.swift; sourceTree = "<group>"; };
 		B3305FE220D3B86B00A47C8C /* SimpleNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleNavBar.swift; sourceTree = "<group>"; };
 		B3305FE520D8E28700A47C8C /* SearchFilterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterPanel.swift; sourceTree = "<group>"; };
+		B3324FE620DA691F004F354C /* BubbleSelectCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleSelectCollectionView.swift; sourceTree = "<group>"; };
+		B3324FE820DB641F004F354C /* PriceListFilterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceListFilterPanel.swift; sourceTree = "<group>"; };
 		B334EDCC20CE9CC40052CF44 /* RxTTNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxTTNetwork.swift; sourceTree = "<group>"; };
 		B334EDCE20CE9CC40052CF44 /* Functional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional.swift; sourceTree = "<group>"; };
 		B334EDCF20CE9CC40052CF44 /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
@@ -244,6 +252,7 @@
 				B32CD13220D916800053AAC7 /* Filters */,
 				B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */,
 				B3305FE520D8E28700A47C8C /* SearchFilterPanel.swift */,
+				1A216F7BE7186484D3355E53 /* SearchAndConditionFilterViewModel.swift */,
 			);
 			path = CategoryListPage;
 			sourceTree = "<group>";
@@ -264,6 +273,9 @@
 			isa = PBXGroup;
 			children = (
 				B32CD13320D916DE0053AAC7 /* MultiColumnTableSelectorPanel.swift */,
+				1A216403CB05228192083299 /* AreaConditionFilterPanel.swift */,
+				B3324FE620DA691F004F354C /* BubbleSelectCollectionView.swift */,
+				B3324FE820DB641F004F354C /* PriceListFilterPanel.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -643,6 +655,7 @@
 				B3F7AD8220D1629C002638EA /* CityListViewModel.swift in Sources */,
 				B3F7AD7620D0DC13002638EA /* WebImageItemView.swift in Sources */,
 				B334EDD120CE9CC50052CF44 /* Functional.swift in Sources */,
+				B3324FE920DB641F004F354C /* PriceListFilterPanel.swift in Sources */,
 				B32BCB2B20CFB6CD0004A8D6 /* HomeHeaderSearchView.swift in Sources */,
 				B3305FE620D8E28700A47C8C /* SearchFilterPanel.swift in Sources */,
 				B32BCB3520CFD35D0004A8D6 /* Color.swift in Sources */,
@@ -663,8 +676,11 @@
 				1A216AEFCB35585A93716DB0 /* SingleImageInfoCell.swift in Sources */,
 				B3305FDD20D39D3500A47C8C /* CategorySectionView.swift in Sources */,
 				1A216B6EF2B0CA22C67A05F9 /* HouseItemEntity.swift in Sources */,
+				B3324FE720DA691F004F354C /* BubbleSelectCollectionView.swift in Sources */,
 				1A216F187BF07E239B635AEA /* RecommendAPI.swift in Sources */,
 				1A21676BF4B7193D13E571AD /* UIKitExtension.swift in Sources */,
+				1A216DBBE4F213478D3E7EEE /* AreaConditionFilterPanel.swift in Sources */,
+				1A21637FC67B71B83871A9CF /* SearchAndConditionFilterViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -830,17 +846,17 @@
 			baseConfigurationReference = DFBD24AA0D56A5029AB868E5 /* Pods-Bubble.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = 899VRGT9G8;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.Bubble;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -852,17 +868,17 @@
 			baseConfigurationReference = 22FB916E25E03D0F6C341524 /* Pods-Bubble.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = 899VRGT9G8;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.Bubble;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
