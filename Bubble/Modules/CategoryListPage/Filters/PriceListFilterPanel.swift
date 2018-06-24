@@ -9,10 +9,10 @@
 import UIKit
 import SnapKit
 
-func constructPriceListConditionPanel(_ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+func constructPriceListConditionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
         if let container = container {
-            let panel = PriceListFilterPanel()
+            let panel = PriceListFilterPanel(nodes: nodes)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
@@ -21,6 +21,13 @@ func constructPriceListConditionPanel(_ action: @escaping ConditionSelectAction)
             panel.didSelect = { nodes in action(index, nodes) }
         }
     }
+}
+
+func parsePriceConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+    if let node = nodePath.last, node.label != "不限" {
+        return .condition(node.label)
+    }
+    return .noCondition("总价")
 }
 
 class PriceListFilterPanel: UIView {
@@ -39,6 +46,18 @@ class PriceListFilterPanel: UIView {
         let dataSource = PriceListTableViewDataSource()
         self.dataSource = dataSource
         super.init(frame: frame)
+        setupUI()
+    }
+
+    init(nodes: [Node]) {
+        let dataSource = PriceListTableViewDataSource()
+        dataSource.nodes = nodes
+        self.dataSource = dataSource
+        super.init(frame: CGRect.zero)
+        setupUI()
+    }
+
+    func setupUI() {
         dataSource.didSelect = { [weak self] nodes in
             self?.didSelect?(nodes)
         }
@@ -47,7 +66,6 @@ class PriceListFilterPanel: UIView {
             maker.top.left.right.bottom.equalToSuperview()
         }
         tableView.register(PriceListItemCell.self, forCellReuseIdentifier: "item")
-        dataSource.nodes = mockupData()
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
         tableView.reloadData()
@@ -115,16 +133,4 @@ class PriceListItemCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-fileprivate func mockupData() -> [Node] {
-    return [Node(id: "", label: "不限", externalConfig: ""),
-            Node(id: "", label: "200万以下", externalConfig: ""),
-            Node(id: "", label: "200-250万", externalConfig: ""),
-            Node(id: "", label: "250-300万", externalConfig: ""),
-            Node(id: "", label: "300-400万", externalConfig: ""),
-            Node(id: "", label: "400-500万", externalConfig: ""),
-            Node(id: "", label: "500-800万", externalConfig: ""),
-            Node(id: "", label: "800-1000万", externalConfig: "")]
-
 }

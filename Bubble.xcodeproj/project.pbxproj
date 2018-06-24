@@ -51,6 +51,9 @@
 		B3B0868420CE223F00483971 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B0868320CE223F00483971 /* UIKit.framework */; };
 		B3B0868620CE225300483971 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B0868520CE225200483971 /* Foundation.framework */; };
 		B3B0868820CE3C9F00483971 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */; };
+		B3C19B8B20DCBF30001666CA /* ConfigurationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C19B8A20DCBF30001666CA /* ConfigurationAPI.swift */; };
+		B3C19B8D20DCC0D4001666CA /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C19B8C20DCC0D4001666CA /* Client.swift */; };
+		B3C19B8F20DCC612001666CA /* SearchEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C19B8E20DCC612001666CA /* SearchEntities.swift */; };
 		B3F7AD7620D0DC13002638EA /* WebImageItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7AD7520D0DC13002638EA /* WebImageItemView.swift */; };
 		B3F7AD7A20D0E349002638EA /* HorseDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7AD7920D0E349002638EA /* HorseDetailPageVC.swift */; };
 		B3F7AD7C20D0EB86002638EA /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7AD7B20D0EB86002638EA /* EnvContext.swift */; };
@@ -130,6 +133,9 @@
 		B3B0868320CE223F00483971 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B3B0868520CE225200483971 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		B3C19B8A20DCBF30001666CA /* ConfigurationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAPI.swift; sourceTree = "<group>"; };
+		B3C19B8C20DCC0D4001666CA /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		B3C19B8E20DCC612001666CA /* SearchEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntities.swift; sourceTree = "<group>"; };
 		B3F7AD7520D0DC13002638EA /* WebImageItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImageItemView.swift; sourceTree = "<group>"; };
 		B3F7AD7920D0E349002638EA /* HorseDetailPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorseDetailPageVC.swift; sourceTree = "<group>"; };
 		B3F7AD7B20D0EB86002638EA /* EnvContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvContext.swift; sourceTree = "<group>"; };
@@ -242,6 +248,7 @@
 				B311A1CC20CF68E800C1060D /* TabViewController.swift */,
 				B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */,
 				B3F7AD7B20D0EB86002638EA /* EnvContext.swift */,
+				B3C19B8C20DCC0D4001666CA /* Client.swift */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -300,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				1A216DC5BE7C703E4FB4F127 /* HouseItemEntity.swift */,
+				B3C19B8E20DCC612001666CA /* SearchEntities.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -410,6 +418,7 @@
 			isa = PBXGroup;
 			children = (
 				1A2165B69D1D55D9155E2665 /* RecommendAPI.swift */,
+				B3C19B8A20DCBF30001666CA /* ConfigurationAPI.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -649,6 +658,7 @@
 				B334EDD020CE9CC50052CF44 /* RxTTNetwork.swift in Sources */,
 				B32BCB2920CFAE370004A8D6 /* BaseNavigationViewController.swift in Sources */,
 				B32BCB3320CFD1D20004A8D6 /* BaseTextField.swift in Sources */,
+				B3C19B8D20DCC0D4001666CA /* Client.swift in Sources */,
 				B32BCB2D20CFB8370004A8D6 /* HomeViewTableViewDataSource.swift in Sources */,
 				B32BCB3920CFDDD80004A8D6 /* HeaderViewControl.swift in Sources */,
 				B3B0861A20C923D100483971 /* ViewController.swift in Sources */,
@@ -662,6 +672,7 @@
 				B3F7AD8820D23849002638EA /* HomeSpringBoardItemView.swift in Sources */,
 				B32BCB3020CFD15C0004A8D6 /* SearchUITextField.swift in Sources */,
 				B3F7AD7C20D0EB86002638EA /* EnvContext.swift in Sources */,
+				B3C19B8B20DCBF30001666CA /* ConfigurationAPI.swift in Sources */,
 				B3F7AD8420D23209002638EA /* HomeSpringBoard.swift in Sources */,
 				B3305FE020D3A60600A47C8C /* CountryListVC.swift in Sources */,
 				B32BCB3E20D0B96D0004A8D6 /* MarqueeGroupView.swift in Sources */,
@@ -680,6 +691,7 @@
 				1A216F187BF07E239B635AEA /* RecommendAPI.swift in Sources */,
 				1A21676BF4B7193D13E571AD /* UIKitExtension.swift in Sources */,
 				1A216DBBE4F213478D3E7EEE /* AreaConditionFilterPanel.swift in Sources */,
+				B3C19B8F20DCC612001666CA /* SearchEntities.swift in Sources */,
 				1A21637FC67B71B83871A9CF /* SearchAndConditionFilterViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

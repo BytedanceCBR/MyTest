@@ -8,18 +8,32 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
-func constructBubbleSelectCollectionPanel(_ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
         if let container = container {
-            let panel = BubbleSelectCollectionView()
+            let panel = BubbleSelectCollectionView(nodes: nodes)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
                 maker.height.equalTo(190)
             }
-            panel.didSelect = { nodes in action(index, nodes) }
+            panel.didSelect = { nodes in
+                action(index, nodes)
+            }
         }
+    }
+}
+
+func parseHorseTypeConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+    if nodePath.count > 1 {
+        return .condition("户型 (多选)")
+    } else if nodePath.count == 1 {
+        return .condition(nodePath.first!.label)
+    } else {
+        return .noCondition("户型")
     }
 }
 
@@ -62,12 +76,14 @@ class BubbleSelectCollectionView: UIView {
         }
     }
 
-    var dataSource: UICollectionViewDataSource
+    var dataSource: BubbleSelectDataSource
 
     var didSelect: (([Node]) -> Void)?
 
-    init() {
-        let dataSource = BubbleSelectDataSource(nodes: mockup())
+    let disposeBag = DisposeBag()
+
+    init(nodes: [Node]) {
+        let dataSource = BubbleSelectDataSource(nodes: nodes)
         self.dataSource = dataSource
         super.init(frame: CGRect.zero)
         setupUI()
@@ -77,7 +93,7 @@ class BubbleSelectCollectionView: UIView {
     }
 
     init(
-            dataSource: UICollectionViewDataSource,
+            dataSource: BubbleSelectDataSource,
             delegate: UICollectionViewDelegate) {
         self.dataSource = dataSource
         super.init(frame: CGRect.zero)
@@ -117,6 +133,12 @@ class BubbleSelectCollectionView: UIView {
                 BubbleCollectionSectionHeader.self,
                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
                 withReuseIdentifier: "header")
+
+        confirmBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    self.didSelect?(self.dataSource.selectedNodes())
+                })
+                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -175,6 +197,10 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
             theHeaderView.label.text = nodes[indexPath.section].label
         }
         return headerView
+    }
+
+    func selectedNodes() -> [Node] {
+        return selectedIndexPaths.map { nodes[$0.section].children[$0.row] }
     }
 }
 

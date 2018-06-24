@@ -14,10 +14,10 @@ fileprivate enum ConditionType: Int {
     case extendValue = 2
 }
 
-func constructAreaConditionPanel(_ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+func constructAreaConditionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
         if let container = container {
-            let panel = AreaConditionFilterPanel()
+            let panel = AreaConditionFilterPanel(nodes: nodes)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
@@ -37,6 +37,20 @@ func parseAreaCondition(nodePath: [Node]) -> (String) -> String {
         return "\(condition)&\(theCondition)"
     }
 }
+
+func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+    let filteredNodes = nodePath.filter { $0.label != "不限" }
+    if filteredNodes.count <= 1 {
+        return .noCondition("区域")
+    } else {
+        if let node = filteredNodes.last {
+            return .condition(node.label)
+        } else {
+            return .noCondition("区域")
+        }
+    }
+}
+
 
 class AreaConditionFilterPanel: UIView {
 
@@ -61,12 +75,23 @@ class AreaConditionFilterPanel: UIView {
         }
     }()
 
-    private var nodes: [Node] = []
+    private var nodes: [Node]
 
     var didSelect: (([Node]) -> Void)?
 
     init() {
+        nodes = []
         super.init(frame: CGRect.zero)
+        initPanelWithNativeDS()
+    }
+
+    init(nodes: [Node]) {
+        self.nodes = nodes
+        super.init(frame: CGRect.zero)
+        initPanelWithNativeDS()
+    }
+
+    func initPanelWithNativeDS() {
         tableViews.forEach { view in
             addSubview(view)
         }
@@ -81,7 +106,6 @@ class AreaConditionFilterPanel: UIView {
 
         tableViews.first?.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
 
-        nodes = mockupData()
         onInit()
     }
 

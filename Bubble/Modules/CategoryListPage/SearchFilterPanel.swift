@@ -85,6 +85,37 @@ class SearchFilterPanel: UIView {
 
 }
 
+func setConditionItemTypeByParser(item: SearchConditionItem,
+                                  reload: @escaping () -> Void,
+                                  parser: @escaping ([Node]) -> ConditionItemType) -> ([Node]) -> Void {
+    return { (nodes) in
+        return setConditionItemType(item: item, reload: reload)(parser(nodes))
+    }
+}
+
+func setConditionItemType(
+    item: SearchConditionItem,
+    reload: @escaping () -> Void) -> (ConditionItemType) -> Void {
+    return { (type) in
+        setFilterConditionItemBy(
+            item: item,
+            reload: reload,
+            conditionItemType: type)
+    }
+}
+
+func setFilterConditionItemBy(item: SearchConditionItem, reload: @escaping () -> Void, conditionItemType: ConditionItemType) {
+    switch conditionItemType {
+        case let .noCondition(label):
+            item.label = label
+            item.isHighlighted = false
+        case let .condition(label):
+            item.label = label
+            item.isHighlighted = true
+    }
+    reload()
+}
+
 class SearchConditionItemView: UIView {
 
     lazy var conditionLabel: UILabel = {
@@ -140,13 +171,31 @@ class SearchConditionItemView: UIView {
 }
 
 class SearchConditionItem {
+    var itemId: Int = -1
     var label: String = ""
     var onClick: ((Int) -> Void)? = nil
     var isHighlighted: Bool
 
-    init(label: String, onClick: ((Int) -> Void)? = nil) {
+    init(itemId: Int, label: String, onClick: ((Int) -> Void)? = nil) {
         self.isHighlighted = false
         self.label = label
         self.onClick = onClick
+        self.itemId = itemId
     }
+}
+
+func transferSearchConfigFilterItemTo(_ configFilter: SearchConfigFilterItem) -> SearchConditionItem {
+    return SearchConditionItem(
+        itemId: configFilter.tabId ?? -1,
+        label: configFilter.text ?? "")
+}
+
+func transferSearchConfigOptionToNode(options: [SearchConfigOption]) -> [Node] {
+    return options.map({ (option) -> Node in
+        return Node(
+            id: option.text ?? "",
+            label: option.text ?? "",
+            externalConfig: "",
+            children: transferSearchConfigOptionToNode(options: option.options ?? []))
+    })
 }

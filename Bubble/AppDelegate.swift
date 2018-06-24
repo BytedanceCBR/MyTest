@@ -37,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                print(content ?? "error")
 //            })
 //            .disposed(by: disposeBag)
+        EnvContext.shared.client.onStart()
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = UIColor.white
         let tabVC = TabViewController(nibName: nil, bundle: nil)

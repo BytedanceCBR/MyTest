@@ -14,4 +14,8 @@ class EnvContext {
     lazy var rootNavController: UINavigationController = {
         BaseNavigationController()
     }()
+
+    lazy var client: Client = {
+        Client()
+    }()
 }

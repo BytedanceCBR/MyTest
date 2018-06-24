@@ -33,16 +33,15 @@ struct ConditionAggregator {
 
 extension ConditionAggregator {
     static func monoid() -> ConditionAggregator {
-        return ConditionAggregator { $0 }
+        return ConditionAggregator {
+            $0
+        }
     }
 }
 
-precedencegroup SequencePrecedence {
-    associativity: left
-    higherThan: AdditionPrecedence
-}
-
 class CategoryListPageVC: UIViewController {
+
+    let disposeBag = DisposeBag()
 
     lazy var navBar: SearchNavBar = {
         let result = SearchNavBar()
@@ -75,56 +74,7 @@ class CategoryListPageVC: UIViewController {
 
     let searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
 
-    lazy var filterConditions: [SearchConditionItem] = {
-        var result: [SearchConditionItem] = []
-        var item = SearchConditionItem(label: "区域")
-        item.onClick = openConditionPanel(
-            state: conditionPanelState,
-            apply: constructAreaConditionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
-                print(nodes)
-                if !nodes.isEmpty {
-                    item.label = nodes.last!.label
-                    item.isHighlighted = true
-                    self?.reloadConditionPanel()
-                }
-            }))
-        result.append(item)
-
-        var item1 = SearchConditionItem(
-            label: "总价")
-        item1.onClick = openConditionPanel(
-            state: conditionPanelState,
-            apply: constructPriceListConditionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
-                print(nodes)
-                if !nodes.isEmpty {
-                    item1.label = nodes.last?.label ?? "总价"
-                    item1.isHighlighted = true
-                    self?.reloadConditionPanel()
-                }
-            }))
-        result.append(item1)
-
-        var item2 = SearchConditionItem(
-                label: "户型",
-                onClick: openConditionPanel(
-                        state: conditionPanelState,
-                        apply: constructBubbleSelectCollectionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
-                            print(nodes)
-                            self?.reloadConditionPanel()
-                        })))
-        result.append(item2)
-
-        var item3 = SearchConditionItem(
-                label: "更多",
-                onClick: openConditionPanel(
-                        state: conditionPanelState,
-                        apply: constructBubbleSelectCollectionPanel(self.closeConditionPanel { [weak self] (index, nodes) in
-                            print(nodes)
-                            self?.reloadConditionPanel()
-                        })))
-        result.append(item3)
-        return result
-    }()
+    lazy var filterConditions: [SearchConditionItem] = { [] }()
 
     func reloadConditionPanel() -> Void {
         searchFilterPanel.setItems(items: filterConditions)
@@ -138,6 +88,7 @@ class CategoryListPageVC: UIViewController {
             }
             self?.conditionPanelView.isHidden = true
             apply(index, nodes)
+            self?.reloadConditionPanel()
         }
 
     }
@@ -164,8 +115,6 @@ class CategoryListPageVC: UIViewController {
             state.currentIndex = index
         }
     }
-
-    let disposeBag = DisposeBag()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
@@ -217,6 +166,83 @@ class CategoryListPageVC: UIViewController {
             maker.left.right.bottom.equalToSuperview()
         }
         conditionPanelView.isHidden = true
+
+        EnvContext.shared.client.configCacheSubject
+            .map { $0?.filter }
+            .map { items in
+                let result: [SearchConditionItem] = items?
+                    .map(transferSearchConfigFilterItemTo) ?? []
+                let panelData: [[Node]] = items?.map {
+                    if let options = $0.options {
+                        return transferSearchConfigOptionToNode(options: options)
+                    } else {
+                        return []
+                    }
+                } ?? []
+                return (result, panelData)
+            }
+            .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
+                let reload: () -> Void = { [weak self] in
+                    self?.reloadConditionPanel()
+                }
+                zip(items.0, items.1).forEach({ (e) in
+                    let (item, nodes) = e
+                    item.onClick = self.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
+                })
+                self.filterConditions = items.0
+                self.reloadConditionPanel()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func initSearchConditionItemPanel(
+        reload: @escaping () -> Void,
+        item: SearchConditionItem,
+        data: [Node]) -> (Int) -> Void {
+        return generatePanelProviderByItem(reload: reload, item: item, data: data)
+    }
+
+    func generatePanelProviderByItem(reload: @escaping () -> Void,
+                                     item: SearchConditionItem,
+                                     data: [Node]) -> (Int) -> Void {
+        switch item.itemId {
+        case 1:
+            return openConditionPanel(
+                state: self.conditionPanelState,
+                apply: constructAreaConditionPanel(nodes: data, self.closeConditionPanel { (index, nodes) in
+                    setConditionItemTypeByParser(
+                        item: item,
+                        reload: reload,
+                        parser: parseAreaConditionItemLabel)(nodes)
+                }))
+        case 2:
+            return openConditionPanel(
+                state: self.conditionPanelState,
+                apply: constructPriceListConditionPanel(nodes: data, self.closeConditionPanel { (index, nodes) in
+                    setConditionItemTypeByParser(
+                        item: item,
+                        reload: reload,
+                        parser: parsePriceConditionItemLabel)(nodes)
+                }))
+        case 3:
+            return openConditionPanel(
+                state: self.conditionPanelState,
+                apply: constructBubbleSelectCollectionPanel(nodes: data, self.closeConditionPanel { (index, nodes) in
+                    setConditionItemTypeByParser(
+                        item: item,
+                        reload: reload,
+                        parser: parseHorseTypeConditionItemLabel)(nodes)
+                }))
+        default:
+            return openConditionPanel(
+                state: self.conditionPanelState,
+                apply: constructBubbleSelectCollectionPanel(nodes: data, self.closeConditionPanel { (index, nodes) in
+                    setConditionItemTypeByParser(
+                        item: item,
+                        reload: reload,
+                        parser: parseHorseTypeConditionItemLabel)(nodes)
+                }))
+        }
     }
 
     override func didReceiveMemoryWarning() {

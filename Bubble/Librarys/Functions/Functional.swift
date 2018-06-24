@@ -8,6 +8,11 @@
 
 import Foundation
 
+precedencegroup SequencePrecedence {
+    associativity: left
+    higherThan: AdditionPrecedence
+}
+
 public func memoize<T: Hashable, U>(body: @escaping (T) -> U) -> (T) -> U {
     var memo: [T: U] = [:]
     return { x in
