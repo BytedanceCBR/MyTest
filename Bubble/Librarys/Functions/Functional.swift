@@ -16,7 +16,9 @@ precedencegroup SequencePrecedence {
 public func memoize<T: Hashable, U>(body: @escaping (T) -> U) -> (T) -> U {
     var memo: [T: U] = [:]
     return { x in
-        if let q = memo[x] { return q }
+        if let q = memo[x] {
+            return q
+        }
         let r = body(x)
         memo[x] = r
         return r
@@ -24,7 +26,8 @@ public func memoize<T: Hashable, U>(body: @escaping (T) -> U) -> (T) -> U {
 }
 
 public typealias VoidCallback = () -> Void
-public func once(callback:@escaping VoidCallback, overExcuted: (() -> Void)? = nil) -> VoidCallback {
+
+public func once(callback: @escaping VoidCallback, overExcuted: (() -> Void)? = nil) -> VoidCallback {
     var excuted = false
     return {
         if !excuted {
@@ -38,10 +41,10 @@ public func once(callback:@escaping VoidCallback, overExcuted: (() -> Void)? = n
 
 public func fetchObjProperties(obj: Any) -> [(label: String?, value: Any)] {
     let properties = Mirror(reflecting: obj)
-        .children
-        .reduce([]) { (result, value) -> [(label: String?, value: Any)] in
-            return result + [(value.label?.replacingOccurrences(of: ".storage", with: ""), value.value)]
-        }
+            .children
+            .reduce([]) { (result, value) -> [(label: String?, value: Any)] in
+        return result + [(value.label?.replacingOccurrences(of: ".storage", with: ""), value.value)]
+    }
     return properties
 }
 
@@ -60,10 +63,23 @@ public func convertNSDict2Dict(source: NSDictionary) -> [AnyHashable: Any]? {
 public func iterateEnum<T: Hashable>(_: T.Type) -> AnyIterator<T> {
     var i = 0
     return AnyIterator {
-        let next = withUnsafeBytes(of: &i) { $0.load(as: T.self) }
-        if next.hashValue != i { return nil }
+        let next = withUnsafeBytes(of: &i) {
+            $0.load(as: T.self)
+        }
+        if next.hashValue != i {
+            return nil
+        }
         i += 1
         return next
+    }
+}
+
+func join(_ tokens: [String], withStr: String) -> String {
+    guard let (head, tail) = tokens.slice.decomposed else {
+        return tokens.first ?? ""
+    }
+    return tail.reduce(head) { (result, item) -> String in
+        "\(result)&\(item)"
     }
 }
 
@@ -81,7 +97,7 @@ extension ArraySlice {
 }
 
 extension Array {
-    public var decompose : (head: Element, tail: [Element])? {
+    public var decompose: (head: Element, tail: [Element])? {
         return isEmpty ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -90,5 +106,8 @@ extension Array {
 /// with generics in the compiler.
 public class Boxa<T> {
     public let unbox: T
-    public init(_ value: T) { self.unbox = value }
+
+    public init(_ value: T) {
+        self.unbox = value
+    }
 }

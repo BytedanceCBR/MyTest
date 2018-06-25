@@ -126,3 +126,52 @@ struct HouseRecommendResponse: Mappable {
 
 }
 
+struct HouseRecommendSection: Mappable {
+
+    var title: String?
+    var link: String?
+    var items: [HouseItemEntity]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        title <- map["title"]
+        link <- map["link"]
+        items <- map["items"]
+    }
+}
+
+struct HouseRecommendData: Mappable {
+
+    var items: [HouseRecommendSection]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        items <- map["items"]
+    }
+
+}
+
+struct HouseRecommendResponse1: Mappable {
+
+    var data: HouseRecommendData?
+    var message: String?
+    var status: Int?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        data <- map["data"]
+        message <- map["message"]
+        status <- map["status"]
+    }
+
+}
+

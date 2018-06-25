@@ -55,6 +55,12 @@ class SearchNavBar: UIView {
         return btn
     }()
 
+    lazy var searchAreaBtn: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = UIColor.clear
+        return btn
+    }()
+
     lazy var searchAreaPanel: UIView = {
         let result = UIView()
         result.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
@@ -77,6 +83,12 @@ class SearchNavBar: UIView {
         result.font = CommonUIStyle.Font.pingFangRegular(14)
         return result
     }()
+
+    var searchable = false {
+        didSet {
+            searchAreaBtn.isHidden = searchable
+        }
+    }
 
     init() {
         super.init(frame: CGRect.zero)
@@ -108,6 +120,11 @@ class SearchNavBar: UIView {
             maker.top.equalToSuperview().offset(5)
             maker.bottom.equalToSuperview().offset(-3)
             maker.height.equalTo(20)
+        }
+
+        searchAreaPanel.addSubview(searchAreaBtn)
+        searchAreaBtn.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
         }
     }
 

@@ -30,6 +30,16 @@ func parsePriceConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
     return .noCondition("总价")
 }
 
+func parsePriceSearchCondition(nodePath: [Node]) -> (String) -> String {
+    return {
+        if let first = nodePath.first {
+            return "\($0)&\(first.externalConfig)"
+        } else {
+            return $0
+        }
+    }
+}
+
 class PriceListFilterPanel: UIView {
 
     var dataSource: PriceListTableViewDataSource

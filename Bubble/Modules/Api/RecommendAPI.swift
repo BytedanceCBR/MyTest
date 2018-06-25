@@ -8,22 +8,53 @@ import RxSwift
 import TTNetworkManager
 import ObjectMapper
 
-func requestHouseRecommend() -> Observable<HouseRecommendResponse?> {
+func requestHouseRecommend() -> Observable<HouseRecommendResponse1?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "http://m.quduzixun.com/api/ershoufang/recommend?city_id=133",
+                    url: "http://m.quduzixun.com/f100/api/recommend",
                     params: ["city_id": "133"],
                     method: "GET",
-                    needCommonParams: false)
+                    needCommonParams: true)
             .map({ (data) -> NSString? in
-                NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                let result = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                return result
             })
-            .map({ (payload) -> HouseRecommendResponse? in
+            .map({ (payload) -> HouseRecommendResponse1? in
                 if let payload = payload {
-                    let response = HouseRecommendResponse(JSONString: payload as String)
+                    let response = HouseRecommendResponse1(JSONString: payload as String)
                     return response
                 } else {
                     return nil
                 }
             })
+}
+
+func requestSuggestion(
+        cityId: Int,
+        horseType: Int,
+        query: String? = nil) -> Observable<SuggestionResponse?> {
+    var params: [String : Any] = [
+            "city_id": cityId,
+            "house_type": horseType,
+            "source": "app"]
+    if let query = query {
+        params["query"] = query
+    }
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: "http://m.quduzixun.com/f100/api/get_suggestion",
+            params: params,
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> SuggestionResponse? in
+            if let payload = payload {
+                let response = SuggestionResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
 }

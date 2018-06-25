@@ -17,7 +17,7 @@ class HomePageSearchPanel: UIView {
         label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = hexStringToUIColor(hex: "#505050")
         label.numberOfLines = 1
-        label.text = "秦皇岛"
+        label.text = ""
         return label
     }()
 

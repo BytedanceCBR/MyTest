@@ -64,8 +64,9 @@ class HomeViewController: UIViewController, UITableViewDelegate {
         self.tableView = UITableView()
         super.viewDidLoad()
         requestHouseRecommend()
+            .debug()
             .subscribe(onNext: { [unowned self] response in
-                if let data = response?.data {
+                if let data = response?.data?.items {
                     self.dataSource.onDataArrived(datas: data)
                     self.tableView.reloadData()
                 }

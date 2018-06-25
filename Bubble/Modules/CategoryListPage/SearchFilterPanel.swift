@@ -190,12 +190,57 @@ func transferSearchConfigFilterItemTo(_ configFilter: SearchConfigFilterItem) ->
         label: configFilter.text ?? "")
 }
 
-func transferSearchConfigOptionToNode(options: [SearchConfigOption]) -> [Node] {
+func transferSearchConfigOptionToNode(options: [SearchConfigOption], isSupportMulti: Bool) -> [Node] {
     return options.map({ (option) -> Node in
+        /// 服务器的格式设计造成这里只能在一遇到标记为可以多选后，则将其所有子节点都理解为可以多选。
+        let theIsSupportMulti = option.supportMulti ?? false || isSupportMulti
+        let externalConfig = option.getOptionValueString(supportMulti: theIsSupportMulti)
         return Node(
             id: option.text ?? "",
             label: option.text ?? "",
-            externalConfig: "",
-            children: transferSearchConfigOptionToNode(options: option.options ?? []))
+            externalConfig: externalConfig,
+            isSupportMulti: theIsSupportMulti,
+            children: transferSearchConfigOptionToNode(options: option.options ?? [], isSupportMulti: theIsSupportMulti))
     })
+}
+
+extension SearchConfigOption {
+
+    func getOptionValueString(supportMulti: Bool) -> String {
+        guard let type = self.type else {
+            return ""
+        }
+
+        if supportMulti == true {
+            return "\(type)[]=\(self.value)"
+        } else {
+            return "\(type)=\(self.value)"
+        }
+    }
+//
+//    func getOptionValueString(supportMulti: Bool) -> String {
+//        guard let type = self.type else {
+//            return ""
+//        }
+//        if supportMulti == true {
+//            if let theValue = value as? Array<Any> {
+//                if let (head, tail) = theValue.slice.decomposed {
+//                    return "\(type)[]=" + tail.reduce("[\(head)") { (result, obj) -> String in
+//                            result + ",\(obj)"
+//                        } + "]"
+//                }
+//            }
+//            return "\(type)[]=\(value)"
+//        } else {
+//            if let theValue = value as? Array<Any>, let type = self.type {
+//                if let (head, tail) = theValue.slice.decomposed {
+//                    return tail.reduce("\(type)[]=\(head)") { (result, obj) -> String in
+//                        result + "&\(type)[]=\(obj)"
+//                    }
+//                }
+//            }
+//            return supportMulti ? "\(type)[]=\(value)" : "\(type)=\(value)"
+//        }
+//
+//    }
 }

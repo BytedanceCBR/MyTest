@@ -14,7 +14,8 @@ import RxCocoa
 func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
         if let container = container {
-            let panel = BubbleSelectCollectionView(nodes: nodes)
+            let inputs: [Node] = [Node(id: "", label: "户型选择", externalConfig: "", isSupportMulti: true, children: nodes)]
+            let panel = BubbleSelectCollectionView(nodes: inputs)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
@@ -34,6 +35,48 @@ func parseHorseTypeConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
         return .condition(nodePath.first!.label)
     } else {
         return .noCondition("户型")
+    }
+}
+
+func parseHorseTypeSearchCondition(nodePath: [Node]) -> (String) -> String {
+    return { query in
+        if let (head, tail) = nodePath.slice.decomposed {
+            let content = tail.reduce(head.externalConfig, { (result, node) -> String in
+                "\(result)&\(node.externalConfig)"
+            })
+            return "\(query)&\(content)"
+        } else {
+            if let externalConfig = nodePath.first?.externalConfig {
+                return "\(query)&\(externalConfig)"
+            } else {
+                return query
+            }
+        }
+    }
+}
+
+func constructMoreSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+    return { (index, container) in
+        if let container = container {
+            let panel = BubbleSelectCollectionView(nodes: nodes)
+            container.addSubview(panel)
+            panel.snp.makeConstraints { maker in
+                maker.left.right.top.bottom.equalToSuperview()
+            }
+            panel.didSelect = { nodes in
+                action(index, nodes)
+            }
+        }
+    }
+}
+
+func parseMoreConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+    if nodePath.count > 1 {
+        return .condition("更多 (多选)")
+    } else if nodePath.count == 1 {
+        return .condition(nodePath.first!.label)
+    } else {
+        return .noCondition("更多")
     }
 }
 
@@ -139,6 +182,13 @@ class BubbleSelectCollectionView: UIView {
                     self.didSelect?(self.dataSource.selectedNodes())
                 })
                 .disposed(by: disposeBag)
+
+        clearBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    self.dataSource.selectedIndexPaths = []
+                    self.didSelect?([])
+                })
+                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -179,6 +229,11 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        if nodes[indexPath.section].isSupportMulti != true {
+            selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+        }
+
         if !selectedIndexPaths.contains(indexPath) {
             selectedIndexPaths.insert(indexPath)
         } else {
@@ -200,7 +255,9 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     }
 
     func selectedNodes() -> [Node] {
-        return selectedIndexPaths.map { nodes[$0.section].children[$0.row] }
+        return selectedIndexPaths.map {
+            nodes[$0.section].children[$0.row]
+        }
     }
 }
 
@@ -295,12 +352,12 @@ fileprivate class BubbleCollectionSectionHeader: UICollectionReusableView {
     }
 }
 
-fileprivate func mockup() -> [Node] {
-    let children = [Node(id: "", label: "一居", externalConfig: ""),
-                    Node(id: "", label: "二居", externalConfig: ""),
-                    Node(id: "", label: "二居", externalConfig: ""),
-                    Node(id: "", label: "二居", externalConfig: ""),
-                    Node(id: "", label: "二居", externalConfig: ""),
-                    Node(id: "", label: "五居及以上", externalConfig: "")]
-    return [Node(id: "", label: "户型选择", externalConfig: "", children: children)]
-}
+//fileprivate func mockup() -> [Node] {
+//    let children = [Node(id: "", label: "一居", externalConfig: ""),
+//                    Node(id: "", label: "二居", externalConfig: ""),
+//                    Node(id: "", label: "二居", externalConfig: ""),
+//                    Node(id: "", label: "二居", externalConfig: ""),
+//                    Node(id: "", label: "二居", externalConfig: ""),
+//                    Node(id: "", label: "五居及以上", externalConfig: "")]
+//    return [Node(id: "", label: "户型选择", externalConfig: "", children: children)]
+//}

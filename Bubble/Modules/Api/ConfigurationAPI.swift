@@ -14,7 +14,7 @@ import ObjectMapper
 func requestSearchConfig(cityId: String = "133") -> Observable<SearchConfigResponse?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "http://10.6.131.78:7881/api/search_config",
+                    url: "http://m.quduzixun.com/f100/api/search_config",
                     params: ["city_id": cityId],
                     method: "GET",
                     needCommonParams: false)

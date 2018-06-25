@@ -4,7 +4,8 @@
 //
 
 import Foundation
-
+import RxSwift
+import RxCocoa
 infix operator <|>: SequencePrecedence
 
 func <|>(l: ConditionAggregator, r: ConditionAggregator) -> ConditionAggregator {
@@ -15,23 +16,33 @@ class SearchAndConditionFilterViewModel {
 
     var conditions: [Int: ((String) -> String)] = [:]
 
-    init() {
+    let queryCondition = BehaviorRelay<String>(value: "")
 
+    var queryConditionAggregator = ConditionAggregator.monoid() {
+        didSet {
+            queryCondition.accept(getConditions())
+        }
+    }
+
+    init() {
     }
 
     func addCondition(index: Int, condition: @escaping (String) -> String) {
         conditions[index] = condition
+        queryCondition.accept(getConditions())
     }
 
     func removeCondition(index: Int) {
         conditions[index] = nil
+        queryCondition.accept(getConditions())
     }
 
     func getConditions() -> String {
-        return conditions
+        return (conditions
             .reduce(ConditionAggregator.monoid()) { (result, e) -> ConditionAggregator in
                 let (_, aggregator) = e
                 return result <|> ConditionAggregator(aggregator: aggregator)
-            }.aggregator("")
+            } <|> queryConditionAggregator).aggregator("")
     }
 }
+
