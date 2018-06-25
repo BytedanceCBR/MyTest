@@ -11,8 +11,8 @@ import SnapKit
 
 func constructPriceListConditionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
-        if let container = container {
-            let panel = PriceListFilterPanel(nodes: nodes)
+        if let container = container, let node = nodes.first {
+            let panel = PriceListFilterPanel(nodes: node.children)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()

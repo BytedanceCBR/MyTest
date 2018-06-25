@@ -14,8 +14,7 @@ import RxCocoa
 func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     return { (index, container) in
         if let container = container {
-            let inputs: [Node] = [Node(id: "", label: "户型选择", externalConfig: "", isSupportMulti: true, children: nodes)]
-            let panel = BubbleSelectCollectionView(nodes: inputs)
+            let panel = BubbleSelectCollectionView(nodes: nodes)
             container.addSubview(panel)
             panel.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()

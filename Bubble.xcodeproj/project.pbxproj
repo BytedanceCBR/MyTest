@@ -42,6 +42,7 @@
 		B334EDD220CE9CC50052CF44 /* Curry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCF20CE9CC40052CF44 /* Curry.swift */; };
 		B33FEBCC20CFA260008556DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33FEBCB20CFA260008556DC /* Images.xcassets */; };
 		B34EB4E320E100A300301676 /* CategoryListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB4E220E100A300301676 /* CategoryListDataSource.swift */; };
+		B34EB4E520E1068A00301676 /* ConfigEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34EB4E420E1068A00301676 /* ConfigEntities.swift */; };
 		B358722120D36200002624DE /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B358722020D36200002624DE /* HomePageSearchPanel.swift */; };
 		B3B0861820C923D100483971 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B0861720C923D100483971 /* AppDelegate.swift */; };
 		B3B0861A20C923D100483971 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B0861920C923D100483971 /* ViewController.swift */; };
@@ -123,6 +124,7 @@
 		B334EDCF20CE9CC40052CF44 /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		B33FEBCB20CFA260008556DC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B34EB4E220E100A300301676 /* CategoryListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListDataSource.swift; sourceTree = "<group>"; };
+		B34EB4E420E1068A00301676 /* ConfigEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigEntities.swift; sourceTree = "<group>"; };
 		B358722020D36200002624DE /* HomePageSearchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageSearchPanel.swift; sourceTree = "<group>"; };
 		B3B0861420C923D100483971 /* Bubble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bubble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3B0861720C923D100483971 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				1A216DC5BE7C703E4FB4F127 /* HouseItemEntity.swift */,
 				B3C19B8E20DCC612001666CA /* SearchEntities.swift */,
 				B3E7EFA620E093070068CDDB /* SuggestionEntities.swift */,
+				B34EB4E420E1068A00301676 /* ConfigEntities.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				B32BCB3C20D00CFE0004A8D6 /* MultiImageInfoCell.swift in Sources */,
 				B3B0861820C923D100483971 /* AppDelegate.swift in Sources */,
 				B3305FE320D3B86B00A47C8C /* SimpleNavBar.swift in Sources */,
+				B34EB4E520E1068A00301676 /* ConfigEntities.swift in Sources */,
 				B3F7AD8B20D26306002638EA /* CommonUIStyle.swift in Sources */,
 				B358722120D36200002624DE /* HomePageSearchPanel.swift in Sources */,
 				B32BCB3120CFD15C0004A8D6 /* SearchTextField.swift in Sources */,
