@@ -8,20 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-#if __has_include("TTNetworkManager.h")
-
-#import "TTHTTPResponseSerializerProtocol.h"
-#import "TTHTTPResponseSerializerBase.h"
-
-@interface TTJSONResponseSerializer : TTHTTPJSONResponseSerializerBase
-
-@end
-
-@interface TTResponseModelResponseSerializer : TTJSONResponseSerializer<TTResponseModelResponseSerializerProtocol>
-
-@end
-
-@interface TTBinaryResponseSerializer : NSObject<TTBinaryResponseSerializerProtocol>
-
-@end
-#endif
+//#if __has_include("TTNetworkManager.h")
+//
+//#import "TTHTTPResponseSerializerProtocol.h"
+//#import "TTHTTPResponseSerializerBase.h"
+//
+//@interface TTJSONResponseSerializer : TTHTTPJSONResponseSerializerBase
+//
+//@end
+//
+//@interface TTResponseModelResponseSerializer : TTJSONResponseSerializer<TTResponseModelResponseSerializerProtocol>
+//
+//@end
+//
+//@interface TTBinaryResponseSerializer : NSObject<TTBinaryResponseSerializerProtocol>
+//
+//@end
+//#endif

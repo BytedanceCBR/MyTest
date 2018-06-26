@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
    s.resource_bundles = {
      'BDStartUp' => ['BDStartUp/Assets/**/*.plist']
    }
-
+#  s.ios.library = 'TTNetworkManager'
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'TTKitchen'
+   s.dependency 'TTNetworkManager'
 end

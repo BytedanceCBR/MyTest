@@ -172,6 +172,10 @@ fileprivate class CityItemCell: UITableViewCell {
 
 }
 
+fileprivate class BubbleBtn: UIView {
+
+}
+
 fileprivate struct CountryListNode {
     let label: String
     let type: Int

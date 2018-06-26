@@ -12,76 +12,78 @@ platform :ios, '8.0'
 #use_frameworks!
 use_modular_headers!
 target 'Bubble' do
-  pod 'Bubble', :path => './'
-  pod 'BDStartUp', :path => './BDStartUp'
+    pod 'Bubble', :path => './'
+    pod 'BDStartUp', :path => './BDStartUp'
 
-  pod 'AFNetworking', '2.5.4'
-  
-  #owner  -> wusizhen.arch'
-  #sumary -> 获取用户首次安装后的一些信息，如installID、deviceID 
-  pod 'TTInstallService', '1.1.3.2'
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条网络 基础网络库 
-  pod 'TTNetworkManager', '2.2.8.35'
-  #owner  -> wusizhen.arch'
-  #sumary -> Reachability统一库，业务插件方接入 
-  pod 'TTReachability', '0.1.18'
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条推送SDK,用于上报一些数据 
-  pod 'TTPushSDK', '0.1.6'
-  #owner  -> fengyadong'
-  #sumary -> 头条共用日志监测和上报库 
-  pod 'TTTracker', '1.1.5'
-  #owner  -> wusizhen.arch'
-  #sumary -> TODO:,Add,long,description,of,the,pod,here. 
-  pod 'TTMonitor', '0.7.9.49'
-  #owner  -> wusizhen.arch'
-  #sumary -> 类似NSUserDefaults的key-value存储库，支持plist和keychain。 
-  pod 'TTPersistence', '0.2.3'
-  #owner  -> wusizhen.arch'
-  #sumary -> 基于GYDataCenter，封装了一个数据存储对象的基类，增加了keymapping，类型校验，数据库大小，版本升级等功能 
-  pod 'TTEntityBase', '0.2.3'
-  #owner  -> shengxuanwei'
-  #sumary -> [Foundation] 头条定位基础库 
-  pod 'TTLocationManager', '1.0.4'
-  #owner  -> jiangjingtao'
-  #sumary -> 新版账号库，实现了网络接口和流操作 
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条分享库。\n封装第三方分享SDK，提供一致的分享接口。 
-  #pod 'TTShare', '0.3.4'
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条分享关系服务头条分享关系服务 
-  #pod 'TTShareService', '0.6.19'
-  #owner  -> xiejunyi'
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条路由 
-  pod 'TTRoute', '0.2.26'
-  #owner  -> wusizhen.arch'
-  #sumary -> 头条通用Hybrid容器 
-  pod 'TTRexxar', '0.8.5'
+    pod 'AFNetworking', '2.5.4'
 
-  #owner  -> xiejunyi'
-  #sumary -> 头条iOS通用基础图片库
-  pod 'BDWebImage', '0.2.8'
+    #owner  -> wusizhen.arch'
+    #sumary -> 获取用户首次安装后的一些信息，如installID、deviceID
+    pod 'TTInstallService', '1.1.3.2'
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条网络 基础网络库
+    pod 'TTNetworkManager', '2.2.8.35'
+    #owner  -> wusizhen.arch'
+    #sumary -> Reachability统一库，业务插件方接入
+    pod 'TTReachability', '0.1.18'
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条推送SDK,用于上报一些数据
+    pod 'TTPushSDK', '0.1.6'
+    #owner  -> fengyadong'
+    #sumary -> 头条共用日志监测和上报库
+    pod 'TTTracker', '1.1.5'
+    #owner  -> wusizhen.arch'
+    #sumary -> TODO:,Add,long,description,of,the,pod,here.
+    pod 'TTMonitor', '0.7.9.49'
+    #owner  -> wusizhen.arch'
+    #sumary -> 类似NSUserDefaults的key-value存储库，支持plist和keychain。
+    pod 'TTPersistence', '0.2.3'
+    #owner  -> wusizhen.arch'
+    #sumary -> 基于GYDataCenter，封装了一个数据存储对象的基类，增加了keymapping，类型校验，数据库大小，版本升级等功能
+    pod 'TTEntityBase', '0.2.3'
+    #owner  -> shengxuanwei'
+    #sumary -> [Foundation] 头条定位基础库
+    pod 'TTLocationManager', '1.0.4'
+    #owner  -> jiangjingtao'
+    #sumary -> 新版账号库，实现了网络接口和流操作
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条分享库。\n封装第三方分享SDK，提供一致的分享接口。
+    #pod 'TTShare', '0.3.4'
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条分享关系服务头条分享关系服务
+    #pod 'TTShareService', '0.6.19'
+    #owner  -> xiejunyi'
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条路由
+    pod 'TTRoute', '0.2.26'
+    #owner  -> wusizhen.arch'
+    #sumary -> 头条通用Hybrid容器
+    pod 'TTRexxar', '0.8.5'
 
-  pod 'RxSwift', '4.1.2'
-  pod 'RxCocoa', '4.1.2'
-  pod 'SnapKit', '4.0.0'
-  pod 'Alamofire'
-  pod 'RxAlamofire'
-  pod 'SwiftyJSON', '4.1.0'
-  pod 'ObjectMapper'
-  pod 'Charts'
-  target 'BubbleTests' do
-    inherit! :search_paths
-  end
-  target 'BubbleUITests' do
-    inherit! :search_paths
-  end
+    #owner  -> xiejunyi'
+    #sumary -> 头条iOS通用基础图片库
+    pod 'BDWebImage', '0.2.8'
+
+    pod 'TTKitchen', '1.1.0'
+
+    pod 'RxSwift', '4.1.2'
+    pod 'RxCocoa', '4.1.2'
+    pod 'SnapKit', '4.0.0'
+    pod 'Alamofire'
+    pod 'RxAlamofire'
+    pod 'SwiftyJSON', '4.1.0'
+    pod 'ObjectMapper'
+    pod 'Charts'
+    target 'BubbleTests' do
+        inherit! :search_paths
+    end
+    target 'BubbleUITests' do
+        inherit! :search_paths
+    end
 end
 
 pre_install do |installer|
-   def installer.verify_no_static_framework_transitive_dependencies; end
+    def installer.verify_no_static_framework_transitive_dependencies; end
 end
 
 post_install do |installer|

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09B49520FF7713AEF2341EF0 /* libPods-BubbleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */; };
+		0E2C03148B3E3E86992423FE /* libPods-Bubble.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A006DF411BCE24E3C8A7EF /* libPods-Bubble.a */; };
 		1A21637FC67B71B83871A9CF /* SearchAndConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F7BE7186484D3355E53 /* SearchAndConditionFilterViewModel.swift */; };
 		1A21676BF4B7193D13E571AD /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21604F236DF6B1A9E7A0BE /* UIKitExtension.swift */; };
 		1A216AEFCB35585A93716DB0 /* SingleImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CFA010216AD68E9EC9B /* SingleImageInfoCell.swift */; };
@@ -14,9 +16,8 @@
 		1A216DBBE4F213478D3E7EEE /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216403CB05228192083299 /* AreaConditionFilterPanel.swift */; };
 		1A216DE3DCC6566E0FB15021 /* TextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216FC4BF82903F1D019906 /* TextParser.swift */; };
 		1A216F187BF07E239B635AEA /* RecommendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165B69D1D55D9155E2665 /* RecommendAPI.swift */; };
-		4B4464C9FA99D36770D9945D /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D916F4C9631A3DB92788BB /* libPods-BubbleUITests.a */; };
-		4DC673BF1C97DD850ACC397B /* libPods-BubbleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA01228B213AB2085CD68E8A /* libPods-BubbleTests.a */; };
-		543CAABAC80EF62E2E4F7A7F /* libPods-Bubble.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */; };
+		4C965404B90848550717BE6C /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855907E05A57AED40965764 /* libPods-BubbleUITests.a */; };
+		B30BBF8320E1E07B00B19E21 /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */; };
 		B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CC20CF68E800C1060D /* TabViewController.swift */; };
 		B311A1CF20CF6A8B00C1060D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CE20CF6A8B00C1060D /* HomeViewController.swift */; };
 		B325CCA320D28D5100F891C5 /* CategoryListPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */; };
@@ -97,8 +98,8 @@
 		1A216F7BE7186484D3355E53 /* SearchAndConditionFilterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAndConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		1A216FC4BF82903F1D019906 /* TextParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextParser.swift; sourceTree = "<group>"; };
 		22FB916E25E03D0F6C341524 /* Pods-Bubble.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bubble/Pods-Bubble.release.xcconfig"; sourceTree = "<group>"; };
-		69D916F4C9631A3DB92788BB /* libPods-BubbleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bubble.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTNetworkManager.a; path = Pods/TTNetworkManager/ios/libTTNetworkManager.a; sourceTree = "<group>"; };
 		B311A1CC20CF68E800C1060D /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		B311A1CE20CF6A8B00C1060D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B325CCA220D28D5100F891C5 /* CategoryListPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListPageVC.swift; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 		B3B0868320CE223F00483971 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B3B0868520CE225200483971 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		B3BF61CC20E205C800777F9A /* Bubble-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bubble-Bridging-Header.h"; sourceTree = "<group>"; };
 		B3C19B8A20DCBF30001666CA /* ConfigurationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAPI.swift; sourceTree = "<group>"; };
 		B3C19B8C20DCC0D4001666CA /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		B3C19B8E20DCC612001666CA /* SearchEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntities.swift; sourceTree = "<group>"; };
@@ -156,9 +158,10 @@
 		B3F7AD8320D23209002638EA /* HomeSpringBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B3F7AD8720D23849002638EA /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
 		B3F7AD8A20D26306002638EA /* CommonUIStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUIStyle.swift; sourceTree = "<group>"; };
+		B5A006DF411BCE24E3C8A7EF /* libPods-Bubble.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bubble.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3249B6D5FC7C0EEBA09BF5C /* Pods-BubbleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BubbleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BubbleUITests/Pods-BubbleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C602D11BF030C6AFD07C5548 /* Pods-BubbleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BubbleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BubbleTests/Pods-BubbleTests.release.xcconfig"; sourceTree = "<group>"; };
-		DA01228B213AB2085CD68E8A /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D855907E05A57AED40965764 /* libPods-BubbleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFBD24AA0D56A5029AB868E5 /* Pods-Bubble.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bubble/Pods-Bubble.debug.xcconfig"; sourceTree = "<group>"; };
 		E0274181446FB727BA102BD3 /* Pods-BubbleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BubbleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BubbleTests/Pods-BubbleTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -168,11 +171,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B30BBF8320E1E07B00B19E21 /* libTTNetworkManager.a in Frameworks */,
 				B3B0868820CE3C9F00483971 /* libstdc++.6.0.9.tbd in Frameworks */,
 				B3B0868620CE225300483971 /* Foundation.framework in Frameworks */,
 				B3B0868420CE223F00483971 /* UIKit.framework in Frameworks */,
 				B3B0868220CE223200483971 /* CoreGraphics.framework in Frameworks */,
-				543CAABAC80EF62E2E4F7A7F /* libPods-Bubble.a in Frameworks */,
+				0E2C03148B3E3E86992423FE /* libPods-Bubble.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,7 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DC673BF1C97DD850ACC397B /* libPods-BubbleTests.a in Frameworks */,
+				09B49520FF7713AEF2341EF0 /* libPods-BubbleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,7 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B4464C9FA99D36770D9945D /* libPods-BubbleUITests.a in Frameworks */,
+				4C965404B90848550717BE6C /* libPods-BubbleUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,13 +202,14 @@
 		52485118FEBA710BCC93845D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */,
 				B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */,
 				B3B0868520CE225200483971 /* Foundation.framework */,
 				B3B0868320CE223F00483971 /* UIKit.framework */,
 				B3B0868120CE223100483971 /* CoreGraphics.framework */,
-				6B53D24B8EDA8E2750A002D0 /* libPods-Bubble.a */,
-				DA01228B213AB2085CD68E8A /* libPods-BubbleTests.a */,
-				69D916F4C9631A3DB92788BB /* libPods-BubbleUITests.a */,
+				B5A006DF411BCE24E3C8A7EF /* libPods-Bubble.a */,
+				4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */,
+				D855907E05A57AED40965764 /* libPods-BubbleUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 		B3B0861620C923D100483971 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
+				B3BF61CC20E205C800777F9A /* Bubble-Bridging-Header.h */,
 				B311A1CB20CF68AF00C1060D /* Launch */,
 				B311A1C920CF689400C1060D /* Modules */,
 				B334EDCA20CE9CC40052CF44 /* Librarys */,
@@ -477,7 +483,7 @@
 				B3B0861020C923D100483971 /* Sources */,
 				B3B0861120C923D100483971 /* Frameworks */,
 				B3B0861220C923D100483971 /* Resources */,
-				A1F5380355CC9767D904C079 /* [CP] Copy Pods Resources */,
+				B1719088C211D3B8ED254518 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -615,7 +621,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A1F5380355CC9767D904C079 /* [CP] Copy Pods Resources */ = {
+		B1719088C211D3B8ED254518 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -896,12 +902,14 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(PROJECT_DIR)/Pods/TTNetworkManager/ios",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Bubble-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -918,12 +926,14 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(PROJECT_DIR)/Pods/TTNetworkManager/ios",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Bubble-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -938,11 +948,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				INFOPLIST_FILE = BubbleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -960,11 +966,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				INFOPLIST_FILE = BubbleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -981,11 +983,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				INFOPLIST_FILE = BubbleUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1002,11 +1000,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				INFOPLIST_FILE = BubbleUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

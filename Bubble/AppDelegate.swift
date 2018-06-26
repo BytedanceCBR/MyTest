@@ -9,6 +9,8 @@
 import UIKit
 import BDStartUp
 import TTNetworkManager
+import TTInstallService
+
 import RxSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -45,6 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rootNavController.viewControllers = [tabVC]
         window?.rootViewController = rootNavController
         window?.makeKeyAndVisible()
+        TTInstallIDManager.sharedInstance().appName;
+
         return true
     }
 

@@ -1,0 +1,286 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.3):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Alamofire (4.7.2)
+  - AMapSearch (3.0.1)
+  - BDStartUp (0.1.0):
+    - TTNetworkManager
+  - BDWebImage (0.2.8):
+    - BDWebImage/Core (= 0.2.8)
+    - BDWebImage/Decoder (= 0.2.8)
+    - BDWebImage/Download (= 0.2.8)
+  - BDWebImage/Core (0.2.8):
+    - YYCache
+  - BDWebImage/Decoder (0.2.8):
+    - BDWebImage/Core
+    - libwebp
+  - BDWebImage/Download (0.2.8):
+    - BDWebImage/Download/Chromium (= 0.2.8)
+    - BDWebImage/Download/DownloadBase (= 0.2.8)
+    - BDWebImage/Download/URLSession (= 0.2.8)
+  - BDWebImage/Download/Chromium (0.2.8):
+    - BDWebImage/Download/DownloadBase
+    - TTNetworkManager (< 3.0.0)
+  - BDWebImage/Download/DownloadBase (0.2.8):
+    - BDWebImage/Core
+  - BDWebImage/Download/URLSession (0.2.8):
+    - BDWebImage/Download/DownloadBase
+  - boringssl (0.0.7)
+  - Bubble (0.1.0)
+  - Charts (3.1.1):
+    - Charts/Core (= 3.1.1)
+  - Charts/Core (3.1.1)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - Godzippa (1.1.1)
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
+    - libwebp/webp
+  - libwebp/dec (0.6.1):
+    - libwebp/core
+  - libwebp/demux (0.6.1):
+    - libwebp/core
+  - libwebp/dsp (0.6.1):
+    - libwebp/core
+  - libwebp/enc (0.6.1):
+    - libwebp/core
+  - libwebp/mux (0.6.1):
+    - libwebp/core
+  - libwebp/utils (0.6.1):
+    - libwebp/core
+  - libwebp/webp (0.6.1)
+  - ObjectMapper (3.3.0)
+  - RxAlamofire (4.2.0):
+    - RxAlamofire/Core (= 4.2.0)
+  - RxAlamofire/Core (4.2.0):
+    - Alamofire (~> 4.5)
+    - RxSwift (~> 4)
+  - RxCocoa (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.1.2)
+  - SnapKit (4.0.0)
+  - SSZipArchive (1.6.3)
+  - SwiftyJSON (4.1.0)
+  - TTBaseLib (1.0.40):
+    - TTBaseLib/SSIndicatorTipsManager (= 1.0.40)
+    - TTBaseLib/TTBaseTool (= 1.0.40)
+    - TTBaseLib/TTBusinessManager (= 1.0.40)
+    - TTBaseLib/TTCategory (= 1.0.40)
+    - TTBaseLib/TTDeviceHelper (= 1.0.40)
+    - TTBaseLib/TTLabelTextHelper (= 1.0.40)
+    - TTBaseLib/TTNetworkHelper (= 1.0.40)
+    - TTBaseLib/TTRobust (= 1.0.40)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.40)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.40)
+  - TTBaseLib/SSIndicatorTipsManager (1.0.40)
+  - TTBaseLib/TTBaseTool (1.0.40)
+  - TTBaseLib/TTBusinessManager (1.0.40)
+  - TTBaseLib/TTCategory (1.0.40):
+    - TTBaseLib/TTBaseTool
+  - TTBaseLib/TTDeviceHelper (1.0.40)
+  - TTBaseLib/TTLabelTextHelper (1.0.40):
+    - TTBaseLib/TTBaseTool
+    - TTServiceKit
+  - TTBaseLib/TTNetworkHelper (1.0.40):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.40)
+  - TTBaseLib/TTSandBoxHelper (1.0.40)
+  - TTBaseLib/TTUIResponderHelper (1.0.40)
+  - TTEntityBase (0.2.3):
+    - FMDB (~> 2.6.2)
+  - TTInstallService (1.1.3.2):
+    - TTNetworkManager (>= 2.1.0)
+  - TTKitchen (1.1.0):
+    - TTKitchen/TTKitchen (= 1.1.0)
+  - TTKitchen/Core (1.1.0):
+    - YYCache
+  - TTKitchen/TTKitchen (1.1.0):
+    - TTKitchen/Core
+  - TTLocationManager (1.0.4):
+    - AMapSearch (= 3.0.1)
+    - TTBaseLib
+    - TTKitchen
+    - TTNetworkManager
+    - TTPlatformBaseLib/TTURLDomainHelper
+    - TTTracker
+  - TTMonitor (0.7.9.49):
+    - TTMonitor/BackTrace (= 0.7.9.49)
+    - TTMonitor/Monitor (= 0.7.9.49)
+  - TTMonitor/BackTrace (0.7.9.49)
+  - TTMonitor/Monitor (0.7.9.49):
+    - FMDB (~> 2.6.2)
+    - TTMonitor/BackTrace
+    - TTNetworkManager
+    - TTReachability
+  - TTNetworkManager (2.2.8.35):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+    - boringssl (~> 0.0.6)
+  - TTPersistence (0.2.3)
+  - TTPlatformBaseLib/TTURLDomainHelper (0.2.17):
+    - SSZipArchive (~> 1.6.2)
+  - TTPushSDK (0.1.6):
+    - TTNetworkManager
+    - TTTracker
+  - TTReachability (0.1.18)
+  - TTRexxar (0.8.5):
+    - SSZipArchive (~> 1.6.2)
+    - TTRexxar/Core (= 0.8.5)
+    - TTRexxar/WebView (= 0.8.5)
+  - TTRexxar/Core (0.8.5):
+    - SSZipArchive (~> 1.6.2)
+    - TTBaseLib
+  - TTRexxar/WebView (0.8.5):
+    - SSZipArchive (~> 1.6.2)
+    - TTRexxar/Core
+  - TTRoute (0.2.26)
+  - TTServiceKit (0.4.2)
+  - TTTracker (1.1.5):
+    - FMDB (~> 2.6.2)
+    - TTInstallService (>= 1.1.1)
+    - TTNetworkManager (>= 2.1.0)
+  - YYCache (1.0.4)
+
+DEPENDENCIES:
+  - AFNetworking (= 2.5.4)
+  - Alamofire
+  - BDStartUp (from `./BDStartUp`)
+  - BDWebImage (= 0.2.8)
+  - Bubble (from `./`)
+  - Charts
+  - ObjectMapper
+  - RxAlamofire
+  - RxCocoa (= 4.1.2)
+  - RxSwift (= 4.1.2)
+  - SnapKit (= 4.0.0)
+  - SwiftyJSON (= 4.1.0)
+  - TTEntityBase (= 0.2.3)
+  - TTInstallService (= 1.1.3.2)
+  - TTKitchen (= 1.1.0)
+  - TTLocationManager (= 1.0.4)
+  - TTMonitor (= 0.7.9.49)
+  - TTNetworkManager (= 2.2.8.35)
+  - TTPersistence (= 0.2.3)
+  - TTPushSDK (= 0.1.6)
+  - TTReachability (= 0.1.18)
+  - TTRexxar (= 0.8.5)
+  - TTRoute (= 0.2.26)
+  - TTTracker (= 1.1.5)
+
+SPEC REPOS:
+  "git@code.byted.org:iOS_Library/privatethird_source_repo.git":
+    - TTMonitor
+  "git@code.byted.org:iOS_Library/publicthird_source_repo.git":
+    - AFgzipRequestSerializer
+    - AFNetworking
+    - Godzippa
+    - SSZipArchive
+  "git@code.byted.org:iOS_Library/toutiao_source_repo.git":
+    - BDWebImage
+    - boringssl
+    - TTBaseLib
+    - TTEntityBase
+    - TTInstallService
+    - TTKitchen
+    - TTLocationManager
+    - TTNetworkManager
+    - TTPersistence
+    - TTPlatformBaseLib
+    - TTPushSDK
+    - TTReachability
+    - TTRexxar
+    - TTRoute
+    - TTServiceKit
+    - TTTracker
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - Alamofire
+    - AMapSearch
+    - Charts
+    - FMDB
+    - libwebp
+    - ObjectMapper
+    - RxAlamofire
+    - RxCocoa
+    - RxSwift
+    - SnapKit
+    - SwiftyJSON
+    - YYCache
+
+EXTERNAL SOURCES:
+  BDStartUp:
+    :path: "./BDStartUp"
+  Bubble:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  AMapSearch: 431b082417bd3da0c2fe594c4822b664607891e9
+  BDStartUp: 1929c387ad483e096af12298445926f209accc69
+  BDWebImage: 177a48554fbd96b7cfecaab4d92633df7b694425
+  boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  Bubble: 6370a0e64e32c3d044a43a14cdb5405cd0dad032
+  Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  Godzippa: 54259e93b2191bbec6b6a8ddd2c070a5f32971b4
+  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
+  ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  RxAlamofire: 87a9c588541210cc3e4a1f843ccc3ecf3eb98b31
+  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
+  RxSwift: e49536837d9901277638493ea537394d4b55f570
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  SSZipArchive: 896def204e56339f9bf6d40903b45f3a1c1bfd69
+  SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
+  TTBaseLib: 3be7553e4e808528e76c520c1bbc01b08ba725fa
+  TTEntityBase: 44bda9a5bad8f345e99547a699b1166313999334
+  TTInstallService: 56d3bfecc1ec4969713b5277b9b6b9101183bac2
+  TTKitchen: cc5750842de67c4799ca13c1c1a116b3627d3361
+  TTLocationManager: af29a9eae4b082bc2ff854ae09a7d516e0b6d467
+  TTMonitor: 3910d55ce2c145e0739b1030560a93f3ce98d532
+  TTNetworkManager: adedd4089c4c8d9c8f83c6cec5ca03e1f4060aba
+  TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
+  TTPlatformBaseLib: a4eee2486b6153a0c33d6e2e3d5ce71a7ec66a9f
+  TTPushSDK: 92d13036ceb8e69bbb3f30081508baa0135c3b78
+  TTReachability: 1b403aa8792dff3aa6228bd827633f5b99ef06ce
+  TTRexxar: e572968808f232015f31c82e0ccb51d39df12865
+  TTRoute: fe51b326a5485b8fe625238cc09c17eed3dda91d
+  TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
+  TTTracker: c01b9f82b795a4a83fd904c63e7283587a452d13
+  YYCache: 8105b6638f5e849296c71f331ff83891a4942952
+
+PODFILE CHECKSUM: 2df6a6710189adf7518173006e8e53a89515a182
+
+COCOAPODS: 1.5.3
