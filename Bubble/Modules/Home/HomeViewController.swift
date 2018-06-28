@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class HomeViewController: UIViewController, UITableViewDelegate {
+class HomeViewController: BaseViewController, UITableViewDelegate {
 
     private var tableView: UITableView!
 

@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 import Charts
-class HorseDetailPageVC: UIViewController {
+class HorseDetailPageVC: BaseViewController {
 
     lazy var slidePageViewPanel: SlidePageViewPanel = {
         SlidePageViewPanel()

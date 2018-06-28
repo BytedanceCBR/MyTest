@@ -17,7 +17,7 @@ fileprivate enum CellType: String {
     case item = "item"
 }
 
-class CountryListVC: UIViewController {
+class CountryListVC: BaseViewController {
 
     lazy private var searchConfigCache: YYCache? = {
         YYCache(name: "countryListHistory")
@@ -116,7 +116,6 @@ class CountryListVC: UIViewController {
                 .debounce(0.3, scheduler: MainScheduler.instance)
                 // 过滤输入法的不可见字符
                 .map { $0?.filter { $0 != " " }.lowercased() }
-                .debug("searchInput")
                 .subscribe(onNext: { [unowned self] s in
                     self.dataSource.setFilterCondition(filterStr: s)
                     self.tableView.reloadData()

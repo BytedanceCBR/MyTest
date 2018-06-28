@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class SuggestionListVC: UIViewController {
+class SuggestionListVC: BaseViewController {
 
     lazy var navBar: SearchNavBar = {
         let result = SearchNavBar()
