@@ -126,7 +126,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             if let query = query {
                 self.highlighted = query
                 requestSuggestion(cityId: 133, horseType: 2, query: query)
-                        //                        .throttle(0.4, scheduler: MainScheduler.instance)
+                        .debug()
                         .subscribe(onNext: { [unowned self] (responsed) in
                             if let responseData = responsed?.data {
                                 self.suggestions = responseData

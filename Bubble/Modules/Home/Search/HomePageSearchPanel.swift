@@ -12,6 +12,8 @@ import SnapKit
 
 class HomePageSearchPanel: UIView {
 
+    var isHighlighted = false
+
     lazy var countryLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.font = CommonUIStyle.Font.pingFangRegular(14)
@@ -59,7 +61,8 @@ class HomePageSearchPanel: UIView {
         return label
     }()
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, isHighlighted: Bool = false) {
+        self.isHighlighted = isHighlighted
         super.init(frame: frame)
         setPanelStyle()
         setupCountryLabel()
@@ -72,11 +75,11 @@ class HomePageSearchPanel: UIView {
     }
 
     private func setPanelStyle() {
-        self.backgroundColor = UIColor.white
-        self.layer.shadowRadius = 4
-        self.layer.shadowColor = hexStringToUIColor(hex: "#000000").cgColor
-        self.layer.shadowOffset = CGSize(width: 0, height: 4)
-        self.layer.shadowOpacity = 0.06
+        if isHighlighted {
+            self.backgroundColor = hexStringToUIColor(hex: "#e8e8e8")
+        } else {
+            self.backgroundColor = UIColor.white
+        }
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 4
     }
@@ -139,4 +142,8 @@ class HomePageSearchPanel: UIView {
             maker.top.bottom.right.equalToSuperview()
         }
     }
+}
+
+class CategorySearchNavPanel: HomePageSearchPanel {
+    
 }

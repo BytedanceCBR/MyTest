@@ -17,13 +17,13 @@
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
 #if __has_include("TTNetworkManager.h")
-//    [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
-//
-//    //初始化代码
-//    [TTNetworkManager shareInstance].defaultJSONResponseSerializerClass = NSClassFromString(@"TTJSONResponseSerializer");
-//    [TTNetworkManager shareInstance].defaultResponseModelResponseSerializerClass = NSClassFromString(@"TTResponseModelResponseSerializer");
-//    [TTNetworkManager shareInstance].defaultBinaryResponseSerializerClass = NSClassFromString(@"TTBinaryResponseSerializer");
-//    [[TTNetworkManager shareInstance] start];
+    [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
+
+    //初始化代码
+    [TTNetworkManager shareInstance].defaultJSONResponseSerializerClass = NSClassFromString(@"TTJSONResponseSerializer");
+    [TTNetworkManager shareInstance].defaultResponseModelResponseSerializerClass = NSClassFromString(@"TTResponseModelResponseSerializer");
+    [TTNetworkManager shareInstance].defaultBinaryResponseSerializerClass = NSClassFromString(@"TTBinaryResponseSerializer");
+    [[TTNetworkManager shareInstance] start];
 #endif
 }
 

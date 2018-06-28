@@ -44,5 +44,9 @@ class SearchAndConditionFilterViewModel {
                 return result <|> ConditionAggregator(aggregator: aggregator)
             } <|> queryConditionAggregator).aggregator("")
     }
+
+    func sendSearchRequest() {
+        queryCondition.accept(getConditions())
+    }
 }
 

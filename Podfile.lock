@@ -24,7 +24,13 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Alamofire (4.7.2)
-  - AMapSearch (3.0.1)
+  - AMap3DMap (6.3.0):
+    - AMapFoundation (~> 1.5)
+  - AMapFoundation (1.5.3)
+  - AMapLocation (2.6.0):
+    - AMapFoundation (~> 1.4)
+  - AMapSearch (6.1.1):
+    - AMapFoundation (~> 1.4)
   - BDStartUp (0.1.0):
     - TTNetworkManager
   - BDWebImage (0.2.8):
@@ -127,13 +133,6 @@ PODS:
     - YYCache
   - TTKitchen/TTKitchen (1.1.0):
     - TTKitchen/Core
-  - TTLocationManager (1.0.4):
-    - AMapSearch (= 3.0.1)
-    - TTBaseLib
-    - TTKitchen
-    - TTNetworkManager
-    - TTPlatformBaseLib/TTURLDomainHelper
-    - TTTracker
   - TTMonitor (0.7.9.49):
     - TTMonitor/BackTrace (= 0.7.9.49)
     - TTMonitor/Monitor (= 0.7.9.49)
@@ -148,8 +147,6 @@ PODS:
     - AFNetworking (~> 2.5.1)
     - boringssl (~> 0.0.6)
   - TTPersistence (0.2.3)
-  - TTPlatformBaseLib/TTURLDomainHelper (0.2.17):
-    - SSZipArchive (~> 1.6.2)
   - TTPushSDK (0.1.6):
     - TTNetworkManager
     - TTTracker
@@ -175,6 +172,9 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (= 2.5.4)
   - Alamofire
+  - AMap3DMap
+  - AMapLocation
+  - AMapSearch
   - BDStartUp (from `./BDStartUp`)
   - BDWebImage (= 0.2.8)
   - Bubble (from `./`)
@@ -188,7 +188,6 @@ DEPENDENCIES:
   - TTEntityBase (= 0.2.3)
   - TTInstallService (= 1.1.3.2)
   - TTKitchen (= 1.1.0)
-  - TTLocationManager (= 1.0.4)
   - TTMonitor (= 0.7.9.49)
   - TTNetworkManager (= 2.2.8.35)
   - TTPersistence (= 0.2.3)
@@ -213,10 +212,8 @@ SPEC REPOS:
     - TTEntityBase
     - TTInstallService
     - TTKitchen
-    - TTLocationManager
     - TTNetworkManager
     - TTPersistence
-    - TTPlatformBaseLib
     - TTPushSDK
     - TTReachability
     - TTRexxar
@@ -226,6 +223,9 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
     - Alamofire
+    - AMap3DMap
+    - AMapFoundation
+    - AMapLocation
     - AMapSearch
     - Charts
     - FMDB
@@ -248,7 +248,10 @@ SPEC CHECKSUMS:
   AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
-  AMapSearch: 431b082417bd3da0c2fe594c4822b664607891e9
+  AMap3DMap: 1bb48f98ecb46682f145881692e7b06adcd06a93
+  AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
+  AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
+  AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
   BDStartUp: 1929c387ad483e096af12298445926f209accc69
   BDWebImage: 177a48554fbd96b7cfecaab4d92633df7b694425
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
@@ -268,11 +271,9 @@ SPEC CHECKSUMS:
   TTEntityBase: 44bda9a5bad8f345e99547a699b1166313999334
   TTInstallService: 56d3bfecc1ec4969713b5277b9b6b9101183bac2
   TTKitchen: cc5750842de67c4799ca13c1c1a116b3627d3361
-  TTLocationManager: af29a9eae4b082bc2ff854ae09a7d516e0b6d467
   TTMonitor: 3910d55ce2c145e0739b1030560a93f3ce98d532
   TTNetworkManager: adedd4089c4c8d9c8f83c6cec5ca03e1f4060aba
   TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
-  TTPlatformBaseLib: a4eee2486b6153a0c33d6e2e3d5ce71a7ec66a9f
   TTPushSDK: 92d13036ceb8e69bbb3f30081508baa0135c3b78
   TTReachability: 1b403aa8792dff3aa6228bd827633f5b99ef06ce
   TTRexxar: e572968808f232015f31c82e0ccb51d39df12865
@@ -281,6 +282,6 @@ SPEC CHECKSUMS:
   TTTracker: c01b9f82b795a4a83fd904c63e7283587a452d13
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
 
-PODFILE CHECKSUM: 2df6a6710189adf7518173006e8e53a89515a182
+PODFILE CHECKSUM: 42f5de97dce87a6d802165bf05d2ee4ff1bb292b
 
 COCOAPODS: 1.5.3

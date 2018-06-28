@@ -43,7 +43,7 @@ target 'Bubble' do
     pod 'TTEntityBase', '0.2.3'
     #owner  -> shengxuanwei'
     #sumary -> [Foundation] 头条定位基础库
-    pod 'TTLocationManager', '1.0.4'
+#    pod 'TTLocationManager', '1.0.4'
     #owner  -> jiangjingtao'
     #sumary -> 新版账号库，实现了网络接口和流操作
     #owner  -> wusizhen.arch'
@@ -65,6 +65,9 @@ target 'Bubble' do
     pod 'BDWebImage', '0.2.8'
 
     pod 'TTKitchen', '1.1.0'
+    pod 'AMapLocation'
+    pod 'AMap3DMap'
+    pod 'AMapSearch'
 
     pod 'RxSwift', '4.1.2'
     pod 'RxCocoa', '4.1.2'

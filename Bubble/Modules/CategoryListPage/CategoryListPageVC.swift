@@ -43,9 +43,10 @@ class CategoryListPageVC: UIViewController {
 
     let disposeBag = DisposeBag()
 
-    lazy var navBar: SearchNavBar = {
-        let result = SearchNavBar()
+    lazy var navBar: CategorySearchNavBar = {
+        let result = CategorySearchNavBar()
         result.searchInput.placeholder = "小区/商圈/地铁"
+        result.searchTypeLabel.text = houseType.value?.stringValue() ?? HouseType.secondHandHouse.stringValue()
         return result
     }()
 
@@ -77,6 +78,10 @@ class CategoryListPageVC: UIViewController {
     lazy var filterConditions: [SearchConditionItem] = {
         []
     }()
+
+    let houseType = BehaviorRelay<HouseType?>(value: nil)
+
+    private var popupMenuView: PopupMenuView?
 
     func reloadConditionPanel() -> Void {
         searchFilterPanel.setItems(items: filterConditions)
@@ -137,18 +142,25 @@ class CategoryListPageVC: UIViewController {
         navBar.searchAreaBtn.rx.tap
                 .subscribe(onNext: { void in
                     let vc = SuggestionListVC()
-                    EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+                    let nav = self.navigationController ?? EnvContext.shared.rootNavController
+                    nav.pushViewController(vc, animated: true)
                     vc.navBar.backBtn.rx.tap
-                            .subscribe(onNext: { void in
-                                EnvContext.shared.rootNavController.popViewController(animated: true)
+                            .subscribe(onNext: { [weak nav] void in
+                                nav?.popViewController(animated: true)
                             })
                             .disposed(by: self.disposeBag)
-                    vc.onSuggestSelect = { [weak self] (condition) in
-                        EnvContext.shared.rootNavController.popViewController(animated: true)
+                    vc.onSuggestSelect = { [weak self, weak nav] (condition) in
+                        nav?.popViewController(animated: true)
                         self?.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
                             condition($0)
                         }
                     }
+                })
+                .disposed(by: disposeBag)
+
+        navBar.searchTypeBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    self.displayPopupMenu()
                 })
                 .disposed(by: disposeBag)
 
@@ -166,24 +178,7 @@ class CategoryListPageVC: UIViewController {
         }
         tableView.dataSource = dataSource
         registerCell(tableView)
-
-        searchAndConditionFilterVM.queryCondition
-                .debug("searchAndConditionFilterVM.queryCondition")
-                .throttle(0.5, scheduler: MainScheduler.instance)
-                .flatMap {
-                    requestSearch(query: $0)
-                }
-                .subscribe(onNext: { [unowned self] response in
-                    if let data = response?.data {
-                        self.dataSource.onDataArrived(datas: data)
-                        self.tableView.reloadData()
-                    }
-                }, onError: { error in
-                    print(error)
-                }, onCompleted: {
-
-                })
-                .disposed(by: disposeBag)
+        bindSearchRequest()
         searchFilterPanel.setItems(items: filterConditions)
 
         view.addSubview(conditionPanelView)
@@ -192,6 +187,14 @@ class CategoryListPageVC: UIViewController {
             maker.left.right.bottom.equalToSuperview()
         }
         conditionPanelView.isHidden = true
+
+        houseType.subscribe(onNext: { [weak self] (type) in
+                    if let type = type {
+                        self?.navBar.searchTypeLabel.text = type.stringValue()
+                        self?.searchAndConditionFilterVM.sendSearchRequest()
+                    }
+                })
+                .disposed(by: disposeBag)
 
         EnvContext.shared.client.configCacheSubject
                 .map {
@@ -221,6 +224,30 @@ class CategoryListPageVC: UIViewController {
                     })
                     self.filterConditions = items.0
                     self.reloadConditionPanel()
+                })
+                .disposed(by: disposeBag)
+
+    }
+
+    func bindSearchRequest() {
+        searchAndConditionFilterVM.queryCondition
+                .map { [weak self] (result) in
+                    result + "&house_type=\(self?.houseType.value?.rawValue ?? HouseType.secondHandHouse.rawValue)"
+                }
+                .debounce(0.01, scheduler: MainScheduler.instance)
+//                .throttle(0.5, scheduler: MainScheduler.instance)
+                .flatMap {
+                    requestSearch(query: $0)
+                }
+                .subscribe(onNext: { [unowned self] response in
+                    if let data = response?.data {
+                        self.dataSource.onDataArrived(datas: data)
+                        self.tableView.reloadData()
+                    }
+                }, onError: { error in
+                    print(error)
+                }, onCompleted: {
+
                 })
                 .disposed(by: disposeBag)
     }
@@ -286,16 +313,11 @@ class CategoryListPageVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let navigationController = self.navigationController {
-            navigationController.view.sendSubview(toBack: navigationController.navigationBar)
-        }
+        self.navigationController?.navigationBar.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let navigationController = self.navigationController {
-            navigationController.view.bringSubview(toFront: navigationController.navigationBar)
-        }
     }
 
     private func registerCell(_ tableView: UITableView) {
@@ -304,6 +326,28 @@ class CategoryListPageVC: UIViewController {
             let (identifier, cls) = e
             tableView.register(cls, forCellReuseIdentifier: identifier)
         }
+    }
+
+    private func displayPopupMenu() {
+        let menuItems = [HouseType.secondHandHouse,
+                         HouseType.newHouse,
+                         HouseType.neighborhood]
+
+        let popupMenuItems = menuItems.map { type -> PopupMenuItem in
+            let result = PopupMenuItem(label: type.stringValue(), isSelected: self.houseType.value == type)
+            result.onClick = { [weak self] in
+                self?.houseType.accept(type)
+                self?.popupMenuView?.removeFromSuperview()
+                self?.popupMenuView = nil
+            }
+            return result
+        }
+        popupMenuView = PopupMenuView(targetView: navBar.searchTypeBtn, menus: popupMenuItems)
+        view.addSubview(popupMenuView!)
+        popupMenuView?.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+        }
+        popupMenuView?.showOnTargetView()
     }
 
 }

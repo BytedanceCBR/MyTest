@@ -10,6 +10,7 @@ import Foundation
 import YYCache
 import RxSwift
 import RxCocoa
+
 class Client {
 
     lazy private var searchConfigCache: YYCache? = {
@@ -20,9 +21,26 @@ class Client {
 
     let generalCacheSubject = BehaviorRelay<GeneralConfigData?>(value: nil)
 
+    let currentSelectedCityId = BehaviorRelay<Int?>(value: nil)
+
     let disposeBag = DisposeBag()
 
+    var hoseType: HouseType = .secondHandHouse
+
+    lazy var locationManager: LocationManager = {
+        LocationManager.shared
+    }()
+
     init() {
+        locationManager.currentLocation
+            .subscribe(onNext: { [weak self] location in
+                if let location = location {
+                    self?.fetchGeneralConfig(
+                        lat: String(location.coordinate.latitude),
+                        lng: String(location.coordinate.longitude))
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     func onStart() {
@@ -41,6 +59,15 @@ class Client {
         }
 
         fetchGeneralConfig()
+
+        setupLocationManager()
+        currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
+        currentSelectedCityId
+            .subscribe(onNext: { (cityId) in
+                UserDefaults.standard.set(cityId, forKey: "selected_city_id")
+                UserDefaults.standard.synchronize()
+            })
+            .disposed(by: disposeBag)
     }
 
     private func fetchSearchConfig() {
@@ -58,19 +85,22 @@ class Client {
                 .disposed(by: disposeBag)
     }
 
-    private func fetchGeneralConfig() {
-        requestGeneralConfig()
-            .debug("requestGeneralConfig")
-            .observeOn(CurrentThreadScheduler.instance)
-            .subscribeOn(CurrentThreadScheduler.instance)
-            .subscribe(onNext: { [unowned self] response in
-                self.generalCacheSubject.accept(response?.data)
-                if let payload = response?.data?.toJSONString() {
-                    self.searchConfigCache?.setObject(payload as NSString, forKey: "general_config")
-                }
-            }, onError: { error in
-                print(error)
-            })
-            .disposed(by: disposeBag)
+    private func fetchGeneralConfig(cityId: String? = nil, lat: String? = nil, lng: String? = nil) {
+        requestGeneralConfig(cityId: cityId, lat: lat, lng: lng)
+                .observeOn(CurrentThreadScheduler.instance)
+                .subscribeOn(CurrentThreadScheduler.instance)
+                .subscribe(onNext: { [unowned self] response in
+                    self.generalCacheSubject.accept(response?.data)
+                    if let payload = response?.data?.toJSONString() {
+                        self.searchConfigCache?.setObject(payload as NSString, forKey: "general_config")
+                    }
+                }, onError: { error in
+                    print(error)
+                })
+                .disposed(by: disposeBag)
+    }
+
+    private func setupLocationManager() {
+        locationManager.requestCurrentLocation()
     }
 }

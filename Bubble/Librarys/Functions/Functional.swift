@@ -111,3 +111,17 @@ public class Boxa<T> {
         self.unbox = value
     }
 }
+
+func groups<T>(items: [T], rowCount: Int) -> [[T]] {
+    return items.reduce([[T]]()) { (result, node: T) -> [[T]] in
+        var result = result
+        if var row = result.last, row.count < rowCount {
+            row.append(node)
+            result.remove(at: result.count - 1)
+            result.append(row)
+        } else {
+            result.append([node])
+        }
+        return result
+    }
+}

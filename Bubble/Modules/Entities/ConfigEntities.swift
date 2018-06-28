@@ -23,9 +23,9 @@ struct GeneralConfigResponse: Mappable {
 }
 
 struct GeneralConfigData: Mappable {
-    var hotCityList: [HotCityItem]?
-    var cityList: [CityItem]?
-    var entryList: [EntryItem]?
+    var hotCityList: [HotCityItem] = []
+    var cityList: [CityItem] = []
+    var entryList: [EntryItem] = []
 
     init?(map: Map) {
 

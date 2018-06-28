@@ -5,6 +5,23 @@
 
 import ObjectMapper
 
+enum HouseType: Int {
+    case newHouse = 1
+    case secondHandHouse = 2
+    case neighborhood = 3
+
+    func stringValue() -> String {
+        switch self {
+        case .newHouse:
+            return "新房"
+        case .secondHandHouse:
+            return "二手房"
+        case .neighborhood:
+            return "小区"
+        }
+    }
+}
+
 struct HouseItemEntity: Mappable {
 
     //properties
