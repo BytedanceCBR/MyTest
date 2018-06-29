@@ -11,9 +11,9 @@ import UIKit
 class CategoryListDataSource: NSObject, UITableViewDataSource {
     var datas: [HouseItemEntity] = []
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return datas.count
-    }
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return datas.count
+//    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return datas.count

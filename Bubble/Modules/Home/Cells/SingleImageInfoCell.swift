@@ -5,8 +5,10 @@
 
 import UIKit
 import SnapKit
-
+import BDWebImage
 class SingleImageInfoCell: UITableViewCell {
+
+    var imageRequest: BDWebImageRequest?
 
     lazy var majorImageView: UIImageView = {
         let imageView = UIImageView()
@@ -129,6 +131,15 @@ class SingleImageInfoCell: UITableViewCell {
         }
         roomSpaceLabel.text = "56420元/平"
     }
+
+    func setImageByUrl(_ url: String) {
+        imageRequest = majorImageView.bd_setImage(with: URL(string: url))
+    }
+
+    override func prepareForReuse() {
+        imageRequest?.cancel()
+        imageRequest = nil
+    }
 }
 
 func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemEntity) {
@@ -137,4 +148,8 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemEntity) {
     cell.areaLabel.text = item.displayDescription
     cell.priceLabel.text = item.baseInfoMap?.pricing
     cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
+    if let img = item.houseImage?.first , let url = img.url {
+        cell.setImageByUrl(url)
+    }
+
 }
