@@ -77,6 +77,7 @@ target 'Bubble' do
     pod 'SwiftyJSON', '4.1.0'
     pod 'ObjectMapper'
     pod 'Charts'
+    pod 'YYText'
     target 'BubbleTests' do
         inherit! :search_paths
     end
@@ -116,5 +117,5 @@ post_install do |installer|
             end
         end
     end
-    system("sudo python ./post_install.py")
+    system("python ./post_install.py")
 end

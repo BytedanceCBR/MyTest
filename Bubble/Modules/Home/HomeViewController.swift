@@ -58,6 +58,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
+        self.automaticallyAdjustsScrollViewInsets = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -80,7 +81,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
 
-        self.automaticallyAdjustsScrollViewInsets = false
 
         view.addSubview(tableView)
         tableView.separatorStyle = .none
@@ -221,7 +221,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailPage = HorseDetailPageVC()
+        let detailPage = HorseDetailPageVC(houseId: 0, houseType: .newHouse)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 

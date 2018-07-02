@@ -17,6 +17,10 @@ class CommonUIStyle {
         static let pingFangMedium: (CGFloat) -> UIFont? = { (size) in
             UIFont(name: "PingFangSC-Medium", size: size)
         }
+
+        static let pingFangSemibold: (CGFloat) -> UIFont? = { (size) in
+            UIFont(name: "PingFangSC-Semibold", size: size)
+        }
     }
 
     class TabBar {
@@ -25,5 +29,9 @@ class CommonUIStyle {
 
     class NavBar {
         static let height: CGFloat = 64
+    }
+
+    class StatusBar {
+        static let height: CGFloat = 20
     }
 }

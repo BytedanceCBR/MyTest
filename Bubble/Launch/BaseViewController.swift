@@ -9,5 +9,9 @@
 import UIKit
 
 class BaseViewController: UIViewController {
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
+        self.navigationController?.navigationBar.isHidden = true
+    }
 }

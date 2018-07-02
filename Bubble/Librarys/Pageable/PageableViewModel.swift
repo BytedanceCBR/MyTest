@@ -48,6 +48,7 @@ open class PageableViewModel: NSObject {
         pageViewProviderGenerator: PageViewProviderGenerator) {
 
         let pageableScrollVIew = UIScrollView()
+        pageableScrollVIew.alwaysBounceHorizontal = false
         self.pageView = pageableScrollVIew
         self.cacheViewCount = cacheViewCount
         self.currentPage = initPageIndex
@@ -55,7 +56,13 @@ open class PageableViewModel: NSObject {
             pageViewProviderGenerator: pageViewProviderGenerator,
             cacheViewCount: cacheViewCount)
         super.init()
-
+        pageFrameObv = pageableScrollVIew.observe(\.bounds, options: [.new, .old]) { [weak self] (view, value) in
+            if let old = value.oldValue, let new = value.newValue {
+                if !old.size.equalTo(new.size) {
+                    self?.onPageLayout()
+                }
+            }
+        }
         loadPage(provider: providerSelector(0))
 
         DispatchQueue.main.async {
@@ -78,9 +85,7 @@ open class PageableViewModel: NSObject {
 
         self.pageView.isPagingEnabled = true
         self.adjectPageLayoutWhenScrollEnded(pageView: pageView)
-        pageFrameObv = pageView.observe(\.frame, options: [.new]) { [weak self] (_, _) in
-            self?.onPageLayout()
-        }
+
     }
 
     private func loadPage(provider: PageViewProvider) {
@@ -94,8 +99,7 @@ open class PageableViewModel: NSObject {
     fileprivate class func initPageProviders(
         pageViewProviderGenerator: PageViewProviderGenerator,
         cacheViewCount: Int) -> [PageViewProvider] {
-        let initPagesCount = cacheViewCount + 1
-        return (1...initPagesCount)
+        return (0...cacheViewCount)
             .map { (_) -> PageViewProvider in
                 pageViewProviderGenerator()
             }
@@ -196,7 +200,7 @@ open class PageableViewModel: NSObject {
     }
 
     func rangeOfWholePageViewsIndex(currentPage: Int, halfOfBgViewCount: Int) -> [Int] {
-        var result = [currentPage, 0]
+        var result = [currentPage]
         for i in (1...halfOfBgViewCount) {
             result.append(currentPage + i)
             result.append(currentPage - i)
@@ -208,15 +212,12 @@ open class PageableViewModel: NSObject {
         selectedPageIndex: Int,
         pageViewCache: [UIView],
         cacheViewCount: Int) -> PageViewProvider {
-        if selectedPageIndex == 0 {
-            return pageViewProviders[0]
-        } else {
-            let selectedIndex = (selectedPageIndex + bufferSize) % cacheViewCount
-            if selectedIndex > cacheViewCount - 1 {
-                assertionFailure("选择视图错误")
-            }
-            return pageViewProviders[selectedIndex + 1]
+
+        let selectedIndex = (selectedPageIndex + bufferSize) % cacheViewCount
+        if selectedIndex > cacheViewCount - 1 {
+            assertionFailure("选择视图错误")
         }
+        return pageViewProviders[selectedIndex + 1]
     }
 
     var providerSelector: (Int) -> PageViewProvider {
@@ -232,15 +233,11 @@ open class PageableViewModel: NSObject {
         selectedPageIndex: Int,
         pageViewCache: [UIView],
         cacheViewCount: Int) -> UIView? {
-        if selectedPageIndex == 0 {
-            return pageViewCache[0]
+        let selectedIndex = catulatePageOffsetByIndex(index: selectedPageIndex)
+        if pageViewCache.count <= selectedIndex + 1 {
+            return nil
         } else {
-            let selectedIndex = catulatePageOffsetByIndex(index: selectedPageIndex)
-            if pageViewCache.count <= selectedIndex + 1 {
-                return nil
-            } else {
-                return pageViewCache[selectedIndex + 1]
-            }
+            return pageViewCache[selectedIndex + 1]
         }
     }
 

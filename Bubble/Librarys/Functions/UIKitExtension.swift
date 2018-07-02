@@ -33,7 +33,7 @@ extension UIView: UIKitExtensionCompatible {}
 
 extension UIKitExtension where BaseType: UIView {
     func addTopBorder(
-        color: UIColor = UIColor.lightGray,
+        color: UIColor = hexStringToUIColor(hex: "#e8e8e8"),
         leading: ConstraintRelatableTarget = 0,
         trailing: ConstraintRelatableTarget = 0) {
         let borderView = UIView(frame: CGRect.zero)
@@ -43,12 +43,12 @@ extension UIKitExtension where BaseType: UIView {
             make.top.equalTo(0)
             make.left.equalTo(leading)
             make.right.equalTo(trailing)
-            make.height.equalTo(1 / UIScreen.main.scale)
+            make.height.equalTo(0.5 / UIScreen.main.scale)
         }
     }
 
     func addleftBorder(
-        color: UIColor = UIColor.lightGray,
+        color: UIColor = hexStringToUIColor(hex: "#e8e8e8"),
         top: ConstraintRelatableTarget = 0,
         bottom: ConstraintRelatableTarget = 0) {
         let borderView = UIView(frame: CGRect.zero)
@@ -58,12 +58,12 @@ extension UIKitExtension where BaseType: UIView {
             make.left.equalTo(0)
             make.top.equalTo(top)
             make.bottom.equalTo(bottom)
-            make.width.equalTo(1 / UIScreen.main.scale)
+            make.width.equalTo(0.5 / UIScreen.main.scale)
         }
     }
 
     func addRightBorder(
-        color: UIColor = UIColor.lightGray,
+        color: UIColor = hexStringToUIColor(hex: "#e8e8e8"),
         top: ConstraintRelatableTarget = 0,
         bottom: ConstraintRelatableTarget = 0) {
         let borderView = UIView(frame: CGRect.zero)
@@ -73,13 +73,13 @@ extension UIKitExtension where BaseType: UIView {
             make.right.equalTo(0)
             make.top.equalTo(top)
             make.bottom.equalTo(bottom)
-            make.width.equalTo(1 / UIScreen.main.scale)
+            make.width.equalTo(0.5 / UIScreen.main.scale)
         }
     }
 
     @discardableResult
     func addBottomBorder(
-        color: UIColor = UIColor.lightGray,
+        color: UIColor = hexStringToUIColor(hex: "#e8e8e8"),
         leading: ConstraintRelatableTarget = 0,
         trailing: ConstraintRelatableTarget = 0) -> UIView {
         let borderView = UIView(frame: CGRect.zero)

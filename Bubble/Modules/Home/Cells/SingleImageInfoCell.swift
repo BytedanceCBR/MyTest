@@ -6,6 +6,8 @@
 import UIKit
 import SnapKit
 import BDWebImage
+import YYText
+import CoreGraphics
 class SingleImageInfoCell: UITableViewCell {
 
     var imageRequest: BDWebImageRequest?
@@ -29,12 +31,19 @@ class SingleImageInfoCell: UITableViewCell {
         return label
     }()
 
-    lazy var areaLabel: UILabel = {
-        let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(12)
-        label.textColor = hexStringToUIColor(hex: "#505050")
+    lazy var areaLabel: YYLabel = {
+        let label = YYLabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping//按照单词分割换行，保证换行时的单词完整。
+
         return label
     }()
+
+//        lazy var areaLabel: YYTextView = {
+//            let label = YYTextView()
+//            label.isEditable = false
+//            return label
+//        }()
 
     lazy var priceLabel: UILabel = {
         let label = UILabel()
@@ -110,10 +119,8 @@ class SingleImageInfoCell: UITableViewCell {
         areaLabel.snp.makeConstraints { [unowned extendTitle] maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(extendTitle.snp.bottom).offset(5)
-            maker.height.equalTo(17)
+            maker.width.greaterThanOrEqualTo(100)
         }
-        areaLabel.text = "海淀-魏公村"
-
         infoPanel.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { [unowned areaLabel] maker in
             maker.left.equalToSuperview()
@@ -145,7 +152,43 @@ class SingleImageInfoCell: UITableViewCell {
 func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemEntity) {
     cell.majorTitle.text = item.displayTitle
     cell.extendTitle.text = item.displaySubtitle
-    cell.areaLabel.text = item.displayDescription
+    let text = NSMutableAttributedString()
+
+    let attributeText = NSMutableAttributedString(string: "新房")
+    attributeText.yy_insertString("  ", at: 0)
+    attributeText.yy_appendString("  ")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(10)
+    attributeText.yy_color = hexStringToUIColor(hex: "#f85959")
+    let substringRange = attributeText.string.range(of: "新房")
+    if let lowerBound = substringRange?.lowerBound,
+        let upperBound = substringRange?.upperBound {
+        let start = attributeText.string.distance(from: attributeText.string.startIndex, to: (lowerBound))
+        let length = attributeText.string.distance(from: lowerBound, to: upperBound)
+        let range = NSMakeRange(start, length)
+        attributeText.yy_setTextBinding(YYTextBinding(deleteConfirm: false), range: range)
+
+        let border = YYTextBorder()
+        border.strokeWidth = 1.5
+        border.fillColor = color(248, 89, 89, 0.08)
+        border.cornerRadius = 2
+        border.lineJoin = CGLineJoin.bevel
+
+        border.insets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)
+        attributeText.yy_setTextBackgroundBorder(border, range: range)
+    }
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    text.append(attributeText)
+    cell.areaLabel.attributedText = text;
+//    cell.areaLabel.sizeToFit()
+
     cell.priceLabel.text = item.baseInfoMap?.pricing
     cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
     if let img = item.houseImage?.first , let url = img.url {

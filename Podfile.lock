@@ -168,6 +168,7 @@ PODS:
     - TTInstallService (>= 1.1.1)
     - TTNetworkManager (>= 2.1.0)
   - YYCache (1.0.4)
+  - YYText (1.0.7)
 
 DEPENDENCIES:
   - AFNetworking (= 2.5.4)
@@ -196,6 +197,7 @@ DEPENDENCIES:
   - TTRexxar (= 0.8.5)
   - TTRoute (= 0.2.26)
   - TTTracker (= 1.1.5)
+  - YYText
 
 SPEC REPOS:
   "git@code.byted.org:iOS_Library/privatethird_source_repo.git":
@@ -237,6 +239,7 @@ SPEC REPOS:
     - SnapKit
     - SwiftyJSON
     - YYCache
+    - YYText
 
 EXTERNAL SOURCES:
   BDStartUp:
@@ -281,7 +284,8 @@ SPEC CHECKSUMS:
   TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
   TTTracker: c01b9f82b795a4a83fd904c63e7283587a452d13
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
+  YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
-PODFILE CHECKSUM: 42f5de97dce87a6d802165bf05d2ee4ff1bb292b
+PODFILE CHECKSUM: dc41d36dd6bfed0a885253d21c9764597d0320e6
 
 COCOAPODS: 1.5.3

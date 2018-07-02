@@ -1,4 +1,7 @@
+import os
+
 def rewrite_file(file_name, contnet, replace_to):
+    os.system("chmod a+w " + file_name)
     file_data = ""
     with open(file_name, "r", encoding="utf-8") as f:
         for line in f:
@@ -13,7 +16,5 @@ rewrite_file("./Pods/Headers/Public/TTNetworkManager/TTNetworkManager-umbrella.h
 
 rewrite_file("./Pods/TTTracker/TTTracker/Core/TTTrackerProxy.m", "#import <TTNetworkManager.h>", '#import "TTNetworkManager.h"')
 rewrite_file("./Pods/TTTracker/TTTracker/Core/TTTrackerUtil.m", "#import <TTInstallUtil.h>", '#import "TTInstallUtil.h"')
-rewrite_file("./Pods/TTLocationManager/TTLocationManager/Classes/TTLocationManager.m", "#import <TTBaseMacro.h>", '#import "TTBaseMacro.h"')
-rewrite_file("./Pods/TTLocationManager/TTLocationManager/Classes/TTLocationManager.m", "#import <TTSandBoxHelper.h>", '#import "TTSandBoxHelper.h"')
 rewrite_file("./Pods/BDWebImage/BDWebImage/Classes/Decoder/BDImageDecoderWebP.m", "#import <webp/demux.h>", '#import "demux.h"')
 
