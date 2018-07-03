@@ -3,12 +3,14 @@ import os
 def rewrite_file(file_name, contnet, replace_to):
     os.system("chmod a+w " + file_name)
     file_data = ""
-    with open(file_name, "r", encoding="utf-8") as f:
+    #with open(file_name, "r", encoding="utf-8") as f:
+    with open(file_name, "r") as f:
         for line in f:
             if contnet in line:
                 line = line.replace(contnet, replace_to)
             file_data += line
-    with open(file_name, "w", encoding="utf-8") as f:
+    #with open(file_name, "w", encoding="utf-8") as f:
+    with open(file_name, "w") as f:
         f.write(file_data)
 
 
