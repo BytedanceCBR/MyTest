@@ -102,8 +102,8 @@ struct TagItem: Mappable {
     mutating func mapping(map: Map) {
         id <- map["id"]
         content <- map["content"]
-        backgroundColor <- map["backgroundColor"]
-        textColor <- map["textColor"]
+        backgroundColor <- map["background_color"]
+        textColor <- map["text_color"]
     }
 }
 

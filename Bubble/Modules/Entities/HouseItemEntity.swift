@@ -8,22 +8,26 @@ import ObjectMapper
 enum HouseType: Int {
     case newHouse = 1
     case secondHandHouse = 2
-    case neighborhood = 3
-
+    case rentHouse = 3
+    case neighborhood = 4
+    
     func stringValue() -> String {
         switch self {
         case .newHouse:
             return "新房"
         case .secondHandHouse:
             return "二手房"
+        case .rentHouse:
+            return "租房"
         case .neighborhood:
             return "小区"
         }
     }
+    
 }
 
 struct HouseItemEntity: Mappable {
-
+    
     //properties
     var id: String?
     var title: String?
@@ -37,11 +41,11 @@ struct HouseItemEntity: Mappable {
     var baseInfoMap: HouseItemBaseInfo?
     var houseImage: [ImageItem]?
     var neighborhoodInfo: NeighborhoodInfo?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     // Mappable
     mutating func mapping(map: Map) {
         id <- map["id"]
@@ -57,16 +61,16 @@ struct HouseItemEntity: Mappable {
         houseImage <- map["house_image"]
         neighborhoodInfo <- map["neighborhood_info"]
     }
-
+    
 }
 
 struct HouseItemAttribute: Mappable {
     var attr: String?
     var value: String?
-
+    
     init?(map: Map) {
     }
-
+    
     mutating func mapping(map: Map) {
         self.attr <- map["attr"]
         self.value <- map["value"]
@@ -76,10 +80,10 @@ struct HouseItemAttribute: Mappable {
 struct HouseItemBaseInfo: Mappable {
     var pricing: String?
     var pricingPerSqm: String?
-
+    
     init?(map: Map) {
     }
-
+    
     mutating func mapping(map: Map) {
         self.pricing <- map["pricing"]
         self.pricingPerSqm <- map["pricing_per_sqm"]
@@ -92,10 +96,10 @@ struct ImageItem: Mappable {
     var width: Int?
     var height: Int?
     var urlList: [String]?
-
+    
     init?(map: Map) {
     }
-
+    
     mutating func mapping(map: Map) {
         self.uri <- map["uri"]
         self.url <- map["url"]
@@ -108,51 +112,58 @@ struct ImageItem: Mappable {
 struct NeighborhoodInfo: Mappable {
     var id: String?
     var name: String?
+    var pricingPerSqm: String?
     var address: String?
-    var lng: Double?
-    var lat: Double?
-
+    var monthUp: Float?
+    var gaodeLng: String?
+    var gaodeLat: String?
+    var gaodeImageUrl: String?
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
-        self.id <- map["id"]
-        self.name <- map["name"]
-        self.address <- map["address"]
-        self.lng <- map["lng"]
-        self.lat <- map["lat"]
+        id <- map["id"]
+        name <- map["name"]
+        address <- map["address"]
+        monthUp <- map["month_up"]
+        pricingPerSqm <- map["pricing_per_sqm"]
+        gaodeLng <- map["gaode_lng"]
+        gaodeLat <- map["gaode_lat"]
+        gaodeImageUrl <- map["gaode_image_url"]
     }
 }
 
-struct HouseRecommendResponse: Mappable {
 
+struct HouseRecommendResponse: Mappable {
+    
     var data: [HouseItemEntity]?
     var message: String?
     var status: Int?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         data <- map["data"]
         message <- map["message"]
         status <- map["status"]
     }
-
+    
 }
 
 struct HouseRecommendSection: Mappable {
-
+    
     var title: String?
     var link: String?
     var items: [HouseItemEntity]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         title <- map["title"]
         link <- map["link"]
@@ -161,6 +172,7 @@ struct HouseRecommendSection: Mappable {
 }
 
 struct HouseRecommendData: Mappable {
+<<<<<<< Updated upstream
 
 
     var court: HouseRecommendSection?
@@ -210,9 +222,9 @@ struct HouseItems {
     var items: [Item]?
 
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         title <- map["title"]
         link <- map["link"]
@@ -232,20 +244,20 @@ struct HouseItems {
 }
 
 struct HouseRecommendResponse1: Mappable {
-
+    
     var data: HouseRecommendData?
     var message: String?
     var status: Int?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         data <- map["data"]
         message <- map["message"]
         status <- map["status"]
     }
-
+    
 }
 
