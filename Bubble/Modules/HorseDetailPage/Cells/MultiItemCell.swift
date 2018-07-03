@@ -142,7 +142,7 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     }
     let text = NSMutableAttributedString()
     let attributeText = NSMutableAttributedString(string: item.title ?? "")
-    attributeText.yy_font = CommonUIStyle.Font.pingFangMedium(16)
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
     attributeText.yy_color = hexStringToUIColor(hex: "#222222")
     text.append(attributeText)
 

@@ -10,17 +10,17 @@ import UIKit
 
 class CommonUIStyle {
     class Font {
-        static let pingFangRegular: (CGFloat) -> UIFont? = { (size) in
-            UIFont(name: "PingFangSC-Regular", size: size)
+        static let pingFangRegular: (CGFloat) -> UIFont = { (size) in
+            UIFont(name: "PingFangSC-Regular", size: size)!
         }
 
-        static let pingFangMedium: (CGFloat) -> UIFont? = { (size) in
-            UIFont(name: "PingFangSC-Medium", size: size)
+        static let pingFangMedium: (CGFloat) -> UIFont = { (size) in
+            UIFont(name: "PingFangSC-Medium", size: size)!
         }
 
-        static let pingFangSemibold: (CGFloat) -> UIFont? = { (size) in
-            UIFont(name: "PingFangSC-Semibold", size: size)
-        }
+        static let pingFangSemibold: (CGFloat) -> UIFont = { (size) in
+            UIFont(name: "PingFangSC-Semibold", size: size)!
+         }
     }
 
     class TabBar {

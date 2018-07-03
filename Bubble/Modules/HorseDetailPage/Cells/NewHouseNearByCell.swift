@@ -76,8 +76,6 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
     fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
 
-    var currentPoiType = POIType.traffic
-
     var centerPoint: CLLocationCoordinate2D?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -104,7 +102,6 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         }
         locationList.dataSource = locationListViewModel
         poiData
-                .debug()
                 .subscribe(onNext: { [unowned self] annotations in
                     self.resetAnnotations(annotations)
                 })
@@ -140,7 +137,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             centerPoint = center
             locationListViewModel.center = center
             mapView.setCenter(center, animated: false)
-            requestPOIInfoByType(poiType: currentPoiType)
+            requestPOIInfoByType(poiType: categorys[segmentedControl.selectedSegmentIndex])
         }
     }
 
@@ -201,10 +198,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         if response.count == 0 {
             return
         }
-        let upper = response.count > 3 ? 3 : response.count
         let pois = response.pois.map { (poi) -> MyMAAnnotation in
             let re = MyMAAnnotation()
-            re.type = currentPoiType
+            re.type = categorys[segmentedControl.selectedSegmentIndex]
             re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
             re.title = poi.name
             return re

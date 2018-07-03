@@ -28,9 +28,7 @@ class TabViewController: UITabBarController {
         super.viewDidLoad()
 
         UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -3)
-        if let theFont = CommonUIStyle.Font.pingFangRegular(10) {
-            UITabBarItem.appearance().setTitleTextAttributes([.font: theFont], for: .normal)
-        }
+        UITabBarItem.appearance().setTitleTextAttributes([.font: CommonUIStyle.Font.pingFangRegular(10)], for: .normal)
 
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.isHidden = true

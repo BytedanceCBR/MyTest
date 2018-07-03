@@ -159,7 +159,7 @@ class SearchConditionItemView: UIView {
     func setConditionLabelText(label: String, color: UIColor, icon: UIImage) {
         conditionLabel.textColor = color
         let attributeText = NSMutableAttributedString(string: label)
-        let attributes: [NSAttributedStringKey: Any] = [.font: CommonUIStyle.Font.pingFangRegular(15)!]
+        let attributes: [NSAttributedStringKey: Any] = [.font: CommonUIStyle.Font.pingFangRegular(15)]
         attributeText.setAttributes(attributes, range: NSRange(location: 0, length: label.count))
         let attachment = NSTextAttachment()
         attachment.image = icon

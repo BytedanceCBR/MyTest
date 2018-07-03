@@ -60,32 +60,45 @@ class HorseDetailPageVC: BaseViewController {
         }
         cellFactory.register(tableView: tableView)
 
-        requestNewHouseDetail(houseId: 15303586943171)
-                .debug()
-                .subscribe(onNext: { [unowned self] (response) in
-                    if let data = response?.data {
-                        let dataParser = DetailDataParser.monoid()
-                            <- parseNewHouseCycleImageNode(data)
-                            <- parseNewHouseNameNode(data)
-                            <- parseNewHouseCoreInfoNode(data)
-                            <- parseNewHouseContactNode(data)
-                            <- parseTimelineNode(data)
-                            <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
-                            <- parseFloorPanNode(data)
-                            <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
-                            <- parseNewHouseCommentNode(data)
-                            <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
-                            <- parseNewHouseNearByNode(data)
+        requestNewHouseDetail(houseId: 6573911052528910605)
+            .debug()
+            .subscribe(onNext: { [unowned self] (response) in
+                if let data = response?.data {
+                    let dataParser = DetailDataParser.monoid()
+                        <- parseNewHouseCycleImageNode(data)
+                        <- parseNewHouseNameNode(data)
+                        <- parseNewHouseCoreInfoNode(data)
+                        <- parseNewHouseContactNode(data)
+                        <- parseTimeLineHeaderNode(data)
+                        <- parseTimelineNode(data)
+                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
 
-                        let result = dataParser.parser([])
-                        self.dataSource.datas = result
-                        print(result)
-                        self.tableView.reloadData()
-                    }
+                        }
+                        <- parseFloorPanHeaderNode(data)
+                        <- parseFloorPanNode(data)
+                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
+
+                        }
+                        <- parseCommentHeaderNode(data)
+                        <- parseNewHouseCommentNode(data)
+                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
+                            
+                        }
+                        <- parseHeaderNode("周边位置")
+                        <- parseNewHouseNearByNode(data)
+                        <- parseHeaderNode("全网比价", showLoadMore: true)
+                        <- parseGlobalPricingNode(data)
+                        <- parseDisclaimerNode(data)
+
+                    let result = dataParser.parser([])
+                    self.dataSource.datas = result
+                    print(result)
+                    self.tableView.reloadData()
+                }
                 }, onError: { (error) in
                     print(error)
-                })
-                .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -102,46 +115,8 @@ class HorseDetailPageVC: BaseViewController {
     }
 
 
-
 }
 
-enum TableCellType {
-    case dataItem(identifier: String, rowId:String)
-    case node(identifier: String)
-}
-
-struct TableSectionNode {
-    let items: [TableCellRender]
-    let label: String
-    let type: TableCellType
-}
-
-struct CellItemNode {
-
-}
-
-struct DetailDataParser {
-    let parser: NewHouseDetailDataParser
-
-    static func monoid() -> DetailDataParser {
-        return DetailDataParser{
-            $0
-        }
-    }
-}
-
-extension DetailDataParser {
-    func join(_ parser: @escaping () -> TableSectionNode) -> DetailDataParser {
-        return DetailDataParser { inputs in
-            self.parser(inputs) + [parser()]
-        }
-    }
-}
-
-infix operator <- : SequencePrecedence
-func <-(chain: DetailDataParser, parser: @escaping () -> TableSectionNode) -> DetailDataParser {
-    return chain.join(parser)
-}
 
 
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
@@ -149,6 +124,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var datas: [TableSectionNode] = []
 
     var cellFactory: UITableViewCellFactory
+
+    var sectionHeaderGenerator: TableViewSectionViewGen?
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -167,9 +144,9 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         switch datas[indexPath.section].type {
         case let .node(identifier):
             let cell = cellFactory.dequeueReusableCell(
-                identifer: identifier,
-                tableView: tableView,
-                indexPath: indexPath)
+                    identifer: identifier,
+                    tableView: tableView,
+                    indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
@@ -182,10 +159,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 }
 
-typealias TableCellRender = (BaseUITableViewCell) -> Void
 
-typealias NewHouseDetailDataParser = ([TableSectionNode]) -> [TableSectionNode]

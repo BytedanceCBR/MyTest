@@ -162,16 +162,73 @@ struct HouseRecommendSection: Mappable {
 
 struct HouseRecommendData: Mappable {
 
-    var items: [HouseRecommendSection]?
+
+    var court: HouseRecommendSection?
+    var house: HouseRecommendSection?
 
     init?(map: Map) {
 
     }
 
     mutating func mapping(map: Map) {
+        court <- map["court"]
+        house <- map["house"]
+    }
+
+}
+
+struct CourtItems: Mappable {
+    var title: String?
+    var link: String?
+    var items: [Item]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        title <- map["title"]
+        link <- map["link"]
         items <- map["items"]
     }
 
+    struct Item: Mappable {
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+        }
+
+    }
+}
+
+struct HouseItems {
+    var title: String?
+    var link: String?
+    var items: [Item]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        title <- map["title"]
+        link <- map["link"]
+        items <- map["items"]
+    }
+
+    struct Item: Mappable {
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+        }
+
+    }
 }
 
 struct HouseRecommendResponse1: Mappable {

@@ -217,9 +217,9 @@ func commitText(commit: String?) -> AttributedStringProcess {
             let attrContent = "  \(commit)"
             let attributeText = NSMutableAttributedString(string: attrContent)
             var attributes: [NSAttributedStringKey: Any] = [.foregroundColor: hexStringToUIColor(hex: "#999999")]
-            if let font = CommonUIStyle.Font.pingFangRegular(13) {
-                attributes[.font] = font
-            }
+
+            attributes[.font] = CommonUIStyle.Font.pingFangRegular(13)
+
             attributeText.setAttributes(attributes, range: NSRange(location: 0, length: attrContent.count))
             attrText.append(attributeText)
         }

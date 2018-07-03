@@ -69,11 +69,20 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         self.tableView = UITableView()
         super.viewDidLoad()
         requestHouseRecommend()
-                .subscribe(onNext: { [unowned self] response in
-                    if let data = response?.data?.items {
-                        self.dataSource.onDataArrived(datas: data)
-                        self.tableView.reloadData()
+                .map { response1 -> [HouseRecommendSection] in
+                    var datas : [HouseRecommendSection] = []
+                    if let house = response1?.data?.house {
+                        datas.append(house)
                     }
+
+                    if let court = response1?.data?.court {
+                        datas.append(court)
+                    }
+                    return datas
+                 }
+                .subscribe(onNext: { [unowned self] response in
+                    self.dataSource.onDataArrived(datas: response)
+                    self.tableView.reloadData()
                 }, onError: { error in
                     print(error)
                 }, onCompleted: {
@@ -226,7 +235,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return CategorySectionView()
+        let view = CategorySectionView()
+        view.categoryLabel.text = self.dataSource.datas[section].title
+        return view
     }
 
     private func bindSearchEvent() {

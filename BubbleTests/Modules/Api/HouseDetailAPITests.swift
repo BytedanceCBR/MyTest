@@ -36,7 +36,7 @@ class HouseDetailAPITests: XCTestCase {
                 XCTAssertNotNil(response?.data?.coreInfo)
 
                 XCTAssertNotNil(response?.data?.timeLine)
-                
+                XCTAssertNotNil(response?.data?.globalPricing)
             }, onError: { (error) in
                 XCTAssert(false)
             }, onCompleted: {

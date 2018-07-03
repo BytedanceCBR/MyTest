@@ -42,12 +42,9 @@ class TimelineCell: BaseUITableViewCell {
         return result
     }()
 
-    lazy var content: UILabel = {
+    lazy var contentLabel: UILabel = {
         let result = UILabel()
-        result.font = CommonUIStyle.Font.pingFangMedium(16)
-        result.textColor = hexStringToUIColor(hex: "#707070")
         result.numberOfLines = 2
-        result.text = "本周末适逢五一小长假，期间北市同时享受经济开发区和国家新技术支持，项目二期…"
         return result
     }()
 
@@ -88,8 +85,8 @@ class TimelineCell: BaseUITableViewCell {
             maker.right.equalToSuperview().offset(-15)
          }
 
-        contentView.addSubview(content)
-        content.snp.makeConstraints { maker in
+        contentView.addSubview(contentLabel)
+        contentLabel.snp.makeConstraints { maker in
             maker.top.equalTo(titleLabel.snp.bottom).offset(4)
             maker.left.equalTo(titleLabel.snp.left)
             maker.right.equalToSuperview().offset(-15)
@@ -123,6 +120,17 @@ class TimelineCell: BaseUITableViewCell {
         // Configure the view for the selected state
     }
 
+    func setContent(_ content: String) {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 4
+        let attrText = NSMutableAttributedString(
+                string: content,
+                attributes: [.font: CommonUIStyle.Font.pingFangMedium(16),
+                             .foregroundColor: hexStringToUIColor(hex: "#707070"),
+                             .paragraphStyle: style])
+        contentLabel.attributedText = attrText
+    }
+
 }
 
 func parseTimelineNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
@@ -141,6 +149,8 @@ func fillTimelineCell(_ data: TimeLine.Item, isFirstCell: Bool, cell: BaseUITabl
         theCell.isFirstCell = isFirstCell
         theCell.timeLabel.text = "03-20"
         theCell.titleLabel.text = data.title
-        theCell.content.text = data.desc
+        if let content = data.desc {              
+            theCell.setContent(content)
+        }
     }
 }

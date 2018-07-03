@@ -32,8 +32,6 @@ class NewHouseCommentCell: BaseUITableViewCell {
 
     lazy var contentLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(16)
-        re.textColor = hexStringToUIColor(hex: "#222222")
         re.numberOfLines = 2
         return re
     }()
@@ -124,6 +122,19 @@ class NewHouseCommentCell: BaseUITableViewCell {
         super.prepareForReuse()
         showAllBtn.isHidden = true
     }
+
+    func setContent(content: String) {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 4
+        let attrText = NSMutableAttributedString(
+            string: content,
+            attributes: [.font: CommonUIStyle.Font.pingFangRegular(16),
+                         .foregroundColor: hexStringToUIColor(hex: "#222222"),
+                         .paragraphStyle: style])
+        contentLabel.attributedText = attrText
+//        re.font = CommonUIStyle.Font.pingFangRegular(16)
+//        re.textColor = hexStringToUIColor(hex: "#222222")
+    }
 }
 
 func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
@@ -135,7 +146,9 @@ func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectio
 
 func fillNewHouseCommentCell(_ data: NewHouseComment.Item, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseCommentCell {
-        theCell.contentLabel.text = data.content
         theCell.fromLabel.text = data.source
+        if let content = data.content {
+            theCell.setContent(content: content)
+        }
     }
 }

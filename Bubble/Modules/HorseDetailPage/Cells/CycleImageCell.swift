@@ -74,7 +74,7 @@ class CycleImageCell: BaseUITableViewCell {
     }
 }
 
-func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
+func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup ?? [])
         return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: CycleImageCell.identifier))

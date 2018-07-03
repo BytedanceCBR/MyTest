@@ -27,7 +27,7 @@ class UITableViewCellFactory {
         cellClasses.append(cellType)
         return self
     }
-    
+
     func register(tableView: UITableView) {
         cellClasses.forEach { cellType in
             tableView.register(cellType, forCellReuseIdentifier: cellType.identifier)
@@ -47,13 +47,16 @@ class UITableViewCellFactory {
 
 func getHouseDetailCellFactory() -> UITableViewCellFactory {
     return UITableViewCellFactory()
-        .addCellClass(cellType: CycleImageCell.self)
-        .addCellClass(cellType: NewHouseNameCell.self)
-        .addCellClass(cellType: NewHouseInfoCell.self)
-        .addCellClass(cellType: ContactCell.self)
-        .addCellClass(cellType: TimelineCell.self)
-        .addCellClass(cellType: OpenAllCell.self)
-        .addCellClass(cellType: MultiItemCell.self)
-        .addCellClass(cellType: NewHouseCommentCell.self)
-        .addCellClass(cellType: NewHouseNearByCell.self)
+            .addCellClass(cellType: CycleImageCell.self)
+            .addCellClass(cellType: NewHouseNameCell.self)
+            .addCellClass(cellType: NewHouseInfoCell.self)
+            .addCellClass(cellType: ContactCell.self)
+            .addCellClass(cellType: TimelineCell.self)
+            .addCellClass(cellType: OpenAllCell.self)
+            .addCellClass(cellType: MultiItemCell.self)
+            .addCellClass(cellType: NewHouseCommentCell.self)
+            .addCellClass(cellType: NewHouseNearByCell.self)
+            .addCellClass(cellType: GlobalPricingCell.self)
+            .addCellClass(cellType: DisclaimerCell.self)
+            .addCellClass(cellType: HeaderCell.self)
 }
