@@ -179,7 +179,8 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
 func createTagAttributeText(
     content: String,
     textColor: UIColor,
-    backgroundColor: UIColor) -> NSAttributedString {
+    backgroundColor: UIColor,
+    insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)) -> NSMutableAttributedString {
     let attributeText = NSMutableAttributedString(string: content)
     attributeText.yy_insertString("  ", at: 0)
     attributeText.yy_appendString("  ")
@@ -203,7 +204,7 @@ func createTagAttributeText(
         border.cornerRadius = 2
         border.lineJoin = CGLineJoin.bevel
 
-        border.insets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)
+        border.insets = insets
         attributeText.yy_setTextBackgroundBorder(border, range: range)
     }
     return attributeText

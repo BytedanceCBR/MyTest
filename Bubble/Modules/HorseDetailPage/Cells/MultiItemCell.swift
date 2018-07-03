@@ -140,7 +140,23 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     if let urlStr = item.images?.first?.url {
         re.icon.bd_setImage(with:  URL(string: urlStr))
     }
-    re.descLabel.text = item.title
+    let text = NSMutableAttributedString()
+    let attributeText = NSMutableAttributedString(string: item.title ?? "")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangMedium(16)
+    attributeText.yy_color = hexStringToUIColor(hex: "#222222")
+    text.append(attributeText)
+
+    if let status = item.saleStatus, let content = status.content {
+        let tag = createTagAttributeText(
+            content: content,
+            textColor: hexStringToUIColor(hex: "#33bf85"),
+            backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
+            insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
+        tag.yy_baselineOffset = 2
+        text.append(tag)
+    }
+
+    re.descLabel.attributedText = text
     re.priceLabel.text = item.pricingPerSqm
     re.spaceLabel.text = item.squaremeter
     return re

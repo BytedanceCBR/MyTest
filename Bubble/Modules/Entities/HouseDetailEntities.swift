@@ -37,8 +37,10 @@ struct NewHouseData: Mappable {
     var contact: [String: String]?
     var timeLine: TimeLine?
     var floorPan: FloorPan?
+    var comment: NewHouseComment?
+    var globalPricing: GlobalPrice?
 
-    init?(map: Map){
+    init?(map: Map) {
 
     }
 
@@ -52,6 +54,8 @@ struct NewHouseData: Mappable {
         contact <- map["contact"]
         timeLine <- map["timeline"]
         floorPan <- map["floorpan_list"]
+        comment <- map["comment"]
+        globalPricing <- map["global_pricing"]
     }
 }
 
@@ -67,7 +71,7 @@ struct NewHouseCoreInfo: Mappable {
     var saleStatus: TagItem?
     var propertyType: TagItem?
 
-    init?(map: Map){
+    init?(map: Map) {
 
     }
 
@@ -77,8 +81,8 @@ struct NewHouseCoreInfo: Mappable {
         constructionOpendate <- map["construction_opendate"]
         courtAddress <- map["court_address"]
         pricingPerSqm <- map["pricing_per_sqm"]
-        geodeLng <- map["geode_lng"]
-        geodeLat <- map["geode_lat"]
+        geodeLng <- map["gaode_lng"]
+        geodeLat <- map["gaode_lat"]
         geodeImageUrl <- map["geode_image_url"]
         saleStatus <- map["sale_status"]
         propertyType <- map["property_type"]
@@ -91,7 +95,7 @@ struct TagItem: Mappable {
     var backgroundColor: String?
     var textColor: String?
 
-    init?(map: Map){
+    init?(map: Map) {
 
     }
 
@@ -107,7 +111,7 @@ struct FloorPan: Mappable {
     var hasMore = false
     var list: [Item]?
 
-    init?(map: Map){
+    init?(map: Map) {
 
     }
 
@@ -186,4 +190,71 @@ struct TimeLine: Mappable {
             desc <- map["desc"]
         }
     }
+}
+
+struct NewHouseComment: Mappable {
+    var hasMore = false
+    var list: [Item]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        hasMore <- map["has_more"]
+        list <- map["list"]
+    }
+
+    struct Item: Mappable {
+        var id: String?
+        var createTime: Int?
+        var userName: String?
+        var content: String?
+        var fromUrl: String?
+        var source: String?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            createTime <- map["create_time"]
+            userName <- map["user_name"]
+            content <- map["content"]
+            fromUrl <- map["from_url"]
+            source <- map["source"]
+        }
+    }
+}
+
+struct GlobalPrice: Mappable {
+    var hasMore: Bool = false
+    var list: [Item]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        hasMore <- map["has_more"]
+        list <- map["list"]
+    }
+
+    struct Item: Mappable {
+        var agencyName: String?
+        var fromUrl: String?
+        var pricingPerSqm: String?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            agencyName <- map["agency_name"]
+            fromUrl <- map["from_url"]
+            pricingPerSqm <- map["pricing_per_sqm"]
+        }
+    }
+
 }

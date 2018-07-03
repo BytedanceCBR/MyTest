@@ -67,3 +67,7 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
     }
 
 }
+
+func getDistanceString(distance: CLLocationDistance) -> String {
+    return String(format: "%.1f公里", arguments: [distance / 1000])
+}

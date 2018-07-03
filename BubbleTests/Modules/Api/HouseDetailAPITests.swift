@@ -36,6 +36,7 @@ class HouseDetailAPITests: XCTestCase {
                 XCTAssertNotNil(response?.data?.coreInfo)
 
                 XCTAssertNotNil(response?.data?.timeLine)
+                
             }, onError: { (error) in
                 XCTAssert(false)
             }, onCompleted: {

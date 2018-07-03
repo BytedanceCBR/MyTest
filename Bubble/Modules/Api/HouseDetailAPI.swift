@@ -10,11 +10,12 @@ import ObjectMapper
 
 
 func requestNewHouseDetail(houseId: Int) -> Observable<HouseDetailResponse?> {
-    let url = "http://m.quduzixun.com/f100/api/court/\(houseId)"
+    let url = "http://m.quduzixun.com/f100/api/court/info"
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
                     url: url,
-                    params: ["house_type": HouseType.newHouse.rawValue],
+                    params: ["house_type": HouseType.newHouse.rawValue,
+                             "court_id": houseId],
                     method: "GET",
                     needCommonParams: false)
             .map({ (data) -> NSString? in

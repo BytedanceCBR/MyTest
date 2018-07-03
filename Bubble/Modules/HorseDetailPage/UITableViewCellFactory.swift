@@ -54,4 +54,6 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
         .addCellClass(cellType: TimelineCell.self)
         .addCellClass(cellType: OpenAllCell.self)
         .addCellClass(cellType: MultiItemCell.self)
+        .addCellClass(cellType: NewHouseCommentCell.self)
+        .addCellClass(cellType: NewHouseNearByCell.self)
 }

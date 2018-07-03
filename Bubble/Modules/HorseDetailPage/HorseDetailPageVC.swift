@@ -72,6 +72,11 @@ class HorseDetailPageVC: BaseViewController {
                             <- parseTimelineNode(data)
                             <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
                             <- parseFloorPanNode(data)
+                            <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
+                            <- parseNewHouseCommentNode(data)
+                            <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {}
+                            <- parseNewHouseNearByNode(data)
+
                         let result = dataParser.parser([])
                         self.dataSource.datas = result
                         print(result)
