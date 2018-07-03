@@ -172,7 +172,6 @@ struct HouseRecommendSection: Mappable {
 }
 
 struct HouseRecommendData: Mappable {
-<<<<<<< Updated upstream
 
 
     var court: HouseRecommendSection?
