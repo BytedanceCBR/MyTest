@@ -11,7 +11,8 @@ import Foundation
 protocol DetailPageViewModel {
     var tableView: UITableView? { get set }
 
-    func requestData()
+    func requestData(houseId: Int)
+
 }
 
 typealias TableCellRender = (BaseUITableViewCell) -> Void

@@ -12,6 +12,7 @@
 		1A2160176A8E129364373223 /* CategoryListPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165F9130F510F34E07685 /* CategoryListPageVC.swift */; };
 		1A21607597A473A5FBEC8125 /* MultiColumnTableSelectorPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21683A49BDF1D466FBCE54 /* MultiColumnTableSelectorPanel.swift */; };
 		1A21614AE76BCF4DCD290975 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21657C75915EE28B32990F /* HomeHeaderSearchView.swift */; };
+		1A21614E011237FC10BF7CDA /* NewHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216449BE34C2C982C6351F /* NewHouseDetailPageViewModel.swift */; };
 		1A21619D9421E806C882826C /* PriceListFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216DB7497A4C4249ACEA32 /* PriceListFilterPanel.swift */; };
 		1A2161EF1A0CEBB7289B14BC /* HouseDetailAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216002D0428E2B53BF44D0 /* HouseDetailAPI.swift */; };
 		1A2161FB173B242674245078 /* WebImageItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166C7610227F7E4649DA7 /* WebImageItemView.swift */; };
@@ -71,6 +72,9 @@
 		B300551520EBB9FC00D15643 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */; };
 		B30BBF8320E1E07B00B19E21 /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */; };
 		B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CC20CF68E800C1060D /* TabViewController.swift */; };
+		B321EF1B20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B321EF1A20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift */; };
+		B321EF1D20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B321EF1C20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift */; };
+		B321EF1F20ECB59B00A7032F /* PropertyListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B321EF1E20ECB59B00A7032F /* PropertyListCell.swift */; };
 		B32BCB2920CFAE370004A8D6 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */; };
 		B32BCB3520CFD35D0004A8D6 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB3420CFD35D0004A8D6 /* Color.swift */; };
 		B32DBD0A20E4F1220052D5D2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DBD0920E4F1220052D5D2 /* BaseViewController.swift */; };
@@ -140,6 +144,7 @@
 		1A216395A2D5D27516E69CF0 /* BDImageViewProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BDImageViewProvider.swift; sourceTree = "<group>"; };
 		1A2163A05CF3660B259E2D2D /* SimpleNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleNavBar.swift; sourceTree = "<group>"; };
 		1A216426F71821CAC163C0DF /* RecommendAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendAPI.swift; sourceTree = "<group>"; };
+		1A216449BE34C2C982C6351F /* NewHouseDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHouseDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A2164B36EB7B83E63D7AEC2 /* SearchAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAPI.swift; sourceTree = "<group>"; };
 		1A2164DB0624AF9F7E79D0E1 /* MarqueeGroupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeGroupView.swift; sourceTree = "<group>"; };
 		1A216503D2135DECB5E90842 /* UITableViewCellFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewCellFactory.swift; sourceTree = "<group>"; };
@@ -193,6 +198,9 @@
 		B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
 		B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTNetworkManager.a; path = Pods/TTNetworkManager/ios/libTTNetworkManager.a; sourceTree = "<group>"; };
 		B311A1CC20CF68E800C1060D /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
+		B321EF1A20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailPageViewModel.swift; sourceTree = "<group>"; };
+		B321EF1C20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseCoreInfoCell.swift; sourceTree = "<group>"; };
+		B321EF1E20ECB59B00A7032F /* PropertyListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListCell.swift; sourceTree = "<group>"; };
 		B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 		B32BCB3420CFD35D0004A8D6 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		B32DBD0920E4F1220052D5D2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -490,6 +498,8 @@
 			isa = PBXGroup;
 			children = (
 				B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */,
+				1A216449BE34C2C982C6351F /* NewHouseDetailPageViewModel.swift */,
+				B321EF1A20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift */,
 			);
 			path = PageVM;
 			sourceTree = "<group>";
@@ -618,6 +628,8 @@
 				B331306920EB6A72005E816A /* GlobalPricingCell.swift */,
 				B331306B20EB77D5005E816A /* DisclaimerCell.swift */,
 				B300551120EB8ADD00D15643 /* HeaderCell.swift */,
+				B321EF1C20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift */,
+				B321EF1E20ECB59B00A7032F /* PropertyListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -940,8 +952,10 @@
 				1A216DE3DCC6566E0FB15021 /* TextParser.swift in Sources */,
 				7D2ED16320ECBB750012F78F /* SearchNeighborhoodEntity.swift in Sources */,
 				1A216D9D5A9F5390401F777D /* HouseItemEntity.swift in Sources */,
+				B321EF1F20ECB59B00A7032F /* PropertyListCell.swift in Sources */,
 				B331306620EA2E01005E816A /* NewHouseCommentCell.swift in Sources */,
 				B331306C20EB77D5005E816A /* DisclaimerCell.swift in Sources */,
+				B321EF1D20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift in Sources */,
 				1A2165EBFFF48BC73918A56D /* SearchEntities.swift in Sources */,
 				1A2165CF0F074130778E209D /* SuggestionEntities.swift in Sources */,
 				1A216DE0BB22E4D555478BFC /* ConfigEntities.swift in Sources */,
@@ -951,6 +965,7 @@
 				B331306820EA3C9F005E816A /* NewHouseNearByCell.swift in Sources */,
 				B300551220EB8ADD00D15643 /* HeaderCell.swift in Sources */,
 				1A216BC43D437808A84610FE /* SuggestionListVC.swift in Sources */,
+				B321EF1B20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				1A21607597A473A5FBEC8125 /* MultiColumnTableSelectorPanel.swift in Sources */,
 				1A2164FA65DA089D70F6BE3B /* AreaConditionFilterPanel.swift in Sources */,
 				1A216883B8142A01B1045F84 /* BubbleSelectCollectionView.swift in Sources */,
@@ -999,6 +1014,7 @@
 				1A21645EFBFDEA262CB87980 /* BDImageViewProvider.swift in Sources */,
 				1A2168142A48B3020465A494 /* NewHouseInfoCell.swift in Sources */,
 				1A216A6A55922E44B89D78D3 /* FWSegmentedControl.swift in Sources */,
+				1A21614E011237FC10BF7CDA /* NewHouseDetailPageViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

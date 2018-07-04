@@ -48,7 +48,7 @@ struct ErshouHouseData: Mappable {
     var id: String?
     var title: String?
     var uploadAt: Int = 0
-    var houseImage: [HouseImage]?
+    var houseImage: [ImageItem]?
     var coreInfo: [ErshouHouseCoreInfo]?
     var baseInfo: [ErshouHouseBaseInfo]?
     var neighborhoodInfo: NeighborhoodInfo?
@@ -105,28 +105,6 @@ struct ErshouHouseCoreInfo: Mappable {
         value <- map["value"]
     }
 }
-
-struct HouseImage: Mappable {
-    var uri: String?
-    var url: String?
-    var width: Int?
-    var height: Int?
-    var urlList: [String]?
-    
-    init?(map: Map) {
-        
-    }
-    
-    mutating func mapping(map: Map) {
-        uri <- map["uri"]
-        url <- map["url"]
-        width <- map["width"]
-        height <- map["height"]
-        urlList <- map["url_list"]
-    }
-}
-
-
 
 struct UserStatus: Mappable {
     var houseSubStatus: Int?

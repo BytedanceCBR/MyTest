@@ -12,6 +12,8 @@ import Charts
 import RxSwift
 import RxCocoa
 
+typealias DetailPageViewModelProvider = (UITableView) -> DetailPageViewModel
+
 class HorseDetailPageVC: BaseViewController {
 
     private let houseId: Int
@@ -19,7 +21,9 @@ class HorseDetailPageVC: BaseViewController {
 
     private let disposeBag = DisposeBag()
 
-    private var cellFactory: UITableViewCellFactory
+    private var detailPageViewModel: DetailPageViewModel?
+
+    private var pageViewModelProvider: DetailPageViewModelProvider?
 
     private lazy var tableView: UITableView = {
         let result = UITableView()
@@ -30,13 +34,11 @@ class HorseDetailPageVC: BaseViewController {
         return result
     }()
 
-    private let dataSource: DataSource
 
-    init(houseId: Int, houseType: HouseType) {
+    init(houseId: Int, houseType: HouseType, provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
         self.houseType = houseType
-        self.cellFactory = getHouseDetailCellFactory()
-        self.dataSource = DataSource(cellFactory: cellFactory)
+        self.pageViewModelProvider = provider
         super.init(nibName: nil, bundle: nil)
         self.automaticallyAdjustsScrollViewInsets = false
     }
@@ -45,60 +47,15 @@ class HorseDetailPageVC: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLayoutSubviews() {
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.view.backgroundColor = UIColor.white
-        tableView.delegate = dataSource
-        tableView.dataSource = dataSource
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.bottom.left.right.equalToSuperview()
         }
-        cellFactory.register(tableView: tableView)
-
-        requestNewHouseDetail(houseId: 6573911052528910605)
-            .debug()
-            .subscribe(onNext: { [unowned self] (response) in
-                if let data = response?.data {
-                    let dataParser = DetailDataParser.monoid()
-                        <- parseNewHouseCycleImageNode(data)
-                        <- parseNewHouseNameNode(data)
-                        <- parseNewHouseCoreInfoNode(data)
-                        <- parseNewHouseContactNode(data)
-                        <- parseTimeLineHeaderNode(data)
-                        <- parseTimelineNode(data)
-                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-
-                        }
-                        <- parseFloorPanHeaderNode(data)
-                        <- parseFloorPanNode(data)
-                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-
-                        }
-                        <- parseCommentHeaderNode(data)
-                        <- parseNewHouseCommentNode(data)
-                        <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-                            
-                        }
-                        <- parseHeaderNode("周边位置")
-                        <- parseNewHouseNearByNode(data)
-                        <- parseHeaderNode("全网比价", showLoadMore: true)
-                        <- parseGlobalPricingNode(data)
-                        <- parseDisclaimerNode(data)
-
-                    let result = dataParser.parser([])
-                    self.dataSource.datas = result
-                    print(result)
-                    self.tableView.reloadData()
-                }
-                }, onError: { (error) in
-                    print(error)
-            })
-            .disposed(by: disposeBag)
+        detailPageViewModel = pageViewModelProvider?(tableView)
+        detailPageViewModel?.requestData(houseId: houseId)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -116,51 +73,4 @@ class HorseDetailPageVC: BaseViewController {
 
 
 }
-
-
-
-fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
-
-    var datas: [TableSectionNode] = []
-
-    var cellFactory: UITableViewCellFactory
-
-    var sectionHeaderGenerator: TableViewSectionViewGen?
-
-    init(cellFactory: UITableViewCellFactory) {
-        self.cellFactory = cellFactory
-        super.init()
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return datas.count
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datas[section].items.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch datas[indexPath.section].type {
-        case let .node(identifier):
-            let cell = cellFactory.dequeueReusableCell(
-                    identifer: identifier,
-                    tableView: tableView,
-                    indexPath: indexPath)
-            datas[indexPath.section].items[indexPath.row](cell)
-            return cell
-        default:
-            return CycleImageCell()
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-}
-
 

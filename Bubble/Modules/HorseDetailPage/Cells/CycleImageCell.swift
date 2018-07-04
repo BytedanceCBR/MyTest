@@ -16,7 +16,7 @@ class CycleImageCell: BaseUITableViewCell {
         return "CycleImage"
     }
 
-    fileprivate var headerImages: [ImageGroup] = [] {
+    fileprivate var headerImages: [ImageModel] = [] {
         didSet {
             pageableViewModel?.reloadData(currentPageOnly: false)
         }
@@ -55,11 +55,7 @@ class CycleImageCell: BaseUITableViewCell {
     func selectHeaderView(index: Int) -> String {
         if headerImages.count != 0 {
             let offset = CycleImageCell.offsetByIndex(index: index, count: headerImages.count)
-            if let url = headerImages[offset].images?.first?.url {
-                return url
-            } else {
-                return ""
-            }
+            return headerImages[offset].url
         } else {
             return ""
         }
@@ -74,14 +70,41 @@ class CycleImageCell: BaseUITableViewCell {
     }
 }
 
+fileprivate struct ImageModel {
+    let url: String
+    let category: String
+}
+
 func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
-        let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup ?? [])
+        let imageItems = newHouseData.imageGroup?.map({ (group) -> ImageModel in
+            if let name = group.name, let url = group.images?.first?.url {
+                return ImageModel(url: url, category: name)
+            } else {
+                return ImageModel(url: "", category: "")
+            }
+        })
+
+        let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
         return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: CycleImageCell.identifier))
     }
 }
 
-func fillCycleImageCell(_ images: [ImageGroup], cell: BaseUITableViewCell) -> Void {
+func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
+    return {
+        let imageItems = ershouHouseData.houseImage?.map({ (image) -> ImageModel in
+            if let url = image.url {
+                return ImageModel(url: url, category: "")
+            } else {
+                return ImageModel(url: "", category: "")
+            }
+        })
+        let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
+        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: CycleImageCell.identifier))
+    }
+}
+
+fileprivate func fillCycleImageCell(_ images: [ImageModel], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? CycleImageCell {
         theCell.headerImages = images
     }

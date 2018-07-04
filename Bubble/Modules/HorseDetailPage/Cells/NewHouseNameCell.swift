@@ -59,7 +59,7 @@ class NewHouseNameCell: BaseUITableViewCell {
             maker.top.equalTo(nameLabel.snp.bottom).offset(6)
             maker.left.equalTo(nameLabel.snp.left)
             maker.height.equalTo(0).priority(.high)
-         }
+        }
 
         contentView.addSubview(secondaryLabel)
         secondaryLabel.snp.makeConstraints { maker in
@@ -117,7 +117,7 @@ class NewHouseNameCell: BaseUITableViewCell {
 
         tagsView.attributedText = text
     }
-    
+
     func setAlias(alias: String? = nil) {
         if let alias = alias, !alias.isEmpty {
             secondaryLabel.text = alias
@@ -132,7 +132,7 @@ class NewHouseNameCell: BaseUITableViewCell {
                 maker.left.equalTo(nameLabel.snp.left)
                 maker.right.equalTo(nameLabel.snp.right)
                 maker.height.equalTo(17).priority(.high)
-             }
+            }
         } else {
             aliasLabel.snp.remakeConstraints { maker in
                 maker.top.equalTo(nameLabel.snp.bottom).offset(6)
@@ -144,7 +144,7 @@ class NewHouseNameCell: BaseUITableViewCell {
                 maker.left.equalTo(aliasLabel.snp.left)
                 maker.right.equalTo(nameLabel.snp.right)
                 maker.height.equalTo(0).priority(.high)
-             }
+            }
         }
     }
 
@@ -157,7 +157,7 @@ func parseNewHouseNameNode(_ newHouseData: NewHouseData) -> () -> TableSectionNo
     }
 }
 
-func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCell) -> Void {
+func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCell) {
     guard let theCell = cell as? NewHouseNameCell else {
         return
     }
@@ -167,7 +167,7 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
     var tags: [NSAttributedString] = []
 
     if let saleStatus = newHouseData.coreInfo?.saleStatus,
-            let content = saleStatus.content {
+       let content = saleStatus.content {
         tags.append(createTagAttributeText(
                 content: content,
                 textColor: hexStringToUIColor(hex: "#33bf85"),
@@ -176,11 +176,34 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
     theCell.setTags(tags: tags)
 }
 
+func parseErshouHouseNameNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
+    return {
+        let cellRender = curry(fillErshouHouseNameCell)(ershouHouseData)
+        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: NewHouseNameCell.identifier))
+    }
+}
+
+func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITableViewCell) {
+    guard let theCell = cell as? NewHouseNameCell else {
+        return
+    }
+    theCell.nameLabel.text = ershouHouseData.title
+    let tags = ershouHouseData.tags?.map({ (item) -> NSAttributedString in
+        createTagAttributeText(
+            content: item.content ?? "" ,
+            textColor: hexStringToUIColor(hex: "#33bf85"),
+            backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08))
+    })
+    theCell.setAlias(alias: nil)
+
+    theCell.setTags(tags: tags ?? [])
+}
+
 func createTagAttributeText(
-    content: String,
-    textColor: UIColor,
-    backgroundColor: UIColor,
-    insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)) -> NSMutableAttributedString {
+        content: String,
+        textColor: UIColor,
+        backgroundColor: UIColor,
+        insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)) -> NSMutableAttributedString {
     let attributeText = NSMutableAttributedString(string: content)
     attributeText.yy_insertString("  ", at: 0)
     attributeText.yy_appendString("  ")
@@ -192,7 +215,7 @@ func createTagAttributeText(
     attributeText.yy_minimumLineHeight = 20
     let substringRange = attributeText.string.range(of: content)
     if let lowerBound = substringRange?.lowerBound,
-        let upperBound = substringRange?.upperBound {
+       let upperBound = substringRange?.upperBound {
         let start = attributeText.string.distance(from: attributeText.string.startIndex, to: (lowerBound))
         let length = attributeText.string.distance(from: lowerBound, to: upperBound)
         let range = NSMakeRange(start, length)

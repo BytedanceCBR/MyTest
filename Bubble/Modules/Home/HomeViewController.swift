@@ -230,7 +230,15 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailPage = HorseDetailPageVC(houseId: 0, houseType: .newHouse)
+//        let detailPage = HorseDetailPageVC(
+//            houseId: 6573911052528910605,
+//            houseType: .newHouse,
+//            provider: getNewHouseDetailPageViewModel())
+
+        let detailPage = HorseDetailPageVC(
+            houseId: 6569028097050460430,
+            houseType: .newHouse,
+            provider: getErshouHouseDetailPageViewModel())
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 
