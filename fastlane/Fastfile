@@ -19,6 +19,8 @@ platform :ios do
   desc "Description of what the lane does"
   lane :beta do
     # add actions here: https://docs.fastlane.tools/actions
+    get_certificates           # invokes cert
+    get_provisioning_profile   # invokes sigh
     build_app(scheme: "Bubble",
               workspace: "Bubble.xcworkspace")
   end
