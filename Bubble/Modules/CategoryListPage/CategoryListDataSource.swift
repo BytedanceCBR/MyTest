@@ -9,7 +9,7 @@
 import UIKit
 
 class CategoryListDataSource: NSObject, UITableViewDataSource {
-    var datas: [HouseItemEntity] = []
+    var datas: [HouseItemInnerEntity] = []
 
 //    func numberOfSections(in tableView: UITableView) -> Int {
 //        return datas.count
@@ -28,7 +28,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource {
         return cell ?? UITableViewCell()
     }
 
-    func onDataArrived(datas: [HouseItemEntity]) {
+    func onDataArrived(datas: [HouseItemInnerEntity]) {
         self.datas = datas
     }
 }

@@ -75,9 +75,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                         datas.append(house)
                     }
 
-                    if let court = response1?.data?.court {
-                        datas.append(court)
-                    }
+//                    if let court = response1?.data?.court {
+//                        datas.append(court)
+//                    }
                     return datas
                  }
                 .subscribe(onNext: { [unowned self] response in

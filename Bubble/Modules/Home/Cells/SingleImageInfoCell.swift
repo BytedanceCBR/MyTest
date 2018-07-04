@@ -149,7 +149,7 @@ class SingleImageInfoCell: UITableViewCell {
     }
 }
 
-func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemEntity) {
+func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemInnerEntity) {
     cell.majorTitle.text = item.displayTitle
     cell.extendTitle.text = item.displaySubtitle
     let text = NSMutableAttributedString()
