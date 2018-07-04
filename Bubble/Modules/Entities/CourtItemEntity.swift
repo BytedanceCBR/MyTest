@@ -290,7 +290,6 @@ struct CourtItemInnerEntity: Mappable {
         displayDescription <- map["display_description"]
         coreInfo <- map["core_info"]
         tags <- map["tags"]
-        coreInfo <- map["core_info"]
         courtImage <- map["images"]
         timeLine <- map["timeline"]
         comment <- map["comment"]

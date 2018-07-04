@@ -64,6 +64,9 @@
 		7D2ED15B20EC901C0012F78F /* CourtItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */; };
 		7D2ED15D20ECB4FF0012F78F /* CourtItemEntityApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */; };
 		7D2ED16120ECB7ED0012F78F /* CourtItemEntityApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */; };
+		7D2ED16320ECBB750012F78F /* SearchNeighborhoodEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED16220ECBB750012F78F /* SearchNeighborhoodEntity.swift */; };
+		7D2ED16520ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED16420ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift */; };
+		7D2ED16720ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED16620ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift */; };
 		B300551220EB8ADD00D15643 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551120EB8ADD00D15643 /* HeaderCell.swift */; };
 		B300551520EBB9FC00D15643 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */; };
 		B30BBF8320E1E07B00B19E21 /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */; };
@@ -183,6 +186,9 @@
 		7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntity.swift; sourceTree = "<group>"; };
 		7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
 		7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApiTest.swift; sourceTree = "<group>"; };
+		7D2ED16220ECBB750012F78F /* SearchNeighborhoodEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNeighborhoodEntity.swift; sourceTree = "<group>"; };
+		7D2ED16420ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNeighborhoodEntityApi.swift; sourceTree = "<group>"; };
+		7D2ED16620ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNeighborhoodEntityApiTest.swift; sourceTree = "<group>"; };
 		B300551120EB8ADD00D15643 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
 		B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTNetworkManager.a; path = Pods/TTNetworkManager/ios/libTTNetworkManager.a; sourceTree = "<group>"; };
@@ -381,6 +387,7 @@
 				1A2162329474D78925BC12F6 /* HouseDetailEntities.swift */,
 				7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */,
 				7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */,
+				7D2ED16220ECBB750012F78F /* SearchNeighborhoodEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -394,6 +401,7 @@
 				1A216002D0428E2B53BF44D0 /* HouseDetailAPI.swift */,
 				7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */,
 				7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */,
+				7D2ED16420ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -582,6 +590,7 @@
 				B342191B20E5E557001064AE /* HouseDetailAPITests.swift */,
 				7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */,
 				7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */,
+				7D2ED16620ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -929,6 +938,7 @@
 				B300551520EBB9FC00D15643 /* DetailPageViewModel.swift in Sources */,
 				1A21676BF4B7193D13E571AD /* UIKitExtension.swift in Sources */,
 				1A216DE3DCC6566E0FB15021 /* TextParser.swift in Sources */,
+				7D2ED16320ECBB750012F78F /* SearchNeighborhoodEntity.swift in Sources */,
 				1A216D9D5A9F5390401F777D /* HouseItemEntity.swift in Sources */,
 				B331306620EA2E01005E816A /* NewHouseCommentCell.swift in Sources */,
 				B331306C20EB77D5005E816A /* DisclaimerCell.swift in Sources */,
@@ -962,6 +972,7 @@
 				B342192320E76D5B001064AE /* CycleImageCell.swift in Sources */,
 				1A2164A636F7AA847211EBEB /* CityListViewModel.swift in Sources */,
 				1A2165073D7441DEEB3C2BB8 /* HouseDetailPageVC.swift in Sources */,
+				7D2ED16520ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift in Sources */,
 				B331306420EA0BE3005E816A /* MultiItemCell.swift in Sources */,
 				1A216E0DEE513B3D5D3AD3F7 /* UITableViewCellFactory.swift in Sources */,
 				1A216B4769EA47592F5C599F /* CountryListVC.swift in Sources */,
@@ -998,6 +1009,7 @@
 				B342192020E62587001064AE /* HorseDetailPageVCTests.swift in Sources */,
 				7D2ED16120ECB7ED0012F78F /* CourtItemEntityApiTest.swift in Sources */,
 				B3B0862D20C923D700483971 /* BubbleTests.swift in Sources */,
+				7D2ED16720ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift in Sources */,
 				7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */,
 				B32E590220E21D8500C8FEB2 /* CityItemCellTest.swift in Sources */,
 				B342191C20E5E557001064AE /* HouseDetailAPITests.swift in Sources */,
