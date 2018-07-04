@@ -58,11 +58,14 @@
 		1A216DE3DCC6566E0FB15021 /* TextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216FC4BF82903F1D019906 /* TextParser.swift */; };
 		1A216E0DEE513B3D5D3AD3F7 /* UITableViewCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216503D2135DECB5E90842 /* UITableViewCellFactory.swift */; };
 		4C965404B90848550717BE6C /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855907E05A57AED40965764 /* libPods-BubbleUITests.a */; };
-		B300551220EB8ADD00D15643 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551120EB8ADD00D15643 /* HeaderCell.swift */; };
-		B300551520EBB9FC00D15643 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */; };
 		7D2ED15520EBAB280012F78F /* ErshouHouseDetailEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */; };
 		7D2ED15720EBB7E60012F78F /* ErshouHouseDetailApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */; };
 		7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */; };
+		7D2ED15B20EC901C0012F78F /* CourtItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */; };
+		7D2ED15D20ECB4FF0012F78F /* CourtItemEntityApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */; };
+		7D2ED16120ECB7ED0012F78F /* CourtItemEntityApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */; };
+		B300551220EB8ADD00D15643 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551120EB8ADD00D15643 /* HeaderCell.swift */; };
+		B300551520EBB9FC00D15643 /* DetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */; };
 		B30BBF8320E1E07B00B19E21 /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */; };
 		B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B311A1CC20CF68E800C1060D /* TabViewController.swift */; };
 		B32BCB2920CFAE370004A8D6 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */; };
@@ -174,11 +177,14 @@
 		1A216FC4BF82903F1D019906 /* TextParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextParser.swift; sourceTree = "<group>"; };
 		22FB916E25E03D0F6C341524 /* Pods-Bubble.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bubble/Pods-Bubble.release.xcconfig"; sourceTree = "<group>"; };
 		4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B300551120EB8ADD00D15643 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
-		B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
 		7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailEntities.swift; sourceTree = "<group>"; };
 		7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailApi.swift; sourceTree = "<group>"; };
 		7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailAPITests.swift; sourceTree = "<group>"; };
+		7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntity.swift; sourceTree = "<group>"; };
+		7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
+		7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApiTest.swift; sourceTree = "<group>"; };
+		B300551120EB8ADD00D15643 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
+		B300551420EBB9FC00D15643 /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
 		B30BBF8220E1E07B00B19E21 /* libTTNetworkManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTNetworkManager.a; path = Pods/TTNetworkManager/ios/libTTNetworkManager.a; sourceTree = "<group>"; };
 		B311A1CC20CF68E800C1060D /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		B32BCB2820CFAE370004A8D6 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
@@ -374,6 +380,7 @@
 				1A216C9B9C70A92281DE9945 /* ConfigEntities.swift */,
 				1A2162329474D78925BC12F6 /* HouseDetailEntities.swift */,
 				7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */,
+				7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -386,6 +393,7 @@
 				1A2164B36EB7B83E63D7AEC2 /* SearchAPI.swift */,
 				1A216002D0428E2B53BF44D0 /* HouseDetailAPI.swift */,
 				7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */,
+				7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -573,6 +581,7 @@
 			children = (
 				B342191B20E5E557001064AE /* HouseDetailAPITests.swift */,
 				7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */,
+				7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -901,6 +910,7 @@
 				B311A1CD20CF68E800C1060D /* TabViewController.swift in Sources */,
 				B331305E20E9E9AB005E816A /* ContactCell.swift in Sources */,
 				B32E590720E23C7200C8FEB2 /* ConstraintArrayDSL.swift in Sources */,
+				7D2ED15D20ECB4FF0012F78F /* CourtItemEntityApi.swift in Sources */,
 				B334EDD220CE9CC50052CF44 /* Curry.swift in Sources */,
 				B32DBD0A20E4F1220052D5D2 /* BaseViewController.swift in Sources */,
 				B334EDD020CE9CC50052CF44 /* RxTTNetwork.swift in Sources */,
@@ -939,6 +949,7 @@
 				1A2168EDCBBF6AD32494917D /* SearchFilterPanel.swift in Sources */,
 				1A216748F426A8E4810AD126 /* SearchAndConditionFilterViewModel.swift in Sources */,
 				1A21661315DC728F75918050 /* CategoryListDataSource.swift in Sources */,
+				7D2ED15B20EC901C0012F78F /* CourtItemEntity.swift in Sources */,
 				B342192820E7D69B001064AE /* NewHouseNameCell.swift in Sources */,
 				1A216CDFDE0D32E643612704 /* PopupMenuView.swift in Sources */,
 				1A2165886C45BD565D9A73A4 /* CommonUIStyle.swift in Sources */,
@@ -985,6 +996,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B342192020E62587001064AE /* HorseDetailPageVCTests.swift in Sources */,
+				7D2ED16120ECB7ED0012F78F /* CourtItemEntityApiTest.swift in Sources */,
 				B3B0862D20C923D700483971 /* BubbleTests.swift in Sources */,
 				7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */,
 				B32E590220E21D8500C8FEB2 /* CityItemCellTest.swift in Sources */,

@@ -41,6 +41,8 @@ struct HouseItemEntity: Mappable {
     var baseInfoMap: HouseItemBaseInfo?
     var houseImage: [ImageItem]?
     var neighborhoodInfo: NeighborhoodInfo?
+    var tags: [TagItem]?
+    var displayBuiltYear: String?
     
     init?(map: Map) {
         
@@ -54,12 +56,16 @@ struct HouseItemEntity: Mappable {
         displayTitle <- map["display_title"]
         displaySubtitle <- map["display_subtitle"]
         displayDescription <- map["display_description"]
+        neighborhoodInfo <- map["neighborhood_info"]
         url <- map["url"]
         coreInfo <- map["core_info"]
         baseInfo <- map["base_info"]
         baseInfoMap <- map["base_info_map"]
         houseImage <- map["house_image"]
         neighborhoodInfo <- map["neighborhood_info"]
+        displayBuiltYear <- map["display_built_year"]
+        tags <- map["tags"]
+
     }
     
 }
@@ -118,6 +124,16 @@ struct NeighborhoodInfo: Mappable {
     var gaodeLng: String?
     var gaodeLat: String?
     var gaodeImageUrl: String?
+    var images: [ImageItem]?
+    var displayTitle: String?
+    var displaySubtitle: String?
+    var displayBuiltYear: String?
+    var displayDescription: String?
+    var houseType: Int?
+    var displayPricePerSqm: String?
+    var displayPrice: String?
+
+
     
     init?(map: Map) {
         
@@ -132,6 +148,14 @@ struct NeighborhoodInfo: Mappable {
         gaodeLng <- map["gaode_lng"]
         gaodeLat <- map["gaode_lat"]
         gaodeImageUrl <- map["gaode_image_url"]
+        images <- map["images"]
+        displayTitle <- map["display_title"]
+        displaySubtitle <- map["display_subtitle"]
+        displayDescription <- map["display_description"]
+        displayPrice <- map["display_price"]
+        displayBuiltYear <- map["display_built_year"]
+        houseType <- map["house_type"]
+        displayPricePerSqm <- map["display_price_per_sqm"]
     }
 }
 
