@@ -30,7 +30,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         cellFactory.register(tableView: tableView)
     }
 
-    func requestData(houseId: Int) {
+    func requestData(houseId: Int64) {
         requestErshouHouseDetail(houseId: houseId)
                 .debug()
                 .subscribe(onNext: { [unowned self] (response) in

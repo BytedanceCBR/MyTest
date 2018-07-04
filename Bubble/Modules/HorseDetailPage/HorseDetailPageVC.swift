@@ -16,7 +16,7 @@ typealias DetailPageViewModelProvider = (UITableView) -> DetailPageViewModel
 
 class HorseDetailPageVC: BaseViewController {
 
-    private let houseId: Int
+    private let houseId: Int64
     private let houseType: HouseType
 
     private let disposeBag = DisposeBag()
@@ -35,7 +35,7 @@ class HorseDetailPageVC: BaseViewController {
     }()
 
 
-    init(houseId: Int, houseType: HouseType, provider: @escaping DetailPageViewModelProvider) {
+    init(houseId: Int64, houseType: HouseType, provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
         self.houseType = houseType
         self.pageViewModelProvider = provider

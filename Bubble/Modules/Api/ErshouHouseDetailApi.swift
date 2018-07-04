@@ -12,7 +12,7 @@ import TTNetworkManager
 import ObjectMapper
 
 
-func requestErshouHouseDetail(houseId: Int) -> Observable<ErshouHouseDetailResponse?> {
+func requestErshouHouseDetail(houseId: Int64) -> Observable<ErshouHouseDetailResponse?> {
     let url = "http://m.quduzixun.com/f100/api/house/info"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(

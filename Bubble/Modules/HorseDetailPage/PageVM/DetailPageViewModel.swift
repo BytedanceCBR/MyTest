@@ -11,7 +11,7 @@ import Foundation
 protocol DetailPageViewModel {
     var tableView: UITableView? { get set }
 
-    func requestData(houseId: Int)
+    func requestData(houseId: Int64)
 
 }
 
