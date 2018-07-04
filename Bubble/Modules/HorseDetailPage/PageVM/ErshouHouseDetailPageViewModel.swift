@@ -51,6 +51,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseErshouHouseCycleImageNode(data)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
+                <- parsePropertyListNode(data)
 
                 return dataParser.parser
         } else {
