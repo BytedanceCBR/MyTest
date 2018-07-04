@@ -34,3 +34,28 @@ func requestNeighborhoodDetail(neighborhoodId: String = "", query: String = "") 
             }
         })
 }
+
+//https://m.quduzixun.com/f100/api/neighborhood/sale?neighborhood_id=6569028179917291780&page=0&price=[10000,40000000]&count=10&room_num=[3,3]&squaremeter=[90,120]
+func requestNeighborhoodTotalSales(neighborhoodId: String = "", query: String = "") -> Observable<NeighborhoodTotalSalesResponse?> {
+    var url = "http://m.quduzixun.com/f100/api/neighborhood/sale?neighborhood_id=\(neighborhoodId)"
+    if !query.isEmpty {
+        url = "\(url)&\(query)"
+    }
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: url,
+            params: nil,
+            method: "GET",
+            needCommonParams: false)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> NeighborhoodTotalSalesResponse? in
+            if let payload = payload {
+                let response = NeighborhoodTotalSalesResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}

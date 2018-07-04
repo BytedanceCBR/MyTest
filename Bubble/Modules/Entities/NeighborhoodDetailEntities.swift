@@ -9,6 +9,22 @@
 import Foundation
 import ObjectMapper
 
+struct NeighborhoodTotalSalesResponse: Mappable {
+    var status: Int?
+    var message: String?
+    var data: TotalSalesItem?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
+
 struct NeighborhoodDetailResponse: Mappable {
     var status: Int?
     var message: String?
@@ -24,6 +40,7 @@ struct NeighborhoodDetailResponse: Mappable {
         data <- map["data"]
     }
 }
+
 struct NeighborhoodItemAttribute: Mappable {
     var attr: String?
     var value: String?

@@ -45,6 +45,107 @@ class HouseDetailAPITests: XCTestCase {
         waitForExpectations(timeout: 3, handler: nil)
     }
     
+    func testRequestNewHousePrice() {
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNewHousePrice(houseId: 6573911052528910605, count: 10)
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.hasMore)
+                XCTAssertNotNil(response?.data?.list?.first?.agencyName)
+                XCTAssertNotNil(response?.data?.list?.first?.fromUrl)
+
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testRequestNewHouseTimeLine() {
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNewHouseTimeLine(houseId: 6573911052528910605, count: 10, page: 0)
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.hasMore)
+                XCTAssertNotNil(response?.data?.list?.first?.title)
+                XCTAssertNotNil(response?.data?.list?.first?.desc)
+                
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testRequestNewHouseFloorPan() {
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNewHouseFloorPan(houseId: 6573911052528910605)
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.hasMore)
+                XCTAssertNotNil(response?.data?.list?.first?.saleStatus)
+                XCTAssertNotNil(response?.data?.list?.first?.images)
+                
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testRequestNewHouseComment() {
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNewHouseComment(houseId: 6573911052528910605, count: 10, page: 0)
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.hasMore)
+                XCTAssertNotNil(response?.data?.list?.first?.userName)
+                XCTAssertNotNil(response?.data?.list?.first?.content)
+                
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testRequestNewHouseMoreDetail() {
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNewHouseMoreDetail(houseId: 6573911052528910605)
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.heating)
+                XCTAssertNotNil(response?.data?.saleStatus)
+                XCTAssertNotNil(response?.data?.openDate)
+
+                
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

@@ -9,16 +9,172 @@
 import Foundation
 import ObjectMapper
 
-struct HouseDetailResponse: Mappable {
+struct CourtComentResponse: Mappable {
+    
+    var status: Int?
+    var message: String?
+    var data: NewHouseComment?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
 
+struct PermitList: Mappable {
+    var permit : String?
+    var permitDate : String?
+    var bindBuilding : String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        permit <- map["permit"]
+        permitDate <- map["permit_date"]
+        bindBuilding <- map["bind_building"]
+    }
+}
+struct CourtMoreDetail: Mappable {
+    
+    var developerName : String?
+    var saleStatus : String?
+    var pricingPerSqm : String?
+    var openDate : String?
+    var deliveryDate : String?
+    var circuitDesc : String?
+    var generalAddress : String?
+    var saleAddress : String?
+    var properyType : String?
+    var featureDesc : String?
+    var buildingType : String?
+    var buildingCategory : String?
+    var decoration : String?
+    var propertyRight : String?
+    var propertyName : String?
+    var powerWaterGasDesc : String?
+    var heating : String?
+    var greenRatio : String?
+    var parkingNum : String?
+    var plotRatio : String?
+    var buildingDesc : String?
+    var permitList : [PermitList]?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        developerName <- map["developer_name"]
+        saleStatus <- map["sale_status"]
+        pricingPerSqm <- map["pricing_per_sqm"]
+        openDate <- map["open_date"]
+        deliveryDate <- map["delivery_date"]
+        circuitDesc <- map["circuit_desc"]
+        generalAddress <- map["general_address"]
+        saleAddress <- map["sale_address"]
+        properyType <- map["propery_type"]
+        featureDesc <- map["feature_desc"]
+        buildingType <- map["building_type"]
+        buildingCategory <- map["building_category"]
+        decoration <- map["decoration"]
+        propertyRight <- map["property_right"]
+        propertyName <- map["property_name"]
+        powerWaterGasDesc <- map["power_water_gas_desc"]
+        heating <- map["heating"]
+        greenRatio <- map["green_ratio"]
+        parkingNum <- map["parking_num"]
+        plotRatio <- map["plot_ratio"]
+        buildingDesc <- map["building_desc"]
+        permitList <- map["permit_list"]
+    }
+}
+
+struct CourtMoreDetailResponse: Mappable {
+    
+    var status: Int?
+    var message: String?
+    var data: CourtMoreDetail?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
+
+
+struct CourtFloorPanResponse: Mappable {
+    
+    var status: Int?
+    var message: String?
+    var data: FloorPan?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
+
+struct CourtTimelineResponse: Mappable {
+    
+    var status: Int?
+    var message: String?
+    var data: TimeLine?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
+
+struct CourtPriceResponse: Mappable {
+    
+    var status: Int?
+    var message: String?
+    var data: GlobalPrice?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}
+
+struct HouseDetailResponse: Mappable {
+    
     var status: Int?
     var message: String?
     var data: NewHouseData?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         status <- map["status"]
         message <- map["message"]
@@ -27,7 +183,7 @@ struct HouseDetailResponse: Mappable {
 }
 
 struct NewHouseData: Mappable {
-
+    
     var id: Int?
     var title: String?
     var uploadAt: Int = 0
@@ -39,11 +195,11 @@ struct NewHouseData: Mappable {
     var floorPan: FloorPan?
     var comment: NewHouseComment?
     var globalPricing: GlobalPrice?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         id <- map["id"]
         title <- map["title"]
@@ -70,11 +226,11 @@ struct NewHouseCoreInfo: Mappable {
     var geodeImageUrl: String?
     var saleStatus: TagItem?
     var propertyType: TagItem?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         name <- map["name"]
         aliasName <- map["alias_name"]
@@ -94,11 +250,11 @@ struct TagItem: Mappable {
     var content: String?
     var backgroundColor: String?
     var textColor: String?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         id <- map["id"]
         content <- map["content"]
@@ -110,30 +266,30 @@ struct TagItem: Mappable {
 struct FloorPan: Mappable {
     var hasMore = false
     var list: [Item]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         hasMore <- map["has_more"]
         list <- map["list"]
     }
-
+    
     struct Item: Mappable {
-
+        
         var id: String?
         var saleStatus: TagItem?
         var title: String?
         var images: [ImageItem]?
         var pricingPerSqm: String?
         var squaremeter: String?
-
-
+        
+        
         init?(map: Map) {
-
+            
         }
-
+        
         mutating func mapping(map: Map) {
             id <- map["id"]
             saleStatus <- map["sale_status"]
@@ -146,15 +302,15 @@ struct FloorPan: Mappable {
 }
 
 struct ImageGroup: Mappable {
-
+    
     var name: String?
     var type: Int?
     var images: [ImageItem]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         name <- map["name"]
         type <- map["type"]
@@ -165,25 +321,25 @@ struct ImageGroup: Mappable {
 struct TimeLine: Mappable {
     var hasMore = false
     var list: [Item]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         hasMore <- map["has_more"]
         list <- map["list"]
     }
-
+    
     struct Item: Mappable {
         var createTime: Int = 0
         var title: String?
         var desc: String?
-
+        
         init?(map: Map) {
-
+            
         }
-
+        
         mutating func mapping(map: Map) {
             createTime <- map["create_time"]
             title <- map["title"]
@@ -195,16 +351,16 @@ struct TimeLine: Mappable {
 struct NewHouseComment: Mappable {
     var hasMore = false
     var list: [Item]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         hasMore <- map["has_more"]
         list <- map["list"]
     }
-
+    
     struct Item: Mappable {
         var id: String?
         var createTime: Int?
@@ -212,11 +368,11 @@ struct NewHouseComment: Mappable {
         var content: String?
         var fromUrl: String?
         var source: String?
-
+        
         init?(map: Map) {
-
+            
         }
-
+        
         mutating func mapping(map: Map) {
             id <- map["id"]
             createTime <- map["create_time"]
@@ -231,30 +387,31 @@ struct NewHouseComment: Mappable {
 struct GlobalPrice: Mappable {
     var hasMore: Bool = false
     var list: [Item]?
-
+    
     init?(map: Map) {
-
+        
     }
-
+    
     mutating func mapping(map: Map) {
         hasMore <- map["has_more"]
         list <- map["list"]
     }
-
+    
     struct Item: Mappable {
         var agencyName: String?
         var fromUrl: String?
         var pricingPerSqm: String?
-
+        
         init?(map: Map) {
-
+            
         }
-
+        
         mutating func mapping(map: Map) {
             agencyName <- map["agency_name"]
             fromUrl <- map["from_url"]
             pricingPerSqm <- map["pricing_per_sqm"]
         }
     }
-
+    
 }
+

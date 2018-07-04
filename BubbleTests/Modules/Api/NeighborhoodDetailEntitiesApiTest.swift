@@ -38,9 +38,30 @@ class NeighborhoodDetailEntitiesApiTest: XCTestCase {
                 XCTAssertNotNil(response?.data?.statsInfo)
                 XCTAssertNotNil(response?.data?.neighborhoodInfo)
                 XCTAssertNotNil(response?.data?.totalSales)
-
-
-                
+       
+            }, onError: { (error) in
+                XCTAssert(false)
+            }, onCompleted: {
+                exp.fulfill()
+            }).disposed(by: disposeBag)
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testNeighborhoodTotalSales() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let disposeBag = DisposeBag()
+        let exp = self.expectation(description: "")
+        requestNeighborhoodTotalSales(neighborhoodId: "6569028179917291780",  query: "")
+            .debug()
+            .subscribe(onNext: { (response) in
+                XCTAssertNotNil(response)
+                XCTAssertNotNil(response?.data)
+                XCTAssertNotNil(response?.data?.hasMore)
+                XCTAssertNotNil(response?.data?.list?.first)
+                XCTAssertNotNil(response?.data?.list?.first?.squaremeter)
+                XCTAssertNotNil(response?.data?.list?.first?.pricing)
+    
             }, onError: { (error) in
                 XCTAssert(false)
             }, onCompleted: {
