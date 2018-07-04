@@ -59,6 +59,8 @@
 		1A216DE3DCC6566E0FB15021 /* TextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216FC4BF82903F1D019906 /* TextParser.swift */; };
 		1A216E0DEE513B3D5D3AD3F7 /* UITableViewCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216503D2135DECB5E90842 /* UITableViewCellFactory.swift */; };
 		4C965404B90848550717BE6C /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855907E05A57AED40965764 /* libPods-BubbleUITests.a */; };
+		7D25354920ECD4C700F6DDE1 /* RelatedSearchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */; };
+		7D25354B20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */; };
 		7D2ED15520EBAB280012F78F /* ErshouHouseDetailEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */; };
 		7D2ED15720EBB7E60012F78F /* ErshouHouseDetailApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */; };
 		7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */; };
@@ -185,6 +187,8 @@
 		1A216FC4BF82903F1D019906 /* TextParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextParser.swift; sourceTree = "<group>"; };
 		22FB916E25E03D0F6C341524 /* Pods-Bubble.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bubble.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bubble/Pods-Bubble.release.xcconfig"; sourceTree = "<group>"; };
 		4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedSearchApi.swift; sourceTree = "<group>"; };
+		7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedSearchApiTest.swift; sourceTree = "<group>"; };
 		7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailEntities.swift; sourceTree = "<group>"; };
 		7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailApi.swift; sourceTree = "<group>"; };
 		7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailAPITests.swift; sourceTree = "<group>"; };
@@ -410,6 +414,7 @@
 				7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */,
 				7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */,
 				7D2ED16420ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift */,
+				7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -601,6 +606,7 @@
 				7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */,
 				7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */,
 				7D2ED16620ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift */,
+				7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -970,6 +976,7 @@
 				1A2164FA65DA089D70F6BE3B /* AreaConditionFilterPanel.swift in Sources */,
 				1A216883B8142A01B1045F84 /* BubbleSelectCollectionView.swift in Sources */,
 				1A21619D9421E806C882826C /* PriceListFilterPanel.swift in Sources */,
+				7D25354920ECD4C700F6DDE1 /* RelatedSearchApi.swift in Sources */,
 				1A2160176A8E129364373223 /* CategoryListPageVC.swift in Sources */,
 				1A2168EDCBBF6AD32494917D /* SearchFilterPanel.swift in Sources */,
 				1A216748F426A8E4810AD126 /* SearchAndConditionFilterViewModel.swift in Sources */,
@@ -1028,6 +1035,7 @@
 				7D2ED16720ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift in Sources */,
 				7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */,
 				B32E590220E21D8500C8FEB2 /* CityItemCellTest.swift in Sources */,
+				7D25354B20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift in Sources */,
 				B342191C20E5E557001064AE /* HouseDetailAPITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
