@@ -61,6 +61,9 @@
 		4C965404B90848550717BE6C /* libPods-BubbleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D855907E05A57AED40965764 /* libPods-BubbleUITests.a */; };
 		7D25354920ECD4C700F6DDE1 /* RelatedSearchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */; };
 		7D25354B20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */; };
+		7D25354D20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354C20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift */; };
+		7D25354F20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25354E20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift */; };
+		7D25355120ECEBB200F6DDE1 /* NeighborhoodDetailEntitiesApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D25355020ECEBB200F6DDE1 /* NeighborhoodDetailEntitiesApiTest.swift */; };
 		7D2ED15520EBAB280012F78F /* ErshouHouseDetailEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */; };
 		7D2ED15720EBB7E60012F78F /* ErshouHouseDetailApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */; };
 		7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */; };
@@ -189,6 +192,9 @@
 		4F3EED2DF48D07921993589B /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedSearchApi.swift; sourceTree = "<group>"; };
 		7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedSearchApiTest.swift; sourceTree = "<group>"; };
+		7D25354C20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailEntities.swift; sourceTree = "<group>"; };
+		7D25354E20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailEntitiesApi.swift; sourceTree = "<group>"; };
+		7D25355020ECEBB200F6DDE1 /* NeighborhoodDetailEntitiesApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailEntitiesApiTest.swift; sourceTree = "<group>"; };
 		7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailEntities.swift; sourceTree = "<group>"; };
 		7D2ED15620EBB7E60012F78F /* ErshouHouseDetailApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailApi.swift; sourceTree = "<group>"; };
 		7D2ED15820EBBACD0012F78F /* ErshouHouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailAPITests.swift; sourceTree = "<group>"; };
@@ -400,6 +406,7 @@
 				7D2ED15420EBAB280012F78F /* ErshouHouseDetailEntities.swift */,
 				7D2ED15A20EC901C0012F78F /* CourtItemEntity.swift */,
 				7D2ED16220ECBB750012F78F /* SearchNeighborhoodEntity.swift */,
+				7D25354C20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -415,6 +422,7 @@
 				7D2ED15C20ECB4FF0012F78F /* CourtItemEntityApi.swift */,
 				7D2ED16420ECC30F0012F78F /* SearchNeighborhoodEntityApi.swift */,
 				7D25354820ECD4C700F6DDE1 /* RelatedSearchApi.swift */,
+				7D25354E20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -607,6 +615,7 @@
 				7D2ED16020ECB7ED0012F78F /* CourtItemEntityApiTest.swift */,
 				7D2ED16620ECC3840012F78F /* SearchNeighborhoodEntityApiTest.swift */,
 				7D25354A20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift */,
+				7D25355020ECEBB200F6DDE1 /* NeighborhoodDetailEntitiesApiTest.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -1003,10 +1012,12 @@
 				1A2163556DC9164BBB766667 /* HomeSpringBoardItemView.swift in Sources */,
 				B342192620E7A00B001064AE /* LBSMapPageVC.swift in Sources */,
 				B331306A20EB6A72005E816A /* GlobalPricingCell.swift in Sources */,
+				7D25354D20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift in Sources */,
 				B331306220EA02D9005E816A /* OpenAllCell.swift in Sources */,
 				1A2166F556D49B959F97F9A3 /* MultiImageInfoCell.swift in Sources */,
 				1A21693DFCABDE8FA5DDA1BE /* MarqueeGroupView.swift in Sources */,
 				1A2161FB173B242674245078 /* WebImageItemView.swift in Sources */,
+				7D25354F20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift in Sources */,
 				1A21635699968B0499C96811 /* SingleImageInfoCell.swift in Sources */,
 				1A21638CE35E982D0145A64B /* CategorySectionView.swift in Sources */,
 				1A216860A66A57EEFE867143 /* BaseTextField.swift in Sources */,
@@ -1036,6 +1047,7 @@
 				7D2ED15920EBBACD0012F78F /* ErshouHouseDetailAPITests.swift in Sources */,
 				B32E590220E21D8500C8FEB2 /* CityItemCellTest.swift in Sources */,
 				7D25354B20ECD6D900F6DDE1 /* RelatedSearchApiTest.swift in Sources */,
+				7D25355120ECEBB200F6DDE1 /* NeighborhoodDetailEntitiesApiTest.swift in Sources */,
 				B342191C20E5E557001064AE /* HouseDetailAPITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
