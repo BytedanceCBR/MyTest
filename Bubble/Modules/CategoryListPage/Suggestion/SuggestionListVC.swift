@@ -13,8 +13,8 @@ import SnapKit
 
 class SuggestionListVC: BaseViewController {
 
-    lazy var navBar: SearchNavBar = {
-        let result = SearchNavBar()
+    lazy var navBar: CategorySearchNavBar = {
+        let result = CategorySearchNavBar()
         result.searchInput.placeholder = "小区/商圈/地铁"
         result.searchable = true
         return result
@@ -33,6 +33,8 @@ class SuggestionListVC: BaseViewController {
     }()
 
     var onSuggestSelect: ((@escaping (String) -> String) -> Void)?
+
+    var houseType: HouseType?
 
     override func viewDidLoad() {
         super.viewDidLoad()

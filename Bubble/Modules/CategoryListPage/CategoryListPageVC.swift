@@ -177,6 +177,7 @@ class CategoryListPageVC: UIViewController {
             maker.top.equalTo(searchFilterPanel.snp.bottom)
         }
         tableView.dataSource = dataSource
+        tableView.delegate = dataSource
         registerCell(tableView)
         bindSearchRequest()
         searchFilterPanel.setItems(items: filterConditions)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CategoryListDataSource: NSObject, UITableViewDataSource {
+class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     var datas: [HouseItemInnerEntity] = []
 
 //    func numberOfSections(in tableView: UITableView) -> Int {
@@ -30,5 +30,9 @@ class CategoryListDataSource: NSObject, UITableViewDataSource {
 
     func onDataArrived(datas: [HouseItemInnerEntity]) {
         self.datas = datas
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 }

@@ -149,8 +149,16 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         return view
     }
 
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 51
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         datas[indexPath.section].selectors?[indexPath.row]()
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 
 }

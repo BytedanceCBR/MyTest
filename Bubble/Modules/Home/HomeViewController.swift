@@ -72,6 +72,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         super.viewDidLoad()
         self.detailPageViewModel = HomeListViewModel(tableView: tableView)
 
+        tableView.rowHeight = UITableViewAutomaticDimension
         view.addSubview(tableView)
         tableView.separatorStyle = .none
         tableView.snp.makeConstraints { (make) in

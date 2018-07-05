@@ -69,7 +69,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.contentView.addSubview(majorImageView)
+
 
         self.contentView.addSubview(lineView)
         lineView.snp.makeConstraints { maker in
@@ -79,14 +79,14 @@ class SingleImageInfoCell: BaseUITableViewCell {
             maker.right.equalToSuperview().offset(-15)
         }
 
+        self.contentView.addSubview(majorImageView)
         majorImageView.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(15)
             maker.top.equalToSuperview().offset(16)
-            maker.bottom.equalToSuperview().offset(-16)
+            maker.bottom.equalTo(-16)
             maker.width.equalTo(114)
             maker.height.equalTo(85)
         }
-        majorImageView.image = #imageLiteral(resourceName: "house-1")
 
         let infoPanel = UIView()
         self.addSubview(infoPanel)
