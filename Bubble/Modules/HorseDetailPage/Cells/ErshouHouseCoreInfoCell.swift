@@ -17,7 +17,6 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
         self.contentView.lu.addBottomBorder()
     }
 

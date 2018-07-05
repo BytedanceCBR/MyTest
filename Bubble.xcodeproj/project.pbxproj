@@ -100,6 +100,7 @@
 		B33FEBCC20CFA260008556DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33FEBCB20CFA260008556DC /* Images.xcassets */; };
 		B34141BE20EDBF4700C54E70 /* MineVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141BD20EDBF4700C54E70 /* MineVC.swift */; };
 		B34141C020EDBF5600C54E70 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141BF20EDBF5600C54E70 /* ChatVC.swift */; };
+		B34141C320EDC75E00C54E70 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C220EDC75E00C54E70 /* ChatCell.swift */; };
 		B342191920E5D745001064AE /* PageableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191720E5D745001064AE /* PageableViewModel.swift */; };
 		B342191C20E5E557001064AE /* HouseDetailAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191B20E5E557001064AE /* HouseDetailAPITests.swift */; };
 		B342192020E62587001064AE /* HorseDetailPageVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191F20E62587001064AE /* HorseDetailPageVCTests.swift */; };
@@ -234,6 +235,7 @@
 		B33FEBCB20CFA260008556DC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B34141BD20EDBF4700C54E70 /* MineVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineVC.swift; sourceTree = "<group>"; };
 		B34141BF20EDBF5600C54E70 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
+		B34141C220EDC75E00C54E70 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		B342191720E5D745001064AE /* PageableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageableViewModel.swift; sourceTree = "<group>"; };
 		B342191B20E5E557001064AE /* HouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseDetailAPITests.swift; sourceTree = "<group>"; };
 		B342191F20E62587001064AE /* HorseDetailPageVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorseDetailPageVCTests.swift; sourceTree = "<group>"; };
@@ -617,6 +619,7 @@
 		B34141BB20EDBF0800C54E70 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				B34141C120EDC73C00C54E70 /* Cells */,
 				B34141BF20EDBF5600C54E70 /* ChatVC.swift */,
 			);
 			path = Messages;
@@ -628,6 +631,14 @@
 				B34141BD20EDBF4700C54E70 /* MineVC.swift */,
 			);
 			path = Mine;
+			sourceTree = "<group>";
+		};
+		B34141C120EDC73C00C54E70 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B34141C220EDC75E00C54E70 /* ChatCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		B342191520E5D745001064AE /* Pageable */ = {
@@ -1065,6 +1076,7 @@
 				1A216D601F89D28575896214 /* HeaderViewControl.swift in Sources */,
 				B331306020E9EF15005E816A /* TimelineCell.swift in Sources */,
 				1A2166AA9C3C426694FB546E /* CycleImageCache.swift in Sources */,
+				B34141C320EDC75E00C54E70 /* ChatCell.swift in Sources */,
 				1A21645EFBFDEA262CB87980 /* BDImageViewProvider.swift in Sources */,
 				1A2168142A48B3020465A494 /* NewHouseInfoCell.swift in Sources */,
 				1A216A6A55922E44B89D78D3 /* FWSegmentedControl.swift in Sources */,

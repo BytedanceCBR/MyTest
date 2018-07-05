@@ -9,6 +9,14 @@ class BaseUITableViewCell: UITableViewCell {
     open class var identifier: String {
         return "base"
     }
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 class UITableViewCellFactory {
@@ -34,9 +42,9 @@ class UITableViewCellFactory {
         }
     }
 
-    func dequeueReusableCell(tableView: UITableView, indexPath: IndexPath) -> BaseUITableViewCell {
-        return BaseUITableViewCell()
-    }
+//    func dequeueReusableCell(tableView: UITableView, indexPath: IndexPath) -> BaseUITableViewCell {
+//        return BaseUITableViewCell()
+//    }
 
     func dequeueReusableCell<T: BaseUITableViewCell>(identifer: String, tableView: UITableView, indexPath: IndexPath) -> T {
         let cell: T = tableView.dequeueReusableCell(withIdentifier: identifer, for: indexPath) as! T
