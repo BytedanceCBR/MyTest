@@ -48,7 +48,6 @@ class SuggestionListVC: BaseViewController {
 
         navBar.searchInput.rx.textInput.text
                 .throttle(0.6, scheduler: MainScheduler.instance)
-//                .debounce(0.8, scheduler: MainScheduler.instance)
                 .subscribe(onNext: tableViewModel.sendQuery(tableView: tableView))
                 .disposed(by: disposeBag)
 

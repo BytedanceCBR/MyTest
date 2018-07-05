@@ -28,7 +28,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     func requestData(houseId: Int64) {
-        requestNewHouseDetail(houseId: 6573911052528910605)
+        requestNewHouseDetail(houseId: houseId)
                 .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
