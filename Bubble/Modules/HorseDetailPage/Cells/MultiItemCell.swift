@@ -30,7 +30,13 @@ class MultiItemCell: BaseUITableViewCell {
         groupView.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
             maker.bottom.equalToSuperview().offset(-16)
-            maker.height.equalTo(172)
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        groupView.subviews.forEach { view in
+            view.removeFromSuperview()
         }
     }
 
@@ -116,6 +122,167 @@ class FloorPanItemView: UIView {
     }
 }
 
+class NeighborhoodItemView: UIView {
+    lazy var icon: UIImageView = {
+        UIImageView()
+    }()
+
+    lazy var descLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.textColor = hexStringToUIColor(hex: "#222222")
+        return re
+    }()
+
+    lazy var priceLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.textColor = hexStringToUIColor(hex: "#f85959")
+        return re
+    }()
+
+    lazy var spaceLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        return re
+    }()
+
+    init() {
+        super.init(frame: CGRect.zero)
+        addSubview(icon)
+        icon.snp.makeConstraints { maker in
+            maker.left.equalTo(4)
+            maker.right.equalToSuperview().offset(-4)
+            maker.width.equalTo(156)
+            maker.height.equalTo(116)
+            maker.top.equalToSuperview()
+        }
+
+        addSubview(descLabel)
+        descLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(4)
+            maker.right.equalToSuperview().offset(-4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(icon.snp.bottom).offset(9)
+        }
+
+        addSubview(priceLabel)
+        priceLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(4)
+            maker.right.equalToSuperview().offset(-4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(descLabel.snp.bottom).offset(4)
+        }
+
+        addSubview(spaceLabel)
+        spaceLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(4)
+            maker.right.equalToSuperview().offset(-4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(priceLabel.snp.bottom).offset(4)
+            maker.bottom.equalToSuperview()
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?) -> () -> TableSectionNode? {
+    return {
+        if let datas = data?.items, datas.count > 0 {
+            let render = curry(fillSearchInNeighborhoodCell)(datas)
+            return TableSectionNode(items: [render], label: "同小区房源", type: .node(identifier: MultiItemCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? MultiItemCell {
+        let views = items.map { item in
+            generateearchInNeighborhoodItemView(item)
+        }
+        views.forEach { view in
+            theCell.groupView.addSubview(view)
+        }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
+            }
+        }
+
+    }
+}
+
+func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorPanItemView {
+    let re = FloorPanItemView()
+    if let urlStr = item.houseImage?.first?.url {
+        re.icon.bd_setImage(with: URL(string: urlStr))
+    }
+    let text = NSMutableAttributedString()
+    let attributeText = NSMutableAttributedString(string: item.title ?? "")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
+    attributeText.yy_color = hexStringToUIColor(hex: "#222222")
+    text.append(attributeText)
+
+    re.descLabel.attributedText = text
+    re.priceLabel.text = item.baseInfoMap?.pricing
+    re.spaceLabel.text = item.baseInfoMap?.pricingPerSqm
+    return re
+}
+
+
+func parseRelatedNeighborhoodNode(_ datas: [NeighborhoodInnerItemEntity]?) -> () -> TableSectionNode? {
+    return {
+        if let datas = datas, datas.count > 0 {
+            let render = curry(fillRelatedNeighborhoodCell)(datas)
+            return TableSectionNode(items: [render], label: "周边小区", type: .node(identifier: MultiItemCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? MultiItemCell {
+        let views = datas.map { item in
+            generateRelatedNeighborhoodView(item)
+        }
+        views.forEach { view in
+            theCell.groupView.addSubview(view)
+        }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
+            }
+        }
+    }
+}
+
+func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> NeighborhoodItemView {
+    let re = NeighborhoodItemView()
+    if let urlStr = item.images?.first?.url {
+        re.icon.bd_setImage(with: URL(string: urlStr))
+    }
+    re.descLabel.text = item.displayTitle
+    re.priceLabel.text = item.displayBuiltYear
+    re.spaceLabel.text = item.displayPricePerSqm
+    return re
+}
+
 func parseFloorPanNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])
@@ -130,15 +297,23 @@ func fillFloorPanCell(_ data: [FloorPan.Item], cell: BaseUITableViewCell) -> Voi
         }
         views.forEach { view in
             theCell.groupView.addSubview(view)
-         }
+        }
         views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
+            }
+        }
     }
 }
 
 func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     let re = FloorPanItemView()
     if let urlStr = item.images?.first?.url {
-        re.icon.bd_setImage(with:  URL(string: urlStr))
+        re.icon.bd_setImage(with: URL(string: urlStr))
     }
     let text = NSMutableAttributedString()
     let attributeText = NSMutableAttributedString(string: item.title ?? "")
@@ -148,10 +323,10 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
 
     if let status = item.saleStatus, let content = status.content {
         let tag = createTagAttributeText(
-            content: content,
-            textColor: hexStringToUIColor(hex: "#33bf85"),
-            backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
-            insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
+                content: content,
+                textColor: hexStringToUIColor(hex: "#33bf85"),
+                backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
+                insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
         tag.yy_baselineOffset = 2
         text.append(tag)
     }

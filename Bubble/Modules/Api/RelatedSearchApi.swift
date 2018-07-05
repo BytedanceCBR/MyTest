@@ -60,7 +60,10 @@ func requestRelatedCourtSearch(courtId: String = "", offset: String = "0", query
         })
 }
 
-func requestRelatedNeighborhoodSearch(neighborhoodId: String = "", offset: String = "0", query: String = "") -> Observable<RelatedNeighborhoodResponse?> {
+func requestRelatedNeighborhoodSearch(
+        neighborhoodId: String = "",
+        offset: Int64  = 0,
+        query: String = "") -> Observable<RelatedNeighborhoodResponse?> {
     var url = "http://m.quduzixun.com/f100/api/related_neighborhood?neighborhood_id=\(neighborhoodId)&offset=\(offset)"
     if !query.isEmpty {
         url = "\(url)&\(query)"

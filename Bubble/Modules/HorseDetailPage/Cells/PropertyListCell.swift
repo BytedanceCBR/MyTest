@@ -46,7 +46,7 @@ class PropertyListCell: BaseUITableViewCell {
     }
 
     fileprivate func addRowView(rows: [UIView]) {
-        for v in wrapperView.subviews where v is RowView {
+        for v in wrapperView.subviews {
             v.removeFromSuperview()
         }
 
@@ -57,6 +57,12 @@ class PropertyListCell: BaseUITableViewCell {
         rows.snp.makeConstraints { maker in
             maker.width.equalToSuperview()
             maker.left.right.equalToSuperview()
+        }
+    }
+
+    override func prepareForReuse() {
+        for v in wrapperView.subviews {
+            v.removeFromSuperview()
         }
     }
 

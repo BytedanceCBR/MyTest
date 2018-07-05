@@ -17,31 +17,46 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 
     lazy var nameKey: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        re.text = "名称"
         return re
     }()
 
     lazy var nameValue: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#222222")
         return re
     }()
 
     lazy var priceKeyLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        re.text = "均价"
         return re
     }()
 
     lazy var priceValueLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#f85959")
         return re
     }()
 
     lazy var monthUpKeyLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        re.text = "环比上涨"
         return re
     }()
 
     lazy var monthUpValueLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#f85959")
         return re
     }()
 
@@ -136,7 +151,7 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, cell: BaseUITableViewCe
     if let theCell = cell as? NeighborhoodInfoCell {
         theCell.nameValue.text = data?.name
         theCell.priceValueLabel.text = data?.pricingPerSqm
-//        theCell.monthUpValueLabel.text = data?.monthUp
+        theCell.monthUpValueLabel.text = String(format: "%.2f%%", arguments: [data?.monthUp ?? 0])
         if let url = data?.gaodeImageUrl {
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }

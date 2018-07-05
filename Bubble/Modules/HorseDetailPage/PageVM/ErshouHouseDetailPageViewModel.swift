@@ -20,7 +20,11 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var cellFactory: UITableViewCellFactory
 
-    private var ershouHouseData =  BehaviorRelay<ErshouHouseData?>(value: nil)
+    private var ershouHouseData = BehaviorRelay<ErshouHouseDetailResponse?>(value: nil)
+
+    private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
+
+    private var relateErshouHouseData = BehaviorRelay<HouseRecommendResponse?>(value: nil)
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -30,6 +34,30 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         tableView.delegate = self.dataSource
 
         cellFactory.register(tableView: tableView)
+        super.init()
+        ershouHouseData
+                .subscribe { [unowned self] event in
+                    let result = self.processData()([])
+                    self.dataSource.datas = result
+                    self.tableView?.reloadData()
+                }
+                .disposed(by: disposeBag)
+
+        relateNeighborhoodData
+                .subscribe { [unowned self] event in
+                    let result = self.processData()([])
+                    self.dataSource.datas = result
+                    self.tableView?.reloadData()
+                }
+                .disposed(by: disposeBag)
+
+        relateErshouHouseData
+                .subscribe { [unowned self] event in
+                    let result = self.processData()([])
+                    self.dataSource.datas = result
+                    self.tableView?.reloadData()
+                }
+                .disposed(by: disposeBag)
     }
 
     func requestData(houseId: Int64) {
@@ -37,28 +65,51 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
-                        let result = self.processData(response: response)([])
-                        self.dataSource.datas = result
-                        self.tableView?.reloadData()
+                        self.ershouHouseData.accept(response)
+                        self.requestReletedData()
                     }
                 }, onError: { (error) in
                     print(error)
                 })
                 .disposed(by: disposeBag)
+
     }
 
-    fileprivate func processData(response: ErshouHouseDetailResponse) -> ([TableSectionNode]) -> [TableSectionNode] {
-        if let data = response.data {
-            let dataParser = DetailDataParser.monoid()
-                <- parseErshouHouseCycleImageNode(data)
-                <- parseErshouHouseNameNode(data)
-                <- parseErshouHouseCoreInfoNode(data)
-                <- parsePropertyListNode(data)
-                <- parseHeaderNode("小区详情", showLoadMore: true)
-                <- parseNeighborhoodInfoNode(data)
-                <- parseHeaderNode("同小区房源")
 
-                return dataParser.parser
+    func requestReletedData() {
+        if let neighborhoodId = ershouHouseData.value?.data?.neighborhoodInfo?.id {
+            requestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId)
+                    .subscribe(onNext: { [unowned self] response in
+                        self.relateNeighborhoodData.accept(response)
+                    })
+                    .disposed(by: disposeBag)
+
+            requestSearch(
+                cityId: "133",
+                query: "neighborhood_id=\(neighborhoodId)")
+                .subscribe(onNext: { [unowned self] response in
+                    self.relateErshouHouseData.accept(response)
+                })
+                .disposed(by: disposeBag)
+        }
+
+    }
+
+    fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
+        if let data = ershouHouseData.value?.data {
+            let dataParser = DetailDataParser.monoid()
+                    <- parseErshouHouseCycleImageNode(data)
+                    <- parseErshouHouseNameNode(data)
+                    <- parseErshouHouseCoreInfoNode(data)
+                    <- parsePropertyListNode(data)
+                    <- parseHeaderNode("小区详情", showLoadMore: true)
+                    <- parseNeighborhoodInfoNode(data)
+                    <- parseHeaderNode("同小区房源") { [unowned self] in
+                        self.relateNeighborhoodData.value != nil
+                    }
+                    <- parseSearchInNeighborhoodNode(relateErshouHouseData.value?.data)
+                    <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items)
+            return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
         }

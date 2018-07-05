@@ -118,10 +118,17 @@ func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
     }
 }
 
-func parseHeaderNode(_ title: String, showLoadMore: Bool = false) -> () -> TableSectionNode? {
+func parseHeaderNode(
+        _ title: String,
+        showLoadMore: Bool = false,
+        filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
-        let cellRender = curry(fillHeaderCell)(title)(showLoadMore)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+        if let filter = filter, filter() == false {
+            return nil
+        } else {
+            let cellRender = curry(fillHeaderCell)(title)(showLoadMore)
+            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+        }
     }
 }
 
