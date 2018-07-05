@@ -140,7 +140,11 @@ class NewHouseCommentCell: BaseUITableViewCell {
 func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let renders = newHouseData.comment?.list?.map(curry(fillNewHouseCommentCell))
-        return TableSectionNode(items: renders ?? [], label: "全网点评", type: .node(identifier: NewHouseCommentCell.identifier))
+        return TableSectionNode(
+            items: renders ?? [],
+            selectors: nil,
+            label: "全网点评",
+            type: .node(identifier: NewHouseCommentCell.identifier))
     }
 }
 

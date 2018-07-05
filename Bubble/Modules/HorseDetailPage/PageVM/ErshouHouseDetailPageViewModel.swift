@@ -195,8 +195,16 @@ func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
 
 func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?) -> () -> TableSectionNode? {
     return {
-        if let renders = data?.map(curry(fillErshouHouseListitemCell)) {
-            return TableSectionNode(items: renders, label: "", type: .node(identifier: SingleImageInfoCell.identifier))
+        let selectors = data?
+            .filter { $0.id != nil }
+            .map { Int64($0.id!) }
+            .map { openErshouHouseDetailPage(houseId: $0!) }
+        if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
+            return TableSectionNode(
+                items: renders,
+                selectors: selectors,
+                label: "二手房源",
+                type: .node(identifier: SingleImageInfoCell.identifier))
         } else {
             return nil
         }
@@ -219,10 +227,20 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITable
 
         theCell.areaLabel.attributedText = text
 
-        theCell.priceLabel.text = data.baseInfoMap?.pricing
-        theCell.roomSpaceLabel.text = data.baseInfoMap?.pricingPerSqm
+        theCell.priceLabel.text = data.displayPrice
+        theCell.roomSpaceLabel.text = data.displayPricePerSqm
         if let img = data.houseImage?.first , let url = img.url {
             theCell.setImageByUrl(url)
         }
+    }
+}
+
+func openErshouHouseDetailPage(houseId: Int64) -> () -> Void {
+    return {
+        let detailPage = HorseDetailPageVC(
+            houseId: houseId,
+            houseType: .newHouse,
+            provider: getErshouHouseDetailPageViewModel())
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }

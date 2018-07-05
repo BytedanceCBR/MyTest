@@ -78,7 +78,7 @@ func parseGlobalPricingNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
             return nil
         }
         let cellRenders = list[..<(list.count > 3 ? 3 : list.count)].map { curry(fillGlobalPricingCell)($0) }
-        return TableSectionNode(items: cellRenders, label: "", type: .node(identifier: GlobalPricingCell.identifier))
+        return TableSectionNode(items: cellRenders, selectors: nil, label: "", type: .node(identifier: GlobalPricingCell.identifier))
     }
 }
 

@@ -67,7 +67,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         let result = UIButton()
         let attriStr = NSAttributedString(
                 string: "更多楼盘信息",
-                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14) ?? UIFont.systemFont(ofSize: 14),
+                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14) ,
                              NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999")])
         result.setAttributedTitle(attriStr, for: .normal)
         result.backgroundColor = hexStringToUIColor(hex: "#f6f7f8")
@@ -78,7 +78,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         let result = UIButton()
         let attriStr = NSAttributedString(
                 string: "变价通知",
-                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ?? UIFont.systemFont(ofSize: 16),
+                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ,
                              NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#222222")])
         result.setAttributedTitle(attriStr, for: .normal)
         return result
@@ -95,7 +95,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         result.setTitle("开盘通知", for: .normal)
         let attriStr = NSAttributedString(
                 string: "开盘通知",
-                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ?? UIFont.systemFont(ofSize: 16),
+                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ,
                              NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999")])
         result.setAttributedTitle(attriStr, for: .normal)
         return result
@@ -188,7 +188,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
 func parseNewHouseCoreInfoNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: NewHouseInfoCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NewHouseInfoCell.identifier))
     }
 }
 

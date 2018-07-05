@@ -89,7 +89,7 @@ func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
     return {
         if newHouseData.timeLine?.list?.count ?? 0 > 0 {
             let cellRender = curry(fillHeaderCell)("楼盘动态")(false)
-            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -100,7 +100,7 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
     return {
         if newHouseData.floorPan?.list?.count ?? 0 > 0 {
             let cellRender = curry(fillHeaderCell)("楼盘户型")(false)
-            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -111,7 +111,7 @@ func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
     return {
         if newHouseData.comment?.list?.count ?? 0 > 0 {
             let cellRender = curry(fillHeaderCell)("全网点评")(false)
-            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -127,7 +127,7 @@ func parseHeaderNode(
             return nil
         } else {
             let cellRender = curry(fillHeaderCell)(title)(showLoadMore)
-            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: HeaderCell.identifier))
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         }
     }
 }

@@ -39,7 +39,6 @@ class SingleImageInfoCell: BaseUITableViewCell {
         let label = YYLabel()
         label.numberOfLines = 0
         label.lineBreakMode = NSLineBreakMode.byWordWrapping//按照单词分割换行，保证换行时的单词完整。
-
         return label
     }()
 
@@ -116,6 +115,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(extendTitle.snp.bottom).offset(5)
             maker.width.greaterThanOrEqualTo(100)
+            maker.height.equalTo(15)
         }
         infoPanel.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { [unowned areaLabel] maker in

@@ -73,3 +73,8 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: NeighborhoodInfoCell.self)
             .addCellClass(cellType: SingleImageInfoCell.self)
 }
+
+func getHomePageCellFactory() -> UITableViewCellFactory {
+    return UITableViewCellFactory()
+            .addCellClass(cellType: SingleImageInfoCell.self)
+}

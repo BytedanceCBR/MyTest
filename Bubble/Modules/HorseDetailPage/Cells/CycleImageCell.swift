@@ -86,7 +86,7 @@ func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData) -> () -> TableSec
         })
 
         let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: CycleImageCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: CycleImageCell.identifier))
     }
 }
 
@@ -100,7 +100,7 @@ func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData) -> () ->
             }
         })
         let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: CycleImageCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: CycleImageCell.identifier))
     }
 }
 

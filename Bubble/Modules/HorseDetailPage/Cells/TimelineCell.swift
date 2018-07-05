@@ -140,7 +140,7 @@ func parseTimelineNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
             return curry(fillTimelineCell)(item)(offset == 0)
         }
 
-        return TableSectionNode(items: renders ?? [], label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
+        return TableSectionNode(items: renders ?? [], selectors: nil, label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
     }
 }
 

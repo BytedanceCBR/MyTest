@@ -83,7 +83,7 @@ class ContactCell: BaseUITableViewCell {
 func parseNewHouseContactNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillNewHouseContactCell)(newHouseData)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: ContactCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: ContactCell.identifier))
     }
 }
 

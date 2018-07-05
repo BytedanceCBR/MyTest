@@ -112,7 +112,11 @@ fileprivate class ItemView: UIView {
 func parseErshouHouseCoreInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillErshouHouseCoreInfoCell)(ershouHouseData)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
     }
 }
 

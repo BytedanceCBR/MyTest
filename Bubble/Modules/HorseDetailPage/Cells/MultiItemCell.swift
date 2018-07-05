@@ -195,7 +195,7 @@ func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?) -> () -> TableSecti
     return {
         if let datas = data?.items?.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)
-            return TableSectionNode(items: [render], label: "同小区房源", type: .node(identifier: MultiItemCell.identifier))
+            return TableSectionNode(items: [render], selectors: nil, label: "同小区房源", type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }
@@ -245,7 +245,7 @@ func parseRelatedNeighborhoodNode(_ datas: [NeighborhoodInnerItemEntity]?) -> ()
     return {
         if let datas = datas, datas.count > 0 {
             let render = curry(fillRelatedNeighborhoodCell)(datas)
-            return TableSectionNode(items: [render], label: "周边小区", type: .node(identifier: MultiItemCell.identifier))
+            return TableSectionNode(items: [render], selectors: nil, label: "周边小区", type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }
@@ -286,7 +286,7 @@ func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> Nei
 func parseFloorPanNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])
-        return TableSectionNode(items: [cellRender], label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
     }
 }
 

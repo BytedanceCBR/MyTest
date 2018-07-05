@@ -55,6 +55,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     var homeSpringBoardViewModel: HomeSpringBoardViewModel!
 
+    private var detailPageViewModel: DetailPageViewModel?
+
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
@@ -68,28 +70,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     override func viewDidLoad() {
         self.tableView = UITableView()
         super.viewDidLoad()
-        requestHouseRecommend()
-                .map { response1 -> [HouseRecommendSection] in
-                    var datas : [HouseRecommendSection] = []
-                    if let house = response1?.data?.house {
-                        datas.append(house)
-                    }
-
-//                    if let court = response1?.data?.court {
-//                        datas.append(court)
-//                    }
-                    return datas
-                 }
-                .subscribe(onNext: { [unowned self] response in
-                    self.dataSource.onDataArrived(datas: response)
-                    self.tableView.reloadData()
-                }, onError: { error in
-                    print(error)
-                }, onCompleted: {
-
-                })
-                .disposed(by: disposeBag)
-
+        self.detailPageViewModel = HomeListViewModel(tableView: tableView)
 
         view.addSubview(tableView)
         tableView.separatorStyle = .none
@@ -97,13 +78,11 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
             make.top.left.right.equalToSuperview()
             make.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
         }
-        tableView.dataSource = dataSource
-        tableView.delegate = self
         registerCell(tableView)
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
-
+        self.detailPageViewModel?.requestData(houseId: 0)
         setupNormalNavBar()
 
         let stateControl = HomeHeaderStateControl()
@@ -227,25 +206,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.isHidden = false
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let detailPage = HorseDetailPageVC(
-//            houseId: 6573911052528910605,
-//            houseType: .newHouse,
-//            provider: getNewHouseDetailPageViewModel())
-
-        let detailPage = HorseDetailPageVC(
-            houseId: 6569028097050460430,
-            houseType: .newHouse,
-            provider: getErshouHouseDetailPageViewModel())
-        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = CategorySectionView()
-        view.categoryLabel.text = self.dataSource.datas[section].title
-        return view
     }
 
     private func bindSearchEvent() {

@@ -119,7 +119,11 @@ fileprivate class TwoRowView: UIView {
 func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillPropertyListCell)(ershouHouseData.baseInfo)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: PropertyListCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: PropertyListCell.identifier))
     }
 }
 

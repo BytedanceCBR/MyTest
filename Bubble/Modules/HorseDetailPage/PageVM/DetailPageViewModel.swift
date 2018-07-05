@@ -21,6 +21,7 @@ typealias NewHouseDetailDataParser = ([TableSectionNode]) -> [TableSectionNode]
 
 typealias TableViewSectionViewGen = (Int) -> UIView?
 
+typealias TableCellSelectedProcess = () -> Void
 
 struct TableViewSectionHeaderGenerator {
     let generator: TableViewSectionViewGen
@@ -52,12 +53,9 @@ enum TableCellType {
 
 struct TableSectionNode {
     let items: [TableCellRender]
+    var selectors: [TableCellSelectedProcess]? = nil
     let label: String
     let type: TableCellType
-}
-
-struct CellItemNode {
-
 }
 
 struct DetailDataParser {

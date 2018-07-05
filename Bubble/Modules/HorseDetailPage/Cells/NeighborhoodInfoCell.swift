@@ -143,7 +143,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
     return {
         let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)
-        return TableSectionNode(items: [render], label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
+        return TableSectionNode(items: [render], selectors: nil, label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 

@@ -313,7 +313,11 @@ class LocationListViewModel: NSObject, UITableViewDataSource {
 func parseNewHouseNearByNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseNearByCell)(newHouseData)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: NewHouseNearByCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: NewHouseNearByCell.identifier))
     }
 }
 

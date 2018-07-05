@@ -52,7 +52,11 @@ class DisclaimerCell: BaseUITableViewCell {
 func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillDisclaimerCell)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: DisclaimerCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: DisclaimerCell.identifier))
     }
 }
 
@@ -60,7 +64,11 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
 func parseDisclaimerNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillDisclaimerCell)
-        return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: DisclaimerCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: DisclaimerCell.identifier))
     }
 }
 

@@ -75,9 +75,9 @@ func parseOpenAllNode(_ hasMore: Bool, callBack: @escaping () -> Void) -> () -> 
     return {
         if hasMore {
             let cellRender = curry(fillOpenAllCell)(callBack)
-            return TableSectionNode(items: [cellRender], label: "", type: .node(identifier: OpenAllCell.identifier))
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
         } else {
-            return TableSectionNode(items: [], label: "", type: .node(identifier: OpenAllCell.identifier))
+            return TableSectionNode(items: [], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
         }
     }
 }
