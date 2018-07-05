@@ -98,6 +98,8 @@
 		B334EDD120CE9CC50052CF44 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCE20CE9CC40052CF44 /* Functional.swift */; };
 		B334EDD220CE9CC50052CF44 /* Curry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B334EDCF20CE9CC40052CF44 /* Curry.swift */; };
 		B33FEBCC20CFA260008556DC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33FEBCB20CFA260008556DC /* Images.xcassets */; };
+		B34141BE20EDBF4700C54E70 /* MineVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141BD20EDBF4700C54E70 /* MineVC.swift */; };
+		B34141C020EDBF5600C54E70 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141BF20EDBF5600C54E70 /* ChatVC.swift */; };
 		B342191920E5D745001064AE /* PageableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191720E5D745001064AE /* PageableViewModel.swift */; };
 		B342191C20E5E557001064AE /* HouseDetailAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191B20E5E557001064AE /* HouseDetailAPITests.swift */; };
 		B342192020E62587001064AE /* HorseDetailPageVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342191F20E62587001064AE /* HorseDetailPageVCTests.swift */; };
@@ -117,6 +119,7 @@
 		B3B0868620CE225300483971 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B0868520CE225200483971 /* Foundation.framework */; };
 		B3B0868820CE3C9F00483971 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */; };
 		B3C19B8D20DCC0D4001666CA /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C19B8C20DCC0D4001666CA /* Client.swift */; };
+		B3E43C7820ED214100A31800 /* NeighborhoodInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E43C7720ED214000A31800 /* NeighborhoodInfoCell.swift */; };
 		B3F7AD7C20D0EB86002638EA /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7AD7B20D0EB86002638EA /* EnvContext.swift */; };
 /* End PBXBuildFile section */
 
@@ -229,6 +232,8 @@
 		B334EDCE20CE9CC40052CF44 /* Functional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functional.swift; sourceTree = "<group>"; };
 		B334EDCF20CE9CC40052CF44 /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		B33FEBCB20CFA260008556DC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B34141BD20EDBF4700C54E70 /* MineVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineVC.swift; sourceTree = "<group>"; };
+		B34141BF20EDBF5600C54E70 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		B342191720E5D745001064AE /* PageableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageableViewModel.swift; sourceTree = "<group>"; };
 		B342191B20E5E557001064AE /* HouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseDetailAPITests.swift; sourceTree = "<group>"; };
 		B342191F20E62587001064AE /* HorseDetailPageVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorseDetailPageVCTests.swift; sourceTree = "<group>"; };
@@ -255,6 +260,7 @@
 		B3B0868720CE3C9F00483971 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		B3BF61CC20E205C800777F9A /* Bubble-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bubble-Bridging-Header.h"; sourceTree = "<group>"; };
 		B3C19B8C20DCC0D4001666CA /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		B3E43C7720ED214000A31800 /* NeighborhoodInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodInfoCell.swift; sourceTree = "<group>"; };
 		B3F7AD7B20D0EB86002638EA /* EnvContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvContext.swift; sourceTree = "<group>"; };
 		B5A006DF411BCE24E3C8A7EF /* libPods-Bubble.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bubble.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3249B6D5FC7C0EEBA09BF5C /* Pods-BubbleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BubbleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BubbleUITests/Pods-BubbleUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -376,6 +382,7 @@
 		1A2165E43DF654D428470ED2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				B34141BA20EDBEF600C54E70 /* Bizs */,
 				1A21670DB20DDCDD8D0EBD4F /* Entities */,
 				1A2166936447F74F1E6E9B10 /* Navs */,
 				1A216EDCCD337A4925486BC4 /* CategoryListPage */,
@@ -598,6 +605,31 @@
 			path = Functions;
 			sourceTree = "<group>";
 		};
+		B34141BA20EDBEF600C54E70 /* Bizs */ = {
+			isa = PBXGroup;
+			children = (
+				B34141BC20EDBF1900C54E70 /* Mine */,
+				B34141BB20EDBF0800C54E70 /* Messages */,
+			);
+			path = Bizs;
+			sourceTree = "<group>";
+		};
+		B34141BB20EDBF0800C54E70 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				B34141BF20EDBF5600C54E70 /* ChatVC.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		B34141BC20EDBF1900C54E70 /* Mine */ = {
+			isa = PBXGroup;
+			children = (
+				B34141BD20EDBF4700C54E70 /* MineVC.swift */,
+			);
+			path = Mine;
+			sourceTree = "<group>";
+		};
 		B342191520E5D745001064AE /* Pageable */ = {
 			isa = PBXGroup;
 			children = (
@@ -645,6 +677,7 @@
 				B300551120EB8ADD00D15643 /* HeaderCell.swift */,
 				B321EF1C20EC81D600A7032F /* ErshouHouseCoreInfoCell.swift */,
 				B321EF1E20ECB59B00A7032F /* PropertyListCell.swift */,
+				B3E43C7720ED214000A31800 /* NeighborhoodInfoCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -983,6 +1016,7 @@
 				B321EF1B20EC6DF400A7032F /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				1A21607597A473A5FBEC8125 /* MultiColumnTableSelectorPanel.swift in Sources */,
 				1A2164FA65DA089D70F6BE3B /* AreaConditionFilterPanel.swift in Sources */,
+				B3E43C7820ED214100A31800 /* NeighborhoodInfoCell.swift in Sources */,
 				1A216883B8142A01B1045F84 /* BubbleSelectCollectionView.swift in Sources */,
 				1A21619D9421E806C882826C /* PriceListFilterPanel.swift in Sources */,
 				7D25354920ECD4C700F6DDE1 /* RelatedSearchApi.swift in Sources */,
@@ -1015,6 +1049,7 @@
 				7D25354D20ECDE1100F6DDE1 /* NeighborhoodDetailEntities.swift in Sources */,
 				B331306220EA02D9005E816A /* OpenAllCell.swift in Sources */,
 				1A2166F556D49B959F97F9A3 /* MultiImageInfoCell.swift in Sources */,
+				B34141BE20EDBF4700C54E70 /* MineVC.swift in Sources */,
 				1A21693DFCABDE8FA5DDA1BE /* MarqueeGroupView.swift in Sources */,
 				1A2161FB173B242674245078 /* WebImageItemView.swift in Sources */,
 				7D25354F20ECEB4E00F6DDE1 /* NeighborhoodDetailEntitiesApi.swift in Sources */,
@@ -1022,6 +1057,7 @@
 				1A21638CE35E982D0145A64B /* CategorySectionView.swift in Sources */,
 				1A216860A66A57EEFE867143 /* BaseTextField.swift in Sources */,
 				1A216DD639A723EA1E827D9C /* SearchTextField.swift in Sources */,
+				B34141C020EDBF5600C54E70 /* ChatVC.swift in Sources */,
 				1A216B59618187F1DF07B8EA /* SearchUITextField.swift in Sources */,
 				1A216AFDC5F761FEA9530074 /* HomeViewController.swift in Sources */,
 				1A21614AE76BCF4DCD290975 /* HomeHeaderSearchView.swift in Sources */,

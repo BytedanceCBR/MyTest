@@ -72,7 +72,7 @@ struct ErshouHouseData: Mappable {
         neighborhoodInfo <- map["neighborhood_info"]
         tags <- map["tags"]
         contact <- map["contact"]
-
+        baseInfo <- map["base_info"]
     }
 }
 

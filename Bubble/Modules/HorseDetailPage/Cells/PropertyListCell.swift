@@ -24,9 +24,10 @@ class PropertyListCell: BaseUITableViewCell {
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
             maker.top.equalTo(2)
-            maker.bottom.equalToSuperview().offset(-2)
+            maker.bottom.equalToSuperview().offset(-16)
             maker.left.right.equalToSuperview()
         }
+        contentView.lu.addBottomBorder(color: hexStringToUIColor(hex: "#e8e8e8"), leading: 15, trailing: -15)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -55,6 +56,7 @@ class PropertyListCell: BaseUITableViewCell {
         rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: 0)
         rows.snp.makeConstraints { maker in
             maker.width.equalToSuperview()
+            maker.left.right.equalToSuperview()
         }
     }
 
@@ -64,11 +66,15 @@ fileprivate class RowView: UIView {
 
     lazy var keyLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.textColor = hexStringToUIColor(hex: "#999999")
         return re
     }()
 
     lazy var valueLabel: UILabel = {
         let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.textColor = hexStringToUIColor(hex: "#222222")
         return re
     }()
 
@@ -83,6 +89,13 @@ fileprivate class RowView: UIView {
             maker.bottom.equalToSuperview()
         }
 
+        addSubview(valueLabel)
+        valueLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(keyLabel.snp.right).offset(10)
+            maker.height.equalTo(21)
+            maker.top.equalTo(14)
+            maker.bottom.equalToSuperview()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -104,10 +117,10 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
     }
 }
 
-func fillPropertyListCell(_ infos : [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
+func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
-        let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[],[]]) { (result, info) -> [[ErshouHouseBaseInfo]] in
-            if info.isSingle ?? false {
+        let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
+            if info.isSingle == false {
                 return [result[0] + [info], result[1]]
             } else {
                 return [result[0], result[1] + [info]]
@@ -131,7 +144,7 @@ func fillPropertyListCell(_ infos : [ErshouHouseBaseInfo]?, cell: BaseUITableVie
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
                 } else {
-                    let  twoRow = twoValueView.last
+                    let twoRow = twoValueView.last
                     let row = RowView()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
@@ -146,7 +159,7 @@ func fillPropertyListCell(_ infos : [ErshouHouseBaseInfo]?, cell: BaseUITableVie
                 view.subviews.snp.makeConstraints { maker in
                     maker.top.bottom.equalToSuperview()
                     maker.height.equalTo(35)
-                 }
+                }
             }
 
             let singleViews = groups[1].map { (info) -> UIView in

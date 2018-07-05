@@ -20,6 +20,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var cellFactory: UITableViewCellFactory
 
+    private var ershouHouseData =  BehaviorRelay<ErshouHouseData?>(value: nil)
+
     init(tableView: UITableView) {
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
@@ -52,6 +54,9 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePropertyListNode(data)
+                <- parseHeaderNode("小区详情", showLoadMore: true)
+                <- parseNeighborhoodInfoNode(data)
+                <- parseHeaderNode("同小区房源")
 
                 return dataParser.parser
         } else {
