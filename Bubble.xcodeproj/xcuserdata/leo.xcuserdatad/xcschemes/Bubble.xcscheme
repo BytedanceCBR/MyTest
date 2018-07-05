@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B3B0861320C923D100483971"
+               BlueprintIdentifier = "2BAFBCDF96568ABCE260CD9D0A8EA4CE"
                BuildableName = "Bubble.app"
                BlueprintName = "Bubble"
                ReferencedContainer = "container:Bubble.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B3B0861320C923D100483971"
+            BlueprintIdentifier = "2BAFBCDF96568ABCE260CD9D0A8EA4CE"
             BuildableName = "Bubble.app"
             BlueprintName = "Bubble"
             ReferencedContainer = "container:Bubble.xcodeproj">

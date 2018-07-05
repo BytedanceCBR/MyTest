@@ -243,14 +243,20 @@ extension HomeViewController {
 
     private func openSearchPanel() {
         print("openSearchPanel")
-        let vc = CategoryListPageVC()
-        vc.houseType.accept(HouseType.secondHandHouse)
+        let vc = SuggestionListVC()
+        let nav = EnvContext.shared.rootNavController
+        nav.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                .subscribe(onNext: { [weak nav] void in
+                    nav?.popViewController(animated: true)
                 })
-                .disposed(by: disposeBag)
-        EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+                .disposed(by: self.disposeBag)
+        vc.onSuggestSelect = { [weak self, weak nav] (condition) in
+            nav?.popViewController(animated: true)
+//            self?.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
+//                condition($0)
+//            }
+        }
     }
 }
 

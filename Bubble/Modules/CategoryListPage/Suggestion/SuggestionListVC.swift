@@ -36,7 +36,6 @@ class SuggestionListVC: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
         self.view.backgroundColor = UIColor.white
 
         UIApplication.shared.statusBarStyle = .default
@@ -83,6 +82,7 @@ class SuggestionListVC: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
         navBar.searchInput.becomeFirstResponder()
     }
 
