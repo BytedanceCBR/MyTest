@@ -22,6 +22,7 @@ class ChatVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.title = "消息"
         self.navigationItem.title = "消息"
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
