@@ -193,7 +193,7 @@ class NeighborhoodItemView: UIView {
 
 func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?) -> () -> TableSectionNode? {
     return {
-        if let datas = data?.items, datas.count > 0 {
+        if let datas = data?.items?.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)
             return TableSectionNode(items: [render], label: "同小区房源", type: .node(identifier: MultiItemCell.identifier))
         } else {
@@ -254,7 +254,7 @@ func parseRelatedNeighborhoodNode(_ datas: [NeighborhoodInnerItemEntity]?) -> ()
 
 func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
-        let views = datas.map { item in
+        let views = datas.take(5).map { item in
             generateRelatedNeighborhoodView(item)
         }
         views.forEach { view in
@@ -292,7 +292,7 @@ func parseFloorPanNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
 
 func fillFloorPanCell(_ data: [FloorPan.Item], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
-        let views = data.map { item in
+        let views = data.take(5).map { item in
             generateFloorPanItemView(item)
         }
         views.forEach { view in

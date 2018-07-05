@@ -81,3 +81,18 @@ struct SearchConfigOption: Mappable {
     }
 }
 
+struct SearchRelatedErshouHouseResponse: Mappable {
+    var status: Int?
+    var message: String?
+    var data: [ErshouHouseData]?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+        data <- map["data"]
+    }
+}

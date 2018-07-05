@@ -8,7 +8,11 @@ import SnapKit
 import BDWebImage
 import YYText
 import CoreGraphics
-class SingleImageInfoCell: UITableViewCell {
+class SingleImageInfoCell: BaseUITableViewCell {
+
+    override open class var identifier: String {
+        return "BaseUITableViewCell"
+    }
 
     var imageRequest: BDWebImageRequest?
 
@@ -38,12 +42,6 @@ class SingleImageInfoCell: UITableViewCell {
 
         return label
     }()
-
-//        lazy var areaLabel: YYTextView = {
-//            let label = YYTextView()
-//            label.isEditable = false
-//            return label
-//        }()
 
     lazy var priceLabel: UILabel = {
         let label = UILabel()
@@ -105,7 +103,6 @@ class SingleImageInfoCell: UITableViewCell {
             maker.height.equalTo(23)
             maker.top.equalToSuperview().offset(13)
         }
-        majorTitle.text = "远洋沁山水 满五唯一 南北通透"
 
         infoPanel.addSubview(extendTitle)
         extendTitle.snp.makeConstraints { [unowned majorTitle] maker in
@@ -113,7 +110,6 @@ class SingleImageInfoCell: UITableViewCell {
             maker.top.equalTo(majorTitle.snp.bottom).offset(5)
             maker.height.equalTo(17)
         }
-        extendTitle.text = "2室一厅/120平/南北/公园"
 
         infoPanel.addSubview(areaLabel)
         areaLabel.snp.makeConstraints { [unowned extendTitle] maker in
@@ -128,7 +124,6 @@ class SingleImageInfoCell: UITableViewCell {
             maker.height.equalTo(17)
         }
 
-        priceLabel.text = "650万"
 
         infoPanel.addSubview(roomSpaceLabel)
         roomSpaceLabel.snp.makeConstraints { [unowned priceLabel] maker in
@@ -136,7 +131,6 @@ class SingleImageInfoCell: UITableViewCell {
             maker.top.equalTo(priceLabel.snp.top)
             maker.height.equalTo(17)
         }
-        roomSpaceLabel.text = "56420元/平"
     }
 
     func setImageByUrl(_ url: String) {
@@ -154,34 +148,7 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemInnerEntity
     cell.extendTitle.text = item.displaySubtitle
     let text = NSMutableAttributedString()
 
-    let attributeText = NSMutableAttributedString(string: "新房")
-    attributeText.yy_insertString("  ", at: 0)
-    attributeText.yy_appendString("  ")
-    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(10)
-    attributeText.yy_color = hexStringToUIColor(hex: "#f85959")
-    let substringRange = attributeText.string.range(of: "新房")
-    if let lowerBound = substringRange?.lowerBound,
-        let upperBound = substringRange?.upperBound {
-        let start = attributeText.string.distance(from: attributeText.string.startIndex, to: (lowerBound))
-        let length = attributeText.string.distance(from: lowerBound, to: upperBound)
-        let range = NSMakeRange(start, length)
-        attributeText.yy_setTextBinding(YYTextBinding(deleteConfirm: false), range: range)
-
-        let border = YYTextBorder()
-        border.strokeWidth = 1.5
-        border.fillColor = color(248, 89, 89, 0.08)
-        border.cornerRadius = 2
-        border.lineJoin = CGLineJoin.bevel
-
-        border.insets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)
-        attributeText.yy_setTextBackgroundBorder(border, range: range)
-    }
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
+    let attributeText = createTagAttrString("新房一天")
     text.append(attributeText)
     text.append(attributeText)
     text.append(attributeText)
@@ -196,3 +163,34 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemInnerEntity
     }
 
 }
+
+func createTagAttrString(
+    _ text: String,
+    textColor: UIColor = hexStringToUIColor(hex: "#f85959"),
+    backgroundColor: UIColor = color(248, 89, 89, 0.08)) -> NSMutableAttributedString {
+    let attributeText = NSMutableAttributedString(string: text)
+    attributeText.yy_insertString("  ", at: 0)
+    attributeText.yy_appendString("  ")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(10)
+    attributeText.yy_color = textColor
+    let substringRange = attributeText.string.range(of: text)
+    if let lowerBound = substringRange?.lowerBound,
+        let upperBound = substringRange?.upperBound {
+        let start = attributeText.string.distance(from: attributeText.string.startIndex, to: (lowerBound))
+        let length = attributeText.string.distance(from: lowerBound, to: upperBound)
+        let range = NSMakeRange(start, length)
+        attributeText.yy_setTextBinding(YYTextBinding(deleteConfirm: false), range: range)
+
+        let border = YYTextBorder()
+        border.strokeWidth = 1.5
+        border.fillColor = backgroundColor
+        border.cornerRadius = 2
+        border.lineJoin = CGLineJoin.bevel
+
+        border.insets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)
+        attributeText.yy_setTextBackgroundBorder(border, range: range)
+    }
+    return attributeText
+}
+
+

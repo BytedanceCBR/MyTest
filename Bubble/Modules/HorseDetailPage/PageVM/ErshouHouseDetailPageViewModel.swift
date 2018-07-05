@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
-
+import YYText
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     weak var tableView: UITableView?
@@ -24,7 +24,9 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
 
-    private var relateErshouHouseData = BehaviorRelay<HouseRecommendResponse?>(value: nil)
+    private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
+
+    private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -36,31 +38,38 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         cellFactory.register(tableView: tableView)
         super.init()
         ershouHouseData
-                .subscribe { [unowned self] event in
-                    let result = self.processData()([])
-                    self.dataSource.datas = result
-                    self.tableView?.reloadData()
-                }
-                .disposed(by: disposeBag)
+            .subscribe { [unowned self] event in
+                let result = self.processData()([])
+                self.dataSource.datas = result
+                self.tableView?.reloadData()
+            }
+            .disposed(by: disposeBag)
 
         relateNeighborhoodData
-                .subscribe { [unowned self] event in
-                    let result = self.processData()([])
-                    self.dataSource.datas = result
-                    self.tableView?.reloadData()
-                }
-                .disposed(by: disposeBag)
-
+            .subscribe { [unowned self] event in
+                let result = self.processData()([])
+                self.dataSource.datas = result
+                self.tableView?.reloadData()
+            }
+            .disposed(by: disposeBag)
+        houseInSameNeighborhood
+            .subscribe { [unowned self] event in
+                let result = self.processData()([])
+                self.dataSource.datas = result
+                self.tableView?.reloadData()
+            }
+            .disposed(by: disposeBag)
         relateErshouHouseData
-                .subscribe { [unowned self] event in
-                    let result = self.processData()([])
-                    self.dataSource.datas = result
-                    self.tableView?.reloadData()
-                }
-                .disposed(by: disposeBag)
+            .subscribe { [unowned self] event in
+                let result = self.processData()([])
+                self.dataSource.datas = result
+                self.tableView?.reloadData()
+            }
+            .disposed(by: disposeBag)
     }
 
     func requestData(houseId: Int64) {
+
         requestErshouHouseDetail(houseId: houseId)
                 .debug()
                 .subscribe(onNext: { [unowned self] (response) in
@@ -72,6 +81,12 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     print(error)
                 })
                 .disposed(by: disposeBag)
+        requestRelatedHouseSearch(houseId: "\(houseId)")
+            .debug("requestRelatedErshouHouse")
+            .subscribe(onNext: { [unowned self] response in
+                self.relateErshouHouseData.accept(response)
+            })
+            .disposed(by: disposeBag)
 
     }
 
@@ -79,20 +94,21 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     func requestReletedData() {
         if let neighborhoodId = ershouHouseData.value?.data?.neighborhoodInfo?.id {
             requestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId)
-                    .subscribe(onNext: { [unowned self] response in
-                        self.relateNeighborhoodData.accept(response)
-                    })
-                    .disposed(by: disposeBag)
-
+                .subscribe(onNext: { [unowned self] response in
+                    self.relateNeighborhoodData.accept(response)
+                })
+                .disposed(by: disposeBag)
+            
             requestSearch(
                 cityId: "133",
                 query: "neighborhood_id=\(neighborhoodId)")
                 .subscribe(onNext: { [unowned self] response in
-                    self.relateErshouHouseData.accept(response)
+                    self.houseInSameNeighborhood.accept(response)
                 })
                 .disposed(by: disposeBag)
-        }
 
+        }
+        
     }
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
@@ -107,8 +123,19 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     <- parseHeaderNode("同小区房源") { [unowned self] in
                         self.relateNeighborhoodData.value != nil
                     }
-                    <- parseSearchInNeighborhoodNode(relateErshouHouseData.value?.data)
+                    <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data)
+                    <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
+
+                    }
+                    <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.items?.count ?? 0))") { [unowned self] in
+                        self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
+                    }
                     <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items)
+                    <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
+
+                    }
+                    <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items)
+                    <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -163,5 +190,39 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
     return { tableView in
         ErshouHouseDetailPageViewModel(tableView: tableView)
+    }
+}
+
+func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?) -> () -> TableSectionNode? {
+    return {
+        if let renders = data?.map(curry(fillErshouHouseListitemCell)) {
+            return TableSectionNode(items: renders, label: "", type: .node(identifier: SingleImageInfoCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITableViewCell) {
+    if let theCell = cell as? SingleImageInfoCell {
+        theCell.majorTitle.text = data.displayTitle
+        theCell.extendTitle.text = data.displaySubtitle
+        let text = NSMutableAttributedString()
+
+        let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
+            createTagAttrString(item.content ?? "")
+        })
+
+        attrTexts?.forEach({ (attrText) in
+            text.append(attrText)
+        })
+
+        theCell.areaLabel.attributedText = text
+
+        theCell.priceLabel.text = data.baseInfoMap?.pricing
+        theCell.roomSpaceLabel.text = data.baseInfoMap?.pricingPerSqm
+        if let img = data.houseImage?.first , let url = img.url {
+            theCell.setImageByUrl(url)
+        }
     }
 }
