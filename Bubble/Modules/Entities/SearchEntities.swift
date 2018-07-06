@@ -48,6 +48,7 @@ struct SearchConfigFilterItem: Mappable {
 
     var text: String?
     var tabId: Int?
+    var tabStyle: Int?
     var options: [SearchConfigOption]?
     var supportMulti: Bool = false
     init?(map: Map) {
@@ -55,31 +56,32 @@ struct SearchConfigFilterItem: Mappable {
     }
 
     mutating func mapping(map: Map) {
-        supportMulti <- map["support_multi"]
         text <- map["text"]
         tabId <- map["tab_id"]
+        tabStyle <- map["tab_style"]
         options <- map["options"]
+        supportMulti <- map["support_multi"]
     }
 }
 
 struct SearchConfigOption: Mappable {
-    var name: String?
     var supportMulti: Bool?
     var options: [SearchConfigOption]?
     var type: String?
     var text: String?
     var value: Any = 0
+    var isEmpty: Int = 0
     init?(map: Map) {
 
     }
 
     mutating func mapping(map: Map) {
-        name <- map["name"]
         supportMulti <- map["support_multi"]
         options <- map["options"]
         type <- map["type"]
         value <- map["value"]
         text <- map["text"]
+        isEmpty <- map["is_empty"]
     }
 }
 

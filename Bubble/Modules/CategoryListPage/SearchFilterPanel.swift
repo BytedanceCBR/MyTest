@@ -200,6 +200,7 @@ func transferSearchConfigOptionToNode(options: [SearchConfigOption], isSupportMu
             label: option.text ?? "",
             externalConfig: externalConfig,
             isSupportMulti: theIsSupportMulti,
+            isEmpty: option.isEmpty,
             children: transferSearchConfigOptionToNode(options: option.options ?? [], isSupportMulti: theIsSupportMulti))
     })
 }

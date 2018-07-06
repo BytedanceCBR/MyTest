@@ -351,28 +351,29 @@ struct Node {
     let label: String
     let externalConfig: String
     let isSupportMulti: Bool
+    let isEmpty: Int
     let children: [Node]
-}
 
-extension Node {
+    init(id: String,
+         label: String,
+         externalConfig: String,
+         isSupportMulti: Bool,
+         isEmpty: Int,
+         children: [Node]) {
+        self.id = id
+        self.label = label
+        self.externalConfig = externalConfig
+        self.isSupportMulti = isSupportMulti
+        self.isEmpty = isEmpty
+        self.children = children
+    }
+
     init(id: String, label: String, externalConfig: String) {
         self.id = id
         self.label = label
+        self.isEmpty = 0
         self.externalConfig = externalConfig
         self.isSupportMulti = false
         self.children = []
     }
 }
-
-//private func mockupData() -> [Node] {
-//    let nodes = [Node(id: "1", label: "不限", externalConfig: ""),
-//                 Node(id: "2", label: "安定门", externalConfig: "")]
-//
-//    let area = Node(id: "3", label: "朝阳", externalConfig: "", children: nodes)
-//    let unliminte = Node(id: "8", label: "不限", externalConfig: "")
-//
-//    let root = Node(id: "4", label: "区域", externalConfig: "", children: [unliminte, area])
-//    let zhichunlu = Node(id: "10", label: "知春路", externalConfig: "")
-//    let subWay = Node(id: "9", label: "地铁", externalConfig: "", children: [zhichunlu])
-//    return [root, subWay]
-//}

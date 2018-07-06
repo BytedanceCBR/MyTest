@@ -97,41 +97,6 @@ class CategoryListPageVC: UIViewController {
         self.conditionPanelState.isShowPanel = false
     }
 
-    func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
-        return { [weak self] (index, nodes) -> Void in
-            self?.conditionPanelView.subviews.forEach { view in
-                view.removeFromSuperview()
-            }
-            self?.conditionPanelView.isHidden = true
-            apply(index, nodes)
-            self?.reloadConditionPanel()
-        }
-
-    }
-
-    func openConditionPanel(state: ConditionPanelState, apply: @escaping ConditionFilterPanelGenerator) -> (Int) -> Void {
-        return { [weak self] (index) in
-            if state.isShowPanel, state.currentIndex == index {
-                self?.conditionPanelView.subviews.forEach { view in
-                    view.removeFromSuperview()
-                }
-                self?.conditionPanelView.isHidden = true
-                state.isShowPanel = false
-            } else if state.isShowPanel, state.currentIndex != index {
-                self?.conditionPanelView.subviews.forEach { view in
-                    view.removeFromSuperview()
-                }
-                apply(index, self?.conditionPanelView)
-                state.isShowPanel = true
-            } else if state.isShowPanel != true {
-                apply(index, self?.conditionPanelView)
-                self?.conditionPanelView.isHidden = false
-                state.isShowPanel = true
-            }
-            state.currentIndex = index
-        }
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
     }
@@ -228,7 +193,7 @@ class CategoryListPageVC: UIViewController {
                     }
                     zip(items.0, items.1).forEach({ (e) in
                         let (item, nodes) = e
-                        item.onClick = self.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
+                        item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
                     })
                     self.filterConditions = items.0
                     self.reloadConditionPanel()
@@ -252,60 +217,6 @@ class CategoryListPageVC: UIViewController {
 
                 })
                 .disposed(by: disposeBag)
-    }
-
-    func initSearchConditionItemPanel(
-            reload: @escaping () -> Void,
-            item: SearchConditionItem,
-            data: [Node]) -> (Int) -> Void {
-        return generatePanelProviderByItem(reload: reload, item: item, configs: data)
-    }
-
-    func generatePanelProviderByItem(reload: @escaping () -> Void,
-                                     item: SearchConditionItem,
-                                     configs: [Node]) -> (Int) -> Void {
-        switch item.itemId {
-        case 1:
-            return openConditionPanel(
-                    state: self.conditionPanelState,
-                    apply: constructAreaConditionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
-                        self.searchAndConditionFilterVM.addCondition(index: index, condition: parseAreaSearchCondition(nodePath: nodes))
-                        setConditionItemTypeByParser(
-                                item: item,
-                                reload: reload,
-                                parser: parseAreaConditionItemLabel)(nodes)
-                    }))
-        case 2:
-            return openConditionPanel(
-                    state: self.conditionPanelState,
-                    apply: constructPriceListConditionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
-                        self.searchAndConditionFilterVM.addCondition(index: index, condition: parsePriceSearchCondition(nodePath: nodes))
-                        setConditionItemTypeByParser(
-                                item: item,
-                                reload: reload,
-                                parser: parsePriceConditionItemLabel)(nodes)
-                    }))
-        case 3:
-            return openConditionPanel(
-                    state: self.conditionPanelState,
-                    apply: constructBubbleSelectCollectionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
-                        self.searchAndConditionFilterVM.addCondition(index: index, condition: parseHorseTypeSearchCondition(nodePath: nodes))
-                        setConditionItemTypeByParser(
-                                item: item,
-                                reload: reload,
-                                parser: parseHorseTypeConditionItemLabel)(nodes)
-                    }))
-        default:
-            return openConditionPanel(
-                    state: self.conditionPanelState,
-                    apply: constructMoreSelectCollectionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
-                        self.searchAndConditionFilterVM.addCondition(index: index, condition: parseHorseTypeSearchCondition(nodePath: nodes))
-                        setConditionItemTypeByParser(
-                                item: item,
-                                reload: reload,
-                                parser: parseMoreConditionItemLabel)(nodes)
-                    }))
-        }
     }
 
     override func didReceiveMemoryWarning() {
