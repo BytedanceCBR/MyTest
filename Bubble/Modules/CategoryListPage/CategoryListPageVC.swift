@@ -72,6 +72,8 @@ class CategoryListPageVC: UIViewController {
 
     let searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
 
+    var conditionFilterViewModel: ConditionFilterViewModel?
+
     lazy var filterConditions: [SearchConditionItem] = {
         []
     }()
@@ -83,7 +85,6 @@ class CategoryListPageVC: UIViewController {
     private var categoryListViewModel: CategoryListViewModel?
 
     init() {
-
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -137,7 +138,9 @@ class CategoryListPageVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.conditionFilterViewModel = ConditionFilterViewModel(
+            conditionPanelView: conditionPanelView,
+            searchAndConditionFilterVM: searchAndConditionFilterVM)
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .default

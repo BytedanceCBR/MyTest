@@ -81,7 +81,7 @@ class RelatedSearchApiTest: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
-        requestRelatedNeighborhoodSearch(neighborhoodId: "6569027970076360974", offset:"0",  query: "")
+        requestRelatedNeighborhoodSearch(neighborhoodId: "6569027970076360974", offset:0,  query: "")
             .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)

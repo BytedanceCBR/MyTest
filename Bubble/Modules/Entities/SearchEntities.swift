@@ -30,6 +30,8 @@ struct SearchConfigResponse: Mappable {
 struct SearchConfigResponseData: Mappable {
 
     var filter: [SearchConfigFilterItem]?
+    var courtFilter: [SearchConfigFilterItem]?
+    var neighborhoodFilter: [SearchConfigFilterItem]?
 
     init?(map: Map) {
 
@@ -37,9 +39,9 @@ struct SearchConfigResponseData: Mappable {
 
     mutating func mapping(map: Map) {
         filter <- map["filter"]
+        courtFilter <- map["court_filter"]
+        neighborhoodFilter <- map["neighborhood_filter"]
     }
-
-
 }
 
 struct SearchConfigFilterItem: Mappable {
