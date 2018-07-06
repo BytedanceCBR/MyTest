@@ -61,6 +61,9 @@
 		6B7D15C305E916CBCDD2679345C4F4BB /* NewHouseNearByCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED06AD880B9E446E65EE4494CB70FC /* NewHouseNearByCell.swift */; };
 		753083310BE88DE7A9B392976E04E8DE /* CategorySectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A5EC44CF929F7A1564FB6702ED79CE /* CategorySectionView.swift */; };
 		78EBD463A0F4BA125EA6A55FF91F80D8 /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C199AFDED38F9FBC87803A1432CA0B /* HomePageSearchPanel.swift */; };
+		7D531F8C20EF7A17001032AB /* UserMessageEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8B20EF7A17001032AB /* UserMessageEntities.swift */; };
+		7D531F8E20EF91A4001032AB /* UserMessageEntitiesApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */; };
+		7D531F9020EF9B40001032AB /* UserMessageEntitiesApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */; };
 		7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */; };
 		7E42F2341424B8CDE9D8039C53975657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4718EF956DEC3D8B7DCED2DB95F4D3 /* Foundation.framework */; };
 		80306763E4F2656863E54B5B7696A6CB /* BubbleSelectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565842925A14E9D79034D2E75CE82172 /* BubbleSelectCollectionView.swift */; };
@@ -207,6 +210,9 @@
 		776A78584ED15D90E9FB80945E57348D /* ErshouHouseDetailAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailAPITests.swift; sourceTree = "<group>"; };
 		789D5B8419E1EE77099894F77AF706FE /* MarqueeGroupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarqueeGroupView.swift; sourceTree = "<group>"; };
 		7B58A4D022BC9F5F6B1BD869D594FCD8 /* libPods-BubbleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BubbleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D531F8B20EF7A17001032AB /* UserMessageEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntities.swift; sourceTree = "<group>"; };
+		7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApi.swift; sourceTree = "<group>"; };
+		7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApiTest.swift; sourceTree = "<group>"; };
 		7F85FD5DEA86AA8ADAB4F5C2436BFF4D /* CycleImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleImageCache.swift; sourceTree = "<group>"; };
 		7FEA91459568E4C790BEF3AB57E8004C /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		8133F15B42B2ABEEA7C0B75E03F9E4BC /* CategoryListPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryListPageVC.swift; sourceTree = "<group>"; };
@@ -336,6 +342,7 @@
 				3F5C446428E8BF87703EAC699D3F2B89 /* SearchEntities.swift */,
 				255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */,
 				29E210C09D6893A5A3467C06579E4DDA /* SuggestionEntities.swift */,
+				7D531F8B20EF7A17001032AB /* UserMessageEntities.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -462,6 +469,7 @@
 				957A91D426194CF107E8845B6A020F9A /* RelatedSearchApiTest.swift */,
 				B3498B7D3F0BBB07528AD37FFFAA66B8 /* SearchNeighborhoodEntityApiTest.swift */,
 				B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */,
+				7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -621,6 +629,7 @@
 				BEC5D9BF9A78AAB8D385D28892D1E58E /* RelatedSearchApi.swift */,
 				BC745AC0928CE8697ECBD15ABBB8BC33 /* SearchAPI.swift */,
 				56F3DE2CC676FAB63B55D3B0D6B971FB /* SearchNeighborhoodEntityApi.swift */,
+				7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -1048,6 +1057,7 @@
 				7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */,
 				78EBD463A0F4BA125EA6A55FF91F80D8 /* HomePageSearchPanel.swift in Sources */,
 				DF515C4B4B54435FBB1A1BCE50F217DC /* HomeSpringBoard.swift in Sources */,
+				7D531F8C20EF7A17001032AB /* UserMessageEntities.swift in Sources */,
 				FCD919A4FCE63E2BB237E3F3371571E9 /* HomeSpringBoardItemView.swift in Sources */,
 				8769A80544DA54E6A0CB199D4281E1F9 /* HomeViewController.swift in Sources */,
 				66B11C1B82061F3A1F4ABF754E662A8B /* HomeViewTableViewDataSource.swift in Sources */,
@@ -1059,6 +1069,7 @@
 				1991B01F0754C14DD8E0C050A27D30A9 /* LBSMapPageVC.swift in Sources */,
 				DB20AD4D6305FD15B9B37D06F5A169C9 /* LocationManager.swift in Sources */,
 				66073B1B0B606C8810A684A30FF8DA7B /* MarqueeGroupView.swift in Sources */,
+				7D531F8E20EF91A4001032AB /* UserMessageEntitiesApi.swift in Sources */,
 				07C6486CFBB5F19A541B7841A5EE30BA /* MineVC.swift in Sources */,
 				C364F15BD96275DCF31F236FFD9AAF15 /* MultiColumnTableSelectorPanel.swift in Sources */,
 				17229716961CE1E68153F5E7F84613D6 /* MultiImageInfoCell.swift in Sources */,
@@ -1117,6 +1128,7 @@
 			files = (
 				27115C4EE61EEDE33C84200A45001BD6 /* BubbleTests.swift in Sources */,
 				1AB1C8BBCD418B1695B36A89A92C6B7F /* CityItemCellTest.swift in Sources */,
+				7D531F9020EF9B40001032AB /* UserMessageEntitiesApiTest.swift in Sources */,
 				A3F65CC4312DAC8EF85E5A5BFAD29193 /* CourtItemEntityApiTest.swift in Sources */,
 				8293A6F4E18C81193EA9C0719837F015 /* ErshouHouseDetailAPITests.swift in Sources */,
 				9B749DE7AAF237B6451CF6B73FB668DB /* HorseDetailPageVCTests.swift in Sources */,

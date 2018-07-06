@@ -10,7 +10,7 @@ import UIKit
 
 class ChatCell: BaseUITableViewCell {
     open override class var identifier: String {
-        return "CycleImage"
+        return "ChatCell"
     }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

@@ -18,8 +18,13 @@ class ChatVC: UIViewController {
         return re
     }()
 
-    private let dataSource = DataSource()
-
+    let disposeBag = DisposeBag()
+    //private let dataSource = DataSource()
+    
+    lazy var tableViewModel: ChatListTableViewModel = {
+        ChatListTableViewModel()
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.title = "消息"
@@ -28,8 +33,22 @@ class ChatVC: UIViewController {
         tableView.snp.makeConstraints { maker in
             maker.top.left.right.bottom.equalToSuperview()
         }
-        tableView.dataSource = dataSource
+        tableView.dataSource = tableViewModel
+        
+        tableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
+        tableView.reloadData()
+        
         // Do any additional setup after loading the view.
+        requestSuggestion(cityId: 133, horseType: 2)
+            .subscribe(onNext: { [unowned self] (responsed) in
+                if let responseData = responsed?.data {
+                    self.tableViewModel.suggestions = responseData
+                    self.tableView.reloadData()
+                }
+                }, onError: { (error) in
+                    print(error)
+            })
+            .disposed(by: disposeBag)
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,7 +56,11 @@ class ChatVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -51,7 +74,10 @@ class ChatVC: UIViewController {
 }
 
 
-fileprivate class DataSource: NSObject, UITableViewDataSource {
+
+class ChatListTableViewModel: NSObject, UITableViewDataSource {
+    var suggestions: [SuggestionItem] = []
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
