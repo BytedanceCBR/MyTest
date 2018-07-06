@@ -162,7 +162,7 @@ PODS:
     - SSZipArchive (~> 1.6.2)
     - TTRexxar/Core
   - TTRoute (0.2.26)
-  - TTServiceKit (0.4.2)
+  - TTServiceKit (0.4.3)
   - TTTracker (1.1.5):
     - FMDB (~> 2.6.2)
     - TTInstallService (>= 1.1.1)
@@ -281,11 +281,11 @@ SPEC CHECKSUMS:
   TTReachability: 1b403aa8792dff3aa6228bd827633f5b99ef06ce
   TTRexxar: e572968808f232015f31c82e0ccb51d39df12865
   TTRoute: fe51b326a5485b8fe625238cc09c17eed3dda91d
-  TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
+  TTServiceKit: 5986a3f594384377ee6aa82d3aee8d02dad4afbb
   TTTracker: c01b9f82b795a4a83fd904c63e7283587a452d13
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
 PODFILE CHECKSUM: dc41d36dd6bfed0a885253d21c9764597d0320e6
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2

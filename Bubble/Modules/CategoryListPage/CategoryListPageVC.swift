@@ -46,7 +46,7 @@ class CategoryListPageVC: UIViewController {
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
         result.searchInput.placeholder = "小区/商圈/地铁"
-        result.searchTypeLabel.text = houseType.value?.stringValue() ?? HouseType.secondHandHouse.stringValue()
+        result.searchTypeLabel.text = houseType.value.stringValue()
         return result
     }()
 
@@ -56,14 +56,11 @@ class CategoryListPageVC: UIViewController {
     }()
 
     lazy var tableView: UITableView = {
-        let result = UITableView()
+        let result = UITableView(frame: CGRect.zero, style: .plain)
         result.separatorStyle = .none
         return result
     }()
 
-    lazy var dataSource: CategoryListDataSource = {
-        CategoryListDataSource()
-    }()
 
     lazy var conditionPanelView: UIView = {
         let result = UIView()
@@ -79,9 +76,20 @@ class CategoryListPageVC: UIViewController {
         []
     }()
 
-    let houseType = BehaviorRelay<HouseType?>(value: nil)
+    let houseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
     private var popupMenuView: PopupMenuView?
+
+    private var categoryListViewModel: CategoryListViewModel?
+
+    init() {
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     func reloadConditionPanel() -> Void {
         searchFilterPanel.setItems(items: filterConditions)
@@ -129,10 +137,11 @@ class CategoryListPageVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .default
-
+        self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView)
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
@@ -176,9 +185,6 @@ class CategoryListPageVC: UIViewController {
             maker.left.right.bottom.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
         }
-        tableView.dataSource = dataSource
-        tableView.delegate = dataSource
-        registerCell(tableView)
         bindSearchRequest()
         searchFilterPanel.setItems(items: filterConditions)
 
@@ -190,10 +196,8 @@ class CategoryListPageVC: UIViewController {
         conditionPanelView.isHidden = true
 
         houseType.subscribe(onNext: { [weak self] (type) in
-                    if let type = type {
-                        self?.navBar.searchTypeLabel.text = type.stringValue()
-                        self?.searchAndConditionFilterVM.sendSearchRequest()
-                    }
+                    self?.navBar.searchTypeLabel.text = type.stringValue()
+                    self?.searchAndConditionFilterVM.sendSearchRequest()
                 })
                 .disposed(by: disposeBag)
 
@@ -227,24 +231,18 @@ class CategoryListPageVC: UIViewController {
                     self.reloadConditionPanel()
                 })
                 .disposed(by: disposeBag)
+        self.searchAndConditionFilterVM.sendSearchRequest()
 
     }
 
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
                 .map { [weak self] (result) in
-                    result + "&house_type=\(self?.houseType.value?.rawValue ?? HouseType.secondHandHouse.rawValue)"
+                    result + "&house_type=\(self?.houseType.value.rawValue ?? HouseType.secondHandHouse.rawValue)"
                 }
                 .debounce(0.01, scheduler: MainScheduler.instance)
-//                .throttle(0.5, scheduler: MainScheduler.instance)
-                .flatMap {
-                    requestSearch(query: $0)
-                }
-                .subscribe(onNext: { [unowned self] response in
-                    if let data = response?.data?.items {
-                        self.dataSource.onDataArrived(datas: data)
-                        self.tableView.reloadData()
-                    }
+                .subscribe(onNext: { [unowned self] query in
+                    self.categoryListViewModel?.requestData(houseType: self.houseType.value, query: query)
                 }, onError: { error in
                     print(error)
                 }, onCompleted: {
@@ -319,14 +317,6 @@ class CategoryListPageVC: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-    }
-
-    private func registerCell(_ tableView: UITableView) {
-        let cellTypeMap: [String: UITableViewCell.Type] = ["item": SingleImageInfoCell.self]
-        cellTypeMap.forEach { (e) in
-            let (identifier, cls) = e
-            tableView.register(cls, forCellReuseIdentifier: identifier)
-        }
     }
 
     private func displayPopupMenu() {

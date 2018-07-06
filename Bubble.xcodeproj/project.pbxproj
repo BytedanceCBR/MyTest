@@ -87,6 +87,7 @@
 		AEB105552793CF8BB736FA6BEC4D362C /* SearchEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5C446428E8BF87703EAC699D3F2B89 /* SearchEntities.swift */; };
 		AF39102EE0A43E2C26CB88CF4E6B33E4 /* CategoryListPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8133F15B42B2ABEEA7C0B75E03F9E4BC /* CategoryListPageVC.swift */; };
 		B0DEE377A4882C349D7C2C2ADE842132 /* BubbleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF01F91FB984CFABF70798CC483E072 /* BubbleUITests.swift */; };
+		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
 		B7463490C2019DFF14444E198E43643D /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9141D1F115AE46B03510AE594590CE /* libTTNetworkManager.a */; };
 		BBE39DA1FBBDB6D0EAC4803737DA1FFF /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A7CDFD7807B866BF66E8C78EC525FB /* TimelineCell.swift */; };
 		BD46785F6C8D9AD4F1D321D8E033D7E0 /* HouseDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519AB3E142A51425726AD97ECC40136 /* HouseDetailPageVC.swift */; };
@@ -233,6 +234,7 @@
 		AECB0D9B9AAFE249F88BA44BBE172AC3 /* MultiItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiItemCell.swift; sourceTree = "<group>"; };
 		AED9CB50032E20514226E8D9FCFD06AA /* RxTTNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxTTNetwork.swift; sourceTree = "<group>"; };
 		B219609EC1483D10A9C5554380F043C7 /* BubbleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleTests.swift; sourceTree = "<group>"; };
+		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
 		B3498B7D3F0BBB07528AD37FFFAA66B8 /* SearchNeighborhoodEntityApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNeighborhoodEntityApiTest.swift; sourceTree = "<group>"; };
 		B4BE63765696BEED7AD11EFFCE55AD71 /* MineVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineVC.swift; sourceTree = "<group>"; };
 		B5839C6BFA35E23D32DBC39FE45F622B /* HouseItemEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseItemEntity.swift; sourceTree = "<group>"; };
@@ -277,6 +279,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		431BB1DEE2F8CD7F65C16B6B345B0D95 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32BE1F272C285880C2F33D62B38BEA21 /* libPods-BubbleTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		55B326F6FC9F4AEC5E13CA6447E35808 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -287,14 +297,6 @@
 				C673067F97C2AC22604514D55FBA55CE /* libPods-Bubble.a in Frameworks */,
 				B7463490C2019DFF14444E198E43643D /* libTTNetworkManager.a in Frameworks */,
 				8122132640C9B2E9D19BA0388F10C6A8 /* libstdc++.6.0.9.tbd in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		431BB1DEE2F8CD7F65C16B6B345B0D95 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				32BE1F272C285880C2F33D62B38BEA21 /* libPods-BubbleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,64 +311,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9D9D8DB57C6A9044DFC691DE529AF294 /* Search */ = {
+		00CED3915ABDD9B8345F461F05CE58CF /* Pageable */ = {
 			isa = PBXGroup;
 			children = (
-				44C199AFDED38F9FBC87803A1432CA0B /* HomePageSearchPanel.swift */,
+				7F85FD5DEA86AA8ADAB4F5C2436BFF4D /* CycleImageCache.swift */,
+				E4B5ADE7E0157C8EF4341FACC737BFEC /* PageableViewModel.swift */,
 			);
-			path = Search;
+			path = Pageable;
 			sourceTree = "<group>";
 		};
-		E136298FD2A0DCCA2D0F222C74F9EC36 /* Home */ = {
+		02AB2BC8212AF91DA2F569EF79D6E11F /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				36B35FEF71A392A6E3888758871E2389 /* Cells */,
-				8DF1E11DFF63E577592C49F2120F5605 /* CountryList */,
-				9D9D8DB57C6A9044DFC691DE529AF294 /* Search */,
-				97C526B4D0D0B435D47D6C6B79987BD5 /* SpringBoard */,
-				7608B3205FA3C4E6521658509044724C /* BaseTextField.swift */,
-				9399FDE3DE7477C1E3337ADEF66AB6B1 /* HeaderViewControl.swift */,
-				0D2CD9B5730FCA285C3D91C7782012FB /* HomeHeaderSearchView.swift */,
-				BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */,
-				C3A1D4E3950F044F9C44CD7363902169 /* HomeViewController.swift */,
-				BB2D216E773D568851B2E1C3A8FC1BC4 /* HomeViewTableViewDataSource.swift */,
-				F33E1A1E735BF103E8D29C35096800D7 /* SearchTextField.swift */,
-				AE089FF39C6BC876496DEFB5EBC5B135 /* SearchUITextField.swift */,
+				548A5C53969A1E1D3457561F81D1F8FF /* ConfigEntities.swift */,
+				FA2E439C6BFC341260EDC922A192CECE /* CourtItemEntity.swift */,
+				C4A6C76918CD9D64D485769A4194555B /* ErshouHouseDetailEntities.swift */,
+				0286B6FA8661224045DD89B577772DE1 /* HouseDetailEntities.swift */,
+				B5839C6BFA35E23D32DBC39FE45F622B /* HouseItemEntity.swift */,
+				C8A272CA81F3CB2CEBA518EA8B6A8943 /* NeighborhoodDetailEntities.swift */,
+				3F5C446428E8BF87703EAC699D3F2B89 /* SearchEntities.swift */,
+				255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */,
+				29E210C09D6893A5A3467C06579E4DDA /* SuggestionEntities.swift */,
 			);
-			path = Home;
-			sourceTree = "<group>";
-		};
-		97C526B4D0D0B435D47D6C6B79987BD5 /* SpringBoard */ = {
-			isa = PBXGroup;
-			children = (
-				0493A46069FD7E768E55ED37072D840B /* HomeSpringBoard.swift */,
-				A5CE03AF0D757940036B3D5EA00D870E /* HomeSpringBoardItemView.swift */,
-			);
-			path = SpringBoard;
-			sourceTree = "<group>";
-		};
-		6BDB3BD67E68879F66C9329DB0A51C52 /* Style */ = {
-			isa = PBXGroup;
-			children = (
-				38CE0EEAD5A251336754B3D246A8BA3A /* CommonUIStyle.swift */,
-			);
-			path = Style;
-			sourceTree = "<group>";
-		};
-		8DF1E11DFF63E577592C49F2120F5605 /* CountryList */ = {
-			isa = PBXGroup;
-			children = (
-				4A963809D2BC6DD00A9C3736983B46A5 /* CountryListVC.swift */,
-			);
-			path = CountryList;
-			sourceTree = "<group>";
-		};
-		79D89BAA1EB0143B27BCD501EB99DE9D /* FWSegmentedControl */ = {
-			isa = PBXGroup;
-			children = (
-				CE3D70E252BF5230E8E7C5EE4CEC4130 /* FWSegmentedControl.swift */,
-			);
-			path = FWSegmentedControl;
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		035635E9BAACF147417D8653C5F81802 /* HorseDetailPage */ = {
@@ -401,55 +368,38 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
-		5245424DEE6EEF5C4E03D39881DBD74D /* Navs */ = {
+		10943918B88CD24AE06C9174773E688B /* Bizs */ = {
 			isa = PBXGroup;
 			children = (
-				D1E2CD2B41C475FE7E40A4ACEE90454C /* SimpleNavBar.swift */,
+				D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */,
+				ED44DB92E408B4EA11F437130F665A08 /* Mine */,
 			);
-			path = Navs;
+			path = Bizs;
 			sourceTree = "<group>";
 		};
-		02AB2BC8212AF91DA2F569EF79D6E11F /* Entities */ = {
+		2B69573B56D7B8C4E19281CAF053A987 /* CategoryListPage */ = {
 			isa = PBXGroup;
 			children = (
-				548A5C53969A1E1D3457561F81D1F8FF /* ConfigEntities.swift */,
-				FA2E439C6BFC341260EDC922A192CECE /* CourtItemEntity.swift */,
-				C4A6C76918CD9D64D485769A4194555B /* ErshouHouseDetailEntities.swift */,
-				0286B6FA8661224045DD89B577772DE1 /* HouseDetailEntities.swift */,
-				B5839C6BFA35E23D32DBC39FE45F622B /* HouseItemEntity.swift */,
-				C8A272CA81F3CB2CEBA518EA8B6A8943 /* NeighborhoodDetailEntities.swift */,
-				3F5C446428E8BF87703EAC699D3F2B89 /* SearchEntities.swift */,
-				255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */,
-				29E210C09D6893A5A3467C06579E4DDA /* SuggestionEntities.swift */,
+				7181B4458C1E16451309AADCFDF09152 /* Filters */,
+				FE6D07934B9D5CDD0660EABAF2B59B47 /* Suggestion */,
+				23B450CA01A9D47A7A256AADCB632011 /* CategoryListDataSource.swift */,
+				8133F15B42B2ABEEA7C0B75E03F9E4BC /* CategoryListPageVC.swift */,
+				D2A77E1B89816F370927EEDF1342DED3 /* PopupMenuView.swift */,
+				88A53D8E409893508E8D2E6D9458AC8A /* SearchAndConditionFilterViewModel.swift */,
+				0F004A3AD6FA89920E7F2B01E6D953E3 /* SearchFilterPanel.swift */,
+				B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */,
 			);
-			path = Entities;
+			path = CategoryListPage;
 			sourceTree = "<group>";
 		};
-		9D5DAFC144D8E84FE1743301BEB6C46A /* Api */ = {
+		32BC999B66100AC58A84D9875C6A3FEB /* PageVM */ = {
 			isa = PBXGroup;
 			children = (
-				4D50F085F3C8390D0F714AF453A7C79A /* ConfigurationAPI.swift */,
-				1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */,
-				F73E3CCC1E17F569BD7F3F6299226C78 /* ErshouHouseDetailApi.swift */,
-				BC386C3E8EED7580C664813EA1C86671 /* HouseDetailAPI.swift */,
-				03763C35FDEC753F037C408B190BDD3A /* NeighborhoodDetailEntitiesApi.swift */,
-				F7EA7396B5CDEEF170FE39F4AF1944FB /* RecommendAPI.swift */,
-				BEC5D9BF9A78AAB8D385D28892D1E58E /* RelatedSearchApi.swift */,
-				BC745AC0928CE8697ECBD15ABBB8BC33 /* SearchAPI.swift */,
-				56F3DE2CC676FAB63B55D3B0D6B971FB /* SearchNeighborhoodEntityApi.swift */,
+				1C92D94C585E1981284344F3EC7F4B7E /* DetailPageViewModel.swift */,
+				48FA1825B0D085D38F65349CABE63CC9 /* ErshouHouseDetailPageViewModel.swift */,
+				344A580F3CEDAB6702CFA8FD6B58457F /* NewHouseDetailPageViewModel.swift */,
 			);
-			path = Api;
-			sourceTree = "<group>";
-		};
-		7181B4458C1E16451309AADCFDF09152 /* Filters */ = {
-			isa = PBXGroup;
-			children = (
-				B94D9D2638F566D987E648A5EDA8EE57 /* AreaConditionFilterPanel.swift */,
-				565842925A14E9D79034D2E75CE82172 /* BubbleSelectCollectionView.swift */,
-				A1A88F3F0B7218482003A22CA9E98B28 /* MultiColumnTableSelectorPanel.swift */,
-				B5DF48CE747E90743E9F4FC85EF4FD8E /* PriceListFilterPanel.swift */,
-			);
-			path = Filters;
+			path = PageVM;
 			sourceTree = "<group>";
 		};
 		36B35FEF71A392A6E3888758871E2389 /* Cells */ = {
@@ -464,26 +414,90 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		2B69573B56D7B8C4E19281CAF053A987 /* CategoryListPage */ = {
+		44A09EF6153F75E955A4538C6E941B3B /* Functions */ = {
 			isa = PBXGroup;
 			children = (
-				7181B4458C1E16451309AADCFDF09152 /* Filters */,
-				FE6D07934B9D5CDD0660EABAF2B59B47 /* Suggestion */,
-				23B450CA01A9D47A7A256AADCB632011 /* CategoryListDataSource.swift */,
-				8133F15B42B2ABEEA7C0B75E03F9E4BC /* CategoryListPageVC.swift */,
-				D2A77E1B89816F370927EEDF1342DED3 /* PopupMenuView.swift */,
-				88A53D8E409893508E8D2E6D9458AC8A /* SearchAndConditionFilterViewModel.swift */,
-				0F004A3AD6FA89920E7F2B01E6D953E3 /* SearchFilterPanel.swift */,
+				3179D278522647D68C65D2DE90D8DF7C /* Color.swift */,
+				7FEA91459568E4C790BEF3AB57E8004C /* Curry.swift */,
+				1D3A7DF5A2929E80DCDA93DB6344BA59 /* Functional.swift */,
+				8EE063E18FFD1A443C61A1C8EB2443FD /* TextParser.swift */,
+				4FF4694B993079E04DC46DD23C932357 /* UIKitExtension.swift */,
 			);
-			path = CategoryListPage;
+			path = Functions;
 			sourceTree = "<group>";
 		};
-		FE6D07934B9D5CDD0660EABAF2B59B47 /* Suggestion */ = {
+		4A8F155E76747E22B4E2E5F8E4380437 /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
-				81AA2B048A72A994B5D30E4DBCB54C51 /* SuggestionListVC.swift */,
+				6DD6442A239F0DBA9C51BAE2923316AD /* Extension */,
+				79D89BAA1EB0143B27BCD501EB99DE9D /* FWSegmentedControl */,
+				44A09EF6153F75E955A4538C6E941B3B /* Functions */,
+				85332F0B54F727AF8D35E9CBCC26AC61 /* Locations */,
+				E4531F69CC7FBA493F673866D6BCE4A4 /* Networks */,
+				00CED3915ABDD9B8345F461F05CE58CF /* Pageable */,
+				C9EC3922C2811AAADDC937EC6CB58729 /* TagView */,
 			);
-			path = Suggestion;
+			path = Librarys;
+			sourceTree = "<group>";
+		};
+		5245424DEE6EEF5C4E03D39881DBD74D /* Navs */ = {
+			isa = PBXGroup;
+			children = (
+				D1E2CD2B41C475FE7E40A4ACEE90454C /* SimpleNavBar.swift */,
+			);
+			path = Navs;
+			sourceTree = "<group>";
+		};
+		57A5E99EE955DE2974943A87073181B8 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				43FF830A544BDE1FE22D068309201307 /* CourtItemEntityApiTest.swift */,
+				776A78584ED15D90E9FB80945E57348D /* ErshouHouseDetailAPITests.swift */,
+				4C676063FA1FA2D8FAD7CB3C3F3B04AC /* HouseDetailAPITests.swift */,
+				E7DBD2FDCB2DB187B275C5CBC6763E26 /* NeighborhoodDetailEntitiesApiTest.swift */,
+				957A91D426194CF107E8845B6A020F9A /* RelatedSearchApiTest.swift */,
+				B3498B7D3F0BBB07528AD37FFFAA66B8 /* SearchNeighborhoodEntityApiTest.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		6BDB3BD67E68879F66C9329DB0A51C52 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				38CE0EEAD5A251336754B3D246A8BA3A /* CommonUIStyle.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		6C4CFCB779D5152C4D1B51C09E6DF580 /* BubbleTests */ = {
+			isa = PBXGroup;
+			children = (
+				C76E705C2906A7851774AEA5FF44983E /* Modules */,
+				B219609EC1483D10A9C5554380F043C7 /* BubbleTests.swift */,
+				7406F5940DC95E1C34449FBD90D98063 /* Info.plist */,
+			);
+			path = BubbleTests;
+			sourceTree = "<group>";
+		};
+		6DD6442A239F0DBA9C51BAE2923316AD /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6031E1982780754B7B313E82A38B41FA /* Array+Extension.swift */,
+				29ACBFF3B4C7CFAC0C808B407FBADA5E /* ConstraintArray+Extensions.swift */,
+				9C86D6C327B4BBA00FAD3E692B772CE3 /* ConstraintArrayDSL.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		7181B4458C1E16451309AADCFDF09152 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				B94D9D2638F566D987E648A5EDA8EE57 /* AreaConditionFilterPanel.swift */,
+				565842925A14E9D79034D2E75CE82172 /* BubbleSelectCollectionView.swift */,
+				A1A88F3F0B7218482003A22CA9E98B28 /* MultiColumnTableSelectorPanel.swift */,
+				B5DF48CE747E90743E9F4FC85EF4FD8E /* PriceListFilterPanel.swift */,
+			);
+			path = Filters;
 			sourceTree = "<group>";
 		};
 		71C18B0C6BD2D0889ADF1C3D3362BE2A /* Frameworks */ = {
@@ -501,180 +515,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DE03F69DE2BACD5DE106F7A1D3E40DC6 /* Pods */ = {
+		748C828B5D13EF6E17437B6BD067056B /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
-				909D63D23E03380E1AE73C1A638E24C8 /* Pods-Bubble.debug.xcconfig */,
-				AC9CE25EBA8323D83E2BB6971DAC4FB7 /* Pods-Bubble.release.xcconfig */,
-				5718A63CAC65AA14DACCCD60BFC1BADE /* Pods-BubbleTests.debug.xcconfig */,
-				C56671585C84B431474F2D69A56C4D0D /* Pods-BubbleTests.release.xcconfig */,
-				687E0C0399B07C5B839AF7DE7FCD267D /* Pods-BubbleUITests.debug.xcconfig */,
-				26E81C20C764968F00EDCA0F2057051A /* Pods-BubbleUITests.release.xcconfig */,
+				F09AB2B35125071289711182E51825C7 /* Launch */,
+				4A8F155E76747E22B4E2E5F8E4380437 /* Librarys */,
+				1000B39F96DBC0099CD3170779F16CE3 /* Modules */,
+				2B617746BB5274B68DA218924841B3D5 /* AppDelegate.swift */,
+				2836F00ED73806DB24D1E0A459E8B30D /* Assets.xcassets */,
+				A659E097F1BD85D79FA99DC35C168BAA /* Bubble-Bridging-Header.h */,
+				862E916B069EBBCBC192559E6C51CEF1 /* Images.xcassets */,
+				AAB88CD2403A86C1E4451D63D2BE6B82 /* Info.plist */,
+				280DF51B955D8F61672AA5C09C598BCD /* LaunchScreen.storyboard */,
+				2CAC3E006F687F855D48B89B709CDE03 /* ViewController.swift */,
 			);
-			name = Pods;
+			path = Bubble;
 			sourceTree = "<group>";
 		};
-		F8E7CF7AD6FE40CC6DFD505F2AC64EAD /* TableHeader */ = {
+		79D89BAA1EB0143B27BCD501EB99DE9D /* FWSegmentedControl */ = {
 			isa = PBXGroup;
 			children = (
+				CE3D70E252BF5230E8E7C5EE4CEC4130 /* FWSegmentedControl.swift */,
 			);
-			path = TableHeader;
-			sourceTree = "<group>";
-		};
-		32BC999B66100AC58A84D9875C6A3FEB /* PageVM */ = {
-			isa = PBXGroup;
-			children = (
-				1C92D94C585E1981284344F3EC7F4B7E /* DetailPageViewModel.swift */,
-				48FA1825B0D085D38F65349CABE63CC9 /* ErshouHouseDetailPageViewModel.swift */,
-				344A580F3CEDAB6702CFA8FD6B58457F /* NewHouseDetailPageViewModel.swift */,
-			);
-			path = PageVM;
-			sourceTree = "<group>";
-		};
-		F09AB2B35125071289711182E51825C7 /* Launch */ = {
-			isa = PBXGroup;
-			children = (
-				E3F90848642CBEAD6DE830B28847CCC6 /* BaseNavigationViewController.swift */,
-				82DE582A19CF8135870CB98BAEAB2CBE /* BaseViewController.swift */,
-				4835061445CE0E1BCB05D02E8F98D139 /* Client.swift */,
-				9F73C1D000C9B79D6FE95E5FF69FD619 /* EnvContext.swift */,
-				F8A64AF2E2108346E252E17A42925CA9 /* TabViewController.swift */,
-			);
-			path = Launch;
-			sourceTree = "<group>";
-		};
-		C76E705C2906A7851774AEA5FF44983E /* Modules */ = {
-			isa = PBXGroup;
-			children = (
-				57A5E99EE955DE2974943A87073181B8 /* Api */,
-				DAC2F9A5570C66461AC93D1075B941FE /* Home */,
-				8A31F0CE5A69628F6A7B067D1202E3DD /* HorseDetailPage */,
-			);
-			path = Modules;
-			sourceTree = "<group>";
-		};
-		DAC2F9A5570C66461AC93D1075B941FE /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
-		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {
-			isa = PBXGroup;
-			children = (
-				8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */,
-			);
-			path = CountryList;
-			sourceTree = "<group>";
-		};
-		6DD6442A239F0DBA9C51BAE2923316AD /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				6031E1982780754B7B313E82A38B41FA /* Array+Extension.swift */,
-				29ACBFF3B4C7CFAC0C808B407FBADA5E /* ConstraintArray+Extensions.swift */,
-				9C86D6C327B4BBA00FAD3E692B772CE3 /* ConstraintArrayDSL.swift */,
-			);
-			path = Extension;
-			sourceTree = "<group>";
-		};
-		4A8F155E76747E22B4E2E5F8E4380437 /* Librarys */ = {
-			isa = PBXGroup;
-			children = (
-				6DD6442A239F0DBA9C51BAE2923316AD /* Extension */,
-				79D89BAA1EB0143B27BCD501EB99DE9D /* FWSegmentedControl */,
-				44A09EF6153F75E955A4538C6E941B3B /* Functions */,
-				85332F0B54F727AF8D35E9CBCC26AC61 /* Locations */,
-				E4531F69CC7FBA493F673866D6BCE4A4 /* Networks */,
-				00CED3915ABDD9B8345F461F05CE58CF /* Pageable */,
-				C9EC3922C2811AAADDC937EC6CB58729 /* TagView */,
-			);
-			path = Librarys;
-			sourceTree = "<group>";
-		};
-		E4531F69CC7FBA493F673866D6BCE4A4 /* Networks */ = {
-			isa = PBXGroup;
-			children = (
-				AED9CB50032E20514226E8D9FCFD06AA /* RxTTNetwork.swift */,
-			);
-			path = Networks;
-			sourceTree = "<group>";
-		};
-		44A09EF6153F75E955A4538C6E941B3B /* Functions */ = {
-			isa = PBXGroup;
-			children = (
-				3179D278522647D68C65D2DE90D8DF7C /* Color.swift */,
-				7FEA91459568E4C790BEF3AB57E8004C /* Curry.swift */,
-				1D3A7DF5A2929E80DCDA93DB6344BA59 /* Functional.swift */,
-				8EE063E18FFD1A443C61A1C8EB2443FD /* TextParser.swift */,
-				4FF4694B993079E04DC46DD23C932357 /* UIKitExtension.swift */,
-			);
-			path = Functions;
-			sourceTree = "<group>";
-		};
-		10943918B88CD24AE06C9174773E688B /* Bizs */ = {
-			isa = PBXGroup;
-			children = (
-				D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */,
-				ED44DB92E408B4EA11F437130F665A08 /* Mine */,
-			);
-			path = Bizs;
-			sourceTree = "<group>";
-		};
-		D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */ = {
-			isa = PBXGroup;
-			children = (
-				85B2A708201C717972924E0F1DEA9073 /* Cells */,
-				8B7223EDEA76FF2EBC38EE51CDDE3ED0 /* ChatVC.swift */,
-			);
-			path = Messages;
-			sourceTree = "<group>";
-		};
-		ED44DB92E408B4EA11F437130F665A08 /* Mine */ = {
-			isa = PBXGroup;
-			children = (
-				B4BE63765696BEED7AD11EFFCE55AD71 /* MineVC.swift */,
-			);
-			path = Mine;
-			sourceTree = "<group>";
-		};
-		85B2A708201C717972924E0F1DEA9073 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				F6FB3FA0D2EBC8E6991BBD2FA36B2D5C /* ChatCell.swift */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		00CED3915ABDD9B8345F461F05CE58CF /* Pageable */ = {
-			isa = PBXGroup;
-			children = (
-				7F85FD5DEA86AA8ADAB4F5C2436BFF4D /* CycleImageCache.swift */,
-				E4B5ADE7E0157C8EF4341FACC737BFEC /* PageableViewModel.swift */,
-			);
-			path = Pageable;
-			sourceTree = "<group>";
-		};
-		57A5E99EE955DE2974943A87073181B8 /* Api */ = {
-			isa = PBXGroup;
-			children = (
-				43FF830A544BDE1FE22D068309201307 /* CourtItemEntityApiTest.swift */,
-				776A78584ED15D90E9FB80945E57348D /* ErshouHouseDetailAPITests.swift */,
-				4C676063FA1FA2D8FAD7CB3C3F3B04AC /* HouseDetailAPITests.swift */,
-				E7DBD2FDCB2DB187B275C5CBC6763E26 /* NeighborhoodDetailEntitiesApiTest.swift */,
-				957A91D426194CF107E8845B6A020F9A /* RelatedSearchApiTest.swift */,
-				B3498B7D3F0BBB07528AD37FFFAA66B8 /* SearchNeighborhoodEntityApiTest.swift */,
-			);
-			path = Api;
-			sourceTree = "<group>";
-		};
-		8A31F0CE5A69628F6A7B067D1202E3DD /* HorseDetailPage */ = {
-			isa = PBXGroup;
-			children = (
-				3F761124FDB1EE21EA966232CC623276 /* HorseDetailPageVCTests.swift */,
-			);
-			path = HorseDetailPage;
+			path = FWSegmentedControl;
 			sourceTree = "<group>";
 		};
 		822D6BD3401029D81859C4240EBECBB4 /* Cells */ = {
@@ -699,12 +562,106 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		E55AB809B9893443F85D7DC7C49532CC /* MapPage */ = {
+		85332F0B54F727AF8D35E9CBCC26AC61 /* Locations */ = {
 			isa = PBXGroup;
 			children = (
-				CE2E5718C35A2E23645C3C242729A1DA /* LBSMapPageVC.swift */,
+				E9C1DB4BC630DE87910E23DA756618D0 /* LocationManager.swift */,
 			);
-			path = MapPage;
+			path = Locations;
+			sourceTree = "<group>";
+		};
+		85B2A708201C717972924E0F1DEA9073 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F6FB3FA0D2EBC8E6991BBD2FA36B2D5C /* ChatCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		8A31F0CE5A69628F6A7B067D1202E3DD /* HorseDetailPage */ = {
+			isa = PBXGroup;
+			children = (
+				3F761124FDB1EE21EA966232CC623276 /* HorseDetailPageVCTests.swift */,
+			);
+			path = HorseDetailPage;
+			sourceTree = "<group>";
+		};
+		8DF1E11DFF63E577592C49F2120F5605 /* CountryList */ = {
+			isa = PBXGroup;
+			children = (
+				4A963809D2BC6DD00A9C3736983B46A5 /* CountryListVC.swift */,
+			);
+			path = CountryList;
+			sourceTree = "<group>";
+		};
+		97C526B4D0D0B435D47D6C6B79987BD5 /* SpringBoard */ = {
+			isa = PBXGroup;
+			children = (
+				0493A46069FD7E768E55ED37072D840B /* HomeSpringBoard.swift */,
+				A5CE03AF0D757940036B3D5EA00D870E /* HomeSpringBoardItemView.swift */,
+			);
+			path = SpringBoard;
+			sourceTree = "<group>";
+		};
+		9D5DAFC144D8E84FE1743301BEB6C46A /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				4D50F085F3C8390D0F714AF453A7C79A /* ConfigurationAPI.swift */,
+				1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */,
+				F73E3CCC1E17F569BD7F3F6299226C78 /* ErshouHouseDetailApi.swift */,
+				BC386C3E8EED7580C664813EA1C86671 /* HouseDetailAPI.swift */,
+				03763C35FDEC753F037C408B190BDD3A /* NeighborhoodDetailEntitiesApi.swift */,
+				F7EA7396B5CDEEF170FE39F4AF1944FB /* RecommendAPI.swift */,
+				BEC5D9BF9A78AAB8D385D28892D1E58E /* RelatedSearchApi.swift */,
+				BC745AC0928CE8697ECBD15ABBB8BC33 /* SearchAPI.swift */,
+				56F3DE2CC676FAB63B55D3B0D6B971FB /* SearchNeighborhoodEntityApi.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		9D9D8DB57C6A9044DFC691DE529AF294 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				44C199AFDED38F9FBC87803A1432CA0B /* HomePageSearchPanel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		A1943EAEA5CED9DDD732CCAE09238A56 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E1F9302CA789D98E69409B09C6DFAA2 /* Bubble.app */,
+				A88F85F6BEC62A2960746E7AEFF85374 /* BubbleTests.xctest */,
+				69E68E03D5F5FB4AC361A3B5B0D3E3C5 /* BubbleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AB97A7D9CCD8330A52BF348B711B26ED /* BubbleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0CF01F91FB984CFABF70798CC483E072 /* BubbleUITests.swift */,
+				DD53EC238720A8EC205AC53A63CD4D79 /* Info.plist */,
+			);
+			path = BubbleUITests;
+			sourceTree = "<group>";
+		};
+		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {
+			isa = PBXGroup;
+			children = (
+				8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */,
+			);
+			path = CountryList;
+			sourceTree = "<group>";
+		};
+		C76E705C2906A7851774AEA5FF44983E /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				57A5E99EE955DE2974943A87073181B8 /* Api */,
+				DAC2F9A5570C66461AC93D1075B941FE /* Home */,
+				8A31F0CE5A69628F6A7B067D1202E3DD /* HorseDetailPage */,
+			);
+			path = Modules;
 			sourceTree = "<group>";
 		};
 		C9EC3922C2811AAADDC937EC6CB58729 /* TagView */ = {
@@ -713,14 +670,6 @@
 				47534D98B1659F904837AAFC3E7F3627 /* TagView.swift */,
 			);
 			path = TagView;
-			sourceTree = "<group>";
-		};
-		85332F0B54F727AF8D35E9CBCC26AC61 /* Locations */ = {
-			isa = PBXGroup;
-			children = (
-				E9C1DB4BC630DE87910E23DA756618D0 /* LocationManager.swift */,
-			);
-			path = Locations;
 			sourceTree = "<group>";
 		};
 		CFA1B0A82162F03252B3774CA85E0FEF = {
@@ -735,74 +684,109 @@
 			);
 			sourceTree = "<group>";
 		};
-		A1943EAEA5CED9DDD732CCAE09238A56 /* Products */ = {
+		D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				8E1F9302CA789D98E69409B09C6DFAA2 /* Bubble.app */,
-				A88F85F6BEC62A2960746E7AEFF85374 /* BubbleTests.xctest */,
-				69E68E03D5F5FB4AC361A3B5B0D3E3C5 /* BubbleUITests.xctest */,
+				85B2A708201C717972924E0F1DEA9073 /* Cells */,
+				8B7223EDEA76FF2EBC38EE51CDDE3ED0 /* ChatVC.swift */,
 			);
-			name = Products;
+			path = Messages;
 			sourceTree = "<group>";
 		};
-		748C828B5D13EF6E17437B6BD067056B /* Bubble */ = {
+		DAC2F9A5570C66461AC93D1075B941FE /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				F09AB2B35125071289711182E51825C7 /* Launch */,
-				4A8F155E76747E22B4E2E5F8E4380437 /* Librarys */,
-				1000B39F96DBC0099CD3170779F16CE3 /* Modules */,
-				2B617746BB5274B68DA218924841B3D5 /* AppDelegate.swift */,
-				2836F00ED73806DB24D1E0A459E8B30D /* Assets.xcassets */,
-				A659E097F1BD85D79FA99DC35C168BAA /* Bubble-Bridging-Header.h */,
-				862E916B069EBBCBC192559E6C51CEF1 /* Images.xcassets */,
-				AAB88CD2403A86C1E4451D63D2BE6B82 /* Info.plist */,
-				280DF51B955D8F61672AA5C09C598BCD /* LaunchScreen.storyboard */,
-				2CAC3E006F687F855D48B89B709CDE03 /* ViewController.swift */,
+				BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */,
 			);
-			path = Bubble;
+			path = Home;
 			sourceTree = "<group>";
 		};
-		6C4CFCB779D5152C4D1B51C09E6DF580 /* BubbleTests */ = {
+		DE03F69DE2BACD5DE106F7A1D3E40DC6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C76E705C2906A7851774AEA5FF44983E /* Modules */,
-				B219609EC1483D10A9C5554380F043C7 /* BubbleTests.swift */,
-				7406F5940DC95E1C34449FBD90D98063 /* Info.plist */,
+				909D63D23E03380E1AE73C1A638E24C8 /* Pods-Bubble.debug.xcconfig */,
+				AC9CE25EBA8323D83E2BB6971DAC4FB7 /* Pods-Bubble.release.xcconfig */,
+				5718A63CAC65AA14DACCCD60BFC1BADE /* Pods-BubbleTests.debug.xcconfig */,
+				C56671585C84B431474F2D69A56C4D0D /* Pods-BubbleTests.release.xcconfig */,
+				687E0C0399B07C5B839AF7DE7FCD267D /* Pods-BubbleUITests.debug.xcconfig */,
+				26E81C20C764968F00EDCA0F2057051A /* Pods-BubbleUITests.release.xcconfig */,
 			);
-			path = BubbleTests;
+			name = Pods;
 			sourceTree = "<group>";
 		};
-		AB97A7D9CCD8330A52BF348B711B26ED /* BubbleUITests */ = {
+		E136298FD2A0DCCA2D0F222C74F9EC36 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				0CF01F91FB984CFABF70798CC483E072 /* BubbleUITests.swift */,
-				DD53EC238720A8EC205AC53A63CD4D79 /* Info.plist */,
+				36B35FEF71A392A6E3888758871E2389 /* Cells */,
+				8DF1E11DFF63E577592C49F2120F5605 /* CountryList */,
+				9D9D8DB57C6A9044DFC691DE529AF294 /* Search */,
+				97C526B4D0D0B435D47D6C6B79987BD5 /* SpringBoard */,
+				7608B3205FA3C4E6521658509044724C /* BaseTextField.swift */,
+				9399FDE3DE7477C1E3337ADEF66AB6B1 /* HeaderViewControl.swift */,
+				0D2CD9B5730FCA285C3D91C7782012FB /* HomeHeaderSearchView.swift */,
+				BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */,
+				C3A1D4E3950F044F9C44CD7363902169 /* HomeViewController.swift */,
+				BB2D216E773D568851B2E1C3A8FC1BC4 /* HomeViewTableViewDataSource.swift */,
+				F33E1A1E735BF103E8D29C35096800D7 /* SearchTextField.swift */,
+				AE089FF39C6BC876496DEFB5EBC5B135 /* SearchUITextField.swift */,
 			);
-			path = BubbleUITests;
+			path = Home;
+			sourceTree = "<group>";
+		};
+		E4531F69CC7FBA493F673866D6BCE4A4 /* Networks */ = {
+			isa = PBXGroup;
+			children = (
+				AED9CB50032E20514226E8D9FCFD06AA /* RxTTNetwork.swift */,
+			);
+			path = Networks;
+			sourceTree = "<group>";
+		};
+		E55AB809B9893443F85D7DC7C49532CC /* MapPage */ = {
+			isa = PBXGroup;
+			children = (
+				CE2E5718C35A2E23645C3C242729A1DA /* LBSMapPageVC.swift */,
+			);
+			path = MapPage;
+			sourceTree = "<group>";
+		};
+		ED44DB92E408B4EA11F437130F665A08 /* Mine */ = {
+			isa = PBXGroup;
+			children = (
+				B4BE63765696BEED7AD11EFFCE55AD71 /* MineVC.swift */,
+			);
+			path = Mine;
+			sourceTree = "<group>";
+		};
+		F09AB2B35125071289711182E51825C7 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				E3F90848642CBEAD6DE830B28847CCC6 /* BaseNavigationViewController.swift */,
+				82DE582A19CF8135870CB98BAEAB2CBE /* BaseViewController.swift */,
+				4835061445CE0E1BCB05D02E8F98D139 /* Client.swift */,
+				9F73C1D000C9B79D6FE95E5FF69FD619 /* EnvContext.swift */,
+				F8A64AF2E2108346E252E17A42925CA9 /* TabViewController.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		F8E7CF7AD6FE40CC6DFD505F2AC64EAD /* TableHeader */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = TableHeader;
+			sourceTree = "<group>";
+		};
+		FE6D07934B9D5CDD0660EABAF2B59B47 /* Suggestion */ = {
+			isa = PBXGroup;
+			children = (
+				81AA2B048A72A994B5D30E4DBCB54C51 /* SuggestionListVC.swift */,
+			);
+			path = Suggestion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2BAFBCDF96568ABCE260CD9D0A8EA4CE /* Bubble */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 13D959CA90DDE7563952C91A4E6E2CA7 /* Build configuration list for PBXNativeTarget "Bubble" */;
-			buildPhases = (
-				88C1D6727D91CE0E9BF9AB6E7FB6817A /* [CP] Check Pods Manifest.lock */,
-				26A7378DB04AABA0E96FA59865961540 /* Sources */,
-				55B326F6FC9F4AEC5E13CA6447E35808 /* Frameworks */,
-				143133CD3881C7AF366A4404DA6D4783 /* Resources */,
-				AAF2916E04E90E272073606F0443CD1F /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Bubble;
-			productName = Bubble;
-			productReference = 8E1F9302CA789D98E69409B09C6DFAA2 /* Bubble.app */;
-			productType = "com.apple.product-type.application";
-		};
 		18095FBFD902F1BD0C662FED808F625A /* BubbleTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DCBE85C1D96F4B5D49A0DFEBC5188895 /* Build configuration list for PBXNativeTarget "BubbleTests" */;
@@ -841,6 +825,25 @@
 			productReference = 69E68E03D5F5FB4AC361A3B5B0D3E3C5 /* BubbleUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		2BAFBCDF96568ABCE260CD9D0A8EA4CE /* Bubble */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13D959CA90DDE7563952C91A4E6E2CA7 /* Build configuration list for PBXNativeTarget "Bubble" */;
+			buildPhases = (
+				88C1D6727D91CE0E9BF9AB6E7FB6817A /* [CP] Check Pods Manifest.lock */,
+				26A7378DB04AABA0E96FA59865961540 /* Sources */,
+				55B326F6FC9F4AEC5E13CA6447E35808 /* Frameworks */,
+				143133CD3881C7AF366A4404DA6D4783 /* Resources */,
+				AAF2916E04E90E272073606F0443CD1F /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Bubble;
+			productName = Bubble;
+			productReference = 8E1F9302CA789D98E69409B09C6DFAA2 /* Bubble.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -851,9 +854,6 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = linlin;
 				TargetAttributes = {
-					2BAFBCDF96568ABCE260CD9D0A8EA4CE = {
-						CreatedOnToolsVersion = 9.3;
-					};
 					18095FBFD902F1BD0C662FED808F625A = {
 						CreatedOnToolsVersion = 9.3;
 						TestTargetID = 2BAFBCDF96568ABCE260CD9D0A8EA4CE;
@@ -861,6 +861,9 @@
 					20728FEA493D85EF0265045C240A77E8 = {
 						CreatedOnToolsVersion = 9.3;
 						TestTargetID = 2BAFBCDF96568ABCE260CD9D0A8EA4CE;
+					};
+					2BAFBCDF96568ABCE260CD9D0A8EA4CE = {
+						CreatedOnToolsVersion = 9.3;
 					};
 				};
 			};
@@ -912,7 +915,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E0901808303E6BDE05E3EAA8086E60AA /* [CP] Check Pods Manifest.lock */ = {
+		7A6C4F6754896A1157A5D72F79B9054C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -923,7 +926,25 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BubbleTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-BubbleUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88C1D6727D91CE0E9BF9AB6E7FB6817A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Bubble-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -950,7 +971,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bubble/Pods-Bubble-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		88C1D6727D91CE0E9BF9AB6E7FB6817A /* [CP] Check Pods Manifest.lock */ = {
+		E0901808303E6BDE05E3EAA8086E60AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -961,25 +982,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Bubble-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7A6C4F6754896A1157A5D72F79B9054C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BubbleUITests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-BubbleTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1003,6 +1006,7 @@
 				80306763E4F2656863E54B5B7696A6CB /* BubbleSelectCollectionView.swift in Sources */,
 				BE0789983AB7A0D4C52775F65A43621C /* CategoryListDataSource.swift in Sources */,
 				AF39102EE0A43E2C26CB88CF4E6B33E4 /* CategoryListPageVC.swift in Sources */,
+				B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */,
 				753083310BE88DE7A9B392976E04E8DE /* CategorySectionView.swift in Sources */,
 				00959CCBAA30F8B92604FBA671BD8188 /* ChatCell.swift in Sources */,
 				0BE1C56E3A896F2AED4AABBBBF62E0EC /* ChatVC.swift in Sources */,
@@ -1092,6 +1096,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5044A2F987D2390A986988CE2CF277DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0DEE377A4882C349D7C2C2ADE842132 /* BubbleUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A401B9C73F72306EE58CA7BA6EC39191 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1105,14 +1117,6 @@
 				2A79691E85258F3BD34729F7F635B3AF /* NeighborhoodDetailEntitiesApiTest.swift in Sources */,
 				BEE95A9EDFF73442581597CA273639C1 /* RelatedSearchApiTest.swift in Sources */,
 				D7B2ADDD21AD371BB2C5270E6F20B114 /* SearchNeighborhoodEntityApiTest.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5044A2F987D2390A986988CE2CF277DD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B0DEE377A4882C349D7C2C2ADE842132 /* BubbleUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,6 +1147,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		22368152B46886706493A58BC4156726 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C56671585C84B431474F2D69A56C4D0D /* Pods-BubbleTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = BubbleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bubble.app/Bubble";
+			};
+			name = Release;
+		};
+		643A38558C5DB076A539FBDCA7153502 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5718A63CAC65AA14DACCCD60BFC1BADE /* Pods-BubbleTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = BubbleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bubble.app/Bubble";
+			};
+			name = Debug;
+		};
 		8BCA6C8CE5DC7336B1561EAB5AF975C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1257,32 +1305,26 @@
 			};
 			name = Release;
 		};
-		DE3AF17011FEB3657995DE62CFE8FF15 /* Debug */ = {
+		B7790D960120E91346188898DA62DDD6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 909D63D23E03380E1AE73C1A638E24C8 /* Pods-Bubble.debug.xcconfig */;
+			baseConfigurationReference = 26E81C20C764968F00EDCA0F2057051A /* Pods-BubbleUITests.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
-				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Bubble/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				INFOPLIST_FILE = BubbleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pods/TTNetworkManager/ios",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Bubble-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Bubble;
 			};
-			name = Debug;
+			name = Release;
 		};
 		C503FFB935DC212349671E242192773D /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1311,50 +1353,6 @@
 			};
 			name = Release;
 		};
-		643A38558C5DB076A539FBDCA7153502 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5718A63CAC65AA14DACCCD60BFC1BADE /* Pods-BubbleTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X46375UBYG;
-				INFOPLIST_FILE = BubbleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bubble.app/Bubble";
-			};
-			name = Debug;
-		};
-		22368152B46886706493A58BC4156726 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C56671585C84B431474F2D69A56C4D0D /* Pods-BubbleTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = X46375UBYG;
-				INFOPLIST_FILE = BubbleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bubble.app/Bubble";
-			};
-			name = Release;
-		};
 		C53A2670776B8119BF17D0805A31CD31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 687E0C0399B07C5B839AF7DE7FCD267D /* Pods-BubbleUITests.debug.xcconfig */;
@@ -1376,35 +1374,41 @@
 			};
 			name = Debug;
 		};
-		B7790D960120E91346188898DA62DDD6 /* Release */ = {
+		DE3AF17011FEB3657995DE62CFE8FF15 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 26E81C20C764968F00EDCA0F2057051A /* Pods-BubbleUITests.release.xcconfig */;
+			baseConfigurationReference = 909D63D23E03380E1AE73C1A638E24C8 /* Pods-Bubble.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
-				INFOPLIST_FILE = BubbleUITests/Info.plist;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = Bubble/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.BubbleUITests;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/TTNetworkManager/ios",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Bubble-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Bubble;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Release;
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B2BC6238F469D0E1E2988EF5FF5FE167 /* Build configuration list for PBXProject "Bubble" */ = {
+		0824451C2CCB2570D6CFCDAE480F2815 /* Build configuration list for PBXNativeTarget "BubbleUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8BCA6C8CE5DC7336B1561EAB5AF975C1 /* Debug */,
-				9E813223762FEF595FC710CBDBD8AFEF /* Release */,
+				C53A2670776B8119BF17D0805A31CD31 /* Debug */,
+				B7790D960120E91346188898DA62DDD6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1418,20 +1422,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		B2BC6238F469D0E1E2988EF5FF5FE167 /* Build configuration list for PBXProject "Bubble" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BCA6C8CE5DC7336B1561EAB5AF975C1 /* Debug */,
+				9E813223762FEF595FC710CBDBD8AFEF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DCBE85C1D96F4B5D49A0DFEBC5188895 /* Build configuration list for PBXNativeTarget "BubbleTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				643A38558C5DB076A539FBDCA7153502 /* Debug */,
 				22368152B46886706493A58BC4156726 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0824451C2CCB2570D6CFCDAE480F2815 /* Build configuration list for PBXNativeTarget "BubbleUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C53A2670776B8119BF17D0805A31CD31 /* Debug */,
-				B7790D960120E91346188898DA62DDD6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

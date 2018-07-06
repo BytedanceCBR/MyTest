@@ -28,12 +28,17 @@ class HomeListViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         requestHouseRecommend()
-                .debug()
                 .map { response -> [TableSectionNode] in
                     if let data = response?.data {
                         let dataParser = DetailDataParser.monoid()
                             <- parseErshouHouseListItemNode(data.house?.items)
+                            <- parseOpenAllNode(true) { [unowned self] in
+                                self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
+                            }
                             <- parseNewHouseListItemNode(data.court?.items)
+                            <- parseOpenAllNode(true) {
+                                self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
+                            }
                         return dataParser.parser([])
                     } else {
                         return []
@@ -48,6 +53,22 @@ class HomeListViewModel: DetailPageViewModel {
 
                 })
                 .disposed(by: disposeBag)
+    }
+
+    private func openCategoryList(houseType: HouseType, condition: @escaping (String) -> String) {
+        let vc = CategoryListPageVC()
+        vc.houseType.accept(houseType)
+        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
+            condition($0)
+        }
+        vc.navBar.isShowTypeSelector = false
+        let nav = EnvContext.shared.rootNavController
+        nav.pushViewController(vc, animated: true)
+        vc.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
 }
@@ -150,7 +171,11 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 51
+        if datas[section].selectors?.count ?? 0 == 0 {
+            return 0
+        } else {
+            return 51
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
