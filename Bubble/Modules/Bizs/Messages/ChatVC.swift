@@ -11,6 +11,8 @@ import SnapKit
 import RxCocoa
 import RxSwift
 class ChatVC: UIViewController {
+    
+
 
     lazy var tableView: UITableView = {
         let re = UITableView()
@@ -34,15 +36,16 @@ class ChatVC: UIViewController {
             maker.top.left.right.bottom.equalToSuperview()
         }
         tableView.dataSource = tableViewModel
+        tableView.delegate = tableViewModel
         
         tableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
         tableView.reloadData()
         
         // Do any additional setup after loading the view.
-        requestSuggestion(cityId: 133, horseType: 2)
+        requestUserUnread(query:"")
             .subscribe(onNext: { [unowned self] (responsed) in
-                if let responseData = responsed?.data {
-                    self.tableViewModel.suggestions = responseData
+                if let responseData = responsed?.data?.unread {
+                    self.tableViewModel.datas = responseData
                     self.tableView.reloadData()
                 }
                 }, onError: { (error) in
@@ -75,16 +78,42 @@ class ChatVC: UIViewController {
 
 
 
-class ChatListTableViewModel: NSObject, UITableViewDataSource {
-    var suggestions: [SuggestionItem] = []
+class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelegate {
+    
+    let imageIconMap: [String: UIImage] = ["300": UIImage(named: "icon-ershoufang")!,
+                                           "301": UIImage(named: "icon-ershoufang")!,
+                                           "302": UIImage(named: "icon-ershoufang")!,
+                                           "303": UIImage(named: "icon-ershoufang")!]
+    var datas: [UserUnreadInnerMsg] = []
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return datas.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = ChatCell()
-        return cell
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: ChatCell.identifier)
+        if let theCell = cell as? ChatCell {
+            let item = datas[indexPath.row]
+            if let id = item.id {
+                theCell.iconImageView.image = imageIconMap[id]
+            }
+
+            if let text = item.content {
+
+                
+                theCell.label.text = text
+            }
+//            theCell.secondaryLabel.text = "约\(item.count)套"
+        }
+        return cell ?? ChatCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("click it \(datas[indexPath.row].id)")
+        let vc = MessageListVC()
+        let nav = EnvContext.shared.rootNavController
+        nav.pushViewController(vc, animated: true)
     }
 
 }
