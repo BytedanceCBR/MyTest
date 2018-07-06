@@ -203,7 +203,7 @@ func createTagAttributeText(
         content: String,
         textColor: UIColor,
         backgroundColor: UIColor,
-        insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -5, bottom: -2, right: -5)) -> NSMutableAttributedString {
+        insets: UIEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)) -> NSMutableAttributedString {
     let attributeText = NSMutableAttributedString(string: content)
     attributeText.yy_insertString("  ", at: 0)
     attributeText.yy_appendString("  ")

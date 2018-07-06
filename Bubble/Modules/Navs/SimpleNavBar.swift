@@ -205,6 +205,12 @@ class CategorySearchNavBar: UIView {
         }
     }
 
+    var isShowTypeSelector = false {
+        didSet {
+            self.adjustTypeSelector(isShowSelector: isShowTypeSelector)
+        }
+    }
+
     init() {
         super.init(frame: CGRect.zero)
         addSubview(backBtn)
@@ -274,9 +280,41 @@ class CategorySearchNavBar: UIView {
         searchAreaPanel.addSubview(searchAreaBtn)
         searchAreaBtn.snp.makeConstraints { maker in
             maker.right.top.bottom.equalToSuperview()
-            maker.left.equalTo(verticalLineView.snp.right)
+            maker.left.equalTo(searchIcon.snp.left)
         }
     }
+    
+    
+    func adjustTypeSelector(isShowSelector: Bool) {
+
+        searchTypeLabel.isHidden = !isShowSelector
+        triangleImage.isHidden = !isShowSelector
+        verticalLineView.isHidden = !isShowSelector
+        searchIcon.snp.remakeConstraints { maker in
+            if isShowSelector {
+                maker.left.equalTo(verticalLineView.snp.right).offset(2)
+            } else {
+                maker.left.equalToSuperview().offset(2)
+            }
+
+            maker.top.equalTo(2)
+            maker.height.width.equalTo(24)
+        }
+
+//        searchInput.snp.makeConstraints { maker in
+//            maker.left.equalTo(searchIcon.snp.right).offset(1)
+//            maker.right.equalToSuperview()
+//            maker.top.equalToSuperview().offset(5)
+//            maker.bottom.equalToSuperview().offset(-3)
+//            maker.height.equalTo(20)
+//        }
+//
+//        searchAreaBtn.snp.makeConstraints { maker in
+//            maker.right.top.bottom.equalToSuperview()
+//            maker.left.equalTo(searchIcon.snp.left)
+//        }
+    }
+    
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

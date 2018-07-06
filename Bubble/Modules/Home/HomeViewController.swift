@@ -250,14 +250,33 @@ extension HomeViewController {
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { [weak nav] void in
                     nav?.popViewController(animated: true)
+
                 })
                 .disposed(by: self.disposeBag)
-        vc.onSuggestSelect = { [weak self, weak nav] (condition) in
-            nav?.popViewController(animated: true)
+        vc.onSuggestSelect = { [weak self, unowned vc] (condition) in
+//            nav?.popViewController(animated: true)
 //            self?.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
 //                condition($0)
 //            }
+            self?.openCategoryList(houseType: vc.houseType.value, condition: condition)
         }
+    }
+
+
+    private func openCategoryList(houseType: HouseType, condition: @escaping (String) -> String) {
+        let vc = CategoryListPageVC()
+        vc.houseType.accept(houseType)
+        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
+            condition($0)
+        }
+        vc.navBar.isShowTypeSelector = false
+        let nav = EnvContext.shared.rootNavController
+        nav.pushViewController(vc, animated: true)
+        vc.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
     }
 }
 

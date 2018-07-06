@@ -34,11 +34,14 @@ class SuggestionListVC: BaseViewController {
 
     var onSuggestSelect: ((@escaping (String) -> String) -> Void)?
 
-    var houseType: HouseType?
+    let houseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
+
+    private var popupMenuView: PopupMenuView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+        navBar.searchTypeLabel.text = houseType.value.stringValue()
 
         UIApplication.shared.statusBarStyle = .default
 
@@ -52,7 +55,11 @@ class SuggestionListVC: BaseViewController {
                 .throttle(0.6, scheduler: MainScheduler.instance)
                 .subscribe(onNext: tableViewModel.sendQuery(tableView: tableView))
                 .disposed(by: disposeBag)
-
+        navBar.searchTypeBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    self.displayPopupMenu()
+                })
+                .disposed(by: disposeBag)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
@@ -69,7 +76,7 @@ class SuggestionListVC: BaseViewController {
         tableView.register(SuggestionItemCell.self, forCellReuseIdentifier: "item")
         tableView.reloadData()
         // Do any additional setup after loading the view.
-        requestSuggestion(cityId: 133, horseType: 2)
+        requestSuggestion(cityId: 133, horseType: houseType.value.rawValue)
                 .subscribe(onNext: { [unowned self] (responsed) in
                     if let responseData = responsed?.data {
                         self.tableViewModel.suggestions = responseData
@@ -79,6 +86,19 @@ class SuggestionListVC: BaseViewController {
                     print(error)
                 })
                 .disposed(by: disposeBag)
+
+        houseType
+            .subscribe(onNext: { [weak self] (type) in
+                self?.navBar.searchTypeLabel.text = type.stringValue()
+                if let tableView = self?.tableView , let houseType = self?.houseType.value {
+                    self?.tableViewModel.sendQuery(
+                        tableView: tableView,
+                        houseType: houseType)(self?.navBar.searchInput.text)
+                }
+                //                        self?.searchAndConditionFilterVM.sendSearchRequest()
+            })
+            .disposed(by: disposeBag)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -89,6 +109,28 @@ class SuggestionListVC: BaseViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    private func displayPopupMenu() {
+        let menuItems = [HouseType.secondHandHouse,
+                         HouseType.newHouse,
+                         HouseType.neighborhood]
+
+        let popupMenuItems = menuItems.map { type -> PopupMenuItem in
+            let result = PopupMenuItem(label: type.stringValue(), isSelected: self.houseType.value == type)
+            result.onClick = { [weak self] in
+                self?.houseType.accept(type)
+                self?.popupMenuView?.removeFromSuperview()
+                self?.popupMenuView = nil
+            }
+            return result
+        }
+        popupMenuView = PopupMenuView(targetView: navBar.searchTypeBtn, menus: popupMenuItems)
+        view.addSubview(popupMenuView!)
+        popupMenuView?.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+        }
+        popupMenuView?.showOnTargetView()
     }
 
 }
@@ -122,11 +164,13 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         return cell ?? UITableViewCell()
     }
 
-    func sendQuery(tableView: UITableView) -> (String?) -> Void {
+    func sendQuery(
+        tableView: UITableView,
+        houseType: HouseType = .secondHandHouse) -> (String?) -> Void {
         return { [unowned self, unowned tableView] (query) in
             if let query = query {
                 self.highlighted = query
-                requestSuggestion(cityId: 133, horseType: 2, query: query)
+                requestSuggestion(cityId: 133, horseType: houseType.rawValue, query: query)
                         .debug()
                         .subscribe(onNext: { [unowned self] (responsed) in
                             if let responseData = responsed?.data {
@@ -246,6 +290,7 @@ class SuggestionItemCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
         result.textColor = hexStringToUIColor(hex: "#222222")
+        result.textAlignment = .left
         return result
     }()
 
@@ -253,6 +298,7 @@ class SuggestionItemCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(13)
         result.textColor = hexStringToUIColor(hex: "#999999")
+        result.textAlignment = .right
         return result
     }()
 
@@ -271,6 +317,7 @@ class SuggestionItemCell: UITableViewCell {
             maker.top.equalTo(12)
             maker.right.equalToSuperview().offset(-15)
             maker.left.equalTo(label.snp.right).offset(5).priority(.high)
+            maker.width.greaterThanOrEqualTo(63).priority(.high)
         }
     }
 
