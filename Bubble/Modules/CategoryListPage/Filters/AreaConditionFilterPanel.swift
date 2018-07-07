@@ -89,15 +89,28 @@ class AreaConditionFilterPanel: UIView {
         }
     }()
 
-//    fileprivate lazy var delegates: [ConditionTableViewDelegate] = {
-//        (0..<3).map { _ in
-//            ConditionTableViewDelegate()
-//        }
-//    }()
+    lazy var clearBtn: UIButton = {
+        let result = UIButton()
+        result.backgroundColor = UIColor.white
+        result.lu.addTopBorder(color: hexStringToUIColor(hex: "#f4f5f6"))
+
+        result.setTitle("重置", for: .normal)
+        result.setTitleColor(hexStringToUIColor(hex: "#222222"), for: .normal)
+        return result
+    }()
+
+    lazy var confirmBtn: UIButton = {
+        let result = UIButton()
+        result.backgroundColor = hexStringToUIColor(hex: "#f85959")
+        result.setTitle("确定", for: .normal)
+        return result
+    }()
 
     private var nodes: [Node]
 
     var didSelect: (([Node]) -> Void)?
+
+    let disposeBag = DisposeBag()
 
     init() {
         nodes = []
@@ -112,6 +125,9 @@ class AreaConditionFilterPanel: UIView {
     }
 
     func initPanelWithNativeDS() {
+
+        dataSources.last?.isShowCheckBox = true
+        dataSources.last?.isMultiSelected = true
         tableViews.forEach { view in
             addSubview(view)
         }
@@ -124,24 +140,51 @@ class AreaConditionFilterPanel: UIView {
         tableViews.first?.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
 
         onInit()
+        clearBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    self.dataSources.forEach { $0.selectedIndexPaths.removeAll() }
+                    self.tableViews.forEach { $0.reloadData() }
+                })
+                .disposed(by: disposeBag)
     }
+
+
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     func onInit() {
+
+        addSubview(clearBtn)
+        clearBtn.snp.makeConstraints { maker in
+            maker.bottom.left.equalToSuperview()
+            maker.right.equalTo(self.snp.centerX)
+            maker.height.equalTo(44)
+        }
+
+        addSubview(confirmBtn)
+        confirmBtn.snp.makeConstraints { maker in
+            maker.bottom.right.equalToSuperview()
+            maker.left.equalTo(self.snp.centerX)
+            maker.height.equalTo(44)
+        }
+
+
         tableViews[ConditionType.category.rawValue].snp.makeConstraints { maker in
-            maker.left.top.bottom.equalToSuperview()
+            maker.left.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.width.equalTo(halfWidthOfScreen())
         }
         tableViews[ConditionType.subCategory.rawValue].snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
+            maker.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.left.equalTo(tableViews[ConditionType.category.rawValue].snp.right)
             maker.width.equalTo(halfWidthOfScreen())
         }
         tableViews[ConditionType.extendValue.rawValue].snp.makeConstraints { maker in
-            maker.top.bottom.right.equalToSuperview()
+            maker.top.right.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.left.equalTo(tableViews[ConditionType.subCategory.rawValue].snp.right)
         }
 
@@ -168,15 +211,18 @@ class AreaConditionFilterPanel: UIView {
                 at: IndexPath(row: 0, section: 0),
                 animated: false,
                 scrollPosition: .none)
+
     }
 
     func displayNormalCondition() {
         tableViews[ConditionType.category.rawValue].snp.remakeConstraints { maker in
-            maker.left.top.bottom.equalToSuperview()
+            maker.left.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.width.equalTo(halfWidthOfScreen())
         }
         tableViews[ConditionType.subCategory.rawValue].snp.remakeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
+            maker.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.left.equalTo(tableViews[ConditionType.category.rawValue].snp.right)
             maker.width.equalTo(halfWidthOfScreen())
         }
@@ -184,11 +230,13 @@ class AreaConditionFilterPanel: UIView {
 
     func displayExtendValue() {
         tableViews[ConditionType.category.rawValue].snp.remakeConstraints { maker in
-            maker.left.top.bottom.equalToSuperview()
+            maker.left.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.width.equalTo(minWidth())
         }
         tableViews[ConditionType.subCategory.rawValue].snp.remakeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
+            maker.top.equalToSuperview()
+            maker.bottom.equalTo(clearBtn.snp.top)
             maker.left.equalTo(tableViews[ConditionType.category.rawValue].snp.right)
             maker.width.equalTo(minWidth())
         }
@@ -199,7 +247,7 @@ class AreaConditionFilterPanel: UIView {
             if nodes[indexPath.row].children.isEmpty {
                 self?.dataSources[ConditionType.subCategory.rawValue].selectedIndexPath = nil
                 self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
-                self?.didSelect?(self?.selectNodePath() ?? [])
+//                self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
                 self?.dataSources[ConditionType.subCategory.rawValue].nodes = nodes[indexPath.row].children
                 self?.dataSources[ConditionType.subCategory.rawValue].onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
@@ -222,9 +270,13 @@ class AreaConditionFilterPanel: UIView {
 
     fileprivate func createSubCategorySelector(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
+
+            let extentValueDS = self?.dataSources[ConditionType.extendValue.rawValue]
+            let extentValueTable = self?.tableViews[ConditionType.extendValue.rawValue]
+
             if nodes[indexPath.row].children.isEmpty {
-                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
-                self?.didSelect?(self?.selectNodePath() ?? [])
+                extentValueDS?.selectedIndexPath = nil
+//                self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
                 self?.dataSources[ConditionType.extendValue.rawValue].nodes = nodes[indexPath.row].children
                 if let displayExtendValue = self?.displayExtendValue {
@@ -232,7 +284,7 @@ class AreaConditionFilterPanel: UIView {
                 }
                 self?.dataSources[ConditionType.extendValue.rawValue].onSelect = { [weak self] (indexPath) in
                     self?.tableViews[ConditionType.extendValue.rawValue].selectRow(at: indexPath, animated: false, scrollPosition: .none)
-                    self?.didSelect?(self?.selectNodePath() ?? [])
+//                    self?.didSelect?(self?.selectNodePath() ?? [])
                 }
                 self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
                 self?.tableViews[ConditionType.extendValue.rawValue].reloadData()
@@ -297,9 +349,13 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
     var selectedIndexPath: IndexPath?
 
-    var selectedIndexPaths: [IndexPath] = []
+    var selectedIndexPaths: Set<IndexPath> = []
 
     var onSelect: ((IndexPath) -> Void)?
+
+    var isShowCheckBox = false
+
+    var isMultiSelected = false
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return nodes.count
@@ -309,6 +365,16 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
         if let theCell = cell as? AreaConditionCell {
             theCell.label.text = nodes[indexPath.row].label
+            theCell.checkboxBtn.isHidden = !isShowCheckBox || nodes[indexPath.row].isEmpty == 1
+            if selectedIndexPaths.contains(indexPath) {
+                theCell.checkboxBtn.isSelected = true
+                theCell.label.textColor = hexStringToUIColor(hex: "#f85959")
+            }
+
+            if selectedIndexPaths.count == 0 && indexPath.row == 0 {
+                theCell.isHighlighted = true
+            }
+
             return theCell
         } else {
             return UITableViewCell()
@@ -318,7 +384,16 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
         onSelect?(indexPath)
-        selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+        if isMultiSelected != true {
+            selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+        }
+
+        if !selectedIndexPaths.contains(indexPath) {
+            selectedIndexPaths.insert(indexPath)
+        } else {
+            selectedIndexPaths.remove(indexPath)
+        }
+        tableView.reloadData()
     }
 
 }
@@ -329,12 +404,13 @@ fileprivate class AreaConditionCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
         result.textColor = hexStringToUIColor(hex: "#222222")
-        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
+//        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
         return result
     }()
 
     lazy var checkboxBtn: UIButton = {
         let re = UIButton()
+        re.isHidden = true
         re.setBackgroundImage(#imageLiteral(resourceName: "invalid-name"), for: .normal)
         re.setBackgroundImage(#imageLiteral(resourceName: "invalid-name-checked"), for: .selected)
         return re
@@ -363,8 +439,15 @@ fileprivate class AreaConditionCell: UITableViewCell {
             maker.right.equalTo(checkboxBtn.snp.left).offset(5)
         }
 
-        checkboxBtn.isSelected = true
+    }
 
+    fileprivate override func prepareForReuse() {
+        super.prepareForReuse()
+        checkboxBtn.isHidden = true
+        checkboxBtn.isSelected = false
+
+        label.textColor = hexStringToUIColor(hex: "#222222")
+        label.text = ""
     }
 
     required init?(coder aDecoder: NSCoder) {
