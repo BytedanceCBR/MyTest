@@ -42,7 +42,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
                     if let responseData = responsed?.data?.items {
                                             let minCursor = responsed?.data?.minCursor
                                             let hasMore = responsed?.data?.hasMore
-                        print("======= 1111 ===\(minCursor)==\(hasMore)=====\(responseData[0].title)=")
+                        print("======= 11111111 ===\(String(describing: minCursor))==\(hasMore)=====\(responseData)=")
 
                         self.tableListViewModel.datas = responseData
                         self.tableView.reloadData()
@@ -88,7 +88,7 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("======= 44444 =======")
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: ChatDetailListCell.identifier)
+        let cell = tableView.dequeueReusableCell(withIdentifier: ChatDetailListCell.identifier, for: indexPath)
         if let theCell = cell as? ChatDetailListCell {
             print("======= 11111 =======")
 
