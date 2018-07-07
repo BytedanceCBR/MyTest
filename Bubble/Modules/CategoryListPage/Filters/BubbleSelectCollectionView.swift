@@ -351,12 +351,3 @@ fileprivate class BubbleCollectionSectionHeader: UICollectionReusableView {
     }
 }
 
-//fileprivate func mockup() -> [Node] {
-//    let children = [Node(id: "", label: "一居", externalConfig: ""),
-//                    Node(id: "", label: "二居", externalConfig: ""),
-//                    Node(id: "", label: "二居", externalConfig: ""),
-//                    Node(id: "", label: "二居", externalConfig: ""),
-//                    Node(id: "", label: "二居", externalConfig: ""),
-//                    Node(id: "", label: "五居及以上", externalConfig: "")]
-//    return [Node(id: "", label: "户型选择", externalConfig: "", children: children)]
-//}

@@ -25,7 +25,9 @@ func constructAreaConditionPanel(
                 maker.left.right.top.equalToSuperview()
                 maker.height.equalTo(352)
             }
-            panel.didSelect = { nodes in action(index, nodes) }
+            panel.didSelect = { nodes in
+                action(index, nodes)
+            }
         }
     }
 }
@@ -33,15 +35,19 @@ func constructAreaConditionPanel(
 func parseAreaCondition(nodePath: [Node]) -> (String) -> String {
     return { (condition) in
         let theCondition = nodePath
-            .filter { $0.label != "不限" }.reduce("", { (result, node) -> String in
-                "\(result)&\(node.externalConfig)"
-            })
+                .filter {
+                    $0.label != "不限"
+                }.reduce("", { (result, node) -> String in
+                    "\(result)&\(node.externalConfig)"
+                })
         return "\(condition)&\(theCondition)"
     }
 }
 
 func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
-    let filteredNodes = nodePath.filter { $0.label != "不限" }
+    let filteredNodes = nodePath.filter {
+        $0.label != "不限"
+    }
     if filteredNodes.count <= 1 {
         return .noCondition("区域")
     } else {
@@ -55,7 +61,9 @@ func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
 
 func parseAreaSearchCondition(nodePath: [Node]) -> (String) -> String {
     return { query in
-        let filteredNodes = nodePath.filter { $0.label != "不限" }
+        let filteredNodes = nodePath.filter {
+            $0.label != "不限"
+        }
         if filteredNodes.count <= 1 {
             return query
         } else {
@@ -81,11 +89,11 @@ class AreaConditionFilterPanel: UIView {
         }
     }()
 
-    fileprivate lazy var delegates: [ConditionTableViewDelegate] = {
-        (0..<3).map { _ in
-            ConditionTableViewDelegate()
-        }
-    }()
+//    fileprivate lazy var delegates: [ConditionTableViewDelegate] = {
+//        (0..<3).map { _ in
+//            ConditionTableViewDelegate()
+//        }
+//    }()
 
     private var nodes: [Node]
 
@@ -110,9 +118,6 @@ class AreaConditionFilterPanel: UIView {
 
         zip(tableViews, dataSources).forEach { (e) in
             e.0.dataSource = e.1
-        }
-
-        zip(tableViews, delegates).forEach { (e) in
             e.0.delegate = e.1
         }
 
@@ -145,13 +150,13 @@ class AreaConditionFilterPanel: UIView {
         if let first = nodes.first {
             dataSources[ConditionType.subCategory.rawValue].nodes = first.children
         }
-        if let first = delegates.first {
+        if let first = dataSources.first {
             first.selectedIndexPath = IndexPath(row: 0, section: 0)
         }
-        delegates[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
+        dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
 
         if let children = nodes.first?.children {
-            delegates[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+            dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
         }
 
         reloadAllTables()
@@ -189,29 +194,28 @@ class AreaConditionFilterPanel: UIView {
         }
     }
 
-    fileprivate func createCategorySelectorHandler(
-        nodes: [Node]) -> (IndexPath) -> Void {
+    fileprivate func createCategorySelectorHandler(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
             if nodes[indexPath.row].children.isEmpty {
-                self?.delegates[ConditionType.subCategory.rawValue].selectedIndexPath = nil
-                self?.delegates[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.subCategory.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
                 self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
                 self?.dataSources[ConditionType.subCategory.rawValue].nodes = nodes[indexPath.row].children
-                self?.delegates[ConditionType.subCategory.rawValue].onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
-                self?.delegates[ConditionType.subCategory.rawValue].selectedIndexPath = nil
-                self?.delegates[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.subCategory.rawValue].onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
+                self?.dataSources[ConditionType.subCategory.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
 
                 self?.displayNormalCondition()
                 self?.tableViews[ConditionType.subCategory.rawValue].reloadData()
                 self?.tableViews[ConditionType.category.rawValue].selectRow(
-                    at: indexPath,
-                    animated: false,
-                    scrollPosition: .none)
+                        at: indexPath,
+                        animated: false,
+                        scrollPosition: .none)
                 self?.tableViews[ConditionType.subCategory.rawValue].selectRow(
-                    at: IndexPath(row: 0, section: 0),
-                    animated: false,
-                    scrollPosition: .none)
+                        at: IndexPath(row: 0, section: 0),
+                        animated: false,
+                        scrollPosition: .none)
             }
         }
     }
@@ -219,35 +223,39 @@ class AreaConditionFilterPanel: UIView {
     fileprivate func createSubCategorySelector(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
             if nodes[indexPath.row].children.isEmpty {
-                self?.delegates[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
                 self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
                 self?.dataSources[ConditionType.extendValue.rawValue].nodes = nodes[indexPath.row].children
                 if let displayExtendValue = self?.displayExtendValue {
                     self?.layoutWithAniminate(apply: displayExtendValue)
                 }
-                self?.delegates[ConditionType.extendValue.rawValue].onSelect = { [weak self] (indexPath) in
+                self?.dataSources[ConditionType.extendValue.rawValue].onSelect = { [weak self] (indexPath) in
                     self?.tableViews[ConditionType.extendValue.rawValue].selectRow(at: indexPath, animated: false, scrollPosition: .none)
                     self?.didSelect?(self?.selectNodePath() ?? [])
                 }
-                self?.delegates[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
                 self?.tableViews[ConditionType.extendValue.rawValue].reloadData()
                 self?.tableViews[ConditionType.subCategory.rawValue].selectRow(
-                    at: indexPath,
-                    animated: false,
-                    scrollPosition: .none)
+                        at: indexPath,
+                        animated: false,
+                        scrollPosition: .none)
                 self?.tableViews[ConditionType.extendValue.rawValue].selectRow(
-                    at: IndexPath(row: 0, section: 0),
-                    animated: false,
-                    scrollPosition: .none)
+                        at: IndexPath(row: 0, section: 0),
+                        animated: false,
+                        scrollPosition: .none)
             }
         }
     }
 
     func selectNodePath() -> [Node] {
-        let paths = delegates
-            .filter { $0.selectedIndexPath != nil }
-            .map { $0.selectedIndexPath! }
+        let paths = dataSources
+                .filter {
+                    $0.selectedIndexPath != nil
+                }
+                .map {
+                    $0.selectedIndexPath!
+                }
         var currentNode: Node?
         var result: [Node] = []
         paths.forEach { path in
@@ -283,23 +291,15 @@ class AreaConditionFilterPanel: UIView {
     }
 }
 
+fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-fileprivate class ConditionTableViewDelegate: NSObject, UITableViewDelegate {
+    var nodes: [Node] = []
 
     var selectedIndexPath: IndexPath?
 
+    var selectedIndexPaths: [IndexPath] = []
+
     var onSelect: ((IndexPath) -> Void)?
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedIndexPath = indexPath
-        onSelect?(indexPath)
-    }
-
-}
-
-fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource {
-
-    var nodes: [Node] = []
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return nodes.count
@@ -314,6 +314,13 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource 
             return UITableViewCell()
         }
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPath = indexPath
+        onSelect?(indexPath)
+        selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+    }
+
 }
 
 fileprivate class AreaConditionCell: UITableViewCell {
@@ -326,10 +333,25 @@ fileprivate class AreaConditionCell: UITableViewCell {
         return result
     }()
 
+    lazy var checkboxBtn: UIButton = {
+        let re = UIButton()
+        re.setBackgroundImage(#imageLiteral(resourceName: "invalid-name"), for: .normal)
+        re.setBackgroundImage(#imageLiteral(resourceName: "invalid-name-checked"), for: .selected)
+        return re
+    }()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.clear
         backgroundColor = UIColor.clear
+
+        contentView.addSubview(checkboxBtn)
+        checkboxBtn.snp.makeConstraints { maker in
+            maker.right.equalTo(-23)
+            maker.centerY.equalToSuperview()
+            maker.width.height.equalTo(14)
+        }
+
         contentView.addSubview(label)
         let bgView = UIView()
         bgView.backgroundColor = UIColor.clear
@@ -338,7 +360,11 @@ fileprivate class AreaConditionCell: UITableViewCell {
             maker.left.right.equalTo(25)
             maker.top.equalTo(12)
             maker.height.equalTo(21)
+            maker.right.equalTo(checkboxBtn.snp.left).offset(5)
         }
+
+        checkboxBtn.isSelected = true
+
     }
 
     required init?(coder aDecoder: NSCoder) {
