@@ -29,8 +29,8 @@ class ChatVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.title = "消息"
-        self.navigationItem.title = "消息"
+//        self.navigationController?.title = "消息"
+//        self.navigationItem.title = "消息"
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.left.right.bottom.equalToSuperview()
@@ -84,6 +84,12 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
                                            "301": UIImage(named: "icon-ershoufang")!,
                                            "302": UIImage(named: "icon-ershoufang")!,
                                            "303": UIImage(named: "icon-ershoufang")!]
+
+    
+    let listIdMap: [String: String] = ["300": "二手房",
+                                           "301": "新房",
+                                           "302": "租房",
+                                           "303": "小区"]
     var datas: [UserUnreadInnerMsg] = []
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -97,14 +103,14 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             let item = datas[indexPath.row]
             if let id = item.id {
                 theCell.iconImageView.image = imageIconMap[id]
+                theCell.label.text = listIdMap[id]
             }
-
             if let text = item.content {
-
-                
-                theCell.label.text = text
+                theCell.secondaryLabel.text = text
             }
-//            theCell.secondaryLabel.text = "约\(item.count)套"
+            if let text2 = item.dateStr {
+                theCell.rightLabel.text = text2
+            }
         }
         return cell ?? ChatCell()
     }
