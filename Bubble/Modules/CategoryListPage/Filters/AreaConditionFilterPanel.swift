@@ -17,58 +17,45 @@ fileprivate enum ConditionType: Int {
 func constructAreaConditionPanel(
         nodes: [Node],
         _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+    var thePanel: AreaConditionFilterPanel? = nil
     return { (index, container) in
         if let container = container {
-            let panel = AreaConditionFilterPanel(nodes: nodes)
-            container.addSubview(panel)
-            panel.snp.makeConstraints { maker in
+            if thePanel == nil {
+                thePanel = AreaConditionFilterPanel(nodes: nodes)
+            }
+
+            container.addSubview(thePanel!)
+            thePanel?.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
                 maker.height.equalTo(352)
             }
-            panel.didSelect = { nodes in
+            thePanel?.didSelect = { nodes in
                 action(index, nodes)
             }
         }
     }
 }
 
-func parseAreaCondition(nodePath: [Node]) -> (String) -> String {
-    return { (condition) in
-        let theCondition = nodePath
-                .filter {
-                    $0.label != "不限"
-                }.reduce("", { (result, node) -> String in
-                    "\(result)&\(node.externalConfig)"
-                })
-        return "\(condition)&\(theCondition)"
-    }
-}
-
 func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
-    let filteredNodes = nodePath.filter {
-        $0.label != "不限"
-    }
-    if filteredNodes.count <= 1 {
+    if nodePath.count == 0 {
         return .noCondition("区域")
-    } else {
-        if let node = filteredNodes.last {
+    } else if nodePath.count == 1 {
+        if let node = nodePath.first {
             return .condition(node.label)
         } else {
             return .noCondition("区域")
         }
+    } else {
+        return .condition("多选")
     }
 }
 
 func parseAreaSearchCondition(nodePath: [Node]) -> (String) -> String {
     return { query in
-        let filteredNodes = nodePath.filter {
-            $0.label != "不限"
-        }
-        if filteredNodes.count <= 1 {
-            return query
-        } else {
-            return "\(query)&\(filteredNodes.last!.externalConfig)"
-        }
+        let queryCondition = nodePath.reduce("", { (result, node) -> String in
+            return "\(result)&\(node.externalConfig)"
+        })
+        return "\(query)\(queryCondition)"
     }
 }
 
@@ -142,12 +129,38 @@ class AreaConditionFilterPanel: UIView {
         onInit()
         clearBtn.rx.tap
                 .subscribe(onNext: { [unowned self] void in
-                    self.dataSources.forEach { $0.selectedIndexPaths.removeAll() }
-                    self.tableViews.forEach { $0.reloadData() }
+                    let subCategoryTable = self.tableViews[ConditionType.subCategory.rawValue]
+                    let extentValueTable = self.tableViews[ConditionType.extendValue.rawValue]
+                    let categoryTable = self.tableViews[ConditionType.category.rawValue]
+                    self.dataSources.forEach {
+                        $0.selectedIndexPaths.removeAll()
+                    }
+                    self.tableViews.forEach {
+                        $0.reloadData()
+                    }
+                    categoryTable.selectRow(
+                            at: IndexPath(row: 0, section: 0),
+                            animated: false,
+                            scrollPosition: .none)
+                    subCategoryTable.selectRow(
+                            at: IndexPath(row: 0, section: 0),
+                            animated: false,
+                            scrollPosition: .none)
+                    extentValueTable.selectRow(
+                            at: IndexPath(row: 0, section: 0),
+                            animated: false,
+                            scrollPosition: .none)
+                    self.displayNormalCondition()
+                })
+                .disposed(by: disposeBag)
+
+        confirmBtn.rx.tap
+                .subscribe(onNext: { [unowned self] void in
+                    let selected = self.selectNodePath()
+                    self.didSelect?(selected)
                 })
                 .disposed(by: disposeBag)
     }
-
 
 
     required init?(coder aDecoder: NSCoder) {
@@ -193,9 +206,7 @@ class AreaConditionFilterPanel: UIView {
         if let first = nodes.first {
             dataSources[ConditionType.subCategory.rawValue].nodes = first.children
         }
-        if let first = dataSources.first {
-            first.selectedIndexPath = IndexPath(row: 0, section: 0)
-        }
+
         dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
 
         if let children = nodes.first?.children {
@@ -244,23 +255,30 @@ class AreaConditionFilterPanel: UIView {
 
     fileprivate func createCategorySelectorHandler(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
+
+            let extentValueDS = self?.dataSources[ConditionType.extendValue.rawValue]
+            let subCategoryDS = self?.dataSources[ConditionType.subCategory.rawValue]
+            let subCategoryTable = self?.tableViews[ConditionType.subCategory.rawValue]
+            let categoryTable = self?.tableViews[ConditionType.category.rawValue]
+
             if nodes[indexPath.row].children.isEmpty {
-                self?.dataSources[ConditionType.subCategory.rawValue].selectedIndexPath = nil
-                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                subCategoryDS?.selectedIndexPaths.removeAll()
+                extentValueDS?.selectedIndexPaths.removeAll()
 //                self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
-                self?.dataSources[ConditionType.subCategory.rawValue].nodes = nodes[indexPath.row].children
-                self?.dataSources[ConditionType.subCategory.rawValue].onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
-                self?.dataSources[ConditionType.subCategory.rawValue].selectedIndexPath = nil
-                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
+                subCategoryDS?.nodes = nodes[indexPath.row].children
+                subCategoryDS?.onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
+                subCategoryDS?.selectedIndexPaths.removeAll()
+
+                extentValueDS?.selectedIndexPaths.removeAll()
 
                 self?.displayNormalCondition()
-                self?.tableViews[ConditionType.subCategory.rawValue].reloadData()
-                self?.tableViews[ConditionType.category.rawValue].selectRow(
+                subCategoryTable?.reloadData()
+                categoryTable?.selectRow(
                         at: indexPath,
                         animated: false,
                         scrollPosition: .none)
-                self?.tableViews[ConditionType.subCategory.rawValue].selectRow(
+                subCategoryTable?.selectRow(
                         at: IndexPath(row: 0, section: 0),
                         animated: false,
                         scrollPosition: .none)
@@ -273,26 +291,27 @@ class AreaConditionFilterPanel: UIView {
 
             let extentValueDS = self?.dataSources[ConditionType.extendValue.rawValue]
             let extentValueTable = self?.tableViews[ConditionType.extendValue.rawValue]
+            let subCategoryTable = self?.tableViews[ConditionType.subCategory.rawValue]
 
             if nodes[indexPath.row].children.isEmpty {
-                extentValueDS?.selectedIndexPath = nil
+                extentValueDS?.selectedIndexPaths.removeAll()
 //                self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
-                self?.dataSources[ConditionType.extendValue.rawValue].nodes = nodes[indexPath.row].children
+                extentValueDS?.nodes = nodes[indexPath.row].children
                 if let displayExtendValue = self?.displayExtendValue {
                     self?.layoutWithAniminate(apply: displayExtendValue)
                 }
-                self?.dataSources[ConditionType.extendValue.rawValue].onSelect = { [weak self] (indexPath) in
-                    self?.tableViews[ConditionType.extendValue.rawValue].selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                extentValueDS?.onSelect = { [weak self] (indexPath) in
+                    extentValueTable?.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 //                    self?.didSelect?(self?.selectNodePath() ?? [])
                 }
-                self?.dataSources[ConditionType.extendValue.rawValue].selectedIndexPath = nil
-                self?.tableViews[ConditionType.extendValue.rawValue].reloadData()
-                self?.tableViews[ConditionType.subCategory.rawValue].selectRow(
+                extentValueDS?.selectedIndexPaths.removeAll()
+                extentValueTable?.reloadData()
+                subCategoryTable?.selectRow(
                         at: indexPath,
                         animated: false,
                         scrollPosition: .none)
-                self?.tableViews[ConditionType.extendValue.rawValue].selectRow(
+                extentValueTable?.selectRow(
                         at: IndexPath(row: 0, section: 0),
                         animated: false,
                         scrollPosition: .none)
@@ -302,26 +321,14 @@ class AreaConditionFilterPanel: UIView {
 
     func selectNodePath() -> [Node] {
         let paths = dataSources
-                .filter {
-                    $0.selectedIndexPath != nil
+                .reversed()
+                .first {
+                    $0.selectedIndexPaths.count > 0
                 }
                 .map {
-                    $0.selectedIndexPath!
+                    $0.selectedNodes()
                 }
-        var currentNode: Node?
-        var result: [Node] = []
-        paths.forEach { path in
-            if let theCurrentNode = currentNode {
-                let nextNode = theCurrentNode.children[path.row]
-                currentNode = nextNode
-                result.append(nextNode)
-            } else {
-                let nextNode = nodes[path.row]
-                currentNode = nextNode
-                result.append(nextNode)
-            }
-        }
-        return result
+        return paths ?? []
     }
 
     func layoutWithAniminate(apply: @escaping () -> Void) {
@@ -346,8 +353,6 @@ class AreaConditionFilterPanel: UIView {
 fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var nodes: [Node] = []
-
-    var selectedIndexPath: IndexPath?
 
     var selectedIndexPaths: Set<IndexPath> = []
 
@@ -382,10 +387,11 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedIndexPath = indexPath
         onSelect?(indexPath)
         if isMultiSelected != true {
-            selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+            selectedIndexPaths = selectedIndexPaths.filter {
+                $0.section != indexPath.section
+            }
         }
 
         if !selectedIndexPaths.contains(indexPath) {
@@ -396,6 +402,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         tableView.reloadData()
     }
 
+    func selectedNodes() -> [Node] {
+        return selectedIndexPaths.map { path -> Node in
+            nodes[path.row]
+        }
+    }
+
 }
 
 fileprivate class AreaConditionCell: UITableViewCell {
@@ -404,7 +416,7 @@ fileprivate class AreaConditionCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
         result.textColor = hexStringToUIColor(hex: "#222222")
-//        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
+        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
         return result
     }()
 

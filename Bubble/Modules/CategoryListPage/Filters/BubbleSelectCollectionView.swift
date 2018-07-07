@@ -12,15 +12,18 @@ import RxSwift
 import RxCocoa
 
 func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+    var thePanel: BubbleSelectCollectionView? = nil
     return { (index, container) in
         if let container = container {
-            let panel = BubbleSelectCollectionView(nodes: nodes)
-            container.addSubview(panel)
-            panel.snp.makeConstraints { maker in
+            if thePanel == nil {
+                thePanel = BubbleSelectCollectionView(nodes: nodes)
+            }
+            container.addSubview(thePanel!)
+            thePanel?.snp.makeConstraints { maker in
                 maker.left.right.top.equalToSuperview()
                 maker.height.equalTo(190)
             }
-            panel.didSelect = { nodes in
+            thePanel?.didSelect = { nodes in
                 action(index, nodes)
             }
         }
@@ -55,14 +58,17 @@ func parseHorseTypeSearchCondition(nodePath: [Node]) -> (String) -> String {
 }
 
 func constructMoreSelectCollectionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
+    var thePanel: BubbleSelectCollectionView? = nil
     return { (index, container) in
         if let container = container {
-            let panel = BubbleSelectCollectionView(nodes: nodes)
-            container.addSubview(panel)
-            panel.snp.makeConstraints { maker in
+            if thePanel == nil {
+                thePanel = BubbleSelectCollectionView(nodes: nodes)
+            }
+            container.addSubview(thePanel!)
+            thePanel?.snp.makeConstraints { maker in
                 maker.left.right.top.bottom.equalToSuperview()
             }
-            panel.didSelect = { nodes in
+            thePanel?.didSelect = { nodes in
                 action(index, nodes)
             }
         }
