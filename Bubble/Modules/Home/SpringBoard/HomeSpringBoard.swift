@@ -29,6 +29,8 @@ class HomeSpringBoard: MarqueeGroupView {
 
 class HomeSpringBoardViewModel {
 
+    typealias SpringBoardItemClick = () -> Void
+
     weak var springBoard: HomeSpringBoard?
 
     let disposeBag = DisposeBag()
@@ -42,10 +44,18 @@ class HomeSpringBoardViewModel {
             createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), label: "咨询")
         ]
 
-        springItems.forEach { view in
+        let clicks: [SpringBoardItemClick] = [
+            openCategoryVC(.newHouse),
+            openCategoryVC(.secondHandHouse),
+            openCategoryVC(.neighborhood),
+            {}
+        ]
+
+        zip(springItems, clicks).forEach { (e) in
+            let (view, click) = e
             view.clickGesture.rx.event
                     .subscribe(onNext: { recognizer in
-                        openNeighborhoodDetailPage(neighborhoodId: 6569029726554489091)()
+                        click()
                     })
                     .disposed(by: disposeBag)
         }
@@ -65,6 +75,22 @@ class HomeSpringBoardViewModel {
 
     func loadData() {
         springBoard?.loadData()
+    }
+
+    private func openCategoryVC(_ houseType: HouseType) -> () -> Void {
+        return { [unowned self] in
+            let vc = CategoryListPageVC()
+            vc.houseType.accept(houseType)
+            vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
+            vc.navBar.isShowTypeSelector = false
+            let nav = EnvContext.shared.rootNavController
+            nav.pushViewController(vc, animated: true)
+            vc.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: self.disposeBag)
+        }
     }
 
 }

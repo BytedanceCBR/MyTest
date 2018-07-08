@@ -95,6 +95,7 @@
 		B300EB7D20F0EBE800C72C93 /* NeighborhoodNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */; };
 		B300EB7F20F0F6F800C72C93 /* NeighborhoodPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */; };
 		B300EB8120F1C5EC00C72C93 /* TransactionRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */; };
+		B300EB8320F1E8AB00C72C93 /* ChatDetailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
 		B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */; };
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
@@ -252,6 +253,7 @@
 		B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodNameCell.swift; sourceTree = "<group>"; };
 		B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodPriceCell.swift; sourceTree = "<group>"; };
 		B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRecordCell.swift; sourceTree = "<group>"; };
+		B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
 		B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
@@ -601,6 +603,7 @@
 		85B2A708201C717972924E0F1DEA9073 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */,
 				F6FB3FA0D2EBC8E6991BBD2FA36B2D5C /* ChatCell.swift */,
 			);
 			path = Cells;
@@ -1077,6 +1080,7 @@
 				7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */,
 				78EBD463A0F4BA125EA6A55FF91F80D8 /* HomePageSearchPanel.swift in Sources */,
 				DF515C4B4B54435FBB1A1BCE50F217DC /* HomeSpringBoard.swift in Sources */,
+				B300EB8320F1E8AB00C72C93 /* ChatDetailListCell.swift in Sources */,
 				7D531F8C20EF7A17001032AB /* UserMessageEntities.swift in Sources */,
 				FCD919A4FCE63E2BB237E3F3371571E9 /* HomeSpringBoardItemView.swift in Sources */,
 				8769A80544DA54E6A0CB199D4281E1F9 /* HomeViewController.swift in Sources */,
