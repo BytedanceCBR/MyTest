@@ -98,6 +98,45 @@
 		B300EB7D20F0EBE800C72C93 /* NeighborhoodNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */; };
 		B300EB7F20F0F6F800C72C93 /* NeighborhoodPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */; };
 		B300EB8120F1C5EC00C72C93 /* TransactionRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */; };
+		B300EBAE20F2230200C72C93 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8620F2230100C72C93 /* TGIndicator.swift */; };
+		B300EBAF20F2230200C72C93 /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8820F2230100C72C93 /* TGBallRotate.swift */; };
+		B300EBB020F2230200C72C93 /* TGLineSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8920F2230100C72C93 /* TGLineSpinFadeLoader.swift */; };
+		B300EBB120F2230200C72C93 /* TGLineCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8A20F2230100C72C93 /* TGLineCursor.swift */; };
+		B300EBB220F2230200C72C93 /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8B20F2230100C72C93 /* TGBallBeat.swift */; };
+		B300EBB320F2230200C72C93 /* TGTriangleSkewSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8C20F2230100C72C93 /* TGTriangleSkewSpin.swift */; };
+		B300EBB420F2230200C72C93 /* TGLineScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8D20F2230100C72C93 /* TGLineScale.swift */; };
+		B300EBB520F2230200C72C93 /* TGBallScaleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8E20F2230200C72C93 /* TGBallScaleMultiple.swift */; };
+		B300EBB620F2230200C72C93 /* TGBallGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8F20F2230200C72C93 /* TGBallGridPulse.swift */; };
+		B300EBB720F2230200C72C93 /* TGLineScaleParty.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9020F2230200C72C93 /* TGLineScaleParty.swift */; };
+		B300EBB820F2230200C72C93 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9120F2230200C72C93 /* TGBallZigZag.swift */; };
+		B300EBB920F2230200C72C93 /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9220F2230200C72C93 /* TGOrbit.swift */; };
+		B300EBBA20F2230200C72C93 /* TGWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9320F2230200C72C93 /* TGWindows.swift */; };
+		B300EBBB20F2230200C72C93 /* TGBallClipRotatePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9420F2230200C72C93 /* TGBallClipRotatePulse.swift */; };
+		B300EBBC20F2230200C72C93 /* TGCubeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9520F2230200C72C93 /* TGCubeTransition.swift */; };
+		B300EBBD20F2230200C72C93 /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9620F2230200C72C93 /* TGBallRotateChase.swift */; };
+		B300EBBE20F2230200C72C93 /* TGSquareSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9720F2230200C72C93 /* TGSquareSpin.swift */; };
+		B300EBBF20F2230200C72C93 /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9820F2230200C72C93 /* TGLineScalePulseOutRapid.swift */; };
+		B300EBC020F2230200C72C93 /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9920F2230200C72C93 /* TGBallGridBeat.swift */; };
+		B300EBC120F2230200C72C93 /* TGBallScaleRipple.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9A20F2230200C72C93 /* TGBallScaleRipple.swift */; };
+		B300EBC220F2230200C72C93 /* TGBallZigZagDeflect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9B20F2230200C72C93 /* TGBallZigZagDeflect.swift */; };
+		B300EBC320F2230200C72C93 /* TGBallClipRotateMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9C20F2230200C72C93 /* TGBallClipRotateMultiple.swift */; };
+		B300EBC420F2230200C72C93 /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9D20F2230200C72C93 /* TGBallTrianglePath.swift */; };
+		B300EBC520F2230200C72C93 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9E20F2230200C72C93 /* TGLineScalePulseOut.swift */; };
+		B300EBC620F2230200C72C93 /* TGBallClipRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB9F20F2230200C72C93 /* TGBallClipRotate.swift */; };
+		B300EBC720F2230200C72C93 /* TGBallScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA020F2230200C72C93 /* TGBallScale.swift */; };
+		B300EBC820F2230200C72C93 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA120F2230200C72C93 /* TGPacman.swift */; };
+		B300EBC920F2230200C72C93 /* TGBallSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA220F2230200C72C93 /* TGBallSpinFadeLoader.swift */; };
+		B300EBCA20F2230200C72C93 /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA320F2230200C72C93 /* TGBlank.swift */; };
+		B300EBCB20F2230200C72C93 /* TGLineOrderbyAsc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA420F2230200C72C93 /* TGLineOrderbyAsc.swift */; };
+		B300EBCC20F2230200C72C93 /* TGBallPulseRise.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA520F2230200C72C93 /* TGBallPulseRise.swift */; };
+		B300EBCD20F2230200C72C93 /* TGAudioEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA620F2230200C72C93 /* TGAudioEqualizer.swift */; };
+		B300EBCE20F2230200C72C93 /* TGBallScaleRippleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA720F2230200C72C93 /* TGBallScaleRippleMultiple.swift */; };
+		B300EBCF20F2230200C72C93 /* TGSemiCircleSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA820F2230200C72C93 /* TGSemiCircleSpin.swift */; };
+		B300EBD020F2230200C72C93 /* TGSquarePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBA920F2230200C72C93 /* TGSquarePulse.swift */; };
+		B300EBD120F2230200C72C93 /* TGBallPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBAA20F2230200C72C93 /* TGBallPulse.swift */; };
+		B300EBD220F2230200C72C93 /* TGBallPulseSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBAB20F2230200C72C93 /* TGBallPulseSync.swift */; };
+		B300EBD320F2230200C72C93 /* TGSquareGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBAC20F2230200C72C93 /* TGSquareGridPulse.swift */; };
+		B300EBD420F2230200C72C93 /* TGRefreshSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
 		B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */; };
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
@@ -258,6 +297,45 @@
 		B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodNameCell.swift; sourceTree = "<group>"; };
 		B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodPriceCell.swift; sourceTree = "<group>"; };
 		B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRecordCell.swift; sourceTree = "<group>"; };
+		B300EB8620F2230100C72C93 /* TGIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGIndicator.swift; sourceTree = "<group>"; };
+		B300EB8820F2230100C72C93 /* TGBallRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotate.swift; sourceTree = "<group>"; };
+		B300EB8920F2230100C72C93 /* TGLineSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineSpinFadeLoader.swift; sourceTree = "<group>"; };
+		B300EB8A20F2230100C72C93 /* TGLineCursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineCursor.swift; sourceTree = "<group>"; };
+		B300EB8B20F2230100C72C93 /* TGBallBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallBeat.swift; sourceTree = "<group>"; };
+		B300EB8C20F2230100C72C93 /* TGTriangleSkewSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGTriangleSkewSpin.swift; sourceTree = "<group>"; };
+		B300EB8D20F2230100C72C93 /* TGLineScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScale.swift; sourceTree = "<group>"; };
+		B300EB8E20F2230200C72C93 /* TGBallScaleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleMultiple.swift; sourceTree = "<group>"; };
+		B300EB8F20F2230200C72C93 /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
+		B300EB9020F2230200C72C93 /* TGLineScaleParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScaleParty.swift; sourceTree = "<group>"; };
+		B300EB9120F2230200C72C93 /* TGBallZigZag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZag.swift; sourceTree = "<group>"; };
+		B300EB9220F2230200C72C93 /* TGOrbit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGOrbit.swift; sourceTree = "<group>"; };
+		B300EB9320F2230200C72C93 /* TGWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGWindows.swift; sourceTree = "<group>"; };
+		B300EB9420F2230200C72C93 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
+		B300EB9520F2230200C72C93 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
+		B300EB9620F2230200C72C93 /* TGBallRotateChase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotateChase.swift; sourceTree = "<group>"; };
+		B300EB9720F2230200C72C93 /* TGSquareSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareSpin.swift; sourceTree = "<group>"; };
+		B300EB9820F2230200C72C93 /* TGLineScalePulseOutRapid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOutRapid.swift; sourceTree = "<group>"; };
+		B300EB9920F2230200C72C93 /* TGBallGridBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridBeat.swift; sourceTree = "<group>"; };
+		B300EB9A20F2230200C72C93 /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
+		B300EB9B20F2230200C72C93 /* TGBallZigZagDeflect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZagDeflect.swift; sourceTree = "<group>"; };
+		B300EB9C20F2230200C72C93 /* TGBallClipRotateMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotateMultiple.swift; sourceTree = "<group>"; };
+		B300EB9D20F2230200C72C93 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
+		B300EB9E20F2230200C72C93 /* TGLineScalePulseOut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOut.swift; sourceTree = "<group>"; };
+		B300EB9F20F2230200C72C93 /* TGBallClipRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotate.swift; sourceTree = "<group>"; };
+		B300EBA020F2230200C72C93 /* TGBallScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScale.swift; sourceTree = "<group>"; };
+		B300EBA120F2230200C72C93 /* TGPacman.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGPacman.swift; sourceTree = "<group>"; };
+		B300EBA220F2230200C72C93 /* TGBallSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallSpinFadeLoader.swift; sourceTree = "<group>"; };
+		B300EBA320F2230200C72C93 /* TGBlank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBlank.swift; sourceTree = "<group>"; };
+		B300EBA420F2230200C72C93 /* TGLineOrderbyAsc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineOrderbyAsc.swift; sourceTree = "<group>"; };
+		B300EBA520F2230200C72C93 /* TGBallPulseRise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseRise.swift; sourceTree = "<group>"; };
+		B300EBA620F2230200C72C93 /* TGAudioEqualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGAudioEqualizer.swift; sourceTree = "<group>"; };
+		B300EBA720F2230200C72C93 /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
+		B300EBA820F2230200C72C93 /* TGSemiCircleSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSemiCircleSpin.swift; sourceTree = "<group>"; };
+		B300EBA920F2230200C72C93 /* TGSquarePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquarePulse.swift; sourceTree = "<group>"; };
+		B300EBAA20F2230200C72C93 /* TGBallPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulse.swift; sourceTree = "<group>"; };
+		B300EBAB20F2230200C72C93 /* TGBallPulseSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseSync.swift; sourceTree = "<group>"; };
+		B300EBAC20F2230200C72C93 /* TGSquareGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareGridPulse.swift; sourceTree = "<group>"; };
+		B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGRefreshSwift.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
 		B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
@@ -458,6 +536,7 @@
 		4A8F155E76747E22B4E2E5F8E4380437 /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				B300EB8420F2230100C72C93 /* TGRefreshSwift */,
 				6DD6442A239F0DBA9C51BAE2923316AD /* Extension */,
 				79D89BAA1EB0143B27BCD501EB99DE9D /* FWSegmentedControl */,
 				44A09EF6153F75E955A4538C6E941B3B /* Functions */,
@@ -688,6 +767,68 @@
 				DD53EC238720A8EC205AC53A63CD4D79 /* Info.plist */,
 			);
 			path = BubbleUITests;
+			sourceTree = "<group>";
+		};
+		B300EB8420F2230100C72C93 /* TGRefreshSwift */ = {
+			isa = PBXGroup;
+			children = (
+				B300EB8520F2230100C72C93 /* TGIndicator */,
+				B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */,
+			);
+			path = TGRefreshSwift;
+			sourceTree = "<group>";
+		};
+		B300EB8520F2230100C72C93 /* TGIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				B300EB8620F2230100C72C93 /* TGIndicator.swift */,
+				B300EB8720F2230100C72C93 /* Animation */,
+			);
+			path = TGIndicator;
+			sourceTree = "<group>";
+		};
+		B300EB8720F2230100C72C93 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				B300EB8820F2230100C72C93 /* TGBallRotate.swift */,
+				B300EB8920F2230100C72C93 /* TGLineSpinFadeLoader.swift */,
+				B300EB8A20F2230100C72C93 /* TGLineCursor.swift */,
+				B300EB8B20F2230100C72C93 /* TGBallBeat.swift */,
+				B300EB8C20F2230100C72C93 /* TGTriangleSkewSpin.swift */,
+				B300EB8D20F2230100C72C93 /* TGLineScale.swift */,
+				B300EB8E20F2230200C72C93 /* TGBallScaleMultiple.swift */,
+				B300EB8F20F2230200C72C93 /* TGBallGridPulse.swift */,
+				B300EB9020F2230200C72C93 /* TGLineScaleParty.swift */,
+				B300EB9120F2230200C72C93 /* TGBallZigZag.swift */,
+				B300EB9220F2230200C72C93 /* TGOrbit.swift */,
+				B300EB9320F2230200C72C93 /* TGWindows.swift */,
+				B300EB9420F2230200C72C93 /* TGBallClipRotatePulse.swift */,
+				B300EB9520F2230200C72C93 /* TGCubeTransition.swift */,
+				B300EB9620F2230200C72C93 /* TGBallRotateChase.swift */,
+				B300EB9720F2230200C72C93 /* TGSquareSpin.swift */,
+				B300EB9820F2230200C72C93 /* TGLineScalePulseOutRapid.swift */,
+				B300EB9920F2230200C72C93 /* TGBallGridBeat.swift */,
+				B300EB9A20F2230200C72C93 /* TGBallScaleRipple.swift */,
+				B300EB9B20F2230200C72C93 /* TGBallZigZagDeflect.swift */,
+				B300EB9C20F2230200C72C93 /* TGBallClipRotateMultiple.swift */,
+				B300EB9D20F2230200C72C93 /* TGBallTrianglePath.swift */,
+				B300EB9E20F2230200C72C93 /* TGLineScalePulseOut.swift */,
+				B300EB9F20F2230200C72C93 /* TGBallClipRotate.swift */,
+				B300EBA020F2230200C72C93 /* TGBallScale.swift */,
+				B300EBA120F2230200C72C93 /* TGPacman.swift */,
+				B300EBA220F2230200C72C93 /* TGBallSpinFadeLoader.swift */,
+				B300EBA320F2230200C72C93 /* TGBlank.swift */,
+				B300EBA420F2230200C72C93 /* TGLineOrderbyAsc.swift */,
+				B300EBA520F2230200C72C93 /* TGBallPulseRise.swift */,
+				B300EBA620F2230200C72C93 /* TGAudioEqualizer.swift */,
+				B300EBA720F2230200C72C93 /* TGBallScaleRippleMultiple.swift */,
+				B300EBA820F2230200C72C93 /* TGSemiCircleSpin.swift */,
+				B300EBA920F2230200C72C93 /* TGSquarePulse.swift */,
+				B300EBAA20F2230200C72C93 /* TGBallPulse.swift */,
+				B300EBAB20F2230200C72C93 /* TGBallPulseSync.swift */,
+				B300EBAC20F2230200C72C93 /* TGSquareGridPulse.swift */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {
@@ -1048,65 +1189,95 @@
 			files = (
 				420F49ED1A961EF55586B53518712E06 /* AppDelegate.swift in Sources */,
 				2D9A6BD48ADDE041A2409791AE16D594 /* AreaConditionFilterPanel.swift in Sources */,
+				B300EBC320F2230200C72C93 /* TGBallClipRotateMultiple.swift in Sources */,
 				D192C4D27974BFE3D634EB84693427F9 /* Array+Extension.swift in Sources */,
+				B300EBBF20F2230200C72C93 /* TGLineScalePulseOutRapid.swift in Sources */,
 				55EC80F9C002CD93BB7FAAF782D017CA /* BDImageViewProvider.swift in Sources */,
+				B300EBCA20F2230200C72C93 /* TGBlank.swift in Sources */,
 				F0DD51ABE1DCEC57EBBED6EE5C67A993 /* BaseNavigationViewController.swift in Sources */,
+				B300EBD020F2230200C72C93 /* TGSquarePulse.swift in Sources */,
+				B300EBCD20F2230200C72C93 /* TGAudioEqualizer.swift in Sources */,
 				02F9587FCED9D43E7D7AD436FB2F3355 /* BaseTextField.swift in Sources */,
 				3A49F76900BF7011A9B09935C1772BEE /* BaseViewController.swift in Sources */,
 				80306763E4F2656863E54B5B7696A6CB /* BubbleSelectCollectionView.swift in Sources */,
 				BE0789983AB7A0D4C52775F65A43621C /* CategoryListDataSource.swift in Sources */,
 				AF39102EE0A43E2C26CB88CF4E6B33E4 /* CategoryListPageVC.swift in Sources */,
+				B300EBBC20F2230200C72C93 /* TGCubeTransition.swift in Sources */,
 				B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */,
 				753083310BE88DE7A9B392976E04E8DE /* CategorySectionView.swift in Sources */,
 				B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */,
+				B300EBB020F2230200C72C93 /* TGLineSpinFadeLoader.swift in Sources */,
+				B300EBCC20F2230200C72C93 /* TGBallPulseRise.swift in Sources */,
+				B300EBC220F2230200C72C93 /* TGBallZigZagDeflect.swift in Sources */,
+				B300EBD420F2230200C72C93 /* TGRefreshSwift.swift in Sources */,
 				00959CCBAA30F8B92604FBA671BD8188 /* ChatCell.swift in Sources */,
 				0BE1C56E3A896F2AED4AABBBBF62E0EC /* ChatVC.swift in Sources */,
+				B300EBC720F2230200C72C93 /* TGBallScale.swift in Sources */,
 				9EFBA84C18664C37B2F3E60230A1BA58 /* CityListViewModel.swift in Sources */,
 				8D49B3196FD302FDBDA8351C8C08DE15 /* Client.swift in Sources */,
+				B300EBCE20F2230200C72C93 /* TGBallScaleRippleMultiple.swift in Sources */,
 				125996B12D421D699AC7C27507B3FB91 /* Color.swift in Sources */,
 				DE060211EC854EDB2CD6AD6B3EEBCB3A /* CommonUIStyle.swift in Sources */,
+				B300EBBA20F2230200C72C93 /* TGWindows.swift in Sources */,
 				15E24CD1128597762F9767E9823B9560 /* ConfigEntities.swift in Sources */,
+				B300EBBE20F2230200C72C93 /* TGSquareSpin.swift in Sources */,
 				668C55607FF8AF28A06CEFAFDF9524E2 /* ConfigurationAPI.swift in Sources */,
 				859E9688B80E5235A558507AA1FA7BAA /* ConstraintArray+Extensions.swift in Sources */,
 				97FBA6D13F0E90441B8D83A40BD140A6 /* ConstraintArrayDSL.swift in Sources */,
 				C7983D9E8A87F6D6455FCE7B2757CB0A /* ContactCell.swift in Sources */,
 				7DF8DED720F1B0F200418946 /* ChatDetailListCell.swift in Sources */,
+				B300EBC820F2230200C72C93 /* TGPacman.swift in Sources */,
 				FEB5CD4708785DC07D0B6C63EAE61BD1 /* CountryListVC.swift in Sources */,
 				C52E7A9EC2511F45F7C8BCE26A2AE232 /* CourtItemEntity.swift in Sources */,
 				58BA8C63EB34C5B9A90EDF27066D9A18 /* CourtItemEntityApi.swift in Sources */,
+				B300EBB220F2230200C72C93 /* TGBallBeat.swift in Sources */,
 				2C2D66E18F2AEB0B9A9A35879040D9F0 /* Curry.swift in Sources */,
 				5AAA29BEB765F404DEB9FCCAF3FCA384 /* CycleImageCache.swift in Sources */,
 				575BB4A6011E491864AC860C066911A4 /* CycleImageCell.swift in Sources */,
 				CB6F428FF625DD18AB29F80EDDACEC8F /* DetailPageViewModel.swift in Sources */,
 				DB1F340BC7915527BCC7B70FC29DE2D7 /* DisclaimerCell.swift in Sources */,
+				B300EBC620F2230200C72C93 /* TGBallClipRotate.swift in Sources */,
+				B300EBCF20F2230200C72C93 /* TGSemiCircleSpin.swift in Sources */,
 				D8973975EB489DC0FF56EB06B33F1387 /* EnvContext.swift in Sources */,
+				B300EBB320F2230200C72C93 /* TGTriangleSkewSpin.swift in Sources */,
 				48AF108C6BB9E38D681022480F68A35F /* ErshouHouseCoreInfoCell.swift in Sources */,
+				B300EBAE20F2230200C72C93 /* TGIndicator.swift in Sources */,
 				30F9A5142EC6DE56680D4566275A9B68 /* ErshouHouseDetailApi.swift in Sources */,
 				B300EB8120F1C5EC00C72C93 /* TransactionRecordCell.swift in Sources */,
 				6B7C4D467D4186649B7209D97AFF07EB /* ErshouHouseDetailEntities.swift in Sources */,
+				B300EBC520F2230200C72C93 /* TGLineScalePulseOut.swift in Sources */,
 				D3A549276C7D08D7CAA7968185CE13A1 /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				9560E1EFBFF1AE9F47080AE1B0177BA6 /* FWSegmentedControl.swift in Sources */,
 				A7D57BA0E1387AF0088BF07E70501ACF /* Functional.swift in Sources */,
 				016132F793481B93BC3A67B3698C9182 /* GlobalPricingCell.swift in Sources */,
 				622AC8A889C4CBB9C942B6CF08C4C96A /* HeaderCell.swift in Sources */,
 				B300EB7F20F0F6F800C72C93 /* NeighborhoodPriceCell.swift in Sources */,
+				B300EBC020F2230200C72C93 /* TGBallGridBeat.swift in Sources */,
+				B300EBB120F2230200C72C93 /* TGLineCursor.swift in Sources */,
 				96554D570CF214269E8272EFDE04CAE2 /* HeaderViewControl.swift in Sources */,
 				CB2E4D593D8C7F7FA8AB2CF00D6FC1B5 /* HomeHeaderSearchView.swift in Sources */,
 				7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */,
+				B300EBCB20F2230200C72C93 /* TGLineOrderbyAsc.swift in Sources */,
 				78EBD463A0F4BA125EA6A55FF91F80D8 /* HomePageSearchPanel.swift in Sources */,
 				DF515C4B4B54435FBB1A1BCE50F217DC /* HomeSpringBoard.swift in Sources */,
 				7D531F8C20EF7A17001032AB /* UserMessageEntities.swift in Sources */,
 				FCD919A4FCE63E2BB237E3F3371571E9 /* HomeSpringBoardItemView.swift in Sources */,
 				8769A80544DA54E6A0CB199D4281E1F9 /* HomeViewController.swift in Sources */,
+				B300EBD220F2230200C72C93 /* TGBallPulseSync.swift in Sources */,
 				66B11C1B82061F3A1F4ABF754E662A8B /* HomeViewTableViewDataSource.swift in Sources */,
+				B300EBC420F2230200C72C93 /* TGBallTrianglePath.swift in Sources */,
 				FA690098BEC92FB925D6D448998E2CB6 /* HorseDetailPageVC.swift in Sources */,
+				B300EBD320F2230200C72C93 /* TGSquareGridPulse.swift in Sources */,
+				B300EBB820F2230200C72C93 /* TGBallZigZag.swift in Sources */,
 				B300EB7D20F0EBE800C72C93 /* NeighborhoodNameCell.swift in Sources */,
 				7D531F9220EFAEF7001032AB /* MessageListVC.swift in Sources */,
 				36C793EFC4FBB14A9E580D2DE4638701 /* HouseDetailAPI.swift in Sources */,
 				8BC7F9EA93E01B0DA37878FD86392550 /* HouseDetailEntities.swift in Sources */,
 				BD46785F6C8D9AD4F1D321D8E033D7E0 /* HouseDetailPageVC.swift in Sources */,
+				B300EBB620F2230200C72C93 /* TGBallGridPulse.swift in Sources */,
 				3EFDDCCDE7CCE7B57B7319400720D9A6 /* HouseItemEntity.swift in Sources */,
 				1991B01F0754C14DD8E0C050A27D30A9 /* LBSMapPageVC.swift in Sources */,
+				B300EBB520F2230200C72C93 /* TGBallScaleMultiple.swift in Sources */,
 				DB20AD4D6305FD15B9B37D06F5A169C9 /* LocationManager.swift in Sources */,
 				66073B1B0B606C8810A684A30FF8DA7B /* MarqueeGroupView.swift in Sources */,
 				7D531F8E20EF91A4001032AB /* UserMessageEntitiesApi.swift in Sources */,
@@ -1119,15 +1290,18 @@
 				39A9C923B38FEE6BA4463162E140D934 /* NeighborhoodInfoCell.swift in Sources */,
 				E4A493DEA5E34E5FA22A398DAC2D1CE9 /* NewHouseCommentCell.swift in Sources */,
 				C872B492DB11C9B6C4C16997C0F5E23D /* NewHouseDetailPageViewModel.swift in Sources */,
+				B300EBB420F2230200C72C93 /* TGLineScale.swift in Sources */,
 				A2E2AAB39CD400D64B15E1C4858F44DA /* NewHouseInfoCell.swift in Sources */,
 				ED1E262929C091912EC7CAD038C70E87 /* NewHouseNameCell.swift in Sources */,
 				6B7D15C305E916CBCDD2679345C4F4BB /* NewHouseNearByCell.swift in Sources */,
 				A61185410BFB3888ACB6944998177636 /* OpenAllCell.swift in Sources */,
 				4AFC4BA8B8AE9C959B2ADC35E02AEEA5 /* PageableViewModel.swift in Sources */,
+				B300EBC120F2230200C72C93 /* TGBallScaleRipple.swift in Sources */,
 				C829B4A0BCC26E994CD284A0881D694C /* PopupMenuView.swift in Sources */,
 				43012FDB480C8BF18F0A9911D954A818 /* PriceListFilterPanel.swift in Sources */,
 				EFEF8ED818D52EFB9FDA01FCE82F11F6 /* PropertyListCell.swift in Sources */,
 				5D482BB22E404D414FF99CD48239C1FF /* RecommendAPI.swift in Sources */,
+				B300EBB920F2230200C72C93 /* TGOrbit.swift in Sources */,
 				4C2DFF9CA8D586EE079C2512EDC28D1C /* RelatedSearchApi.swift in Sources */,
 				548A3534510DDF208457641E301079AE /* RxTTNetwork.swift in Sources */,
 				F55AC83E6E0860AF2A1790D482681547 /* SearchAPI.swift in Sources */,
@@ -1145,11 +1319,17 @@
 				ED7FEA32A012D04BF7EB5B7990A701C9 /* TabViewController.swift in Sources */,
 				58D58539FDD569A2CE1A9C3CE39827A4 /* TagView.swift in Sources */,
 				5D3E6A8B9F8513D9F9547B8F43D38D76 /* TextParser.swift in Sources */,
+				B300EBAF20F2230200C72C93 /* TGBallRotate.swift in Sources */,
+				B300EBB720F2230200C72C93 /* TGLineScaleParty.swift in Sources */,
+				B300EBC920F2230200C72C93 /* TGBallSpinFadeLoader.swift in Sources */,
 				BBE39DA1FBBDB6D0EAC4803737DA1FFF /* TimelineCell.swift in Sources */,
 				340FC5DFB8124C8BBB03D16E52D661EB /* UIKitExtension.swift in Sources */,
+				B300EBBB20F2230200C72C93 /* TGBallClipRotatePulse.swift in Sources */,
 				266C3175AAB1A82168E48CF9601821F8 /* UITableViewCellFactory.swift in Sources */,
 				02B4F01A36173C201CB5542F23B1DC5B /* ViewController.swift in Sources */,
 				CEEF130AC6006391D433B7FEE5457E63 /* WebImageItemView.swift in Sources */,
+				B300EBBD20F2230200C72C93 /* TGBallRotateChase.swift in Sources */,
+				B300EBD120F2230200C72C93 /* TGBallPulse.swift in Sources */,
 				1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */,
 				1A216510BC7286624889833D /* NeighborhoodDetailPageViewModel.swift in Sources */,
 				1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */,
