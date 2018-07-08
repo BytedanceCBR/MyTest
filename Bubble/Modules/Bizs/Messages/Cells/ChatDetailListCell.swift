@@ -149,34 +149,81 @@ class ChatDetailListCell: BaseUITableViewCell {
     }
 }
 
-//func createTagAttrString(
-//    _ text: String,
-//    textColor: UIColor = hexStringToUIColor(hex: "#f85959"),
-//    backgroundColor: UIColor = color(248, 89, 89, 0.08)) -> NSMutableAttributedString {
-//    let attributeText = NSMutableAttributedString(string: text)
-//    attributeText.yy_insertString("  ", at: 0)
-//    attributeText.yy_appendString("  ")
-//    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(10)
-//    attributeText.yy_color = textColor
-//    let substringRange = attributeText.string.range(of: text)
-//    if let lowerBound = substringRange?.lowerBound,
-//        let upperBound = substringRange?.upperBound {
-//        let start = attributeText.string.distance(from: attributeText.string.startIndex, to: (lowerBound))
-//        let length = attributeText.string.distance(from: lowerBound, to: upperBound)
-//        let range = NSMakeRange(start, length)
-//        attributeText.yy_setTextBinding(YYTextBinding(deleteConfirm: false), range: range)
-//
-//        let border = YYTextBorder()
-//        border.strokeWidth = 1.5
-//        border.fillColor = backgroundColor
-//        border.cornerRadius = 2
-//        border.lineJoin = CGLineJoin.bevel
-//
-//        border.insets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)
-//        attributeText.yy_setTextBackgroundBorder(border, range: range)
-//    }
-//    return attributeText
-//}
+
+
+class UserMsgSectionView: UIView {
+    
+    lazy var timeAreaBgView: UIView = {
+        let re = UIView()
+        re.layer.cornerRadius = 13.5
+        re.backgroundColor = color(0, 0, 0, 0.15)
+        return re
+    }()
+    
+    lazy var tipsLabel: UILabel = {
+        let label = UILabel()
+        label.font = CommonUIStyle.Font.pingFangMedium(18)
+        label.textColor = hexStringToUIColor(hex: "#222222")
+        label.text = ""
+        return label
+    }()
+    
+    lazy var tipsBgView: UIView = {
+        let re = UIView()
+        re.backgroundColor = UIColor.white
+        return re
+    }()
+    
+    lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = CommonUIStyle.Font.pingFangMedium(14)
+        label.textColor = hexStringToUIColor(hex: "#ffffff")
+        label.text = ""
+        return label
+    }()
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        self.lu.addBottomBorder()
+        self.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        addSubview(timeAreaBgView)
+        timeAreaBgView.snp.makeConstraints { (maker) in
+            maker.centerX.equalToSuperview()
+            maker.top.equalTo(20)
+            maker.height.equalTo(27)
+        }
+        
+        timeAreaBgView.addSubview(dateLabel)
+        dateLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(15)
+            maker.right.equalTo(-15)
+            maker.height.equalTo(22)
+            maker.top.equalTo(4)
+            maker.bottom.equalTo(-4)
+        }
+        
+        addSubview(tipsBgView)
+        tipsBgView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(timeAreaBgView.snp.bottom).offset(15)
+            maker.bottom.left.right.equalToSuperview()
+        }
+        
+        tipsBgView.addSubview(tipsLabel)
+        tipsLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(15)
+            maker.right.equalTo(-37)
+            maker.height.equalTo(25)
+            maker.top.equalTo(18)
+            maker.bottom.equalTo(-17)
+        }
+
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
 
 
 

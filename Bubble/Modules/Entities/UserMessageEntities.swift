@@ -134,7 +134,10 @@ struct UserListMsgInnerItem: Mappable {
     var pricePerSqm: String?
     var openUrl: String?
     var tags: [TagItem]?
-    
+    var images: [ImageItem]?
+    var houseType: Int?
+
+
     init?(map: Map) {
         
     }
@@ -148,5 +151,7 @@ struct UserListMsgInnerItem: Mappable {
         pricePerSqm <- map["price_per_sqm"]
         tags <- map["tags"]
         openUrl <- map["open_url"]
+        images <- map["images"]
+        houseType <- map["house_type"]
     }
 }

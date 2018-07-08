@@ -68,6 +68,7 @@
 		7D531F9020EF9B40001032AB /* UserMessageEntitiesApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */; };
 		7D531F9220EFAEF7001032AB /* MessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F9120EFAEF7001032AB /* MessageListVC.swift */; };
 		7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */; };
+		7DF8DED720F1B0F200418946 /* ChatDetailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8DED620F1B0F200418946 /* ChatDetailListCell.swift */; };
 		7E42F2341424B8CDE9D8039C53975657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4718EF956DEC3D8B7DCED2DB95F4D3 /* Foundation.framework */; };
 		80306763E4F2656863E54B5B7696A6CB /* BubbleSelectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565842925A14E9D79034D2E75CE82172 /* BubbleSelectCollectionView.swift */; };
 		8122132640C9B2E9D19BA0388F10C6A8 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AA245B84939262906F3E8819FE756BA8 /* libstdc++.6.0.9.tbd */; };
@@ -96,7 +97,6 @@
 		B300EB7D20F0EBE800C72C93 /* NeighborhoodNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */; };
 		B300EB7F20F0F6F800C72C93 /* NeighborhoodPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */; };
 		B300EB8120F1C5EC00C72C93 /* TransactionRecordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */; };
-		B300EB8320F1E8AB00C72C93 /* ChatDetailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
 		B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */; };
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
@@ -223,6 +223,7 @@
 		7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApi.swift; sourceTree = "<group>"; };
 		7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApiTest.swift; sourceTree = "<group>"; };
 		7D531F9120EFAEF7001032AB /* MessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListVC.swift; sourceTree = "<group>"; };
+		7DF8DED620F1B0F200418946 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
 		7F85FD5DEA86AA8ADAB4F5C2436BFF4D /* CycleImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleImageCache.swift; sourceTree = "<group>"; };
 		7FEA91459568E4C790BEF3AB57E8004C /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		8133F15B42B2ABEEA7C0B75E03F9E4BC /* CategoryListPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryListPageVC.swift; sourceTree = "<group>"; };
@@ -255,7 +256,6 @@
 		B300EB7C20F0EBE800C72C93 /* NeighborhoodNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodNameCell.swift; sourceTree = "<group>"; };
 		B300EB7E20F0F6F800C72C93 /* NeighborhoodPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodPriceCell.swift; sourceTree = "<group>"; };
 		B300EB8020F1C5EC00C72C93 /* TransactionRecordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRecordCell.swift; sourceTree = "<group>"; };
-		B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
 		B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
@@ -569,6 +569,13 @@
 			path = FWSegmentedControl;
 			sourceTree = "<group>";
 		};
+		7DF8DED820F1F95A00418946 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		822D6BD3401029D81859C4240EBECBB4 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -605,7 +612,7 @@
 		85B2A708201C717972924E0F1DEA9073 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				B300EB8220F1E8AA00C72C93 /* ChatDetailListCell.swift */,
+				7DF8DED620F1B0F200418946 /* ChatDetailListCell.swift */,
 				F6FB3FA0D2EBC8E6991BBD2FA36B2D5C /* ChatCell.swift */,
 			);
 			path = Cells;
@@ -715,6 +722,7 @@
 				71C18B0C6BD2D0889ADF1C3D3362BE2A /* Frameworks */,
 				DE03F69DE2BACD5DE106F7A1D3E40DC6 /* Pods */,
 				A1943EAEA5CED9DDD732CCAE09238A56 /* Products */,
+				7DF8DED820F1F95A00418946 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1059,6 +1067,7 @@
 				859E9688B80E5235A558507AA1FA7BAA /* ConstraintArray+Extensions.swift in Sources */,
 				97FBA6D13F0E90441B8D83A40BD140A6 /* ConstraintArrayDSL.swift in Sources */,
 				C7983D9E8A87F6D6455FCE7B2757CB0A /* ContactCell.swift in Sources */,
+				7DF8DED720F1B0F200418946 /* ChatDetailListCell.swift in Sources */,
 				FEB5CD4708785DC07D0B6C63EAE61BD1 /* CountryListVC.swift in Sources */,
 				C52E7A9EC2511F45F7C8BCE26A2AE232 /* CourtItemEntity.swift in Sources */,
 				58BA8C63EB34C5B9A90EDF27066D9A18 /* CourtItemEntityApi.swift in Sources */,
@@ -1083,7 +1092,6 @@
 				7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */,
 				78EBD463A0F4BA125EA6A55FF91F80D8 /* HomePageSearchPanel.swift in Sources */,
 				DF515C4B4B54435FBB1A1BCE50F217DC /* HomeSpringBoard.swift in Sources */,
-				B300EB8320F1E8AB00C72C93 /* ChatDetailListCell.swift in Sources */,
 				7D531F8C20EF7A17001032AB /* UserMessageEntities.swift in Sources */,
 				FCD919A4FCE63E2BB237E3F3371571E9 /* HomeSpringBoardItemView.swift in Sources */,
 				8769A80544DA54E6A0CB199D4281E1F9 /* HomeViewController.swift in Sources */,

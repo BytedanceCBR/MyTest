@@ -80,14 +80,14 @@ class ChatVC: UIViewController {
 
 class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelegate {
     
-    let imageIconMap: [String: UIImage] = ["300": UIImage(named: "icon-ershoufang")!,
+    let imageIconMap: [String: UIImage] = ["300": UIImage(named: "icon-xinfang")!,
                                            "301": UIImage(named: "icon-ershoufang")!,
-                                           "302": UIImage(named: "icon-ershoufang")!,
-                                           "303": UIImage(named: "icon-ershoufang")!]
+                                           "302": UIImage(named: "icon-zufang")!,
+                                           "303": UIImage(named: "icon-xiaoqu")!]
 
     
-    let listIdMap: [String: String] = ["300": "二手房",
-                                           "301": "新房",
+    let listIdMap: [String: String] = ["301": "二手房",
+                                           "300": "新房",
                                            "302": "租房",
                                            "303": "小区"]
     var datas: [UserUnreadInnerMsg] = []
@@ -118,6 +118,7 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("click it \(datas[indexPath.row].id)")
         let vc = MessageListVC()
+        vc.messageId = datas[indexPath.row].id
         let nav = EnvContext.shared.rootNavController
         nav.pushViewController(vc, animated: true)
     }
