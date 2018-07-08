@@ -22,6 +22,7 @@
 		1991B01F0754C14DD8E0C050A27D30A9 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E5718C35A2E23645C3C242729A1DA /* LBSMapPageVC.swift */; };
 		1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216130F340A11375391C9F /* SearchFilterPanel.swift */; };
 		1A216510BC7286624889833D /* NeighborhoodDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */; };
+		1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */; };
 		1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */; };
 		1AB1C8BBCD418B1695B36A89A92C6B7F /* CityItemCellTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */; };
 		20591B23BD3979D8B1168FA7386F5F2D /* SearchNeighborhoodEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */; };
@@ -170,6 +171,7 @@
 		1A216130F340A11375391C9F /* SearchFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchFilterPanel.swift; sourceTree = "<group>"; };
 		1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinePageViewModel.swift; sourceTree = "<group>"; };
 		1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailPageViewModel.swift; sourceTree = "<group>"; };
+		1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
 		1BEB033643738EAE398EA57C1EC22B30 /* OpenAllCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAllCell.swift; sourceTree = "<group>"; };
 		1C92D94C585E1981284344F3EC7F4B7E /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				BC995B9AC18BCAECCB5CA7AE85425C6A /* MultiImageInfoCell.swift */,
 				9820139915E42DFCB282F99EF341BB87 /* SingleImageInfoCell.swift */,
 				466A91FD491E6D063A4D57E4083B6EA5 /* WebImageItemView.swift */,
+				1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1150,6 +1153,7 @@
 				1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */,
 				1A216510BC7286624889833D /* NeighborhoodDetailPageViewModel.swift in Sources */,
 				1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */,
+				1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

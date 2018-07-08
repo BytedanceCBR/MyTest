@@ -80,9 +80,12 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: SingleImageInfoCell.self)
             .addCellClass(cellType: NeighborhoodNameCell.self)
             .addCellClass(cellType: NeighborhoodPriceCell.self)
+            .addCellClass(cellType: NeighborhoodItemCell.self)
+
 }
 
 func getHomePageCellFactory() -> UITableViewCellFactory {
     return UITableViewCellFactory()
             .addCellClass(cellType: SingleImageInfoCell.self)
+            .addCellClass(cellType: NeighborhoodItemCell.self)
 }

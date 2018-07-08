@@ -36,8 +36,10 @@ class CategoryListViewModel: DetailPageViewModel {
         switch houseType {
         case .newHouse:
             requestNewHouseList(query: query)
-        default:
+        case .secondHandHouse:
             requestErshouHouseList(query: query)
+        default:
+            requestNeigborhoodList(query: query)
         }
     }
     
@@ -62,6 +64,21 @@ class CategoryListViewModel: DetailPageViewModel {
                     if let data = response?.data {
                         let dataParser = DetailDataParser.monoid()
                                 <- parseErshouHouseListItemNode(data.items)
+                        return dataParser.parser([])
+                    } else {
+                        return []
+                    }
+                }
+                .subscribe(onNext: reloadData())
+                .disposed(by: disposeBag)
+    }
+
+    func requestNeigborhoodList(query: String) {
+        requestNeighborhoodSearch(cityId: "133", query: query)
+                .map { response -> [TableSectionNode] in
+                    if let data = response?.data {
+                        let dataParser = DetailDataParser.monoid()
+                            <- parseNeighborhoodItemNode(data.items)
                         return dataParser.parser([])
                     } else {
                         return []

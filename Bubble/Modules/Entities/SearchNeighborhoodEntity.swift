@@ -71,6 +71,7 @@ struct NeighborhoodInnerItemEntity: Mappable {
     var gaodeLat: String?
     var baseInfoMap: BaseInfoMapItem?
     var images: [ImageItem]?
+    var displayStatusInfo: String?
     
     init?(map: Map) {
         
@@ -92,7 +93,7 @@ struct NeighborhoodInnerItemEntity: Mappable {
         baseInfoMap <- map["base_info_map"]
         gaodeLng <- map["gaode_lng"]
         gaodeLat <- map["gaode_lat"]
-
+        displayStatusInfo <- map["display_stats_info"]
     }
     
 }
