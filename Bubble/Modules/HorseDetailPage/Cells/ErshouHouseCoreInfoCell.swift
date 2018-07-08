@@ -107,7 +107,30 @@ fileprivate class ItemView: UIView {
     }
 }
 
+func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData) -> () -> TableSectionNode? {
+    return {
+        let cellRender = curry(fillNeighborhoodStatsInfoCell)(data)
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
+    }
+}
 
+func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? ErshouHouseCoreInfoCell, let statsInfo = data.statsInfo {
+        let infos = statsInfo.map { info -> ItemView in
+            let re = ItemView()
+            re.keyLabel.text = info.attr
+            re.valueLabel.text = info.value
+            return re
+        }
+        infos.first?.verticalLine.isHidden = true
+
+        theCell.setItem(items: infos)
+    }
+}
 
 func parseErshouHouseCoreInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
     return {

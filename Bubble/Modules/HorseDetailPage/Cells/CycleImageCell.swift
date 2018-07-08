@@ -86,7 +86,11 @@ func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData) -> () -> TableSec
         })
 
         let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: CycleImageCell.identifier))
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: CycleImageCell.identifier))
     }
 }
 
@@ -100,7 +104,32 @@ func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData) -> () ->
             }
         })
         let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: CycleImageCell.identifier))
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: CycleImageCell.identifier))
+    }
+}
+
+func parseCycleImageNode(_ images: [ImageItem]?) -> () -> TableSectionNode? {
+    return {
+        let imageItems = images?.map { (item) -> ImageModel in
+            if let url = item.url {
+                return ImageModel(url: url, category: "")
+            } else {
+                return ImageModel(url: "", category: "")
+            }
+         }
+        if imageItems == nil || imageItems?.count == 0 {
+            return nil
+        }
+        let cellRender = curry(fillCycleImageCell)(imageItems ?? [])
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: CycleImageCell.identifier))
     }
 }
 

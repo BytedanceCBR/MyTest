@@ -20,6 +20,12 @@ class BaseUITableViewCell: UITableViewCell {
     }
 }
 
+extension BaseUITableViewCell {
+    func addBottomLine() {
+        contentView.lu.addBottomBorder(color: hexStringToUIColor(hex: "#e8e8e8"), leading: 15, trailing: -15)
+    }
+}
+
 class UITableViewCellFactory {
 
     var cellClasses: [BaseUITableViewCell.Type] = []
@@ -72,6 +78,8 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: PropertyListCell.self)
             .addCellClass(cellType: NeighborhoodInfoCell.self)
             .addCellClass(cellType: SingleImageInfoCell.self)
+            .addCellClass(cellType: NeighborhoodNameCell.self)
+            .addCellClass(cellType: NeighborhoodPriceCell.self)
 }
 
 func getHomePageCellFactory() -> UITableViewCellFactory {

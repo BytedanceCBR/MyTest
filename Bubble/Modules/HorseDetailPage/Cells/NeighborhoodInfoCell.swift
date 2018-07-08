@@ -49,7 +49,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: "#999999")
-        re.text = "环比上涨"
+        re.text = "环比"
         return re
     }()
 

@@ -310,6 +310,25 @@ class LocationListViewModel: NSObject, UITableViewDataSource {
     }
 }
 
+func parseNeighorhoodNearByNode(_ data: NeighborhoodDetailData) -> () -> TableSectionNode {
+    return {
+        let cellRender = curry(fillNeighorhoodNearByCell)(data)
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: NewHouseNearByCell.identifier))
+    }
+}
+
+func fillNeighorhoodNearByCell(_ data: NeighborhoodDetailData, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? NewHouseNearByCell {
+        if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
+            theCell.setLocation(lat: lat, lng: lng)
+        }
+    }
+}
+
 func parseNewHouseNearByNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseNearByCell)(newHouseData)

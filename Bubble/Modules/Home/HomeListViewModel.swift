@@ -125,6 +125,16 @@ func openNewHouseDetailPage(houseId: Int64) -> () -> Void {
     }
 }
 
+func openNeighborhoodDetailPage(neighborhoodId: Int64) -> () -> Void {
+    return {
+        let detailPage = HorseDetailPageVC(
+            houseId: neighborhoodId,
+            houseType: .newHouse,
+            provider: getNeighborhoodDetailPageViewModel())
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+}
+
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 
     var datas: [TableSectionNode] = []

@@ -38,20 +38,14 @@ class HomeSpringBoardViewModel {
         let springItems: [HomeSpringBoardItemView] = [
             createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-ershoufang"), label: "二手房"),
             createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-xinfang"), label: "新房"),
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-zufang"), label: "租房"),
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), label: "找小区")
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), label: "找小区"),
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), label: "咨询")
         ]
 
         springItems.forEach { view in
             view.clickGesture.rx.event
                     .subscribe(onNext: { recognizer in
-                        let categoryVC = CategoryListPageVC()
-                        EnvContext.shared.rootNavController.pushViewController(categoryVC, animated: true)
-                        categoryVC.navBar.backBtn.rx.tap
-                                .subscribe(onNext: { void in
-                                    EnvContext.shared.rootNavController.popViewController(animated: true)
-                                })
-                                .disposed(by: self.disposeBag)
+                        openNeighborhoodDetailPage(neighborhoodId: 6569029726554489091)()
                     })
                     .disposed(by: disposeBag)
         }

@@ -21,13 +21,16 @@ class PropertyListCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        addBottomLine()
+
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
             maker.top.equalTo(2)
             maker.bottom.equalToSuperview().offset(-16)
             maker.left.right.equalToSuperview()
         }
-        contentView.lu.addBottomBorder(color: hexStringToUIColor(hex: "#e8e8e8"), leading: 15, trailing: -15)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -126,6 +129,75 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
             type: .node(identifier: PropertyListCell.identifier))
     }
 }
+
+func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData) -> () -> TableSectionNode? {
+    return {
+        let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: PropertyListCell.identifier))
+    }
+}
+
+func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? PropertyListCell {
+        let groups: [[NeighborhoodItemAttribute]]? = infos?.reduce([[], []]) { (result, info) -> [[NeighborhoodItemAttribute]] in
+            if info.isSingle == false {
+                return [result[0] + [info], result[1]]
+            } else {
+                return [result[0], result[1] + [info]]
+            }
+        }
+
+        if let groups = groups {
+
+            func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
+                rowView.keyLabel.text = info.attr
+                rowView.valueLabel.text = info.value
+            }
+
+            var twoValueView: [UIView] = []
+            groups[0].enumerated().forEach { (e) in
+                let (offset, info) = e
+                if (offset + 1) % 2 == 0 {
+                    let twoRow = TwoRowView()
+                    let row = RowView()
+                    setRowValue(info, row)
+                    twoRow.addSubview(row)
+                    twoValueView.append(twoRow)
+                } else {
+                    let twoRow = twoValueView.last
+                    let row = RowView()
+                    setRowValue(info, row)
+                    twoRow?.addSubview(row)
+                }
+            }
+
+            twoValueView.forEach { view in
+                view.subviews.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            }
+
+            twoValueView.forEach { view in
+                view.subviews.snp.makeConstraints { maker in
+                    maker.top.bottom.equalToSuperview()
+                    maker.height.equalTo(35)
+                }
+            }
+
+            let singleViews = groups[1].map { (info) -> UIView in
+                let re = RowView()
+                setRowValue(info, re)
+                return re
+            }
+
+            theCell.addRowView(rows: twoValueView + singleViews)
+        }
+    }
+}
+
+
 
 func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {

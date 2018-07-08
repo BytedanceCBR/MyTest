@@ -52,7 +52,7 @@ struct NeighborhoodItemAttribute: Mappable {
     mutating func mapping(map: Map) {
         self.attr <- map["attr"]
         self.value <- map["value"]
-        self.value <- map["is_single"]
+        self.isSingle <- map["is_single"]
     }
 }
 
@@ -60,19 +60,15 @@ struct NeighborhoodDetailInfo: Mappable {
     var id: String?
     var name: String?
     var pricingPerSqm: String?
-    var address: String?
     var monthUp: Float?
+    var address: String?
     var gaodeLng: String?
     var gaodeLat: String?
     var gaodeImageUrl: String?
-    var images: [ImageItem]?
-    var displayTitle: String?
-    var displaySubtitle: String?
-    var displayBuiltYear: String?
-    var displayDescription: String?
-    var houseType: Int?
-    var displayPricePerSqm: String?
-    var displayPrice: String?
+    var districtName: String?
+    var areaName: String?
+    var locationFullName: String?
+    var status: Int?
     
     
     
@@ -83,20 +79,16 @@ struct NeighborhoodDetailInfo: Mappable {
     mutating func mapping(map: Map) {
         id <- map["id"]
         name <- map["name"]
-        address <- map["address"]
-        monthUp <- map["month_up"]
         pricingPerSqm <- map["pricing_per_sqm"]
+        monthUp <- map["month_up"]
+        address <- map["address"]
         gaodeLng <- map["gaode_lng"]
         gaodeLat <- map["gaode_lat"]
         gaodeImageUrl <- map["gaode_image_url"]
-        images <- map["images"]
-        displayTitle <- map["display_title"]
-        displaySubtitle <- map["display_subtitle"]
-        displayDescription <- map["display_description"]
-        displayPrice <- map["display_price"]
-        displayBuiltYear <- map["display_built_year"]
-        houseType <- map["house_type"]
-        displayPricePerSqm <- map["display_price_per_sqm"]
+        districtName <- map["district_name"]
+        areaName <- map["area_name"]
+        locationFullName <- map["location_full_name"]
+        status <- map["status"]
     }
 }
 
@@ -152,7 +144,6 @@ struct NeighborhoodDetailData: Mappable {
     var totalSales: TotalSalesItem?
     var tags: [TagItem]?
     var neighbordhoodStatus: NeighborhoodUsertatus?
-    var images: [ImageItem]?
 
     
     init?(map: Map) {
