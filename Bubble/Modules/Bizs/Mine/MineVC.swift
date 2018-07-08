@@ -7,12 +7,27 @@
 //
 
 import UIKit
-
+import SnapKit
 class MineVC: UIViewController {
+
+    private var minePageViewModel: MinePageViewModel?
+
+    private lazy var tableView: UITableView = {
+        let re = UITableView()
+        re.separatorStyle = .none
+        return re
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "我的"
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+         }
+        minePageViewModel = MinePageViewModel(tableView: tableView)
+
+        minePageViewModel?.loadData()
         // Do any additional setup after loading the view.
     }
 
