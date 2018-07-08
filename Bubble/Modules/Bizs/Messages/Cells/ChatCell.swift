@@ -49,6 +49,8 @@ class ChatCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        contentView.lu.addBottomBorder(color: hexStringToUIColor(hex: "#e8e8e8"), leading: 15, trailing: -15)
+        
         contentView.addSubview(iconImageView)
         iconImageView.snp.makeConstraints { (maker) in
             maker.left.equalTo(14)
@@ -57,31 +59,31 @@ class ChatCell: BaseUITableViewCell {
             maker.height.width.equalTo(52)
         }
         
+        contentView.addSubview(rightLabel)
+        rightLabel.snp.makeConstraints { maker in
+            maker.top.equalTo(13)
+            maker.right.equalToSuperview().offset(-13)
+            maker.width.greaterThanOrEqualTo(28).priority(.high)
+            maker.height.equalTo(17)
+        }
+
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.top.equalTo(12.5)
-            maker.left.equalTo(77)
-//            maker.left.equalTo(iconImageView.snp.right).offset(11)
-            maker.bottom.equalToSuperview().offset(-13.5)
-            maker.width.greaterThanOrEqualTo(283)
+            maker.left.equalTo(iconImageView.snp.right).offset(11)
+            maker.right.equalTo(rightLabel.snp.left).offset(4)
+            maker.height.equalTo(22)
         }
-        
+
         contentView.addSubview(secondaryLabel)
         secondaryLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(39.5)
-            maker.left.equalTo(77)
-            maker.bottom.equalToSuperview().offset(-13.5)
-            maker.width.greaterThanOrEqualTo(283)
+            maker.top.equalTo(label.snp.bottom).offset(5)
+            maker.left.equalTo(label.snp.left)
+            maker.right.equalTo(label.snp.right)
+            maker.height.equalTo(17)
         }
         
-        contentView.addSubview(rightLabel)
-        rightLabel.snp.makeConstraints { maker in
 
-            maker.top.equalTo(15)
-            maker.right.equalToSuperview().offset(-10)
-            maker.left.equalTo(label.snp.right).offset(5).priority(.high)
-            maker.width.greaterThanOrEqualTo(28).priority(.high)
-        }
         
     }
     

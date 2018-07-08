@@ -12,91 +12,88 @@ import RxCocoa
 import RxSwift
 
 class MessageListVC: BaseViewController, UITableViewDelegate {
-
+    
     lazy var tableView: UITableView = {
-        let re = UITableView()
+        let re = UITableView(frame: CGRect.zero, style: .grouped)
         re.separatorStyle = .none
+        if #available(iOS 11.0, *) {
+            re.contentInsetAdjustmentBehavior = .never
+        }
         return re
     }()
-
+    
     let disposeBag = DisposeBag()
     
     lazy var tableListViewModel: ChatDetailListTableViewModel = {
         ChatDetailListTableViewModel()
     }()
     
+    var messageId: String?
+    
+    private var minCursor: String?
+    
+    private let limit = "10"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         // Do any additional setup after loading the view.
-        
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints { (maker) in
+            maker.top.bottom.right.left.equalToSuperview()
+        }
         tableView.dataSource = tableListViewModel
         tableView.delegate = tableListViewModel
         
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
-        tableView.reloadData()
-
-        requestUserList(listId: "303", minCursor: "", limit: "10", query: "")
-            .subscribe(onNext: { [unowned self] (responsed) in
-
+        if let messageId = messageId {
+            requestUserList(listId: messageId, minCursor: "", limit: "10", query: "")
+                .subscribe(onNext: { [unowned self] (responsed) in
+                    
                     if let responseData = responsed?.data?.items {
-                                            let minCursor = responsed?.data?.minCursor
-                                            let hasMore = responsed?.data?.hasMore
-                        print("======= 11111111 ===\(String(describing: minCursor))==\(hasMore)=====\(responseData)=")
-
+                        let minCursor = responsed?.data?.minCursor
+                        let hasMore = responsed?.data?.hasMore
                         self.tableListViewModel.datas = responseData
                         self.tableView.reloadData()
                     }
-                
-                }, onError: { (error) in
-                    print(error)
-            })
-            .disposed(by: disposeBag)
+                    
+                    }, onError: { (error) in
+                        print(error)
+                })
+                .disposed(by: disposeBag)
+        }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }
 
 class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDataSource {
-    let imageIconMap: [String: UIImage] = ["300": UIImage(named: "icon-ershoufang")!,
-                                           "301": UIImage(named: "icon-ershoufang")!,
-                                           "302": UIImage(named: "icon-ershoufang")!,
-                                           "303": UIImage(named: "icon-ershoufang")!]
     
     var datas: [UserListMsgItem] = []
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("======= 55555555 \(datas.count) =======")
-
         return datas.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let data = datas[section].items {
-            print("======= 666666666 \(data.count) =======")
             return data.count
         }
-        print("======= 7777777 =======")
-
+        
         return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("======= 44444 =======")
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: ChatDetailListCell.identifier, for: indexPath)
         if let theCell = cell as? ChatDetailListCell {
-            print("======= 11111 =======")
-
+            
             if let items = datas[indexPath.section].items {
-                print("======= 00000 =======")
-
                 let data = items[indexPath.row]
-
                 theCell.majorTitle.text = data.title
                 theCell.extendTitle.text = data.description
                 let text = NSMutableAttributedString()
@@ -110,20 +107,16 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 })
                 
                 theCell.areaLabel.attributedText = text
+                theCell.priceLabel.text = data.price
+                theCell.roomSpaceLabel.text = data.pricePerSqm
                 
-                theCell.priceLabel.text = data.pricePerSqm
-                theCell.roomSpaceLabel.text = ""
-                theCell.majorImageView.image = imageIconMap["301"]
-
-//                if let img = data.courtImage?.first , let url = img.url {
-//                    theCell.setImageByUrl(url)
-//                }
-                print("======= 22222 =======")
-
+                if let img = data.images?.first , let url = img.url {
+                    theCell.setImageByUrl(url)
+                }
+                
             }
         }
-        print("======= 333333 =======")
-
+        
         return cell ?? ChatDetailListCell()
     }
     
@@ -132,13 +125,45 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = CategorySectionView()
-        view.categoryLabel.text = datas[section].title
+        let view = UserMsgSectionView()
+        view.tipsLabel.text = datas[section].title
+        view.dateLabel.text = datas[section].dateStr
         return view
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
 
-
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let houseId = datas[indexPath.section].items?[indexPath.row].id {
+            var houseType: HouseType = .newHouse
+            if let houseTypeId = datas[indexPath.section].items?[indexPath.row].houseType {
+                if houseTypeId == 1 {
+                    houseType  = .newHouse
+                } else if houseTypeId == 2 {
+                    houseType  = .secondHandHouse
+                } else if houseTypeId == 3 {
+                    houseType  = .rentHouse
+                } else if houseTypeId == 4 {
+                    houseType  = .neighborhood
+                } else {
+                    print("error houseType \(houseTypeId)")
+                }
+            }
+            switch houseType {
+            case .newHouse:
+                openNewHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+            case .secondHandHouse:
+                openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+            default:
+                openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+            }
+        }
+    }
+    
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
