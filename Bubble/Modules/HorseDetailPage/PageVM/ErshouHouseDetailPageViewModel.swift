@@ -114,12 +114,15 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = ershouHouseData.value?.data {
+
+            let openBeighBor = openFloorPanDetailPage(floorPanId: data.neighborhoodInfo?.id)
+
             let dataParser = DetailDataParser.monoid()
                     <- parseErshouHouseCycleImageNode(data)
                     <- parseErshouHouseNameNode(data)
                     <- parseErshouHouseCoreInfoNode(data)
                     <- parsePropertyListNode(data)
-                    <- parseHeaderNode("小区详情", showLoadMore: true)
+                    <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: true, process: openBeighBor)
                     <- parseNeighborhoodInfoNode(data)
                     <- parseHeaderNode("同小区房源") { [unowned self] in
                         self.relateNeighborhoodData.value != nil
@@ -140,6 +143,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
+        }
+    }
+
+    fileprivate func openFloorPanDetailPage(floorPanId: String?) -> () -> Void {
+        return { [unowned self] in
+            if let floorPanId = floorPanId, let id = Int64(floorPanId) {
+                openNeighborhoodDetailPage(neighborhoodId: Int64(id), disposeBag: self.disposeBag)()
+            }
         }
     }
 }
@@ -180,7 +191,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
+        datas[indexPath.section].selectors?[indexPath.row]()
     }
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {

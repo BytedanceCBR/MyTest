@@ -91,7 +91,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
-                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)

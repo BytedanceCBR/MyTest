@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import BDWebImage
+import RxSwift
 class NeighborhoodInfoCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -141,9 +142,15 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 }
 
 func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
+    let disposeBag = DisposeBag()
     return {
         let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)
-        return TableSectionNode(items: [render], selectors: nil, label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
+        let selector = {
+            if let neighborhoodId = ershouHouseData.neighborhoodInfo?.id, let id = Int64(neighborhoodId) {
+                openNeighborhoodDetailPage(neighborhoodId: id, disposeBag: disposeBag)()
+            }
+        }
+        return TableSectionNode(items: [render], selectors: [selector], label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 

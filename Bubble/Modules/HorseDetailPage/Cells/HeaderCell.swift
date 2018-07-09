@@ -25,6 +25,7 @@ class HeaderCell: BaseUITableViewCell {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: "#707070")
+        re.textAlignment = .right
         re.text = "查看更多"
         re.isHidden = true
         return re
@@ -58,7 +59,7 @@ class HeaderCell: BaseUITableViewCell {
         loadMore.snp.makeConstraints { maker in
             maker.top.equalTo(20)
             maker.height.equalTo(14)
-            maker.width.equalTo(56)
+            maker.width.equalTo(66)
             maker.right.equalTo(arrowsImg.snp.left)
          }
     }
@@ -88,7 +89,7 @@ class HeaderCell: BaseUITableViewCell {
 func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.timeLine?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("楼盘动态")(false)
+            let cellRender = curry(fillHeaderCell)("楼盘动态")("查看更多 >")(false)
             return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
@@ -99,8 +100,12 @@ func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
 func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.floorPan?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("楼盘户型")(false)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
+            let cellRender = curry(fillHeaderCell)("楼盘户型")("查看更多 >")(false)
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -110,8 +115,12 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
 func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.comment?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("全网点评")(false)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
+            let cellRender = curry(fillHeaderCell)("全网点评")("查看更多 >")(false)
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                label: "",
+                type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -120,21 +129,32 @@ func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
 
 func parseHeaderNode(
         _ title: String,
+        subTitle: String = "查看更多 >",
         showLoadMore: Bool = false,
+        process: TableCellSelectedProcess? = nil,
         filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHeaderCell)(title)(showLoadMore)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
+            let cellRender = curry(fillHeaderCell)(title)(subTitle)(showLoadMore)
+            var selectors: [TableCellSelectedProcess] = []
+            if process != nil {
+                selectors.append(process!)
+            }
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: selectors,
+                label: "",
+                type: .node(identifier: HeaderCell.identifier))
         }
     }
 }
 
-func fillHeaderCell(_ title: String, showLoadMore: Bool, cell: BaseUITableViewCell) -> Void {
+func fillHeaderCell(_ title: String, subTitle: String, showLoadMore: Bool, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HeaderCell {
         theCell.label.text = title
+        theCell.loadMore.text = subTitle
         theCell.arrowsImg.isHidden = !showLoadMore
         theCell.loadMore.isHidden = !showLoadMore
     }

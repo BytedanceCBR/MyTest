@@ -71,6 +71,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
                              NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999")])
         result.setAttributedTitle(attriStr, for: .normal)
         result.backgroundColor = hexStringToUIColor(hex: "#f6f7f8")
+        result.layer.cornerRadius = 5
         return result
     }()
 

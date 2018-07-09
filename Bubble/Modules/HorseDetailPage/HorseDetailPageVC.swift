@@ -126,7 +126,6 @@ class HorseDetailPageVC: BaseViewController {
         navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
         navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
         self.detailPageViewModel?.titleValue
-                .debug()
                 .subscribe(onNext: { [unowned self] title in
                     self.navBar.title.text = title
                 })
