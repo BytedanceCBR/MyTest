@@ -139,27 +139,19 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let houseId = datas[indexPath.section].items?[indexPath.row].id {
-            var houseType: HouseType = .newHouse
             if let houseTypeId = datas[indexPath.section].items?[indexPath.row].houseType {
-                if houseTypeId == 1 {
-                    houseType  = .newHouse
-                } else if houseTypeId == 2 {
-                    houseType  = .secondHandHouse
-                } else if houseTypeId == 3 {
-                    houseType  = .rentHouse
-                } else if houseTypeId == 4 {
-                    houseType  = .neighborhood
-                } else {
-                    print("error houseType \(houseTypeId)")
+                var houseType: HouseType = HouseType(rawValue: houseTypeId) ?? .newHouse
+
+                switch houseType {
+                case .newHouse:
+                    openNewHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+                case .secondHandHouse:
+                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+                default:
+                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
                 }
-            }
-            switch houseType {
-            case .newHouse:
-                openNewHouseDetailPage(houseId: Int64(houseId) ?? 0)()
-            case .secondHandHouse:
-                openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
-            default:
-                openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+            } else {
+                assertionFailure()
             }
         }
     }
