@@ -217,7 +217,7 @@ open class PageableViewModel: NSObject {
         if selectedIndex > cacheViewCount - 1 {
             assertionFailure("选择视图错误")
         }
-        return pageViewProviders[selectedIndex + 1]
+        return pageViewProviders[selectedIndex]
     }
 
     var providerSelector: (Int) -> PageViewProvider {
@@ -237,7 +237,7 @@ open class PageableViewModel: NSObject {
         if pageViewCache.count <= selectedIndex + 1 {
             return nil
         } else {
-            return pageViewCache[selectedIndex + 1]
+            return pageViewCache[selectedIndex]
         }
     }
 

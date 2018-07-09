@@ -139,6 +139,7 @@ func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> Voi
         let detailPage = HorseDetailPageVC(
                 houseId: houseId,
                 houseType: .newHouse,
+                isShowBottomBar: true,
                 provider: getNewHouseDetailPageViewModel())
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in

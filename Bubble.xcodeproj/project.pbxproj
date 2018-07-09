@@ -26,6 +26,7 @@
 		1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216130F340A11375391C9F /* SearchFilterPanel.swift */; };
 		1A2161A06C3D06237E08037D /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161278B48B3E743D0C879 /* TGBlank.swift */; };
 		1A2161E17EEE35E54D26DAC8 /* TGBallZigZagDeflect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21674A77879C6FC6F6609B /* TGBallZigZagDeflect.swift */; };
+		1A2161F4A4D8D46994A7C896 /* HouseDetailPageBottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */; };
 		1A216228E8C6E3B306406ED0 /* TGLineScaleParty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D26A226441BE7229EAF /* TGLineScaleParty.swift */; };
 		1A21629CE94C9A1C376043A2 /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167CD1061349E54FA15E5 /* TGBallRotateChase.swift */; };
 		1A216315E9ED79B0457E0162 /* TGSquarePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21608C271598A73C54946E /* TGSquarePulse.swift */; };
@@ -242,6 +243,7 @@
 		1A21674A77879C6FC6F6609B /* TGBallZigZagDeflect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZagDeflect.swift; sourceTree = "<group>"; };
 		1A2167CD1061349E54FA15E5 /* TGBallRotateChase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotateChase.swift; sourceTree = "<group>"; };
 		1A2167EC5382D17FF10C26D1 /* TGSemiCircleSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSemiCircleSpin.swift; sourceTree = "<group>"; };
+		1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseDetailPageBottomBarView.swift; sourceTree = "<group>"; };
 		1A216908E1C9436BB0C4A8B3 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
 		1A2169B889E3C6B82935A118 /* TGTriangleSkewSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGTriangleSkewSpin.swift; sourceTree = "<group>"; };
 		1A2169C8AA71AFA63A303D40 /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
@@ -459,6 +461,7 @@
 				0519AB3E142A51425726AD97ECC40136 /* HouseDetailPageVC.swift */,
 				590AF2F930C76F1456C0C8D79D102904 /* SlidePageView.swift */,
 				B636A6928B9B98220C40EDDF4311ED6A /* UITableViewCellFactory.swift */,
+				1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */,
 			);
 			path = HorseDetailPage;
 			sourceTree = "<group>";
@@ -1350,6 +1353,7 @@
 				1A216BCC424FE6ACE3F3F323 /* TGBallPulse.swift in Sources */,
 				1A216D051C33589EC371CABF /* TGBallPulseSync.swift in Sources */,
 				1A216CD5C5E78DFB30D69440 /* TGSquareGridPulse.swift in Sources */,
+				1A2161F4A4D8D46994A7C896 /* HouseDetailPageBottomBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

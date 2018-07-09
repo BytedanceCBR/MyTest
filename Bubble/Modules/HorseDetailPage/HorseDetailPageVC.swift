@@ -39,10 +39,20 @@ class HorseDetailPageVC: BaseViewController {
         return result
     }()
 
+    private lazy var bottomBar: HouseDetailPageBottomBarView = {
+        let re = HouseDetailPageBottomBarView()
+        return re
+    }()
 
-    init(houseId: Int64, houseType: HouseType, provider: @escaping DetailPageViewModelProvider) {
+    var isShowBottomBar: Bool
+
+    init(houseId: Int64,
+         houseType: HouseType,
+         isShowBottomBar: Bool = false,
+         provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
         self.houseType = houseType
+        self.isShowBottomBar = isShowBottomBar
         self.pageViewModelProvider = provider
         super.init(nibName: nil, bundle: nil)
         self.automaticallyAdjustsScrollViewInsets = false
@@ -58,9 +68,21 @@ class HorseDetailPageVC: BaseViewController {
 
         setupNavBar()
 
+        if isShowBottomBar {
+            view.addSubview(bottomBar)
+            bottomBar.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+            }
+        }
+
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.top.bottom.left.right.equalToSuperview()
+            if isShowBottomBar {
+                maker.top.right.left.equalToSuperview()
+                maker.bottom.equalTo(bottomBar.snp.top)
+            } else {
+                maker.top.bottom.left.right.equalToSuperview()
+            }
         }
         detailPageViewModel = pageViewModelProvider?(tableView)
         detailPageViewModel?.requestData(houseId: houseId)

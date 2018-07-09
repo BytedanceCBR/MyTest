@@ -11,17 +11,16 @@ import SnapKit
 
 class SimpleNavBar: UIView {
 
+    lazy var bgView: UIView = {
+        let re = UIView()
+        re.alpha = 0.5
+        return re
+    }()
+
     lazy var backBtn: UIButton = {
         let btn = UIButton()
         btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
-    }()
-
-    lazy var backBtnMaskView: UIView = {
-        let re = UIView()
-        re.layer.cornerRadius = 4
-        re.backgroundColor = color(0, 0, 0, 0.08)
-        return re
     }()
 
     lazy var title: UILabel = {
@@ -35,15 +34,16 @@ class SimpleNavBar: UIView {
         return re
     }()
 
-    lazy var rightBtnMaskView: UIView = {
-        let re = UIView()
-        re.layer.cornerRadius = 4
-        re.backgroundColor = color(0, 0, 0, 0.08)
-        return re
-    }()
+    var gradientlayer: CAGradientLayer?
 
     init(hiddenMaskBtn: Bool = true) {
         super.init(frame: CGRect.zero)
+
+        addSubview(bgView)
+        bgView.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+        }
+
         addSubview(backBtn)
         backBtn.snp.makeConstraints { maker in
             maker.left.equalTo(12)
@@ -52,23 +52,11 @@ class SimpleNavBar: UIView {
             maker.bottom.equalTo(-10)
         }
 
-        addSubview(backBtnMaskView)
-        backBtnMaskView.snp.makeConstraints { maker in
-            maker.center.equalTo(backBtn.snp.center)
-            maker.width.height.equalTo(30)
-        }
-
         addSubview(rightBtn)
         rightBtn.snp.makeConstraints { maker in
             maker.centerY.equalTo(backBtn.snp.centerY)
             maker.width.height.equalTo(24).priority(.high)
             maker.right.equalTo(-12)
-        }
-
-        addSubview(rightBtnMaskView)
-        rightBtnMaskView.snp.makeConstraints { maker in
-            maker.center.equalTo(rightBtn.snp.center)
-            maker.width.height.equalTo(30)
         }
 
         addSubview(title)
@@ -79,19 +67,32 @@ class SimpleNavBar: UIView {
             maker.centerX.equalToSuperview()
             maker.right.equalTo(rightBtn.snp.left).priority(.low)
         }
+        setGradientColor()
+    }
+    
+    func setGradientColor() {
+        let topColor = color(0, 0, 0, 1)
+        let bottomColor = color(0, 0, 0, 0)
+        let gradientColors = [topColor.cgColor, bottomColor.cgColor]
+        let gradientLocations:[NSNumber] = [0.0, 1.0]
 
-        backBtnMaskView.isHidden = hiddenMaskBtn
-        rightBtnMaskView.isHidden = hiddenMaskBtn
-
-        bringSubview(toFront: backBtn)
-        bringSubview(toFront: rightBtn)
-
+        gradientlayer = CAGradientLayer()
+        gradientlayer?.colors = gradientColors
+        gradientlayer?.locations = gradientLocations
+        gradientlayer?.frame = self.frame
+        if let gradientlayer = gradientlayer {
+            bgView.layer.insertSublayer(gradientlayer, at: 0)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientlayer?.frame = self.bounds
+    }
 }
 
 class SearchNavBar: UIView {

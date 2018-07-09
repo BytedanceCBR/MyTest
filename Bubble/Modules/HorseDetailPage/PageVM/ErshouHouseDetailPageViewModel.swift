@@ -260,6 +260,7 @@ func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> 
         let detailPage = HorseDetailPageVC(
             houseId: houseId,
             houseType: .newHouse,
+            isShowBottomBar: true,
             provider: getErshouHouseDetailPageViewModel())
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in

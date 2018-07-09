@@ -228,7 +228,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
 extension HomeViewController {
     private func openCountryList() {
-        print("openCountryList")
         let vc = CountryListVC()
         vc.onClose = { _ in
             EnvContext.shared.rootNavController.popViewController(animated: true)

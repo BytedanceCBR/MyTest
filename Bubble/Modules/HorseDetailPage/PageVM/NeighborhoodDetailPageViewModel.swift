@@ -70,7 +70,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     func requestReletedData() {
         if let neighborhoodId = neighborhoodDetailResponse.value?.data?.neighborhoodInfo?.id {
             requestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId)
-                    .debug("requestReletedData")
                     .subscribe(onNext: { [unowned self] response in
                         self.relateNeighborhoodData.accept(response)
                     })
@@ -79,7 +78,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
             requestSearch(
                     cityId: "133",
                     query: "&neighborhood_id=\(neighborhoodId)")
-                    .debug("requestReletedData")
                     .subscribe(onNext: { [unowned self] response in
                         self.houseInSameNeighborhood.accept(response)
                     })
