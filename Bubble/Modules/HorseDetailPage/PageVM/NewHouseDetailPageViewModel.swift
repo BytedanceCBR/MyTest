@@ -33,7 +33,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         requestNewHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
-                        self.titleValue.accept(response.data?.title)
+                        self.titleValue.accept(response.data?.coreInfo?.name)
                         let result = self.processData(response: response)([])
                         self.dataSource.datas = result
                         self.tableView?.reloadData()

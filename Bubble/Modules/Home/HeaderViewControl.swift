@@ -15,11 +15,7 @@ enum HomeHeaderState {
 
 class HomeHeaderStateControl {
 
-    private var state: HomeHeaderState = .suspend {
-        didSet {
-            print("HomeHeaderStateControl \(state)")
-        }
-    }
+    private var state: HomeHeaderState = .suspend
 
     var onStateChanged: ((HomeHeaderState) -> Void)?
 
