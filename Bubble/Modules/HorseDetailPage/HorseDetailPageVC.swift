@@ -26,7 +26,7 @@ class HorseDetailPageVC: BaseViewController {
     private var pageViewModelProvider: DetailPageViewModelProvider?
 
     var navBar: SimpleNavBar = {
-        let re = SimpleNavBar()
+        let re = SimpleNavBar(hiddenMaskBtn: false)
         return re
     }()
 

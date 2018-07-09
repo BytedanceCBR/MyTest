@@ -17,6 +17,13 @@ class SimpleNavBar: UIView {
         return btn
     }()
 
+    lazy var backBtnMaskView: UIView = {
+        let re = UIView()
+        re.layer.cornerRadius = 4
+        re.backgroundColor = color(0, 0, 0, 0.08)
+        return re
+    }()
+
     lazy var title: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -28,7 +35,14 @@ class SimpleNavBar: UIView {
         return re
     }()
 
-    init() {
+    lazy var rightBtnMaskView: UIView = {
+        let re = UIView()
+        re.layer.cornerRadius = 4
+        re.backgroundColor = color(0, 0, 0, 0.08)
+        return re
+    }()
+
+    init(hiddenMaskBtn: Bool = true) {
         super.init(frame: CGRect.zero)
         addSubview(backBtn)
         backBtn.snp.makeConstraints { maker in
@@ -38,11 +52,23 @@ class SimpleNavBar: UIView {
             maker.bottom.equalTo(-10)
         }
 
+        addSubview(backBtnMaskView)
+        backBtnMaskView.snp.makeConstraints { maker in
+            maker.center.equalTo(backBtn.snp.center)
+            maker.width.height.equalTo(30)
+        }
+
         addSubview(rightBtn)
         rightBtn.snp.makeConstraints { maker in
             maker.centerY.equalTo(backBtn.snp.centerY)
             maker.width.height.equalTo(24).priority(.high)
             maker.right.equalTo(-12)
+        }
+
+        addSubview(rightBtnMaskView)
+        rightBtnMaskView.snp.makeConstraints { maker in
+            maker.center.equalTo(rightBtn.snp.center)
+            maker.width.height.equalTo(30)
         }
 
         addSubview(title)
@@ -53,6 +79,12 @@ class SimpleNavBar: UIView {
             maker.centerX.equalToSuperview()
             maker.right.equalTo(rightBtn.snp.left).priority(.low)
         }
+
+        backBtnMaskView.isHidden = hiddenMaskBtn
+        rightBtnMaskView.isHidden = hiddenMaskBtn
+
+        bringSubview(toFront: backBtn)
+        bringSubview(toFront: rightBtn)
 
     }
 
