@@ -25,6 +25,11 @@ class HorseDetailPageVC: BaseViewController {
 
     private var pageViewModelProvider: DetailPageViewModelProvider?
 
+    var navBar: SimpleNavBar = {
+        let re = SimpleNavBar()
+        return re
+    }()
+
     private lazy var tableView: UITableView = {
         let result = UITableView()
         result.separatorStyle = .none
@@ -50,12 +55,26 @@ class HorseDetailPageVC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+
+        setupNavBar()
+
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.bottom.left.right.equalToSuperview()
         }
         detailPageViewModel = pageViewModelProvider?(tableView)
         detailPageViewModel?.requestData(houseId: houseId)
+
+        view.bringSubview(toFront: navBar)
+    }
+
+    private func setupNavBar() {
+        view.addSubview(navBar)
+        navBar.snp.makeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+        }
+        navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
+        navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
     }
 
     override func viewWillAppear(_ animated: Bool) {

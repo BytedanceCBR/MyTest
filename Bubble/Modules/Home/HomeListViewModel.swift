@@ -28,14 +28,14 @@ class HomeListViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         requestHouseRecommend()
-                .map { response -> [TableSectionNode] in
+                .map { [unowned self] response -> [TableSectionNode] in
                     if let data = response?.data {
                         let dataParser = DetailDataParser.monoid()
-                            <- parseErshouHouseListItemNode(data.house?.items)
+                            <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag)
                             <- parseOpenAllNode(true) { [unowned self] in
                                 self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
                             }
-                            <- parseNewHouseListItemNode(data.court?.items)
+                            <- parseNewHouseListItemNode(data.court?.items, disposeBag: self.disposeBag)
                             <- parseOpenAllNode(true) {
                                 self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
                             }
@@ -73,12 +73,12 @@ class HomeListViewModel: DetailPageViewModel {
 
 }
 
-func parseNewHouseListItemNode(_ data: [CourtItemInnerEntity]?) -> () -> TableSectionNode? {
+func parseNewHouseListItemNode(_ data: [CourtItemInnerEntity]?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let selectors = data?
                 .filter { $0.id != nil }
                 .map { Int64($0.id!) }
-                .map { openNewHouseDetailPage(houseId: $0!) }
+            .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag) }
         if let renders = data?.map(curry(fillNewHouseListitemCell)), let selectors = selectors {
             return TableSectionNode(
                     items: renders,
@@ -91,11 +91,11 @@ func parseNewHouseListItemNode(_ data: [CourtItemInnerEntity]?) -> () -> TableSe
     }
 }
 
-func paresNewHouseListRowItemNode(_ data: [CourtItemInnerEntity]?) -> [TableRowNode] {
+func paresNewHouseListRowItemNode(_ data: [CourtItemInnerEntity]?, disposeBag: DisposeBag) -> [TableRowNode] {
     let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openNewHouseDetailPage(houseId: $0!) }
+            .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag) }
     if let renders = data?.map(curry(fillNewHouseListitemCell)), let selectors = selectors {
 
         return zip(renders, selectors).map { (e) -> TableRowNode in
@@ -134,22 +134,32 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity, cell: BaseUITableVie
     }
 }
 
-func openNewHouseDetailPage(houseId: Int64) -> () -> Void {
+func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
                 houseId: houseId,
                 houseType: .newHouse,
                 provider: getNewHouseDetailPageViewModel())
+        detailPage.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }
 
-func openNeighborhoodDetailPage(neighborhoodId: Int64) -> () -> Void {
+func openNeighborhoodDetailPage(neighborhoodId: Int64, disposeBag: DisposeBag) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
             houseId: neighborhoodId,
             houseType: .newHouse,
             provider: getNeighborhoodDetailPageViewModel())
+        detailPage.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }

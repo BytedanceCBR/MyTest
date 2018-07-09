@@ -33,7 +33,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     private var minCursor: String?
     
     private let limit = "10"
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -51,8 +51,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
                 .subscribe(onNext: { [unowned self] (responsed) in
                     
                     if let responseData = responsed?.data?.items {
-                        let minCursor = responsed?.data?.minCursor
-                        let hasMore = responsed?.data?.hasMore
+//                        let minCursor = responsed?.data?.minCursor
+//                        let hasMore = responsed?.data?.hasMore
                         self.tableListViewModel.datas = responseData
                         self.tableView.reloadData()
                     }
@@ -74,6 +74,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
 class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDataSource {
     
     var datas: [UserListMsgItem] = []
+
+    let disposeBag = DisposeBag()
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return datas.count
@@ -144,11 +146,11 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
                 switch houseType {
                 case .newHouse:
-                    openNewHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+                    openNewHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag)()
                 case .secondHandHouse:
-                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag)()
                 default:
-                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0)()
+                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag)()
                 }
             } else {
                 assertionFailure()

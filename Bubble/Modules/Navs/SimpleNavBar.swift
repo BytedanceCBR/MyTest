@@ -23,6 +23,11 @@ class SimpleNavBar: UIView {
         return label
     }()
 
+    lazy var rightBtn: UIButton = {
+        let re = UIButton()
+        return re
+    }()
+
     init() {
         super.init(frame: CGRect.zero)
         addSubview(backBtn)
@@ -30,15 +35,25 @@ class SimpleNavBar: UIView {
             maker.left.equalTo(12)
             maker.width.height.equalTo(24)
             maker.top.equalTo(30)
+            maker.bottom.equalTo(-10)
+        }
+
+        addSubview(rightBtn)
+        rightBtn.snp.makeConstraints { maker in
+            maker.centerY.equalTo(backBtn.snp.centerY)
+            maker.width.height.equalTo(24).priority(.high)
+            maker.right.equalTo(-12)
         }
 
         addSubview(title)
         title.snp.makeConstraints { maker in
             maker.top.equalTo(28)
-            maker.left.equalTo(backBtn.snp.right)
+            maker.left.equalTo(backBtn.snp.right).offset(10)
             maker.height.equalTo(28)
             maker.centerX.equalToSuperview()
+            maker.right.equalTo(rightBtn.snp.left).priority(.low)
         }
+
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -51,9 +51,9 @@ class CategoryListViewModel: DetailPageViewModel {
         let loader = pageRequestCourtSearch(cityId: "133", query: query)
         pageableLoader = { [unowned self] in
             loader()
-                .map { response -> [TableRowNode] in
+                .map { [unowned self] response -> [TableRowNode] in
                     if let data = response?.data {
-                        return paresNewHouseListRowItemNode(data.items)
+                        return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag)
                     } else {
                         return []
                     }
@@ -68,9 +68,9 @@ class CategoryListViewModel: DetailPageViewModel {
         let loader = pageRequestErshouHouseSearch(cityId: "133", query: query)
         pageableLoader = { [unowned self] in
             loader()
-                    .map { response -> [TableRowNode] in
+                    .map { [unowned self] response -> [TableRowNode] in
                         if let data = response?.data {
-                            return parseErshouHouseListRowItemNode(data.items)
+                            return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag)
                         } else {
                             return []
                         }
@@ -85,9 +85,9 @@ class CategoryListViewModel: DetailPageViewModel {
         let loader = pageRequestNeighborhoodSearch(cityId: "133", query: query)
         pageableLoader = { [unowned self] in
             loader()
-                    .map { response -> [TableRowNode] in
+                    .map { [unowned self] response -> [TableRowNode] in
                         if let data = response?.data {
-                            return parseNeighborhoodRowItemNode(data.items)
+                            return parseNeighborhoodRowItemNode(data.items, disposeBag: self.disposeBag)
                         } else {
                             return []
                         }

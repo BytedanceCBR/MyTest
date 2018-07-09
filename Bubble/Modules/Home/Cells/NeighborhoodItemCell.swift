@@ -8,6 +8,7 @@ import SnapKit
 import BDWebImage
 import YYText
 import CoreGraphics
+import RxSwift
 class NeighborhoodItemCell: BaseUITableViewCell {
 
     override open class var identifier: String {
@@ -144,12 +145,12 @@ class NeighborhoodItemCell: BaseUITableViewCell {
     }
 }
 
-func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?) -> () -> TableSectionNode?  {
+func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, disposeBag: DisposeBag) -> () -> TableSectionNode?  {
     return {
         let selectors = items?
                 .filter { $0.id != nil }
                 .map { Int64($0.id!) }
-                .map { openNeighborhoodDetailPage(neighborhoodId: $0!) }
+                .map { openNeighborhoodDetailPage(neighborhoodId: $0!, disposeBag: disposeBag) }
         if let renders = items?.map(curry(fillNeighborhoodItemCell)), let selectors = selectors {
             return TableSectionNode(
                     items: renders,
@@ -162,11 +163,11 @@ func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?) -> () ->
     }
 }
 
-func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?) -> [TableRowNode]  {
+func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, disposeBag: DisposeBag) -> [TableRowNode]  {
     let selectors = items?
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
-        .map { openNeighborhoodDetailPage(neighborhoodId: $0!) }
+        .map { openNeighborhoodDetailPage(neighborhoodId: $0!, disposeBag: disposeBag) }
     if let renders = items?.map(curry(fillNeighborhoodItemCell)), let selectors = selectors {
         return zip(selectors, renders).map({ (e) -> TableRowNode in
             let (selector, render) = e

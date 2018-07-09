@@ -71,7 +71,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     func requestData(houseId: Int64) {
 
         requestErshouHouseDetail(houseId: houseId)
-                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.ershouHouseData.accept(response)
@@ -82,7 +81,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 })
                 .disposed(by: disposeBag)
         requestRelatedHouseSearch(houseId: "\(houseId)")
-            .debug("requestRelatedErshouHouse")
             .subscribe(onNext: { [unowned self] response in
                 self.relateErshouHouseData.accept(response)
             })
@@ -134,7 +132,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
 
                     }
-                    <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items)
+                    <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag)
                     <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
@@ -197,12 +195,12 @@ func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
     }
 }
 
-func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?) -> () -> TableSectionNode? {
+func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openErshouHouseDetailPage(houseId: $0!) }
+            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag) }
         if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
             return TableSectionNode(
                 items: renders,
@@ -215,11 +213,11 @@ func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?) -> () -> Tabl
     }
 }
 
-func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?) -> [TableRowNode] {
+func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: DisposeBag) -> [TableRowNode] {
     let selectors = data?
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
-        .map { openErshouHouseDetailPage(houseId: $0!) }
+        .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag) }
     if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
         return zip(selectors, renders).map({ (e) -> TableRowNode in
             let (selector, render) = e
@@ -257,12 +255,17 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITable
     }
 }
 
-func openErshouHouseDetailPage(houseId: Int64) -> () -> Void {
+func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
             houseId: houseId,
             houseType: .newHouse,
             provider: getErshouHouseDetailPageViewModel())
+        detailPage.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }
