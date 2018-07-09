@@ -448,6 +448,7 @@
 		035635E9BAACF147417D8653C5F81802 /* HorseDetailPage */ = {
 			isa = PBXGroup;
 			children = (
+				B300EC1220F3347000C72C93 /* NavBar */,
 				822D6BD3401029D81859C4240EBECBB4 /* Cells */,
 				E55AB809B9893443F85D7DC7C49532CC /* MapPage */,
 				32BC999B66100AC58A84D9875C6A3FEB /* PageVM */,
@@ -834,6 +835,13 @@
 				B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */,
 			);
 			path = TGRefreshSwift;
+			sourceTree = "<group>";
+		};
+		B300EC1220F3347000C72C93 /* NavBar */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NavBar;
 			sourceTree = "<group>";
 		};
 		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {

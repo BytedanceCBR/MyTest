@@ -32,6 +32,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangSemibold(16)
         re.textColor = hexStringToUIColor(hex: "#f85959")
+        re.textAlignment = .right
         return re
     }()
 
@@ -39,6 +40,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.textColor = hexStringToUIColor(hex: "#999999")
+        re.textAlignment = .right
         return re
     }()
 
@@ -49,7 +51,7 @@ class TransactionRecordCell: BaseUITableViewCell {
 
         contentView.addSubview(totalPriceLabel)
         totalPriceLabel.snp.makeConstraints { maker in
-            maker.right.equalTo(15)
+            maker.right.equalTo(-15)
             maker.top.equalTo(15)
             maker.width.greaterThanOrEqualTo(45)
             maker.height.equalTo(22)
@@ -59,23 +61,23 @@ class TransactionRecordCell: BaseUITableViewCell {
         namelabel.snp.makeConstraints { maker in
             maker.left.equalTo(15)
             maker.top.equalTo(14)
-            maker.right.equalTo(totalPriceLabel.snp.left).offset(5)
+            maker.right.equalTo(totalPriceLabel.snp.left).offset(-5)
             maker.height.equalTo(22)
          }
 
         contentView.addSubview(pricePreSqmLabel)
         pricePreSqmLabel.snp.makeConstraints { maker in
-            maker.right.equalTo(15)
+            maker.right.equalTo(-15)
             maker.height.equalTo(15)
             maker.top.equalTo(totalPriceLabel.snp.bottom).offset(5)
         }
 
         contentView.addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(5)
+            maker.top.equalTo(namelabel.snp.bottom).offset(5)
             maker.left.equalTo(15)
             maker.bottom.equalToSuperview().offset(-13)
-            maker.right.equalTo(pricePreSqmLabel.snp.left).offset(5)
+            maker.right.equalTo(pricePreSqmLabel.snp.left).offset(-5)
         }
     }
 
