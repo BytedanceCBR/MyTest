@@ -45,8 +45,8 @@ class HomeSpringBoardViewModel {
         ]
 
         let clicks: [SpringBoardItemClick] = [
-            openCategoryVC(.newHouse),
             openCategoryVC(.secondHandHouse),
+            openCategoryVC(.newHouse),
             openCategoryVC(.neighborhood),
             {}
         ]

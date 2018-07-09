@@ -58,6 +58,7 @@ class CategoryListPageVC: UIViewController {
     lazy var tableView: UITableView = {
         let result = UITableView(frame: CGRect.zero, style: .plain)
         result.separatorStyle = .none
+        result.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         return result
     }()
 
@@ -66,6 +67,11 @@ class CategoryListPageVC: UIViewController {
         let result = UIView()
         result.backgroundColor = hexStringToUIColor(hex: "#222222", alpha: 0.3)
         return result
+    }()
+
+    lazy var footIndicatorView: LoadingIndicatorView = {
+        let indicator = LoadingIndicatorView()
+        return indicator
     }()
 
     let conditionPanelState = ConditionPanelState()
@@ -108,6 +114,8 @@ class CategoryListPageVC: UIViewController {
             searchAndConditionFilterVM: searchAndConditionFilterVM)
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
+        self.automaticallyAdjustsScrollViewInsets = false
+
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView)
         view.addSubview(navBar)
@@ -153,6 +161,9 @@ class CategoryListPageVC: UIViewController {
             maker.left.right.bottom.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
         }
+
+        bindLoadMore()
+
         bindSearchRequest()
         searchFilterPanel.setItems(items: filterConditions)
 
@@ -201,6 +212,28 @@ class CategoryListPageVC: UIViewController {
                 .disposed(by: disposeBag)
         self.searchAndConditionFilterVM.sendSearchRequest()
 
+    }
+    
+    func bindLoadMore() {
+        tableView.tableFooterView = footIndicatorView
+        tableView.rx.didScroll
+                .throttle(0.3, latest: false, scheduler: MainScheduler.instance)
+                .subscribe(onNext: { [unowned self, unowned tableView] void in
+                    if tableView.contentOffset.y > 0 &&
+                            tableView.contentSize.height - tableView.frame.height - tableView.contentOffset.y <= 0 &&
+                            !self.footIndicatorView.isAnimating {
+                        self.footIndicatorView.startAnimating()
+                        self.loadData()
+                    }
+                })
+                .disposed(by: disposeBag)
+        self.categoryListViewModel?.onDataLoaded = { [unowned self] in
+            self.footIndicatorView.stopAnimating()
+        }
+    }
+
+    @objc func loadData() {
+        categoryListViewModel?.pageableLoader?()
     }
 
     func bindSearchRequest() {

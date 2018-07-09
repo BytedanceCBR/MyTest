@@ -19,6 +19,10 @@ class CategoryListViewModel: DetailPageViewModel {
 
     private var cellFactory: UITableViewCellFactory
 
+    var pageableLoader: (() -> Void)?
+
+    var onDataLoaded: (() -> Void)?
+
     init(tableView: UITableView){
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
@@ -44,54 +48,61 @@ class CategoryListViewModel: DetailPageViewModel {
     }
     
     func requestNewHouseList(query: String) {
-        requestCourtSearch(cityId: "133", query: query)
-                .map { response -> [TableSectionNode] in
+        let loader = pageRequestCourtSearch(cityId: "133", query: query)
+        pageableLoader = { [unowned self] in
+            loader()
+                .map { response -> [TableRowNode] in
                     if let data = response?.data {
-                        let dataParser = DetailDataParser.monoid()
-                                <- parseNewHouseListItemNode(data.items)
-                        return dataParser.parser([])
+                        return paresNewHouseListRowItemNode(data.items)
                     } else {
                         return []
                     }
                 }
-                .subscribe(onNext: reloadData())
-                .disposed(by: disposeBag)
+                .subscribe(onNext: self.reloadData())
+                .disposed(by:self.disposeBag)
+        }
+        pageableLoader?()
     }
 
     func requestErshouHouseList(query: String) {
-        requestSearch(query: query)
-                .map { response -> [TableSectionNode] in
-                    if let data = response?.data {
-                        let dataParser = DetailDataParser.monoid()
-                                <- parseErshouHouseListItemNode(data.items)
-                        return dataParser.parser([])
-                    } else {
-                        return []
+        let loader = pageRequestErshouHouseSearch(cityId: "133", query: query)
+        pageableLoader = { [unowned self] in
+            loader()
+                    .map { response -> [TableRowNode] in
+                        if let data = response?.data {
+                            return parseErshouHouseListRowItemNode(data.items)
+                        } else {
+                            return []
+                        }
                     }
-                }
-                .subscribe(onNext: reloadData())
-                .disposed(by: disposeBag)
+                    .subscribe(onNext: self.reloadData())
+                    .disposed(by:self.disposeBag)
+        }
+        pageableLoader?()
     }
 
     func requestNeigborhoodList(query: String) {
-        requestNeighborhoodSearch(cityId: "133", query: query)
-                .map { response -> [TableSectionNode] in
-                    if let data = response?.data {
-                        let dataParser = DetailDataParser.monoid()
-                            <- parseNeighborhoodItemNode(data.items)
-                        return dataParser.parser([])
-                    } else {
-                        return []
+        let loader = pageRequestNeighborhoodSearch(cityId: "133", query: query)
+        pageableLoader = { [unowned self] in
+            loader()
+                    .map { response -> [TableRowNode] in
+                        if let data = response?.data {
+                            return parseNeighborhoodRowItemNode(data.items)
+                        } else {
+                            return []
+                        }
                     }
-                }
-                .subscribe(onNext: reloadData())
-                .disposed(by: disposeBag)
+                    .subscribe(onNext: self.reloadData())
+                    .disposed(by:self.disposeBag)
+        }
+        pageableLoader?()
     }
 
-    func reloadData() -> ([TableSectionNode]) -> Void {
+    func reloadData() -> ([TableRowNode]) -> Void {
         return { [unowned self] datas in
-            self.dataSource.datas = datas
+            self.dataSource.datas = self.dataSource.datas + datas
             self.tableView?.reloadData()
+            self.onDataLoaded?()
         }
     }
 
@@ -99,7 +110,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var datas: [TableSectionNode] = []
+    var datas: [TableRowNode] = []
 
     var cellFactory: UITableViewCellFactory
 
@@ -110,43 +121,34 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         super.init()
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return datas.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datas[section].items.count
-    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch datas[indexPath.section].type {
+        switch datas[indexPath.row].type {
         case let .node(identifier):
             let cell = cellFactory.dequeueReusableCell(
-                    identifer: identifier,
-                    tableView: tableView,
-                    indexPath: indexPath)
-            datas[indexPath.section].items[indexPath.row](cell)
+                identifer: identifier,
+                tableView: tableView,
+                indexPath: indexPath)
+            datas[indexPath.row].itemRender(cell)
             return cell
         default:
             return CycleImageCell()
         }
     }
 
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let view = CategorySectionView()
-//        view.categoryLabel.text = datas[section].label
-//        return view
-//    }
-//
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        datas[indexPath.section].selectors?[indexPath.row]()
+        datas[indexPath.row].selector()
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+
 }

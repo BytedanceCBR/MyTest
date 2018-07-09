@@ -11,7 +11,7 @@ import RxSwift
 import TTNetworkManager
 import ObjectMapper
 
-func requestNeighborhoodSearch(cityId: String = "133", query: String = "") -> Observable<SearchNeighborhoodResponse?> {
+func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
     var url = "http://m.quduzixun.com/f100/api/search_neighborhood?city_id=\(cityId)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
@@ -19,7 +19,7 @@ func requestNeighborhoodSearch(cityId: String = "133", query: String = "") -> Ob
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
-            params: nil,
+            params: ["offset": offset],
             method: "GET",
             needCommonParams: false)
         .map({ (data) -> NSString? in
@@ -33,4 +33,21 @@ func requestNeighborhoodSearch(cityId: String = "133", query: String = "") -> Ob
                 return nil
             }
         })
+}
+
+func pageRequestNeighborhoodSearch(
+    cityId: String = "133",
+    query: String = "") -> () -> Observable<SearchNeighborhoodResponse?> {
+    var offset: Int = 0
+    return {
+        return requestNeighborhoodSearch(
+            cityId: cityId,
+            offset: offset,
+            query: query)
+            .do(onNext: { (response) in
+                if let count = response?.data?.items?.count {
+                    offset = count
+                }
+            })
+    }
 }

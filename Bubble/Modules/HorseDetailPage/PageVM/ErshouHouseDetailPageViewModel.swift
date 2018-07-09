@@ -215,6 +215,24 @@ func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?) -> () -> Tabl
     }
 }
 
+func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?) -> [TableRowNode] {
+    let selectors = data?
+        .filter { $0.id != nil }
+        .map { Int64($0.id!) }
+        .map { openErshouHouseDetailPage(houseId: $0!) }
+    if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
+        return zip(selectors, renders).map({ (e) -> TableRowNode in
+            let (selector, render) = e
+            return TableRowNode(
+                itemRender: render,
+                selector: selector,
+                type: .node(identifier: SingleImageInfoCell.identifier))
+        })
+    } else {
+        return []
+    }
+}
+
 func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITableViewCell) {
     if let theCell = cell as? SingleImageInfoCell {
         theCell.majorTitle.text = data.displayTitle

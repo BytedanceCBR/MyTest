@@ -58,6 +58,12 @@ struct TableSectionNode {
     let type: TableCellType
 }
 
+struct TableRowNode {
+    let itemRender: TableCellRender
+    let selector: TableCellSelectedProcess
+    let type: TableCellType
+}
+
 struct DetailDataParser {
     let parser: NewHouseDetailDataParser
 

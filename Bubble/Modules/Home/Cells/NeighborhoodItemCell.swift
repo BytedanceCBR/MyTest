@@ -162,6 +162,25 @@ func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?) -> () ->
     }
 }
 
+func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?) -> [TableRowNode]  {
+    let selectors = items?
+        .filter { $0.id != nil }
+        .map { Int64($0.id!) }
+        .map { openNeighborhoodDetailPage(neighborhoodId: $0!) }
+    if let renders = items?.map(curry(fillNeighborhoodItemCell)), let selectors = selectors {
+        return zip(selectors, renders).map({ (e) -> TableRowNode in
+            let (selector, render) = e
+            return TableRowNode(
+                itemRender: render,
+                selector: selector,
+                type: .node(identifier: NeighborhoodItemCell.identifier))
+        })
+    } else {
+        return []
+    }
+}
+
+
 func fillNeighborhoodItemCell(_ item: NeighborhoodInnerItemEntity, cell: BaseUITableViewCell) {
     if let theCell = cell as? NeighborhoodItemCell{
         theCell.majorTitle.text = item.displayTitle

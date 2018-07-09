@@ -91,6 +91,25 @@ func parseNewHouseListItemNode(_ data: [CourtItemInnerEntity]?) -> () -> TableSe
     }
 }
 
+func paresNewHouseListRowItemNode(_ data: [CourtItemInnerEntity]?) -> [TableRowNode] {
+    let selectors = data?
+            .filter { $0.id != nil }
+            .map { Int64($0.id!) }
+            .map { openNewHouseDetailPage(houseId: $0!) }
+    if let renders = data?.map(curry(fillNewHouseListitemCell)), let selectors = selectors {
+
+        return zip(renders, selectors).map { (e) -> TableRowNode in
+            let (render, selector) = e
+            return TableRowNode(
+                itemRender: render,
+                selector: selector,
+                type: .node(identifier: SingleImageInfoCell.identifier))
+        }
+
+    }
+    return []
+}
+
 func fillNewHouseListitemCell(_ data: CourtItemInnerEntity, cell: BaseUITableViewCell) {
     if let theCell = cell as? SingleImageInfoCell {
         theCell.majorTitle.text = data.displayTitle
