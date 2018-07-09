@@ -7,9 +7,12 @@
 //
 
 import Foundation
-
+import RxSwift
+import RxCocoa
 protocol DetailPageViewModel {
     var tableView: UITableView? { get set }
+
+    var titleValue: BehaviorRelay<String?> { get }
 
     func requestData(houseId: Int64)
 

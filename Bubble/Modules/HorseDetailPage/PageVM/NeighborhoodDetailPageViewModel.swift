@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
+    var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -91,6 +93,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
                 .debug()
                 .subscribe(onNext: { [unowned self] (response) in
+                    self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)
                     self.requestReletedData()
                 }, onError: { (error) in

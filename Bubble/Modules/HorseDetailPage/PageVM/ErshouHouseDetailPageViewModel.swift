@@ -12,6 +12,8 @@ import RxCocoa
 import YYText
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
+    var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -73,6 +75,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         requestErshouHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
+                        self.titleValue.accept(response.data?.title)
                         self.ershouHouseData.accept(response)
                         self.requestReletedData()
                     }

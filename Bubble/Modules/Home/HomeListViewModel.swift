@@ -9,6 +9,8 @@ import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
 
+    var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+
     weak var tableView: UITableView?
 
     private var cellFactory: UITableViewCellFactory

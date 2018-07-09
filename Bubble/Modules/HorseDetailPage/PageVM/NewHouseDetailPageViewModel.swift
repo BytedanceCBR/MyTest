@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
+    var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -31,6 +33,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         requestNewHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
+                        self.titleValue.accept(response.data?.title)
                         let result = self.processData(response: response)([])
                         self.dataSource.datas = result
                         self.tableView?.reloadData()

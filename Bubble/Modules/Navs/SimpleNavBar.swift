@@ -71,6 +71,11 @@ class SimpleNavBar: UIView {
     }
     
     func setGradientColor() {
+        removeGradientColor()
+        title.isHidden = true
+
+        bgView.backgroundColor = UIColor.clear
+        bgView.alpha = 0.5
         let topColor = color(0, 0, 0, 1)
         let bottomColor = color(0, 0, 0, 0)
         let gradientColors = [topColor.cgColor, bottomColor.cgColor]
@@ -83,6 +88,15 @@ class SimpleNavBar: UIView {
         if let gradientlayer = gradientlayer {
             bgView.layer.insertSublayer(gradientlayer, at: 0)
         }
+
+    }
+
+    func removeGradientColor() {
+        title.isHidden = false
+        gradientlayer?.removeFromSuperlayer()
+        gradientlayer = nil
+        bgView.backgroundColor = UIColor.white
+        bgView.alpha = 1
     }
 
     required init?(coder aDecoder: NSCoder) {

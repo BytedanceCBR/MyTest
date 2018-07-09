@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 class CategoryListViewModel: DetailPageViewModel {
 
+    var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+
     let disposeBag = DisposeBag()
 
     weak var tableView: UITableView?
