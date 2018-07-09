@@ -102,7 +102,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             
             requestSearch(
                 cityId: "133",
-                query: "&neighborhood_id=\(neighborhoodId)")
+                query: "neighborhood_id=\(neighborhoodId)&house_type=2")
                 .subscribe(onNext: { [unowned self] response in
                     self.houseInSameNeighborhood.accept(response)
                 })
@@ -124,11 +124,11 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     <- parsePropertyListNode(data)
                     <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: true, process: openBeighBor)
                     <- parseNeighborhoodInfoNode(data)
-                    <- parseHeaderNode("同小区房源") { [unowned self] in
-                        self.relateNeighborhoodData.value != nil
+                    <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.items?.count ?? 0))") { [unowned self] in
+                        self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
                     }
                     <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data)
-                    <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
+                    <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0)) {
 
                     }
                     <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.items?.count ?? 0))") { [unowned self] in
@@ -138,6 +138,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
 
                     }
+                    <- parseHeaderNode("相关推荐")
                     <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag)
                     <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
@@ -191,7 +192,9 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        datas[indexPath.section].selectors?[indexPath.row]()
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
+            datas[indexPath.section].selectors?[indexPath.row]()
+        }
     }
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {

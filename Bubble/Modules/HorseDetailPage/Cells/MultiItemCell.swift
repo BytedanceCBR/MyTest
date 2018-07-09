@@ -235,8 +235,8 @@ func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorP
     text.append(attributeText)
 
     re.descLabel.attributedText = text
-    re.priceLabel.text = item.baseInfoMap?.pricing
-    re.spaceLabel.text = item.baseInfoMap?.pricingPerSqm
+    re.priceLabel.text = item.displayPrice
+    re.spaceLabel.text = item.displayPricePerSqm
     return re
 }
 

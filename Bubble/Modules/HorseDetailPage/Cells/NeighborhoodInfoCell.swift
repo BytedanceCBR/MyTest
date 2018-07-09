@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import BDWebImage
 import RxSwift
+import RxCocoa
 class NeighborhoodInfoCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -63,9 +64,14 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 
     lazy var mapImageView: UIImageView = {
         let re = UIImageView()
-
         return re
     }()
+
+    lazy var mapViewGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -122,6 +128,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
             maker.height.equalTo(150)
             maker.top.equalTo(monthUpValueLabel.snp.bottom).offset(16)
          }
+        mapImageView.addGestureRecognizer(mapViewGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -139,6 +146,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         // Configure the view for the selected state
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
 }
 
 func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
