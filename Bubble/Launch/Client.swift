@@ -27,10 +27,6 @@ class Client {
 
     var hoseType: HouseType = .secondHandHouse
 
-    var networkConfig: Configuration.NetworkConfig = {
-        Configuration.NetworkConfig()
-    }()
-
     lazy var locationManager: LocationManager = {
         LocationManager.shared
     }()
