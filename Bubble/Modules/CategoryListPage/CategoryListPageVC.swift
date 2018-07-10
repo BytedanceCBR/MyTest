@@ -80,10 +80,6 @@ class CategoryListPageVC: UIViewController {
 
     var conditionFilterViewModel: ConditionFilterViewModel?
 
-    lazy var filterConditions: [SearchConditionItem] = {
-        []
-    }()
-
     let houseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
     private var popupMenuView: PopupMenuView?
@@ -98,11 +94,6 @@ class CategoryListPageVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func reloadConditionPanel() -> Void {
-        searchFilterPanel.setItems(items: filterConditions)
-        self.conditionPanelState.isShowPanel = false
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
     }
@@ -111,6 +102,7 @@ class CategoryListPageVC: UIViewController {
         super.viewDidLoad()
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
+            searchFilterPanel: searchFilterPanel,
             searchAndConditionFilterVM: searchAndConditionFilterVM)
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
@@ -165,7 +157,6 @@ class CategoryListPageVC: UIViewController {
         bindLoadMore()
 
         bindSearchRequest()
-        searchFilterPanel.setItems(items: filterConditions)
 
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in
@@ -200,14 +191,14 @@ class CategoryListPageVC: UIViewController {
                 }
                 .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
                     let reload: () -> Void = { [weak self] in
-                        self?.reloadConditionPanel()
+                        self?.conditionFilterViewModel?.reloadConditionPanel()
                     }
                     zip(items.0, items.1).forEach({ (e) in
                         let (item, nodes) = e
                         item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
                     })
-                    self.filterConditions = items.0
-                    self.reloadConditionPanel()
+                    self.conditionFilterViewModel?.filterConditions = items.0
+                    self.conditionFilterViewModel?.reloadConditionPanel()
                 })
                 .disposed(by: disposeBag)
         self.searchAndConditionFilterVM.sendSearchRequest()

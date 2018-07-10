@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icon-search-titlebar.png",
+      "filename" : "icon-triangle-open.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-search-titlebar@2x.png",
+      "filename" : "icon-triangle-open@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-search-titlebar@3x.png",
+      "filename" : "icon-triangle-open@3x.png",
       "scale" : "3x"
     }
   ],

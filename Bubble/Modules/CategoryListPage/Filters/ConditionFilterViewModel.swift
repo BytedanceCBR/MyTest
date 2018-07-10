@@ -13,14 +13,22 @@ class ConditionFilterViewModel {
 
     weak var conditionPanelView: UIView?
 
+    weak var searchFilterPanel: SearchFilterPanel?
+
     let conditionPanelState = ConditionPanelState()
 
     let searchAndConditionFilterVM: SearchAndConditionFilterViewModel
 
+    lazy var filterConditions: [SearchConditionItem] = {
+        []
+    }()
+
     init(conditionPanelView: UIView,
+         searchFilterPanel: SearchFilterPanel,
          searchAndConditionFilterVM: SearchAndConditionFilterViewModel) {
         self.conditionPanelView = conditionPanelView
         self.searchAndConditionFilterVM = searchAndConditionFilterVM
+        self.searchFilterPanel = searchFilterPanel
     }
 
     func initSearchConditionItemPanel(
@@ -78,7 +86,9 @@ class ConditionFilterViewModel {
     }
 
 
-    func openConditionPanel(state: ConditionPanelState, apply: @escaping ConditionFilterPanelGenerator) -> (Int) -> Void {
+    func openConditionPanel(
+            state: ConditionPanelState,
+            apply: @escaping ConditionFilterPanelGenerator) -> (Int) -> Void {
         return { [weak self] (index) in
             if state.isShowPanel, state.currentIndex == index {
                 self?.conditionPanelView?.subviews.forEach { view in
@@ -98,6 +108,14 @@ class ConditionFilterViewModel {
                 state.isShowPanel = true
             }
             state.currentIndex = index
+            self?.searchFilterPanel?.items.forEach({ (item) in
+                item.isExpand = false
+            })
+            if let items = self?.searchFilterPanel?.items, items.count > index {
+                items[index].isHighlighted = state.isShowPanel || items[index].isSeted
+                items[index].isExpand = state.isShowPanel
+            }
+            self?.searchFilterPanel?.refresh()
         }
     }
 
@@ -113,7 +131,7 @@ class ConditionFilterViewModel {
     }
 
     func reloadConditionPanel() -> Void {
-//        searchFilterPanel.setItems(items: filterConditions)
+        searchFilterPanel?.setItems(items: filterConditions)
         self.conditionPanelState.isShowPanel = false
     }
 }

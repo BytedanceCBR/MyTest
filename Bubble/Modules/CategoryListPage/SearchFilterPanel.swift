@@ -15,6 +15,7 @@ import RxSwift
 enum ConditionItemType {
     case noCondition(String)
     case condition(String)
+    case expand(String)
 }
 
 class SearchFilterPanel: UIView {
@@ -22,6 +23,8 @@ class SearchFilterPanel: UIView {
     var itemViews: [SearchConditionItemView] = []
 
     let disposeBag = DisposeBag()
+
+    var items: [SearchConditionItem] = []
 
     init() {
         super.init(frame: CGRect.zero)
@@ -53,15 +56,35 @@ class SearchFilterPanel: UIView {
     }
 
     func setItems(items: [SearchConditionItem]) {
+        self.items = items
+
+        refresh()
+    }
+    
+    func refresh() {
         itemViews.forEach {
             $0.removeFromSuperview()
         }
         itemViews = items.map { item -> SearchConditionItemView in
             let result = SearchConditionItemView()
             if item.isHighlighted {
-                result.setConditionLabelText(label: item.label, color: hexStringToUIColor(hex: "#f85959"), icon: #imageLiteral(resourceName: "icon-triangle-retract"))
+                if item.isExpand {
+                    result.setConditionLabelText(
+                            label: item.label,
+                            color: hexStringToUIColor(hex: "#f85959"),
+                            icon: #imageLiteral(resourceName: "icon-triangle-retract"))
+                } else {
+                    result.setConditionLabelText(
+                            label: item.label,
+                            color: hexStringToUIColor(hex: "#f85959"),
+                            icon: #imageLiteral(resourceName: "icon-triangle-open-highlighted"))
+                }
+
             } else {
-                result.setConditionLabelText(label: item.label, color: hexStringToUIColor(hex: "#222222"), icon: #imageLiteral(resourceName: "icon-triangle-open"))
+                result.setConditionLabelText(
+                        label: item.label,
+                        color: hexStringToUIColor(hex: "#222222"),
+                        icon: #imageLiteral(resourceName: "icon-triangle-open"))
             }
             return result
         }
@@ -105,13 +128,20 @@ func setConditionItemType(
 }
 
 func setFilterConditionItemBy(item: SearchConditionItem, reload: @escaping () -> Void, conditionItemType: ConditionItemType) {
+    item.isExpand = false
     switch conditionItemType {
         case let .noCondition(label):
             item.label = label
             item.isHighlighted = false
+            item.isSeted = false
         case let .condition(label):
             item.label = label
             item.isHighlighted = true
+            item.isSeted = true
+        case let .expand(label):
+            item.label = label
+            item.isHighlighted = true
+            item.isExpand = true
     }
     reload()
 }
@@ -137,6 +167,12 @@ class SearchConditionItemView: UIView {
     }()
 
     var isHighlighted = false
+
+    var isExpand: Bool = false {
+        didSet {
+
+        }
+    }
 
     init() {
         super.init(frame: CGRect.zero)
@@ -175,12 +211,16 @@ class SearchConditionItem {
     var label: String = ""
     var onClick: ((Int) -> Void)? = nil
     var isHighlighted: Bool
+    var isExpand: Bool
+    var isSeted: Bool
 
     init(itemId: Int, label: String, onClick: ((Int) -> Void)? = nil) {
         self.isHighlighted = false
+        self.isExpand = false
         self.label = label
         self.onClick = onClick
         self.itemId = itemId
+        self.isSeted = false
     }
 }
 
