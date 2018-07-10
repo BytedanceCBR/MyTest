@@ -53,7 +53,6 @@ class GeneralBizConfig {
                              lng: locationManager?.currentLocation.value?.coordinate.longitude)
             .observeOn(CurrentThreadScheduler.instance)
             .subscribeOn(CurrentThreadScheduler.instance)
-            .debug()
             .subscribe(onNext: { [unowned self] response in
                 self.generalCacheSubject.accept(response?.data)
                 if let payload = response?.data?.toJSONString() {

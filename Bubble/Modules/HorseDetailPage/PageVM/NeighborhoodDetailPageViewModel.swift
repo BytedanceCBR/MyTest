@@ -77,9 +77,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     })
                     .disposed(by: disposeBag)
 
-            requestSearch(
-                    cityId: "133",
-                    query: "&neighborhood_id=\(neighborhoodId)")
+            requestSearch(query: "&neighborhood_id=\(neighborhoodId)")
                     .subscribe(onNext: { [unowned self] response in
                         self.houseInSameNeighborhood.accept(response)
                     })

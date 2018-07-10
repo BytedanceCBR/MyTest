@@ -100,9 +100,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 })
                 .disposed(by: disposeBag)
             
-            requestSearch(
-                cityId: "133",
-                query: "neighborhood_id=\(neighborhoodId)&house_type=2")
+            requestSearch(query: "neighborhood_id=\(neighborhoodId)&house_type=2")
                 .subscribe(onNext: { [unowned self] response in
                     self.houseInSameNeighborhood.accept(response)
                 })

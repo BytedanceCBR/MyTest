@@ -12,12 +12,11 @@ import TTNetworkManager
 import ObjectMapper
 
 func requestSearch(
-    cityId: String = "133",
     offset: Int64 = 0,
     query: String = "") -> Observable<HouseRecommendResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/search?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/api/search?"
     if !query.isEmpty {
-        url = "\(url)&\(query)"
+        url = "\(url)\(query)"
     }
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
@@ -39,17 +38,15 @@ func requestSearch(
 }
 
 func pageRequestErshouHouseSearch(
-    cityId: String = "133",
     query: String = "") -> () ->  Observable<HouseRecommendResponse?> {
     var offset: Int64 = 0
     return {
         return requestSearch(
-            cityId: cityId,
             offset: offset,
             query: query)
             .do(onNext: { (response) in
                 if let count = response?.data?.items?.count {
-                    offset = Int64(count)
+                    offset = offset + Int64(count)
                 }
             })
     }

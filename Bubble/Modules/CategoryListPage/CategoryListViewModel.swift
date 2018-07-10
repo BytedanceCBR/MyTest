@@ -63,11 +63,12 @@ class CategoryListViewModel: DetailPageViewModel {
                 .subscribe(onNext: self.reloadData())
                 .disposed(by:self.disposeBag)
         }
+        cleanData()
         pageableLoader?()
     }
 
     func requestErshouHouseList(query: String) {
-        let loader = pageRequestErshouHouseSearch(cityId: "133", query: query)
+        let loader = pageRequestErshouHouseSearch(query: query)
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
@@ -80,6 +81,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     .subscribe(onNext: self.reloadData())
                     .disposed(by:self.disposeBag)
         }
+        cleanData()
         pageableLoader?()
     }
 
@@ -97,6 +99,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     .subscribe(onNext: self.reloadData())
                     .disposed(by:self.disposeBag)
         }
+        cleanData()
         pageableLoader?()
     }
 
@@ -106,6 +109,10 @@ class CategoryListViewModel: DetailPageViewModel {
             self.tableView?.reloadData()
             self.onDataLoaded?()
         }
+    }
+
+    func cleanData() {
+        self.dataSource.datas = []
     }
 
 }

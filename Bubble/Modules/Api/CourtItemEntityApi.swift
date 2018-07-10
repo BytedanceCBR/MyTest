@@ -18,7 +18,7 @@ func requestCourtSearch(
 
     var url = "\(EnvContext.networkConfig.host)/api/search_court?city_id=\(cityId)"
     if !query.isEmpty {
-        url = "\(url)&\(query)"
+        url = "\(url)\(query)"
     }
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
@@ -49,7 +49,7 @@ func pageRequestCourtSearch(cityId: String = "133", query: String = "") -> () ->
             query: query)
             .do(onNext: { (response) in
                 if let count = response?.data?.items?.count {
-                    offset = Int64(count)
+                    offset = offset + Int64(count)
                 }
             })
     }

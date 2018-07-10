@@ -46,7 +46,7 @@ func pageRequestNeighborhoodSearch(
             query: query)
             .do(onNext: { (response) in
                 if let count = response?.data?.items?.count {
-                    offset = count
+                    offset = offset + count
                 }
             })
     }
