@@ -13,7 +13,7 @@ import ObjectMapper
 
 
 func requestErshouHouseDetail(houseId: Int64) -> Observable<ErshouHouseDetailResponse?> {
-    let url = "http://m.quduzixun.com/f100/api/house/info"
+    let url = "\(EnvContext.networkConfig.host)/api/house/info"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,

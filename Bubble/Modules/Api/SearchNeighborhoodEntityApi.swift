@@ -12,7 +12,7 @@ import TTNetworkManager
 import ObjectMapper
 
 func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
-    var url = "http://m.quduzixun.com/f100/api/search_neighborhood?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/api/search_neighborhood?city_id=\(cityId)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }

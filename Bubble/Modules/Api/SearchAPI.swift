@@ -15,7 +15,7 @@ func requestSearch(
     cityId: String = "133",
     offset: Int64 = 0,
     query: String = "") -> Observable<HouseRecommendResponse?> {
-    var url = "http://m.quduzixun.com/f100/api/search?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/api/search?city_id=\(cityId)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }

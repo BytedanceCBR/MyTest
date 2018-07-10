@@ -12,7 +12,7 @@ import TTNetworkManager
 import ObjectMapper
 
 func requestNeighborhoodDetail(neighborhoodId: String = "", query: String = "") -> Observable<NeighborhoodDetailResponse?> {
-    var url = "http://m.quduzixun.com/f100/api/neighborhood/info?neighborhood_id=\(neighborhoodId)"
+    var url = "\(EnvContext.networkConfig.host)/api/neighborhood/info?neighborhood_id=\(neighborhoodId)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }
@@ -37,7 +37,7 @@ func requestNeighborhoodDetail(neighborhoodId: String = "", query: String = "") 
 
 //https://m.quduzixun.com/f100/api/neighborhood/sale?neighborhood_id=6569028179917291780&page=0&price=[10000,40000000]&count=10&room_num=[3,3]&squaremeter=[90,120]
 func requestNeighborhoodTotalSales(neighborhoodId: String = "", query: String = "") -> Observable<NeighborhoodTotalSalesResponse?> {
-    var url = "http://m.quduzixun.com/f100/api/neighborhood/sale?neighborhood_id=\(neighborhoodId)"
+    var url = "\(EnvContext.networkConfig.host)/api/neighborhood/sale?neighborhood_id=\(neighborhoodId)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }

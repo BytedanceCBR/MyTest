@@ -11,7 +11,7 @@ import ObjectMapper
 func requestHouseRecommend() -> Observable<HouseRecommendResponse1?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "http://m.quduzixun.com/f100/api/recommend",
+                    url: "\(EnvContext.networkConfig.host)/api/recommend",
                     params: ["city_id": "133"],
                     method: "GET",
                     needCommonParams: true)
@@ -42,7 +42,7 @@ func requestSuggestion(
     }
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
-            url: "http://m.quduzixun.com/f100/api/get_suggestion",
+            url: "\(EnvContext.networkConfig.host)/api/get_suggestion",
             params: params,
             method: "GET",
             needCommonParams: true)
@@ -68,7 +68,7 @@ func requestRelatedErshouHouse(
     ]
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "http://m.quduzixun.com/f100/api/related_house",
+                    url: "\(EnvContext.networkConfig.host)/api/related_house",
                     params: params,
                     method: "GET",
                     needCommonParams: true)
