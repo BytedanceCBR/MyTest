@@ -114,27 +114,16 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         let generalBizConfig = EnvContext.shared.client.generalBizconfig
         generalBizConfig.currentSelectCityId
                 .map(generalBizConfig.cityNameById())
+                .debug("generalBizConfig")
                 .subscribe(onNext: { [unowned self] (city) in
                     if let city = city {
                         self.suspendSearchBar.countryLabel.text = city
                         self.navBar.suspendSearchBar.countryLabel.text = city
-                    }
-                })
-                .disposed(by: disposeBag)
-
-        EnvContext.shared.client.currentSelectedCityId
-                .map { i -> String in
-                    if let cityList = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.cityList {
-                        return cityList.first {
-                            $0.cityId == i
-                        }?.name ?? "选择城市"
                     } else {
-                        return "选择城市"
+                        let defaultStr = "选择城市"
+                        self.suspendSearchBar.countryLabel.text = defaultStr
+                        self.navBar.suspendSearchBar.countryLabel.text = defaultStr
                     }
-                }
-                .subscribe(onNext: { i in
-                    self.suspendSearchBar.countryLabel.text = i
-                    self.navBar.suspendSearchBar.countryLabel.text = i
                 })
                 .disposed(by: disposeBag)
     }

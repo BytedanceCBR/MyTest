@@ -36,11 +36,17 @@ class Client {
 
     init() {
         locationManager.currentLocation
-                .subscribe(onNext: { [weak self] _ in
-                    self?.generalBizconfig.fetchConfiguration()
-                    self?.setCommonNetwork()
-                })
-                .disposed(by: disposeBag)
+            .subscribe(onNext: { [weak self] _ in
+                self?.generalBizconfig.fetchConfiguration()
+                self?.setCommonNetwork()
+            })
+            .disposed(by: disposeBag)
+        generalBizconfig.currentSelectCityId
+            .subscribe(onNext: { [weak self] _ in
+                self?.generalBizconfig.fetchConfiguration()
+                self?.setCommonNetwork()
+            })
+            .disposed(by: disposeBag)
     }
 
     func setCommonNetwork() {
@@ -52,7 +58,7 @@ class Client {
 
     func onStart() {
         setupLocationManager()
-
+        generalBizconfig.load()
         if let searchConfigCache = searchConfigCache {
             if !searchConfigCache.containsObject(forKey: "config") {
                 fetchSearchConfig()

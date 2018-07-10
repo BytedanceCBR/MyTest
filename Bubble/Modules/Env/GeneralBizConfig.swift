@@ -13,7 +13,7 @@ class GeneralBizConfig {
     static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"
 
     lazy private var searchConfigCache: YYCache? = {
-        YYCache(name: "config")
+        YYCache(name: "general_config")
     }()
 
     let generalCacheSubject = BehaviorRelay<GeneralConfigData?>(value: nil)
@@ -33,12 +33,10 @@ class GeneralBizConfig {
             if !searchConfigCache.containsObject(forKey: "config") {
                 fetchConfiguration()
             } else {
-                let generalPayload = searchConfigCache.object(forKey: "general_config") as! String
+                let generalPayload = searchConfigCache.object(forKey: "config") as! String
                 let generalConfig = GeneralConfigData(JSONString: generalPayload)
                 generalCacheSubject.accept(generalConfig)
-                if let cityId = getCurrentSelectCityId() {
-                    currentSelectCityId.accept(cityId)
-                }
+                currentSelectCityId.accept(getCurrentSelectCityId())
                 fetchConfiguration()
             }
         }
@@ -62,7 +60,7 @@ class GeneralBizConfig {
             .subscribe(onNext: { [unowned self] response in
                 self.generalCacheSubject.accept(response?.data)
                 if let payload = response?.data?.toJSONString() {
-                    self.searchConfigCache?.setObject(payload as NSString, forKey: "general_config")
+                    self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
 
                 }
                 if let currentCityId = response?.data?.currentCityId {
@@ -85,7 +83,7 @@ class GeneralBizConfig {
     func getCurrentSelectCityId() -> Int? {
         let cityId = UserDefaults.standard
                 .integer(forKey: GeneralBizConfig.CONFIG_KEY_SELECT_CITY_ID)
-        return cityId
+        return cityId == 0 ? nil : cityId
     }
 
     func commonParams() -> () -> [AnyHashable: Any] {
