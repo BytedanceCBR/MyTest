@@ -20,49 +20,49 @@
 		17229716961CE1E68153F5E7F84613D6 /* MultiImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC995B9AC18BCAECCB5CA7AE85425C6A /* MultiImageInfoCell.swift */; };
 		18A544BE4DCAE334FF63790C681FEFF1 /* NeighborhoodDetailEntitiesApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03763C35FDEC753F037C408B190BDD3A /* NeighborhoodDetailEntitiesApi.swift */; };
 		1991B01F0754C14DD8E0C050A27D30A9 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E5718C35A2E23645C3C242729A1DA /* LBSMapPageVC.swift */; };
-		1A21604CC621833054CA6D94 /* TGBallPulseRise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216426417E021AF2A2DF65 /* TGBallPulseRise.swift */; };
-		1A2160898FD52690E5483117 /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21648D61C70191EA992A87 /* TGBallBeat.swift */; };
-		1A2160FA72081933802DA1D8 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166C68E85B5E711534F27 /* TGLineScalePulseOut.swift */; };
+		1A216002176A289FCDC93A79 /* TGLineCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CD28FC78D661285A19A /* TGLineCursor.swift */; };
+		1A21602BA1DAAE86B926B480 /* TGLineScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */; };
+		1A21604D6486FDAA0CA45EB0 /* TGBallClipRotatePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */; };
+		1A21611E7C676634236DE32D /* TGTriangleSkewSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */; };
+		1A2161565C356ECF1F5F6356 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D4EBFA8119D603F2DB /* TGPacman.swift */; };
 		1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216130F340A11375391C9F /* SearchFilterPanel.swift */; };
-		1A2161A06C3D06237E08037D /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161278B48B3E743D0C879 /* TGBlank.swift */; };
-		1A2161E17EEE35E54D26DAC8 /* TGBallZigZagDeflect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21674A77879C6FC6F6609B /* TGBallZigZagDeflect.swift */; };
+		1A2161AF1CFC9707F2144AA2 /* TGBallGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */; };
 		1A2161F4A4D8D46994A7C896 /* HouseDetailPageBottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */; };
-		1A216228E8C6E3B306406ED0 /* TGLineScaleParty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D26A226441BE7229EAF /* TGLineScaleParty.swift */; };
-		1A21629CE94C9A1C376043A2 /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167CD1061349E54FA15E5 /* TGBallRotateChase.swift */; };
-		1A216315E9ED79B0457E0162 /* TGSquarePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21608C271598A73C54946E /* TGSquarePulse.swift */; };
-		1A2163D6A761E70DABD129E9 /* TGBallScaleRipple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160C1470191F20097096D /* TGBallScaleRipple.swift */; };
-		1A2164AF828E752494C7986C /* TGBallGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2169C8AA71AFA63A303D40 /* TGBallGridPulse.swift */; };
+		1A21622D0065E11F5AF3726B /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2164F00CA7D6AACA2CD796 /* TGOrbit.swift */; };
+		1A21623EEF0EE216334CB021 /* TGSquareSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B6B619135AF707F7845 /* TGSquareSpin.swift */; };
+		1A216345A0F87A09B7F20969 /* TGWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2169421CDC3A838941280A /* TGWindows.swift */; };
+		1A21636688A8EF7AA365D712 /* TGLineScaleParty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A6071431ADA243CF6F6 /* TGLineScaleParty.swift */; };
+		1A21639CC01D88A11EB7B008 /* TGSemiCircleSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166820A8214CB1387851F /* TGSemiCircleSpin.swift */; };
+		1A21639E55EAADCBAA6528ED /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216083934BF5B314D766EE /* TGBlank.swift */; };
+		1A2163CBA04285189AB288E4 /* TGBallPulseSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166DACCFF666EFB073471 /* TGBallPulseSync.swift */; };
+		1A21641D5A1D3CC65C96D97A /* TGSquarePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216AD34CE3F7115332BD0C /* TGSquarePulse.swift */; };
+		1A21647C3A0F5A5C8B8DF03D /* TGBallPulseRise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21606A0A466D097E45D35D /* TGBallPulseRise.swift */; };
+		1A21648C1ACCAFC8D387AB83 /* TGBallScaleRippleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */; };
 		1A216510BC7286624889833D /* NeighborhoodDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */; };
-		1A21653F9CA54BDF9C824111 /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2164CEF4BCF17C6F68AC98 /* TGBallRotate.swift */; };
-		1A216561B1D4E87F16B7FA9E /* TGBallClipRotatePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216908E1C9436BB0C4A8B3 /* TGBallClipRotatePulse.swift */; };
-		1A2165B1879C0A34308C8C89 /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2164A65098F16C33419526 /* TGLineScalePulseOutRapid.swift */; };
+		1A21652A51D8963E73D3E6AC /* TGBallZigZagDeflect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216534A9AEDB9CF0171AFA /* TGBallZigZagDeflect.swift */; };
+		1A216555B0C403DF359FBC0A /* TGSquareGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216492B610A51EFD9827BF /* TGSquareGridPulse.swift */; };
+		1A2166A9E0B37A87D18D8182 /* TGCubeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */; };
 		1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */; };
-		1A2166E129EF3BB4842F0608 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E5B13743751A277A913 /* TGBallZigZag.swift */; };
-		1A21675E88B8104FA8861342 /* TGWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162A48C3FD426D08502A0 /* TGWindows.swift */; };
-		1A2167752BA3A4BBFA474834 /* TGLineCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216639461E029C6C643E1D /* TGLineCursor.swift */; };
-		1A21678284EFF9443D249745 /* TGBallSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21672DA6B7F101D8E91B54 /* TGBallSpinFadeLoader.swift */; };
-		1A2167B6EDF26999B521A180 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2164FB1ADB0AF1C84C94EE /* TGPacman.swift */; };
-		1A2168F2D4F348DDE8B88E6A /* TGTriangleSkewSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2169B889E3C6B82935A118 /* TGTriangleSkewSpin.swift */; };
-		1A216907682788A80C9A25C5 /* TGAudioEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216296CDEBC901D7F7296F /* TGAudioEqualizer.swift */; };
-		1A21690F2935BC2DEC816189 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21637F55843C1002578B64 /* TGIndicator.swift */; };
-		1A21691AE645F121E35FA4AF /* TGBallClipRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21656D6F2A4B019491B694 /* TGBallClipRotate.swift */; };
-		1A2169982AFD1522C367EC8A /* TGBallScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165A87C76704256B21752 /* TGBallScale.swift */; };
-		1A2169A238AC321FC4895542 /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160325C460D59732B1F29 /* TGBallTrianglePath.swift */; };
-		1A216A28A929B334F1ADF4F9 /* TGBallScaleRippleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E02FA5A7D315173BECF /* TGBallScaleRippleMultiple.swift */; };
-		1A216B0C7E8EBD229BEAAE75 /* TGCubeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165D393FF998F6DE6D549 /* TGCubeTransition.swift */; };
-		1A216B3416F286000C959D27 /* TGLineOrderbyAsc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21672E21C31255AFFAB310 /* TGLineOrderbyAsc.swift */; };
-		1A216BCC424FE6ACE3F3F323 /* TGBallPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21663E0EDD094B857922AF /* TGBallPulse.swift */; };
+		1A2166BBDC9C0FDDCFABDF4C /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216997147967D6C96DF81A /* TGBallGridBeat.swift */; };
+		1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21654368D760800244CACC /* TGBallBeat.swift */; };
+		1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */; };
+		1A21686EFB61D4153BF01402 /* TGBallScaleRipple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */; };
+		1A21688B9886BC46AE43B020 /* TGBallPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F6D2BD34A108953A36E /* TGBallPulse.swift */; };
+		1A21689046CCFB61A8B9FD0B /* TGBallScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216FE195022C83DC20F61A /* TGBallScale.swift */; };
+		1A2169320DFAD616FB5A83B0 /* TGAudioEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216170CD3CF455CA4E936F /* TGAudioEqualizer.swift */; };
+		1A21696EF43FAFA4473D22E1 /* TGBallSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */; };
+		1A21698E91F5C990A3AA9DC4 /* TGLineOrderbyAsc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */; };
+		1A2169ACB01B225214CD9414 /* TGBallScaleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167651BB1A721258FD510 /* TGBallScaleMultiple.swift */; };
+		1A216A6252C28F16C59B40F5 /* TGBallClipRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */; };
+		1A216B16B6471855858B7C50 /* TGBallClipRotateMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */; };
+		1A216B41FEC305961DCC7D7A /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */; };
+		1A216BDB56696EEC0A9AB6AE /* TGLineSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165BEDAA30BDDAC0623E5 /* TGLineSpinFadeLoader.swift */; };
 		1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */; };
-		1A216C17F2C8EAA3F5A4DE8A /* TGLineSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216FF1B3F00791DF9A1E70 /* TGLineSpinFadeLoader.swift */; };
-		1A216CD5C5E78DFB30D69440 /* TGSquareGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166C0C31A06CA89DEBF8E /* TGSquareGridPulse.swift */; };
-		1A216D051C33589EC371CABF /* TGBallPulseSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21621373A42E8AF15928E0 /* TGBallPulseSync.swift */; };
-		1A216D32567AC801CF57D4A1 /* TGBallClipRotateMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21653962742EA3B0A2C9AE /* TGBallClipRotateMultiple.swift */; };
-		1A216DAC4D97B7D73A7FAA7F /* TGLineScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216658CA9A24698077C9AD /* TGLineScale.swift */; };
-		1A216DCC5534B280D7FA0108 /* TGSquareSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165DDDF27BEA4AFB4CB0C /* TGSquareSpin.swift */; };
-		1A216E2B1F60E50ACA588E75 /* TGBallScaleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A695B0913FE24717430 /* TGBallScaleMultiple.swift */; };
-		1A216EFA9E90CE8EFB358C52 /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166030CB09CE80DA73364 /* TGBallGridBeat.swift */; };
-		1A216F54908E943C91EC69BF /* TGSemiCircleSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167EC5382D17FF10C26D1 /* TGSemiCircleSpin.swift */; };
-		1A216FF9C5C48FF7332F2E56 /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161545EED5FCE64798E39 /* TGOrbit.swift */; };
+		1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D1F43F1F934632B2F3C /* TGIndicator.swift */; };
+		1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216C71F1128F3D74D96967 /* TGBallRotate.swift */; };
+		1A216EED4D75D8068F9B209F /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */; };
+		1A216F0F7C8B28F2BD0D6D93 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */; };
+		1A216F26244D87EA944F606A /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */; };
 		1AB1C8BBCD418B1695B36A89A92C6B7F /* CityItemCellTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */; };
 		20591B23BD3979D8B1168FA7386F5F2D /* SearchNeighborhoodEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */; };
 		266C3175AAB1A82168E48CF9601821F8 /* UITableViewCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636A6928B9B98220C40EDDF4311ED6A /* UITableViewCellFactory.swift */; };
@@ -210,49 +210,49 @@
 		0D2CD9B5730FCA285C3D91C7782012FB /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
 		12527A39FE595F4CAD50CA50217C0795 /* HorseDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorseDetailPageVC.swift; sourceTree = "<group>"; };
 		17A5EC44CF929F7A1564FB6702ED79CE /* CategorySectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategorySectionView.swift; sourceTree = "<group>"; };
-		1A2160325C460D59732B1F29 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
-		1A21608C271598A73C54946E /* TGSquarePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquarePulse.swift; sourceTree = "<group>"; };
-		1A2160C1470191F20097096D /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
-		1A2161278B48B3E743D0C879 /* TGBlank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBlank.swift; sourceTree = "<group>"; };
+		1A21606A0A466D097E45D35D /* TGBallPulseRise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseRise.swift; sourceTree = "<group>"; };
+		1A216083934BF5B314D766EE /* TGBlank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBlank.swift; sourceTree = "<group>"; };
 		1A216130F340A11375391C9F /* SearchFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchFilterPanel.swift; sourceTree = "<group>"; };
 		1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinePageViewModel.swift; sourceTree = "<group>"; };
-		1A2161545EED5FCE64798E39 /* TGOrbit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGOrbit.swift; sourceTree = "<group>"; };
-		1A21621373A42E8AF15928E0 /* TGBallPulseSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseSync.swift; sourceTree = "<group>"; };
-		1A216296CDEBC901D7F7296F /* TGAudioEqualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGAudioEqualizer.swift; sourceTree = "<group>"; };
-		1A2162A48C3FD426D08502A0 /* TGWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGWindows.swift; sourceTree = "<group>"; };
+		1A216170CD3CF455CA4E936F /* TGAudioEqualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGAudioEqualizer.swift; sourceTree = "<group>"; };
+		1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOutRapid.swift; sourceTree = "<group>"; };
+		1A2162D4EBFA8119D603F2DB /* TGPacman.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGPacman.swift; sourceTree = "<group>"; };
+		1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotateChase.swift; sourceTree = "<group>"; };
 		1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailPageViewModel.swift; sourceTree = "<group>"; };
-		1A21637F55843C1002578B64 /* TGIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGIndicator.swift; sourceTree = "<group>"; };
-		1A216426417E021AF2A2DF65 /* TGBallPulseRise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseRise.swift; sourceTree = "<group>"; };
-		1A21648D61C70191EA992A87 /* TGBallBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallBeat.swift; sourceTree = "<group>"; };
-		1A2164A65098F16C33419526 /* TGLineScalePulseOutRapid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOutRapid.swift; sourceTree = "<group>"; };
-		1A2164CEF4BCF17C6F68AC98 /* TGBallRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotate.swift; sourceTree = "<group>"; };
-		1A2164FB1ADB0AF1C84C94EE /* TGPacman.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGPacman.swift; sourceTree = "<group>"; };
-		1A21653962742EA3B0A2C9AE /* TGBallClipRotateMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotateMultiple.swift; sourceTree = "<group>"; };
-		1A21656D6F2A4B019491B694 /* TGBallClipRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotate.swift; sourceTree = "<group>"; };
-		1A2165A87C76704256B21752 /* TGBallScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScale.swift; sourceTree = "<group>"; };
-		1A2165D393FF998F6DE6D549 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
-		1A2165DDDF27BEA4AFB4CB0C /* TGSquareSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareSpin.swift; sourceTree = "<group>"; };
-		1A2166030CB09CE80DA73364 /* TGBallGridBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridBeat.swift; sourceTree = "<group>"; };
-		1A216639461E029C6C643E1D /* TGLineCursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineCursor.swift; sourceTree = "<group>"; };
-		1A21663E0EDD094B857922AF /* TGBallPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulse.swift; sourceTree = "<group>"; };
-		1A216658CA9A24698077C9AD /* TGLineScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScale.swift; sourceTree = "<group>"; };
-		1A2166C0C31A06CA89DEBF8E /* TGSquareGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareGridPulse.swift; sourceTree = "<group>"; };
-		1A2166C68E85B5E711534F27 /* TGLineScalePulseOut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOut.swift; sourceTree = "<group>"; };
-		1A21672DA6B7F101D8E91B54 /* TGBallSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallSpinFadeLoader.swift; sourceTree = "<group>"; };
-		1A21672E21C31255AFFAB310 /* TGLineOrderbyAsc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineOrderbyAsc.swift; sourceTree = "<group>"; };
-		1A21674A77879C6FC6F6609B /* TGBallZigZagDeflect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZagDeflect.swift; sourceTree = "<group>"; };
-		1A2167CD1061349E54FA15E5 /* TGBallRotateChase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotateChase.swift; sourceTree = "<group>"; };
-		1A2167EC5382D17FF10C26D1 /* TGSemiCircleSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSemiCircleSpin.swift; sourceTree = "<group>"; };
+		1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineOrderbyAsc.swift; sourceTree = "<group>"; };
+		1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
+		1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
+		1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScale.swift; sourceTree = "<group>"; };
+		1A216492B610A51EFD9827BF /* TGSquareGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareGridPulse.swift; sourceTree = "<group>"; };
+		1A2164F00CA7D6AACA2CD796 /* TGOrbit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGOrbit.swift; sourceTree = "<group>"; };
+		1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOut.swift; sourceTree = "<group>"; };
+		1A216534A9AEDB9CF0171AFA /* TGBallZigZagDeflect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZagDeflect.swift; sourceTree = "<group>"; };
+		1A21654368D760800244CACC /* TGBallBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallBeat.swift; sourceTree = "<group>"; };
+		1A2165BEDAA30BDDAC0623E5 /* TGLineSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineSpinFadeLoader.swift; sourceTree = "<group>"; };
+		1A2166820A8214CB1387851F /* TGSemiCircleSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSemiCircleSpin.swift; sourceTree = "<group>"; };
+		1A2166DACCFF666EFB073471 /* TGBallPulseSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseSync.swift; sourceTree = "<group>"; };
+		1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotate.swift; sourceTree = "<group>"; };
+		1A2167651BB1A721258FD510 /* TGBallScaleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleMultiple.swift; sourceTree = "<group>"; };
+		1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZag.swift; sourceTree = "<group>"; };
 		1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseDetailPageBottomBarView.swift; sourceTree = "<group>"; };
-		1A216908E1C9436BB0C4A8B3 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
-		1A2169B889E3C6B82935A118 /* TGTriangleSkewSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGTriangleSkewSpin.swift; sourceTree = "<group>"; };
-		1A2169C8AA71AFA63A303D40 /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
-		1A216A695B0913FE24717430 /* TGBallScaleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleMultiple.swift; sourceTree = "<group>"; };
-		1A216D26A226441BE7229EAF /* TGLineScaleParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScaleParty.swift; sourceTree = "<group>"; };
-		1A216E02FA5A7D315173BECF /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
-		1A216E5B13743751A277A913 /* TGBallZigZag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZag.swift; sourceTree = "<group>"; };
+		1A2169421CDC3A838941280A /* TGWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGWindows.swift; sourceTree = "<group>"; };
+		1A216997147967D6C96DF81A /* TGBallGridBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridBeat.swift; sourceTree = "<group>"; };
+		1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallSpinFadeLoader.swift; sourceTree = "<group>"; };
+		1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
+		1A216A6071431ADA243CF6F6 /* TGLineScaleParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScaleParty.swift; sourceTree = "<group>"; };
+		1A216AD34CE3F7115332BD0C /* TGSquarePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquarePulse.swift; sourceTree = "<group>"; };
+		1A216B6B619135AF707F7845 /* TGSquareSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareSpin.swift; sourceTree = "<group>"; };
+		1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGTriangleSkewSpin.swift; sourceTree = "<group>"; };
+		1A216C71F1128F3D74D96967 /* TGBallRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotate.swift; sourceTree = "<group>"; };
+		1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotateMultiple.swift; sourceTree = "<group>"; };
+		1A216CD28FC78D661285A19A /* TGLineCursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineCursor.swift; sourceTree = "<group>"; };
+		1A216D1F43F1F934632B2F3C /* TGIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGIndicator.swift; sourceTree = "<group>"; };
 		1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
-		1A216FF1B3F00791DF9A1E70 /* TGLineSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineSpinFadeLoader.swift; sourceTree = "<group>"; };
+		1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
+		1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
+		1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
+		1A216F6D2BD34A108953A36E /* TGBallPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulse.swift; sourceTree = "<group>"; };
+		1A216FE195022C83DC20F61A /* TGBallScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScale.swift; sourceTree = "<group>"; };
 		1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
 		1BEB033643738EAE398EA57C1EC22B30 /* OpenAllCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAllCell.swift; sourceTree = "<group>"; };
 		1C92D94C585E1981284344F3EC7F4B7E /* DetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewModel.swift; sourceTree = "<group>"; };
@@ -490,57 +490,57 @@
 			path = Bizs;
 			sourceTree = "<group>";
 		};
-		1A2161C4BC845BF10A6A89A9 /* TGIndicator */ = {
+		1A2164259C48DA372CCC93CB /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				1A21637F55843C1002578B64 /* TGIndicator.swift */,
-				1A2164960A37046BEF4DD306 /* Animation */,
-			);
-			path = TGIndicator;
-			sourceTree = "<group>";
-		};
-		1A2164960A37046BEF4DD306 /* Animation */ = {
-			isa = PBXGroup;
-			children = (
-				1A2164CEF4BCF17C6F68AC98 /* TGBallRotate.swift */,
-				1A216FF1B3F00791DF9A1E70 /* TGLineSpinFadeLoader.swift */,
-				1A216639461E029C6C643E1D /* TGLineCursor.swift */,
-				1A21648D61C70191EA992A87 /* TGBallBeat.swift */,
-				1A2169B889E3C6B82935A118 /* TGTriangleSkewSpin.swift */,
-				1A216658CA9A24698077C9AD /* TGLineScale.swift */,
-				1A216A695B0913FE24717430 /* TGBallScaleMultiple.swift */,
-				1A2169C8AA71AFA63A303D40 /* TGBallGridPulse.swift */,
-				1A216D26A226441BE7229EAF /* TGLineScaleParty.swift */,
-				1A216E5B13743751A277A913 /* TGBallZigZag.swift */,
-				1A2161545EED5FCE64798E39 /* TGOrbit.swift */,
-				1A2162A48C3FD426D08502A0 /* TGWindows.swift */,
-				1A216908E1C9436BB0C4A8B3 /* TGBallClipRotatePulse.swift */,
-				1A2165D393FF998F6DE6D549 /* TGCubeTransition.swift */,
-				1A2167CD1061349E54FA15E5 /* TGBallRotateChase.swift */,
-				1A2165DDDF27BEA4AFB4CB0C /* TGSquareSpin.swift */,
-				1A2164A65098F16C33419526 /* TGLineScalePulseOutRapid.swift */,
-				1A2166030CB09CE80DA73364 /* TGBallGridBeat.swift */,
-				1A2160C1470191F20097096D /* TGBallScaleRipple.swift */,
-				1A21674A77879C6FC6F6609B /* TGBallZigZagDeflect.swift */,
-				1A21653962742EA3B0A2C9AE /* TGBallClipRotateMultiple.swift */,
-				1A2160325C460D59732B1F29 /* TGBallTrianglePath.swift */,
-				1A2166C68E85B5E711534F27 /* TGLineScalePulseOut.swift */,
-				1A21656D6F2A4B019491B694 /* TGBallClipRotate.swift */,
-				1A2165A87C76704256B21752 /* TGBallScale.swift */,
-				1A2164FB1ADB0AF1C84C94EE /* TGPacman.swift */,
-				1A21672DA6B7F101D8E91B54 /* TGBallSpinFadeLoader.swift */,
-				1A2161278B48B3E743D0C879 /* TGBlank.swift */,
-				1A21672E21C31255AFFAB310 /* TGLineOrderbyAsc.swift */,
-				1A216426417E021AF2A2DF65 /* TGBallPulseRise.swift */,
-				1A216296CDEBC901D7F7296F /* TGAudioEqualizer.swift */,
-				1A216E02FA5A7D315173BECF /* TGBallScaleRippleMultiple.swift */,
-				1A2167EC5382D17FF10C26D1 /* TGSemiCircleSpin.swift */,
-				1A21608C271598A73C54946E /* TGSquarePulse.swift */,
-				1A21663E0EDD094B857922AF /* TGBallPulse.swift */,
-				1A21621373A42E8AF15928E0 /* TGBallPulseSync.swift */,
-				1A2166C0C31A06CA89DEBF8E /* TGSquareGridPulse.swift */,
+				1A216C71F1128F3D74D96967 /* TGBallRotate.swift */,
+				1A2165BEDAA30BDDAC0623E5 /* TGLineSpinFadeLoader.swift */,
+				1A216CD28FC78D661285A19A /* TGLineCursor.swift */,
+				1A21654368D760800244CACC /* TGBallBeat.swift */,
+				1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */,
+				1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */,
+				1A2167651BB1A721258FD510 /* TGBallScaleMultiple.swift */,
+				1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */,
+				1A216A6071431ADA243CF6F6 /* TGLineScaleParty.swift */,
+				1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */,
+				1A2164F00CA7D6AACA2CD796 /* TGOrbit.swift */,
+				1A2169421CDC3A838941280A /* TGWindows.swift */,
+				1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */,
+				1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */,
+				1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */,
+				1A216B6B619135AF707F7845 /* TGSquareSpin.swift */,
+				1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */,
+				1A216997147967D6C96DF81A /* TGBallGridBeat.swift */,
+				1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */,
+				1A216534A9AEDB9CF0171AFA /* TGBallZigZagDeflect.swift */,
+				1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */,
+				1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */,
+				1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */,
+				1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */,
+				1A216FE195022C83DC20F61A /* TGBallScale.swift */,
+				1A2162D4EBFA8119D603F2DB /* TGPacman.swift */,
+				1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */,
+				1A216083934BF5B314D766EE /* TGBlank.swift */,
+				1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */,
+				1A21606A0A466D097E45D35D /* TGBallPulseRise.swift */,
+				1A216170CD3CF455CA4E936F /* TGAudioEqualizer.swift */,
+				1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */,
+				1A2166820A8214CB1387851F /* TGSemiCircleSpin.swift */,
+				1A216AD34CE3F7115332BD0C /* TGSquarePulse.swift */,
+				1A216F6D2BD34A108953A36E /* TGBallPulse.swift */,
+				1A2166DACCFF666EFB073471 /* TGBallPulseSync.swift */,
+				1A216492B610A51EFD9827BF /* TGSquareGridPulse.swift */,
 			);
 			path = Animation;
+			sourceTree = "<group>";
+		};
+		1A2164486E685C0018811C71 /* TGIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				1A216D1F43F1F934632B2F3C /* TGIndicator.swift */,
+				1A2164259C48DA372CCC93CB /* Animation */,
+			);
+			path = TGIndicator;
 			sourceTree = "<group>";
 		};
 		2B69573B56D7B8C4E19281CAF053A987 /* CategoryListPage */ = {
@@ -836,6 +836,7 @@
 				B300EC0820F2314D00C72C93 /* TGRefreshSwift.bundle */,
 				B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */,
 				B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */,
+				1A2164486E685C0018811C71 /* TGIndicator */,
 			);
 			path = TGRefreshSwift;
 			sourceTree = "<group>";
@@ -940,7 +941,6 @@
 			isa = PBXGroup;
 			children = (
 				AED9CB50032E20514226E8D9FCFD06AA /* RxTTNetwork.swift */,
-				1A2161C4BC845BF10A6A89A9 /* TGIndicator */,
 			);
 			path = Networks;
 			sourceTree = "<group>";
@@ -1315,45 +1315,45 @@
 				1A216510BC7286624889833D /* NeighborhoodDetailPageViewModel.swift in Sources */,
 				1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */,
 				1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */,
-				1A21690F2935BC2DEC816189 /* TGIndicator.swift in Sources */,
-				1A21653F9CA54BDF9C824111 /* TGBallRotate.swift in Sources */,
-				1A216C17F2C8EAA3F5A4DE8A /* TGLineSpinFadeLoader.swift in Sources */,
-				1A2167752BA3A4BBFA474834 /* TGLineCursor.swift in Sources */,
-				1A2160898FD52690E5483117 /* TGBallBeat.swift in Sources */,
-				1A2168F2D4F348DDE8B88E6A /* TGTriangleSkewSpin.swift in Sources */,
-				1A216DAC4D97B7D73A7FAA7F /* TGLineScale.swift in Sources */,
-				1A216E2B1F60E50ACA588E75 /* TGBallScaleMultiple.swift in Sources */,
-				1A2164AF828E752494C7986C /* TGBallGridPulse.swift in Sources */,
-				1A216228E8C6E3B306406ED0 /* TGLineScaleParty.swift in Sources */,
-				1A2166E129EF3BB4842F0608 /* TGBallZigZag.swift in Sources */,
-				1A216FF9C5C48FF7332F2E56 /* TGOrbit.swift in Sources */,
-				1A21675E88B8104FA8861342 /* TGWindows.swift in Sources */,
-				1A216561B1D4E87F16B7FA9E /* TGBallClipRotatePulse.swift in Sources */,
-				1A216B0C7E8EBD229BEAAE75 /* TGCubeTransition.swift in Sources */,
-				1A21629CE94C9A1C376043A2 /* TGBallRotateChase.swift in Sources */,
-				1A216DCC5534B280D7FA0108 /* TGSquareSpin.swift in Sources */,
-				1A2165B1879C0A34308C8C89 /* TGLineScalePulseOutRapid.swift in Sources */,
-				1A216EFA9E90CE8EFB358C52 /* TGBallGridBeat.swift in Sources */,
-				1A2163D6A761E70DABD129E9 /* TGBallScaleRipple.swift in Sources */,
-				1A2161E17EEE35E54D26DAC8 /* TGBallZigZagDeflect.swift in Sources */,
-				1A216D32567AC801CF57D4A1 /* TGBallClipRotateMultiple.swift in Sources */,
-				1A2169A238AC321FC4895542 /* TGBallTrianglePath.swift in Sources */,
-				1A2160FA72081933802DA1D8 /* TGLineScalePulseOut.swift in Sources */,
-				1A21691AE645F121E35FA4AF /* TGBallClipRotate.swift in Sources */,
-				1A2169982AFD1522C367EC8A /* TGBallScale.swift in Sources */,
-				1A2167B6EDF26999B521A180 /* TGPacman.swift in Sources */,
-				1A21678284EFF9443D249745 /* TGBallSpinFadeLoader.swift in Sources */,
-				1A2161A06C3D06237E08037D /* TGBlank.swift in Sources */,
-				1A216B3416F286000C959D27 /* TGLineOrderbyAsc.swift in Sources */,
-				1A21604CC621833054CA6D94 /* TGBallPulseRise.swift in Sources */,
-				1A216907682788A80C9A25C5 /* TGAudioEqualizer.swift in Sources */,
-				1A216A28A929B334F1ADF4F9 /* TGBallScaleRippleMultiple.swift in Sources */,
-				1A216F54908E943C91EC69BF /* TGSemiCircleSpin.swift in Sources */,
-				1A216315E9ED79B0457E0162 /* TGSquarePulse.swift in Sources */,
-				1A216BCC424FE6ACE3F3F323 /* TGBallPulse.swift in Sources */,
-				1A216D051C33589EC371CABF /* TGBallPulseSync.swift in Sources */,
-				1A216CD5C5E78DFB30D69440 /* TGSquareGridPulse.swift in Sources */,
 				1A2161F4A4D8D46994A7C896 /* HouseDetailPageBottomBarView.swift in Sources */,
+				1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */,
+				1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */,
+				1A216BDB56696EEC0A9AB6AE /* TGLineSpinFadeLoader.swift in Sources */,
+				1A216002176A289FCDC93A79 /* TGLineCursor.swift in Sources */,
+				1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */,
+				1A21611E7C676634236DE32D /* TGTriangleSkewSpin.swift in Sources */,
+				1A21602BA1DAAE86B926B480 /* TGLineScale.swift in Sources */,
+				1A2169ACB01B225214CD9414 /* TGBallScaleMultiple.swift in Sources */,
+				1A2161AF1CFC9707F2144AA2 /* TGBallGridPulse.swift in Sources */,
+				1A21636688A8EF7AA365D712 /* TGLineScaleParty.swift in Sources */,
+				1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */,
+				1A21622D0065E11F5AF3726B /* TGOrbit.swift in Sources */,
+				1A216345A0F87A09B7F20969 /* TGWindows.swift in Sources */,
+				1A21604D6486FDAA0CA45EB0 /* TGBallClipRotatePulse.swift in Sources */,
+				1A2166A9E0B37A87D18D8182 /* TGCubeTransition.swift in Sources */,
+				1A216B41FEC305961DCC7D7A /* TGBallRotateChase.swift in Sources */,
+				1A21623EEF0EE216334CB021 /* TGSquareSpin.swift in Sources */,
+				1A216F26244D87EA944F606A /* TGLineScalePulseOutRapid.swift in Sources */,
+				1A2166BBDC9C0FDDCFABDF4C /* TGBallGridBeat.swift in Sources */,
+				1A21686EFB61D4153BF01402 /* TGBallScaleRipple.swift in Sources */,
+				1A21652A51D8963E73D3E6AC /* TGBallZigZagDeflect.swift in Sources */,
+				1A216B16B6471855858B7C50 /* TGBallClipRotateMultiple.swift in Sources */,
+				1A216EED4D75D8068F9B209F /* TGBallTrianglePath.swift in Sources */,
+				1A216F0F7C8B28F2BD0D6D93 /* TGLineScalePulseOut.swift in Sources */,
+				1A216A6252C28F16C59B40F5 /* TGBallClipRotate.swift in Sources */,
+				1A21689046CCFB61A8B9FD0B /* TGBallScale.swift in Sources */,
+				1A2161565C356ECF1F5F6356 /* TGPacman.swift in Sources */,
+				1A21696EF43FAFA4473D22E1 /* TGBallSpinFadeLoader.swift in Sources */,
+				1A21639E55EAADCBAA6528ED /* TGBlank.swift in Sources */,
+				1A21698E91F5C990A3AA9DC4 /* TGLineOrderbyAsc.swift in Sources */,
+				1A21647C3A0F5A5C8B8DF03D /* TGBallPulseRise.swift in Sources */,
+				1A2169320DFAD616FB5A83B0 /* TGAudioEqualizer.swift in Sources */,
+				1A21648C1ACCAFC8D387AB83 /* TGBallScaleRippleMultiple.swift in Sources */,
+				1A21639CC01D88A11EB7B008 /* TGSemiCircleSpin.swift in Sources */,
+				1A21641D5A1D3CC65C96D97A /* TGSquarePulse.swift in Sources */,
+				1A21688B9886BC46AE43B020 /* TGBallPulse.swift in Sources */,
+				1A2163CBA04285189AB288E4 /* TGBallPulseSync.swift in Sources */,
+				1A216555B0C403DF359FBC0A /* TGSquareGridPulse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

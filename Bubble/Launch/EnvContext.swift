@@ -11,6 +11,10 @@ import UIKit
 class EnvContext {
     static let shared = EnvContext()
 
+    static let networkConfig: NetworkConfig = {
+        NetworkConfig()
+    }()
+
     lazy var rootNavController: UINavigationController = {
         BaseNavigationController()
     }()
@@ -19,3 +23,13 @@ class EnvContext {
         Client()
     }()
 }
+
+class NetworkConfig {
+    var host: String
+
+    init() {
+        self.host = "http://m.quduzixun.com/f100"
+    }
+}
+
+
