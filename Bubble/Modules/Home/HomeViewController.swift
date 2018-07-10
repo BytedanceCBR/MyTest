@@ -225,7 +225,7 @@ extension HomeViewController {
         }
         vc.onItemSelect
                 .subscribe(onNext: { i in
-                    EnvContext.shared.client.currentSelectedCityId.accept(i)
+                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
                     EnvContext.shared.rootNavController.popViewController(animated: true)
                 })
                 .disposed(by: self.disposeBag)

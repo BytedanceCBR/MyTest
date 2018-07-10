@@ -19,8 +19,6 @@ class Client {
 
     let configCacheSubject = BehaviorRelay<SearchConfigResponseData?>(value: nil)
 
-    let currentSelectedCityId = BehaviorRelay<Int?>(value: nil)
-
     let disposeBag = DisposeBag()
 
     var hoseType: HouseType = .secondHandHouse
@@ -69,13 +67,13 @@ class Client {
             }
         }
 
-        currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
-        currentSelectedCityId
-                .subscribe(onNext: { (cityId) in
-                    UserDefaults.standard.set(cityId, forKey: "selected_city_id")
-                    UserDefaults.standard.synchronize()
-                })
-                .disposed(by: disposeBag)
+//        currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
+//        currentSelectedCityId
+//                .subscribe(onNext: { (cityId) in
+//                    UserDefaults.standard.set(cityId, forKey: "selected_city_id")
+//                    UserDefaults.standard.synchronize()
+//                })
+//                .disposed(by: disposeBag)
     }
 
     private func fetchSearchConfig() {

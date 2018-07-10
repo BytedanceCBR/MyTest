@@ -26,6 +26,13 @@ class GeneralBizConfig {
 
     init(locationManager: LocationManager) {
         self.locationManager = locationManager
+
+        currentSelectCityId
+            .filter { $0 != nil }
+            .subscribe(onNext: { [unowned self] (cityId) in
+                self.setCurrentSelectCityId(cityId: cityId!)
+            })
+            .disposed(by: disposeBag)
     }
 
     func load() {
