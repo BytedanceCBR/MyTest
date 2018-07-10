@@ -53,6 +53,7 @@ class SuggestionListVC: BaseViewController {
 
         navBar.searchInput.rx.textInput.text
                 .throttle(0.6, scheduler: MainScheduler.instance)
+                .filter { $0 != nil && $0 != "" }
                 .subscribe(onNext: tableViewModel.sendQuery(tableView: tableView))
                 .disposed(by: disposeBag)
         navBar.searchTypeBtn.rx.tap
@@ -75,25 +76,15 @@ class SuggestionListVC: BaseViewController {
         }
         tableView.register(SuggestionItemCell.self, forCellReuseIdentifier: "item")
         tableView.reloadData()
-        // Do any additional setup after loading the view.
-        requestSuggestion(cityId: 133, horseType: houseType.value.rawValue)
-                .subscribe(onNext: { [unowned self] (responsed) in
-                    if let responseData = responsed?.data {
-                        self.tableViewModel.suggestions = responseData
-                        self.tableView.reloadData()
-                    }
-                }, onError: { (error) in
-                    print(error)
-                })
-                .disposed(by: disposeBag)
-
         houseType
             .subscribe(onNext: { [weak self] (type) in
                 self?.navBar.searchTypeLabel.text = type.stringValue()
                 if let tableView = self?.tableView , let houseType = self?.houseType.value {
-                    self?.tableViewModel.sendQuery(
-                        tableView: tableView,
-                        houseType: houseType)(self?.navBar.searchInput.text)
+                    if self?.navBar.searchInput.text?.isEmpty == false {
+                        self?.tableViewModel.sendQuery(
+                            tableView: tableView,
+                            houseType: houseType)(self?.navBar.searchInput.text)
+                    }
                 }
                 //                        self?.searchAndConditionFilterVM.sendSearchRequest()
             })

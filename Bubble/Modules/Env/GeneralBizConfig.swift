@@ -10,6 +10,8 @@ import RxCocoa
 import TTNetworkManager
 class GeneralBizConfig {
 
+    static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"
+
     lazy private var searchConfigCache: YYCache? = {
         YYCache(name: "config")
     }()
@@ -34,6 +36,10 @@ class GeneralBizConfig {
                 let generalPayload = searchConfigCache.object(forKey: "general_config") as! String
                 let generalConfig = GeneralConfigData(JSONString: generalPayload)
                 generalCacheSubject.accept(generalConfig)
+                if let cityId = getCurrentSelectCityId() {
+                    currentSelectCityId.accept(cityId)
+                }
+                fetchConfiguration()
             }
         }
     }
@@ -60,12 +66,26 @@ class GeneralBizConfig {
 
                 }
                 if let currentCityId = response?.data?.currentCityId {
-                    self.currentSelectCityId.accept(Int(currentCityId))
+                    if self.getCurrentSelectCityId() == nil {
+                        self.currentSelectCityId.accept(Int(currentCityId))
+                        self.setCurrentSelectCityId(cityId: Int(currentCityId))
+                    }
                 }
             }, onError: { error in
                     print(error)
             })
             .disposed(by: disposeBag)
+    }
+
+    func setCurrentSelectCityId(cityId: Int) {
+        UserDefaults.standard.set(cityId, forKey: GeneralBizConfig.CONFIG_KEY_SELECT_CITY_ID)
+        UserDefaults.standard.synchronize()
+    }
+
+    func getCurrentSelectCityId() -> Int? {
+        let cityId = UserDefaults.standard
+                .integer(forKey: GeneralBizConfig.CONFIG_KEY_SELECT_CITY_ID)
+        return cityId
     }
 
     func commonParams() -> () -> [AnyHashable: Any] {
