@@ -23,6 +23,7 @@
 		1A216002176A289FCDC93A79 /* TGLineCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CD28FC78D661285A19A /* TGLineCursor.swift */; };
 		1A21602BA1DAAE86B926B480 /* TGLineScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */; };
 		1A21604D6486FDAA0CA45EB0 /* TGBallClipRotatePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */; };
+		1A216064CD05CBACADE1959B /* GeneralBizConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F8350507AD670E3F80F /* GeneralBizConfig.swift */; };
 		1A21611E7C676634236DE32D /* TGTriangleSkewSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */; };
 		1A2161565C356ECF1F5F6356 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D4EBFA8119D603F2DB /* TGPacman.swift */; };
 		1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216130F340A11375391C9F /* SearchFilterPanel.swift */; };
@@ -140,6 +141,7 @@
 		B300EBD420F2230200C72C93 /* TGRefreshSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */; };
 		B300EC0920F2314D00C72C93 /* TGRefreshSwift.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B300EC0820F2314D00C72C93 /* TGRefreshSwift.bundle */; };
 		B300EC0B20F2461A00C72C93 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */; };
+		B327FC8420F471CD00721C23 /* NetworkCommonParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
 		B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */; };
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
@@ -252,6 +254,7 @@
 		1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
 		1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
 		1A216F6D2BD34A108953A36E /* TGBallPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulse.swift; sourceTree = "<group>"; };
+		1A216F8350507AD670E3F80F /* GeneralBizConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralBizConfig.swift; sourceTree = "<group>"; };
 		1A216FE195022C83DC20F61A /* TGBallScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScale.swift; sourceTree = "<group>"; };
 		1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
 		1BEB033643738EAE398EA57C1EC22B30 /* OpenAllCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAllCell.swift; sourceTree = "<group>"; };
@@ -342,6 +345,7 @@
 		B300EBAD20F2230200C72C93 /* TGRefreshSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGRefreshSwift.swift; sourceTree = "<group>"; };
 		B300EC0820F2314D00C72C93 /* TGRefreshSwift.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TGRefreshSwift.bundle; sourceTree = "<group>"; };
 		B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
+		B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCommonParams.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
 		B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				035635E9BAACF147417D8653C5F81802 /* HorseDetailPage */,
 				5245424DEE6EEF5C4E03D39881DBD74D /* Navs */,
 				6BDB3BD67E68879F66C9329DB0A51C52 /* Style */,
+				1A216E0705C4D1ABEA6E863F /* Env */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -541,6 +546,15 @@
 				1A2164259C48DA372CCC93CB /* Animation */,
 			);
 			path = TGIndicator;
+			sourceTree = "<group>";
+		};
+		1A216E0705C4D1ABEA6E863F /* Env */ = {
+			isa = PBXGroup;
+			children = (
+				1A216F8350507AD670E3F80F /* GeneralBizConfig.swift */,
+				B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */,
+			);
+			path = Env;
 			sourceTree = "<group>";
 		};
 		2B69573B56D7B8C4E19281CAF053A987 /* CategoryListPage */ = {
@@ -1319,6 +1333,7 @@
 				1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */,
 				1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */,
 				1A216BDB56696EEC0A9AB6AE /* TGLineSpinFadeLoader.swift in Sources */,
+				B327FC8420F471CD00721C23 /* NetworkCommonParams.swift in Sources */,
 				1A216002176A289FCDC93A79 /* TGLineCursor.swift in Sources */,
 				1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */,
 				1A21611E7C676634236DE32D /* TGTriangleSkewSpin.swift in Sources */,
@@ -1354,6 +1369,7 @@
 				1A21688B9886BC46AE43B020 /* TGBallPulse.swift in Sources */,
 				1A2163CBA04285189AB288E4 /* TGBallPulseSync.swift in Sources */,
 				1A216555B0C403DF359FBC0A /* TGSquareGridPulse.swift in Sources */,
+				1A216064CD05CBACADE1959B /* GeneralBizConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

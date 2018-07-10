@@ -26,6 +26,7 @@ struct GeneralConfigData: Mappable {
     var hotCityList: [HotCityItem] = []
     var cityList: [CityItem] = []
     var entryList: [EntryItem] = []
+    var currentCityId: Int64?
 
     init?(map: Map) {
 
@@ -34,7 +35,8 @@ struct GeneralConfigData: Mappable {
     mutating func mapping(map: Map) {
         hotCityList <- map["hot_city_list"]
         cityList <- map["city_list"]
-        entryList <- map["entry_list"]
+        entryList <- map["entry_info"]
+        currentCityId <- map["current_city"]
     }
 }
 

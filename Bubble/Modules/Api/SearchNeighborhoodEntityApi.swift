@@ -12,16 +12,16 @@ import TTNetworkManager
 import ObjectMapper
 
 func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/search_neighborhood?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/api/search_neighborhood?"
     if !query.isEmpty {
-        url = "\(url)&\(query)"
+        url = "\(url)\(query)"
     }
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
             params: ["offset": offset],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

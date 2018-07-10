@@ -17,7 +17,7 @@ func requestNewHouseDetail(houseId: Int64) -> Observable<HouseDetailResponse?> {
                     params: ["house_type": HouseType.newHouse.rawValue,
                              "court_id": houseId],
                     method: "GET",
-                    needCommonParams: false)
+                    needCommonParams: true)
             .map({ (data) -> NSString? in
                 NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             })
@@ -40,7 +40,7 @@ func requestNewHousePrice(houseId: Int64, count: Int64) -> Observable<CourtPrice
                 "court_id": houseId,
                 "count": count],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -65,7 +65,7 @@ func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> O
                 "page": page
                 ],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -88,7 +88,7 @@ func requestNewHouseFloorPan(houseId: Int64) -> Observable<CourtFloorPanResponse
                 "court_id": houseId,
             ],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -113,7 +113,7 @@ func requestNewHouseComment(houseId: Int64, count: Int64, page: Int64 = 0) -> Ob
                 "page": page
             ],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -137,7 +137,7 @@ func requestNewHouseMoreDetail(houseId: Int64) -> Observable<CourtMoreDetailResp
                 "court_id": houseId,
             ],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

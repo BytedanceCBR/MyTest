@@ -10,7 +10,7 @@ import Foundation
 import YYCache
 import RxSwift
 import RxCocoa
-
+import TTNetworkManager
 class Client {
 
     lazy private var searchConfigCache: YYCache? = {
@@ -18,8 +18,6 @@ class Client {
     }()
 
     let configCacheSubject = BehaviorRelay<SearchConfigResponseData?>(value: nil)
-
-    let generalCacheSubject = BehaviorRelay<GeneralConfigData?>(value: nil)
 
     let currentSelectedCityId = BehaviorRelay<Int?>(value: nil)
 
@@ -31,19 +29,30 @@ class Client {
         LocationManager.shared
     }()
 
+    lazy var generalBizconfig: GeneralBizConfig = {
+        let re = GeneralBizConfig(locationManager: locationManager)
+        return re
+    }()
+
     init() {
         locationManager.currentLocation
-                .subscribe(onNext: { [weak self] location in
-                    if let location = location {
-                        self?.fetchGeneralConfig(
-                                lat: String(location.coordinate.latitude),
-                                lng: String(location.coordinate.longitude))
-                    }
+                .subscribe(onNext: { [weak self] _ in
+                    self?.generalBizconfig.fetchConfiguration()
+                    self?.setCommonNetwork()
                 })
                 .disposed(by: disposeBag)
     }
 
+    func setCommonNetwork() {
+        let commonParams = NetworkCommonParams.monoid()
+            <- locationManager.locationParams()
+            <- generalBizconfig.commonParams()
+        TTNetworkManager.shareInstance().commonParams = commonParams.params()
+    }
+
     func onStart() {
+        setupLocationManager()
+
         if let searchConfigCache = searchConfigCache {
             if !searchConfigCache.containsObject(forKey: "config") {
                 fetchSearchConfig()
@@ -51,16 +60,9 @@ class Client {
                 let configPayload = searchConfigCache.object(forKey: "search_config") as! String
                 let config = SearchConfigResponseData(JSONString: configPayload)
                 configCacheSubject.accept(config)
-
-                let generalPayload = searchConfigCache.object(forKey: "general_config") as! String
-                let generalConfig = GeneralConfigData(JSONString: generalPayload)
-                generalCacheSubject.accept(generalConfig)
             }
         }
 
-        fetchGeneralConfig()
-
-        setupLocationManager()
         currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
         currentSelectedCityId
                 .subscribe(onNext: { (cityId) in
@@ -78,21 +80,6 @@ class Client {
                     self.configCacheSubject.accept(response?.data)
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "search_config")
-                    }
-                }, onError: { error in
-                    print(error)
-                })
-                .disposed(by: disposeBag)
-    }
-
-    private func fetchGeneralConfig(cityId: String? = nil, lat: String? = nil, lng: String? = nil) {
-        requestGeneralConfig(cityId: cityId, lat: lat, lng: lng)
-                .observeOn(CurrentThreadScheduler.instance)
-                .subscribeOn(CurrentThreadScheduler.instance)
-                .subscribe(onNext: { [unowned self] response in
-                    self.generalCacheSubject.accept(response?.data)
-                    if let payload = response?.data?.toJSONString() {
-                        self.searchConfigCache?.setObject(payload as NSString, forKey: "general_config")
                     }
                 }, onError: { error in
                     print(error)

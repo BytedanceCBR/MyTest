@@ -21,7 +21,7 @@ func requestNeighborhoodDetail(neighborhoodId: String = "", query: String = "") 
             url: url,
             params: nil,
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -46,7 +46,7 @@ func requestNeighborhoodTotalSales(neighborhoodId: String = "", query: String = 
             url: url,
             params: nil,
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

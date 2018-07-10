@@ -87,7 +87,7 @@ class CountryListVC: BaseViewController {
         tableView.register(BubbleCell.self, forCellReuseIdentifier: CellType.bubble.rawValue)
         tableView.register(CityItemCell.self, forCellReuseIdentifier: CellType.item.rawValue)
         tableView.reloadData()
-        EnvContext.shared.client.generalCacheSubject
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject
                 .subscribe(onNext: { [unowned self] data in
                     if let data = data {
                         let listData = (parseHotCityList(data.hotCityList) <*> parseCityList(data.cityList))([])

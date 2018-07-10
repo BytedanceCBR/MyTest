@@ -111,18 +111,20 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 .disposed(by: disposeBag)
         bindSearchEvent()
 
-        EnvContext.shared.client.locationManager.currentCity
-                .subscribe(onNext: { [unowned self] (reGeo) in
-                    if let reGeo = reGeo {
-                        self.suspendSearchBar.countryLabel.text = reGeo.city
-                        self.navBar.suspendSearchBar.countryLabel.text = reGeo.city
+        let generalBizConfig = EnvContext.shared.client.generalBizconfig
+        generalBizConfig.currentSelectCityId
+                .map(generalBizConfig.cityNameById())
+                .subscribe(onNext: { [unowned self] (city) in
+                    if let city = city {
+                        self.suspendSearchBar.countryLabel.text = city
+                        self.navBar.suspendSearchBar.countryLabel.text = city
                     }
                 })
                 .disposed(by: disposeBag)
 
         EnvContext.shared.client.currentSelectedCityId
                 .map { i -> String in
-                    if let cityList = EnvContext.shared.client.generalCacheSubject.value?.cityList {
+                    if let cityList = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.cityList {
                         return cityList.first {
                             $0.cityId == i
                         }?.name ?? "选择城市"

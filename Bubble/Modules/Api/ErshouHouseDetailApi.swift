@@ -20,7 +20,7 @@ func requestErshouHouseDetail(houseId: Int64) -> Observable<ErshouHouseDetailRes
             params: ["house_type": HouseType.secondHandHouse.rawValue,
                      "house_id": houseId],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

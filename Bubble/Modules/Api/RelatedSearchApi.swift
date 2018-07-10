@@ -21,7 +21,7 @@ func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query
             url: url,
             params: nil,
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -46,7 +46,7 @@ func requestRelatedCourtSearch(courtId: String = "", offset: String = "0", query
             url: url,
             params: nil,
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
@@ -73,7 +73,7 @@ func requestRelatedNeighborhoodSearch(
             url: url,
             params: nil,
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

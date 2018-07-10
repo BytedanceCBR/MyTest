@@ -25,7 +25,7 @@ func requestCourtSearch(
             url: url,
             params: ["offset": offset],
             method: "GET",
-            needCommonParams: false)
+            needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })

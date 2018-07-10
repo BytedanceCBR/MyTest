@@ -17,7 +17,7 @@ func requestSearchConfig(cityId: String = "133") -> Observable<SearchConfigRespo
                     url: "\(EnvContext.networkConfig.host)/api/search_config",
                     params: ["city_id": cityId],
                     method: "GET",
-                    needCommonParams: false)
+                    needCommonParams: true)
             .map({ (data) -> NSString? in
                 NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             })
@@ -31,7 +31,7 @@ func requestSearchConfig(cityId: String = "133") -> Observable<SearchConfigRespo
             })
 }
 
-func requestGeneralConfig(cityId: String? = nil, lat: String? = nil, lng: String? = nil) -> Observable<GeneralConfigResponse?> {
+func requestGeneralConfig(cityId: String? = nil, gaodeCityId: String? = nil, lat: Double? = nil, lng: Double? = nil) -> Observable<GeneralConfigResponse?> {
     var params: [String: Any] = [:]
     if let cityId = cityId {
         params["city_id"] = cityId
@@ -40,6 +40,10 @@ func requestGeneralConfig(cityId: String? = nil, lat: String? = nil, lng: String
     if let lat = lat, let lng = lng {
         params["gaode_lng"] = lng
         params["gaode_lat"] = lat
+    }
+
+    if let gaodeCityId = gaodeCityId {
+        params["gaode_city_id"] = gaodeCityId
     }
     return requestGeneralConfig(params: params)
 }
@@ -50,7 +54,7 @@ func requestGeneralConfig(params: [String: Any]) -> Observable<GeneralConfigResp
                     url: "\(EnvContext.networkConfig.host)/api/config",
                     params: params,
                     method: "GET",
-                    needCommonParams: false)
+                    needCommonParams: true)
             .map({ (data) -> NSString? in
                 NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             })

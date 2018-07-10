@@ -66,6 +66,21 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
         })
     }
 
+    func locationParams() -> () -> [AnyHashable: Any] {
+        return { [weak self] in
+            var params: [AnyHashable: Any]  = [:]
+            if let lat = self?.currentLocation.value?.coordinate.latitude,
+                let lng = self?.currentLocation.value?.coordinate.longitude {
+                params["gaode_lat"] = lat
+                params["gaode_lng"] = lng
+            }
+            if let gaodeCityId = self?.currentCity.value?.citycode {
+                params["gaode_city_id"] = gaodeCityId
+            }
+            return params
+        }
+    }
+
 }
 
 func getDistanceString(distance: CLLocationDistance) -> String {
