@@ -63,7 +63,7 @@ struct TableSectionNode {
 
 struct TableRowNode {
     let itemRender: TableCellRender
-    let selector: TableCellSelectedProcess
+    var selector: TableCellSelectedProcess? = nil
     let type: TableCellType
 }
 

@@ -156,3 +156,12 @@ func fillNewHouseCommentCell(_ data: NewHouseComment.Item, cell: BaseUITableView
         }
     }
 }
+
+func parseNewHouseCommentNode(_ items: [NewHouseComment.Item]) -> () -> [TableRowNode] {
+    return {
+        let renders = items.map(curry(fillNewHouseCommentCell)).map({ (render) -> TableRowNode in
+            TableRowNode(itemRender: render, selector: nil, type: .node(identifier: NewHouseCommentCell.identifier))
+        })
+        return renders
+    }
+}

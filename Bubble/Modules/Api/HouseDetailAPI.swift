@@ -127,6 +127,18 @@ func requestNewHouseComment(houseId: Int64, count: Int64, page: Int64 = 0) -> Ob
         })
 }
 
+func pageRequestNewHouseComment(houseId: Int64, count: Int64) -> () ->  Observable<CourtComentResponse?> {
+    var offset: Int64 = 0
+    return {
+        return requestNewHouseComment(houseId: houseId, count: count, page: offset)
+                .do(onNext: { (response) in
+                    if let count = response?.data?.list?.count {
+                        offset = offset + 1
+                    }
+                })
+    }
+}
+
 
 func requestNewHouseMoreDetail(houseId: Int64) -> Observable<CourtMoreDetailResponse?> {
     let url = "\(EnvContext.networkConfig.host)/api/court/detail"

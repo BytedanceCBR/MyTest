@@ -34,7 +34,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.coreInfo?.name)
-                        let result = self.processData(response: response)([])
+                        let result = self.processData(response: response, courtId: houseId)([])
                         self.dataSource.datas = result
                         self.tableView?.reloadData()
                     }
@@ -44,7 +44,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .disposed(by: disposeBag)
     }
 
-    fileprivate func processData(response: HouseDetailResponse) -> ([TableSectionNode]) -> [TableSectionNode] {
+    fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = response.data {
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data)
@@ -63,8 +63,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data)
-                <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-
+                <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [weak self] in
+                    self?.openCommentList(courtId: courtId)
                 }
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data)
@@ -77,6 +77,15 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         }
     }
 
+    func openCommentList(courtId: Int64) {
+        let detailPage = HouseCommentVC(courtId: courtId)
+        detailPage.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
 
 }
 
