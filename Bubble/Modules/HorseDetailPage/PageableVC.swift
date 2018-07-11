@@ -9,6 +9,8 @@ import RxSwift
 protocol PageableVC: class {
     var footIndicatorView: LoadingIndicatorView? { get set }
 
+    var tableView: UITableView { get }
+
     func setupLoadmoreIndicatorView(tableView: UITableView, disposeBag: DisposeBag)
 
     func loadMore()
@@ -24,11 +26,21 @@ extension PageableVC {
                 .subscribe(onNext: { [unowned self, unowned tableView] void in
                     if tableView.contentOffset.y > 0 &&
                                tableView.contentSize.height - tableView.frame.height - tableView.contentOffset.y <= 0 &&
-                        self.footIndicatorView?.isAnimating ?? false == false {
+                        self.footIndicatorView?.isAnimating ?? true == false {
                         self.footIndicatorView?.startAnimating()
                         self.loadMore()
                     }
                 })
                 .disposed(by: disposeBag)
+    }
+
+    func onDataLoaded() -> (Bool) -> Void {
+        return { (hasMore) in
+            self.footIndicatorView?.stopAnimating()
+            if hasMore == false {
+                self.footIndicatorView = nil
+                self.tableView.tableFooterView = nil
+            }
+        }
     }
 }

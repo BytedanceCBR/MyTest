@@ -4,7 +4,8 @@
 //
 
 import UIKit
-
+import RxSwift
+import RxCocoa
 class HouseCommentVC: BaseSubPageViewController, PageableVC {
 
 
@@ -13,8 +14,14 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
         return re
     }()
 
+    let courtId: Int64
+
+    var houseCommentViewModel: HouseCommentViewModel?
+
+    let disposeBag = DisposeBag()
 
     init(courtId: Int64) {
+        self.courtId = courtId
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -24,9 +31,16 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navBar.title.text = "全网点评"
+        houseCommentViewModel = HouseCommentViewModel(tableView: tableView)
+
+        houseCommentViewModel?.request(courtId: courtId)
+        houseCommentViewModel?.onDataLoaded = self.onDataLoaded()
+        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
+
     }
 
     func loadMore() {
-
+        houseCommentViewModel?.pageableLoader?()
     }
 }
