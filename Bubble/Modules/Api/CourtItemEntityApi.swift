@@ -54,3 +54,8 @@ func pageRequestCourtSearch(cityId: String = "133", query: String = "") -> () ->
             })
     }
 }
+
+
+func requestCourtInfo(courtId: String, type: Int) -> Observable<Void> {
+    return .empty()
+}

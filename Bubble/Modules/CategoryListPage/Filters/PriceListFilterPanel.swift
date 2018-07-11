@@ -8,9 +8,11 @@
 
 import UIKit
 import SnapKit
-
+import RxCocoa
+import RxSwift
 func constructPriceListConditionPanel(nodes: [Node], _ action: @escaping ConditionSelectAction) -> ConditionFilterPanelGenerator {
     var thePanel: PriceListFilterPanel? = nil
+    let disposeBag = DisposeBag()
     return { (index, container) in
 
         if let container = container, let node = nodes.first {
@@ -23,8 +25,41 @@ func constructPriceListConditionPanel(nodes: [Node], _ action: @escaping Conditi
                 maker.height.equalTo(352)
             }
             thePanel?.didSelect = { nodes in action(index, nodes) }
+
+            NotificationCenter.default.rx
+                .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
+                .subscribe(onNext: { notification in
+                    let userInfo = notification.userInfo!
+                    let  keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+                    let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+
+                    let animations:(() -> Void) = {
+                        //键盘的偏移量
+                        thePanel?.snp.remakeConstraints { maker in
+                            maker.left.right.top.equalToSuperview()
+                            maker.bottom.equalToSuperview().offset(-keyBoardBounds.size.height)
+                        }
+                    }
+
+                    if duration > 0 {
+                        let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+                        UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+                    }else{
+                        animations()
+                    }
+                })
+                .disposed(by: disposeBag)
         }
     }
+}
+
+func catulateOffsetByKeybroadSize(_ panel: PriceListFilterPanel?, keybrodaSize: CGSize) -> CGFloat {
+    let safeHeight = UIScreen.main.bounds.size.height - keybrodaSize.height
+    var offset: CGFloat = 0
+    if let panel = panel {
+        offset = (panel.frame.minY + panel.frame.height + 104) - safeHeight
+    }
+    return offset
 }
 
 func parsePriceConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
@@ -49,6 +84,8 @@ class PriceListFilterPanel: UIView {
     var dataSource: PriceListTableViewDataSource
 
     var didSelect: (([Node]) -> Void)?
+
+    let disposeBag = DisposeBag()
 
     lazy var tableView: UITableView = {
         let result = UITableView()
@@ -78,7 +115,8 @@ class PriceListFilterPanel: UIView {
 
     func setupUI() {
         dataSource.didSelect = { [weak self] nodes in
-            self?.didSelect?(nodes)
+            self?.bottomInputView.upperPriceTextField.text = ""
+            self?.bottomInputView.lowerPriceTextField.text = ""
         }
         
         addSubview(tableView)
@@ -96,11 +134,55 @@ class PriceListFilterPanel: UIView {
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
         tableView.reloadData()
-        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+        tableView.selectRow(
+            at: IndexPath(row: 0, section: 0),
+            animated: false,
+            scrollPosition: .none)
+        bindInputPanelObservable()
+        binfConfig()
+    }
+
+    func bindInputPanelObservable() {
+        bottomInputView.upperPriceTextField.rx.text
+                .filter { $0?.isEmpty == false }
+                .subscribe(onNext: { [unowned self] s in
+                    self.dataSource.selectedIndexPaths = []
+                    self.tableView.reloadData()
+                })
+                .disposed(by: disposeBag)
+        bottomInputView.lowerPriceTextField.rx.text
+                .filter { $0?.isEmpty == false }
+                .subscribe(onNext: { [unowned self] s in
+                    self.dataSource.selectedIndexPaths = []
+                    self.tableView.reloadData()
+                })
+                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func binfConfig() {
+        bottomInputView.configBtn.rx.tap
+            .subscribe(onNext: { [unowned self] () in
+                let nodes = self.dataSource.nodes
+                let datas = self.dataSource.selectedIndexPaths.map { path -> Node in
+                    nodes[path.row]
+                }
+                if datas.isEmpty {
+                    if let low = Int(self.bottomInputView.lowerPriceTextField.text ?? ""),
+                            let upper = Int(self.bottomInputView.upperPriceTextField.text ?? "") {
+                        self.didSelect?([Node(
+                            id: "",
+                            label: "\(low)万-\(upper)万",
+                            externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]")])
+                    }
+                } else {
+                    self.didSelect?(datas)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
 }
@@ -111,7 +193,7 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
 
     var selectedIndexPath: IndexPath?
 
-    var selectedIndexPaths: [IndexPath] = []
+    var selectedIndexPaths: Set<IndexPath> = []
 
     var didSelect: (([Node]) -> Void)?
 
@@ -123,14 +205,25 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
         if let theCell = cell as? PriceListItemCell {
             theCell.label.text = nodes[indexPath.row].label
+            if selectedIndexPaths.contains(indexPath) {
+                theCell.checkboxBtn.isSelected = true
+                theCell.label.textColor = hexStringToUIColor(hex: "#f85959")
+            } else {
+                theCell.checkboxBtn.isSelected = false
+            }
         }
         return cell ?? UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        didSelect?([nodes[indexPath.row]])
+        if !selectedIndexPaths.contains(indexPath) {
+            selectedIndexPaths.insert(indexPath)
+        } else {
+            selectedIndexPaths.remove(indexPath)
+        }
+        tableView.reloadData()
+        didSelect?([])
     }
-
 }
 
 class PriceListItemCell: UITableViewCell {
@@ -174,6 +267,11 @@ class PriceListItemCell: UITableViewCell {
         selectedBackgroundView = bgView
     }
 
+    override func prepareForReuse() {
+        checkboxBtn.isSelected = false
+        label.textColor = hexStringToUIColor(hex: "#222222")
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -188,6 +286,7 @@ fileprivate class PriceBottomInputView: UIView {
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.layer.cornerRadius = 4
+        re.keyboardType = .numberPad
         return re
     }()
 
@@ -198,6 +297,7 @@ fileprivate class PriceBottomInputView: UIView {
         re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.textAlignment = .center
         re.layer.cornerRadius = 4
+        re.keyboardType = .numberPad
         return re
     }()
 
@@ -231,7 +331,7 @@ fileprivate class PriceBottomInputView: UIView {
             maker.top.equalTo(8)
             maker.bottom.equalTo(-8)
             maker.height.equalTo(28)
-            maker.width.equalTo(105)
+            maker.width.greaterThanOrEqualTo(80)
         }
 
         addSubview(seperaterLineView)
@@ -248,13 +348,14 @@ fileprivate class PriceBottomInputView: UIView {
             maker.top.equalTo(8)
             maker.bottom.equalTo(-8)
             maker.height.equalTo(28)
-            maker.width.equalTo(105)
+            maker.width.greaterThanOrEqualTo(80)
         }
 
         addSubview(configBtn)
         configBtn.snp.makeConstraints { maker in
             maker.right.top.bottom.equalToSuperview()
             maker.left.equalTo(upperPriceTextField.snp.right).offset(21)
+            maker.width.greaterThanOrEqualTo(90).priority(.high)
         }
 
         addSubview(topBorderLine)

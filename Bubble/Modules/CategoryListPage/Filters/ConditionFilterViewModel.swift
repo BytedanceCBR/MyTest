@@ -110,7 +110,9 @@ class ConditionFilterViewModel {
             state.currentIndex = index
             self?.searchFilterPanel?.items.forEach({ (item) in
                 item.isExpand = false
+                item.isHighlighted = item.isSeted
             })
+
             if let items = self?.searchFilterPanel?.items, items.count > index {
                 items[index].isHighlighted = state.isShowPanel || items[index].isSeted
                 items[index].isExpand = state.isShowPanel

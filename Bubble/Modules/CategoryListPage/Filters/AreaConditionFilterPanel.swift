@@ -40,7 +40,7 @@ func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
     if nodePath.count == 0 {
         return .noCondition("区域")
     } else if nodePath.count == 1 {
-        if let node = nodePath.first {
+        if let node = nodePath.first, node.isEmpty != 0 /*判定是否是不限*/ {
             return .condition(node.label)
         } else {
             return .noCondition("区域")
@@ -264,7 +264,6 @@ class AreaConditionFilterPanel: UIView {
             if nodes[indexPath.row].children.isEmpty {
                 subCategoryDS?.selectedIndexPaths.removeAll()
                 extentValueDS?.selectedIndexPaths.removeAll()
-//                self?.didSelect?(self?.selectNodePath() ?? [])
             } else {
                 subCategoryDS?.nodes = nodes[indexPath.row].children
                 subCategoryDS?.onSelect = self?.createSubCategorySelector(nodes: nodes[indexPath.row].children)
@@ -295,15 +294,15 @@ class AreaConditionFilterPanel: UIView {
 
             if nodes[indexPath.row].children.isEmpty {
                 extentValueDS?.selectedIndexPaths.removeAll()
-//                self?.didSelect?(self?.selectNodePath() ?? [])
+                extentValueTable?.reloadData()
+                self?.displayNormalCondition()
             } else {
                 extentValueDS?.nodes = nodes[indexPath.row].children
                 if let displayExtendValue = self?.displayExtendValue {
                     self?.layoutWithAniminate(apply: displayExtendValue)
                 }
-                extentValueDS?.onSelect = { [weak self] (indexPath) in
+                extentValueDS?.onSelect = { (indexPath) in
                     extentValueTable?.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-//                    self?.didSelect?(self?.selectNodePath() ?? [])
                 }
                 extentValueDS?.selectedIndexPaths.removeAll()
                 extentValueTable?.reloadData()
@@ -323,7 +322,7 @@ class AreaConditionFilterPanel: UIView {
         let paths = dataSources
                 .reversed()
                 .first {
-                    $0.selectedIndexPaths.count > 0
+                    $0.selectedIndexPaths.count > 0 && $0.selectedNodes().first?.isEmpty == 0
                 }
                 .map {
                     $0.selectedNodes()
@@ -362,6 +361,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
     var isMultiSelected = false
 
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return nodes.count
     }
@@ -394,6 +394,16 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
             }
         }
 
+        let node = nodes[indexPath.row]
+        if node.isEmpty != 0 {
+            selectedIndexPaths = []
+        } else {
+            selectedIndexPaths = selectedIndexPaths.filter {
+                nodes[$0.row].isEmpty == 0
+            }
+        }
+
+
         if !selectedIndexPaths.contains(indexPath) {
             selectedIndexPaths.insert(indexPath)
         } else {
@@ -416,7 +426,6 @@ fileprivate class AreaConditionCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
         result.textColor = hexStringToUIColor(hex: "#222222")
-        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
         return result
     }()
 

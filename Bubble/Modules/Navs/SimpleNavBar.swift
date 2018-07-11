@@ -38,7 +38,6 @@ class SimpleNavBar: UIView {
 
     init(hiddenMaskBtn: Bool = true) {
         super.init(frame: CGRect.zero)
-        bgView.lu.addBottomBorder()
         addSubview(bgView)
         bgView.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()

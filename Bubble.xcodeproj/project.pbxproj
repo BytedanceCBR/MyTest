@@ -46,6 +46,7 @@
 		1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */; };
 		1A2166BBDC9C0FDDCFABDF4C /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216997147967D6C96DF81A /* TGBallGridBeat.swift */; };
 		1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21654368D760800244CACC /* TGBallBeat.swift */; };
+		1A21682853A71CFE8B2F663B /* FloorPanDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F7C73E25DF29185E3D3 /* FloorPanDetailViewModel.swift */; };
 		1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */; };
 		1A21686EFB61D4153BF01402 /* TGBallScaleRipple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */; };
 		1A21688B9886BC46AE43B020 /* TGBallPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F6D2BD34A108953A36E /* TGBallPulse.swift */; };
@@ -57,11 +58,13 @@
 		1A216A6252C28F16C59B40F5 /* TGBallClipRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */; };
 		1A216B16B6471855858B7C50 /* TGBallClipRotateMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */; };
 		1A216B41FEC305961DCC7D7A /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */; };
+		1A216B996777CA992AB09526 /* HouseCommentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216AFCA9DF0151904AACF3 /* HouseCommentVC.swift */; };
 		1A216BDB56696EEC0A9AB6AE /* TGLineSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2165BEDAA30BDDAC0623E5 /* TGLineSpinFadeLoader.swift */; };
 		1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */; };
 		1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D1F43F1F934632B2F3C /* TGIndicator.swift */; };
 		1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216C71F1128F3D74D96967 /* TGBallRotate.swift */; };
 		1A216EED4D75D8068F9B209F /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */; };
+		1A216F0D840757E8F45EED00 /* HouseCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F0074F5D8461B207110 /* HouseCommentViewModel.swift */; };
 		1A216F0F7C8B28F2BD0D6D93 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */; };
 		1A216F26244D87EA944F606A /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */; };
 		1AB1C8BBCD418B1695B36A89A92C6B7F /* CityItemCellTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */; };
@@ -142,6 +145,7 @@
 		B300EC0920F2314D00C72C93 /* TGRefreshSwift.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B300EC0820F2314D00C72C93 /* TGRefreshSwift.bundle */; };
 		B300EC0B20F2461A00C72C93 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */; };
 		B327FC8420F471CD00721C23 /* NetworkCommonParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */; };
+		B327FC8720F553EE00721C23 /* FloorPanDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B327FC8620F553EE00721C23 /* FloorPanDetailVC.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
 		B32DA60C20EF81FD00D7E277 /* ConditionFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */; };
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
@@ -243,6 +247,7 @@
 		1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
 		1A216A6071431ADA243CF6F6 /* TGLineScaleParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScaleParty.swift; sourceTree = "<group>"; };
 		1A216AD34CE3F7115332BD0C /* TGSquarePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquarePulse.swift; sourceTree = "<group>"; };
+		1A216AFCA9DF0151904AACF3 /* HouseCommentVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCommentVC.swift; sourceTree = "<group>"; };
 		1A216B6B619135AF707F7845 /* TGSquareSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareSpin.swift; sourceTree = "<group>"; };
 		1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGTriangleSkewSpin.swift; sourceTree = "<group>"; };
 		1A216C71F1128F3D74D96967 /* TGBallRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotate.swift; sourceTree = "<group>"; };
@@ -251,9 +256,11 @@
 		1A216D1F43F1F934632B2F3C /* TGIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGIndicator.swift; sourceTree = "<group>"; };
 		1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
+		1A216F0074F5D8461B207110 /* HouseCommentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCommentViewModel.swift; sourceTree = "<group>"; };
 		1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
 		1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
 		1A216F6D2BD34A108953A36E /* TGBallPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulse.swift; sourceTree = "<group>"; };
+		1A216F7C73E25DF29185E3D3 /* FloorPanDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanDetailViewModel.swift; sourceTree = "<group>"; };
 		1A216F8350507AD670E3F80F /* GeneralBizConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralBizConfig.swift; sourceTree = "<group>"; };
 		1A216FE195022C83DC20F61A /* TGBallScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScale.swift; sourceTree = "<group>"; };
 		1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtItemEntityApi.swift; sourceTree = "<group>"; };
@@ -346,6 +353,7 @@
 		B300EC0820F2314D00C72C93 /* TGRefreshSwift.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TGRefreshSwift.bundle; sourceTree = "<group>"; };
 		B300EC0A20F2461A00C72C93 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCommonParams.swift; sourceTree = "<group>"; };
+		B327FC8620F553EE00721C23 /* FloorPanDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPanDetailVC.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
 		B32DA60B20EF81FD00D7E277 /* ConditionFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionFilterViewModel.swift; sourceTree = "<group>"; };
 		B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
@@ -466,6 +474,7 @@
 				590AF2F930C76F1456C0C8D79D102904 /* SlidePageView.swift */,
 				B636A6928B9B98220C40EDDF4311ED6A /* UITableViewCellFactory.swift */,
 				1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */,
+				1A216B06A806ACFC920D63B8 /* SubPages */,
 			);
 			path = HorseDetailPage;
 			sourceTree = "<group>";
@@ -489,6 +498,7 @@
 		10943918B88CD24AE06C9174773E688B /* Bizs */ = {
 			isa = PBXGroup;
 			children = (
+				B327FC8520F5535400721C23 /* FloorPan */,
 				D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */,
 				ED44DB92E408B4EA11F437130F665A08 /* Mine */,
 			);
@@ -546,6 +556,23 @@
 				1A2164259C48DA372CCC93CB /* Animation */,
 			);
 			path = TGIndicator;
+			sourceTree = "<group>";
+		};
+		1A21660D8AF4283A0F19BCC3 /* HouseComment */ = {
+			isa = PBXGroup;
+			children = (
+				1A216AFCA9DF0151904AACF3 /* HouseCommentVC.swift */,
+				1A216F0074F5D8461B207110 /* HouseCommentViewModel.swift */,
+			);
+			path = HouseComment;
+			sourceTree = "<group>";
+		};
+		1A216B06A806ACFC920D63B8 /* SubPages */ = {
+			isa = PBXGroup;
+			children = (
+				1A21660D8AF4283A0F19BCC3 /* HouseComment */,
+			);
+			path = SubPages;
 			sourceTree = "<group>";
 		};
 		1A216E0705C4D1ABEA6E863F /* Env */ = {
@@ -860,6 +887,15 @@
 			children = (
 			);
 			path = NavBar;
+			sourceTree = "<group>";
+		};
+		B327FC8520F5535400721C23 /* FloorPan */ = {
+			isa = PBXGroup;
+			children = (
+				B327FC8620F553EE00721C23 /* FloorPanDetailVC.swift */,
+				1A216F7C73E25DF29185E3D3 /* FloorPanDetailViewModel.swift */,
+			);
+			path = FloorPan;
 			sourceTree = "<group>";
 		};
 		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {
@@ -1361,6 +1397,7 @@
 				1A21696EF43FAFA4473D22E1 /* TGBallSpinFadeLoader.swift in Sources */,
 				1A21639E55EAADCBAA6528ED /* TGBlank.swift in Sources */,
 				1A21698E91F5C990A3AA9DC4 /* TGLineOrderbyAsc.swift in Sources */,
+				B327FC8720F553EE00721C23 /* FloorPanDetailVC.swift in Sources */,
 				1A21647C3A0F5A5C8B8DF03D /* TGBallPulseRise.swift in Sources */,
 				1A2169320DFAD616FB5A83B0 /* TGAudioEqualizer.swift in Sources */,
 				1A21648C1ACCAFC8D387AB83 /* TGBallScaleRippleMultiple.swift in Sources */,
@@ -1370,6 +1407,9 @@
 				1A2163CBA04285189AB288E4 /* TGBallPulseSync.swift in Sources */,
 				1A216555B0C403DF359FBC0A /* TGSquareGridPulse.swift in Sources */,
 				1A216064CD05CBACADE1959B /* GeneralBizConfig.swift in Sources */,
+				1A21682853A71CFE8B2F663B /* FloorPanDetailViewModel.swift in Sources */,
+				1A216B996777CA992AB09526 /* HouseCommentVC.swift in Sources */,
+				1A216F0D840757E8F45EED00 /* HouseCommentViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
