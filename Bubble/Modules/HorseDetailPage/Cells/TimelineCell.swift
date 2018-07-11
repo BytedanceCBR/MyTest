@@ -120,7 +120,7 @@ class TimelineCell: BaseUITableViewCell {
         // Configure the view for the selected state
     }
 
-    func setContent(_ content: String) {
+    func setContent(_ content: String, isExpand: Bool = false) {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4
         let attrText = NSMutableAttributedString(
@@ -129,6 +129,9 @@ class TimelineCell: BaseUITableViewCell {
                              .foregroundColor: hexStringToUIColor(hex: "#707070"),
                              .paragraphStyle: style])
         contentLabel.attributedText = attrText
+        if isExpand {
+            contentLabel.numberOfLines = 0
+        }
     }
 
 }
@@ -137,20 +140,23 @@ func parseTimelineNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let renders = newHouseData.timeLine?.list?.enumerated().map { (e) -> TableCellRender in
             let (offset, item) = e
-            return curry(fillTimelineCell)(item)(offset == 0)
+            return curry(fillTimelineCell)(item)(offset == 0)(false)
         }
-
         return TableSectionNode(items: renders ?? [], selectors: nil, label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
     }
 }
 
-func fillTimelineCell(_ data: TimeLine.Item, isFirstCell: Bool, cell: BaseUITableViewCell) -> Void {
+func fillTimelineCell(
+    _ data: TimeLine.Item,
+    isFirstCell: Bool,
+    isExpand: Bool = false,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? TimelineCell {
         theCell.isFirstCell = isFirstCell
         theCell.timeLabel.text = "03-20"
         theCell.titleLabel.text = data.title
         if let content = data.desc {              
-            theCell.setContent(content)
+            theCell.setContent(content, isExpand: isExpand)
         }
     }
 }
@@ -160,7 +166,7 @@ func parseTimelineNode(_ items: [TimeLine.Item]) -> () -> [TableRowNode] {
         let renders = items.map(curry(fillTimelineCell)).enumerated().map({ (e) -> TableRowNode in
             let (offset, render) = e
             return TableRowNode(
-                    itemRender: render(offset == 0),
+                    itemRender: render(offset == 0)(true),
                     selector: nil,
                     type: .node(identifier: TimelineCell.identifier))
         })

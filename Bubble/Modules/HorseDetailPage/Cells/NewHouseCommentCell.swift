@@ -123,7 +123,7 @@ class NewHouseCommentCell: BaseUITableViewCell {
         showAllBtn.isHidden = true
     }
 
-    func setContent(content: String) {
+    func setContent(content: String, isExpand: Bool) {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 4
         let attrText = NSMutableAttributedString(
@@ -132,6 +132,9 @@ class NewHouseCommentCell: BaseUITableViewCell {
                          .foregroundColor: hexStringToUIColor(hex: "#222222"),
                          .paragraphStyle: style])
         contentLabel.attributedText = attrText
+        if isExpand {
+            contentLabel.numberOfLines = 0
+        }
 //        re.font = CommonUIStyle.Font.pingFangRegular(16)
 //        re.textColor = hexStringToUIColor(hex: "#222222")
     }
@@ -139,7 +142,7 @@ class NewHouseCommentCell: BaseUITableViewCell {
 
 func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
-        let renders = newHouseData.comment?.list?.map(curry(fillNewHouseCommentCell))
+        let renders = newHouseData.comment?.list?.map(curry(fillNewHouseCommentCell)).map { $0(false) }
         return TableSectionNode(
             items: renders ?? [],
             selectors: nil,
@@ -148,11 +151,14 @@ func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectio
     }
 }
 
-func fillNewHouseCommentCell(_ data: NewHouseComment.Item, cell: BaseUITableViewCell) -> Void {
+func fillNewHouseCommentCell(
+    _ data: NewHouseComment.Item,
+    isExpand: Bool = false,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseCommentCell {
         theCell.fromLabel.text = data.source
         if let content = data.content {
-            theCell.setContent(content: content)
+            theCell.setContent(content: content, isExpand: isExpand)
         }
     }
 }
@@ -160,7 +166,10 @@ func fillNewHouseCommentCell(_ data: NewHouseComment.Item, cell: BaseUITableView
 func parseNewHouseCommentNode(_ items: [NewHouseComment.Item]) -> () -> [TableRowNode] {
     return {
         let renders = items.map(curry(fillNewHouseCommentCell)).map({ (render) -> TableRowNode in
-            TableRowNode(itemRender: render, selector: nil, type: .node(identifier: NewHouseCommentCell.identifier))
+            TableRowNode(
+                itemRender: render(true),
+                selector: nil,
+                type: .node(identifier: NewHouseCommentCell.identifier))
         })
         return renders
     }
