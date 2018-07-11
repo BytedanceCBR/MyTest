@@ -79,6 +79,18 @@ func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> O
         })
 }
 
+func pageRequestNewHouseTimeLine(houseId: Int64, count: Int64 = 15) -> () ->  Observable<CourtTimelineResponse?> {
+    var offset: Int64 = 0
+    return {
+        return requestNewHouseTimeLine(houseId: houseId, count: count, page: offset)
+                .do(onNext: { (response) in
+                    if let count = response?.data?.list?.count {
+                        offset = offset + 1
+                    }
+                })
+    }
+}
+
 func requestNewHouseFloorPan(houseId: Int64) -> Observable<CourtFloorPanResponse?> {
     let url = "\(EnvContext.networkConfig.host)/api/court/floorplan"
     return TTNetworkManager.shareInstance().rx

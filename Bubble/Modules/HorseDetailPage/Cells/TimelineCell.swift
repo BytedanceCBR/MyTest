@@ -154,3 +154,16 @@ func fillTimelineCell(_ data: TimeLine.Item, isFirstCell: Bool, cell: BaseUITabl
         }
     }
 }
+
+func parseTimelineNode(_ items: [TimeLine.Item]) -> () -> [TableRowNode] {
+    return {
+        let renders = items.map(curry(fillTimelineCell)).enumerated().map({ (e) -> TableRowNode in
+            let (offset, render) = e
+            return TableRowNode(
+                    itemRender: render(offset == 0),
+                    selector: nil,
+                    type: .node(identifier: TimelineCell.identifier))
+        })
+        return renders
+    }
+}

@@ -53,13 +53,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data)
-                <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-
+                <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [weak self] in
+                    self?.openFloorPanList(courtId: courtId)
                 }
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data)
-                <- parseOpenAllNode(data.timeLine?.hasMore ?? false) {
-
+                <- parseOpenAllNode(data.floorPan?.hasMore ?? false) { [weak self] in
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data)
@@ -84,6 +83,16 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 EnvContext.shared.rootNavController.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+
+    func openFloorPanList(courtId: Int64) {
+        let detailPage = FloorPanListVC(courtId: courtId)
+        detailPage.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 
