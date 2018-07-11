@@ -48,6 +48,7 @@ class GlobalPricingCell: BaseUITableViewCell {
             maker.top.equalTo(11)
             maker.bottom.equalToSuperview().offset(-11)
             maker.height.equalTo(22)
+            maker.width.equalTo(56).priority(.high)
             maker.right.equalTo(fromLabel.snp.left).offset(-15)
         }
     }
@@ -69,7 +70,7 @@ class GlobalPricingCell: BaseUITableViewCell {
 
 }
 
-func parseGlobalPricingNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
+func parseGlobalPricingNode(_ newHouseData: NewHouseData, processor: @escaping TableCellSelectedProcess) -> () -> TableSectionNode? {
     return {
         guard let list = newHouseData.globalPricing?.list else {
             return nil
@@ -78,9 +79,23 @@ func parseGlobalPricingNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
             return nil
         }
         let cellRenders = list[..<(list.count > 3 ? 3 : list.count)].map { curry(fillGlobalPricingCell)($0) }
-        return TableSectionNode(items: cellRenders, selectors: nil, label: "", type: .node(identifier: GlobalPricingCell.identifier))
+        let selectors = list[..<(list.count > 3 ? 3 : list.count)].map { _ in processor }
+        return TableSectionNode(items: cellRenders, selectors: selectors, label: "", type: .node(identifier: GlobalPricingCell.identifier))
     }
 }
+
+func parseGlobalPricingNode(_ items: [GlobalPrice.Item]) -> () -> [TableRowNode] {
+    return {
+        let renders = items.map(curry(fillGlobalPricingCell)).map({ (render) -> TableRowNode in
+            return TableRowNode(
+                itemRender: render,
+                selector: nil,
+                type: .node(identifier: GlobalPricingCell.identifier))
+        })
+        return renders
+    }
+}
+
 
 func fillGlobalPricingCell(_ data: GlobalPrice.Item, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? GlobalPricingCell {

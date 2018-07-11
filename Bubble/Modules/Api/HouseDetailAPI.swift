@@ -31,13 +31,14 @@ func requestNewHouseDetail(houseId: Int64) -> Observable<HouseDetailResponse?> {
             })
 }
 
-func requestNewHousePrice(houseId: Int64, count: Int64) -> Observable<CourtPriceResponse?> {
+func requestNewHousePrice(houseId: Int64, count: Int64, page: Int64 = 0) -> Observable<CourtPriceResponse?> {
     let url = "\(EnvContext.networkConfig.host)/api/court/pricing"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
             params: [
                 "court_id": houseId,
+                "page": page,
                 "count": count],
             method: "GET",
             needCommonParams: true)
@@ -52,6 +53,16 @@ func requestNewHousePrice(houseId: Int64, count: Int64) -> Observable<CourtPrice
                 return nil
             }
         })
+}
+
+func pageRequestNewHousePrice(houseId: Int64, count: Int64 = 15) -> () ->  Observable<CourtPriceResponse?> {
+    var offset: Int64 = 0
+    return {
+        return requestNewHousePrice(houseId: houseId, count: count, page: offset)
+            .do(onNext: { (response) in
+                offset = offset + 1
+            })
+    }
 }
 
 func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> Observable<CourtTimelineResponse?> {
@@ -84,9 +95,7 @@ func pageRequestNewHouseTimeLine(houseId: Int64, count: Int64 = 15) -> () ->  Ob
     return {
         return requestNewHouseTimeLine(houseId: houseId, count: count, page: offset)
                 .do(onNext: { (response) in
-                    if let count = response?.data?.list?.count {
-                        offset = offset + 1
-                    }
+                    offset = offset + 1
                 })
     }
 }

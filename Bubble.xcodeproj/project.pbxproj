@@ -153,6 +153,8 @@
 		B34141C520EF2BE000C54E70 /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34141C420EF2BE000C54E70 /* CategoryListViewModel.swift */; };
 		B36E248320F5B0F700D4E8D0 /* BaseSubPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E248220F5B0F700D4E8D0 /* BaseSubPageViewController.swift */; };
 		B36E248620F5BD1900D4E8D0 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E248520F5BD1900D4E8D0 /* FloorPanListVC.swift */; };
+		B36E248920F5DCF400D4E8D0 /* GlobalPricingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E248820F5DCF400D4E8D0 /* GlobalPricingVC.swift */; };
+		B36E248B20F5DD6A00D4E8D0 /* GlobalPricingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E248A20F5DD6A00D4E8D0 /* GlobalPricingViewModel.swift */; };
 		B7463490C2019DFF14444E198E43643D /* libTTNetworkManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9141D1F115AE46B03510AE594590CE /* libTTNetworkManager.a */; };
 		BBE39DA1FBBDB6D0EAC4803737DA1FFF /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A7CDFD7807B866BF66E8C78EC525FB /* TimelineCell.swift */; };
 		BD46785F6C8D9AD4F1D321D8E033D7E0 /* HouseDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0519AB3E142A51425726AD97ECC40136 /* HouseDetailPageVC.swift */; };
@@ -366,6 +368,8 @@
 		B3498B7D3F0BBB07528AD37FFFAA66B8 /* SearchNeighborhoodEntityApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNeighborhoodEntityApiTest.swift; sourceTree = "<group>"; };
 		B36E248220F5B0F700D4E8D0 /* BaseSubPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSubPageViewController.swift; sourceTree = "<group>"; };
 		B36E248520F5BD1900D4E8D0 /* FloorPanListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPanListVC.swift; sourceTree = "<group>"; };
+		B36E248820F5DCF400D4E8D0 /* GlobalPricingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalPricingVC.swift; sourceTree = "<group>"; };
+		B36E248A20F5DD6A00D4E8D0 /* GlobalPricingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalPricingViewModel.swift; sourceTree = "<group>"; };
 		B4BE63765696BEED7AD11EFFCE55AD71 /* MineVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineVC.swift; sourceTree = "<group>"; };
 		B5839C6BFA35E23D32DBC39FE45F622B /* HouseItemEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseItemEntity.swift; sourceTree = "<group>"; };
 		B5DF48CE747E90743E9F4FC85EF4FD8E /* PriceListFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceListFilterPanel.swift; sourceTree = "<group>"; };
@@ -579,6 +583,7 @@
 		1A216B06A806ACFC920D63B8 /* SubPages */ = {
 			isa = PBXGroup;
 			children = (
+				B36E248720F5DCDF00D4E8D0 /* GlobalPricing */,
 				B36E248420F5BCEF00D4E8D0 /* FloorPanList */,
 				1A21660D8AF4283A0F19BCC3 /* HouseComment */,
 				B36E248220F5B0F700D4E8D0 /* BaseSubPageViewController.swift */,
@@ -916,6 +921,15 @@
 				1A216EBE411D81696795C40B /* FloorPanListViewModel.swift */,
 			);
 			path = FloorPanList;
+			sourceTree = "<group>";
+		};
+		B36E248720F5DCDF00D4E8D0 /* GlobalPricing */ = {
+			isa = PBXGroup;
+			children = (
+				B36E248820F5DCF400D4E8D0 /* GlobalPricingVC.swift */,
+				B36E248A20F5DD6A00D4E8D0 /* GlobalPricingViewModel.swift */,
+			);
+			path = GlobalPricing;
 			sourceTree = "<group>";
 		};
 		BF5C68A649AD07E359AC09F98A2B8092 /* CountryList */ = {
@@ -1345,6 +1359,7 @@
 				07C6486CFBB5F19A541B7841A5EE30BA /* MineVC.swift in Sources */,
 				C364F15BD96275DCF31F236FFD9AAF15 /* MultiColumnTableSelectorPanel.swift in Sources */,
 				17229716961CE1E68153F5E7F84613D6 /* MultiImageInfoCell.swift in Sources */,
+				B36E248920F5DCF400D4E8D0 /* GlobalPricingVC.swift in Sources */,
 				9BA58495E9CCA577D555BAF6BC6A36E4 /* MultiItemCell.swift in Sources */,
 				CE6381F2DE088ED568FA39AC83C4884C /* NeighborhoodDetailEntities.swift in Sources */,
 				18A544BE4DCAE334FF63790C681FEFF1 /* NeighborhoodDetailEntitiesApi.swift in Sources */,
@@ -1376,6 +1391,7 @@
 				E068C750E1280AB434973B52CA4DE7C8 /* SuggestionListVC.swift in Sources */,
 				ED7FEA32A012D04BF7EB5B7990A701C9 /* TabViewController.swift in Sources */,
 				58D58539FDD569A2CE1A9C3CE39827A4 /* TagView.swift in Sources */,
+				B36E248B20F5DD6A00D4E8D0 /* GlobalPricingViewModel.swift in Sources */,
 				5D3E6A8B9F8513D9F9547B8F43D38D76 /* TextParser.swift in Sources */,
 				BBE39DA1FBBDB6D0EAC4803737DA1FFF /* TimelineCell.swift in Sources */,
 				340FC5DFB8124C8BBB03D16E52D661EB /* UIKitExtension.swift in Sources */,

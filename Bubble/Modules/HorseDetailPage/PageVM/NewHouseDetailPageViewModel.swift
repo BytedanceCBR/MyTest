@@ -67,8 +67,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data)
-                <- parseHeaderNode("全网比价", showLoadMore: true)
-                <- parseGlobalPricingNode(data)
+                <- parseHeaderNode("全网比价",
+                                   showLoadMore: true,
+                                   process: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag))
+                <- parseGlobalPricingNode(data, processor: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag))
                 <- parseDisclaimerNode(data)
             return dataParser.parser
         } else {
@@ -96,7 +98,21 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 
+
 }
+
+func openGlobalPricingList(courtId: Int64, disposeBag: DisposeBag) -> () -> Void {
+    return {
+        let detailPage = GlobalPricingVC(courtId: courtId)
+        detailPage.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+}
+
 
 func getNewHouseDetailPageViewModel() -> (UITableView) -> DetailPageViewModel {
     return { tableView in
@@ -140,7 +156,9 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
+            datas[indexPath.section].selectors?[indexPath.row]()
+        }
     }
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
