@@ -153,7 +153,7 @@ func pageRequestNewHouseComment(houseId: Int64, count: Int64) -> () ->  Observab
     return {
         return requestNewHouseComment(houseId: houseId, count: count, page: offset)
                 .do(onNext: { (response) in
-                    if let count = response?.data?.list?.count {
+                    if let count = response?.data?.list?.count, count > 0 {
                         offset = offset + 1
                     }
                 })

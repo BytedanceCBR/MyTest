@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import BDWebImage
 import YYText
+import RxCocoa
+import RxSwift
 
 class MultiItemCell: BaseUITableViewCell {
 
@@ -81,6 +83,13 @@ class FloorPanItemView: UIView {
         return re
     }()
 
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+
+    let disposeBag = DisposeBag()
+
     init() {
         super.init(frame: CGRect.zero)
         addSubview(icon)
@@ -115,6 +124,8 @@ class FloorPanItemView: UIView {
             maker.centerY.equalTo(priceLabel.snp.centerY)
             maker.bottom.equalToSuperview()
         }
+        addGestureRecognizer(tapGesture)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -147,6 +158,13 @@ class NeighborhoodItemView: UIView {
         re.textColor = hexStringToUIColor(hex: "#999999")
         return re
     }()
+
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+
+    let disposeBag = DisposeBag()
 
     init() {
         super.init(frame: CGRect.zero)
@@ -183,6 +201,7 @@ class NeighborhoodItemView: UIView {
             maker.top.equalTo(priceLabel.snp.bottom).offset(4)
             maker.bottom.equalToSuperview()
         }
+        addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -204,24 +223,33 @@ func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?) -> () -> TableSecti
 
 func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
-        let views = items.map { item in
-            generateearchInNeighborhoodItemView(item)
+        let views = items.map { item -> FloorPanItemView in
+            let re = generateearchInNeighborhoodItemView(item)
+            re.tapGesture.rx.event
+                .subscribe(onNext: { [unowned re] recognizer in
+                    if let id = item.id, let houseId = Int64(id) {
+                        openErshouHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag)()
+                    }
+                })
+                .disposed(by: re.disposeBag)
+            return re
         }
+
         views.forEach { view in
             theCell.groupView.addSubview(view)
         }
-        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-        views.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
-        }
-        if let view = views.last {
-            theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                maker.height.equalTo(view.snp.height).offset(16)
+            views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            views.snp.makeConstraints { maker in
+                maker.top.bottom.equalToSuperview()
+            }
+            if let view = views.last {
+                theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                    maker.height.equalTo(view.snp.height).offset(16)
+                }
             }
         }
-
     }
-}
+
 
 func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorPanItemView {
     let re = FloorPanItemView()
@@ -254,23 +282,32 @@ func parseRelatedNeighborhoodNode(_ datas: [NeighborhoodInnerItemEntity]?) -> ()
 
 func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
-        let views = datas.take(5).map { item in
-            generateRelatedNeighborhoodView(item)
+        let views = datas.take(5).map { item -> NeighborhoodItemView in
+            let re = generateRelatedNeighborhoodView(item)
+            re.tapGesture.rx.event
+                .subscribe(onNext: { [unowned re] recognizer in
+                    if let id = item.id, let houseId = Int64(id) {
+                        openNeighborhoodDetailPage(neighborhoodId: houseId, disposeBag: re.disposeBag)()
+                    }
+                })
+                .disposed(by: re.disposeBag)
+            return re
         }
         views.forEach { view in
             theCell.groupView.addSubview(view)
         }
-        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-        views.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
-        }
-        if let view = views.last {
-            theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                maker.height.equalTo(view.snp.height).offset(16)
+            views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            views.snp.makeConstraints { maker in
+                maker.top.bottom.equalToSuperview()
+            }
+            if let view = views.last {
+                theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                    maker.height.equalTo(view.snp.height).offset(16)
+                }
             }
         }
     }
-}
+
 
 func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> NeighborhoodItemView {
     let re = NeighborhoodItemView()
@@ -334,5 +371,12 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     re.descLabel.attributedText = text
     re.priceLabel.text = item.pricingPerSqm
     re.spaceLabel.text = item.squaremeter
+//    re.tapGesture.rx.event
+//        .subscribe(onNext: { [unowned re] recognizer in
+//            if let id = item.id, let houseId = Int64(id) {
+//                openNewHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag)()
+//            }
+//        })
+//        .disposed(by: re.disposeBag)
     return re
 }

@@ -86,3 +86,19 @@ func requestRelatedNeighborhoodSearch(
             }
         })
 }
+
+func pageRequestRelatedNeighborhoodSearch(neighborhoodId: String = "",
+                                          query: String = "") -> () -> Observable<RelatedNeighborhoodResponse?> {
+    var offset: Int64 = 0
+    return {
+        return requestRelatedNeighborhoodSearch(
+            neighborhoodId: neighborhoodId,
+            offset: offset,
+            query: query)
+            .do(onNext: { (response) in
+                if let count = response?.data?.items?.count {
+                    offset = offset + Int64(count)
+                }
+            })
+    }
+}
