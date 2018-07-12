@@ -6,39 +6,43 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class MinePageViewModel {
+
+class MinePageViewModel: NSObject, UITableViewDelegate {
+
+    fileprivate let dataSource: DataSource
 
     weak var tableView: UITableView?
 
-    fileprivate var dataSource: DataSource
+    var userInfo: UserInfo?
 
-    private let disposeBag = DisposeBag()
-
-    private var cellFactory: UITableViewCellFactory
+    let cellFactory: UITableViewCellFactory
 
     init(tableView: UITableView) {
         self.tableView = tableView
-        self.cellFactory = getHouseDetailCellFactory()
+        self.cellFactory = getMineCellFactory()
         self.dataSource = DataSource(cellFactory: cellFactory)
         tableView.dataSource = self.dataSource
         tableView.delegate = self.dataSource
+        tableView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
 
         cellFactory.register(tableView: tableView)
+        super.init()
     }
 
-    func loadData() {
+    func reload() {
         let datas = processData()([])
         dataSource.datas = datas
         tableView?.reloadData()
     }
 
-
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         let dataParser = DetailDataParser.monoid()
-                <- parseHeaderNode("我的信息")
+                <- parseUserInfoNode(userInfo)
+                <- parseHeaderNode("房源关注")
+                <- parseFavoriteNode()
+                <- parseTextRowCell()
         return dataParser.parser
     }
-
 }
 
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
@@ -77,7 +81,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
+        datas[indexPath.section].selectors?[indexPath.row]()
     }
 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
@@ -87,4 +91,13 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+}
+
+
+func getMineCellFactory() -> UITableViewCellFactory {
+    return UITableViewCellFactory()
+            .addCellClass(cellType: UserInfoCell.self)
+            .addCellClass(cellType: FavoriteCell.self)
+            .addCellClass(cellType: HeaderCell.self)
+            .addCellClass(cellType: TextRowCell.self)
 }
