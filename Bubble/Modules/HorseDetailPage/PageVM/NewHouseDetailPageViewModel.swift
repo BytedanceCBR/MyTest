@@ -101,6 +101,16 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
 }
 
+func openRelatedNeighborhoodList(neighborhoodId: String, disposeBag: DisposeBag) {
+    let listVC = RelatedNeighborhoodListVC(neighborhoodId: neighborhoodId)
+    listVC.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+    EnvContext.shared.rootNavController.pushViewController(listVC, animated: true)
+}
+
 func openGlobalPricingList(courtId: Int64, disposeBag: DisposeBag) -> () -> Void {
     return {
         let detailPage = GlobalPricingVC(courtId: courtId)

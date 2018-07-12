@@ -58,7 +58,7 @@ class HomeListViewModel: DetailPageViewModel {
     }
 
     private func openCategoryList(houseType: HouseType, condition: @escaping (String) -> String) {
-        let vc = CategoryListPageVC()
+        let vc = CategoryListPageVC(isOpenConditionFilter: true)
         vc.houseType.accept(houseType)
         vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
             condition($0)

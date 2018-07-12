@@ -238,17 +238,17 @@ func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], cell: BaseUITab
         views.forEach { view in
             theCell.groupView.addSubview(view)
         }
-            views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-            views.snp.makeConstraints { maker in
-                maker.top.bottom.equalToSuperview()
-            }
-            if let view = views.last {
-                theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                    maker.height.equalTo(view.snp.height).offset(16)
-                }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
             }
         }
     }
+}
 
 
 func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorPanItemView {
@@ -296,17 +296,17 @@ func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], cell: Bas
         views.forEach { view in
             theCell.groupView.addSubview(view)
         }
-            views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-            views.snp.makeConstraints { maker in
-                maker.top.bottom.equalToSuperview()
-            }
-            if let view = views.last {
-                theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                    maker.height.equalTo(view.snp.height).offset(16)
-                }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
             }
         }
     }
+}
 
 
 func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> NeighborhoodItemView {

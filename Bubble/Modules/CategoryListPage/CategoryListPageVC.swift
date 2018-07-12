@@ -86,7 +86,10 @@ class CategoryListPageVC: UIViewController {
 
     private var categoryListViewModel: CategoryListViewModel?
 
-    init() {
+    private let isOpenConditionFilter: Bool
+
+    init(isOpenConditionFilter: Bool) {
+        self.isOpenConditionFilter = isOpenConditionFilter
         super.init(nibName: nil, bundle: nil)
     }
 

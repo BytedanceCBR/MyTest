@@ -48,6 +48,7 @@
 		1A2166A9E0B37A87D18D8182 /* TGCubeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */; };
 		1A2166B8FB86DAFF8D158B5C /* NeighborhoodItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */; };
 		1A2166BBDC9C0FDDCFABDF4C /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216997147967D6C96DF81A /* TGBallGridBeat.swift */; };
+		1A21671334E4BA56B6F396CE /* ErshouHouseListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2163B26CCCD292CECAE365 /* ErshouHouseListVC.swift */; };
 		1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21654368D760800244CACC /* TGBallBeat.swift */; };
 		1A21682853A71CFE8B2F663B /* FloorPanDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F7C73E25DF29185E3D3 /* FloorPanDetailViewModel.swift */; };
 		1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */; };
@@ -67,6 +68,7 @@
 		1A216C51E1D47704B05C7FA7 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216EBE411D81696795C40B /* FloorPanListViewModel.swift */; };
 		1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D1F43F1F934632B2F3C /* TGIndicator.swift */; };
 		1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216C71F1128F3D74D96967 /* TGBallRotate.swift */; };
+		1A216DF091EA0BF1DA7E0DB7 /* ErshouHouseListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D6784A6C65D151D88B8 /* ErshouHouseListViewModel.swift */; };
 		1A216EED4D75D8068F9B209F /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */; };
 		1A216F0F7C8B28F2BD0D6D93 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */; };
 		1A216F26244D87EA944F606A /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */; };
@@ -237,6 +239,7 @@
 		1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineOrderbyAsc.swift; sourceTree = "<group>"; };
 		1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
+		1A2163B26CCCD292CECAE365 /* ErshouHouseListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseListVC.swift; sourceTree = "<group>"; };
 		1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
 		1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScale.swift; sourceTree = "<group>"; };
 		1A216492B610A51EFD9827BF /* TGSquareGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSquareGridPulse.swift; sourceTree = "<group>"; };
@@ -265,6 +268,7 @@
 		1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotateMultiple.swift; sourceTree = "<group>"; };
 		1A216CD28FC78D661285A19A /* TGLineCursor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineCursor.swift; sourceTree = "<group>"; };
 		1A216D1F43F1F934632B2F3C /* TGIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGIndicator.swift; sourceTree = "<group>"; };
+		1A216D6784A6C65D151D88B8 /* ErshouHouseListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseListViewModel.swift; sourceTree = "<group>"; };
 		1A216D9B4E3603712D3BAB33 /* PageableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageableVC.swift; sourceTree = "<group>"; };
 		1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
@@ -595,6 +599,7 @@
 				B36E248420F5BCEF00D4E8D0 /* FloorPanList */,
 				1A21660D8AF4283A0F19BCC3 /* HouseComment */,
 				1A216D4C9BC784D95E9D03E5 /* RelatedNeighborhoodList */,
+				1A216ECF5E355A84F5303EA3 /* ErshouHouseList */,
 			);
 			path = SubPages;
 			sourceTree = "<group>";
@@ -615,6 +620,15 @@
 				B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */,
 			);
 			path = Env;
+			sourceTree = "<group>";
+		};
+		1A216ECF5E355A84F5303EA3 /* ErshouHouseList */ = {
+			isa = PBXGroup;
+			children = (
+				1A2163B26CCCD292CECAE365 /* ErshouHouseListVC.swift */,
+				1A216D6784A6C65D151D88B8 /* ErshouHouseListViewModel.swift */,
+			);
+			path = ErshouHouseList;
 			sourceTree = "<group>";
 		};
 		2B69573B56D7B8C4E19281CAF053A987 /* CategoryListPage */ = {
@@ -1470,6 +1484,8 @@
 				1A2164A8FAF72AB590074A19 /* HouseCommentViewModel.swift in Sources */,
 				1A216C51E1D47704B05C7FA7 /* FloorPanListViewModel.swift in Sources */,
 				1A2163DA71D6CDAC77DB57C0 /* RelatedNeighborhoodListVC.swift in Sources */,
+				1A21671334E4BA56B6F396CE /* ErshouHouseListVC.swift in Sources */,
+				1A216DF091EA0BF1DA7E0DB7 /* ErshouHouseListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

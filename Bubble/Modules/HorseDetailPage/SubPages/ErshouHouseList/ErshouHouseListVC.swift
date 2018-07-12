@@ -4,28 +4,32 @@
 //
 
 import Foundation
-import RxSwift
+import SnapKit
 import RxCocoa
-class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
+import RxSwift
+
+class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
+
     var footIndicatorView: LoadingIndicatorView? = {
         let re = LoadingIndicatorView()
         return re
     }()
 
-    var relatedNeighborhoodListViewModel: RelatedNeighborhoodListViewModel?
-
     let neighborhoodId: String
+
+    var ershouHouseListViewModel: ErshouHouseListViewModel?
 
     let disposeBag = DisposeBag()
 
     init(neighborhoodId: String) {
         self.neighborhoodId = neighborhoodId
         super.init(isHiddenBottomBar: true)
-        self.navBar.title.text = "周边小区"
-        self.relatedNeighborhoodListViewModel = RelatedNeighborhoodListViewModel(tableView: tableView)
-        self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()
+        self.navBar.title.text = "同小区房源"
+        self.ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView)
+        ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
+        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId)
+
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
-        self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -33,6 +37,8 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
     }
 
     func loadMore() {
-        relatedNeighborhoodListViewModel?.pageableLoader?()
+        ershouHouseListViewModel?.pageableLoader?()
     }
+
+    
 }

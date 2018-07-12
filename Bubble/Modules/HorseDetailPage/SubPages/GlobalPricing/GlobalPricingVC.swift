@@ -23,7 +23,7 @@ class GlobalPricingVC: BaseSubPageViewController, PageableVC {
 
     init(courtId: Int64) {
         self.courtId = courtId
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
 
     required init?(coder aDecoder: NSCoder) {

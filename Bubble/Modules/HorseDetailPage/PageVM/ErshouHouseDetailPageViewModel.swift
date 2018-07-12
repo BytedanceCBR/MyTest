@@ -126,15 +126,19 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                         self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
                     }
                     <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data)
-                    <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0)) {
-
-                    }
+                    <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0)) { [unowned self] in
+                        if let id = data.neighborhoodInfo?.id {
+                            self.openErshouHouseList(neighborhoodId: id, disposeBag: self.disposeBag)
+                        }
+            }
                     <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.items?.count ?? 0))") { [unowned self] in
                         self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                     }
                     <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items)
-                    <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) {
-
+                    <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) { [unowned self] in
+                        if let id = data.neighborhoodInfo?.id {
+                            openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag)
+                        }
                     }
                     <- parseHeaderNode("相关推荐")
                     <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag)
@@ -151,6 +155,16 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 openNeighborhoodDetailPage(neighborhoodId: Int64(id), disposeBag: self.disposeBag)()
             }
         }
+    }
+
+    private func openErshouHouseList(neighborhoodId: String, disposeBag: DisposeBag) {
+        let listVC = ErshouHouseListVC(neighborhoodId: neighborhoodId)
+        listVC.navBar.backBtn.rx.tap
+            .subscribe(onNext: { void in
+                EnvContext.shared.rootNavController.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(listVC, animated: true)
     }
 }
 

@@ -79,7 +79,7 @@ class HomeSpringBoardViewModel {
 
     private func openCategoryVC(_ houseType: HouseType) -> () -> Void {
         return { [unowned self] in
-            let vc = CategoryListPageVC()
+            let vc = CategoryListPageVC(isOpenConditionFilter: true)
             vc.houseType.accept(houseType)
             vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
             vc.navBar.isShowTypeSelector = false

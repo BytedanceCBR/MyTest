@@ -26,6 +26,17 @@ class BaseSubPageViewController: BaseViewController {
         return re
     }()
 
+    private let isHiddenBottomBar: Bool
+
+    init(isHiddenBottomBar: Bool = false) {
+        self.isHiddenBottomBar = isHiddenBottomBar
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -35,16 +46,24 @@ class BaseSubPageViewController: BaseViewController {
             maker.left.right.top.equalToSuperview()
         }
 
-        self.view.addSubview(bottomBar)
-        bottomBar.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+        if !self.isHiddenBottomBar {
+            self.view.addSubview(bottomBar)
+            bottomBar.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+            }
         }
+
 
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(bottomBar.snp.top)
+            if !self.isHiddenBottomBar {
+                maker.bottom.equalTo(bottomBar.snp.top)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
+
         }
         // Do any additional setup after loading the view.
     }
