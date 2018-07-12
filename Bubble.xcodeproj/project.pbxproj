@@ -117,6 +117,11 @@
 		7D531F9020EF9B40001032AB /* UserMessageEntitiesApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */; };
 		7D531F9220EFAEF7001032AB /* MessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F9120EFAEF7001032AB /* MessageListVC.swift */; };
 		7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */; };
+		7D8168A320F78595004D438E /* TextSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A020F78594004D438E /* TextSelectCell.swift */; };
+		7D8168A420F78595004D438E /* FavoriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A120F78594004D438E /* FavoriteCell.swift */; };
+		7D8168A520F78595004D438E /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A220F78594004D438E /* UserInfoCell.swift */; };
+		7D8168A720F785EC004D438E /* UserInfoEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A620F785EB004D438E /* UserInfoEntities.swift */; };
+		7D8168A920F78617004D438E /* MinePageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A820F78616004D438E /* MinePageApi.swift */; };
 		7DF8DED720F1B0F200418946 /* ChatDetailListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8DED620F1B0F200418946 /* ChatDetailListCell.swift */; };
 		7E42F2341424B8CDE9D8039C53975657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4718EF956DEC3D8B7DCED2DB95F4D3 /* Foundation.framework */; };
 		80306763E4F2656863E54B5B7696A6CB /* BubbleSelectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565842925A14E9D79034D2E75CE82172 /* BubbleSelectCollectionView.swift */; };
@@ -332,6 +337,11 @@
 		7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApi.swift; sourceTree = "<group>"; };
 		7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApiTest.swift; sourceTree = "<group>"; };
 		7D531F9120EFAEF7001032AB /* MessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListVC.swift; sourceTree = "<group>"; };
+		7D8168A020F78594004D438E /* TextSelectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSelectCell.swift; sourceTree = "<group>"; };
+		7D8168A120F78594004D438E /* FavoriteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCell.swift; sourceTree = "<group>"; };
+		7D8168A220F78594004D438E /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
+		7D8168A620F785EB004D438E /* UserInfoEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoEntities.swift; sourceTree = "<group>"; };
+		7D8168A820F78616004D438E /* MinePageApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinePageApi.swift; sourceTree = "<group>"; };
 		7DF8DED620F1B0F200418946 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
 		7F85FD5DEA86AA8ADAB4F5C2436BFF4D /* CycleImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleImageCache.swift; sourceTree = "<group>"; };
 		7FEA91459568E4C790BEF3AB57E8004C /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
@@ -467,6 +477,7 @@
 		02AB2BC8212AF91DA2F569EF79D6E11F /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				7D8168A620F785EB004D438E /* UserInfoEntities.swift */,
 				548A5C53969A1E1D3457561F81D1F8FF /* ConfigEntities.swift */,
 				FA2E439C6BFC341260EDC922A192CECE /* CourtItemEntity.swift */,
 				C4A6C76918CD9D64D485769A4194555B /* ErshouHouseDetailEntities.swift */,
@@ -800,6 +811,16 @@
 			path = FWSegmentedControl;
 			sourceTree = "<group>";
 		};
+		7D81689F20F78594004D438E /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				7D8168A020F78594004D438E /* TextSelectCell.swift */,
+				7D8168A120F78594004D438E /* FavoriteCell.swift */,
+				7D8168A220F78594004D438E /* UserInfoCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		7DF8DED820F1F95A00418946 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -877,6 +898,7 @@
 		9D5DAFC144D8E84FE1743301BEB6C46A /* Api */ = {
 			isa = PBXGroup;
 			children = (
+				7D8168A820F78616004D438E /* MinePageApi.swift */,
 				4D50F085F3C8390D0F714AF453A7C79A /* ConfigurationAPI.swift */,
 				1A4241FB81A97C88105DCC260BF76B32 /* CourtItemEntityApi.swift */,
 				F73E3CCC1E17F569BD7F3F6299226C78 /* ErshouHouseDetailApi.swift */,
@@ -1071,6 +1093,7 @@
 		ED44DB92E408B4EA11F437130F665A08 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				7D81689F20F78594004D438E /* Cells */,
 				B4BE63765696BEED7AD11EFFCE55AD71 /* MineVC.swift */,
 				1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */,
 			);
@@ -1342,6 +1365,7 @@
 				125996B12D421D699AC7C27507B3FB91 /* Color.swift in Sources */,
 				DE060211EC854EDB2CD6AD6B3EEBCB3A /* CommonUIStyle.swift in Sources */,
 				15E24CD1128597762F9767E9823B9560 /* ConfigEntities.swift in Sources */,
+				7D8168A320F78595004D438E /* TextSelectCell.swift in Sources */,
 				668C55607FF8AF28A06CEFAFDF9524E2 /* ConfigurationAPI.swift in Sources */,
 				859E9688B80E5235A558507AA1FA7BAA /* ConstraintArray+Extensions.swift in Sources */,
 				97FBA6D13F0E90441B8D83A40BD140A6 /* ConstraintArrayDSL.swift in Sources */,
@@ -1360,6 +1384,7 @@
 				30F9A5142EC6DE56680D4566275A9B68 /* ErshouHouseDetailApi.swift in Sources */,
 				B300EB8120F1C5EC00C72C93 /* TransactionRecordCell.swift in Sources */,
 				6B7C4D467D4186649B7209D97AFF07EB /* ErshouHouseDetailEntities.swift in Sources */,
+				7D8168A520F78595004D438E /* UserInfoCell.swift in Sources */,
 				D3A549276C7D08D7CAA7968185CE13A1 /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				9560E1EFBFF1AE9F47080AE1B0177BA6 /* FWSegmentedControl.swift in Sources */,
 				A7D57BA0E1387AF0088BF07E70501ACF /* Functional.swift in Sources */,
@@ -1412,6 +1437,7 @@
 				F55AC83E6E0860AF2A1790D482681547 /* SearchAPI.swift in Sources */,
 				29ADF81543358FA15C520BD359EACE14 /* SearchAndConditionFilterViewModel.swift in Sources */,
 				AEB105552793CF8BB736FA6BEC4D362C /* SearchEntities.swift in Sources */,
+				7D8168A420F78595004D438E /* FavoriteCell.swift in Sources */,
 				20591B23BD3979D8B1168FA7386F5F2D /* SearchNeighborhoodEntity.swift in Sources */,
 				44544F47B4E48E6611CB1E32E30D1F41 /* SearchNeighborhoodEntityApi.swift in Sources */,
 				4C1A5575542DA1A64415DED5E8FA8BDB /* SearchTextField.swift in Sources */,
@@ -1446,6 +1472,7 @@
 				1A2169ACB01B225214CD9414 /* TGBallScaleMultiple.swift in Sources */,
 				1A2161AF1CFC9707F2144AA2 /* TGBallGridPulse.swift in Sources */,
 				1A21636688A8EF7AA365D712 /* TGLineScaleParty.swift in Sources */,
+				7D8168A720F785EC004D438E /* UserInfoEntities.swift in Sources */,
 				1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */,
 				1A21622D0065E11F5AF3726B /* TGOrbit.swift in Sources */,
 				1A216345A0F87A09B7F20969 /* TGWindows.swift in Sources */,
@@ -1484,6 +1511,7 @@
 				1A2164A8FAF72AB590074A19 /* HouseCommentViewModel.swift in Sources */,
 				1A216C51E1D47704B05C7FA7 /* FloorPanListViewModel.swift in Sources */,
 				1A2163DA71D6CDAC77DB57C0 /* RelatedNeighborhoodListVC.swift in Sources */,
+				7D8168A920F78617004D438E /* MinePageApi.swift in Sources */,
 				1A21671334E4BA56B6F396CE /* ErshouHouseListVC.swift in Sources */,
 				1A216DF091EA0BF1DA7E0DB7 /* ErshouHouseListViewModel.swift in Sources */,
 			);
