@@ -70,6 +70,70 @@ class GlobalPricingCell: BaseUITableViewCell {
 
 }
 
+class GlobalPricingListCell: BaseUITableViewCell {
+
+
+    lazy var priceLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangSemibold(16)
+        re.textColor = hexStringToUIColor(hex: "#f85959")
+        return re
+    }()
+
+    lazy var fromLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.textAlignment = .right
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        return re
+    }()
+
+    open override class var identifier: String {
+        return "GlobalPricingListCell"
+    }
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.addBottomLine()
+
+        contentView.addSubview(fromLabel)
+        fromLabel.snp.makeConstraints { maker in
+            maker.right.equalToSuperview().offset(-15)
+            maker.top.equalTo(21)
+            maker.bottom.equalToSuperview().offset(-21)
+            maker.height.equalTo(14)
+            maker.width.greaterThanOrEqualTo(60)
+        }
+
+        contentView.addSubview(priceLabel)
+        priceLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(15)
+            maker.top.equalTo(17)
+            maker.bottom.equalToSuperview().offset(-17)
+            maker.height.equalTo(22)
+            maker.width.equalTo(56).priority(.high)
+            maker.right.equalTo(fromLabel.snp.left).offset(-15)
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+
 func parseGlobalPricingNode(_ newHouseData: NewHouseData, processor: @escaping TableCellSelectedProcess) -> () -> TableSectionNode? {
     return {
         guard let list = newHouseData.globalPricing?.list else {
@@ -86,13 +150,20 @@ func parseGlobalPricingNode(_ newHouseData: NewHouseData, processor: @escaping T
 
 func parseGlobalPricingNode(_ items: [GlobalPrice.Item]) -> () -> [TableRowNode] {
     return {
-        let renders = items.map(curry(fillGlobalPricingCell)).map({ (render) -> TableRowNode in
+        let renders = items.map(curry(fillGlobalPricingListCell)).map({ (render) -> TableRowNode in
             return TableRowNode(
                 itemRender: render,
                 selector: nil,
-                type: .node(identifier: GlobalPricingCell.identifier))
+                type: .node(identifier: GlobalPricingListCell.identifier))
         })
         return renders
+    }
+}
+
+func fillGlobalPricingListCell(_ data: GlobalPrice.Item, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? GlobalPricingListCell {
+        theCell.priceLabel.text = data.pricingPerSqm
+        theCell.fromLabel.text = data.agencyName
     }
 }
 

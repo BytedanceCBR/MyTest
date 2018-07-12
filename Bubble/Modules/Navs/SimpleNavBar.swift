@@ -34,6 +34,12 @@ class SimpleNavBar: UIView {
         return re
     }()
 
+    lazy var seperatorLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#e8e8e8")
+        return re
+    }()
+
     var gradientlayer: CAGradientLayer?
 
     init(hiddenMaskBtn: Bool = true) {
@@ -67,6 +73,12 @@ class SimpleNavBar: UIView {
             maker.right.equalTo(rightBtn.snp.left).priority(.low)
         }
         setGradientColor()
+
+        addSubview(seperatorLine)
+        seperatorLine.snp.makeConstraints { maker in
+            maker.height.equalTo(0.5)
+            maker.left.right.bottom.equalToSuperview()
+         }
     }
     
     func setGradientColor() {
