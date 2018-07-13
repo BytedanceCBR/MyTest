@@ -86,36 +86,38 @@ PODS:
     - libwebp/core
   - libwebp/webp (0.6.1)
   - ObjectMapper (3.3.0)
+  - OpenUDID (1.0.0)
   - RxCocoa (4.1.2):
     - RxSwift (~> 4.0)
   - RxSwift (4.1.2)
   - SnapKit (4.0.0)
   - SSZipArchive (1.6.3)
-  - TTBaseLib (1.0.40):
-    - TTBaseLib/SSIndicatorTipsManager (= 1.0.40)
-    - TTBaseLib/TTBaseTool (= 1.0.40)
-    - TTBaseLib/TTBusinessManager (= 1.0.40)
-    - TTBaseLib/TTCategory (= 1.0.40)
-    - TTBaseLib/TTDeviceHelper (= 1.0.40)
-    - TTBaseLib/TTLabelTextHelper (= 1.0.40)
-    - TTBaseLib/TTNetworkHelper (= 1.0.40)
-    - TTBaseLib/TTRobust (= 1.0.40)
-    - TTBaseLib/TTSandBoxHelper (= 1.0.40)
-    - TTBaseLib/TTUIResponderHelper (= 1.0.40)
-  - TTBaseLib/SSIndicatorTipsManager (1.0.40)
-  - TTBaseLib/TTBaseTool (1.0.40)
-  - TTBaseLib/TTBusinessManager (1.0.40)
-  - TTBaseLib/TTCategory (1.0.40):
+  - TTBaseLib (1.0.42):
+    - TTBaseLib/SSIndicatorTipsManager (= 1.0.42)
+    - TTBaseLib/TTBaseTool (= 1.0.42)
+    - TTBaseLib/TTBusinessManager (= 1.0.42)
+    - TTBaseLib/TTCategory (= 1.0.42)
+    - TTBaseLib/TTDeviceHelper (= 1.0.42)
+    - TTBaseLib/TTLabelTextHelper (= 1.0.42)
+    - TTBaseLib/TTNetworkHelper (= 1.0.42)
+    - TTBaseLib/TTRobust (= 1.0.42)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.42)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.42)
+  - TTBaseLib/SSIndicatorTipsManager (1.0.42)
+  - TTBaseLib/TTBaseTool (1.0.42)
+  - TTBaseLib/TTBusinessManager (1.0.42)
+  - TTBaseLib/TTCategory (1.0.42):
     - TTBaseLib/TTBaseTool
-  - TTBaseLib/TTDeviceHelper (1.0.40)
-  - TTBaseLib/TTLabelTextHelper (1.0.40):
+  - TTBaseLib/TTDeviceHelper (1.0.42):
+    - OpenUDID
+  - TTBaseLib/TTLabelTextHelper (1.0.42):
     - TTBaseLib/TTBaseTool
     - TTServiceKit
-  - TTBaseLib/TTNetworkHelper (1.0.40):
+  - TTBaseLib/TTNetworkHelper (1.0.42):
     - TTReachability
-  - TTBaseLib/TTRobust (1.0.40)
-  - TTBaseLib/TTSandBoxHelper (1.0.40)
-  - TTBaseLib/TTUIResponderHelper (1.0.40)
+  - TTBaseLib/TTRobust (1.0.42)
+  - TTBaseLib/TTSandBoxHelper (1.0.42)
+  - TTBaseLib/TTUIResponderHelper (1.0.42)
   - TTEntityBase (0.2.3):
     - FMDB (~> 2.6.2)
   - TTInstallService (1.1.3.2):
@@ -222,6 +224,7 @@ SPEC REPOS:
     - FMDB
     - libwebp
     - ObjectMapper
+    - OpenUDID
     - RxCocoa
     - RxSwift
     - SnapKit
@@ -250,11 +253,12 @@ SPEC CHECKSUMS:
   Godzippa: 54259e93b2191bbec6b6a8ddd2c070a5f32971b4
   libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  OpenUDID: e7cb6984c7304906ad20f3a36bf087b025896b6b
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SSZipArchive: 896def204e56339f9bf6d40903b45f3a1c1bfd69
-  TTBaseLib: 3be7553e4e808528e76c520c1bbc01b08ba725fa
+  TTBaseLib: 61fe489ac7b9f425ed89687f9724efbdfd1b0879
   TTEntityBase: 44bda9a5bad8f345e99547a699b1166313999334
   TTInstallService: 56d3bfecc1ec4969713b5277b9b6b9101183bac2
   TTKitchen: cc5750842de67c4799ca13c1c1a116b3627d3361
