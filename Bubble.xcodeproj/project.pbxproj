@@ -24,10 +24,12 @@
 		1A21602BA1DAAE86B926B480 /* TGLineScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21645BEC4FD07DBDCC9707 /* TGLineScale.swift */; };
 		1A21604D6486FDAA0CA45EB0 /* TGBallClipRotatePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */; };
 		1A216064CD05CBACADE1959B /* GeneralBizConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F8350507AD670E3F80F /* GeneralBizConfig.swift */; };
+		1A21606E2E91ADDD5F4CE02F /* FloorPanInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A2A45EB7DE7A9E80760 /* FloorPanInfoVC.swift */; };
 		1A21611E7C676634236DE32D /* TGTriangleSkewSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216BCA731986807C2A146F /* TGTriangleSkewSpin.swift */; };
 		1A2161565C356ECF1F5F6356 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D4EBFA8119D603F2DB /* TGPacman.swift */; };
 		1A21619D6382BF8ECCD1C8EE /* SearchFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216130F340A11375391C9F /* SearchFilterPanel.swift */; };
 		1A2161AF1CFC9707F2144AA2 /* TGBallGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */; };
+		1A2161C32383F5349FF432EB /* PermitListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166560B1036023C5C19EF /* PermitListCell.swift */; };
 		1A2161F4A4D8D46994A7C896 /* HouseDetailPageBottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */; };
 		1A21622D0065E11F5AF3726B /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2164F00CA7D6AACA2CD796 /* TGOrbit.swift */; };
 		1A21623EEF0EE216334CB021 /* TGSquareSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B6B619135AF707F7845 /* TGSquareSpin.swift */; };
@@ -59,6 +61,7 @@
 		1A21696EF43FAFA4473D22E1 /* TGBallSpinFadeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */; };
 		1A21698E91F5C990A3AA9DC4 /* TGLineOrderbyAsc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */; };
 		1A2169ACB01B225214CD9414 /* TGBallScaleMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167651BB1A721258FD510 /* TGBallScaleMultiple.swift */; };
+		1A2169C85F43EDDA364B41E4 /* FloorPanInfoPropertyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E9CDC600263835A598D /* FloorPanInfoPropertyCell.swift */; };
 		1A216A6252C28F16C59B40F5 /* TGBallClipRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */; };
 		1A216B16B6471855858B7C50 /* TGBallClipRotateMultiple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216CAC26040AD156F8D5D9 /* TGBallClipRotateMultiple.swift */; };
 		1A216B41FEC305961DCC7D7A /* TGBallRotateChase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */; };
@@ -72,6 +75,7 @@
 		1A216EED4D75D8068F9B209F /* TGBallTrianglePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */; };
 		1A216F0F7C8B28F2BD0D6D93 /* TGLineScalePulseOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216532397FC52B9E340DC4 /* TGLineScalePulseOut.swift */; };
 		1A216F26244D87EA944F606A /* TGLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */; };
+		1A216F9FE74489703B2292AE /* FloorPanInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161C556B1214B7E2D6E25 /* FloorPanInfoViewModel.swift */; };
 		1AB1C8BBCD418B1695B36A89A92C6B7F /* CityItemCellTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C946C74434D26015841A33CD43636EB /* CityItemCellTest.swift */; };
 		20591B23BD3979D8B1168FA7386F5F2D /* SearchNeighborhoodEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255F0F3D826AD23C35ABC439E62CDEE1 /* SearchNeighborhoodEntity.swift */; };
 		266C3175AAB1A82168E48CF9601821F8 /* UITableViewCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B636A6928B9B98220C40EDDF4311ED6A /* UITableViewCellFactory.swift */; };
@@ -232,6 +236,7 @@
 		1A216130F340A11375391C9F /* SearchFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchFilterPanel.swift; sourceTree = "<group>"; };
 		1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinePageViewModel.swift; sourceTree = "<group>"; };
 		1A216170CD3CF455CA4E936F /* TGAudioEqualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGAudioEqualizer.swift; sourceTree = "<group>"; };
+		1A2161C556B1214B7E2D6E25 /* FloorPanInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanInfoViewModel.swift; sourceTree = "<group>"; };
 		1A21622BA28E843A69A713D7 /* TGLineScalePulseOutRapid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScalePulseOutRapid.swift; sourceTree = "<group>"; };
 		1A2162D4EBFA8119D603F2DB /* TGPacman.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGPacman.swift; sourceTree = "<group>"; };
 		1A2162D6723E269F9CCC55B5 /* TGBallRotateChase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallRotateChase.swift; sourceTree = "<group>"; };
@@ -248,6 +253,7 @@
 		1A216534A9AEDB9CF0171AFA /* TGBallZigZagDeflect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallZigZagDeflect.swift; sourceTree = "<group>"; };
 		1A21654368D760800244CACC /* TGBallBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallBeat.swift; sourceTree = "<group>"; };
 		1A2165BEDAA30BDDAC0623E5 /* TGLineSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineSpinFadeLoader.swift; sourceTree = "<group>"; };
+		1A2166560B1036023C5C19EF /* PermitListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitListCell.swift; sourceTree = "<group>"; };
 		1A2166820A8214CB1387851F /* TGSemiCircleSpin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGSemiCircleSpin.swift; sourceTree = "<group>"; };
 		1A2166DACCFF666EFB073471 /* TGBallPulseSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallPulseSync.swift; sourceTree = "<group>"; };
 		1A216712DFF8F895C81D25F5 /* TGBallClipRotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotate.swift; sourceTree = "<group>"; };
@@ -256,6 +262,7 @@
 		1A21688E8DB281078E6BFBF5 /* HouseDetailPageBottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseDetailPageBottomBarView.swift; sourceTree = "<group>"; };
 		1A2169421CDC3A838941280A /* TGWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGWindows.swift; sourceTree = "<group>"; };
 		1A216997147967D6C96DF81A /* TGBallGridBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridBeat.swift; sourceTree = "<group>"; };
+		1A216A2A45EB7DE7A9E80760 /* FloorPanInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanInfoVC.swift; sourceTree = "<group>"; };
 		1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallSpinFadeLoader.swift; sourceTree = "<group>"; };
 		1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
 		1A216A6071431ADA243CF6F6 /* TGLineScaleParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineScaleParty.swift; sourceTree = "<group>"; };
@@ -272,6 +279,7 @@
 		1A216D9B4E3603712D3BAB33 /* PageableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageableVC.swift; sourceTree = "<group>"; };
 		1A216E6855CA45ADA7ACFC6B /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		1A216E8A31449A89D7B3F99B /* TGBallScaleRippleMultiple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRippleMultiple.swift; sourceTree = "<group>"; };
+		1A216E9CDC600263835A598D /* FloorPanInfoPropertyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanInfoPropertyCell.swift; sourceTree = "<group>"; };
 		1A216EBE411D81696795C40B /* FloorPanListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanListViewModel.swift; sourceTree = "<group>"; };
 		1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallScaleRipple.swift; sourceTree = "<group>"; };
 		1A216F38B82179C0222BE3A8 /* TGBallTrianglePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallTrianglePath.swift; sourceTree = "<group>"; };
@@ -528,6 +536,17 @@
 			path = Bizs;
 			sourceTree = "<group>";
 		};
+		1A21638A55E45D218DA49942 /* FloorPanInfo */ = {
+			isa = PBXGroup;
+			children = (
+				1A216A2A45EB7DE7A9E80760 /* FloorPanInfoVC.swift */,
+				1A2161C556B1214B7E2D6E25 /* FloorPanInfoViewModel.swift */,
+				1A216E9CDC600263835A598D /* FloorPanInfoPropertyCell.swift */,
+				1A2166560B1036023C5C19EF /* PermitListCell.swift */,
+			);
+			path = FloorPanInfo;
+			sourceTree = "<group>";
+		};
 		1A2164259C48DA372CCC93CB /* Animation */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,6 +619,7 @@
 				1A21660D8AF4283A0F19BCC3 /* HouseComment */,
 				1A216D4C9BC784D95E9D03E5 /* RelatedNeighborhoodList */,
 				1A216ECF5E355A84F5303EA3 /* ErshouHouseList */,
+				1A21638A55E45D218DA49942 /* FloorPanInfo */,
 			);
 			path = SubPages;
 			sourceTree = "<group>";
@@ -1486,6 +1506,10 @@
 				1A2163DA71D6CDAC77DB57C0 /* RelatedNeighborhoodListVC.swift in Sources */,
 				1A21671334E4BA56B6F396CE /* ErshouHouseListVC.swift in Sources */,
 				1A216DF091EA0BF1DA7E0DB7 /* ErshouHouseListViewModel.swift in Sources */,
+				1A21606E2E91ADDD5F4CE02F /* FloorPanInfoVC.swift in Sources */,
+				1A216F9FE74489703B2292AE /* FloorPanInfoViewModel.swift in Sources */,
+				1A2169C85F43EDDA364B41E4 /* FloorPanInfoPropertyCell.swift in Sources */,
+				1A2161C32383F5349FF432EB /* PermitListCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

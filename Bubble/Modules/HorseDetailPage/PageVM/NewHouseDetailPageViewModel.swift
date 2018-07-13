@@ -49,7 +49,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data)
                 <- parseNewHouseNameNode(data)
-                <- parseNewHouseCoreInfoNode(data)
+                <- parseNewHouseCoreInfoNode(data, floorPanId: "\(courtId)", disposeBag: disposeBag)
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data)
@@ -127,6 +127,22 @@ func openGlobalPricingList(courtId: Int64, disposeBag: DisposeBag) -> () -> Void
 func getNewHouseDetailPageViewModel() -> (UITableView) -> DetailPageViewModel {
     return { tableView in
         NewHouseDetailPageViewModel(tableView: tableView)
+    }
+}
+
+func openFloorPanInfoPage(floorPanId: String, newHouseData: NewHouseData, disposeBag: DisposeBag) -> () -> Void {
+    return {
+        let detailPage = FloorPanInfoVC(
+            isHiddenBottomBar: false,
+            floorPanId: floorPanId,
+            newHouseData: newHouseData)
+
+        detailPage.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }
 

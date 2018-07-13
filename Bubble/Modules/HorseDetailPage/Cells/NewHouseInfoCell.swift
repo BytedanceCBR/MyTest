@@ -5,7 +5,8 @@
 
 import UIKit
 import SnapKit
-
+import RxSwift
+import RxCocoa
 class NewHouseInfoCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -17,6 +18,8 @@ class NewHouseInfoCell: BaseUITableViewCell {
     let labelKeyLeftPandding: CGFloat = 15
 
     let labelKeyTextColor = hexStringToUIColor(hex: "#999999")
+
+    var disposeBag = DisposeBag()
 
     lazy var pricingPerSqmKeyLabel: UILabel = {
         let result = UILabel()
@@ -60,6 +63,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
         result.textColor = hexStringToUIColor(hex: "#222222")
+        result.numberOfLines = 0
         return result
     }()
 
@@ -115,6 +119,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         pricingPerSqmLabel.snp.makeConstraints { maker in
             maker.centerY.equalTo(pricingPerSqmKeyLabel.snp.centerY)
             maker.left.equalTo(pricingPerSqmKeyLabel.snp.right).offset(10)
+            maker.right.equalTo(-15)
             maker.height.equalTo(22)
         }
 
@@ -129,6 +134,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         openDataLabel.snp.makeConstraints { maker in
             maker.centerY.equalTo(openDateKey.snp.centerY)
             maker.left.equalTo(openDateKey.snp.right).offset(10)
+            maker.right.equalTo(-15)
             maker.height.equalTo(22)
         }
 
@@ -137,12 +143,14 @@ class NewHouseInfoCell: BaseUITableViewCell {
             maker.top.equalTo(openDateKey.snp.bottom).offset(18)
             maker.left.equalTo(labelKeyLeftPandding)
             maker.height.equalTo(17)
+            maker.width.equalTo(24)
         }
 
         contentView.addSubview(courtAddressLabel)
         courtAddressLabel.snp.makeConstraints { maker in
             maker.centerY.equalTo(courtAddressKey.snp.centerY)
             maker.left.equalTo(courtAddressKey.snp.right).offset(10)
+            maker.right.equalTo(-15)
             maker.height.equalTo(22)
         }
 
@@ -179,6 +187,11 @@ class NewHouseInfoCell: BaseUITableViewCell {
         }
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -186,17 +199,22 @@ class NewHouseInfoCell: BaseUITableViewCell {
 }
 
 
-func parseNewHouseCoreInfoNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
+func parseNewHouseCoreInfoNode(_ newHouseData: NewHouseData, floorPanId: String, disposeBag: DisposeBag) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)
+        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(disposeBag)
         return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NewHouseInfoCell.identifier))
     }
 }
 
-func fillNewHouseCoreInfoCell(_ data: NewHouseData, cell: BaseUITableViewCell) -> Void {
+func fillNewHouseCoreInfoCell(_ data: NewHouseData, floorPanId: String, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseInfoCell {
         theCell.pricingPerSqmLabel.text = data.coreInfo?.pricingPerSqm
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
+        theCell.moreBtn.rx.tap
+            .debug("fillNewHouseCoreInfoCell")
+            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag))
+            .disposed(by: theCell.disposeBag)
+
     }
 }

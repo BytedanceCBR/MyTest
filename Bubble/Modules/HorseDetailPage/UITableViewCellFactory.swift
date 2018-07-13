@@ -83,6 +83,8 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: NeighborhoodItemCell.self)
             .addCellClass(cellType: TransactionRecordCell.self)
             .addCellClass(cellType: GlobalPricingListCell.self)
+            .addCellClass(cellType: FloorPanInfoPropertyCell.self)
+            .addCellClass(cellType: PermitListCell.self)
 
 }
 

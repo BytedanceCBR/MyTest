@@ -44,6 +44,7 @@ public struct ConstraintArrayDSL {
     ///   - tailSpacing: the spacing after the last item and the container
     public func distributeViewsAlong(axisType:UILayoutConstraintAxis,
                                      fixedSpacing:CGFloat,
+                                     averageLayout: Bool = true,
                                      leadSpacing:CGFloat = 0,
                                      tailSpacing:CGFloat = 0) {
         
@@ -56,7 +57,9 @@ public struct ConstraintArrayDSL {
             for (i, v) in self.array.enumerated() {
                 v.snp.makeConstraints({ (make) in
                     if prev != nil {
-                        make.width.equalTo(prev!)
+                        if averageLayout {
+                            make.width.equalTo(prev!)
+                        }
                         make.left.equalTo((prev?.snp.right)!).offset(fixedSpacing)
                         if (i == self.array.count - 1) {//last one
                             if tailSpacing != -1 {
@@ -74,7 +77,9 @@ public struct ConstraintArrayDSL {
             for (i, v) in self.array.enumerated() {
                 v.snp.makeConstraints({ (make) in
                     if prev != nil {
-                        make.height.equalTo(prev!)
+                        if averageLayout {
+                            make.height.equalTo(prev!)
+                        }
                         make.top.equalTo((prev?.snp.bottom)!).offset(fixedSpacing)
                         if (i == self.array.count - 1) {//last one
                             if tailSpacing != -1 {

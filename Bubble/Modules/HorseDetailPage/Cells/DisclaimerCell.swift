@@ -60,6 +60,17 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
     }
 }
 
+func parseDisclaimerNode() -> () -> TableSectionNode? {
+    return {
+        let cellRender = curry(fillDisclaimerCell)
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: DisclaimerCell.identifier))
+    }
+}
+
 
 func parseDisclaimerNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {

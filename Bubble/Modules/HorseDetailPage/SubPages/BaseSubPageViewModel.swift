@@ -18,7 +18,7 @@ class BaseSubPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate
 
     var onDataLoaded: ((Bool) -> Void)?
 
-    private var cellFactory: UITableViewCellFactory
+    var cellFactory: UITableViewCellFactory
 
     let disposeBag = DisposeBag()
 

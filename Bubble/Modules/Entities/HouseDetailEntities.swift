@@ -58,6 +58,7 @@ struct CourtMoreDetail: Mappable {
     var decoration : String?
     var propertyRight : String?
     var propertyName : String?
+    var propertyPrice: String?
     var powerWaterGasDesc : String?
     var heating : String?
     var greenRatio : String?
@@ -86,6 +87,7 @@ struct CourtMoreDetail: Mappable {
         decoration <- map["decoration"]
         propertyRight <- map["property_right"]
         propertyName <- map["property_name"]
+        propertyPrice <- map["property_price"]
         powerWaterGasDesc <- map["power_water_gas_desc"]
         heating <- map["heating"]
         greenRatio <- map["green_ratio"]
