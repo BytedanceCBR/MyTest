@@ -19,7 +19,6 @@ class SimpleNavBar: UIView {
 
     lazy var backBtn: UIButton = {
         let btn = UIButton()
-        btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
     }()
 
@@ -42,8 +41,10 @@ class SimpleNavBar: UIView {
 
     var gradientlayer: CAGradientLayer?
 
-    init(hiddenMaskBtn: Bool = true) {
+    init(backBtnImg: UIImage = #imageLiteral(resourceName: "icon-return"), hiddenMaskBtn: Bool = true) {
         super.init(frame: CGRect.zero)
+        backBtn.setBackgroundImage(backBtnImg, for: .normal)
+
         addSubview(bgView)
         bgView.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()
@@ -84,7 +85,7 @@ class SimpleNavBar: UIView {
     func setGradientColor() {
         removeGradientColor()
         title.isHidden = true
-
+        seperatorLine.isHidden = true
         bgView.backgroundColor = UIColor.clear
         bgView.alpha = 0.5
         let topColor = color(0, 0, 0, 1)
@@ -104,6 +105,7 @@ class SimpleNavBar: UIView {
 
     func removeGradientColor() {
         title.isHidden = false
+        seperatorLine.isHidden = false
         gradientlayer?.removeFromSuperlayer()
         gradientlayer = nil
         bgView.backgroundColor = UIColor.white

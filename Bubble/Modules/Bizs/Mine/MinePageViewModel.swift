@@ -17,6 +17,8 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
 
     let cellFactory: UITableViewCellFactory
 
+    let disposeBag = DisposeBag()
+
     init(tableView: UITableView) {
         self.tableView = tableView
         self.cellFactory = getMineCellFactory()
@@ -37,7 +39,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         let dataParser = DetailDataParser.monoid()
-                <- parseUserInfoNode(userInfo)
+                <- parseUserInfoNode(userInfo, disposeBag: disposeBag)
                 <- parseFavoriteNode()
                 <- parseOptionNode(
                 icon: #imageLiteral(resourceName: "star-simple-line-icons"),
@@ -118,6 +120,5 @@ func getMineCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: UserInfoCell.self)
             .addCellClass(cellType: FavoriteCell.self)
             .addCellClass(cellType: HeaderCell.self)
-            .addCellClass(cellType: TextRowCell.self)
             .addCellClass(cellType: MineOptionCell.self)
 }

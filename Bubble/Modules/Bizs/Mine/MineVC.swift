@@ -37,7 +37,6 @@ class MineVC: BaseViewController {
             maker.left.right.top.bottom.equalToSuperview()
         }
         self.mineViewModel = MinePageViewModel(tableView: tableView)
-        self.mineViewModel?.userInfo = UserInfo()
         self.mineViewModel?.reload()
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .default

@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 class UserInfoCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -72,11 +73,30 @@ class UserInfoCell: BaseUITableViewCell {
     }
 }
 
-
-func parseUserInfoNode(_ info: UserInfo?) -> () -> TableSectionNode? {
+func parseUserInfoNode(_ info: UserInfo?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillUserInfoCell)(info)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: UserInfoCell.identifier))
+        var selector: (() -> Void)? = nil
+        if let userInfo = info {
+            selector = {
+
+            }
+        } else {
+            selector = {
+                let vc = QuickLoginVC()
+                vc.navBar.backBtn.rx.tap
+                    .subscribe(onNext: { void in
+                        EnvContext.shared.rootNavController.popViewController(animated: true)
+                    })
+                    .disposed(by: disposeBag)
+                EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+            }
+        }
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: [selector!],
+                label: "",
+                type: .node(identifier: UserInfoCell.identifier))
     }
 }
 
@@ -86,3 +106,4 @@ func fillUserInfoCell(_ info: UserInfo?, cell: BaseUITableViewCell) -> Void {
         theCell.userDesc.text = info?.description ?? "我们一起开启美好的找房之旅～"
     }
 }
+

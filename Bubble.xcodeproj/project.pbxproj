@@ -54,6 +54,7 @@
 		1A2166BBDC9C0FDDCFABDF4C /* TGBallGridBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216997147967D6C96DF81A /* TGBallGridBeat.swift */; };
 		1A21671334E4BA56B6F396CE /* ErshouHouseListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2163B26CCCD292CECAE365 /* ErshouHouseListVC.swift */; };
 		1A21674C67D52A2B57DE551A /* TGBallBeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21654368D760800244CACC /* TGBallBeat.swift */; };
+		1A2167EC70F53F45D5D2E229 /* QuickLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2169B7FC3902F03AAEC0D8 /* QuickLoginVC.swift */; };
 		1A21682853A71CFE8B2F663B /* FloorPanDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F7C73E25DF29185E3D3 /* FloorPanDetailViewModel.swift */; };
 		1A21686448F43C0D104DC896 /* TGBallZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21681516973A8D033A0ED5 /* TGBallZigZag.swift */; };
 		1A21686EFB61D4153BF01402 /* TGBallScaleRipple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F15E3C3EB0D280413F1 /* TGBallScaleRipple.swift */; };
@@ -125,7 +126,6 @@
 		7D531F9020EF9B40001032AB /* UserMessageEntitiesApiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */; };
 		7D531F9220EFAEF7001032AB /* MessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D531F9120EFAEF7001032AB /* MessageListVC.swift */; };
 		7D55266531C029E0C7FB3AC879FF5E59 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AC6F1B9D433D563FF7364427D1383 /* HomeListViewModel.swift */; };
-		7D8168A320F78595004D438E /* TextSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A020F78594004D438E /* TextSelectCell.swift */; };
 		7D8168A420F78595004D438E /* FavoriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A120F78594004D438E /* FavoriteCell.swift */; };
 		7D8168A520F78595004D438E /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A220F78594004D438E /* UserInfoCell.swift */; };
 		7D8168A720F785EC004D438E /* UserInfoEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8168A620F785EB004D438E /* UserInfoEntities.swift */; };
@@ -284,6 +284,7 @@
 		1A2168A4744CDE7E4BF06B28 /* FloorPanCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanCategoryViewModel.swift; sourceTree = "<group>"; };
 		1A2169421CDC3A838941280A /* TGWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGWindows.swift; sourceTree = "<group>"; };
 		1A216997147967D6C96DF81A /* TGBallGridBeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridBeat.swift; sourceTree = "<group>"; };
+		1A2169B7FC3902F03AAEC0D8 /* QuickLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickLoginVC.swift; sourceTree = "<group>"; };
 		1A216A2A45EB7DE7A9E80760 /* FloorPanInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanInfoVC.swift; sourceTree = "<group>"; };
 		1A216A51E03054784B4A7F73 /* TGBallSpinFadeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallSpinFadeLoader.swift; sourceTree = "<group>"; };
 		1A216A55E16C26570ED81C09 /* TGCubeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCubeTransition.swift; sourceTree = "<group>"; };
@@ -362,7 +363,6 @@
 		7D531F8D20EF91A4001032AB /* UserMessageEntitiesApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApi.swift; sourceTree = "<group>"; };
 		7D531F8F20EF9B40001032AB /* UserMessageEntitiesApiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageEntitiesApiTest.swift; sourceTree = "<group>"; };
 		7D531F9120EFAEF7001032AB /* MessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListVC.swift; sourceTree = "<group>"; };
-		7D8168A020F78594004D438E /* TextSelectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextSelectCell.swift; sourceTree = "<group>"; };
 		7D8168A120F78594004D438E /* FavoriteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCell.swift; sourceTree = "<group>"; };
 		7D8168A220F78594004D438E /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		7D8168A620F785EB004D438E /* UserInfoEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoEntities.swift; sourceTree = "<group>"; };
@@ -573,6 +573,7 @@
 		10943918B88CD24AE06C9174773E688B /* Bizs */ = {
 			isa = PBXGroup;
 			children = (
+				B31D9AFF20FC9F55001010BD /* Account */,
 				B327FC8520F5535400721C23 /* FloorPan */,
 				D45C99A51F3C8329F6E1B3D47C3E2E06 /* Messages */,
 				ED44DB92E408B4EA11F437130F665A08 /* Mine */,
@@ -897,7 +898,6 @@
 		7D81689F20F78594004D438E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				7D8168A020F78594004D438E /* TextSelectCell.swift */,
 				7D8168A120F78594004D438E /* FavoriteCell.swift */,
 				7D8168A220F78594004D438E /* UserInfoCell.swift */,
 				1A21636C476791DA499BC4D6 /* MineOptionCell.swift */,
@@ -1040,6 +1040,14 @@
 			children = (
 			);
 			path = NavBar;
+			sourceTree = "<group>";
+		};
+		B31D9AFF20FC9F55001010BD /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				1A2169B7FC3902F03AAEC0D8 /* QuickLoginVC.swift */,
+			);
+			path = Account;
 			sourceTree = "<group>";
 		};
 		B327FC8520F5535400721C23 /* FloorPan */ = {
@@ -1555,7 +1563,6 @@
 				125996B12D421D699AC7C27507B3FB91 /* Color.swift in Sources */,
 				DE060211EC854EDB2CD6AD6B3EEBCB3A /* CommonUIStyle.swift in Sources */,
 				15E24CD1128597762F9767E9823B9560 /* ConfigEntities.swift in Sources */,
-				7D8168A320F78595004D438E /* TextSelectCell.swift in Sources */,
 				668C55607FF8AF28A06CEFAFDF9524E2 /* ConfigurationAPI.swift in Sources */,
 				859E9688B80E5235A558507AA1FA7BAA /* ConstraintArray+Extensions.swift in Sources */,
 				97FBA6D13F0E90441B8D83A40BD140A6 /* ConstraintArrayDSL.swift in Sources */,
@@ -1716,6 +1723,7 @@
 				1A2164771E0D407D65EBCBCC /* FloorPanHouseTypeCell.swift in Sources */,
 				B31D9AEF20FC6550001010BD /* FloorPlanRecommendHeaderCell.swift in Sources */,
 				1A216D29F5B310CDB70F652E /* MineOptionCell.swift in Sources */,
+				1A2167EC70F53F45D5D2E229 /* QuickLoginVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
