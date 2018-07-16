@@ -23,7 +23,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
         self.dataSource = DataSource(cellFactory: cellFactory)
         tableView.dataSource = self.dataSource
         tableView.delegate = self.dataSource
-        tableView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        tableView.backgroundColor = UIColor.white
 
         cellFactory.register(tableView: tableView)
         super.init()
@@ -39,7 +39,27 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
         let dataParser = DetailDataParser.monoid()
                 <- parseUserInfoNode(userInfo)
                 <- parseFavoriteNode()
-                <- parseTextRowCell()
+                <- parseOptionNode(
+                icon: #imageLiteral(resourceName: "star-simple-line-icons"),
+                label: "我的收藏",
+                isShowBottomLine: true) {
+                    print("我的收藏")
+                }
+                <- parseOptionNode(
+                icon: #imageLiteral(resourceName: "bubbles-simple-line-icons"),
+                label: "用户反馈",
+                isShowBottomLine: true) {
+                    print("用户反馈")
+                }
+                <- parseOptionNode(
+                icon: #imageLiteral(resourceName: "setting-simple-line-icons"),
+                label: "系统设置",
+                isShowBottomLine: true) {
+                    print("系统设置")
+                }
+                <- parseContactUsNode(phoneNumber: "100-0937-3859") {
+                    print("客服电话")
+                }
         return dataParser.parser
     }
 }
@@ -99,4 +119,5 @@ func getMineCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: FavoriteCell.self)
             .addCellClass(cellType: HeaderCell.self)
             .addCellClass(cellType: TextRowCell.self)
+            .addCellClass(cellType: MineOptionCell.self)
 }

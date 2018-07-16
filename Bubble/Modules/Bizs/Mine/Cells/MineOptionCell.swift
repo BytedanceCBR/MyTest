@@ -64,12 +64,23 @@ class MineOptionCell: BaseUITableViewCell {
             maker.centerY.equalTo(iconView.snp.centerY)
             maker.height.width.equalTo(12)
         }
+
+        contentView.addSubview(subTitle)
+        subTitle.snp.makeConstraints { maker in
+            maker.right.equalTo(-15)
+            maker.centerY.equalTo(label.snp.centerY)
+            maker.height.equalTo(22)
+         }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        arrowsIcon.isHidden = false
+    }
 }
 
 func parseOptionNode(
@@ -100,6 +111,27 @@ fileprivate func fillOptionCell(icon: UIImage,
                     trailing: -15)
         }
         theCell.iconView.image = icon
+    }
+}
+
+func parseContactUsNode(phoneNumber: String, callback: (() -> Void)?) -> () -> TableSectionNode? {
+    let render = curry(fillContactUsCell)(phoneNumber)
+    return {
+        return TableSectionNode(
+                items: [render],
+                selectors: callback != nil ? [callback!] : nil,
+                label: "",
+                type: .node(identifier: MineOptionCell.identifier))
+    }
+}
+
+func fillContactUsCell(phoneNumber: String, cell: BaseUITableViewCell) {
+    if let theCell = cell as? MineOptionCell {
+        theCell.label.text = "客服电话"
+        theCell.iconView.image = #imageLiteral(resourceName: "earphones-alt-simple-line-icons")
+        theCell.subTitle.text = phoneNumber
+        theCell.arrowsIcon.isHidden = true
+        theCell.subTitle.isHidden = false
     }
 }
 
