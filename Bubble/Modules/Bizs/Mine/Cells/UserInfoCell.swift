@@ -82,7 +82,7 @@ func parseUserInfoNode(_ info: UserInfo?) -> () -> TableSectionNode? {
 
 func fillUserInfoCell(_ info: UserInfo?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
-        theCell.userName.text = info?.screen_name ?? "139****7029"
-        theCell.userDesc.text = info?.description ?? "填写你的说明"
+        theCell.userName.text = info?.screen_name ?? "登陆/注册"
+        theCell.userDesc.text = info?.description ?? "我们一起开启美好的找房之旅～"
     }
 }

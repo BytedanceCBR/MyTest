@@ -10,9 +10,16 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
-class ChatVC: UIViewController {
+class ChatVC: BaseViewController {
     
-
+    lazy var navBar: SimpleNavBar = {
+        let re = SimpleNavBar()
+        re.backBtn.isHidden = true
+        re.rightBtn.isHidden = true
+        re.title.text = "消息"
+        re.removeGradientColor()
+        return re
+    }()
 
     lazy var tableView: UITableView = {
         let re = UITableView()
@@ -31,9 +38,16 @@ class ChatVC: UIViewController {
         super.viewDidLoad()
 //        self.navigationController?.title = "消息"
 //        self.navigationItem.title = "消息"
+
+        self.view.addSubview(navBar)
+        navBar.snp.makeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+        }
+
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.top.left.right.bottom.equalToSuperview()
+            maker.left.right.bottom.equalToSuperview()
+            maker.top.equalTo(navBar.snp.bottom)
         }
         tableView.dataSource = tableViewModel
         tableView.delegate = tableViewModel
@@ -61,6 +75,7 @@ class ChatVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .default
         self.navigationController?.navigationBar.isHidden = true
     }
     

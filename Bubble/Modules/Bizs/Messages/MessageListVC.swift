@@ -63,6 +63,11 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
                 .disposed(by: disposeBag)
         }
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .default
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
