@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
-
 class MineVC: UIViewController {
 
     private var minePageViewModel: MinePageViewModel?
@@ -48,6 +47,10 @@ class MineVC: UIViewController {
                     print(error)
                 })
                 .disposed(by: disposeBag)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {

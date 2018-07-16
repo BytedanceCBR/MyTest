@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import TTNetworkManager
 import ObjectMapper
 
 func requestSearchConfig(cityId: String = "133") -> Observable<SearchConfigResponse?> {

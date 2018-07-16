@@ -7,10 +7,8 @@
 //
 
 import Foundation
-import YYCache
 import RxSwift
 import RxCocoa
-import TTNetworkManager
 class Client {
 
     lazy private var searchConfigCache: YYCache? = {

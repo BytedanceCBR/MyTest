@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import BDWebImage
 import RxSwift
 import RxCocoa
 class NeighborhoodInfoCell: BaseUITableViewCell {

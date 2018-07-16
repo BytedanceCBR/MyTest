@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BDWebImage
 import SnapKit
 
 class NewHouseCommentCell: BaseUITableViewCell {

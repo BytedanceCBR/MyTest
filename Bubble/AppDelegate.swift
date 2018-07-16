@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import BDStartUp
-import TTNetworkManager
-import TTInstallService
 
 import RxSwift
 @UIApplicationMain

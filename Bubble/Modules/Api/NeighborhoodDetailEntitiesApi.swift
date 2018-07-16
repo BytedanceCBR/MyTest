@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import TTNetworkManager
 import ObjectMapper
 
 func requestNeighborhoodDetail(neighborhoodId: String = "", query: String = "") -> Observable<NeighborhoodDetailResponse?> {

@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-import YYText
 
 class NewHouseNameCell: BaseUITableViewCell {
 

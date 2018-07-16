@@ -5,7 +5,6 @@
 
 import Foundation
 import SnapKit
-import BDWebImage
 import RxSwift
 class FloorPanHouseTypeCell: BaseUITableViewCell {
 

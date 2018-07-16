@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import TTNetworkManager
 import ObjectMapper
 
 func requestUserUnread(query: String = "") -> Observable<UserUnreadMessageResponse?> {

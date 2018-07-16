@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-import YYCache
 
 fileprivate enum CellType: String {
     case bubble = "bubble"

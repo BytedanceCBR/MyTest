@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import TTNetworkManager
 import RxSwift
 
 extension TTNetworkManager: ReactiveCompatible {

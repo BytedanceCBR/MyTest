@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import TTNetworkManager
 import ObjectMapper
 
 func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query: String = "") -> Observable<RelatedHouseResponse?> {

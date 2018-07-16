@@ -10,7 +10,7 @@ source 'git@code.byted.org:ugc/UGCSpecs.git'
 
 platform :ios, '8.0'
 #use_frameworks!
-use_modular_headers!
+#use_modular_headers!
 target 'Bubble' do
     pod 'Bubble', :path => './'
     pod 'BDStartUp', :path => './BDStartUp'
@@ -69,12 +69,14 @@ target 'Bubble' do
     pod 'AMap3DMap'
     pod 'AMapSearch'
 
-    pod 'RxSwift', '4.1.2'
-    pod 'RxCocoa', '4.1.2'
-    pod 'SnapKit', '4.0.0'
-    pod 'ObjectMapper'
-    pod 'Charts'
+#    pod 'RxSwift', '4.1.2'
+#    pod 'RxCocoa', '4.1.2'
+#    pod 'SnapKit', '4.0.0'
+#    pod 'ObjectMapper'
+#    pod 'Charts'
     pod 'YYText'
+
+    pod 'BDAccount'
     target 'BubbleTests' do
         inherit! :search_paths
     end
@@ -114,5 +116,5 @@ post_install do |installer|
             end
         end
     end
-    system("python ./post_install.py")
+    #system("python ./post_install.py")
 end

@@ -4,10 +4,8 @@
 //
 
 import Foundation
-import YYCache
 import RxSwift
 import RxCocoa
-import TTNetworkManager
 class GeneralBizConfig {
 
     static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"

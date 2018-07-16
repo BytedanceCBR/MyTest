@@ -5,7 +5,6 @@
 
 import Foundation
 import RxSwift
-import TTNetworkManager
 import ObjectMapper
 
 func requestHouseRecommend() -> Observable<HouseRecommendResponse1?> {

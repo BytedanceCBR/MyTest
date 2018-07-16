@@ -165,6 +165,11 @@
 		B31D9AEB20FC4983001010BD /* FloorPanCategoryDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9AEA20FC4983001010BD /* FloorPanCategoryDetailPageViewModel.swift */; };
 		B31D9AED20FC5C72001010BD /* FloorPlanHouseTypeNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9AEC20FC5C72001010BD /* FloorPlanHouseTypeNameCell.swift */; };
 		B31D9AEF20FC6550001010BD /* FloorPlanRecommendHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9AEE20FC6550001010BD /* FloorPlanRecommendHeaderCell.swift */; };
+		B31D9AF820FC7C05001010BD /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31D9AF120FC7C04001010BD /* RxCocoa.framework */; };
+		B31D9AF920FC7C05001010BD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31D9AF220FC7C05001010BD /* RxSwift.framework */; };
+		B31D9AFB20FC7C05001010BD /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31D9AF420FC7C05001010BD /* Charts.framework */; };
+		B31D9AFC20FC7C05001010BD /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31D9AF520FC7C05001010BD /* ObjectMapper.framework */; };
+		B31D9AFE20FC7C05001010BD /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31D9AF720FC7C05001010BD /* SnapKit.framework */; };
 		B327FC8420F471CD00721C23 /* NetworkCommonParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */; };
 		B327FC8720F553EE00721C23 /* FloorPanDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B327FC8620F553EE00721C23 /* FloorPanDetailVC.swift */; };
 		B32DA60A20EF7B7000D7E277 /* SearchConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */; };
@@ -400,6 +405,13 @@
 		B31D9AEA20FC4983001010BD /* FloorPanCategoryDetailPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPanCategoryDetailPageViewModel.swift; sourceTree = "<group>"; };
 		B31D9AEC20FC5C72001010BD /* FloorPlanHouseTypeNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanHouseTypeNameCell.swift; sourceTree = "<group>"; };
 		B31D9AEE20FC6550001010BD /* FloorPlanRecommendHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanRecommendHeaderCell.swift; sourceTree = "<group>"; };
+		B31D9AF120FC7C04001010BD /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
+		B31D9AF220FC7C05001010BD /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
+		B31D9AF320FC7C05001010BD /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/iOS/RxBlocking.framework; sourceTree = "<group>"; };
+		B31D9AF420FC7C05001010BD /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
+		B31D9AF520FC7C05001010BD /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
+		B31D9AF620FC7C05001010BD /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
+		B31D9AF720FC7C05001010BD /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		B327FC8320F471CD00721C23 /* NetworkCommonParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCommonParams.swift; sourceTree = "<group>"; };
 		B327FC8620F553EE00721C23 /* FloorPanDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPanDetailVC.swift; sourceTree = "<group>"; };
 		B32DA60920EF7B7000D7E277 /* SearchConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigTests.swift; sourceTree = "<group>"; };
@@ -467,6 +479,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B31D9AF820FC7C05001010BD /* RxCocoa.framework in Frameworks */,
+				B31D9AF920FC7C05001010BD /* RxSwift.framework in Frameworks */,
+				B31D9AFB20FC7C05001010BD /* Charts.framework in Frameworks */,
+				B31D9AFC20FC7C05001010BD /* ObjectMapper.framework in Frameworks */,
+				B31D9AFE20FC7C05001010BD /* SnapKit.framework in Frameworks */,
 				D687328E12CDAF3788B7F17959641799 /* CoreGraphics.framework in Frameworks */,
 				7E42F2341424B8CDE9D8039C53975657 /* Foundation.framework in Frameworks */,
 				922A23C8793EB86DD454A5D931C2CDD2 /* UIKit.framework in Frameworks */,
@@ -831,6 +848,13 @@
 		71C18B0C6BD2D0889ADF1C3D3362BE2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B31D9AF420FC7C05001010BD /* Charts.framework */,
+				B31D9AF520FC7C05001010BD /* ObjectMapper.framework */,
+				B31D9AF320FC7C05001010BD /* RxBlocking.framework */,
+				B31D9AF120FC7C04001010BD /* RxCocoa.framework */,
+				B31D9AF220FC7C05001010BD /* RxSwift.framework */,
+				B31D9AF620FC7C05001010BD /* RxTest.framework */,
+				B31D9AF720FC7C05001010BD /* SnapKit.framework */,
 				BED5D61F76E97E82DE52AD3BFB936734 /* CoreGraphics.framework */,
 				2F4718EF956DEC3D8B7DCED2DB95F4D3 /* Foundation.framework */,
 				C51B5557B2D19040CD17804F4DED97B8 /* UIKit.framework */,
@@ -1195,6 +1219,8 @@
 				A401B9C73F72306EE58CA7BA6EC39191 /* Sources */,
 				431BB1DEE2F8CD7F65C16B6B345B0D95 /* Frameworks */,
 				7DD01E1791030E144B2F081E5FDBC420 /* Resources */,
+				B667DDAA94C403C19EF96465 /* [CP] Embed Pods Frameworks */,
+				7BA4AE908186963346C5AD69 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1214,6 +1240,8 @@
 				5044A2F987D2390A986988CE2CF277DD /* Sources */,
 				BC8DB63B12CE82D9A92E647599FE7C81 /* Frameworks */,
 				F92D97BDC12611C549F8951FBDAFEC00 /* Resources */,
+				F9D9AE7D485C06C7C6DE3E57 /* [CP] Embed Pods Frameworks */,
+				5E828F5B8EAEEB1D2979569E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1234,6 +1262,8 @@
 				55B326F6FC9F4AEC5E13CA6447E35808 /* Frameworks */,
 				143133CD3881C7AF366A4404DA6D4783 /* Resources */,
 				AAF2916E04E90E272073606F0443CD1F /* [CP] Copy Pods Resources */,
+				B31D9AF020FC7B3A001010BD /* ShellScript */,
+				883850F737848AB94CE12363 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1319,6 +1349,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		5E828F5B8EAEEB1D2979569E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BubbleUITests/Pods-BubbleUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7A6C4F6754896A1157A5D72F79B9054C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1335,6 +1380,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7BA4AE908186963346C5AD69 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BubbleTests/Pods-BubbleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		883850F737848AB94CE12363 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bubble/Pods-Bubble-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		88C1D6727D91CE0E9BF9AB6E7FB6817A /* [CP] Check Pods Manifest.lock */ = {
@@ -1363,16 +1438,56 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Bubble/Pods-Bubble-resources.sh",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/BDStartUp/BDStartUp.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDStartUp.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bubble/Pods-Bubble-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B31D9AF020FC7B3A001010BD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxCocoa.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ObjectMapper.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Charts.framework",
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SnapKit.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxSwift.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/ObjectMapper.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Charts.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		B667DDAA94C403C19EF96465 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BubbleTests/Pods-BubbleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E0901808303E6BDE05E3EAA8086E60AA /* [CP] Check Pods Manifest.lock */ = {
@@ -1391,6 +1506,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9D9AE7D485C06C7C6DE3E57 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BubbleUITests/Pods-BubbleUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1813,6 +1943,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1854,6 +1988,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Bubble/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

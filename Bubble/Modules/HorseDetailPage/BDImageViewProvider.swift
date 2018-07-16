@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import BDWebImage
 
 class BDImageViewProvider: PageViewProvider {
 

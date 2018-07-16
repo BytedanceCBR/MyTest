@@ -9,7 +9,6 @@
 import Foundation
 import RxSwift
 import RxCocoa
-import YYText
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)

@@ -5,8 +5,6 @@
 
 import UIKit
 import SnapKit
-import BDWebImage
-import YYText
 import CoreGraphics
 import RxSwift
 class NeighborhoodItemCell: BaseUITableViewCell {

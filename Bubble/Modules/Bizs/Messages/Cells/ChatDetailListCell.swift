@@ -10,8 +10,6 @@
 
 import UIKit
 import SnapKit
-import BDWebImage
-import YYText
 import CoreGraphics
 
 class ChatDetailListCell: BaseUITableViewCell {

@@ -8,7 +8,6 @@
 
 import UIKit
 import SnapKit
-
 class UserInfoCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -32,6 +31,7 @@ class UserInfoCell: BaseUITableViewCell {
     }()
 
     lazy var avatarView: UIImageView = {
+        print(BDAccount.shared())
         let re = UIImageView()
         re.image = #imageLiteral(resourceName: "icon-zufang")
         return re

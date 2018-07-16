@@ -8,8 +8,6 @@
 
 import UIKit
 import SnapKit
-import BDWebImage
-import YYText
 import RxCocoa
 import RxSwift
 
