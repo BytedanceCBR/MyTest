@@ -72,6 +72,7 @@
 		1A216C09D0065BA2A5CA664A /* MinePageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21613DCCF0E70259AB0860 /* MinePageViewModel.swift */; };
 		1A216C51E1D47704B05C7FA7 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216EBE411D81696795C40B /* FloorPanListViewModel.swift */; };
 		1A216CAE46B0C9C7207FDDB8 /* TGIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D1F43F1F934632B2F3C /* TGIndicator.swift */; };
+		1A216D29F5B310CDB70F652E /* MineOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21636C476791DA499BC4D6 /* MineOptionCell.swift */; };
 		1A216D3DCC1F7D0F12017820 /* FloorPanCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216562256ADEB6C848385B /* FloorPanCategoryVC.swift */; };
 		1A216D676D1C164CBD105D4A /* TGBallRotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216C71F1128F3D74D96967 /* TGBallRotate.swift */; };
 		1A216DF091EA0BF1DA7E0DB7 /* ErshouHouseListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216D6784A6C65D151D88B8 /* ErshouHouseListViewModel.swift */; };
@@ -260,6 +261,7 @@
 		1A2163381C41BC3BC0FC6145 /* HouseCommentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseCommentViewModel.swift; sourceTree = "<group>"; };
 		1A21633F2B00CDB9B629425E /* NeighborhoodDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A21635624A0298A34D82BDA /* TGLineOrderbyAsc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGLineOrderbyAsc.swift; sourceTree = "<group>"; };
+		1A21636C476791DA499BC4D6 /* MineOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MineOptionCell.swift; sourceTree = "<group>"; };
 		1A2163B0C136A45EEB47888A /* TGBallGridPulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallGridPulse.swift; sourceTree = "<group>"; };
 		1A2163B26CCCD292CECAE365 /* ErshouHouseListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseListVC.swift; sourceTree = "<group>"; };
 		1A216445B1A45F6FB21BAA67 /* TGBallClipRotatePulse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGBallClipRotatePulse.swift; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 				7D8168A020F78594004D438E /* TextSelectCell.swift */,
 				7D8168A120F78594004D438E /* FavoriteCell.swift */,
 				7D8168A220F78594004D438E /* UserInfoCell.swift */,
+				1A21636C476791DA499BC4D6 /* MineOptionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1712,6 +1715,7 @@
 				1A2161AAEAA9AC0BE9578F22 /* FloorPanCategoryViewModel.swift in Sources */,
 				1A2164771E0D407D65EBCBCC /* FloorPanHouseTypeCell.swift in Sources */,
 				B31D9AEF20FC6550001010BD /* FloorPlanRecommendHeaderCell.swift in Sources */,
+				1A216D29F5B310CDB70F652E /* MineOptionCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

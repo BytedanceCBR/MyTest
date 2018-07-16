@@ -38,7 +38,6 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         let dataParser = DetailDataParser.monoid()
                 <- parseUserInfoNode(userInfo)
-                <- parseHeaderNode("房源关注")
                 <- parseFavoriteNode()
                 <- parseTextRowCell()
         return dataParser.parser

@@ -17,16 +17,35 @@ class FavoriteCell: BaseUITableViewCell {
 
     lazy var bgView: UIView = {
         let re = UIView()
+        re.backgroundColor = UIColor.white
+        return re
+    }()
+
+    lazy var titleLabel: UILabel = {
+        let re = UILabel()
+        re.text = "房源关注"
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.textColor = hexStringToUIColor(hex: "#222222")
+        re.textAlignment = .left
         return re
     }()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
 
         contentView.addSubview(bgView)
         bgView.snp.makeConstraints { maker in
             maker.top.equalTo(6)
+            maker.bottom.equalTo(-6)
             maker.left.right.equalToSuperview()
+        }
+
+        bgView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(15)
+            maker.top.equalTo(16)
+            maker.height.equalTo(22)
         }
 
     }
@@ -36,16 +55,17 @@ class FavoriteCell: BaseUITableViewCell {
     }
 
     fileprivate func setItem(items: [FavoriteItemView]) {
-        for v in contentView.subviews where v is FavoriteItemView {
+        for v in bgView.subviews where v is FavoriteItemView {
             v.removeFromSuperview()
         }
 
         items.forEach { view in
-            contentView.addSubview(view)
+            bgView.addSubview(view)
         }
         items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
         items.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
+            maker.top.equalTo(titleLabel.snp.bottom)
+            maker.bottom.equalToSuperview()
         }
     }
 }
@@ -56,7 +76,7 @@ fileprivate class FavoriteItemView: UIView {
     lazy var keyLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
-        re.textColor = hexStringToUIColor(hex: "#5050505")
+        re.textColor = hexStringToUIColor(hex: "#505050")
         return re
     }()
 

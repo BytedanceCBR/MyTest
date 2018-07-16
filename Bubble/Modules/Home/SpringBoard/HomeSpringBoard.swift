@@ -38,10 +38,10 @@ class HomeSpringBoardViewModel {
     init(springBoard: HomeSpringBoard) {
         self.springBoard = springBoard
         let springItems: [HomeSpringBoardItemView] = [
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-ershoufang"), label: "二手房"),
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-xinfang"), label: "新房"),
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), label: "找小区"),
-            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), label: "咨询")
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "home-icon-ershoufang"), label: "二手房"),
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "home-icon-xinfang"), label: "新房"),
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "home-icon-xiaoqu"), label: "找小区"),
+            createSpringBoardItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), label: "资讯")
         ]
 
         let clicks: [SpringBoardItemClick] = [

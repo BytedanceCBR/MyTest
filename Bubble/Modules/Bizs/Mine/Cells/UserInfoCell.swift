@@ -33,7 +33,7 @@ class UserInfoCell: BaseUITableViewCell {
     lazy var avatarView: UIImageView = {
         print(BDAccount.shared())
         let re = UIImageView()
-        re.image = #imageLiteral(resourceName: "icon-zufang")
+        re.image = #imageLiteral(resourceName: "default-avatar-icons")
         return re
     }()
 
@@ -42,16 +42,17 @@ class UserInfoCell: BaseUITableViewCell {
 
         contentView.addSubview(avatarView)
         avatarView.snp.makeConstraints { (maker) in
-            maker.right.equalTo(-15)
-            maker.width.height.equalTo(60)
-            maker.bottom.equalTo(-20)
-            maker.top.equalToSuperview()
+            maker.right.equalTo(-14)
+            maker.width.height.equalTo(62)
+            maker.bottom.equalTo(-19)
+            maker.top.equalTo(63)
         }
 
         contentView.addSubview(userName)
         userName.snp.makeConstraints { maker in
-            maker.top.equalToSuperview()
+            maker.top.equalTo(64)
             maker.left.equalTo(15)
+            maker.height.equalTo(34)
             maker.right.lessThanOrEqualTo(avatarView)
         }
 
@@ -59,7 +60,9 @@ class UserInfoCell: BaseUITableViewCell {
         userDesc.snp.makeConstraints { maker in
             maker.top.equalTo(userName.snp.bottom)
             maker.left.equalTo(15)
+            maker.height.equalTo(34)
             maker.right.lessThanOrEqualTo(avatarView)
+            maker.bottom.equalTo(-13)
         }
     }
 

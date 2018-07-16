@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
-class MineVC: UIViewController {
+class MineVC: BaseViewController {
 
     private var minePageViewModel: MinePageViewModel?
 
@@ -18,6 +18,9 @@ class MineVC: UIViewController {
         let re = UITableView()
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         re.separatorStyle = .none
+        if #available(iOS 11.0, *) {
+            re.contentInsetAdjustmentBehavior = .never
+        }
         return re
     }()
 
@@ -27,6 +30,7 @@ class MineVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
         self.navigationItem.title = "我的"
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
@@ -35,7 +39,8 @@ class MineVC: UIViewController {
         self.mineViewModel = MinePageViewModel(tableView: tableView)
         self.mineViewModel?.userInfo = UserInfo()
         self.mineViewModel?.reload()
-
+        self.navigationController?.navigationBar.isHidden = true
+        UIApplication.shared.statusBarStyle = .default
 
         requestUserInfo(query: "")
                 .subscribe(onNext: { [unowned self] (response) in
@@ -51,6 +56,8 @@ class MineVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+
     }
 
     override func didReceiveMemoryWarning() {

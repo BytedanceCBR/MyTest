@@ -197,7 +197,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.isHidden = false
     }
 
     private func bindSearchEvent() {

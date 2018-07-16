@@ -22,7 +22,10 @@ class BaseUITableViewCell: UITableViewCell {
 
 extension BaseUITableViewCell {
     func addBottomLine() {
-        contentView.lu.addBottomBorder(color: hexStringToUIColor(hex: "#e8e8e8"), leading: 15, trailing: -15)
+        contentView.lu.addBottomBorder(
+                color: hexStringToUIColor(hex: "#e8e8e8"),
+                leading: 15,
+                trailing: -15)
     }
 }
 
