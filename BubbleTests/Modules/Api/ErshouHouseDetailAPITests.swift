@@ -25,7 +25,6 @@ class ErshouHouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestErshouHouseDetail(houseId: 6570464886776660237)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

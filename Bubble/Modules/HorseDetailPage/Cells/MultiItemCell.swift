@@ -254,7 +254,7 @@ func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], cell: BaseUITab
 func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorPanItemView {
     let re = FloorPanItemView()
     if let urlStr = item.houseImage?.first?.url {
-        re.icon.bd_setImage(with: URL(string: urlStr))
+        re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     let text = NSMutableAttributedString()
     let attributeText = NSMutableAttributedString(string: item.title ?? "")
@@ -312,7 +312,7 @@ func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], cell: Bas
 func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> NeighborhoodItemView {
     let re = NeighborhoodItemView()
     if let urlStr = item.images?.first?.url {
-        re.icon.bd_setImage(with: URL(string: urlStr))
+        re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     re.descLabel.text = item.displayTitle
     re.priceLabel.text = item.displayBuiltYear
@@ -329,8 +329,16 @@ func parseFloorPanNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
 
 func fillFloorPanCell(_ data: [FloorPan.Item], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
-        let views = data.take(5).map { item in
-            generateFloorPanItemView(item)
+        let views = data.take(5).map { item -> FloorPanItemView in
+            let re = generateFloorPanItemView(item)
+            re.tapGesture.rx.event
+                .subscribe(onNext: { [unowned re] recognizer in
+                    if let id = item.id, let floorPanId = Int64(id) {
+                        openFloorPanCategoryDetailPage(floorPanId: floorPanId, disposeBag: re.disposeBag)()
+                    }
+                })
+                .disposed(by: re.disposeBag)
+            return re
         }
         views.forEach { view in
             theCell.groupView.addSubview(view)
@@ -350,7 +358,7 @@ func fillFloorPanCell(_ data: [FloorPan.Item], cell: BaseUITableViewCell) -> Voi
 func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     let re = FloorPanItemView()
     if let urlStr = item.images?.first?.url {
-        re.icon.bd_setImage(with: URL(string: urlStr))
+        re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     let text = NSMutableAttributedString()
     let attributeText = NSMutableAttributedString(string: item.title ?? "")
@@ -371,12 +379,71 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     re.descLabel.attributedText = text
     re.priceLabel.text = item.pricingPerSqm
     re.spaceLabel.text = item.squaremeter
-//    re.tapGesture.rx.event
-//        .subscribe(onNext: { [unowned re] recognizer in
-//            if let id = item.id, let houseId = Int64(id) {
-//                openNewHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag)()
-//            }
-//        })
-//        .disposed(by: re.disposeBag)
+    return re
+}
+
+func parseFloorPanNode(_ items: [FloorPlanInfoData.Recommend]?) -> () -> TableSectionNode? {
+    return {
+        if let items = items {
+            let cellRender = curry(fillFloorPanCell)(items)
+            return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillFloorPanCell(_ data: [FloorPlanInfoData.Recommend], cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? MultiItemCell {
+        let views = data.take(5).map { item -> FloorPanItemView in
+            let re = generateFloorPanItemView(item)
+            re.tapGesture.rx.event
+                    .subscribe(onNext: { [unowned re] recognizer in
+                        if let id = item.id, let floorPanId = Int64(id) {
+                            openFloorPanCategoryDetailPage(floorPanId: floorPanId, disposeBag: re.disposeBag)()
+                        }
+                    })
+                    .disposed(by: re.disposeBag)
+            return re
+        }
+        views.forEach { view in
+            theCell.groupView.addSubview(view)
+        }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
+            }
+        }
+    }
+}
+
+func generateFloorPanItemView(_ item: FloorPlanInfoData.Recommend) -> FloorPanItemView {
+    let re = FloorPanItemView()
+    if let urlStr = item.images?.first?.url {
+        re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
+    }
+    let text = NSMutableAttributedString()
+    let attributeText = NSMutableAttributedString(string: item.title ?? "")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
+    attributeText.yy_color = hexStringToUIColor(hex: "#222222")
+    text.append(attributeText)
+
+//    if let status = item.saleStatus, let content = status.content {
+//        let tag = createTagAttributeText(
+//                content: content,
+//                textColor: hexStringToUIColor(hex: "#33bf85"),
+//                backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
+//                insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
+//        tag.yy_baselineOffset = 2
+//        text.append(tag)
+//    }
+
+    re.descLabel.attributedText = text
+    re.priceLabel.text = item.pricingPerSqm
+    re.spaceLabel.text = item.squaremeter
     return re
 }

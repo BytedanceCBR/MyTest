@@ -25,7 +25,6 @@ class CourtItemEntityApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestCourtSearch(cityId: "133", query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

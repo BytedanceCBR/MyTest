@@ -28,7 +28,6 @@ class RelatedSearchApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestRelatedHouseSearch(houseId: "6569032107446944013", offset:"0",  query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -55,7 +54,6 @@ class RelatedSearchApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestRelatedCourtSearch(courtId: "6573911428842045710", offset:"0",  query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -82,7 +80,6 @@ class RelatedSearchApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestRelatedNeighborhoodSearch(neighborhoodId: "6569027970076360974", offset:0,  query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

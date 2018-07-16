@@ -28,7 +28,6 @@ class SearchNeighborhoodEntityApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNeighborhoodSearch(cityId: "133", query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

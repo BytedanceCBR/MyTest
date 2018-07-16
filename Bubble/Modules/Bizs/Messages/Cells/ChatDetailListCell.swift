@@ -140,7 +140,7 @@ class ChatDetailListCell: BaseUITableViewCell {
     }
     
     func setImageByUrl(_ url: String) {
-        imageRequest = majorImageView.bd_setImage(with: URL(string: url))
+        imageRequest = majorImageView.bd_setImage(with: URL(string: url), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     
     override func prepareForReuse() {

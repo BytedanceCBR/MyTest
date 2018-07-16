@@ -21,7 +21,7 @@ class BaseSubPageViewController: BaseViewController {
         return re
     }()
 
-    private lazy var bottomBar: HouseDetailPageBottomBarView = {
+    lazy var bottomBar: HouseDetailPageBottomBarView = {
         let re = HouseDetailPageBottomBarView()
         return re
     }()

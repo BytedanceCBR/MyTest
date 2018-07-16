@@ -29,7 +29,6 @@ class UserMessageEntitiesApi: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestUserUnread(query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -53,7 +52,6 @@ class UserMessageEntitiesApi: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestUserList(listId: "303", minCursor: "", limit: "10", query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

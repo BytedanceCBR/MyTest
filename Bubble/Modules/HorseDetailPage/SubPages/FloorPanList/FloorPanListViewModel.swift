@@ -29,7 +29,6 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
         tableView.dataSource = self
         datas
                 .skip(1)
-                .debug()
                 .subscribe(onNext: { [unowned self] datas in
                     self.tableView?.reloadData()
                 })

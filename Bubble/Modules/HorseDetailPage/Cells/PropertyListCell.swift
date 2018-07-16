@@ -130,6 +130,17 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
     }
 }
 
+func parseFloorPlanPropertyListNode(_ data: FloorPlanInfoData) -> () -> TableSectionNode? {
+    return {
+        let cellRender = curry(fillPropertyListCell)(data.baseInfo)
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: PropertyListCell.identifier))
+    }
+}
+
 func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)

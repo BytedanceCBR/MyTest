@@ -29,7 +29,6 @@ class NeighborhoodDetailEntitiesApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNeighborhoodDetail(neighborhoodId: "6569027969963213063",  query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -53,7 +52,6 @@ class NeighborhoodDetailEntitiesApiTest: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNeighborhoodTotalSales(neighborhoodId: "6569028179917291780",  query: "")
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

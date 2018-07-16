@@ -266,7 +266,6 @@ struct TagItem: Mappable {
 }
 
 struct FloorPan: Mappable {
-    var hasMore = false
     var list: [Item]?
     
     init?(map: Map) {
@@ -274,7 +273,6 @@ struct FloorPan: Mappable {
     }
     
     mutating func mapping(map: Map) {
-        hasMore <- map["has_more"]
         list <- map["list"]
     }
     
@@ -286,6 +284,7 @@ struct FloorPan: Mappable {
         var images: [ImageItem]?
         var pricingPerSqm: String?
         var squaremeter: String?
+        var roomCount: Int = -1
         
         
         init?(map: Map) {
@@ -299,6 +298,7 @@ struct FloorPan: Mappable {
             images <- map["images"]
             pricingPerSqm <- map["pricing_per_sqm"]
             squaremeter <- map["squaremeter"]
+            roomCount <- map["room_count"]
         }
     }
 }
@@ -417,3 +417,70 @@ struct GlobalPrice: Mappable {
     
 }
 
+struct FloorPlanInfoResponse: Mappable {
+    var data: FloorPlanInfoData?
+    var message: String?
+    var status: Int = 0
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        data <- map["data"]
+        message <- map["message"]
+        status <- map["status"]
+    }
+}
+
+struct FloorPlanInfoData: Mappable {
+    var id: String?
+    var title: String?
+    var saleStatus: Any?
+    var pricing: String?
+    var pricingPerSqm: String?
+    var baseInfo: [ErshouHouseBaseInfo]?
+    var images: [ImageItem] = []
+    var recommend: [Recommend] = []
+    var status: Int = 0
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        id <- map["id"]
+        title <- map["title"]
+        saleStatus <- map["sale_status"]
+        pricing <- map["pricing"]
+        pricingPerSqm <- map["pricing_per_sqm"]
+        baseInfo <- map["base_info"]
+        images <- map["images"]
+        recommend <- map["recommend"]
+        status <- map["status"]
+    }
+
+    struct Recommend: Mappable {
+        var id: String?
+        var saleStatus: Any?
+        var title: String?
+        var images: [ImageItem]?
+        var pricingPerSqm: String?
+        var squaremeter: String?
+        var roomCount: Int?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            title <- map["title"]
+            saleStatus <- map["sale_status"]
+            squaremeter <- map["squaremeter"]
+            pricingPerSqm <- map["pricing_per_sqm"]
+            roomCount <- map["roomCount"]
+            images <- map["images"]
+        }
+    }
+}

@@ -58,7 +58,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data)
-                <- parseOpenAllNode(data.floorPan?.hasMore ?? false) { [weak self] in
+                <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 > 0) { [unowned self] in
+                    openFloorPanCategoryPage(floorPanId: "\(courtId)", disposeBag: self.disposeBag)()
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data)
@@ -136,6 +137,21 @@ func openFloorPanInfoPage(floorPanId: String, newHouseData: NewHouseData, dispos
             isHiddenBottomBar: false,
             floorPanId: floorPanId,
             newHouseData: newHouseData)
+
+        detailPage.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+}
+
+func openFloorPanCategoryPage(floorPanId: String, disposeBag: DisposeBag) -> () -> Void {
+    return {
+        let detailPage = FloorPanCategoryVC(
+                isHiddenBottomBar: false,
+                floorPanId: floorPanId)
 
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

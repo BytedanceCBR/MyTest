@@ -98,7 +98,6 @@ class CountryListVC: BaseViewController {
                 .disposed(by: disposeBag)
 
         EnvContext.shared.client.locationManager.currentCity
-                .debug()
                 .subscribe(onNext: { [unowned self] geocode in
                     if let geocode = geocode {
                         self.locationBar.countryLabel.text = geocode.city

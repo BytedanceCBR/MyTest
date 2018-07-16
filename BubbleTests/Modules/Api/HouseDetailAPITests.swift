@@ -25,7 +25,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHouseDetail(houseId: 15303579811814)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -49,7 +48,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHousePrice(houseId: 6573911052528910605, count: 10)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -69,7 +67,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHouseTimeLine(houseId: 6573911052528910605, count: 10, page: 0)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -89,7 +86,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHouseFloorPan(houseId: 6573911052528910605)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -109,7 +105,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHouseComment(houseId: 6573911052528910605, count: 10, page: 0)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
@@ -129,7 +124,6 @@ class HouseDetailAPITests: XCTestCase {
         let disposeBag = DisposeBag()
         let exp = self.expectation(description: "")
         requestNewHouseMoreDetail(houseId: 6573911052528910605)
-            .debug()
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)

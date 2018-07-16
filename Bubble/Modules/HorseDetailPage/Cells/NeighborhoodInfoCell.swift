@@ -170,7 +170,7 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, cell: BaseUITableViewCe
         theCell.priceValueLabel.text = data?.pricingPerSqm
         theCell.monthUpValueLabel.text = String(format: "%.2f%%", arguments: [data?.monthUp ?? 0])
         if let url = data?.gaodeImageUrl {
-            theCell.mapImageView.bd_setImage(with: URL(string: url))
+            theCell.mapImageView.bd_setImage(with: URL(string: url), placeholder: #imageLiteral(resourceName: "default_image"))
         }
     }
 }

@@ -183,3 +183,26 @@ func requestNewHouseMoreDetail(houseId: Int64) -> Observable<CourtMoreDetailResp
             }
         })
 }
+
+func requestFloorPlanInfo(floorPanId: String) -> Observable<FloorPlanInfoResponse?> {
+    let url = "\(EnvContext.networkConfig.host)/api/floorplan/info"
+    return TTNetworkManager.shareInstance().rx
+            .requestForBinary(
+                    url: url,
+                    params: [
+                        "floorplan_id": floorPanId,
+                    ],
+                    method: "GET",
+                    needCommonParams: true)
+            .map({ (data) -> NSString? in
+                NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            })
+            .map({ (payload) -> FloorPlanInfoResponse? in
+                if let payload = payload {
+                    let response = FloorPlanInfoResponse(JSONString: payload as String)
+                    return response
+                } else {
+                    return nil
+                }
+            })
+}
