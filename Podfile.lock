@@ -30,26 +30,39 @@ PODS:
     - AMapFoundation (~> 1.4)
   - AMapSearch (6.1.1):
     - AMapFoundation (~> 1.4)
-  - BDAccount (0.3.6):
-    - BDAccount/Account (= 0.3.6)
-  - BDAccount/Account (0.3.6):
+  - BDAccount/Account (0.3.0):
     - BDAccount/AccountCore
     - BDAccount/Logger
     - BDAccount/Monitor
     - BDAccount/NetWorkCore
-  - BDAccount/AccountCore (0.3.6):
+  - BDAccount/AccountCore (0.3.0):
     - OpenSSL-Universal
     - TTBaseLib
     - TTMonitor
     - YYModel
-  - BDAccount/Logger (0.3.6)
-  - BDAccount/Monitor (0.3.6):
+  - BDAccount/Flow (0.3.0):
+    - BDAccount/Account
     - BDAccount/AccountCore
-  - BDAccount/NetWorkCore (0.3.6):
+    - BDAccount/Logger
+    - BDAccount/Monitor
+    - BDAccount/NetWorkCore
+    - BDAccount/PlatformCore
+  - BDAccount/Logger (0.3.0)
+  - BDAccount/Monitor (0.3.0):
+    - BDAccount/AccountCore
+  - BDAccount/NetWorkCore (0.3.0):
     - BDAccount/AccountCore
     - BDAccount/Logger
     - BDAccount/Monitor
     - TTNetworkManager
+  - BDAccount/PlatformCore (0.3.0):
+    - BDAccount/AccountCore
+    - BDAccount/Logger
+    - BDAccount/Monitor
+    - BDAccount/NetWorkCore
+    - TTPlatformBaseLib/TTTrackerWrapper
+  - BDAccount/PlatformCustomAuth (0.3.0):
+    - BDAccount/PlatformCore
   - BDStartUp (0.1.0):
     - TTNetworkManager
   - BDWebImage (0.2.8):
@@ -74,10 +87,14 @@ PODS:
     - BDWebImage/Download/DownloadBase
   - boringssl (0.0.7)
   - Bubble (0.1.0)
+  - Crashlytics (3.7.3):
+    - Fabric (~> 1.6.3)
+  - Fabric (1.6.13)
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
   - Godzippa (1.1.1)
+  - JSONModel (1.7.0)
   - libwebp (0.6.1):
     - libwebp/core (= 0.6.1)
     - libwebp/dec (= 0.6.1)
@@ -105,6 +122,8 @@ PODS:
   - OpenSSL-Universal (1.0.2.13)
   - OpenUDID (1.0.0)
   - SSZipArchive (1.6.3)
+  - TTABManager (0.0.8):
+    - TTBaseLib
   - TTBaseLib (1.0.42):
     - TTBaseLib/SSIndicatorTipsManager (= 1.0.42)
     - TTBaseLib/TTBaseTool (= 1.0.42)
@@ -150,11 +169,82 @@ PODS:
     - TTMonitor/BackTrace
     - TTNetworkManager
     - TTReachability
+  - TTNetBusiness (0.0.12):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTNetworkHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTInstallService
+    - TTMonitor
+    - TTNetBusiness/DNSManager (= 0.0.12)
+    - TTNetBusiness/TTHttpsControlManager (= 0.0.12)
+    - TTNetBusiness/TTNetworkUtilities (= 0.0.12)
+    - TTNetBusiness/TTRouteSelectionManager (= 0.0.12)
+    - TTNetworkManager
+    - TTPersistence
+    - TTTracker
+  - TTNetBusiness/DNSManager (0.0.12):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTNetworkHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTInstallService
+    - TTMonitor
+    - TTNetworkManager
+    - TTPersistence
+    - TTTracker
+  - TTNetBusiness/TTHttpsControlManager (0.0.12):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTNetworkHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTInstallService
+    - TTMonitor
+    - TTNetBusiness/TTRouteSelectionManager
+    - TTNetworkManager
+    - TTPersistence
+    - TTTracker
+  - TTNetBusiness/TTNetworkUtilities (0.0.12):
+    - JSONModel
+    - TTABManager
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTNetworkHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTInstallService
+    - TTMonitor
+    - TTNetBusiness/DNSManager
+    - TTNetworkManager
+    - TTPersistence
+    - TTServiceKit
+    - TTThemed
+    - TTTracker
+    - TTUserSettings
+  - TTNetBusiness/TTRouteSelectionManager (0.0.12):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTNetworkHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTInstallService
+    - TTMonitor
+    - TTNetworkManager
+    - TTPersistence
+    - TTTracker
   - TTNetworkManager (2.2.8.35):
     - AFgzipRequestSerializer (~> 0.0.2)
     - AFNetworking (~> 2.5.1)
     - boringssl (~> 0.0.6)
   - TTPersistence (0.2.3)
+  - TTPlatformBaseLib/TTTrackerWrapper (0.2.20):
+    - Crashlytics (~> 3.7.2)
+    - SSZipArchive (~> 1.6.2)
+    - TTNetBusiness
+    - TTPersistence
+    - TTTracker
   - TTPushSDK (0.1.6):
     - TTNetworkManager
     - TTTracker
@@ -171,10 +261,17 @@ PODS:
     - TTRexxar/Core
   - TTRoute (0.2.26)
   - TTServiceKit (0.4.3)
+  - TTThemed (0.1.14):
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTUIResponderHelper
   - TTTracker (1.1.5):
     - FMDB (~> 2.6.2)
     - TTInstallService (>= 1.1.1)
     - TTNetworkManager (>= 2.1.0)
+  - TTUserSettings (0.3.4):
+    - TTBaseLib
+    - TTNetworkManager (< 3.0)
   - YYCache (1.0.4)
   - YYModel (1.0.4)
   - YYText (1.0.7)
@@ -184,7 +281,10 @@ DEPENDENCIES:
   - AMap3DMap
   - AMapLocation
   - AMapSearch
-  - BDAccount
+  - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, branch `dev`)
+  - BDAccount/Flow (from `git@code.byted.org:iOS_Library/BDAccount.git`, branch `dev`)
+  - BDAccount/NetWorkCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, branch `dev`)
+  - BDAccount/PlatformCustomAuth (from `git@code.byted.org:iOS_Library/BDAccount.git`, branch `dev`)
   - BDStartUp (from `./BDStartUp`)
   - BDWebImage (= 0.2.8)
   - Bubble (from `./`)
@@ -202,10 +302,18 @@ DEPENDENCIES:
   - YYText
 
 EXTERNAL SOURCES:
+  BDAccount:
+    :branch: dev
+    :git: git@code.byted.org:iOS_Library/BDAccount.git
   BDStartUp:
     :path: ./BDStartUp
   Bubble:
     :path: ./
+
+CHECKOUT OPTIONS:
+  BDAccount:
+    :commit: b301336f83a63cc79f62793a73464b1112f0ac05
+    :git: git@code.byted.org:iOS_Library/BDAccount.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
@@ -214,34 +322,42 @@ SPEC CHECKSUMS:
   AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
   AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
   AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
-  BDAccount: 741161fee13605e059ef9eb37646da0d48cef228
+  BDAccount: 8d498288fd06aedbe4fed5309b19e9e93922a490
   BDStartUp: 1929c387ad483e096af12298445926f209accc69
   BDWebImage: 177a48554fbd96b7cfecaab4d92633df7b694425
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
   Bubble: 6370a0e64e32c3d044a43a14cdb5405cd0dad032
+  Crashlytics: 76f6beaff70acf226139582c09c78461597c2b98
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   Godzippa: 54259e93b2191bbec6b6a8ddd2c070a5f32971b4
+  JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
   libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
   OpenUDID: e7cb6984c7304906ad20f3a36bf087b025896b6b
   SSZipArchive: 896def204e56339f9bf6d40903b45f3a1c1bfd69
+  TTABManager: b57b5ef660a17fdbe85c40d885b91d67478a0013
   TTBaseLib: 61fe489ac7b9f425ed89687f9724efbdfd1b0879
   TTEntityBase: 44bda9a5bad8f345e99547a699b1166313999334
   TTInstallService: 56d3bfecc1ec4969713b5277b9b6b9101183bac2
   TTKitchen: cc5750842de67c4799ca13c1c1a116b3627d3361
   TTMonitor: 3910d55ce2c145e0739b1030560a93f3ce98d532
+  TTNetBusiness: 72d6fffb73e12d1f3ef829392c90826d5a02a43c
   TTNetworkManager: adedd4089c4c8d9c8f83c6cec5ca03e1f4060aba
   TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
+  TTPlatformBaseLib: 6f52e52a071483b30061c680a3b1c17e67b884ed
   TTPushSDK: 92d13036ceb8e69bbb3f30081508baa0135c3b78
   TTReachability: 1b403aa8792dff3aa6228bd827633f5b99ef06ce
   TTRexxar: e572968808f232015f31c82e0ccb51d39df12865
   TTRoute: fe51b326a5485b8fe625238cc09c17eed3dda91d
   TTServiceKit: 5986a3f594384377ee6aa82d3aee8d02dad4afbb
+  TTThemed: 6b16ff3fef153347b971983491ba7935cda8f3fb
   TTTracker: c01b9f82b795a4a83fd904c63e7283587a452d13
+  TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
-PODFILE CHECKSUM: a6f1c811b9e92d810cca31e3a318f0544c2dc26e
+PODFILE CHECKSUM: bd67a51873ea6aa8c2ab25bde2f94011fbdd40ba
 
 COCOAPODS: 1.4.0

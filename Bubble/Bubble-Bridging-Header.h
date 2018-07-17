@@ -21,3 +21,4 @@
 #import "BDAccount+NetworkAPI.h"
 #import "BDAccountAPIWrapper.h"
 #import <TTInstallService/TTInstallIDManager.h>
+#import "BDAccount+FlowCommand.h"

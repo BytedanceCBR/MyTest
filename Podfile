@@ -74,9 +74,14 @@ target 'Bubble' do
 #    pod 'SnapKit', '4.0.0'
 #    pod 'ObjectMapper'
 #    pod 'Charts'
-    pod 'YYText'
+     pod 'YYText'
 
-    pod 'BDAccount'
+     pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :branch => 'dev', :subspecs => [
+        'Account',
+        'NetWorkCore',
+        'Flow',
+        'PlatformCustomAuth'
+    ]
     target 'BubbleTests' do
         inherit! :search_paths
     end

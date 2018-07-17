@@ -38,6 +38,8 @@ func requestSMSVerifyCode(
     }
 }
 
+
+
 func requestQuickLogin(mobile: String, smsCode: String) -> Observable<Void> {
     return Observable.create { (observer) in
         BDAccount.requestQuickLogin(withMobile: mobile, smsCode: smsCode) { error in
@@ -55,4 +57,12 @@ func requestQuickLogin(mobile: String, smsCode: String) -> Observable<Void> {
 enum RequestSMSCodeResult {
     case needCaptchaCode(UIImage)
     case successed
+}
+
+
+func getSMSVerifyCodeCommand() -> Observable<RequestSMSCodeResult> {
+    return Observable.create { (observer) in
+//        BDAccount.
+        return Disposables.create()
+    }
 }
