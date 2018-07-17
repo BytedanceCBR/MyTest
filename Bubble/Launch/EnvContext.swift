@@ -28,7 +28,7 @@ class NetworkConfig {
     var host: String
 
     init() {
-        self.host = "http://m.quduzixun.com/f100"
+        self.host = "http://m.quduzixun.com"
     }
 }
 

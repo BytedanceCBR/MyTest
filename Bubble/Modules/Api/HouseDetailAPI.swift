@@ -9,7 +9,7 @@ import ObjectMapper
 
 
 func requestNewHouseDetail(houseId: Int64) -> Observable<HouseDetailResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/api/court/info"
+    let url = "\(EnvContext.networkConfig.host)/f100/api/court/info"
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
                     url: url,
@@ -65,7 +65,7 @@ func pageRequestNewHousePrice(houseId: Int64, count: Int64 = 15) -> () ->  Obser
 }
 
 func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> Observable<CourtTimelineResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/api/court/timeline"
+    let url = "\(EnvContext.networkConfig.host)/f100/api/court/timeline"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
@@ -123,7 +123,7 @@ func requestNewHouseFloorPan(houseId: Int64) -> Observable<CourtFloorPanResponse
 }
 
 func requestNewHouseComment(houseId: Int64, count: Int64, page: Int64 = 0) -> Observable<CourtComentResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/api/court/comment"
+    let url = "\(EnvContext.networkConfig.host)/f100/api/court/comment"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
@@ -161,7 +161,7 @@ func pageRequestNewHouseComment(houseId: Int64, count: Int64) -> () ->  Observab
 
 
 func requestNewHouseMoreDetail(houseId: Int64) -> Observable<CourtMoreDetailResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/api/court/detail"
+    let url = "\(EnvContext.networkConfig.host)/f100/api/court/detail"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,

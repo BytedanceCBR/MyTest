@@ -97,6 +97,10 @@ class GeneralBizConfig {
             if let selectCityId = self?.currentSelectCityId.value {
                 re["city_id"] = selectCityId
             }
+            re["app_id"] = "1370"
+            re["aid"] = "1370"
+            re["channel"] = "local_test"
+            re["app_name"] = "F100"
             return re
         }
     }

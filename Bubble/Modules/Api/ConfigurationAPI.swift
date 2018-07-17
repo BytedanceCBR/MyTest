@@ -13,7 +13,7 @@ import ObjectMapper
 func requestSearchConfig(cityId: String = "133") -> Observable<SearchConfigResponse?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "\(EnvContext.networkConfig.host)/api/search_config",
+                    url: "\(EnvContext.networkConfig.host)/f100/api/search_config",
                     params: ["city_id": cityId],
                     method: "GET",
                     needCommonParams: true)
@@ -50,7 +50,7 @@ func requestGeneralConfig(cityId: String? = nil, gaodeCityId: String? = nil, lat
 func requestGeneralConfig(params: [String: Any]) -> Observable<GeneralConfigResponse?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "\(EnvContext.networkConfig.host)/api/config",
+                    url: "\(EnvContext.networkConfig.host)/f100/api/config",
                     params: params,
                     method: "GET",
                     needCommonParams: true)

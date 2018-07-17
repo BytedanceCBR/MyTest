@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 class Client {
 
+    static let appId = "1370"
+
     lazy private var searchConfigCache: YYCache? = {
         YYCache(name: "config")
     }()
@@ -29,6 +31,9 @@ class Client {
         let re = GeneralBizConfig(locationManager: locationManager)
         return re
     }()
+
+    var did: String?
+    var iid: String?
 
     init() {
         locationManager.currentLocation
@@ -49,6 +54,7 @@ class Client {
         let commonParams = NetworkCommonParams.monoid()
             <- locationManager.locationParams()
             <- generalBizconfig.commonParams()
+            <- self.commonParams()
         TTNetworkManager.shareInstance().commonParams = commonParams.params()
     }
 
@@ -65,6 +71,19 @@ class Client {
             }
         }
 
+        TTInstallIDManager.sharedInstance().start(
+                withAppID: Client.appId,
+                channel: "local_test",
+                appName: "F100") { [weak self] (did, iid) in
+                    if let did = did, let iid = iid {
+                        self?.did = did
+                        self?.iid = iid
+                        self?.setCommonNetwork()
+                        AccountConfig.setupAccountConfig(did: did, iid: iid, appId: Client.appId)
+                    } else {
+                        assertionFailure()
+                    }
+                }
 //        currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
 //        currentSelectedCityId
 //                .subscribe(onNext: { (cityId) in
@@ -72,6 +91,19 @@ class Client {
 //                    UserDefaults.standard.synchronize()
 //                })
 //                .disposed(by: disposeBag)
+    }
+
+    func commonParams() -> () -> [AnyHashable: Any] {
+        return { [weak self] in
+            var re: [AnyHashable: Any] = [:]
+            if let iid = self?.iid {
+                re["iid"] = iid
+            }
+            if let did = self?.did {
+                re["did"] = did
+            }
+            return re
+        }
     }
 
     private func fetchSearchConfig() {

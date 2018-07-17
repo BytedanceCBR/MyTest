@@ -89,7 +89,7 @@ class HouseDetailAPITests: XCTestCase {
             .subscribe(onNext: { (response) in
                 XCTAssertNotNil(response)
                 XCTAssertNotNil(response?.data)
-                XCTAssertNotNil(response?.data?.hasMore)
+//                XCTAssertNotNil(response?.data?.hasMore)
                 XCTAssertNotNil(response?.data?.list?.first?.saleStatus)
                 XCTAssertNotNil(response?.data?.list?.first?.images)
                 

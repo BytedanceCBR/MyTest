@@ -13,7 +13,7 @@ import ObjectMapper
 func requestSearch(
     offset: Int64 = 0,
     query: String = "") -> Observable<HouseRecommendResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/search?"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/search?"
     if !query.isEmpty {
         url = "\(url)\(query)"
     }

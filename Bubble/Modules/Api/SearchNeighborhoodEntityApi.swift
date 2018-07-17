@@ -11,7 +11,7 @@ import RxSwift
 import ObjectMapper
 
 func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/search_neighborhood?"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/search_neighborhood?"
     if !query.isEmpty {
         url = "\(url)\(query)"
     }

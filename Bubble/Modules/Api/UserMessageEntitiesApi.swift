@@ -11,7 +11,7 @@ import RxSwift
 import ObjectMapper
 
 func requestUserUnread(query: String = "") -> Observable<UserUnreadMessageResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/msg/unread"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/msg/unread"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }
@@ -36,7 +36,7 @@ func requestUserUnread(query: String = "") -> Observable<UserUnreadMessageRespon
 
 
 func requestUserList(listId: String = "", minCursor: String = "", limit: String="0", query: String = "") -> Observable<UserListMessageResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/msg/list?list_id=\(listId)&minCursor=\(minCursor)&limit=\(limit)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/msg/list?list_id=\(listId)&minCursor=\(minCursor)&limit=\(limit)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }

@@ -18,3 +18,6 @@
 #import <YYText/YYText.h>
 #import <YYCache/YYCache.h>
 #import <BDAccount/BDAccountSDK.h>
+#import "BDAccount+NetworkAPI.h"
+#import "BDAccountAPIWrapper.h"
+#import <TTInstallService/TTInstallIDManager.h>

@@ -15,7 +15,7 @@ func requestCourtSearch(
         offset: Int64 = 0,
         query: String = "") -> Observable<CourtSearchResponse?> {
 
-    var url = "\(EnvContext.networkConfig.host)/api/search_court?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/search_court?city_id=\(cityId)"
     if !query.isEmpty {
         url = "\(url)\(query)"
     }

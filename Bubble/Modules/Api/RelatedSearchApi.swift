@@ -11,7 +11,7 @@ import RxSwift
 import ObjectMapper
 
 func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query: String = "") -> Observable<RelatedHouseResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/related_house?house_id=\(houseId)&offset=\(offset)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/related_house?house_id=\(houseId)&offset=\(offset)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }
@@ -36,7 +36,7 @@ func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query
 
 
 func requestRelatedCourtSearch(courtId: String = "", offset: String = "0", query: String = "") -> Observable<RelatedCourtResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/related_court?court_id=\(courtId)&offset=\(offset)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/related_court?court_id=\(courtId)&offset=\(offset)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }
@@ -63,7 +63,7 @@ func requestRelatedNeighborhoodSearch(
         neighborhoodId: String = "",
         offset: Int64  = 0,
         query: String = "") -> Observable<RelatedNeighborhoodResponse?> {
-    var url = "\(EnvContext.networkConfig.host)/api/related_neighborhood?neighborhood_id=\(neighborhoodId)&offset=\(offset)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/related_neighborhood?neighborhood_id=\(neighborhoodId)&offset=\(offset)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }

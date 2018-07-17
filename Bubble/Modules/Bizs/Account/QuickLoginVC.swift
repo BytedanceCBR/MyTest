@@ -5,6 +5,8 @@
 
 import Foundation
 import SnapKit
+import RxSwift
+import RxCocoa
 class QuickLoginVC: BaseViewController {
 
     lazy var navBar: SimpleNavBar = {
@@ -59,6 +61,11 @@ class QuickLoginVC: BaseViewController {
     lazy var sendVerifyCodeBtn: UIButton = {
         let re = UIButton()
         QuickLoginVC.setVerifyCodeBtn(content: "获取验证码", btn: re)
+        QuickLoginVC.setVerifyCodeBtn(
+                content: "获取验证码",
+                color: hexStringToUIColor(hex: "#999999"),
+                status: .disabled,
+                btn: re)
         return re
     }()
 
@@ -75,7 +82,12 @@ class QuickLoginVC: BaseViewController {
         return re
     }()
 
+    private let disposeBag = DisposeBag()
+
+    private let quickLoginViewModel: QuickLoginViewModel
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.quickLoginViewModel = QuickLoginViewModel()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
@@ -147,18 +159,38 @@ class QuickLoginVC: BaseViewController {
             maker.left.equalTo(30)
             maker.right.equalTo(-30)
             maker.height.equalTo(46)
-         }
+        }
+
+        sendVerifyCodeBtn.rx.tap
+            .withLatestFrom(phoneInput.rx.text)
+            .bind(to: quickLoginViewModel.requestSMS).disposed(by: disposeBag)
+
+        let mergeInputs = Observable.combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
+        confirmBtn.rx.tap
+                .withLatestFrom(mergeInputs)
+                .bind(to: quickLoginViewModel.requestLogin)
+                .disposed(by: disposeBag)
+
+        phoneInput.rx.text
+            .filter { $0 != nil }
+            .map { $0!.count >= 11 }
+            .bind(to: sendVerifyCodeBtn.rx.isEnabled)
+            .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    static func setVerifyCodeBtn(content: String, btn: UIButton) {
+    static func setVerifyCodeBtn(
+            content: String,
+            color: UIColor = hexStringToUIColor(hex: "#222222"),
+            status: UIControlState = .normal,
+            btn: UIButton) {
         let attriStr = NSAttributedString(
                 string: content,
                 attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14),
-                             NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999")])
-        btn.setAttributedTitle(attriStr, for: .normal)
+                             NSAttributedStringKey.foregroundColor: color])
+        btn.setAttributedTitle(attriStr, for: status)
     }
 }
