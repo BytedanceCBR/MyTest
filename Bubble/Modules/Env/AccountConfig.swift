@@ -4,8 +4,20 @@
 //
 
 import Foundation
-
+import RxSwift
+import RxCocoa
 class AccountConfig {
+
+    let userInfo: BehaviorRelay<BDAccountUser?> = BehaviorRelay<BDAccountUser?>(value: nil)
+
+    init() {
+
+    }
+
+    func loadAccount() {
+        userInfo.accept(BDAccount.shared().user)
+    }
+
     static func setupAccountConfig(did: String, iid: String, appId: String) {
         let conf = BDAccountConfiguration.default()
         conf.domain = EnvContext.networkConfig.host

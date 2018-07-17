@@ -40,17 +40,6 @@ class MineVC: BaseViewController {
         self.mineViewModel?.reload()
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .default
-
-        requestUserInfo(query: "")
-                .subscribe(onNext: { [unowned self] (response) in
-                    if let responseData = response?.data {
-                        self.mineViewModel?.userInfo = responseData
-                        self.mineViewModel?.reload()
-                    }
-                }, onError: { (error) in
-                    print(error)
-                })
-                .disposed(by: disposeBag)
     }
 
     override func viewWillAppear(_ animated: Bool) {

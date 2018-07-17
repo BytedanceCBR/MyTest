@@ -30,14 +30,12 @@ class QuickLoginViewModel {
     func requestSMSCode(captcha: String? = nil,
                         phoneNumber: String?) {
         if let phoneNumber = phoneNumber {
-            requestSMSVerifyCode(
+            getSMSVerifyCodeCommand(
                 mobileString: phoneNumber,
-                oldMobile: nil,
-                bdCodeType: BDAccountStatusChangedReason.mobileSMSCodeLogin.rawValue,
-                captcha: nil)
+                bdCodeType: BDAccountStatusChangedReason.mobileSMSCodeLogin.rawValue)
                 .debug()
                 .subscribe(onNext: { result in
-                    
+
                 }, onError: { error in
                     print(error)
                 })
@@ -59,7 +57,8 @@ class QuickLoginViewModel {
         requestQuickLogin(mobile: mobile, smsCode: smsCode)
                 .debug()
                 .subscribe(onNext: { void in
-
+                    let user = BDAccount.shared().user
+                    print(user)
                 }, onError: { error in
 
                 })

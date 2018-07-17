@@ -13,8 +13,6 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
 
     weak var tableView: UITableView?
 
-    var userInfo: UserInfo?
-
     let cellFactory: UITableViewCellFactory
 
     let disposeBag = DisposeBag()
@@ -38,6 +36,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
     }
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
+        let userInfo = EnvContext.shared.client.accountConfig.userInfo.value
         let dataParser = DetailDataParser.monoid()
                 <- parseUserInfoNode(userInfo, disposeBag: disposeBag)
                 <- parseFavoriteNode()

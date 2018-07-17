@@ -32,6 +32,11 @@ class Client {
         return re
     }()
 
+    lazy var accountConfig: AccountConfig = {
+        let re = AccountConfig()
+        return re
+    }()
+
     var did: String?
     var iid: String?
 
@@ -84,6 +89,8 @@ class Client {
                         assertionFailure()
                     }
                 }
+
+        accountConfig.loadAccount()
 //        currentSelectedCityId.accept(UserDefaults.standard.integer(forKey: "selected_city_id"))
 //        currentSelectedCityId
 //                .subscribe(onNext: { (cityId) in

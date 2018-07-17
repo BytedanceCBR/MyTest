@@ -60,9 +60,36 @@ enum RequestSMSCodeResult {
 }
 
 
-func getSMSVerifyCodeCommand() -> Observable<RequestSMSCodeResult> {
+func getSMSVerifyCodeCommand(mobileString: String, bdCodeType: Int) -> Observable<RequestSMSCodeResult> {
+    let dataDelegate = GetSMSCodeDataDelegate(mobileNumber: mobileString, bdCodeType: bdCodeType)
     return Observable.create { (observer) in
-//        BDAccount.
+        BDAccount.execute(BDAccountCommandType.getSMSCodeCommand, dataDelegate: dataDelegate, viewDelegate: nil)
         return Disposables.create()
     }
+}
+
+
+class GetSMSCodeDataDelegate: NSObject, BDAccountFlowOperationDataDelegate {
+
+    let mobileNumber: String
+    let bdCodeType: Int
+
+    init(mobileNumber: String,
+         bdCodeType: Int) {
+        self.mobileNumber = mobileNumber
+        self.bdCodeType = bdCodeType
+    }
+
+    func operationRequestParamsCommandType(_ type: BDAccountCommandType, scene: Int) -> [AnyHashable : Any] {
+        return [BDAccountFlowParamsPhoneNumberKey: mobileNumber,
+                BDAccountFlowParamsSMSCodeTypeKey: BDAccountSMSCodeType.mobileSMSCodeLogin.rawValue]
+    }
+
+    deinit {
+        print("GetSMSCodeDataDelegate")
+    }
+}
+
+class AccountViewDelegate: NSObject, BDAccountFlowOperationViewDelegate {
+    
 }

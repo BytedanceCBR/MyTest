@@ -54,7 +54,7 @@ class UserInfoCell: BaseUITableViewCell {
             maker.top.equalTo(64)
             maker.left.equalTo(15)
             maker.height.equalTo(34)
-            maker.right.lessThanOrEqualTo(avatarView)
+            maker.right.lessThanOrEqualTo(avatarView.snp.left).offset(-10)
         }
 
         contentView.addSubview(userDesc)
@@ -62,7 +62,7 @@ class UserInfoCell: BaseUITableViewCell {
             maker.top.equalTo(userName.snp.bottom)
             maker.left.equalTo(15)
             maker.height.equalTo(34)
-            maker.right.lessThanOrEqualTo(avatarView)
+            maker.right.lessThanOrEqualTo(avatarView.snp.left).offset(-10)
             maker.bottom.equalTo(-13)
         }
     }
@@ -73,7 +73,7 @@ class UserInfoCell: BaseUITableViewCell {
     }
 }
 
-func parseUserInfoNode(_ info: UserInfo?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseUserInfoNode(_ info: BDAccountUser?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillUserInfoCell)(info)
         var selector: (() -> Void)? = nil
@@ -100,10 +100,13 @@ func parseUserInfoNode(_ info: UserInfo?, disposeBag: DisposeBag) -> () -> Table
     }
 }
 
-func fillUserInfoCell(_ info: UserInfo?, cell: BaseUITableViewCell) -> Void {
+func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
-        theCell.userName.text = info?.screen_name ?? "登陆/注册"
-        theCell.userDesc.text = info?.description ?? "我们一起开启美好的找房之旅～"
+        theCell.userName.text = info?.name ?? "登陆/注册"
+        theCell.userDesc.text = info?.userDescription ?? "我们一起开启美好的找房之旅～"
+        if let urlStr = info?.avatarURL {
+            theCell.avatarView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default-avatar-icons"))
+        }
     }
 }
 
