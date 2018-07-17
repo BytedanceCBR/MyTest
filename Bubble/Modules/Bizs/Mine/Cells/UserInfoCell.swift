@@ -38,6 +38,13 @@ class UserInfoCell: BaseUITableViewCell {
         return re
     }()
 
+    lazy var editBtn: UIButton = {
+        let re = UIButton()
+        re.setImage(#imageLiteral(resourceName: "pencil-simple-line-icons"), for: .normal)
+        re.isHidden = true
+        return re
+    }()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -65,6 +72,13 @@ class UserInfoCell: BaseUITableViewCell {
             maker.right.lessThanOrEqualTo(avatarView.snp.left).offset(-10)
             maker.bottom.equalTo(-13)
         }
+
+        contentView.addSubview(editBtn)
+        editBtn.snp.makeConstraints { maker in
+            maker.left.equalTo(userDesc.snp.right).offset(5)
+            maker.centerY.equalTo(userDesc.snp.centerY)
+            maker.width.height.equalTo(16)
+        }
     }
 
 
@@ -77,7 +91,7 @@ func parseUserInfoNode(_ info: BDAccountUser?, disposeBag: DisposeBag) -> () -> 
     return {
         let cellRender = curry(fillUserInfoCell)(info)
         var selector: (() -> Void)? = nil
-        if let userInfo = info {
+        if info != nil {
             selector = {
 
             }
@@ -103,7 +117,14 @@ func parseUserInfoNode(_ info: BDAccountUser?, disposeBag: DisposeBag) -> () -> 
 func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
         theCell.userName.text = info?.name ?? "登陆/注册"
-        theCell.userDesc.text = info?.userDescription ?? "我们一起开启美好的找房之旅～"
+        if info != nil {
+            theCell.userDesc.text = "查看并编辑个人资料"
+            theCell.editBtn.isHidden = false
+        } else {
+            theCell.userDesc.text = "我们一起开启美好的找房之旅～"
+            theCell.editBtn.isHidden = true
+        }
+
         if let urlStr = info?.avatarURL {
             theCell.avatarView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default-avatar-icons"))
         }

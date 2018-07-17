@@ -27,6 +27,13 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
 
         cellFactory.register(tableView: tableView)
         super.init()
+
+        EnvContext.shared.client.accountConfig.userInfo
+            .filter { $0 != nil }
+            .subscribe(onNext: { [unowned self] _ in
+                self.reload()
+            })
+            .disposed(by: disposeBag)
     }
 
     func reload() {

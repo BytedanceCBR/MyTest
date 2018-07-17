@@ -86,6 +86,8 @@ class QuickLoginVC: BaseViewController {
 
     private let quickLoginViewModel: QuickLoginViewModel
 
+    var hud: MBProgressHUD?
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.quickLoginViewModel = QuickLoginViewModel()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -162,11 +164,13 @@ class QuickLoginVC: BaseViewController {
         }
 
         sendVerifyCodeBtn.rx.tap
-            .withLatestFrom(phoneInput.rx.text)
-            .bind(to: quickLoginViewModel.requestSMS).disposed(by: disposeBag)
+                .do(onNext: { self.showLoading(title: "正在获取验证码") })
+                .withLatestFrom(phoneInput.rx.text)
+                .bind(to: quickLoginViewModel.requestSMS).disposed(by: disposeBag)
 
         let mergeInputs = Observable.combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
         confirmBtn.rx.tap
+                .do(onNext: { self.showLoading(title: "正在登录中") })
                 .withLatestFrom(mergeInputs)
                 .bind(to: quickLoginViewModel.requestLogin)
                 .disposed(by: disposeBag)
@@ -176,6 +180,17 @@ class QuickLoginVC: BaseViewController {
             .map { $0!.count >= 11 }
             .bind(to: sendVerifyCodeBtn.rx.isEnabled)
             .disposed(by: disposeBag)
+
+        quickLoginViewModel.onResponse
+            .bind(onNext: dismissHud())
+            .disposed(by: disposeBag)
+
+        EnvContext.shared.client.accountConfig.userInfo
+                .filter { $0 != nil }
+                .subscribe(onNext: { _ in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -193,4 +208,20 @@ class QuickLoginVC: BaseViewController {
                              NSAttributedStringKey.foregroundColor: color])
         btn.setAttributedTitle(attriStr, for: status)
     }
+
+    func showLoading(title: String) {
+        phoneInput.resignFirstResponder()
+        varifyCodeInput.resignFirstResponder()
+        hud = MBProgressHUD.showAdded(to: self.view, animated: true)
+        hud?.label.text = title
+        hud?.mode = MBProgressHUDMode.annularDeterminate
+        hud?.show(animated: true)
+    }
+
+    func dismissHud() -> (RequestSMSCodeResult?) -> Void {
+        return { [weak self] (_) in
+            self?.hud?.hide(animated: true)
+        }
+    }
+
 }

@@ -56,14 +56,32 @@ func requestQuickLogin(mobile: String, smsCode: String) -> Observable<Void> {
 
 enum RequestSMSCodeResult {
     case needCaptchaCode(UIImage)
+    case error(Error?)
     case successed
 }
 
 
 func getSMSVerifyCodeCommand(mobileString: String, bdCodeType: Int) -> Observable<RequestSMSCodeResult> {
     let dataDelegate = GetSMSCodeDataDelegate(mobileNumber: mobileString, bdCodeType: bdCodeType)
+    let delegate = AccountViewDelegate()
     return Observable.create { (observer) in
-        BDAccount.execute(BDAccountCommandType.getSMSCodeCommand, dataDelegate: dataDelegate, viewDelegate: nil)
+        delegate.onResponse = { (result) in
+            switch result {
+            case let .error(error):
+                if let error = error {
+                    observer.onError(error)
+                } else {
+                    observer.onCompleted()
+                }
+            case .needCaptchaCode:
+                observer.onNext(result)
+                observer.onCompleted()
+            case .successed:
+                observer.onNext(result)
+                observer.onCompleted()
+            }
+        }
+        BDAccount.execute(BDAccountCommandType.getSMSCodeCommand, dataDelegate: dataDelegate, viewDelegate: delegate)
         return Disposables.create()
     }
 }
@@ -91,5 +109,22 @@ class GetSMSCodeDataDelegate: NSObject, BDAccountFlowOperationDataDelegate {
 }
 
 class AccountViewDelegate: NSObject, BDAccountFlowOperationViewDelegate {
-    
+
+    var onResponse: ((RequestSMSCodeResult) -> Void)?
+
+    func showInputSMSCodeViewRetryTime(_ retryTime: NSNumber?, scene: BDAccountSMSCodeType) {
+        onResponse?(.successed)
+    }
+
+    func showGetSMSCodeErrorView(_ error: Error?, retryTime: NSNumber?, scene: BDAccountSMSCodeType) {
+        onResponse?(.error(error))
+    }
+
+    func showGetSMSCodeInputCaptchaImageView(_ captchaImage: UIImage?, retryTime: NSNumber?, error: Error?, scene: BDAccountSMSCodeType) {
+        if let image = captchaImage {
+            onResponse?(.needCaptchaCode(image))
+        } else {
+            onResponse?(.error(error))
+        }
+    }
 }

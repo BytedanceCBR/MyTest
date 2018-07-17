@@ -75,7 +75,7 @@ target 'Bubble' do
 #    pod 'ObjectMapper'
 #    pod 'Charts'
      pod 'YYText'
-
+     pod 'MBProgressHUD', '~> 1.1.0'
      pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :branch => 'dev', :subspecs => [
         'Account',
         'NetWorkCore',

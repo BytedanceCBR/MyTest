@@ -22,3 +22,4 @@
 #import "BDAccountAPIWrapper.h"
 #import <TTInstallService/TTInstallIDManager.h>
 #import "BDAccount+FlowCommand.h"
+#import "MBProgressHUD.h"

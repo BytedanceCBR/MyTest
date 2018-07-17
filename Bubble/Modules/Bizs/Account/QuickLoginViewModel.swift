@@ -13,6 +13,8 @@ class QuickLoginViewModel {
 
     let requestLogin: BehaviorRelay<(String?, String?)?> = BehaviorRelay<(String?, String?)?>(value: nil)
 
+    let onResponse: BehaviorRelay<RequestSMSCodeResult?> = BehaviorRelay<RequestSMSCodeResult?>(value: nil)
+
     private let disposeBag = DisposeBag()
 
     init(){
@@ -34,10 +36,11 @@ class QuickLoginViewModel {
                 mobileString: phoneNumber,
                 bdCodeType: BDAccountStatusChangedReason.mobileSMSCodeLogin.rawValue)
                 .debug()
-                .subscribe(onNext: { result in
-
+                .subscribe(onNext: { [unowned self] result in
+                    self.onResponse.accept(.successed)
+                    EnvContext.shared.client.accountConfig.userInfo.accept(BDAccount.shared().user)
                 }, onError: { error in
-                    print(error)
+                    self.onResponse.accept(.error(error))
                 })
                 .disposed(by: disposeBag)
         } else {
@@ -56,9 +59,9 @@ class QuickLoginViewModel {
     func quickLogin(mobile: String, smsCode: String) {
         requestQuickLogin(mobile: mobile, smsCode: smsCode)
                 .debug()
-                .subscribe(onNext: { void in
-                    let user = BDAccount.shared().user
-                    print(user)
+                .subscribe(onNext: { [unowned self] void in
+                    EnvContext.shared.client.accountConfig.userInfo.accept(BDAccount.shared().user)
+                    self.onResponse.accept(.successed)
                 }, onError: { error in
 
                 })
@@ -66,3 +69,5 @@ class QuickLoginViewModel {
     }
 
 }
+
+
