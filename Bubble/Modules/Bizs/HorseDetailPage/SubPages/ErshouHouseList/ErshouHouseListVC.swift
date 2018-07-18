@@ -19,11 +19,9 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
     var ershouHouseListViewModel: ErshouHouseListViewModel?
 
-    let disposeBag = DisposeBag()
-
     init(neighborhoodId: String) {
         self.neighborhoodId = neighborhoodId
-        super.init(isHiddenBottomBar: true)
+        super.init(identifier: neighborhoodId, isHiddenBottomBar: true)
         self.navBar.title.text = "同小区房源"
         self.ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView)
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()

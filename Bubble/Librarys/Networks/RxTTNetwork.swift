@@ -18,7 +18,7 @@ extension Reactive where Base: TTNetworkManager {
     func requestForBinary(
         url: String,
         params: [String: Any]? = nil,
-        method: String = "get",
+        method: String = "GET",
         needCommonParams: Bool = false) -> Observable<Data> {
         return Observable.create({ (observable) -> Disposable in
             let task = TTNetworkManager.shareInstance()

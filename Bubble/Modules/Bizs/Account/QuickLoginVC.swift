@@ -248,3 +248,13 @@ class QuickLoginVC: BaseViewController {
     }
 
 }
+
+func openQuickLoginVC(disposeBag: DisposeBag) {
+    let vc = QuickLoginVC()
+    vc.navBar.backBtn.rx.tap
+        .subscribe(onNext: { void in
+            EnvContext.shared.rootNavController.popViewController(animated: true)
+        })
+        .disposed(by: disposeBag)
+    EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+}

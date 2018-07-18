@@ -9,6 +9,8 @@ import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
 
+    var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
+
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
     weak var tableView: UITableView?
@@ -18,6 +20,8 @@ class HomeListViewModel: DetailPageViewModel {
     fileprivate var dataSource: DataSource
 
     let disposeBag = DisposeBag()
+
+    var houseId: Int64 = -1
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -29,6 +33,7 @@ class HomeListViewModel: DetailPageViewModel {
     }
 
     func requestData(houseId: Int64) {
+        self.houseId = houseId
         requestHouseRecommend()
                 .map { [unowned self] response -> [TableSectionNode] in
                     if let data = response?.data {
@@ -55,6 +60,14 @@ class HomeListViewModel: DetailPageViewModel {
 
                 })
                 .disposed(by: disposeBag)
+    }
+
+    func followThisItem() {
+        followIt(
+            houseType: .newHouse,
+            followAction: .newHouse,
+            followId: "\(houseId)",
+            disposeBag: disposeBag)()
     }
 
     private func openCategoryList(houseType: HouseType, condition: @escaping (String) -> String) {

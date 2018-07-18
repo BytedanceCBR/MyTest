@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 class CategoryListViewModel: DetailPageViewModel {
 
+    var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
+
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
     let disposeBag = DisposeBag()
@@ -47,6 +49,9 @@ class CategoryListViewModel: DetailPageViewModel {
         default:
             requestNeigborhoodList(query: query)
         }
+    }
+
+    func followThisItem() {
     }
     
     func requestNewHouseList(query: String) {

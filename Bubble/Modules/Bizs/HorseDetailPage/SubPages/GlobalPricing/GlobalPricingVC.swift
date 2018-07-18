@@ -19,11 +19,9 @@ class GlobalPricingVC: BaseSubPageViewController, PageableVC {
 
     var globalPricingViewModel: GlobalPricingViewModel?
 
-    let disposeBag = DisposeBag()
-
     init(courtId: Int64) {
         self.courtId = courtId
-        super.init()
+        super.init(identifier: "\(courtId)")
     }
 
     required init?(coder aDecoder: NSCoder) {

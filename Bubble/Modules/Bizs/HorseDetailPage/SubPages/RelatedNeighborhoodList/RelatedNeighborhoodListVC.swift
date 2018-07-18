@@ -16,11 +16,11 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
 
     let neighborhoodId: String
 
-    let disposeBag = DisposeBag()
-
     init(neighborhoodId: String) {
         self.neighborhoodId = neighborhoodId
-        super.init(isHiddenBottomBar: true)
+        super.init(
+            identifier: neighborhoodId,
+            isHiddenBottomBar: true)
         self.navBar.title.text = "周边小区"
         self.relatedNeighborhoodListViewModel = RelatedNeighborhoodListViewModel(tableView: tableView)
         self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()

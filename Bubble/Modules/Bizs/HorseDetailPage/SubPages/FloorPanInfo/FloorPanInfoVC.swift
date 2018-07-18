@@ -16,7 +16,7 @@ class FloorPanInfoVC: BaseSubPageViewController {
     init(isHiddenBottomBar: Bool, floorPanId: String, newHouseData: NewHouseData) {
         self.floorPanId = floorPanId
         self.newHouseData = newHouseData
-        super.init(isHiddenBottomBar: isHiddenBottomBar)
+        super.init(identifier: floorPanId, isHiddenBottomBar: isHiddenBottomBar)
         self.navBar.title.text = "楼盘信息"
         self.floorPanInfoViewModel = FloorPanInfoViewModel(tableView: tableView)
     }

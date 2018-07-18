@@ -53,10 +53,9 @@ struct ErshouHouseData: Mappable {
     var baseInfo: [ErshouHouseBaseInfo]?
     var neighborhoodInfo: NeighborhoodInfo?
     var contact: [String: String]?
-    var abtestVersions: String?
     var priceTrend: PriceTrend?
     var housePriceRange: [Int: Int]?
-    var tags: [TagItem]?
+    var tags: [TagItem] = []
     var userStatus: UserStatus?
     
     init?(map: Map) {
@@ -67,12 +66,15 @@ struct ErshouHouseData: Mappable {
         id <- map["id"]
         title <- map["title"]
         uploadAt <- map["upload_at"]
-        coreInfo <- map["core_info"]
         houseImage <- map["house_image"]
-        neighborhoodInfo <- map["neighborhood_info"]
-        tags <- map["tags"]
-        contact <- map["contact"]
+        coreInfo <- map["core_info"]
         baseInfo <- map["base_info"]
+        neighborhoodInfo <- map["neighborhood_info"]
+        contact <- map["contact"]
+        priceTrend <- map["price_trend"]
+        housePriceRange <- map["house_price_range"]
+        tags <- map["tags"]
+        userStatus <- map["user_status"]
     }
 }
 
@@ -107,8 +109,9 @@ struct ErshouHouseCoreInfo: Mappable {
 }
 
 struct UserStatus: Mappable {
-    var houseSubStatus: Int?
-    var pricingSubStauts: Int?
+    var houseSubStatus: Int = 0
+    var pricingSubStauts: Int = 0
+    var courtOpenSubStatus: Int = 0
     
     init?(map: Map) {
         
@@ -117,6 +120,7 @@ struct UserStatus: Mappable {
     mutating func mapping(map: Map) {
         houseSubStatus <- map["house_sub_status"]
         pricingSubStauts <- map["pricing_sub_stauts"]
+        courtOpenSubStatus <- map["court_open_sub_stauts"]
     }
 }
 

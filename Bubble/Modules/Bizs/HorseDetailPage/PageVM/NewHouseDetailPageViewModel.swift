@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
+    var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
+
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
     weak var tableView: UITableView?
@@ -17,6 +19,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     private let disposeBag = DisposeBag()
 
     private var cellFactory: UITableViewCellFactory
+
+    private var houseId: Int64 = -1
 
     init(tableView: UITableView){
         self.tableView = tableView
@@ -30,6 +34,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     func requestData(houseId: Int64) {
+        self.houseId = houseId
         requestNewHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
@@ -77,6 +82,14 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         } else {
             return DetailDataParser.monoid().parser
         }
+    }
+
+    func followThisItem() {
+        followIt(
+            houseType: .newHouse,
+            followAction: .newHouse,
+            followId: "\(houseId)",
+            disposeBag: disposeBag)()
     }
 
     func openCommentList(courtId: Int64) {

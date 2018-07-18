@@ -116,6 +116,31 @@ class HorseDetailPageVC: BaseViewController {
         tableView.rx.contentOffset
             .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
             .disposed(by: disposeBag)
+
+
+        if let detailPageViewModel = detailPageViewModel {
+            bottomBar.favouriteBtn.rx.tap
+                    .bind(onNext: detailPageViewModel.followThisItem)
+                    .disposed(by: disposeBag)
+            detailPageViewModel.followStatus
+                .filter { (result) -> Bool in
+                    if case .success(_) = result {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                .map { (result) -> Bool in
+                    if case let .success(status) = result {
+                        return status
+                    } else {
+                        return false
+                    }
+                }
+                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+                .disposed(by: disposeBag)
+                
+        }
     }
 
     private func setupNavBar() {

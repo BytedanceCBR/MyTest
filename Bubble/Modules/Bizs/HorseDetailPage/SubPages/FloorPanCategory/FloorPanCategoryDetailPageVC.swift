@@ -16,7 +16,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 
     init(isHiddenBottomBar: Bool, floorPanId: Int64) {
         self.floorPanId = floorPanId
-        super.init(isHiddenBottomBar: false)
+        super.init(identifier: "\(floorPanId)", isHiddenBottomBar: false)
     }
 
     override func viewDidLoad() {

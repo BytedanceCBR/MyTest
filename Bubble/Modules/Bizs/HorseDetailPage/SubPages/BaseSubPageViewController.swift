@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+import RxCocoa
+import RxSwift
 class BaseSubPageViewController: BaseViewController {
 
     lazy var tableView: UITableView = {
@@ -26,9 +27,16 @@ class BaseSubPageViewController: BaseViewController {
         return re
     }()
 
+    var houseType: HouseType = .newHouse
+    var followActionType: FollowActionType = .newHouse
+    var identifier: String
+
     private let isHiddenBottomBar: Bool
 
-    init(isHiddenBottomBar: Bool = false) {
+    let disposeBag = DisposeBag()
+
+    init(identifier: String, isHiddenBottomBar: Bool = false) {
+        self.identifier = identifier
         self.isHiddenBottomBar = isHiddenBottomBar
         super.init(nibName: nil, bundle: nil)
     }
@@ -66,11 +74,38 @@ class BaseSubPageViewController: BaseViewController {
 
         }
         // Do any additional setup after loading the view.
+
+        bottomBar.favouriteBtn.rx.tap
+            .bind(onNext: self.followIt(
+                houseType: houseType,
+                followAction: followActionType,
+                followId: identifier))
+            .disposed(by: disposeBag)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
+
+    func followIt(
+            houseType: HouseType,
+            followAction: FollowActionType,
+            followId: String) -> () -> Void {
+        return { [unowned self] in
+            requestFollow(
+                    houseType: houseType,
+                    followId: followId,
+                    actionType: followAction)
+                    .debug()
+                    .subscribe(onNext: { response in
+
+                    }, onError: { error in
+
+                    })
+                    .disposed(by: self.disposeBag)
+        }
+    }
+
 }

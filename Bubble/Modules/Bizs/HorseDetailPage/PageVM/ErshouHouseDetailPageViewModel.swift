@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
+    var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
+
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
     weak var tableView: UITableView?
@@ -28,6 +30,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
 
     private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
+
+    private var houseId: Int64 = -1
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -70,13 +74,17 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     func requestData(houseId: Int64) {
-
+        self.houseId = houseId
         requestErshouHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)
                         self.ershouHouseData.accept(response)
                         self.requestReletedData()
+                    }
+
+                    if let status = response?.data?.userStatus {
+                        self.followStatus.accept(Result.success(status.houseSubStatus == 1))
                     }
                 }, onError: { (error) in
                     print(error)
@@ -90,6 +98,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     }
 
+    func followThisItem() {
+        followIt(
+            houseType: .secondHandHouse,
+            followAction: .ershouHouse,
+            followId: "\(houseId)",
+            disposeBag: disposeBag)()
+    }
 
     func requestReletedData() {
         if let neighborhoodId = ershouHouseData.value?.data?.neighborhoodInfo?.id {

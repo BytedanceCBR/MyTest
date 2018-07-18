@@ -10,12 +10,39 @@ import Foundation
 import RxSwift
 import RxCocoa
 protocol DetailPageViewModel {
+
+    var followStatus: BehaviorRelay<Result<Bool>> { get }
+
     var tableView: UITableView? { get set }
 
     var titleValue: BehaviorRelay<String?> { get }
 
     func requestData(houseId: Int64)
 
+    func followThisItem()
+
+}
+
+extension DetailPageViewModel {
+    func followIt(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
+        disposeBag: DisposeBag) -> () -> Void {
+        return {
+            requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .debug()
+                .subscribe(onNext: { response in
+
+                }, onError: { error in
+                    
+                })
+                .disposed(by: disposeBag)
+        }
+    }
 }
 
 typealias TableCellRender = (BaseUITableViewCell) -> Void

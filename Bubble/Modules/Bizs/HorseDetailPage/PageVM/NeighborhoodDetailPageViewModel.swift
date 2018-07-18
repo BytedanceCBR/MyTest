@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
+    var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
+
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
     weak var tableView: UITableView?
@@ -28,6 +30,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     //小区内相关
     private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
 
+
+    private var houseId: Int64 = -1
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -88,8 +92,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     }
 
     func requestData(houseId: Int64) {
+        self.houseId = houseId
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
                 .subscribe(onNext: { [unowned self] (response) in
+                    if let status = response?.data?.neighbordhoodStatus {
+                        self.followStatus.accept(Result.success(status.neighborhoodSubStatus ?? 0 == 1))
+                    }
                     self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)
                     self.requestReletedData()
@@ -105,6 +113,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
                 })
                 .disposed(by: disposeBag)
+    }
+
+    func followThisItem() {
+        followIt(
+            houseType: .neighborhood,
+            followAction: .beighborhood,
+            followId: "\(houseId)",
+            disposeBag: disposeBag)()
     }
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {

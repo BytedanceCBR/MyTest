@@ -10,6 +10,7 @@ class HouseDetailPageBottomBarView: UIView {
     lazy var favouriteBtn: UIButton = {
         let re = UIButton()
         re.setBackgroundImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
+        re.setBackgroundImage(#imageLiteral(resourceName: "tab-collect-yellow"), for: .selected)
         return re
     }()
 

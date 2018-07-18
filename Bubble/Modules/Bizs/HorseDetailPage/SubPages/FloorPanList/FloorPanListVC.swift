@@ -19,11 +19,10 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
 
     var floorPanListViewModel: FloorPanListViewModel?
 
-    let disposeBag = DisposeBag()
 
     init(courtId: Int64) {
         self.courtId = courtId
-        super.init()
+        super.init(identifier: "\(courtId)")
     }
 
     required init?(coder aDecoder: NSCoder) {

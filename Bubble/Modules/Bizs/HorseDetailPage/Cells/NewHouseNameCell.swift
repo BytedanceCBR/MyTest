@@ -187,7 +187,7 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
         return
     }
     theCell.nameLabel.text = ershouHouseData.title
-    let tags = ershouHouseData.tags?.map({ (item) -> NSAttributedString in
+    let tags = ershouHouseData.tags.map({ (item) -> NSAttributedString in
         createTagAttributeText(
             content: item.content ?? "" ,
             textColor: hexStringToUIColor(hex: "#33bf85"),
@@ -195,7 +195,7 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
     })
     theCell.setAlias(alias: nil)
 
-    theCell.setTags(tags: tags ?? [])
+    theCell.setTags(tags: tags)
 }
 
 func createTagAttributeText(
