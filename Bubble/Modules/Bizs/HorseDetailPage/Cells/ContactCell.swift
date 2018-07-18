@@ -8,7 +8,8 @@
 
 import UIKit
 import SnapKit
-
+import RxSwift
+import RxCocoa
 class ContactCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -35,6 +36,8 @@ class ContactCell: BaseUITableViewCell {
         result.setImage(#imageLiteral(resourceName: "group-3"), for: .normal)
         return result
     }()
+
+    var disposeBag = DisposeBag()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -78,6 +81,10 @@ class ContactCell: BaseUITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
 }
 
 func parseNewHouseContactNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
@@ -91,5 +98,12 @@ func fillNewHouseContactCell(_ data: NewHouseData, cell: BaseUITableViewCell) ->
     if let theCell = cell as? ContactCell {
         theCell.phoneNumberLabel.text = data.contact?["phone"]
         theCell.descLabel.text = data.contact?["notice_desc"]
+        theCell.phoneCallBtn.rx.tap
+                .subscribe(onNext: { void in
+                    if let phone = data.contact?["phone"] {
+                        Utils.telecall(phoneNumber: phone)
+                    }
+                })
+                .disposed(by: theCell.disposeBag)
     }
 }
