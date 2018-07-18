@@ -233,7 +233,7 @@ class CategoryListPageVC: UIViewController {
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
                 .map { [weak self] (result) in
-                    result + "&house_type=\(self?.houseType.value.rawValue ?? HouseType.secondHandHouse.rawValue)"
+                    "house_type=\(self?.houseType.value.rawValue ?? HouseType.secondHandHouse.rawValue)" + result
                 }
                 .debounce(0.01, scheduler: MainScheduler.instance)
                 .subscribe(onNext: { [unowned self] query in
