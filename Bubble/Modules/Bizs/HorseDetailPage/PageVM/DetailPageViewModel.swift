@@ -36,11 +36,35 @@ extension DetailPageViewModel {
                 actionType: followAction)
                 .debug()
                 .subscribe(onNext: { response in
-
+                    if response?.data?.followStatus ?? 1 == 0 {
+                        self.followStatus.accept(.success(true))
+                    }
                 }, onError: { error in
                     
                 })
                 .disposed(by: disposeBag)
+        }
+    }
+
+    func cancelFollowIt(
+            houseType: HouseType,
+            followAction: FollowActionType,
+            followId: String,
+            disposeBag: DisposeBag) -> () -> Void {
+        return {
+            requestCancelFollow(
+                    houseType: houseType,
+                    followId: followId,
+                    actionType: followAction)
+                    .debug()
+                    .subscribe(onNext: { response in
+                        if response?.data?.followStatus ?? 1 == 0 {
+                            self.followStatus.accept(.success(false))
+                        }
+                    }, onError: { error in
+
+                    })
+                    .disposed(by: disposeBag)
         }
     }
 }

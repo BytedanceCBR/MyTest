@@ -99,11 +99,24 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     func followThisItem() {
-        followIt(
-            houseType: .secondHandHouse,
-            followAction: .ershouHouse,
-            followId: "\(houseId)",
-            disposeBag: disposeBag)()
+        switch followStatus.value {
+        case let .success(status):
+            if status {
+                cancelFollowIt(
+                        houseType: .secondHandHouse,
+                        followAction: .ershouHouse,
+                        followId: "\(houseId)",
+                        disposeBag: disposeBag)()
+            } else {
+                followIt(
+                        houseType: .secondHandHouse,
+                        followAction: .ershouHouse,
+                        followId: "\(houseId)",
+                        disposeBag: disposeBag)()
+            }
+        case .failure(_): do {}
+        }
+
     }
 
     func requestReletedData() {

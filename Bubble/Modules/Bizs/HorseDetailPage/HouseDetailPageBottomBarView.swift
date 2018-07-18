@@ -11,6 +11,7 @@ class HouseDetailPageBottomBarView: UIView {
         let re = UIButton()
         re.setBackgroundImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
         re.setBackgroundImage(#imageLiteral(resourceName: "tab-collect-yellow"), for: .selected)
+        re.setBackgroundImage(#imageLiteral(resourceName: "tab-collect-yellow"), for: .highlighted)
         return re
     }()
 
