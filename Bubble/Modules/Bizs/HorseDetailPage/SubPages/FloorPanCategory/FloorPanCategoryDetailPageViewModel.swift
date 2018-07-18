@@ -38,6 +38,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
 
     func request(floorPanId: Int64) {
         requestFloorPlanInfo(floorPanId: "\(floorPanId)")
+                .debug()
                 .subscribe(onNext: { [unowned self] response in
                     if let data = response?.data {
                         self.datas.accept(self.dataParserByData(data: data).parser([]))

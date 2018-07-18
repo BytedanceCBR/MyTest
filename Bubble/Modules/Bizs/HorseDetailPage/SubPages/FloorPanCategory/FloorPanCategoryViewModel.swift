@@ -78,6 +78,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
     func request(courtId: Int64) {
         requestNewHouseFloorPan(houseId: courtId)
+                .debug()
                 .subscribe(onNext: { [unowned self] response in
                     if let its = response?.data?.list {
                         self.items.accept(its)
