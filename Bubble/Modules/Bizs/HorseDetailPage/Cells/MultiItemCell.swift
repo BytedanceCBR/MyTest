@@ -364,9 +364,9 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     attributeText.yy_color = hexStringToUIColor(hex: "#222222")
     text.append(attributeText)
 
-    if let status = item.saleStatus, let content = status.content {
+    if let status = item.saleStatus {
         let tag = createTagAttributeText(
-                content: content,
+                content: status.content,
                 textColor: hexStringToUIColor(hex: "#33bf85"),
                 backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
                 insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))

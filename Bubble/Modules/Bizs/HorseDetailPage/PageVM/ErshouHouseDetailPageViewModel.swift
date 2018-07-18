@@ -294,7 +294,10 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITable
         let text = NSMutableAttributedString()
 
         let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
-            createTagAttrString(item.content ?? "")
+            createTagAttrString(
+                item.content,
+                textColor: hexStringToUIColor(hex: item.textColor),
+                backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
         })
 
         attrTexts?.forEach({ (attrText) in

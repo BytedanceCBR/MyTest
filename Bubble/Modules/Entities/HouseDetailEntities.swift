@@ -251,7 +251,7 @@ struct NewHouseCoreInfo: Mappable {
 
 struct TagItem: Mappable {
     var id: Int?
-    var content: String?
+    var content: String = ""
     var backgroundColor: String?
     var textColor: String?
     

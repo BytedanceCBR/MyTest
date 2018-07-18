@@ -165,12 +165,21 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
     theCell.setAlias(alias: newHouseData.coreInfo?.aliasName)
     var tags: [NSAttributedString] = []
 
-    if let saleStatus = newHouseData.coreInfo?.saleStatus,
-       let content = saleStatus.content {
-        tags.append(createTagAttributeText(
-                content: content,
-                textColor: hexStringToUIColor(hex: "#33bf85"),
-                backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08)))
+//    if let saleStatus = newHouseData.coreInfo?.saleStatus {
+//        tags.append(createTagAttributeText(
+//                content: saleStatus.content,
+//                textColor: hexStringToUIColor(hex: saleStatus.textColor),
+//                backgroundColor: hexStringToUIColor(hex: saleStatus.backgroundColor)))
+//    }
+    if let tgs = newHouseData.tags {
+        tgs.map { (item) in
+            createTagAttributeText(
+                    content: item.content,
+                    textColor: hexStringToUIColor(hex: item.textColor),
+                    backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+        }.forEach { item in
+            tags.append(item)
+        }
     }
     theCell.setTags(tags: tags)
 }

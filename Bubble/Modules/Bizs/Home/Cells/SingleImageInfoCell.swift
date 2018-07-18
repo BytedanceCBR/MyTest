@@ -146,13 +146,18 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemInnerEntity
     cell.extendTitle.text = item.displaySubtitle
     let text = NSMutableAttributedString()
 
-    let attributeText = createTagAttrString("新房一天")
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
-    text.append(attributeText)
-    cell.areaLabel.attributedText = text;
-//    cell.areaLabel.sizeToFit()
+    let attrs = item.tags?.map({ (item) -> NSMutableAttributedString in
+        createTagAttrString(
+                item.content,
+                textColor: hexStringToUIColor(hex: item.textColor),
+                backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+    })
+
+    attrs?.forEach({ (attrText) in
+        text.append(attrText)
+    })
+
+    cell.areaLabel.attributedText = text
 
     cell.priceLabel.text = item.baseInfoMap?.pricing
     cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
