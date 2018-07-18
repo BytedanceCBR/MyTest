@@ -79,6 +79,7 @@ class QuickLoginVC: BaseViewController {
                 attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
                              NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#ffffff")])
         re.setAttributedTitle(attriStr, for: .normal)
+        re.isEnabled = false
         return re
     }()
 
@@ -163,6 +164,8 @@ class QuickLoginVC: BaseViewController {
             maker.height.equalTo(46)
         }
 
+        quickLoginViewModel.sendSMSBtn = sendVerifyCodeBtn
+
         sendVerifyCodeBtn.rx.tap
                 .do(onNext: { self.showLoading(title: "正在获取验证码") })
                 .withLatestFrom(phoneInput.rx.text)
@@ -191,6 +194,16 @@ class QuickLoginVC: BaseViewController {
                     EnvContext.shared.rootNavController.popViewController(animated: true)
                 })
                 .disposed(by: disposeBag)
+
+        Observable
+            .combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
+            .map { (e) -> Bool in
+                let (phone, code) = e
+                return phone?.count ?? 0 >= 11 && code?.count ?? 0 > 3
+            }
+            .bind(onNext: curry(self.enableConfirmBtn)(confirmBtn))
+            .disposed(by: disposeBag)
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -221,6 +234,15 @@ class QuickLoginVC: BaseViewController {
     func dismissHud() -> (RequestSMSCodeResult?) -> Void {
         return { [weak self] (_) in
             self?.hud?.hide(animated: true)
+        }
+    }
+
+    func enableConfirmBtn(button: UIButton, isEnabled: Bool) {
+        button.isEnabled = isEnabled
+        if isEnabled {
+            button.alpha = 1
+        } else {
+            button.alpha = 0.6
         }
     }
 
