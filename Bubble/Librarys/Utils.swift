@@ -13,9 +13,12 @@ class Utils {
 
 extension Utils {
     //拨打电话
-    class func telecall(phoneNumber: String) {
-        let phoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
-        let callStr = "telprompt://\(phoneNumber)"
+    class func telecall(phoneNumber: String?) {
+        guard let phoneNumber = phoneNumber else {
+             return
+        }
+        let thePhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+        let callStr = "telprompt://\(thePhoneNumber)"
         guard let url = URL(string: callStr) else {
             return
         }

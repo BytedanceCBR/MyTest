@@ -13,6 +13,8 @@ protocol DetailPageViewModel {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
+    var contactPhone: BehaviorRelay<String?> { get }
+
     var tableView: UITableView? { get set }
 
     var titleValue: BehaviorRelay<String?> { get }

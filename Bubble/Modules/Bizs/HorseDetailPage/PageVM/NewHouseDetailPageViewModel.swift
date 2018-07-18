@@ -22,6 +22,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var houseId: Int64 = -1
 
+    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+
     init(tableView: UITableView){
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
@@ -42,6 +44,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                         let result = self.processData(response: response, courtId: houseId)([])
                         self.dataSource.datas = result
                         self.tableView?.reloadData()
+                    }
+
+                    if let contact = response?.data?.contact?["phone"] {
+                        self.contactPhone.accept(contact)
                     }
 
                     if let status = response?.data?.userStatus {

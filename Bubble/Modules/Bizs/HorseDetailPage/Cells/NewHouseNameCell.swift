@@ -165,12 +165,6 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
     theCell.setAlias(alias: newHouseData.coreInfo?.aliasName)
     var tags: [NSAttributedString] = []
 
-//    if let saleStatus = newHouseData.coreInfo?.saleStatus {
-//        tags.append(createTagAttributeText(
-//                content: saleStatus.content,
-//                textColor: hexStringToUIColor(hex: saleStatus.textColor),
-//                backgroundColor: hexStringToUIColor(hex: saleStatus.backgroundColor)))
-//    }
     if let tgs = newHouseData.tags {
         tgs.map { (item) in
             createTagAttributeText(

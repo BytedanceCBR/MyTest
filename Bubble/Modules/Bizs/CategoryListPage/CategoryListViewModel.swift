@@ -27,6 +27,8 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var onDataLoaded: (() -> Void)?
 
+    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+
     init(tableView: UITableView){
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()

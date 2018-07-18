@@ -139,7 +139,10 @@ class HorseDetailPageVC: BaseViewController {
                 }
                 .bind(to: bottomBar.favouriteBtn.rx.isSelected)
                 .disposed(by: disposeBag)
-                
+            bottomBar.contactBtn.rx.tap
+                    .withLatestFrom(detailPageViewModel.contactPhone)
+                    .bind(onNext: Utils.telecall)
+                    .disposed(by: disposeBag)
         }
     }
 

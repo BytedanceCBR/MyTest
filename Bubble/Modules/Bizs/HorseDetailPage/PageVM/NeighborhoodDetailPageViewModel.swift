@@ -30,8 +30,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     //小区内相关
     private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
 
-
     private var houseId: Int64 = -1
+
+    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
 
     init(tableView: UITableView) {
         self.tableView = tableView

@@ -25,23 +25,6 @@ struct ErshouHouseDetailResponse: Mappable {
     }
 }
 
-//struct TagItem: Mappable {
-//    var id: Int?
-//    var content: String?
-//    var backgroundColor: String?
-//    var textColor: String?
-//
-//    init?(map: Map) {
-//
-//    }
-//
-//    mutating func mapping(map: Map) {
-//        id <- map["id"]
-//        content <- map["content"]
-//        backgroundColor <- map["background_color"]
-//        textColor <- map["text_color"]
-//    }
-//}
 
 struct ErshouHouseData: Mappable {
     
@@ -52,7 +35,7 @@ struct ErshouHouseData: Mappable {
     var coreInfo: [ErshouHouseCoreInfo]?
     var baseInfo: [ErshouHouseBaseInfo]?
     var neighborhoodInfo: NeighborhoodInfo?
-    var contact: [String: String]?
+    var contact: [String: Any] = [:]
     var priceTrend: PriceTrend?
     var housePriceRange: [Int: Int]?
     var tags: [TagItem] = []

@@ -33,6 +33,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var houseId: Int64 = -1
 
+    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+
     init(tableView: UITableView) {
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
@@ -41,6 +43,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         tableView.delegate = self.dataSource
 
         cellFactory.register(tableView: tableView)
+        ershouHouseData
+            .map { (response) -> String? in
+                let phone = response?.data?.contact["phone"] as? String
+                return phone
+            }
+            .bind(to: contactPhone)
+            .disposed(by: disposeBag)
         super.init()
         ershouHouseData
             .subscribe { [unowned self] event in
@@ -76,6 +85,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     func requestData(houseId: Int64) {
         self.houseId = houseId
         requestErshouHouseDetail(houseId: houseId)
+                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)

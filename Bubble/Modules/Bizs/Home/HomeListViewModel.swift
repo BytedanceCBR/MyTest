@@ -23,6 +23,8 @@ class HomeListViewModel: DetailPageViewModel {
 
     var houseId: Int64 = -1
 
+    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+
     init(tableView: UITableView) {
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
