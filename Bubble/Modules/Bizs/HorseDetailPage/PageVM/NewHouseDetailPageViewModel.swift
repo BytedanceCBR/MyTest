@@ -43,6 +43,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                         self.dataSource.datas = result
                         self.tableView?.reloadData()
                     }
+
+                    if let status = response?.data?.userStatus {
+                        self.followStatus.accept(.success(status.courtSubStatus == 1))
+                    }
                 }, onError: { (error) in
                     print(error)
                 })
@@ -85,11 +89,23 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     func followThisItem() {
-        followIt(
-            houseType: .newHouse,
-            followAction: .newHouse,
-            followId: "\(houseId)",
-            disposeBag: disposeBag)()
+        switch followStatus.value {
+        case let .success(status):
+            if status {
+                cancelFollowIt(
+                        houseType: .newHouse,
+                        followAction: .newHouse,
+                        followId: "\(houseId)",
+                        disposeBag: disposeBag)()
+            } else {
+                followIt(
+                        houseType: .newHouse,
+                        followAction: .newHouse,
+                        followId: "\(houseId)",
+                        disposeBag: disposeBag)()
+            }
+        case .failure(_): do {}
+        }
     }
 
     func openCommentList(courtId: Int64) {

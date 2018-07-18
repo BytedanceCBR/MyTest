@@ -116,11 +116,23 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     }
 
     func followThisItem() {
-        followIt(
-            houseType: .neighborhood,
-            followAction: .beighborhood,
-            followId: "\(houseId)",
-            disposeBag: disposeBag)()
+        switch followStatus.value {
+        case let .success(status):
+            if status {
+                cancelFollowIt(
+                    houseType: .neighborhood,
+                    followAction: .beighborhood,
+                    followId: "\(houseId)",
+                    disposeBag: disposeBag)()
+            } else {
+                followIt(
+                    houseType: .neighborhood,
+                    followAction: .beighborhood,
+                    followId: "\(houseId)",
+                    disposeBag: disposeBag)()
+            }
+        case .failure(_): do {}
+        }
     }
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {

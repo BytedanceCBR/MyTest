@@ -197,6 +197,7 @@ struct NewHouseData: Mappable {
     var floorPan: FloorPan?
     var comment: NewHouseComment?
     var globalPricing: GlobalPrice?
+    var userStatus: UserStatus?
     
     init?(map: Map) {
         
@@ -214,6 +215,7 @@ struct NewHouseData: Mappable {
         floorPan <- map["floorpan_list"]
         comment <- map["comment"]
         globalPricing <- map["global_pricing"]
+        userStatus <- map["user_status"]
     }
 }
 

@@ -212,7 +212,6 @@ func fillNewHouseCoreInfoCell(_ data: NewHouseData, floorPanId: String, disposeB
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
         theCell.moreBtn.rx.tap
-            .debug("fillNewHouseCoreInfoCell")
             .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag))
             .disposed(by: theCell.disposeBag)
 
