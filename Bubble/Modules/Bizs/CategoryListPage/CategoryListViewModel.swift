@@ -55,7 +55,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
     
     func requestNewHouseList(query: String) {
-        let loader = pageRequestCourtSearch(cityId: "133", query: query)
+        let loader = pageRequestCourtSearch(query: query)
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
@@ -91,7 +91,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
     func requestNeigborhoodList(query: String) {
-        let loader = pageRequestNeighborhoodSearch(cityId: "133", query: query)
+        let loader = pageRequestNeighborhoodSearch(query: query)
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in

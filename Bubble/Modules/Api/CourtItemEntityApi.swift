@@ -11,11 +11,10 @@ import RxSwift
 import ObjectMapper
 
 func requestCourtSearch(
-        cityId: String = "133",
         offset: Int64 = 0,
         query: String = "") -> Observable<CourtSearchResponse?> {
 
-    var url = "\(EnvContext.networkConfig.host)/f100/api/search_court?city_id=\(cityId)"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/search_court?"
     if !query.isEmpty {
         url = "\(url)\(query)"
     }
@@ -39,11 +38,10 @@ func requestCourtSearch(
 }
 
 
-func pageRequestCourtSearch(cityId: String = "133", query: String = "") -> () -> Observable<CourtSearchResponse?> {
+func pageRequestCourtSearch(query: String = "") -> () -> Observable<CourtSearchResponse?> {
     var offset: Int64 = 0
     return {
         return requestCourtSearch(
-            cityId: cityId,
             offset: offset,
             query: query)
             .do(onNext: { (response) in

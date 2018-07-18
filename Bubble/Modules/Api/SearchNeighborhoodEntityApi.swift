@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import ObjectMapper
 
-func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
+func requestNeighborhoodSearch(offset: Int = 0, query: String = "") -> Observable<SearchNeighborhoodResponse?> {
     var url = "\(EnvContext.networkConfig.host)/f100/api/search_neighborhood?"
     if !query.isEmpty {
         url = "\(url)\(query)"
@@ -35,12 +35,10 @@ func requestNeighborhoodSearch(cityId: String = "133", offset: Int = 0, query: S
 }
 
 func pageRequestNeighborhoodSearch(
-    cityId: String = "133",
     query: String = "") -> () -> Observable<SearchNeighborhoodResponse?> {
     var offset: Int = 0
     return {
         return requestNeighborhoodSearch(
-            cityId: cityId,
             offset: offset,
             query: query)
             .do(onNext: { (response) in
