@@ -37,18 +37,17 @@ extension DetailPageViewModel {
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
             if userInfo.value == nil {
+                userInfo
+                    .skip(1)
+                    .filter { $0 != nil }
+                    .subscribe(onNext: { [weak self] _ in
+                        self?.followThisItem()
+                        loginDisposeBag = DisposeBag()
+                    })
+                    .disposed(by: loginDisposeBag)
                 openQuickLoginVC(disposeBag: disposeBag)
                 return
             }
-
-            userInfo
-                .filter { $0 != nil }
-                .subscribe(onNext: { [weak self] _ in
-                    self?.followThisItem()
-                    loginDisposeBag = DisposeBag()
-                })
-                .disposed(by: loginDisposeBag)
-
             requestFollow(
                 houseType: houseType,
                 followId: followId,
@@ -76,19 +75,17 @@ extension DetailPageViewModel {
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
             if userInfo.value == nil {
-                openQuickLoginVC(disposeBag: disposeBag)
-                return
-            }
-
-            userInfo
+                userInfo
+                    .skip(1)
                     .filter { $0 != nil }
                     .subscribe(onNext: { [weak self] _ in
                         self?.followThisItem()
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-            
-
+                openQuickLoginVC(disposeBag: disposeBag)
+                return
+            }
             requestCancelFollow(
                     houseType: houseType,
                     followId: followId,

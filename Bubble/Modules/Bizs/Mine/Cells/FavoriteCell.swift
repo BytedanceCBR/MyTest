@@ -71,7 +71,6 @@ class FavoriteCell: BaseUITableViewCell {
     }
 }
 
-
 fileprivate class FavoriteItemView: UIView {
 
     lazy var keyLabel: UILabel = {
@@ -118,25 +117,26 @@ fileprivate class FavoriteItemView: UIView {
     }
 }
 
+
 func parseFavoriteNode(disposeBag: DisposeBag) -> () -> TableSectionNode? {
     let items: [FavoriteItemView] = [
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-ershoufang"), title: "二手房"),
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-xinfang"), title: "新房"),
-//        FavoriteItemView(image: #imageLiteral(resourceName: "icon-zufang"), title: "租房"),
+        //        FavoriteItemView(image: #imageLiteral(resourceName: "icon-zufang"), title: "租房"),
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), title: "小区"),
-    ]
+        ]
     let selectors = [HouseType.secondHandHouse,
                      HouseType.newHouse,
                      HouseType.neighborhood].map { (houseType) in
-        return {
-            let vc = MyFavoriteListVC(houseType: houseType)
-            vc.navBar.backBtn.rx.tap
-                    .subscribe(onNext: { void in
-                        EnvContext.shared.rootNavController.popViewController(animated: true)
-                    })
-                    .disposed(by: disposeBag)
-            EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
-        }
+                        return {
+                            let vc = MyFavoriteListVC(houseType: houseType)
+                            vc.navBar.backBtn.rx.tap
+                                .subscribe(onNext: { void in
+                                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                                })
+                                .disposed(by: disposeBag)
+                            EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+                        }
     }
     zip(items, selectors).forEach { (e) -> Void in
         let (item, selector) = e
@@ -155,5 +155,108 @@ func parseFavoriteNode(disposeBag: DisposeBag) -> () -> TableSectionNode? {
 fileprivate func fillFavoriteCell(_ items: [FavoriteItemView], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FavoriteCell {
         theCell.setItem(items: items)
+    }
+}
+
+class SpringBroadCell: BaseUITableViewCell {
+
+    open override class var identifier: String {
+        return "SpringBroadCell"
+    }
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    fileprivate func setItem(items: [SpringBroadItemView]) {
+        for v in contentView.subviews where v is SpringBroadItemView {
+            v.removeFromSuperview()
+        }
+
+        items.forEach { view in
+            contentView.addSubview(view)
+        }
+        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        items.snp.makeConstraints { maker in
+            maker.top.equalToSuperview()
+            maker.bottom.equalToSuperview()
+        }
+    }
+}
+
+fileprivate class SpringBroadItemView: UIView {
+
+    lazy var keyLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#505050")
+        return re
+    }()
+
+    lazy var IconView: UIImageView = {
+        let re = UIImageView()
+        return re
+    }()
+
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+
+    init(image: UIImage, title: String) {
+        super.init(frame: CGRect.zero)
+
+        IconView.image = image
+        addSubview(IconView)
+        IconView.snp.makeConstraints { maker in
+            maker.width.height.equalTo(66)
+            maker.centerX.equalToSuperview()
+            maker.top.equalTo(16)
+        }
+
+        keyLabel.text = title
+        addSubview(keyLabel)
+        keyLabel.snp.makeConstraints { maker in
+            maker.top.equalTo(76)
+            maker.centerX.equalTo(IconView)
+            maker.bottom.equalTo(-20)
+        }
+
+        addGestureRecognizer(tapGesture)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+func parseSpringboardNode(_ items: [EntryItem], disposeBag: DisposeBag) -> () -> TableSectionNode? {
+    let views = items.map { createFavoriteItemViewByEntryId(item: $0) }
+    return {
+        let cellRender = curry(fillSpringboardCell)(views)
+        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
+    }
+}
+
+fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView], cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? SpringBroadCell {
+        theCell.setItem(items: items)
+    }
+}
+
+fileprivate func createFavoriteItemViewByEntryId(item: EntryItem) -> SpringBroadItemView {
+    switch item.entryId {
+    case 1:
+        return SpringBroadItemView(image: #imageLiteral(resourceName: "home-icon-ershoufang"), title: item.name ?? "二手房")
+    case 2:
+        return SpringBroadItemView(image: #imageLiteral(resourceName: "home-icon-xinfang"), title: item.name ?? "新房")
+    case 4:
+        return SpringBroadItemView(image: #imageLiteral(resourceName: "home-icon-xiaoqu"), title: item.name ?? "找小区")
+    default:
+        return SpringBroadItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), title: item.name ?? "资讯")
     }
 }

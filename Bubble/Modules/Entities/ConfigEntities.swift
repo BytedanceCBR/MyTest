@@ -27,6 +27,8 @@ struct GeneralConfigData: Mappable {
     var cityList: [CityItem] = []
     var entryList: [EntryItem] = []
     var currentCityId: Int64?
+    var opData: OpData?
+    var banners: [Banner]?
 
     init?(map: Map) {
 
@@ -37,6 +39,8 @@ struct GeneralConfigData: Mappable {
         cityList <- map["city_list"]
         entryList <- map["entry_info"]
         currentCityId <- map["current_city"]
+        opData <- map["op_data"]
+        banners <- map["banners"]
     }
 }
 
@@ -91,4 +95,62 @@ struct EntryItem: Mappable {
         entryId <- map["entry_id"]
     }
 
+}
+
+struct OpData: Mappable {
+    var opStyle: Int = 1
+    var items: [Item] = []
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        opStyle <- map["op_style"]
+        items <- map["items"]
+    }
+
+
+    struct Item: Mappable {
+
+        var hotCityList: String?
+        var title: String?
+        var description: String?
+        var image: [ImageItem] = []
+        var openUrl: String?
+        var backgroundColor: String?
+        var textColor: String?
+        var logPb: Any?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            hotCityList <- map["hot_city_list"]
+            title <- map["title"]
+            description <- map["description"]
+            image <- map["image"]
+            openUrl <- map["open_url"]
+            backgroundColor <- map["background_color"]
+            textColor <- map["text_color"]
+            logPb <- map["log_pb"]
+        }
+    }
+}
+
+struct Banner: Mappable {
+    var id: String?
+    var image: ImageItem?
+    var url: String?
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        id <- map["id"]
+        image <- map["image"]
+        url <- map["url"]
+    }
 }

@@ -27,16 +27,12 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     let disposeBag = DisposeBag()
 
-    lazy var slidePageViewPanel: SlidePageViewPanel = {
-        SlidePageViewPanel()
-    }()
-
     lazy var headerViewPanel: UIView = {
         UIView(frame: CGRect(
                 x: 0,
                 y: 0,
                 width: self.view.frame.width,
-                height: 327))
+                height: 211))
     }()
 
     lazy var suspendSearchBar: HomePageSearchPanel = {
@@ -57,6 +53,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     private var detailPageViewModel: DetailPageViewModel?
 
+    private var cycleImagePageableViewModel: PageableViewModel?
+
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
@@ -71,7 +69,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         self.tableView = UITableView()
         super.viewDidLoad()
         self.detailPageViewModel = HomeListViewModel(tableView: tableView)
-
+        self.setupPageableViewModel()
         tableView.rowHeight = UITableViewAutomaticDimension
         view.addSubview(tableView)
         tableView.separatorStyle = .none
@@ -126,6 +124,43 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                     }
                 })
                 .disposed(by: disposeBag)
+
+    }
+    
+    private func setupPageableViewModel() {
+        let pageableViewModel = PageableViewModel(cacheViewCount: 5) {
+            return BDImageViewProvider { [weak self] i in
+                return self?.bannerImgSelector(index: i) ?? ""
+            }
+        }
+        pageableViewModel.pageView.isUserInteractionEnabled = true
+        headerViewPanel.addSubview(pageableViewModel.pageView)
+        pageableViewModel.pageView.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+            maker.height.equalTo(211)
+         }
+        cycleImagePageableViewModel = pageableViewModel
+        pageableViewModel.reloadData(currentPageOnly: false)
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject
+                .skip(1)
+                .subscribe(onNext: { data in
+                    if let banners = data?.banners, banners.count > 1{
+                    } else {
+                        pageableViewModel.pageView.isScrollEnabled = false
+                    }
+                })
+                .disposed(by: disposeBag)
+    }
+
+    func bannerImgSelector(index: Int) -> String {
+        let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
+        let count  = config?.banners?.count ?? 0
+        if let banners = config?.banners {
+            if count > 0 {
+                return banners[index % count].image?.url ?? ""
+            }
+        }
+        return ""
     }
 
     override func viewDidLayoutSubviews() {
@@ -146,17 +181,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     }
 
     private func setupHeaderSlidePanel(tableView: UITableView) {
-        headerViewPanel.addSubview(slidePageViewPanel)
-        slidePageViewPanel.snp.makeConstraints { maker in
-            maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(211)
-        }
-        slidePageViewPanel.slidePageView.itemProvider = {
-            [WebImageItemView(),
-             WebImageItemView(),
-             WebImageItemView()]
-        }
-        slidePageViewPanel.slidePageView.loadData()
         headerViewPanel.addSubview(suspendSearchBar)
         suspendSearchBar.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
@@ -168,17 +192,16 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     }
 
     private func setupHomeSpringBoard() {
-        headerViewPanel.addSubview(homeSpringBoard)
-        homeSpringBoard.snp.makeConstraints { [unowned slidePageViewPanel] maker in
-            maker.top.equalTo(slidePageViewPanel.snp.bottom)
-            maker.bottom.equalToSuperview()
-            maker.left.equalToSuperview().offset(8)
-            maker.right.equalToSuperview().offset(-8)
-            maker.height.equalTo(116)
-        }
-        homeSpringBoardViewModel = HomeSpringBoardViewModel(springBoard: homeSpringBoard)
-        homeSpringBoardViewModel.loadData()
-        slidePageViewPanel.startCarousel()
+//        headerViewPanel.addSubview(homeSpringBoard)
+//        homeSpringBoard.snp.makeConstraints { [unowned slidePageViewPanel] maker in
+//            maker.top.equalTo(slidePageViewPanel.snp.bottom)
+//            maker.bottom.equalToSuperview()
+//            maker.left.equalToSuperview().offset(8)
+//            maker.right.equalToSuperview().offset(-8)
+//            maker.height.equalTo(116)
+//        }
+//        homeSpringBoardViewModel = HomeSpringBoardViewModel(springBoard: homeSpringBoard)
+//        homeSpringBoardViewModel.loadData()
     }
 
     private func registerCell(_ tableView: UITableView) {

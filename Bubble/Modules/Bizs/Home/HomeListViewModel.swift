@@ -37,31 +37,33 @@ class HomeListViewModel: DetailPageViewModel {
     func requestData(houseId: Int64) {
         self.houseId = houseId
         requestHouseRecommend()
-                .map { [unowned self] response -> [TableSectionNode] in
-                    if let data = response?.data {
-                        let dataParser = DetailDataParser.monoid()
-                            <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag)
-                            <- parseOpenAllNode(true) { [unowned self] in
-                                self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
-                            }
-                            <- parseNewHouseListItemNode(data.court?.items, disposeBag: self.disposeBag)
-                            <- parseOpenAllNode(true) {
-                                self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
-                            }
-                        return dataParser.parser([])
-                    } else {
-                        return []
+            .map { [unowned self] response -> [TableSectionNode] in
+                let entrys = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.entryList
+                if let data = response?.data {
+                    let dataParser = DetailDataParser.monoid()
+                        <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag)
+                        <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag)
+                        <- parseOpenAllNode(true) { [unowned self] in
+                            self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
+                        }
+                        <- parseNewHouseListItemNode(data.court?.items, disposeBag: self.disposeBag)
+                        <- parseOpenAllNode(true) {
+                            self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
                     }
+                    return dataParser.parser([])
+                } else {
+                    return []
                 }
-                .subscribe(onNext: { [unowned self] response in
-                    self.dataSource.datas = response
-                    self.tableView?.reloadData()
+            }
+            .subscribe(onNext: { [unowned self] response in
+                self.dataSource.datas = response
+                self.tableView?.reloadData()
                 }, onError: { error in
                     print(error)
-                }, onCompleted: {
+            }, onCompleted: {
 
-                })
-                .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 
     func followThisItem() {
