@@ -236,6 +236,13 @@ fileprivate class SpringBroadItemView: UIView {
 
 func parseSpringboardNode(_ items: [EntryItem], disposeBag: DisposeBag) -> () -> TableSectionNode? {
     let views = items.map { createFavoriteItemViewByEntryId(item: $0) }
+    zip(items, views).forEach { e in
+        let (item, view) = e
+        view.tapGesture.rx.event
+            .map({ (_) -> Void in () })
+            .bind(onNext: createSpringBroadItemSelector(item: item, disposeBag: disposeBag))
+            .disposed(by: disposeBag)
+    }
     return {
         let cellRender = curry(fillSpringboardCell)(views)
         return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
@@ -245,6 +252,19 @@ func parseSpringboardNode(_ items: [EntryItem], disposeBag: DisposeBag) -> () ->
 fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView], cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? SpringBroadCell {
         theCell.setItem(items: items)
+    }
+}
+
+fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: DisposeBag) -> () -> Void {
+    switch item.entryId {
+    case 1:
+        return openCategoryVC(.secondHandHouse, disposeBag: disposeBag)
+    case 2:
+        return openCategoryVC(.newHouse, disposeBag: disposeBag)
+    case 4:
+        return openCategoryVC(.neighborhood, disposeBag: disposeBag)
+    default:
+        return {}
     }
 }
 
@@ -258,5 +278,21 @@ fileprivate func createFavoriteItemViewByEntryId(item: EntryItem) -> SpringBroad
         return SpringBroadItemView(image: #imageLiteral(resourceName: "home-icon-xiaoqu"), title: item.name ?? "找小区")
     default:
         return SpringBroadItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), title: item.name ?? "资讯")
+    }
+}
+
+fileprivate func openCategoryVC(_ houseType: HouseType, disposeBag: DisposeBag) -> () -> Void {
+    return {
+        let vc = CategoryListPageVC(isOpenConditionFilter: true)
+        vc.houseType.accept(houseType)
+        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
+        vc.navBar.isShowTypeSelector = false
+        let nav = EnvContext.shared.rootNavController
+        nav.pushViewController(vc, animated: true)
+        vc.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
     }
 }
