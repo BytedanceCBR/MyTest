@@ -93,6 +93,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: FloorPlanRecommendHeaderCell.self)
             .addCellClass(cellType: FavoriteCell.self)
             .addCellClass(cellType: SpringBroadCell.self)
+            .addCellClass(cellType: GridOpBoardCell.self)
 
 
 }

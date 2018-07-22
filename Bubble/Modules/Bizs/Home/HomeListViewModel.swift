@@ -38,10 +38,12 @@ class HomeListViewModel: DetailPageViewModel {
         self.houseId = houseId
         requestHouseRecommend()
             .map { [unowned self] response -> [TableSectionNode] in
-                let entrys = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.entryList
+                let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
+                let entrys = config?.entryList
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag)
+                        <- parseGridOpNode(config?.opData?.items ?? [], disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag)
                         <- parseOpenAllNode(true) { [unowned self] in
                             self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)

@@ -66,7 +66,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                     print("系统设置")
                 }
                 <- parseContactUsNode(phoneNumber: "100-0937-3859") {
-                    print("客服电话")
+                    Utils.telecall(phoneNumber: "100-0937-3859")
                 }
         return dataParser.parser
     }
