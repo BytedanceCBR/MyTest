@@ -120,7 +120,8 @@ func paresNewHouseListRowItemNode(_ data: [CourtItemInnerEntity]?, disposeBag: D
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
-                type: .node(identifier: SingleImageInfoCell.identifier))
+                type: .node(identifier: SingleImageInfoCell.identifier),
+                editor: nil)
         }
 
     }

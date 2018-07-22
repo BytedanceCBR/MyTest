@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
 class CategoryListViewModel: DetailPageViewModel {
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
@@ -19,7 +20,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     weak var tableView: UITableView?
 
-    private var dataSource: CategoryListDataSource
+    var dataSource: CategoryListDataSource
 
     private var cellFactory: UITableViewCellFactory
 
@@ -29,7 +30,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
 
-    init(tableView: UITableView){
+    init(tableView: UITableView) {
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
         self.dataSource = CategoryListDataSource(cellFactory: cellFactory)
@@ -57,20 +58,20 @@ class CategoryListViewModel: DetailPageViewModel {
     func followThisItem() {
         // do nothing
     }
-    
+
     func requestNewHouseList(query: String) {
         let loader = pageRequestCourtSearch(query: query)
         pageableLoader = { [unowned self] in
             loader()
-                .map { [unowned self] response -> [TableRowNode] in
-                    if let data = response?.data {
-                        return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag)
-                    } else {
-                        return []
+                    .map { [unowned self] response -> [TableRowNode] in
+                        if let data = response?.data {
+                            return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag)
+                        } else {
+                            return []
+                        }
                     }
-                }
-                .subscribe(onNext: self.reloadData())
-                .disposed(by:self.disposeBag)
+                    .subscribe(onNext: self.reloadData())
+                    .disposed(by: self.disposeBag)
         }
         cleanData()
         pageableLoader?()
@@ -88,7 +89,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         }
                     }
                     .subscribe(onNext: self.reloadData())
-                    .disposed(by:self.disposeBag)
+                    .disposed(by: self.disposeBag)
         }
         cleanData()
         pageableLoader?()
@@ -106,7 +107,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         }
                     }
                     .subscribe(onNext: self.reloadData())
-                    .disposed(by:self.disposeBag)
+                    .disposed(by: self.disposeBag)
         }
         cleanData()
         pageableLoader?()
@@ -114,6 +115,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 
     func requestFavoriteData(houseType: HouseType) {
+        dataSource.canCancelFollowUp = true
         let loader = pageRequestFollowUpList(houseType: houseType)
         pageableLoader = { [unowned self] in
             loader()
@@ -125,7 +127,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         }
                     }
                     .subscribe(onNext: self.reloadData())
-                    .disposed(by:self.disposeBag)
+                    .disposed(by: self.disposeBag)
         }
         cleanData()
         pageableLoader?()
@@ -153,6 +155,12 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
 
+    var canCancelFollowUp: Bool = false
+
+    let disposeBag = DisposeBag()
+
+    var showHud: ((String, Int) -> Void)?
+
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
         super.init()
@@ -166,9 +174,9 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         switch datas[indexPath.row].type {
         case let .node(identifier):
             let cell = cellFactory.dequeueReusableCell(
-                identifer: identifier,
-                tableView: tableView,
-                indexPath: indexPath)
+                    identifer: identifier,
+                    tableView: tableView,
+                    indexPath: indexPath)
             datas[indexPath.row].itemRender(cell)
             return cell
         default:
@@ -180,14 +188,28 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         return 0
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if datas.count > indexPath.row {
-            datas[indexPath.row].selector?()
-        }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return canCancelFollowUp
     }
 
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            showHud?("正在取消关注", -1)
+            datas[indexPath.row]
+                    .editor?(editingStyle)
+                    .debug()
+                    .subscribe(onNext: { [unowned self] result in
+                        self.showHud?("已取消关注", 1)
+                    }, onError: { [unowned self] error in
+                        switch error {
+                            case let BizError.bizError(status, message):
+                                self.showHud?(message, 1)
+                            case is Error:
+                                self.showHud?("请求失败", 1)
+                        }
+                    })
+                    .disposed(by: disposeBag)
+        }
     }
 
 }

@@ -7,7 +7,7 @@ import Foundation
 import SnapKit
 import RxSwift
 import RxCocoa
-class MyFavoriteListVC: BaseViewController {
+class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar()
         re.removeGradientColor()
@@ -54,6 +54,7 @@ class MyFavoriteListVC: BaseViewController {
         categoryListVM = CategoryListViewModel(tableView: tableView)
 
         categoryListVM?.requestFavoriteData(houseType: houseType)
+        tableView.delegate = self
         self.categoryListVM?.onDataLoaded = { [weak self] count in
             if count == 0 {
                 self?.showEmptyMaskView()
@@ -80,7 +81,40 @@ class MyFavoriteListVC: BaseViewController {
         emptyMaskView.snp.makeConstraints { maker in
             maker.top.bottom.right.left.equalTo(tableView)
         }
-        emptyMaskView.label.text = "啊哦～你还没有关注的新房"
+        switch houseType {
+        case .newHouse:
+            emptyMaskView.label.text = "啊哦～你还没有关注的新房"
+        case .secondHandHouse:
+            emptyMaskView.label.text = "啊哦～你还没有关注的二手房"
+        case .neighborhood:
+            emptyMaskView.label.text = "啊哦～你还没有关注的小区"
+        case .rentHouse:
+            emptyMaskView.label.text = "啊哦～你还没有关注的租房"
+        }
     }
 
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let datas = categoryListVM?.dataSource.datas {
+            if datas.count > indexPath.row {
+                datas[indexPath.row].selector?()
+            }
+        }
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.delete
+    }
+
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "取消订阅"
+    }
 }

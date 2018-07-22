@@ -133,7 +133,8 @@ func parseFloorPanItemsNode(
             TableRowNode(
                     itemRender: $0.0,
                     selector: $0.1,
-                    type: .node(identifier: FloorPanHouseTypeCell.identifier))
+                    type: .node(identifier: FloorPanHouseTypeCell.identifier),
+                    editor: nil)
         }
     }
 }

@@ -168,7 +168,8 @@ func parseTimelineNode(_ items: [TimeLine.Item]) -> () -> [TableRowNode] {
             return TableRowNode(
                     itemRender: render(offset == 0)(true),
                     selector: nil,
-                    type: .node(identifier: TimelineCell.identifier))
+                    type: .node(identifier: TimelineCell.identifier),
+                    editor: nil)
         })
         return renders
     }

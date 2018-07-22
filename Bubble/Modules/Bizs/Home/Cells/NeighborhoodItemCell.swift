@@ -172,7 +172,8 @@ func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, dispo
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
-                type: .node(identifier: NeighborhoodItemCell.identifier))
+                type: .node(identifier: NeighborhoodItemCell.identifier),
+                editor: nil)
         })
     } else {
         return []

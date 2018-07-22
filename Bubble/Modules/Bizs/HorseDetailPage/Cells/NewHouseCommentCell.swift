@@ -168,7 +168,8 @@ func parseNewHouseCommentNode(_ items: [NewHouseComment.Item]) -> () -> [TableRo
             TableRowNode(
                 itemRender: render(true),
                 selector: nil,
-                type: .node(identifier: NewHouseCommentCell.identifier))
+                type: .node(identifier: NewHouseCommentCell.identifier),
+                editor: nil)
         })
         return renders
     }

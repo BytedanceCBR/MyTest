@@ -80,6 +80,7 @@ struct UserFollowData: Mappable {
         var pricePerSqm: String?
         var tags: [Tag]?
         var images: [ImageItem] = []
+        var houseType: Int?
 
         init?(map: Map) {
 
@@ -94,6 +95,7 @@ struct UserFollowData: Mappable {
             pricePerSqm <- map["price_per_sqm"]
             tags <- map["tags"]
             images <- map["images"]
+            houseType <- map["house_type"]
         }
     }
 

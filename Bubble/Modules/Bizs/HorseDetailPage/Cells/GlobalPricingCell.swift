@@ -154,7 +154,7 @@ func parseGlobalPricingNode(_ items: [GlobalPrice.Item]) -> () -> [TableRowNode]
             return TableRowNode(
                 itemRender: render,
                 selector: nil,
-                type: .node(identifier: GlobalPricingListCell.identifier))
+                type: .node(identifier: GlobalPricingListCell.identifier), editor: nil)
         })
         return renders
     }

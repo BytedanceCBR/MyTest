@@ -149,10 +149,16 @@ struct TableSectionNode {
     let type: TableCellType
 }
 
+enum TableRowEditResult {
+    case success(String)
+    case error(Error)
+}
+
 struct TableRowNode {
     let itemRender: TableCellRender
     var selector: TableCellSelectedProcess? = nil
     let type: TableCellType
+    var editor: ((UITableViewCellEditingStyle) -> Observable<TableRowEditResult>)?
 }
 
 struct DetailDataParser {

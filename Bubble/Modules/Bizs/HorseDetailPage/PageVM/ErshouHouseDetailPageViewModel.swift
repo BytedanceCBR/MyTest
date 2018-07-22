@@ -290,7 +290,8 @@ func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
-                type: .node(identifier: SingleImageInfoCell.identifier))
+                type: .node(identifier: SingleImageInfoCell.identifier),
+                editor: nil)
         })
     } else {
         return []
@@ -325,20 +326,52 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITable
 }
 
 func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag) -> [TableRowNode] {
-    let selectors = data.items
+    let adapters = data.items
         .filter { $0.followId != nil }
-        .map {
-            openErshouHouseDetailPage(houseId: Int64($0.followId!)!, disposeBag: disposeBag)
-    }
-    let renders = data.items.map(curry(fillFollowUpListItemCell))
-    return zip(selectors, renders).map({ e -> TableRowNode in
-        let (selector, render) = e
+        .map { item -> (TableCellSelectedProcess, (BaseUITableViewCell) -> Void, (UITableViewCellEditingStyle) -> Observable<TableRowEditResult>) in
+            let selector = openErshouHouseDetailPage(houseId: Int64(item.followId!)!, disposeBag: disposeBag)
+            let render = curry(fillFollowUpListItemCell)(item)
+            let editor = { (style: UITableViewCellEditingStyle) -> Observable<TableRowEditResult> in
+                if let ht = HouseType(rawValue: item.houseType ?? -1), let followId = item.followId {
+                    return cancelFollowUp(houseType: ht, followId: followId)
+                } else {
+                    return .empty()
+                }
+            }
+            return (selector, render, editor)
+        }
+
+    return adapters.map({ e -> TableRowNode in
+        let (selector, render, editor) = e
         return TableRowNode(
             itemRender: render,
             selector: selector,
-            type: .node(identifier: SingleImageInfoCell.identifier))
+            type: .node(identifier: SingleImageInfoCell.identifier),
+            editor: editor)
     })
 
+}
+
+func cancelFollowUp(houseType: HouseType, followId: String) -> Observable<TableRowEditResult> {
+    if let actionType = FollowActionType(rawValue: houseType.rawValue) {
+        return requestCancelFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: actionType)
+                .map { response -> TableRowEditResult in
+                    if response?.status ?? -1 != 0 {
+                        return TableRowEditResult.success(response?.message ?? "取消成功")
+                    } else {
+                        if let status = response?.status, let message = response?.message {
+                            return TableRowEditResult.error(BizError.bizError(status, message))
+                        } else {
+                            return TableRowEditResult.error(BizError.unknownError)
+                        }
+                    }
+                }
+    } else {
+        return .empty()
+    }
 }
 
 func fillFollowUpListItemCell(_ data: UserFollowData.Item, cell: BaseUITableViewCell) {
