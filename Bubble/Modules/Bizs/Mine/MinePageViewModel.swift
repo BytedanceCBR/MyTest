@@ -46,7 +46,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
         let userInfo = EnvContext.shared.client.accountConfig.userInfo.value
         let dataParser = DetailDataParser.monoid()
                 <- parseUserInfoNode(userInfo, disposeBag: disposeBag)
-                <- parseFavoriteNode()
+                <- parseFavoriteNode(disposeBag: disposeBag)
                 <- parseOptionNode(
                 icon: #imageLiteral(resourceName: "star-simple-line-icons"),
                 label: "我的收藏",

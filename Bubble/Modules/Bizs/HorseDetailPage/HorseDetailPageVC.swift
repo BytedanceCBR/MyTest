@@ -46,6 +46,10 @@ class HorseDetailPageVC: BaseViewController {
 
     var isShowBottomBar: Bool
 
+    var quickLoginVM: QuickLoginAlertViewModel?
+
+    var hud: MBProgressHUD?
+
     init(houseId: Int64,
          houseType: HouseType,
          isShowBottomBar: Bool = false,
@@ -65,6 +69,9 @@ class HorseDetailPageVC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+        let thehud = MBProgressHUD()
+        self.hud = thehud
+        self.view.addSubview(thehud)
         detailPageViewModel = pageViewModelProvider?(tableView)
 
         setupNavBar()
@@ -139,11 +146,20 @@ class HorseDetailPageVC: BaseViewController {
                 }
                 .bind(to: bottomBar.favouriteBtn.rx.isSelected)
                 .disposed(by: disposeBag)
+
             bottomBar.contactBtn.rx.tap
                     .withLatestFrom(detailPageViewModel.contactPhone)
                     .bind(onNext: Utils.telecall)
                     .disposed(by: disposeBag)
         }
+
+
+        let alert = BubbleAlertController(title: "变价通知", message: nil, preferredStyle: .alert)
+        quickLoginVM = QuickLoginAlertViewModel(
+                title: "变价通知",
+                subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机",
+                alert: alert)
+        self.present(alert, animated: true)
     }
 
     private func setupNavBar() {

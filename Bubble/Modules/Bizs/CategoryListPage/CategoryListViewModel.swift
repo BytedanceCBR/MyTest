@@ -25,7 +25,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var pageableLoader: (() -> Void)?
 
-    var onDataLoaded: (() -> Void)?
+    var onDataLoaded: ((Int) -> Void)?
 
     var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
 
@@ -53,7 +53,9 @@ class CategoryListViewModel: DetailPageViewModel {
         }
     }
 
+
     func followThisItem() {
+        // do nothing
     }
     
     func requestNewHouseList(query: String) {
@@ -110,11 +112,30 @@ class CategoryListViewModel: DetailPageViewModel {
         pageableLoader?()
     }
 
+
+    func requestFavoriteData(houseType: HouseType) {
+        let loader = pageRequestFollowUpList(houseType: houseType)
+        pageableLoader = { [unowned self] in
+            loader()
+                    .map { [unowned self] response -> [TableRowNode] in
+                        if let data = response?.data {
+                            return parseFollowUpListRowItemNode(data, disposeBag: self.disposeBag)
+                        } else {
+                            return []
+                        }
+                    }
+                    .subscribe(onNext: self.reloadData())
+                    .disposed(by:self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+    }
+
     func reloadData() -> ([TableRowNode]) -> Void {
         return { [unowned self] datas in
             self.dataSource.datas = self.dataSource.datas + datas
             self.tableView?.reloadData()
-            self.onDataLoaded?()
+            self.onDataLoaded?(datas.count)
         }
     }
 
@@ -160,7 +181,9 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        datas[indexPath.row].selector?()
+        if datas.count > indexPath.row {
+            datas[indexPath.row].selector?()
+        }
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {

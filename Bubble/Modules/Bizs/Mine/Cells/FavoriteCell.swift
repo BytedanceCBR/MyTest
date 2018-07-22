@@ -8,7 +8,8 @@
 
 import UIKit
 import SnapKit
-
+import RxCocoa
+import RxSwift
 class FavoriteCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -85,6 +86,10 @@ fileprivate class FavoriteItemView: UIView {
         return re
     }()
 
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
 
     init(image: UIImage, title: String) {
         super.init(frame: CGRect.zero)
@@ -104,6 +109,8 @@ fileprivate class FavoriteItemView: UIView {
             maker.centerX.equalTo(IconView)
             maker.bottom.equalTo(-18)
         }
+
+        addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -111,13 +118,34 @@ fileprivate class FavoriteItemView: UIView {
     }
 }
 
-func parseFavoriteNode() -> () -> TableSectionNode? {
+func parseFavoriteNode(disposeBag: DisposeBag) -> () -> TableSectionNode? {
     let items: [FavoriteItemView] = [
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-ershoufang"), title: "二手房"),
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-xinfang"), title: "新房"),
-        FavoriteItemView(image: #imageLiteral(resourceName: "icon-zufang"), title: "租房"),
+//        FavoriteItemView(image: #imageLiteral(resourceName: "icon-zufang"), title: "租房"),
         FavoriteItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), title: "小区"),
     ]
+    let selectors = [HouseType.secondHandHouse,
+                     HouseType.newHouse,
+                     HouseType.neighborhood].map { (houseType) in
+        return {
+            let vc = MyFavoriteListVC(houseType: houseType)
+            vc.navBar.backBtn.rx.tap
+                    .subscribe(onNext: { void in
+                        EnvContext.shared.rootNavController.popViewController(animated: true)
+                    })
+                    .disposed(by: disposeBag)
+            EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+        }
+    }
+    zip(items, selectors).forEach { (e) -> Void in
+        let (item, selector) = e
+        item.tapGesture.rx.event
+            .subscribe(onNext: { (_) in
+                selector()
+            })
+            .disposed(by: disposeBag)
+    }
     return {
         let cellRender = curry(fillFavoriteCell)(items)
         return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: FavoriteCell.identifier))

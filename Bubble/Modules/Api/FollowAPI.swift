@@ -68,3 +68,48 @@ func requestCancelFollow(
             }
         })
 }
+
+func requestFollowUpList(
+        houseType: HouseType,
+        offset: Int = 0,
+        limit: Int = 10) -> Observable<UserFollowListResponse?> {
+
+    let url = "\(EnvContext.networkConfig.host)/f100/api/get_user_follow?house_type=\(houseType.rawValue)"
+    return TTNetworkManager.shareInstance().rx
+            .requestForBinary(
+                    url: url,
+                    params: ["house_type": houseType.rawValue,
+                             "offset": offset,
+                             "limit": limit],
+                    method: "GET",
+                    needCommonParams: true)
+            .map({ (data) -> NSString? in
+                NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            })
+            .map({ (payload) -> UserFollowListResponse? in
+                if let payload = payload {
+                    let response = UserFollowListResponse(JSONString: payload as String)
+                    return response
+                } else {
+                    return nil
+                }
+            })
+
+}
+
+func pageRequestFollowUpList(
+        houseType: HouseType,
+        limit: Int = 10) -> () -> Observable<UserFollowListResponse?> {
+    var offset: Int = 0
+    return {
+        return requestFollowUpList(
+                houseType: houseType,
+                offset: offset,
+                limit: limit)
+                .do(onNext: { (response) in
+                    if let count = response?.data?.items.count {
+                        offset = offset + count
+                    }
+                })
+    }
+}

@@ -63,7 +63,7 @@ class Client {
         TTNetworkManager.shareInstance().commonParams = commonParams.params()
     }
 
-    func onStart() {
+    @objc func onStart() {
         setupLocationManager()
         generalBizconfig.load()
         if let searchConfigCache = searchConfigCache {

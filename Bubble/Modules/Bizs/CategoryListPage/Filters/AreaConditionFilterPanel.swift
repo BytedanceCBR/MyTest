@@ -40,7 +40,7 @@ func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
     if nodePath.count == 0 {
         return .noCondition("区域")
     } else if nodePath.count == 1 {
-        if let node = nodePath.first, node.isEmpty != 0 /*判定是否是不限*/ {
+        if let node = nodePath.first, node.isEmpty != 1 /*判定是否是不限*/ {
             return .condition(node.label)
         } else {
             return .noCondition("区域")

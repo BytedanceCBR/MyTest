@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
-protocol DetailPageViewModel {
+protocol DetailPageViewModel: class {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
@@ -26,12 +26,29 @@ protocol DetailPageViewModel {
 }
 
 extension DetailPageViewModel {
+
     func followIt(
         houseType: HouseType,
         followAction: FollowActionType,
         followId: String,
         disposeBag: DisposeBag) -> () -> Void {
+        var loginDisposeBag = DisposeBag()
         return {
+            let userInfo = EnvContext.shared.client.accountConfig.userInfo
+
+            if userInfo.value == nil {
+                openQuickLoginVC(disposeBag: disposeBag)
+                return
+            }
+
+            userInfo
+                .filter { $0 != nil }
+                .subscribe(onNext: { [weak self] _ in
+                    self?.followThisItem()
+                    loginDisposeBag = DisposeBag()
+                })
+                .disposed(by: loginDisposeBag)
+
             requestFollow(
                 houseType: houseType,
                 followId: followId,
@@ -53,7 +70,25 @@ extension DetailPageViewModel {
             followAction: FollowActionType,
             followId: String,
             disposeBag: DisposeBag) -> () -> Void {
+            var loginDisposeBag = DisposeBag()
         return {
+
+            let userInfo = EnvContext.shared.client.accountConfig.userInfo
+
+            if userInfo.value == nil {
+                openQuickLoginVC(disposeBag: disposeBag)
+                return
+            }
+
+            userInfo
+                    .filter { $0 != nil }
+                    .subscribe(onNext: { [weak self] _ in
+                        self?.followThisItem()
+                        loginDisposeBag = DisposeBag()
+                    })
+                    .disposed(by: loginDisposeBag)
+            
+
             requestCancelFollow(
                     houseType: houseType,
                     followId: followId,

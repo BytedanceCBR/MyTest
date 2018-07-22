@@ -324,6 +324,49 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity, cell: BaseUITable
     }
 }
 
+func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag) -> [TableRowNode] {
+    let selectors = data.items
+        .filter { $0.followId != nil }
+        .map {
+            openErshouHouseDetailPage(houseId: Int64($0.followId!)!, disposeBag: disposeBag)
+    }
+    let renders = data.items.map(curry(fillFollowUpListItemCell))
+    return zip(selectors, renders).map({ e -> TableRowNode in
+        let (selector, render) = e
+        return TableRowNode(
+            itemRender: render,
+            selector: selector,
+            type: .node(identifier: SingleImageInfoCell.identifier))
+    })
+
+}
+
+func fillFollowUpListItemCell(_ data: UserFollowData.Item, cell: BaseUITableViewCell) {
+    if let theCell = cell as? SingleImageInfoCell {
+        theCell.majorTitle.text = data.title
+        theCell.extendTitle.text = data.description
+
+        let text = NSMutableAttributedString()
+        let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
+            createTagAttrString(
+                    item.content,
+                    textColor: hexStringToUIColor(hex: item.textColor),
+                    backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+        })
+
+        attrTexts?.forEach({ (attrText) in
+            text.append(attrText)
+        })
+
+        theCell.areaLabel.attributedText = text
+        theCell.priceLabel.text = data.pricePerSqm
+
+        if let img = data.images.first , let url = img.url {
+            theCell.setImageByUrl(url)
+        }
+    }
+}
+
 func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(

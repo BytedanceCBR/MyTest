@@ -221,7 +221,7 @@ class CategoryListPageVC: UIViewController {
                     }
                 })
                 .disposed(by: disposeBag)
-        self.categoryListViewModel?.onDataLoaded = { [unowned self] in
+        self.categoryListViewModel?.onDataLoaded = { [unowned self] _ in
             self.footIndicatorView.stopAnimating()
         }
     }

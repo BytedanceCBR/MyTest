@@ -14,5 +14,6 @@ class BaseViewController: UIViewController {
         view.backgroundColor = UIColor.white
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.interactivePopGestureRecognizer!.isEnabled = true
     }
 }

@@ -72,13 +72,14 @@ struct UserFollowData: Mappable {
 
     struct Item: Mappable {
 
-        var followId: Int64?
+        var followId: String?
         var title: String?
         var description: String?
         var saleInfo: String?
         var price: String?
         var pricePerSqm: String?
-        var tags: [String: Any]?
+        var tags: [Tag]?
+        var images: [ImageItem] = []
 
         init?(map: Map) {
 
@@ -92,6 +93,25 @@ struct UserFollowData: Mappable {
             price <- map["price"]
             pricePerSqm <- map["price_per_sqm"]
             tags <- map["tags"]
+            images <- map["images"]
+        }
+    }
+
+    struct Tag: Mappable {
+        var id: Int = 0
+        var content: String = ""
+        var backgroundColor: String?
+        var textColor: String?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            content <- map["content"]
+            backgroundColor <- map["background_color"]
+            textColor <- map["text_color"]
         }
     }
 }

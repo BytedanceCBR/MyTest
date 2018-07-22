@@ -35,7 +35,7 @@ func requestUserUnread(query: String = "") -> Observable<UserUnreadMessageRespon
 }
 
 
-func requestUserList(listId: String = "", minCursor: String = "", limit: String="0", query: String = "") -> Observable<UserListMessageResponse?> {
+func requestUserMessageList(listId: String = "", minCursor: String = "", limit: String="0", query: String = "") -> Observable<UserListMessageResponse?> {
     var url = "\(EnvContext.networkConfig.host)/f100/api/msg/list?list_id=\(listId)&minCursor=\(minCursor)&limit=\(limit)"
     if !query.isEmpty {
         url = "\(url)&\(query)"

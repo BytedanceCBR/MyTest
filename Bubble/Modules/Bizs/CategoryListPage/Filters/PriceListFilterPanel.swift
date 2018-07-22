@@ -71,10 +71,8 @@ func parsePriceConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
 
 func parsePriceSearchCondition(nodePath: [Node]) -> (String) -> String {
     return {
-        if let first = nodePath.first {
-            return "\($0)&\(first.externalConfig)"
-        } else {
-            return $0
+        return nodePath.reduce($0) { (result, node) in
+            "\(result)&\(node.externalConfig)"
         }
     }
 }

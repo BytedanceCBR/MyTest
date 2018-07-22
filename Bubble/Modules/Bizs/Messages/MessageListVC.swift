@@ -12,7 +12,13 @@ import RxCocoa
 import RxSwift
 
 class MessageListVC: BaseViewController, UITableViewDelegate {
-    
+
+    lazy var navBar: CategorySearchNavBar = {
+        let result = CategorySearchNavBar()
+        result.searchInput.placeholder = "小区/商圈/地铁"
+        return result
+    }()
+
     lazy var tableView: UITableView = {
         let re = UITableView(frame: CGRect.zero, style: .grouped)
         re.separatorStyle = .none
@@ -37,19 +43,30 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+
+        view.addSubview(navBar)
+        navBar.snp.makeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+        }
+
         // Do any additional setup after loading the view.
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { (maker) in
-            maker.top.bottom.right.left.equalToSuperview()
+            maker.bottom.right.left.equalToSuperview()
+            maker.top.equalTo(navBar.snp.bottom)
         }
         tableView.dataSource = tableListViewModel
         tableView.delegate = tableListViewModel
         
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
         if let messageId = messageId {
-            requestUserList(listId: messageId, minCursor: "", limit: "10", query: "")
+            requestUserMessageList(
+                    listId: messageId,
+                    minCursor: "",
+                    limit: "10",
+                    query: "")
+                .debug()
                 .subscribe(onNext: { [unowned self] (responsed) in
-                    
                     if let responseData = responsed?.data?.items {
 //                        let minCursor = responsed?.data?.minCursor
 //                        let hasMore = responsed?.data?.hasMore
