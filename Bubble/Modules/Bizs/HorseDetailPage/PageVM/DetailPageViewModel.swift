@@ -13,6 +13,10 @@ protocol DetailPageViewModel: class {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
+//    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
+//
+//    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
+
     var contactPhone: BehaviorRelay<String?> { get }
 
     var tableView: UITableView? { get set }
@@ -52,10 +56,10 @@ extension DetailPageViewModel {
                 houseType: houseType,
                 followId: followId,
                 actionType: followAction)
-                .debug()
                 .subscribe(onNext: { response in
                     if response?.data?.followStatus ?? 1 == 0 {
                         self.followStatus.accept(.success(true))
+                        EnvContext.shared.toast.showToast("已收藏")
                     }
                 }, onError: { error in
                     
@@ -90,10 +94,11 @@ extension DetailPageViewModel {
                     houseType: houseType,
                     followId: followId,
                     actionType: followAction)
-                    .debug()
                     .subscribe(onNext: { response in
                         if response?.data?.followStatus ?? 1 == 0 {
+                            EnvContext.shared.toast.dismissToast()
                             self.followStatus.accept(.success(false))
+                            EnvContext.shared.toast.showToast("取消收藏")
                         }
                     }, onError: { error in
 
@@ -101,6 +106,7 @@ extension DetailPageViewModel {
                     .disposed(by: disposeBag)
         }
     }
+
 }
 
 typealias TableCellRender = (BaseUITableViewCell) -> Void

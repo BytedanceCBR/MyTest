@@ -13,6 +13,10 @@ class NewHouseInfoCell: BaseUITableViewCell {
         return "NewHouseInfo"
     }
 
+    var priceChangeNotifyRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+
+    var openChangeNotifyRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+
     let labelKeyFontSize: CGFloat = 12
 
     let labelKeyLeftPandding: CGFloat = 15
@@ -101,7 +105,7 @@ class NewHouseInfoCell: BaseUITableViewCell {
         let attriStr = NSAttributedString(
                 string: "开盘通知",
                 attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ,
-                             NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999")])
+                             NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#222222")])
         result.setAttributedTitle(attriStr, for: .normal)
         return result
     }()
@@ -185,6 +189,26 @@ class NewHouseInfoCell: BaseUITableViewCell {
             maker.height.equalTo(54)
             maker.top.equalTo(moreBtn.snp.bottom)
         }
+
+        openChangeNotifyRelay
+            .skip(1)
+            .bind { [unowned self] b in
+                self.openNotify
+                    .setAttributedTitle(setContentByStatus(
+                        text: "开盘通知",
+                        status: !b), for: .normal)
+            }
+            .disposed(by: disposeBag)
+
+        priceChangeNotifyRelay
+            .skip(1)
+            .bind { [unowned self] b in
+                self.priceChangedNotify
+                    .setAttributedTitle(setContentByStatus(
+                        text: "变价通知",
+                        status: !b), for: .normal)
+            }
+            .disposed(by: disposeBag)
     }
 
     override func prepareForReuse() {
@@ -199,14 +223,29 @@ class NewHouseInfoCell: BaseUITableViewCell {
 }
 
 
-func parseNewHouseCoreInfoNode(_ newHouseData: NewHouseData, floorPanId: String, disposeBag: DisposeBag) -> () -> TableSectionNode {
+func parseNewHouseCoreInfoNode(
+    _ newHouseData: NewHouseData,
+    floorPanId: String,
+    priceChangeHandler: @escaping (BehaviorRelay<Bool>) -> Void,
+    openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
+    disposeBag: DisposeBag) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(disposeBag)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NewHouseInfoCell.identifier))
+        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            label: "",
+            type: .node(identifier: NewHouseInfoCell.identifier))
     }
 }
 
-func fillNewHouseCoreInfoCell(_ data: NewHouseData, floorPanId: String, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
+func fillNewHouseCoreInfoCell(
+        _ data: NewHouseData,
+        floorPanId: String,
+        priceChangeHandler: @escaping (BehaviorRelay<Bool>) -> Void,
+        openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
+        disposeBag: DisposeBag,
+        cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseInfoCell {
         theCell.pricingPerSqmLabel.text = data.coreInfo?.pricingPerSqm
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
@@ -215,5 +254,43 @@ func fillNewHouseCoreInfoCell(_ data: NewHouseData, floorPanId: String, disposeB
             .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag))
             .disposed(by: theCell.disposeBag)
 
+        theCell.priceChangedNotify
+                .setAttributedTitle(setContentByStatus(
+                text: "变价通知",
+                status: data.userStatus?.pricingSubStauts ?? 0 == 0), for: .normal)
+
+        theCell.openNotify
+                .setAttributedTitle(setContentByStatus(
+                text: "开盘通知",
+                status: data.userStatus?.courtOpenSubStatus ?? 0 == 0), for: .normal)
+
+        theCell.openNotify.rx.tap
+                .subscribe { event in
+                    openCourtNotify(theCell.openChangeNotifyRelay)
+                }
+                .disposed(by: disposeBag)
+        theCell.priceChangedNotify.rx.tap
+                .subscribe { event in
+                    priceChangeHandler(theCell.priceChangeNotifyRelay)
+                }
+                .disposed(by: disposeBag)
+
     }
+}
+
+fileprivate func setContentByStatus(text: String, status: Bool) -> NSMutableAttributedString {
+    let color = status ? hexStringToUIColor(hex: "#222222") : hexStringToUIColor(hex: "#999999")
+    let re = NSMutableAttributedString(
+            string: text,
+            attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                         NSAttributedStringKey.foregroundColor: color])
+    return re
+}
+
+fileprivate func createButtonAttributeText(text: String, textColor: String, font: UIFont) -> NSMutableAttributedString {
+    let re = NSMutableAttributedString(
+            string: text,
+            attributes: [NSAttributedStringKey.font: font,
+                         NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: textColor)])
+    return re
 }

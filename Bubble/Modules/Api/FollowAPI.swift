@@ -15,8 +15,9 @@ enum FollowActionType: Int {
     case ershouHouse = 2
     case rentHouse = 3
     case beighborhood = 4
-    case openFloorPan = 5
-    case newHousePriceChanged = 6
+    case newHousePriceChanged = 5
+    case openFloorPan = 6
+
 }
 
 func requestFollow(

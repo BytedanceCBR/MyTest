@@ -15,11 +15,11 @@ class QuickLoginViewModel {
 
     let onResponse: BehaviorRelay<RequestSMSCodeResult?> = BehaviorRelay<RequestSMSCodeResult?>(value: nil)
 
+    let loginResponse: BehaviorRelay<RequestQuickLoginResult?> = BehaviorRelay<RequestQuickLoginResult?>(value: nil)
+
     private let disposeBag = DisposeBag()
 
     weak var sendSMSBtn: UIButton?
-
-//    var sourceObservable: Observable<Int>
 
     init(){
 
@@ -43,15 +43,20 @@ class QuickLoginViewModel {
                 }
             }
 
+            EnvContext.shared.toast.showLoadingToast("请求短信验证码")
             getSMSVerifyCodeCommand(
                 mobileString: phoneNumber,
                 bdCodeType: BDAccountStatusChangedReason.mobileSMSCodeLogin.rawValue)
                 .debug()
                 .subscribe(onNext: { [unowned self] result in
+                    EnvContext.shared.toast.dismissToast()
                     self.onResponse.accept(.successed)
                     EnvContext.shared.client.accountConfig.userInfo.accept(BDAccount.shared().user)
+                    EnvContext.shared.toast.showToast("短信验证码发送成功")
                 }, onError: { error in
                     self.onResponse.accept(.error(error))
+                    EnvContext.shared.toast.dismissToast()
+                    EnvContext.shared.toast.showToast("短信发送请求失败")
                 })
                 .disposed(by: disposeBag)
         } else {
@@ -68,13 +73,18 @@ class QuickLoginViewModel {
     }
 
     func quickLogin(mobile: String, smsCode: String) {
+        EnvContext.shared.toast.showLoadingToast("正在登录")
         requestQuickLogin(mobile: mobile, smsCode: smsCode)
                 .debug()
                 .subscribe(onNext: { [unowned self] void in
+                    EnvContext.shared.toast.dismissToast()
+                    EnvContext.shared.toast.showToast("登录成功")
                     EnvContext.shared.client.accountConfig.userInfo.accept(BDAccount.shared().user)
                     self.onResponse.accept(.successed)
+                    self.loginResponse.accept(.successed)
+                    EnvContext.shared.client.accountConfig.setUserPhone(phoneNumber: mobile)
                 }, onError: { error in
-
+                    self.loginResponse.accept(.error(error))
                 })
                 .disposed(by: disposeBag)
     }

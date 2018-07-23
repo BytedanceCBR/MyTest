@@ -123,7 +123,7 @@ fileprivate class GridView: UIView {
 }
 
 func parseGridOpNode(_ items: [OpData.Item], disposeBag: DisposeBag) -> () -> TableSectionNode? {
-    assert(items.count == 4)
+//    assert(items.count == 4)
     if items.count >= 4 {
         let its = items.take(4)
         return {

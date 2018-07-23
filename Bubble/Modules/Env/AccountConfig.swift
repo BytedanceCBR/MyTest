@@ -10,6 +10,8 @@ class AccountConfig {
 
     let userInfo: BehaviorRelay<BDAccountUser?> = BehaviorRelay<BDAccountUser?>(value: nil)
 
+    private let KEY_USER_PHONE = "user_phone_key"
+
     init() {
 
     }
@@ -34,5 +36,14 @@ class AccountConfig {
         }
 
         BDAccount.shared().accountConf = conf
+    }
+    
+    func setUserPhone(phoneNumber: String) {
+        UserDefaults.standard.set(phoneNumber, forKey: KEY_USER_PHONE)
+        UserDefaults.standard.synchronize()
+    }
+
+    func getUserPhone() -> String? {
+        return UserDefaults.standard.string(forKey: KEY_USER_PHONE)
     }
 }

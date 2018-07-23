@@ -24,6 +24,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
 
+    var showQuickLoginAlert: ((String, String) -> Void)?
+
+    var showFollowupAlert: ((String, String) -> Observable<Void>)?
+
+    var closeAlert: (() -> Void)?
+
     init(tableView: UITableView){
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
@@ -64,7 +70,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data)
                 <- parseNewHouseNameNode(data)
-                <- parseNewHouseCoreInfoNode(data, floorPanId: "\(courtId)", disposeBag: disposeBag)
+                <- parseNewHouseCoreInfoNode(
+                    data,
+                    floorPanId: "\(courtId)",
+                    priceChangeHandler: self.handlePriceChangeNotify(closeAlert: closeAlert ?? {}),
+                    openCourtNotify: self.handleOpenCourtNotify(closeAlert: closeAlert ?? {}),
+                    disposeBag: disposeBag)
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data)
@@ -94,6 +105,108 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         }
     }
 
+    func openCommentList(courtId: Int64) {
+        let detailPage = HouseCommentVC(courtId: courtId)
+        detailPage.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+
+    func openFloorPanList(courtId: Int64) {
+        let detailPage = FloorPanListVC(courtId: courtId)
+        detailPage.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    EnvContext.shared.rootNavController.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
+        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    }
+
+//MARK: - 订阅
+    func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
+        return { [unowned self] (isFollowup) in
+            if EnvContext.shared.client.accountConfig.userInfo.value == nil {
+                self.showQuickLoginAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
+                EnvContext.shared.client.accountConfig.userInfo
+                        .skip(1)
+                        .filter { $0 != nil }
+                        .map { _ in () }
+                        .bind(onNext: self.followIt(
+                                houseType: .newHouse,
+                                followAction: .openFloorPan,
+                                followId: "\(self.houseId)",
+                                disposeBag: self.disposeBag))
+                        .disposed(by: self.disposeBag)
+            } else {
+                let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
+                        .flatMap({ [unowned self] () -> Observable<UserFollowResponse?> in
+                            EnvContext.shared.toast.showLoadingToast("订阅开盘通知")
+                            return self.followItObv(houseType: .newHouse, followAction: .openFloorPan, followId: "\(self.houseId)")
+                        })
+                obv?.subscribe(onNext: { [unowned self] response in
+                    if let status = response?.status, status == 0 {
+                        EnvContext.shared.toast.dismissToast()
+                        self.closeAlert?()
+                        EnvContext.shared.toast.showToast("开盘通知订阅成功")
+                    }
+                }, onError: { error in
+
+                }).disposed(by: self.disposeBag)
+                obv?.map({ (response) -> Bool in
+                            return response != nil && response?.status == 0
+                        })
+                        .bind(to: isFollowup)
+                        .disposed(by: self.disposeBag)
+            }
+        }
+    }
+
+    func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
+        return { [unowned self] (isFollowup) in
+            if EnvContext.shared.client.accountConfig.userInfo.value == nil {
+                self.showQuickLoginAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
+                EnvContext.shared.client.accountConfig.userInfo
+                        .skip(1)
+                        .filter { $0 != nil }
+                        .map { _ in () }
+                        .bind(onNext: self.followIt(
+                                houseType: .newHouse,
+                                followAction: .newHousePriceChanged,
+                                followId: "\(self.houseId)",
+                                disposeBag: self.disposeBag))
+                        .disposed(by: self.disposeBag)
+            } else {
+                let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
+                    .flatMap({ [unowned self] () ->  Observable<UserFollowResponse?> in
+                        EnvContext.shared.toast.showLoadingToast("订阅变价通知")
+                        return self.followItObv(houseType: .newHouse, followAction: .newHousePriceChanged, followId: "\(self.houseId)")
+                    })
+
+
+                obv?.subscribe(onNext: { [unowned self] response in
+                    if let status = response?.status, status == 0 {
+                        EnvContext.shared.toast.dismissToast()
+                        self.closeAlert?()
+                        EnvContext.shared.toast.showToast("变价通知订阅成功")
+                    }
+                }, onError: { error in
+
+                }).disposed(by: self.disposeBag)
+
+                obv?
+                    .map({ (response) -> Bool in
+                        closeAlert()
+                        return response != nil && response?.status == 0
+                    })
+                    .bind(to: isFollowup)
+                    .disposed(by: self.disposeBag)
+            }
+        }
+    }
+
     func followThisItem() {
         switch followStatus.value {
         case let .success(status):
@@ -114,28 +227,41 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         }
     }
 
-    func openCommentList(courtId: Int64) {
-        let detailPage = HouseCommentVC(courtId: courtId)
-        detailPage.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
-                EnvContext.shared.rootNavController.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
+    func followItObv(
+            houseType: HouseType,
+            followAction: FollowActionType,
+            followId: String) -> Observable<UserFollowResponse?> {
+        return requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
     }
-
-    func openFloorPanList(courtId: Int64) {
-        let detailPage = FloorPanListVC(courtId: courtId)
-        detailPage.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    EnvContext.shared.rootNavController.popViewController(animated: true)
-                })
-                .disposed(by: disposeBag)
-        EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
-    }
-
-
 }
+
+//MARK: - ViewModel构造函数
+
+func getNewHouseDetailPageViewModel(
+        detailPageVC: HorseDetailPageVC,
+        tableView: UITableView) -> NewHouseDetailPageViewModel {
+    let re = NewHouseDetailPageViewModel(tableView: tableView)
+    re.showQuickLoginAlert = { [weak detailPageVC] (title, subTitle) in
+        detailPageVC?.showQuickLoginAlert(title: title, subTitle: subTitle)
+    }
+
+    re.showFollowupAlert = { [unowned detailPageVC] (title, subTitle) -> Observable<Void> in
+        return detailPageVC
+            .showFollowupAlert(title: title, subTitle: subTitle)
+    }
+
+    re.closeAlert = { [weak detailPageVC] in
+        detailPageVC?.closeAlertView()
+    }
+    return re
+}
+
+
+
+//MARK: - 页面跳转
 
 func openRelatedNeighborhoodList(neighborhoodId: String, disposeBag: DisposeBag) {
     let listVC = RelatedNeighborhoodListVC(neighborhoodId: neighborhoodId)
@@ -156,13 +282,6 @@ func openGlobalPricingList(courtId: Int64, disposeBag: DisposeBag) -> () -> Void
             })
             .disposed(by: disposeBag)
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
-    }
-}
-
-
-func getNewHouseDetailPageViewModel() -> (UITableView) -> DetailPageViewModel {
-    return { tableView in
-        NewHouseDetailPageViewModel(tableView: tableView)
     }
 }
 
@@ -196,6 +315,8 @@ func openFloorPanCategoryPage(floorPanId: String, disposeBag: DisposeBag) -> () 
         EnvContext.shared.rootNavController.pushViewController(detailPage, animated: true)
     }
 }
+
+//MARK: - DataSource
 
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 

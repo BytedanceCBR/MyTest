@@ -103,8 +103,8 @@ struct UserStatus: Mappable {
     
     mutating func mapping(map: Map) {
         houseSubStatus <- map["house_sub_status"]
-        pricingSubStauts <- map["pricing_sub_stauts"]
-        courtOpenSubStatus <- map["court_open_sub_stauts"]
+        pricingSubStauts <- map["pricing_sub_status"]
+        courtOpenSubStatus <- map["court_open_sub_status"]
         courtSubStatus <- map["court_sub_status"]
     }
 }

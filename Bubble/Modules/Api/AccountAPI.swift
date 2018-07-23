@@ -60,6 +60,12 @@ enum RequestSMSCodeResult {
     case successed
 }
 
+enum RequestQuickLoginResult {
+    case needCaptchaCode(UIImage)
+    case error(Error?)
+    case successed
+}
+
 
 func getSMSVerifyCodeCommand(mobileString: String, bdCodeType: Int) -> Observable<RequestSMSCodeResult> {
     let dataDelegate = GetSMSCodeDataDelegate(mobileNumber: mobileString, bdCodeType: bdCodeType)

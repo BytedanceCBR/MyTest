@@ -164,8 +164,9 @@ func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag) -> () -> Voi
         let detailPage = HorseDetailPageVC(
                 houseId: houseId,
                 houseType: .newHouse,
-                isShowBottomBar: true,
-                provider: getNewHouseDetailPageViewModel())
+                isShowBottomBar: true)
+        detailPage.pageViewModelProvider = curry(getNewHouseDetailPageViewModel)(detailPage)
+
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 EnvContext.shared.rootNavController.popViewController(animated: true)

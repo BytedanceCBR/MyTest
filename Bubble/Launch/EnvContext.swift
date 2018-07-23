@@ -22,6 +22,10 @@ class EnvContext {
     lazy var client: Client = {
         Client()
     }()
+
+    lazy var toast: ToastAlertCenter = {
+        ToastAlertCenter()
+    }()
 }
 
 class NetworkConfig {

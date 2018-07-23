@@ -23,7 +23,7 @@ class HorseDetailPageVC: BaseViewController {
 
     private var detailPageViewModel: DetailPageViewModel?
 
-    private var pageViewModelProvider: DetailPageViewModelProvider?
+    var pageViewModelProvider: DetailPageViewModelProvider?
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -50,6 +50,8 @@ class HorseDetailPageVC: BaseViewController {
 
     var hud: MBProgressHUD?
 
+    var alert: BubbleAlertController?
+
     init(houseId: Int64,
          houseType: HouseType,
          isShowBottomBar: Bool = false,
@@ -58,6 +60,17 @@ class HorseDetailPageVC: BaseViewController {
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
         self.pageViewModelProvider = provider
+        super.init(nibName: nil, bundle: nil)
+        self.automaticallyAdjustsScrollViewInsets = false
+    }
+
+
+    init(houseId: Int64,
+         houseType: HouseType,
+         isShowBottomBar: Bool = false) {
+        self.houseId = houseId
+        self.houseType = houseType
+        self.isShowBottomBar = isShowBottomBar
         super.init(nibName: nil, bundle: nil)
         self.automaticallyAdjustsScrollViewInsets = false
     }
@@ -152,14 +165,6 @@ class HorseDetailPageVC: BaseViewController {
                     .bind(onNext: Utils.telecall)
                     .disposed(by: disposeBag)
         }
-
-
-        let alert = BubbleAlertController(title: "变价通知", message: nil, preferredStyle: .alert)
-        quickLoginVM = QuickLoginAlertViewModel(
-                title: "变价通知",
-                subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机",
-                alert: alert)
-        self.present(alert, animated: true)
     }
 
     private func setupNavBar() {
@@ -189,6 +194,36 @@ class HorseDetailPageVC: BaseViewController {
         }
     }
 
+    func showQuickLoginAlert(title: String, subTitle: String) {
+        let alert = BubbleAlertController(
+            title: title,
+            message: nil,
+            preferredStyle: .alert)
+        quickLoginVM = QuickLoginAlertViewModel(
+                title: title,
+                subTitle: subTitle,
+                alert: alert)
+        self.present(alert, animated: true)
+    }
+
+    func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
+        alert = BubbleAlertController(
+                title: title,
+                message: nil,
+                preferredStyle: .alert)
+        let phoneNumber = EnvContext.shared.client.accountConfig.getUserPhone()
+        let alertView = createPhoneConfirmAlert(
+                title: title,
+                subTitle: subTitle,
+                phoneNumber: phoneNumber ?? "",
+                bubbleAlertController: alert!)
+        self.present(alert!, animated: true)
+        return alertView.configBtn.rx.tap.map { () }
+    }
+
+    func closeAlertView() {
+        alert?.dismiss(animated: true)
+    }
 
 }
 

@@ -85,7 +85,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     func requestData(houseId: Int64) {
         self.houseId = houseId
         requestErshouHouseDetail(houseId: houseId)
-                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)

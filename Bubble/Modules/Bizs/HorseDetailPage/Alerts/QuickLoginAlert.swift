@@ -17,6 +17,8 @@ class QuickLoginAlertViewModel {
 
     var hud: MBProgressHUD?
 
+    var onLoginSuccess: ((RequestQuickLoginResult) -> Void)?
+
     init(title: String, subTitle: String, alert: BubbleAlertController) {
         self.quickLoginAlert = alert
         self.quickLoginVM = QuickLoginViewModel()
