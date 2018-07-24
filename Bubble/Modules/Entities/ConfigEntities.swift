@@ -27,6 +27,7 @@ struct GeneralConfigData: Mappable {
     var cityList: [CityItem] = []
     var entryList: [EntryItem] = []
     var currentCityId: Int64?
+    var currentCityName: String?
     var opData: OpData?
     var banners: [Banner]?
 
@@ -38,7 +39,8 @@ struct GeneralConfigData: Mappable {
         hotCityList <- map["hot_city_list"]
         cityList <- map["city_list"]
         entryList <- map["entry_info"]
-        currentCityId <- map["current_city"]
+        currentCityId <- map["current_city_id"]
+        currentCityName <- map["current_city_name"]
         opData <- map["op_data"]
         banners <- map["banners"]
     }

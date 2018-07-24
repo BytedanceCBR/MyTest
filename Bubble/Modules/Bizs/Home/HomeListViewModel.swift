@@ -45,11 +45,11 @@ class HomeListViewModel: DetailPageViewModel {
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag)
                         <- parseGridOpNode(config?.opData?.items ?? [], disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag)
-                        <- parseOpenAllNode(true) { [unowned self] in
+                        <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
                             self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
                         }
                         <- parseNewHouseListItemNode(data.court?.items, disposeBag: self.disposeBag)
-                        <- parseOpenAllNode(true) {
+                        <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0) {
                             self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
                     }
                     return dataParser.parser([])

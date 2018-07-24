@@ -81,7 +81,15 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
-        self.detailPageViewModel?.requestData(houseId: 0)
+        let reloadObv = Observable.combineLatest(
+                EnvContext.shared.client.configCacheSubject,
+                EnvContext.shared.client.generalBizconfig.currentSelectCityId)
+        reloadObv
+                .debug()
+                .filter { $0.1 != nil }
+                .map { _ in 0 }
+                .bind(onNext: detailPageViewModel!.requestData)
+                .disposed(by: disposeBag)
         setupNormalNavBar()
 
         let stateControl = HomeHeaderStateControl()
