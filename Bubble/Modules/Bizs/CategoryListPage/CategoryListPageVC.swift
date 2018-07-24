@@ -174,9 +174,55 @@ class CategoryListPageVC: UIViewController {
                 })
                 .disposed(by: disposeBag)
 
-        EnvContext.shared.client.configCacheSubject
-                .map {
-                    $0?.filter
+//        EnvContext.shared.client.configCacheSubject
+//                .map {
+//                    $0?.filter
+//                }
+//                .map { items in
+//                    let result: [SearchConditionItem] = items?
+//                            .map(transferSearchConfigFilterItemTo) ?? []
+//                    let panelData: [[Node]] = items?.map {
+//                        if let options = $0.options {
+//                            return transferSearchConfigOptionToNode(
+//                                    options: options,
+//                                    isSupportMulti: $0.supportMulti)
+//                        } else {
+//                            return []
+//                        }
+//                    } ?? []
+//                    return (result, panelData)
+//                }
+//                .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
+//                    let reload: () -> Void = { [weak self] in
+//                        self?.conditionFilterViewModel?.reloadConditionPanel()
+//                    }
+//                    zip(items.0, items.1).forEach({ (e) in
+//                        let (item, nodes) = e
+//                        item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
+//                    })
+//                    self.conditionFilterViewModel?.filterConditions = items.0
+//                    self.conditionFilterViewModel?.reloadConditionPanel()
+//                })
+//                .disposed(by: disposeBag)
+
+        Observable
+                .zip(houseType, EnvContext.shared.client.configCacheSubject)
+                .filter { (e) in
+                    let (_, config) = e
+                    return config != nil
+                }
+                .map { (e) -> ([SearchConfigFilterItem]?) in
+                    let (type, config) = e
+                    switch type {
+                        case HouseType.newHouse:
+                            return config?.courtFilter
+                        case HouseType.secondHandHouse:
+                            return config?.filter
+                        case HouseType.neighborhood:
+                            return config?.neighborhoodFilter
+                        default:
+                            return config?.filter
+                    }
                 }
                 .map { items in
                     let result: [SearchConditionItem] = items?

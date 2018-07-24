@@ -194,18 +194,20 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            showHud?("正在取消关注", -1)
+            EnvContext.shared.toast.showLoadingToast("正在取消关注")
             datas[indexPath.row]
                     .editor?(editingStyle)
                     .debug()
-                    .subscribe(onNext: { [unowned self] result in
-                        self.showHud?("已取消关注", 1)
-                    }, onError: { [unowned self] error in
+                    .subscribe(onNext: { result in
+                        EnvContext.shared.toast.dismissToast()
+                        EnvContext.shared.toast.showToast("已取消关注")
+                    }, onError: { error in
+                        EnvContext.shared.toast.dismissToast()
                         switch error {
                             case let BizError.bizError(status, message):
-                                self.showHud?(message, 1)
-                            case is Error:
-                                self.showHud?("请求失败", 1)
+                                EnvContext.shared.toast.showToast(message)
+                            default:
+                                EnvContext.shared.toast.showToast("请求失败")
                         }
                     })
                     .disposed(by: disposeBag)

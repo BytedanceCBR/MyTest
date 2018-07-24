@@ -38,7 +38,6 @@ class BDImageViewProvider: PageViewProvider {
     }
 
     func reloadData() {
-        imageRequest?.cancel()
         if let urlStr = imageSelector?(index) {
             imageView.tag = index
             imageRequest = imageView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
