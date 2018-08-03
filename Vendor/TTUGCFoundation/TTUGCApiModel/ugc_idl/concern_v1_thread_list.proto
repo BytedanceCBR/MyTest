@@ -1,0 +1,19 @@
+import "enum_type.proto";
+import "common.proto";
+
+message concern_v1_thread_list_request{
+        required string concern_id      = 1;    //关心id
+        required int32 count            = 2;    //请求的数量
+        required int64 min_cursor       = 3;    //最小的游标
+        required int64 max_cursor       = 4;    //最大的游标
+}
+
+message concern_v1_thread_list_response{
+        required int32 err_no                           = 1;
+        optional string err_tips                        = 2;
+        optional TipsStruct tips                        = 3;    //提醒信息
+        optional HasMoreType has_more                   = 4;    //是否有更多数据
+        required int64 min_cursor                       = 5;
+        required int64 max_cursor                       = 6;
+        repeated UgcDataStruct threads                  = 7;    //帖子列表(包括置顶帖子数)
+}

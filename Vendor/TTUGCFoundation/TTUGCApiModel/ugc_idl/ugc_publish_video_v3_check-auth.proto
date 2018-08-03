@@ -1,0 +1,11 @@
+
+import "enum_type.proto";
+import "common.proto";
+message ugc_publish_video_v3_check_auth_request{
+}
+
+message ugc_publish_video_v3_check_auth_response{
+        required int32 err_no = 1;
+        required PublisherPermissionStruct publisher_permission_control = 2;    //帖子/动态id
+        optional string err_tips = 3;
+}

@@ -1,0 +1,16 @@
+PODS:
+  - TTAvatar (0.1.0)
+
+DEPENDENCIES:
+  - TTAvatar (from `../`)
+
+EXTERNAL SOURCES:
+  TTAvatar:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TTAvatar: e807219319700d620721399c3a9a6e68527a8da0
+
+PODFILE CHECKSUM: 3920e73c28db1cfc01b1749b5bb5fc232bbb428b
+
+COCOAPODS: 1.4.0

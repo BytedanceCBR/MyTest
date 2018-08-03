@@ -2,8 +2,9 @@
 .gitattributes
 *xcuserdata*
 *.bcsymbolmap
-Carthage/*
-Carthage/
+Article/Carthage/*
+Article/Carthage/
+Article/Pods
 .vscode/
 node_modules
 package-lock.json

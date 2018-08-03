@@ -1,0 +1,289 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/Pods_TTThemed_Example.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "Pods-TTThemed_Example-umbrella.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/Target Support Files/Pods-TTThemed_Example/Pods-TTThemed_Example-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "Pods_TTThemed_Example-Swift.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/Pods_TTThemed_Example.framework/Headers/Pods_TTThemed_Example-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/Pods_TTThemed_Example.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Intermediates/Pods.build/Debug-iphonesimulator/Pods-TTThemed_Example.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTBaseLib/TTBaseLib.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "NSDataAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSDataAdditions/NSDataAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSDictionary+TTAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSDictionaryAdditions/NSDictionary+TTAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSMutableArrayAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSMutableArrayAdditions/NSMutableArrayAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSObject+MultiDelegates.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSObjectAdditions/NSObject+MultiDelegates.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSObject+TTAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSObjectAdditions/NSObject+TTAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSStringAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSStringAdditions/NSStringAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NSTimer+Additions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/NSTimerAdditions/NSTimer+Additions.h"
+        },
+        {
+          'type': 'file',
+          'name': "NetworkUtilities.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTNetworkHelper/NetworkUtilities.h"
+        },
+        {
+          'type': 'file',
+          'name': "OpenUDID.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTDeviceHelper/OpenUDID.h"
+        },
+        {
+          'type': 'file',
+          'name': "SSRobust.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTRobust/SSRobust.h"
+        },
+        {
+          'type': 'file',
+          'name': "SSWeakObject.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTRobust/SSWeakObject.h"
+        },
+        {
+          'type': 'file',
+          'name': "Singleton.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTBaseTool/Singleton.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTBaseLib-Swift.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTBaseLib/TTBaseLib.framework/Headers/TTBaseLib-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTBaseLib-umbrella.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/Target Support Files/TTBaseLib/TTBaseLib-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTBaseMacro.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTBaseTool/TTBaseMacro.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTDeviceHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTDeviceHelper/TTDeviceHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTLabelTextHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTBaseTool/TTLabelTextHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTMessageCenter.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTMidWare/TTMessageCenter.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTModuleBridge.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTMidWare/TTModuleBridge.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTNetworkHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTNetworkHelper/TTNetworkHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTSandBoxHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTSandBoxHelper/TTSandBoxHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTServiceCenter.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTMidWare/TTServiceCenter.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTStringHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTBaseTool/TTStringHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTUIResponderHelper.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTUIResponderHelper/TTUIResponderHelper.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTURLUtils.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTBaseTool/TTURLUtils.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIButton+TTAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/UIButtonAdditions/UIButton+TTAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIDevice+TTAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/UIDeviceAdditions/UIDevice+TTAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIImageAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/UIImageAdditions/UIImageAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "UITextView+TTAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/UITextViewAdditions/UITextView+TTAdditions.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIViewAdditions.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTBaseLib/TTBaseLib/TTCategory/UIViewAdditions/UIViewAdditions.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTBaseLib/TTBaseLib.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Intermediates/Pods.build/Debug-iphonesimulator/TTBaseLib.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTReachability/TTReachability.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "TTReachability-Swift.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTReachability/TTReachability.framework/Headers/TTReachability-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTReachability-umbrella.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/Target Support Files/TTReachability/TTReachability-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTReachability.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/TTReachability/TTReachability/Classes/TTReachability.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTReachability/TTReachability.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Intermediates/Pods.build/Debug-iphonesimulator/TTReachability.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTThemed/TTThemed.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "SSThemed.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/SSThemed.h"
+        },
+        {
+          'type': 'file',
+          'name': "SSViewBase.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/SSViewBase.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTThemeConst.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/TTThemeConst.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTThemeManager.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/TTThemeManager.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTThemed-Swift.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTThemed/TTThemed.framework/Headers/TTThemed-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "TTThemed-umbrella.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Pods/Target Support Files/TTThemed/TTThemed-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIColor+TTThemeExtension.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/UIColor+TTThemeExtension.h"
+        },
+        {
+          'type': 'file',
+          'name': "UIImage+TTThemeExtension.h",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/TTThemed/Classes/UIImage+TTThemeExtension.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Products/Debug-iphonesimulator/TTThemed/TTThemed.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/fengjingjun/work/Demo/TTPods/tt_pods_theme/Example/Build/Intermediates/Pods.build/Debug-iphonesimulator/TTThemed.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

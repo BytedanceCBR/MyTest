@@ -1,0 +1,498 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D896EBB1FCFD2D9002E03A2 /* VERSION.md in Resources */ = {isa = PBXBuildFile; fileRef = 2D896EBA1FCFD2D9002E03A2 /* VERSION.md */; };
+		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
+		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
+		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
+		A50B9E4B1EF64D7E00E0E19E /* TTFlexManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B9E4A1EF64D7E00E0E19E /* TTFlexManager.m */; };
+		A50DF7D61EEA9E1E002A5253 /* NSTimer+TargetRetainRef.m in Sources */ = {isa = PBXBuildFile; fileRef = A50DF7D51EEA9E1E002A5253 /* NSTimer+TargetRetainRef.m */; };
+		A5257EA01EF294430067A4D6 /* TTTestDelayDeallocViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5257E9F1EF294430067A4D6 /* TTTestDelayDeallocViewController.m */; };
+		A5AB36B81EF1188900E69BF1 /* TTTestAppViewControlller.m in Sources */ = {isa = PBXBuildFile; fileRef = A5AB36B71EF1188900E69BF1 /* TTTestAppViewControlller.m */; };
+		A5F59C8F1ED7D59300884157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5F59C8E1ED7D59300884157 /* Images.xcassets */; };
+		A5F59CB61ED7D5F200884157 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A5F59CA81ED7D5F200884157 /* main.m */; };
+		A5F59CB71ED7D5F200884157 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5F59CAA1ED7D5F200884157 /* LaunchScreen.storyboard */; };
+		A5F59CB81ED7D5F200884157 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5F59CAC1ED7D5F200884157 /* Main.storyboard */; };
+		A5F59CB91ED7D5F200884157 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A5F59CAE1ED7D5F200884157 /* InfoPlist.strings */; };
+		A5F59CBB1ED7D5F200884157 /* TTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A5F59CB31ED7D5F200884157 /* TTAppDelegate.m */; };
+		A5F59CBC1ED7D5F200884157 /* TTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5F59CB51ED7D5F200884157 /* TTViewController.m */; };
+		A5F6FCA71EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5F6FCA61EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2D896EBA1FCFD2D9002E03A2 /* VERSION.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = VERSION.md; path = ../VERSION.md; sourceTree = "<group>"; };
+		40B46A8032321327BB2EEADE /* TTAccountLogin.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TTAccountLogin.podspec; path = ../TTAccountLogin.podspec; sourceTree = "<group>"; };
+		6003F58A195388D20070C39A /* TTAccountLoginDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TTAccountLoginDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
+		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
+		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
+		96FD52CEC6EA5BA5309B0052 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		A50B9E491EF64D7E00E0E19E /* TTFlexManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFlexManager.h; sourceTree = "<group>"; };
+		A50B9E4A1EF64D7E00E0E19E /* TTFlexManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTFlexManager.m; sourceTree = "<group>"; };
+		A50DF7D41EEA9E1E002A5253 /* NSTimer+TargetRetainRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+TargetRetainRef.h"; sourceTree = "<group>"; };
+		A50DF7D51EEA9E1E002A5253 /* NSTimer+TargetRetainRef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+TargetRetainRef.m"; sourceTree = "<group>"; };
+		A5257E9E1EF294430067A4D6 /* TTTestDelayDeallocViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTestDelayDeallocViewController.h; sourceTree = "<group>"; };
+		A5257E9F1EF294430067A4D6 /* TTTestDelayDeallocViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTestDelayDeallocViewController.m; sourceTree = "<group>"; };
+		A5AB36B61EF1188900E69BF1 /* TTTestAppViewControlller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTestAppViewControlller.h; sourceTree = "<group>"; };
+		A5AB36B71EF1188900E69BF1 /* TTTestAppViewControlller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTestAppViewControlller.m; sourceTree = "<group>"; };
+		A5F59C8E1ED7D59300884157 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A5F59CA81ED7D5F200884157 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A5F59CAB1ED7D5F200884157 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A5F59CAD1ED7D5F200884157 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A5F59CAF1ED7D5F200884157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A5F59CB01ED7D5F200884157 /* TTAccountLoginDemo-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TTAccountLoginDemo-Info.plist"; sourceTree = "<group>"; };
+		A5F59CB11ED7D5F200884157 /* TTAccountLoginDemo-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TTAccountLoginDemo-Prefix.pch"; sourceTree = "<group>"; };
+		A5F59CB21ED7D5F200884157 /* TTAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTAppDelegate.h; sourceTree = "<group>"; };
+		A5F59CB31ED7D5F200884157 /* TTAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAppDelegate.m; sourceTree = "<group>"; };
+		A5F59CB41ED7D5F200884157 /* TTViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTViewController.h; sourceTree = "<group>"; };
+		A5F59CB51ED7D5F200884157 /* TTViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTViewController.m; sourceTree = "<group>"; };
+		A5F6FCA51EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTestNSTimerCyRefViewController.h; sourceTree = "<group>"; };
+		A5F6FCA61EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTestNSTimerCyRefViewController.m; sourceTree = "<group>"; };
+		FF4A701234FECDEF26166B82 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6003F587195388D20070C39A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
+				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
+				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6003F581195388D10070C39A = {
+			isa = PBXGroup;
+			children = (
+				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
+				6003F593195388D20070C39A /* TTAccountLoginDemo */,
+				6003F5B5195388D20070C39A /* Tests */,
+				6003F58C195388D20070C39A /* Frameworks */,
+				6003F58B195388D20070C39A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6003F58B195388D20070C39A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6003F58A195388D20070C39A /* TTAccountLoginDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6003F58C195388D20070C39A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6003F58D195388D20070C39A /* Foundation.framework */,
+				6003F58F195388D20070C39A /* CoreGraphics.framework */,
+				6003F591195388D20070C39A /* UIKit.framework */,
+				6003F5AF195388D20070C39A /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6003F593195388D20070C39A /* TTAccountLoginDemo */ = {
+			isa = PBXGroup;
+			children = (
+				A5F59CA61ED7D5F200884157 /* Sources */,
+				A5F59C8D1ED7D59300884157 /* Resources */,
+			);
+			path = TTAccountLoginDemo;
+			sourceTree = "<group>";
+		};
+		6003F5B5195388D20070C39A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6003F5BB195388D20070C39A /* Tests.m */,
+				6003F5B6195388D20070C39A /* Supporting Files */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		6003F5B6195388D20070C39A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6003F5B7195388D20070C39A /* Tests-Info.plist */,
+				6003F5B8195388D20070C39A /* InfoPlist.strings */,
+				606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		60FF7A9C1954A5C5007DD14C /* Podspec Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				2D896EBA1FCFD2D9002E03A2 /* VERSION.md */,
+				40B46A8032321327BB2EEADE /* TTAccountLogin.podspec */,
+				FF4A701234FECDEF26166B82 /* README.md */,
+				96FD52CEC6EA5BA5309B0052 /* LICENSE */,
+			);
+			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		A50B9E481EF64D7E00E0E19E /* TTFlexManager */ = {
+			isa = PBXGroup;
+			children = (
+				A50B9E491EF64D7E00E0E19E /* TTFlexManager.h */,
+				A50B9E4A1EF64D7E00E0E19E /* TTFlexManager.m */,
+			);
+			path = TTFlexManager;
+			sourceTree = "<group>";
+		};
+		A5F59C8D1ED7D59300884157 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A5F59C8E1ED7D59300884157 /* Images.xcassets */,
+			);
+			name = Resources;
+			path = TTAccountLoginDemo/Resources;
+			sourceTree = SOURCE_ROOT;
+		};
+		A5F59CA61ED7D5F200884157 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A50B9E481EF64D7E00E0E19E /* TTFlexManager */,
+				A5F59CA71ED7D5F200884157 /* AppEntry */,
+				A5F59CB41ED7D5F200884157 /* TTViewController.h */,
+				A5F59CB51ED7D5F200884157 /* TTViewController.m */,
+				A5F6FCA51EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.h */,
+				A5F6FCA61EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.m */,
+				A50DF7D41EEA9E1E002A5253 /* NSTimer+TargetRetainRef.h */,
+				A50DF7D51EEA9E1E002A5253 /* NSTimer+TargetRetainRef.m */,
+			);
+			name = Sources;
+			path = TTAccountLoginDemo/Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		A5F59CA71ED7D5F200884157 /* AppEntry */ = {
+			isa = PBXGroup;
+			children = (
+				A5F59CA81ED7D5F200884157 /* main.m */,
+				A5F59CA91ED7D5F200884157 /* Supporting Files */,
+				A5F59CB01ED7D5F200884157 /* TTAccountLoginDemo-Info.plist */,
+				A5F59CB11ED7D5F200884157 /* TTAccountLoginDemo-Prefix.pch */,
+				A5F59CB21ED7D5F200884157 /* TTAppDelegate.h */,
+				A5F59CB31ED7D5F200884157 /* TTAppDelegate.m */,
+				A5AB36B61EF1188900E69BF1 /* TTTestAppViewControlller.h */,
+				A5AB36B71EF1188900E69BF1 /* TTTestAppViewControlller.m */,
+				A5257E9E1EF294430067A4D6 /* TTTestDelayDeallocViewController.h */,
+				A5257E9F1EF294430067A4D6 /* TTTestDelayDeallocViewController.m */,
+			);
+			path = AppEntry;
+			sourceTree = "<group>";
+		};
+		A5F59CA91ED7D5F200884157 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A5F59CAA1ED7D5F200884157 /* LaunchScreen.storyboard */,
+				A5F59CAC1ED7D5F200884157 /* Main.storyboard */,
+				A5F59CAE1ED7D5F200884157 /* InfoPlist.strings */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6003F589195388D20070C39A /* TTAccountLoginDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TTAccountLoginDemo" */;
+			buildPhases = (
+				6003F586195388D20070C39A /* Sources */,
+				6003F587195388D20070C39A /* Frameworks */,
+				6003F588195388D20070C39A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TTAccountLoginDemo;
+			productName = TTAccountLogin;
+			productReference = 6003F58A195388D20070C39A /* TTAccountLoginDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6003F582195388D10070C39A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = TT;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = Nice2Me;
+				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = CG6329SXZK;
+					};
+				};
+			};
+			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "TTAccountLoginDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6003F581195388D10070C39A;
+			productRefGroup = 6003F58B195388D20070C39A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6003F589195388D20070C39A /* TTAccountLoginDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6003F588195388D20070C39A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5F59CB81ED7D5F200884157 /* Main.storyboard in Resources */,
+				A5F59CB91ED7D5F200884157 /* InfoPlist.strings in Resources */,
+				2D896EBB1FCFD2D9002E03A2 /* VERSION.md in Resources */,
+				A5F59C8F1ED7D59300884157 /* Images.xcassets in Resources */,
+				A5F59CB71ED7D5F200884157 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6003F586195388D20070C39A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5F59CBB1ED7D5F200884157 /* TTAppDelegate.m in Sources */,
+				A50DF7D61EEA9E1E002A5253 /* NSTimer+TargetRetainRef.m in Sources */,
+				A5F59CB61ED7D5F200884157 /* main.m in Sources */,
+				A5257EA01EF294430067A4D6 /* TTTestDelayDeallocViewController.m in Sources */,
+				A50B9E4B1EF64D7E00E0E19E /* TTFlexManager.m in Sources */,
+				A5F59CBC1ED7D5F200884157 /* TTViewController.m in Sources */,
+				A5AB36B81EF1188900E69BF1 /* TTTestAppViewControlller.m in Sources */,
+				A5F6FCA71EE92E8F008A66D6 /* TTTestNSTimerCyRefViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6003F5B8195388D20070C39A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6003F5B9195388D20070C39A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A5F59CAA1ED7D5F200884157 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A5F59CAB1ED7D5F200884157 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A5F59CAC1ED7D5F200884157 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A5F59CAD1ED7D5F200884157 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A5F59CAE1ED7D5F200884157 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A5F59CAF1ED7D5F200884157 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6003F5BD195388D20070C39A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6003F5BE195388D20070C39A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6003F5C0195388D20070C39A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = CG6329SXZK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/TTAccountLoginDemo\"",
+				);
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTAccountLoginDemo/Sources/AppEntry/TTAccountLoginDemo-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/TTAccountLoginDemo/Sources/AppEntry/TTAccountLoginDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6003F5C1195388D20070C39A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = CG6329SXZK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$PODS_CONFIGURATION_BUILD_DIR/TTAccountLoginDemo\"",
+				);
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTAccountLoginDemo/Sources/AppEntry/TTAccountLoginDemo-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/TTAccountLoginDemo/Sources/AppEntry/TTAccountLoginDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MODULE_NAME = ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6003F585195388D10070C39A /* Build configuration list for PBXProject "TTAccountLoginDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6003F5BD195388D20070C39A /* Debug */,
+				6003F5BE195388D20070C39A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "TTAccountLoginDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6003F5C0195388D20070C39A /* Debug */,
+				6003F5C1195388D20070C39A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6003F582195388D10070C39A /* Project object */;
+}

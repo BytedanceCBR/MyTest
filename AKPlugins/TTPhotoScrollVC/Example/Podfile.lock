@@ -1,0 +1,180 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - FLAnimatedImage (1.0.12)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - Godzippa (1.1.0)
+  - KVOController (1.1.0)
+  - libwebp (0.6.0):
+    - libwebp/core (= 0.6.0)
+    - libwebp/dec (= 0.6.0)
+    - libwebp/demux (= 0.6.0)
+    - libwebp/dsp (= 0.6.0)
+    - libwebp/enc (= 0.6.0)
+    - libwebp/mux (= 0.6.0)
+    - libwebp/utils (= 0.6.0)
+    - libwebp/webp (= 0.6.0)
+  - libwebp/core (0.6.0):
+    - libwebp/webp
+  - libwebp/dec (0.6.0):
+    - libwebp/core
+  - libwebp/demux (0.6.0):
+    - libwebp/core
+  - libwebp/dsp (0.6.0):
+    - libwebp/core
+  - libwebp/enc (0.6.0):
+    - libwebp/core
+  - libwebp/mux (0.6.0):
+    - libwebp/core
+  - libwebp/utils (0.6.0):
+    - libwebp/core
+  - libwebp/webp (0.6.0)
+  - Masonry (1.0.1)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
+  - SDWebImage/GIF (4.0.0):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.0.0):
+    - libwebp
+    - SDWebImage/Core
+  - TTBaseLib (1.0.9):
+    - TTBaseLib/TTBaseTool (= 1.0.9)
+    - TTBaseLib/TTBusinessManager (= 1.0.9)
+    - TTBaseLib/TTCategory (= 1.0.9)
+    - TTBaseLib/TTDeviceHelper (= 1.0.9)
+    - TTBaseLib/TTNetworkHelper (= 1.0.9)
+    - TTBaseLib/TTRobust (= 1.0.9)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.9)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.9)
+  - TTBaseLib/TTBaseTool (1.0.9)
+  - TTBaseLib/TTBusinessManager (1.0.9)
+  - TTBaseLib/TTCategory (1.0.9)
+  - TTBaseLib/TTDeviceHelper (1.0.9)
+  - TTBaseLib/TTNetworkHelper (1.0.9):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.9)
+  - TTBaseLib/TTSandBoxHelper (1.0.9)
+  - TTBaseLib/TTUIResponderHelper (1.0.9)
+  - TTImage (0.6.1):
+    - SDWebImage/Core (= 4.0.0)
+    - SDWebImage/GIF (= 4.0.0)
+    - SDWebImage/WebP (= 4.0.0)
+    - TTThemed
+  - TTImagePicker (0.1.7):
+    - TTBaseLib
+    - TTUIWidget
+  - TTImagePreviewAnimateManager (1.0.1):
+    - TTUIWidget
+  - TTNetworkManager (2.1.0):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+  - TTPhotoScrollVC (0.0.5):
+    - SDWebImage
+    - TTImagePicker
+    - TTImagePreviewAnimateManager
+    - TTThemed
+    - TTTracker
+  - TTReachability (0.1.2)
+  - TTServiceProtocols (0.0.1)
+  - TTThemed (0.1.1):
+    - TTBaseLib
+  - TTTracker (0.8.2):
+    - FMDB (~> 2.6.2)
+    - TTNetworkManager
+  - TTUIWidget (0.8.15):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+    - TTImage
+    - TTThemed
+
+DEPENDENCIES:
+  - TTBaseLib (= 1.0.9)
+  - TTImage (from `git@code.byted.org:TTIOS/tt_pods_image.git`, branch `dev_sd4`)
+  - TTImagePicker (from `git@code.byted.org:TTIOS/tt_pods_image_picker.git`, branch `master`)
+  - TTNetworkManager (= 2.1.0)
+  - TTPhotoScrollVC (from `../`)
+  - TTServiceProtocols (from `git@code.byted.org:TTIOS/tt_pods_service_protocols.git`, branch `develop`)
+  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, branch `dev_sd4`)
+
+EXTERNAL SOURCES:
+  TTImage:
+    :branch: dev_sd4
+    :git: git@code.byted.org:TTIOS/tt_pods_image.git
+  TTImagePicker:
+    :branch: master
+    :git: git@code.byted.org:TTIOS/tt_pods_image_picker.git
+  TTPhotoScrollVC:
+    :path: "../"
+  TTServiceProtocols:
+    :branch: develop
+    :git: git@code.byted.org:TTIOS/tt_pods_service_protocols.git
+  TTUIWidget:
+    :branch: dev_sd4
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
+
+CHECKOUT OPTIONS:
+  TTImage:
+    :commit: 027bbd81e14f0824d1113406c738353df0238a63
+    :git: git@code.byted.org:TTIOS/tt_pods_image.git
+  TTImagePicker:
+    :commit: 545d07c81eca3e61a754c8ab0129d0d394422048
+    :git: git@code.byted.org:TTIOS/tt_pods_image_picker.git
+  TTServiceProtocols:
+    :commit: 05b18a378b00bad8b23f61ab56d72a4406ecfd3b
+    :git: git@code.byted.org:TTIOS/tt_pods_service_protocols.git
+  TTUIWidget:
+    :commit: 72fefebb2f291e0bfa96dbc376a2a569636000bb
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+  TTBaseLib: f9eeecf2c2d5025808803db92d914b4417f3cfe9
+  TTImage: 6e9d5542fe4530a51aa0e90bd4fee40a8e2cac91
+  TTImagePicker: dca569c665c730017e1c3795efbda69361391268
+  TTImagePreviewAnimateManager: d49630a49ce3e6e302ab77cd30c173b84dfb9cc9
+  TTNetworkManager: 9cf0160da8a981831f968142b5e3ffb7f3bfc704
+  TTPhotoScrollVC: 5806b4dbbaddfc6aa5e56364e5a15f666ef3c974
+  TTReachability: 32b145f5eb46ad3456def02b188e75d6464b6492
+  TTServiceProtocols: 75c1264136f03991aa4bd5148b61b4adfc5c4475
+  TTThemed: 0103264be37f965b0bfc15670d22f700f8ca1dd7
+  TTTracker: 41c94a58255df477c7f926cb6bae0c89eecd4e98
+  TTUIWidget: ab9babfe3f79f459ab207cd5c404497f6381596f
+
+PODFILE CHECKSUM: 3b779659771a5a3cdce29214c9ae5f0c5b025ea3
+
+COCOAPODS: 1.0.1

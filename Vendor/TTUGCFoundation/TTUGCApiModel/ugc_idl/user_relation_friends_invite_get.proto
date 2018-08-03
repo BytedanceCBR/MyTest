@@ -1,0 +1,12 @@
+import "common.proto";
+
+message user_relation_friends_invite_request{
+        required int32 offset = 1;
+        required int32 count = 2;
+}
+
+message user_relation_friends_invite_response{
+        required string message = 1;
+        required InviteFriendsDataStruct data = 2;
+        optional string error_tips = 3;
+}

@@ -1,0 +1,103 @@
+PODS:
+  - FLAnimatedImage (1.0.12)
+  - KVOController (1.1.0)
+  - libwebp (0.6.0):
+    - libwebp/core (= 0.6.0)
+    - libwebp/dec (= 0.6.0)
+    - libwebp/demux (= 0.6.0)
+    - libwebp/dsp (= 0.6.0)
+    - libwebp/enc (= 0.6.0)
+    - libwebp/mux (= 0.6.0)
+    - libwebp/utils (= 0.6.0)
+    - libwebp/webp (= 0.6.0)
+  - libwebp/core (0.6.0):
+    - libwebp/webp
+  - libwebp/dec (0.6.0):
+    - libwebp/core
+  - libwebp/demux (0.6.0):
+    - libwebp/core
+  - libwebp/dsp (0.6.0):
+    - libwebp/core
+  - libwebp/enc (0.6.0):
+    - libwebp/core
+  - libwebp/mux (0.6.0):
+    - libwebp/core
+  - libwebp/utils (0.6.0):
+    - libwebp/core
+  - libwebp/webp (0.6.0)
+  - Masonry (1.0.1)
+  - SDWebImage/Core (4.1.0)
+  - SDWebImage/GIF (4.1.0):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.1.0):
+    - libwebp
+    - SDWebImage/Core
+  - TTBaseLib (1.0.23):
+    - TTBaseLib/TTBaseTool (= 1.0.23)
+    - TTBaseLib/TTBusinessManager (= 1.0.23)
+    - TTBaseLib/TTCategory (= 1.0.23)
+    - TTBaseLib/TTDeviceHelper (= 1.0.23)
+    - TTBaseLib/TTNetworkHelper (= 1.0.23)
+    - TTBaseLib/TTRobust (= 1.0.23)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.23)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.23)
+  - TTBaseLib/TTBaseTool (1.0.23)
+  - TTBaseLib/TTBusinessManager (1.0.23)
+  - TTBaseLib/TTCategory (1.0.23)
+  - TTBaseLib/TTDeviceHelper (1.0.23)
+  - TTBaseLib/TTNetworkHelper (1.0.23):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.23)
+  - TTBaseLib/TTSandBoxHelper (1.0.23)
+  - TTBaseLib/TTUIResponderHelper (1.0.23)
+  - TTImage (0.7.2):
+    - SDWebImage/Core (= 4.1.0)
+    - SDWebImage/GIF (= 4.1.0)
+    - SDWebImage/WebP (= 4.1.0)
+    - TTThemed
+  - TTImagePicker (1.1.5):
+    - TTBaseLib
+    - TTUIWidget
+  - TTReachability (0.1.8)
+  - TTRoute (0.2.19)
+  - TTThemed (0.1.5):
+    - TTBaseLib
+  - TTUIWidget (0.8.36):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+    - TTImage
+    - TTRoute
+    - TTThemed
+    - TTVerifyKit
+  - TTVerifyKit (0.3.0):
+    - TTBaseLib
+    - TTImage (~> 0.7)
+    - TTThemed
+
+DEPENDENCIES:
+  - TTImagePicker (from `../`)
+
+EXTERNAL SOURCES:
+  TTImagePicker:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  TTBaseLib: 5e1e660dc806f8ff205feb5353694b434c4afa16
+  TTImage: da387306d0bf91f456e9506a0f8bec0bfa02d7ae
+  TTImagePicker: 0293ce889892c9393c098378fd0fbbc06b50e9ff
+  TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
+  TTRoute: 03b5a0f3b2ea7044869f01483cbf50a980229379
+  TTThemed: c671929a0e6e293128c1c7d85e5190b581f8dc41
+  TTUIWidget: 5281d3b48a8891132a1443ba704645ad02c4b433
+  TTVerifyKit: cc38d6605f2cc02585c6632e711310ef828ce569
+
+PODFILE CHECKSUM: c18465b3d3c04b86093d64c502de472af44c728d
+
+COCOAPODS: 1.2.1

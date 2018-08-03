@@ -1,0 +1,16 @@
+PODS:
+  - BDTSharedHeaders (0.1.0)
+
+DEPENDENCIES:
+  - BDTSharedHeaders (from `../`)
+
+EXTERNAL SOURCES:
+  BDTSharedHeaders:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BDTSharedHeaders: fb0331c68dde3a96b954c62b7d8639a90f5afb0b
+
+PODFILE CHECKSUM: 755fdfc9489d1f745664c6ed23499f78a0d80ae9
+
+COCOAPODS: 1.2.1

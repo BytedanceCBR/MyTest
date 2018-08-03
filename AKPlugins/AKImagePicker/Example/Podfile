@@ -1,0 +1,14 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+
+# use_frameworks!
+
+inhibit_all_warnings!
+
+
+platform :ios, '7.0'
+
+target 'TTImagePickerDemo' do
+    pod 'TTImagePicker', :path => '../'
+end
+

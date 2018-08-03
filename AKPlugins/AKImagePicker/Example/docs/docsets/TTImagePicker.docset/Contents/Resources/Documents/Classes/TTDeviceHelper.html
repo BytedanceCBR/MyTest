@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TTDeviceHelper Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Class/TTDeviceHelper" class="dashAnchor"></a>
+    <a title="TTDeviceHelper Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">TTImagePicker Docs</a> (44% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">TTImagePicker Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        TTDeviceHelper Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Categories.html">Categories</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(SSTheme).html">UIColor(SSTheme)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(SSUIColorAdditions).html">UIColor(SSUIColorAdditions)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(TTThemeExtensionx).html">UIColor(TTThemeExtensionx)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIImage(TTThemeExtension).html">UIImage(TTThemeExtension)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/TTAlbumModel.html">TTAlbumModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTAssetModel.html">TTAssetModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTDeviceHelper.html">TTDeviceHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTDeviceUIUtils.html">TTDeviceUIUtils</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerCacheManager.html">TTImagePickerCacheManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerController.html">TTImagePickerController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerIcloudDownloader.html">TTImagePickerIcloudDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerLoadingView.html">TTImagePickerLoadingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerManager.html">TTImagePickerManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerResult.html">TTImagePickerResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerTrackManager.html">TTImagePickerTrackManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePreviewViewController.html">TTImagePreviewViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Constants.html">Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:TTImagePickerDefineHead.h@TTImagePickerSelctedCountDidChange">TTImagePickerSelctedCountDidChange</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/TTDeviceMode.html">TTDeviceMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TTSplitScreenMode.html">TTSplitScreenMode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickTrackDelegate.html">TTImagePickTrackDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerControllerDelegate.html">TTImagePickerControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerNavDelegate.html">TTImagePickerNavDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerNavProtocol.html">TTImagePickerNavProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePreviewViewControllerDelegate.html">TTImagePreviewViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Type Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerIcloudDownloader.h@T@IcloudCompletion">IcloudCompletion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerIcloudDownloader.h@T@IcloudProgressHandler">IcloudProgressHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerLoadingView.h@T@RetryBlock">RetryBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTAssetModelMediaType.html">TTAssetModelMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTImagePickerMode.html">TTImagePickerMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTImagePickerTrackKey.html">TTImagePickerTrackKey</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@TTImagePickerTrack#$@EA@TTImagePickerTrackKey#*$objc(cs)NSDictionary#">TTImagePickerTrack</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>TTDeviceHelper</h1>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)platformName"></a>
+                    <a name="//apple_ref/objc/Method/+platformName" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)platformName">+platformName</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取当前设备的类型</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">platformName</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">platformName</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><q>iPhone</q>/<q>iPad</q></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)is480Screen"></a>
+                    <a name="//apple_ref/objc/Method/+is480Screen" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)is480Screen">+is480Screen</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPhone4, iPhone4S</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">is480Screen</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">is480Screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)is568Screen"></a>
+                    <a name="//apple_ref/objc/Method/+is568Screen" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)is568Screen">+is568Screen</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPhone5, iPhone5C, iPhone5S, iPhoneSE</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">is568Screen</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">is568Screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)is667Screen"></a>
+                    <a name="//apple_ref/objc/Method/+is667Screen" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)is667Screen">+is667Screen</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPhone6,iPhone6S</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">is667Screen</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">is667Screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)is736Screen"></a>
+                    <a name="//apple_ref/objc/Method/+is736Screen" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)is736Screen">+is736Screen</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPhone6plus, iPhone6Splus</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">is736Screen</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">is736Screen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)isScreenWidthLarge320"></a>
+                    <a name="//apple_ref/objc/Method/+isScreenWidthLarge320" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)isScreenWidthLarge320">+isScreenWidthLarge320</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备的宽度大于320</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isScreenWidthLarge320</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">isScreenWidthLarge320</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)isPadDevice"></a>
+                    <a name="//apple_ref/objc/Method/+isPadDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)isPadDevice">+isPadDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPad</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isPadDevice</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">isPadDevice</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)isIpadProDevice"></a>
+                    <a name="//apple_ref/objc/Method/+isIpadProDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)isIpadProDevice">+isIpadProDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是iPad pro</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isIpadProDevice</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">isIpadProDevice</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)isJailBroken"></a>
+                    <a name="//apple_ref/objc/Method/+isJailBroken" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)isJailBroken">+isJailBroken</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>判断设备是否越狱</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isJailBroken</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">isJailBroken</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Yes or No</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)getDeviceType"></a>
+                    <a name="//apple_ref/objc/Method/+getDeviceType" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)getDeviceType">+getDeviceType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取设备类型</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/TTDeviceMode.html">TTDeviceMode</a></span><span class="p">)</span><span class="n">getDeviceType</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">getDeviceType</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/TTDeviceMode.html">TTDeviceMode</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>TTDeviceType类型</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)idfaString"></a>
+                    <a name="//apple_ref/objc/Method/+idfaString" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)idfaString">+idfaString</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取idfa</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">idfaString</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">idfaString</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)idfvString"></a>
+                    <a name="//apple_ref/objc/Method/+idfvString" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)idfvString">+idfvString</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取idfv</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">idfvString</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">idfvString</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)OSVersionNumber"></a>
+                    <a name="//apple_ref/objc/Method/+OSVersionNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)OSVersionNumber">+OSVersionNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取系统版本号</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">OSVersionNumber</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">osVersionNumber</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Float</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)MACAddress"></a>
+                    <a name="//apple_ref/objc/Method/+MACAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)MACAddress">+MACAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取MAC地址</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">MACAddress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">macAddress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)currentLanguage"></a>
+                    <a name="//apple_ref/objc/Method/+currentLanguage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)currentLanguage">+currentLanguage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取当前语言种类</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">currentLanguage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">currentLanguage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)openUDID"></a>
+                    <a name="//apple_ref/objc/Method/+openUDID" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)openUDID">+openUDID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取openUDID</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">openUDID</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">openUDID</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)ssOnePixel"></a>
+                    <a name="//apple_ref/objc/Method/+ssOnePixel" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)ssOnePixel">+ssOnePixel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>返回一像素的大小，对于2x屏幕返回0.5， 1x屏幕返回1</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="n">ssOnePixel</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">ssOnePixel</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)screenScale"></a>
+                    <a name="//apple_ref/objc/Method/+screenScale" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)screenScale">+screenScale</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取当前屏幕范围</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="n">screenScale</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">screenScale</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)resolutionString"></a>
+                    <a name="//apple_ref/objc/Method/+resolutionString" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)resolutionString">+resolutionString</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取mainScreen的scale</p>
+
+<p>@return</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">resolutionString</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">resolutionString</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TTDiskSpace"></a>
+                <a name="//apple_ref/objc/Section/TTDiskSpace" class="dashAnchor"></a>
+                <a href="#/TTDiskSpace">
+                  <h3 class="section-name">TTDiskSpace</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)getTotalDiskSpace"></a>
+                    <a name="//apple_ref/objc/Method/+getTotalDiskSpace" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)getTotalDiskSpace">+getTotalDiskSpace</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTDeviceHelper(cm)getFreeDiskSpace"></a>
+                    <a name="//apple_ref/objc/Method/+getFreeDiskSpace" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTDeviceHelper(cm)getFreeDiskSpace">+getFreeDiskSpace</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">tuyaohui</a>. All rights reserved. (Last updated: 2017-08-14)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

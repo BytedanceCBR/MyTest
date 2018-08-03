@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TTAvatar_Example' do
+  pod 'TTAvatar', :path => '../'
+
+  target 'TTAvatar_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

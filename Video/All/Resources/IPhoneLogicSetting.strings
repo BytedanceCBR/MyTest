@@ -1,0 +1,15 @@
+/* 
+  IPhoneLogicSetting.strings
+  Video
+
+  Created by Tianhang Yu on 12-7-20.
+  Copyright (c) 2012年 Bytedance. All rights reserved.
+*/
+
+"vlHTTPServerPort"=12345;
+"ssFeedbackAppKey"="video-all-ios";
+"vlTag"="__all__";
+"vlAppDownloadUrl"="http://www.feifei.com/app/";
+"sinaAppScheme"="sinaweibosso.ss.video.all";
+
+"customAuthorityViewTitleBarLeftEdge" = 1; 
