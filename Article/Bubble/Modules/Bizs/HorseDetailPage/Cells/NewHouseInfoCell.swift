@@ -270,12 +270,20 @@ func fillNewHouseCoreInfoCell(
 
         theCell.openNotify.rx.tap
                 .subscribe { event in
-                    openCourtNotify(theCell.openChangeNotifyRelay)
+                    if data.userStatus?.courtOpenSubStatus ?? 0 == 1 {
+                        EnvContext.shared.toast.showToast("您已订阅过啦～")
+                    } else {
+                        openCourtNotify(theCell.openChangeNotifyRelay)
+                    }
                 }
                 .disposed(by: disposeBag)
         theCell.priceChangedNotify.rx.tap
                 .subscribe { event in
-                    priceChangeHandler(theCell.priceChangeNotifyRelay)
+                    if data.userStatus?.pricingSubStauts ?? 0 == 1 {
+                        EnvContext.shared.toast.showToast("您已订阅过啦～")
+                    } else {
+                        priceChangeHandler(theCell.priceChangeNotifyRelay)
+                    }
                 }
                 .disposed(by: disposeBag)
 

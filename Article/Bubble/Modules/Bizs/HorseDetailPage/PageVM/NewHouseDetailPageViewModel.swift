@@ -131,6 +131,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 //MARK: - 订阅
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
+
             if EnvContext.shared.client.accountConfig.userInfo.value == nil {
                 self.showQuickLoginAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
                 EnvContext.shared.client.accountConfig.userInfo
