@@ -1,0 +1,370 @@
+//
+//  HomeViewController.swift
+//  Bubble
+//
+//  Created by linlin on 2018/6/12.
+//  Copyright © 2018年 linlin. All rights reserved.
+//
+
+import UIKit
+import SnapKit
+import RxSwift
+import RxCocoa
+import Reachability
+class HomeViewController: BaseViewController, UITableViewDelegate {
+
+    private var tableView: UITableView!
+
+    private var navBar: BubbleNavigationBar!
+
+    private let dataSource: HomeViewTableViewDataSource!
+
+    private let sectionHeader: CGFloat = 38
+
+    let disposeBag = DisposeBag()
+
+    private lazy var infoDisplay: EmptyMaskView = {
+        let re = EmptyMaskView()
+        return re
+    }()
+
+    lazy var headerViewPanel: UIView = {
+        UIView(frame: CGRect(
+                x: 0,
+                y: 0,
+                width: self.view.frame.width,
+                height: 211))
+    }()
+
+    lazy var suspendSearchBar: HomePageSearchPanel = {
+        let result = HomePageSearchPanel(frame: CGRect.zero)
+        result.layer.shadowRadius = 4
+        result.layer.shadowColor = hexStringToUIColor(hex: "#000000").cgColor
+        result.layer.shadowOffset = CGSize(width: 0, height: 4)
+        result.layer.shadowOpacity = 0.06
+        return result
+    }()
+
+    lazy var homeSpringBoard: HomeSpringBoard = {
+        HomeSpringBoard()
+    }()
+
+    let barStyle = BehaviorRelay<Int>(value: UIStatusBarStyle.lightContent.rawValue)
+
+    var homeSpringBoardViewModel: HomeSpringBoardViewModel!
+
+    private var detailPageViewModel: DetailPageViewModel?
+
+    private var cycleImagePageableViewModel: PageableViewModel?
+
+    private var stateControl: HomeHeaderStateControl?
+
+    init() {
+        self.dataSource = HomeViewTableViewDataSource()
+        super.init(nibName: nil, bundle: nil)
+        self.automaticallyAdjustsScrollViewInsets = false
+        barStyle
+                .bind { [unowned self] i in
+                    self.ttStatusBarStyle = i
+                    self.ttNeedChangeNavBar = true
+                }
+                .disposed(by: disposeBag)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        self.tableView = UITableView()
+        super.viewDidLoad()
+        self.hidesBottomBarWhenPushed = false
+        self.detailPageViewModel = HomeListViewModel(tableView: tableView, navVC: self.navigationController)
+        self.setupPageableViewModel()
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.backgroundColor = UIColor.clear
+        setupErrorDisplay()
+
+        view.addSubview(tableView)
+        tableView.separatorStyle = .none
+        tableView.snp.makeConstraints { (make) in
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
+        }
+        registerCell(tableView)
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        let reloadObv = Observable.combineLatest(
+                EnvContext.shared.client.configCacheSubject,
+                EnvContext.shared.client.generalBizconfig.currentSelectCityId)
+        reloadObv
+                .filter { $0.1 != nil }
+                .map { _ in 0 }
+                .bind(onNext: detailPageViewModel!.requestData)
+                .disposed(by: disposeBag)
+        setupNormalNavBar()
+
+        let stateControl = HomeHeaderStateControl()
+        self.stateControl = stateControl
+        stateControl.onStateChanged = { (state) in
+            switch state {
+            case .suspend:
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.navBar.isHidden = true
+                    self.suspendSearchBar.isHidden = false
+                    self.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+                    UIApplication.shared.statusBarStyle = .lightContent
+                })
+            default:
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.navBar.isHidden = false
+                    self.suspendSearchBar.isHidden = true
+                    self.barStyle.accept(UIStatusBarStyle.default.rawValue)
+                    UIApplication.shared.statusBarStyle = .default
+                })
+            }
+        }
+        stateControl.onContentOffsetChanged = { [weak self] (state, offset) in
+            self?.navBar.alpha = (1 - (139 - offset.y) / 139) * 2
+        }
+        tableView.rx.contentOffset
+                .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
+                .disposed(by: disposeBag)
+        bindSearchEvent()
+
+        let generalBizConfig = EnvContext.shared.client.generalBizconfig
+        generalBizConfig.currentSelectCityId
+                .map(generalBizConfig.cityNameById())
+                .subscribe(onNext: { [unowned self] (city) in
+                    if let city = city {
+                        self.suspendSearchBar.countryLabel.text = city
+                        self.navBar.suspendSearchBar.countryLabel.text = city
+                    } else {
+                        let defaultStr = "选择城市"
+                        self.suspendSearchBar.countryLabel.text = defaultStr
+                        self.navBar.suspendSearchBar.countryLabel.text = defaultStr
+                    }
+                })
+                .disposed(by: disposeBag)
+        bindNetReachability()
+    }
+
+    private func setupErrorDisplay() {
+        view.addSubview(infoDisplay)
+        infoDisplay.snp.makeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
+        }
+    }
+    
+    private func setupPageableViewModel() {
+        let pageableViewModel = PageableViewModel(cacheViewCount: 5) {
+            return BDImageViewProvider { [weak self] i in
+                let selectedImage = self?.bannerImgSelector(index: i) ?? ""
+                return selectedImage
+            }
+        }
+        pageableViewModel.pageView.isUserInteractionEnabled = true
+        headerViewPanel.addSubview(pageableViewModel.pageView)
+        pageableViewModel.pageView.snp.makeConstraints { maker in
+            maker.left.right.top.bottom.equalToSuperview()
+            maker.height.equalTo(211)
+         }
+        cycleImagePageableViewModel = pageableViewModel
+        pageableViewModel.reloadData(currentPageOnly: false)
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject
+                .subscribe(onNext: { [weak pageableViewModel] data in
+                    if let banners = data?.banners, banners.count > 1{
+                    } else {
+                        pageableViewModel?.pageView.isScrollEnabled = false
+                    }
+                    pageableViewModel?.reloadData(currentPageOnly: false)
+                })
+                .disposed(by: disposeBag)
+    }
+
+    func bannerImgSelector(index: Int) -> String {
+        let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
+        let count  = config?.banners?.count ?? 0
+        if let banners = config?.banners {
+            if count > 0 {
+                return banners[index % count].image?.url ?? ""
+            }
+        }
+        return ""
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.tableHeaderView = headerViewPanel
+        setupHeaderSlidePanel(tableView: tableView)
+    }
+
+    private func setupNormalNavBar() {
+        navBar = BubbleNavigationBar()
+        navBar.isHidden = true
+        self.view.addSubview(navBar)
+        navBar.snp.makeConstraints { (maker) in
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(58)
+            } else {
+                maker.height.equalTo(65)
+            }
+            maker.top.left.right.equalToSuperview()
+        }
+    }
+
+    private func setupHeaderSlidePanel(tableView: UITableView) {
+        headerViewPanel.addSubview(suspendSearchBar)
+        suspendSearchBar.snp.makeConstraints { maker in
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(48)
+            } else {
+                maker.top.equalTo(25)
+            }
+
+            maker.centerX.equalToSuperview()
+
+            maker.height.equalTo(40)
+            maker.left.equalToSuperview().offset(15)
+            maker.right.equalToSuperview().offset(-15)
+        }
+    }
+
+    private func registerCell(_ tableView: UITableView) {
+        let cellTypeMap: [String: UITableViewCell.Type] = ["item": SingleImageInfoCell.self]
+        cellTypeMap.forEach { (e) in
+            let (identifier, cls) = e
+            tableView.register(cls, forCellReuseIdentifier: identifier)
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+
+    private func bindSearchEvent() {
+        suspendSearchBar.changeCountryBtn.rx.tap
+                .subscribe(onNext: openCountryList)
+                .disposed(by: disposeBag)
+        suspendSearchBar.searchBtn.rx.tap
+                .subscribe(onNext: openSearchPanel)
+                .disposed(by: disposeBag)
+        navBar.suspendSearchBar.changeCountryBtn.rx.tap
+                .subscribe(onNext: openCountryList)
+                .disposed(by: disposeBag)
+        navBar.suspendSearchBar.searchBtn.rx.tap
+                .subscribe(onNext: openSearchPanel)
+                .disposed(by: disposeBag)
+    }
+    
+    private func bindNetReachability() {
+        let generalBizConfig = EnvContext.shared.client.generalBizconfig
+        Observable
+            .combineLatest(Reachability.rx.isReachable, generalBizConfig.generalCacheSubject)
+            .map { (e) -> Bool in
+                let (reach, generalconfig) = e
+                return reach == false && generalconfig == nil
+            }
+            .bind(onNext: displayNetworkError())
+            .disposed(by: disposeBag)
+        
+    }
+
+    private func displayNetworkError() -> (Bool) -> Void {
+        return { [weak self] (isDisplay) in
+            self?.cycleImagePageableViewModel?.pageView.isHidden = isDisplay
+            self?.infoDisplay.isHidden = !isDisplay
+            self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
+            self?.stateControl?.disable = isDisplay
+            UIApplication.shared.statusBarStyle = .default
+            self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
+        }
+    }
+}
+
+
+extension HomeViewController {
+    private func openCountryList() {
+        let vc = CountryListVC()
+        vc.onClose = { _ in
+            self.navigationController?.popViewController(animated: true)
+        }
+        vc.onItemSelect
+                .subscribe(onNext: { i in
+                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
+                    self.navigationController?.popViewController(animated: true)
+                })
+                .disposed(by: self.disposeBag)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func openSearchPanel() {
+        let vc = SuggestionListVC()
+        let nav = self.navigationController
+        nav?.pushViewController(vc, animated: true)
+        vc.navBar.backBtn.rx.tap
+                .subscribe(onNext: { [weak nav] void in
+                    nav?.popViewController(animated: true)
+                })
+                .disposed(by: self.disposeBag)
+        vc.onSuggestSelect = { [weak self, unowned vc] (condition, associationalWord) in
+            self?.openCategoryList(
+                houseType: vc.houseType.value,
+                condition: condition,
+                associationalWord: associationalWord)
+        }
+    }
+
+
+    private func openCategoryList(
+        houseType: HouseType,
+        condition: String,
+        associationalWord: String? = nil) {
+        let vc = CategoryListPageVC(
+            isOpenConditionFilter: true,
+            associationalWord: associationalWord)
+        vc.houseType.accept(houseType)
+        vc.suggestionParams = condition
+        vc.navBar.isShowTypeSelector = false
+        let nav = self.navigationController
+        nav?.pushViewController(vc, animated: true)
+        vc.navBar.backBtn.rx.tap
+                .subscribe(onNext: { void in
+                    nav?.popViewController(animated: true)
+                })
+                .disposed(by: disposeBag)
+    }
+}
+
+class BubbleNavigationBar: UIView {
+
+    lazy var suspendSearchBar: HomePageSearchPanel = {
+        let result = HomePageSearchPanel(frame: CGRect.zero, isHighlighted: true)
+        result.isHighlighted = true
+        return result
+    }()
+
+    init() {
+        super.init(frame: CGRect.zero)
+        backgroundColor = UIColor.white
+        addSubview(suspendSearchBar)
+        self.lu.addBottomBorder()
+        suspendSearchBar.snp.makeConstraints { (make) in
+            make.left.equalTo(15)
+            make.right.equalToSuperview().offset(-15)
+            make.bottom.equalToSuperview().offset(-10)
+            make.height.equalTo(40)
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

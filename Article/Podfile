@@ -1,0 +1,384 @@
+#—————————————pod私有源--------------------------------------
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+platform :ios, '8.0'
+
+inhibit_all_warnings!
+def appPods
+    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+#    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
+
+    #-----安全组sdk-----#
+    pod 'IESSafeGuard', '0.6.5'
+
+    #-----视频业务库-----#
+    pod 'TTVideoService', '0.1.40'
+    pod 'TTVideoService/TTBusinessService', '0.1.40'
+    #-----问答业务库-----#
+#    pod 'TTWenda', '0.14.0'
+#    pod 'TTWenda', :git => 'git@code.byted.org:TTIOS/tt_business_wenda.git', branch: 'feature_aikan_beta'
+    pod 'AKWDPlugin', :path => '../AKPlugins/AKWDPlugin', :inhibit_warnings => false
+
+    #-----评论业务库-----#
+#    pod 'TTComment', :git => 'git@code.byted.org:TTIOS/tt_pods_comment.git', :branch => 'feature_aikan'
+    pod 'AKCommentPlugin', :path => '../AKPlugins/AKCommentPlugin', :inhibit_warnings => false
+
+    #-----小说业务库-----#
+#    pod 'TTNovel', git: 'git@code.byted.org:TTIOS/TTNovel', commit: 'd22e0fd9d4e4ae31f2645eb3fe75fa458870590d'
+    #-----火山业务库，依赖HTSLiveRoomSDK/Player-----
+#    pod 'HTSLive', '1.0.8'
+    #-----小视频-----
+    pod 'HTSVideoPlay', :path => '../Vendor/ShortVideo', :inhibit_warnings => false
+    pod 'TSVToolkit', '0.1.2'
+    pod 'lottie-ios', '2.1.5'
+
+    #-----UGC-----
+#    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
+    pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
+    pod 'TTKitchen', '1.0.2'
+
+    #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
+    #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
+    pod 'BDTArticle', '0.2.3'
+    pod 'BDTExploreOrderedData', '0.1.6'
+
+    pod 'BDTFactoryConfigurator', '0.1.0'
+    pod 'BDTBasePlayer', '0.3.48'
+    pod 'BDTSharedHeaders', :path => '../Vendor/BDTSharedHeaders'
+    #-----支付封装库-----  modified 6.2.1 alipay加回来
+    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
+    #-----三方服务封装库-----  modified 6.2.1 alipay加回来
+    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
+    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
+#    pod 'TTThirdPartySDKs/AlipaySDK', '0.0.4'
+#    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
+#    pod 'TTThirdPartySDKs/DingDingSDK', '0.0.4'
+    #-----免流量统计-----
+    pod 'TTFlowStatisticsManager', '0.0.8'
+    #----- 新分享库 -----
+#    pod 'TTShare', '0.3.3'
+    ## subspects
+#    pod 'TTShareService', '0.6.15'
+    pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
+
+    pod 'TTShare/TTShareBusiness', '0.3.3', :subspecs => [
+    'TTShareWeChatBusiness',
+    'TTShareQQBusiness',
+    'TTShareCopyBusiness'
+    ]
+    
+    pod 'TTShare/TTShareBasic', '0.3.3', :subspecs => [
+    'TTWeChatShare',
+    'TTQQShare'
+    ]
+
+    #-----头条视频播放器库，依赖自研播放器库，还包含系统播放器-----
+    pod 'TTVideo', '1.1.1'
+    #-----视频重构基础库-----
+    pod 'TTVContainerScrollView', '0.1.2'
+    pod 'TTVTableViewItem', '0.1.0'
+    pod 'TTVTLIndexPathTools', '0.4.4'
+    pod 'TTVTableViewProtocolInterceptor', '0.1.2'
+    #-----火山直播推流SDK-----
+#    pod 'TTLiveSDK', :git => 'git@code.byted.org:ugc/HTSStreamerSDK.git', :commit => '1f9fbbcee72e569bc073b9aa8657ee6152439b0f'
+    #------主端接直播库-------
+#    pod 'HTSLiveCocos/core', '0.4.4'
+#    pod 'TTLive', '1.1.5'
+#    pod 'HTSLogger', '0.1.0'
+
+#    pod 'DOUAudioStreamer', :git => 'git@code.byted.org:ugc/DOUAudioStreamer.git', :commit => '6776f8ea3ab31f08a7c1fc81a2748a67f31ad265'
+#    pod 'EffectPlatformSDK', '0.1.6', :subspecs => [
+#    'Core',
+#    'UIKit',
+#    'Uncompress'
+#    ]
+    #-----火山播放器库-----
+#    pod 'HTSLiveRoomSDK/Player', :git => 'git@code.byted.org:ugc/HTSLiveRoom.git', :branch => 'update_KVOController'
+#    pod 'HTSStore', '0.2.3'
+    #-----火山播放器 ----
+    pod 'IESVideoPlayer', '0.1.16'
+    pod 'AWEVideoPlayer', '0.3.20'
+
+    #-----头条获取installID---
+    pod 'TTInstallService', '1.0.0.6'
+    #-----头条图片滑动浏览器----
+    pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
+    #-----头条用户设置库--------
+    pod 'TTUserSettings', '0.3.4'
+    #----头条webview库-----
+#    pod 'TTWebViewBundle', '0.8.15'
+    pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
+    pod 'TTRexxar', '0.8.1', subspecs:['Core', 'WebView', 'PackageApp’, 'Plugins']
+    #----头条组件协议库-----
+
+    pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
+    
+    #-----头条图片/视频选择器-----
+    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false,
+    :subspecs => [
+    'Category',
+    'Model'
+    ]
+
+    #-----头条头像-----
+#    pod 'TTAvatar', '0.4.13'
+    pod 'TTAvatar', :path => '../AKPlugins/TTAvatar', :inhibit_warnings => false
+    #-----头条加v认证工具-----
+    pod 'TTVerifyKit',  '0.3.0'
+    #-----举报-----
+    pod 'TTReporter', '0.2.1'
+    #-----头条号---
+    pod 'TTAdModule', '0.1.25'
+    pod 'TTAdSplashSDK', '0.1.0'
+
+    pod 'TTEntry', '0.1.6'
+
+    #-----朋友关系-----
+    pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation', :inhibit_warnings => false
+    #-----点赞分享顶踩不感兴趣----
+    pod 'TTBatchItemAction','0.1.7'
+    #-------AB测库--------
+    pod 'TTABManager', '0.0.7'
+    #-----头条网络业务库------
+    pod 'TTNetBusiness', '0.0.10'
+
+    #-----授权----
+    pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
+    
+    #----头条Settihngs----
+    pod 'TTSettingsManager', '0.3.1'
+    #-----手机通讯录操作库---
+#    pod 'TTAddressBookService', '0.1.3'
+    #-----电信取号服务---
+#    pod 'TTTelecomGettingMobile', '0.2.0'
+
+    #---- 嘉聊视频直播SDK ----
+    # pod 'TTVideoLive', :git => 'git@code.byted.org:ttmp/live-ios.git', :branch => 'master' # 用于嘉聊
+#    pod 'TTVideoLive', '1.0.2' # 用于嘉聊
+
+    #--------------------------------------------------基础工具库-----------------------------------------------#
+    #--------------------------------------------------基础工具库-----------------------------------------------#
+    #-----头条基础库-----
+    pod 'TTBaseLib', :path => '../AKPlugins/TTBaseLib', :inhibit_warnings => false
+
+    #-----头条主题库-----
+    pod 'TTThemed', :path => '../AKPlugins/AKThemed', :inhibit_warnings => false
+    #-----头条UI组件库-----
+    pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
+
+    #-----头条网络库-----
+    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+#    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
+    #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
+#    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'
+    #-----播放器SDK相关-----
+    pod 'TTPlayerSDK', '2.9.3.14'
+    pod 'TTFFmpeg', '1.2.5'
+    pod 'TTVideoEngine', '1.8.3.8'
+    pod 'TTPreloaderSDK', '1.4.16'
+#    pod 'TTFileUploadClient', ‘1.5.1.1'
+
+    #----点赞按钮-----
+    pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton', :inhibit_warnings => false
+
+    #-----电视投屏-----
+    #pod 'ConnectSDK/Core' ,'1.6.1-ttv'
+
+    #-----头条sercive中间件-----
+    pod 'TTServiceKit', '0.4.1'
+    #-----头条端监控库-----
+#    pod 'TTMonitor', '0.7.9.42'
+    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+    #----- 长连接 & IM -----
+#    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
+    pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
+    pod 'TTPushManager', '0.0.10'
+    pod 'TTReachability', '0.1.8'
+    pod 'Protobuf', '3.0.1-ttv'
+    #----- 存储库 -----
+    pod 'TTPersistence', '0.2.3'
+    pod 'TTEntityBase', '0.2.1'
+    #--- 图片库 --
+    pod 'TTImage', '0.8.0'
+    pod 'BDWebImage', '0.2.2' , :subspecs => [
+    'Core',
+    'Download',
+    'Decoder',
+    'SDAdapter'
+    ]
+    #-----头条交互式退出手势----
+    pod 'TTImagePreviewAnimateManager', '1.0.13'
+    #-----头条日志库-----
+    pod 'TTTracker', '1.0.0.6'
+    #-----头条推送SDK----
+    pod 'TTPushSDK', '0.1.1'
+    #-----路由-----
+    pod 'TTRoute', '0.2.25'
+#    pod 'TTRoute', git:'git@code.byted.org:TTIOS/tt_pods_route.git', :commit => '7fa71c20b4545d0f963a0100106dc203a420b08f'
+    #-----头条impression库-----
+    pod 'TTImpression', '0.0.26'
+    #-----平台化基础库-----
+    #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit =>'6e2f44378650a7086b45f1d07d3f9bd379254152'
+    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
+    #
+   #-----平台化UIModel库-----
+    pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
+    #-----音频相关库---
+    pod 'TTAudio', '0.1.4'
+    #----热修复库---
+#    pod 'TTSparkRescue','2.3.1'
+
+    #pod 'TTAVRecorder', '1.1.1'
+
+    #----弹窗互斥---
+    pod 'TTDialogDirector', :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git', :commit => '8ed5beb', :subspecs => [
+    'Core',
+    'PhotoLibrary',
+    'Microphone',
+    'Camera',
+    'UserNotification',
+    'Contacts',
+#    'Location'
+    ]
+
+#    #——头条OpenSDK和PlatformSDK库----
+#    pod 'Bytedancebase', '0.2.3', :subspecs => [
+#    'BDOpenSDK',
+#    'BDPlatformSDK'
+#    ]
+
+    #-----TTAccountSDK-----
+#    pod 'TTAccountSDK', '3.0.5', :subspecs => [
+#    'Account',
+#    'WeChatAccount'
+##    'SinaWeiboAccount',
+##    'TencentQQAccount',
+##    'TencentWBAccount',
+##    'RenRenAccount',
+##    'TianYiAccount',
+##    'TTAwemeAccount',
+##    'TTHotsoonAccount'
+#    ]
+    pod 'TTAccountSDK', :path => '../AKPlugins/TTAccountSDK', :inhibit_warnings => false, :subspecs => [
+    'Account',
+    'WeChatAccount'
+    #    'SinaWeiboAccount',
+    #    'TencentQQAccount',
+    #    'TencentWBAccount',
+    #    'RenRenAccount',
+    #    'TianYiAccount',
+    #    'TTAwemeAccount',
+    #    'TTHotsoonAccount'
+    ]
+    #-----账号登录UI库-----
+    pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
+    #-----账号的业务库----
+#    pod 'TTNewsAccountBusiness', '0.2.4'
+    pod 'TTNewsAccountBusiness', :path => '../AKPlugins/TTNewsAccountBusiness', :inhibit_warnings => false
+
+    #************业务SDK**********
+    #-----Fantasy-----
+#    pod 'TTFantasy', '2.0.0'
+    #pod 'TTFantasy', git:'git@code.byted.org:TTVideo/tt_pods_TTFantasy.git', :branch => 'dev'
+
+    #--------------------------------------------------三方库-----------------------------------------------#
+    #--------------------------------------------------三方库-----------------------------------------------#
+    #pod 'GPUImage', :git => 'https://github.com/pretouch/GPUImageFramewrok.git', :commit => '1d77041' ‘#’火山依赖
+#    pod 'YYImage', '1.0.3'
+    pod 'YYWebImage', '1.0.4'
+#    pod 'MBProgressHUD'
+    pod 'TTTAttributedLabel', '1.13.3'
+    pod 'UMengAnalytics', '4.1.4'
+    pod 'JSONModel', '1.7.0-private'
+    pod 'Fabric', '1.6.7'
+    pod 'MJExtension', '3.0.12'
+    pod 'Crashlytics', '3.7.2'
+    pod 'KVOController', '1.2.0'
+    pod 'RSSwizzle', '0.1.0'
+    pod 'RNCryptor-objc', '3.0.5'
+    pod 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
+    pod 'CHTCollectionViewWaterfallLayout', '0.9.5'
+#    pod 'CocoaSecurity', '1.2.4'
+    pod 'Aspects', '1.4.1'
+    pod 'SSZipArchive', '1.6.2'
+    pod 'libextobjc', '0.4.1'
+    ##...
+    #pod 'ProtocolBuffers', '1.9.11'
+    pod 'libextobjc', '0.4.1'
+    pod 'ReactiveObjC', '3.0.0'
+    pod 'SDWebImage', '4.1.0'
+    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
+    'Core',
+    'RCTText',
+    'RCTImage',
+    'RCTNetwork',
+    'RCTActionSheet',
+    'RCTWebSocket', # needed for debugging
+    ]
+    
+#    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    #-----只越狱渠道接入-----
+    #pod 'Appsee', '2.2'
+    #-----测试  内存泄漏时开启-----
+#    pod 'MLeaksFinder', '0.2.0'
+
+    pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :commit => 'aa8be5a2824245b4253cf8a8a5ccf3fae382d75e', :subspecs => [
+        'Account',
+        'NetWorkCore',
+        'Flow',
+        'PlatformCustomAuth',
+        'WeChat',
+        'TencentQQ',
+        'SinaWeibo'
+    ]
+    pod 'YYText'
+    pod 'AMapLocation'
+    pod 'AMap3DMap'
+    pod 'AMapSearch'
+    pod  'OpenUDID', '0.1.0'
+end
+target 'News' do
+    appPods
+end
+
+target 'NewsInHouse' do
+    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    appPods
+end
+
+# POD POST_INSTALL
+post_install do |installer|
+
+    installer.aggregate_targets.each do |target|
+        copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
+        string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
+        assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
+        text = File.read(copy_pods_resources_path)
+        new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
+        File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
+    end
+
+    installer.pods_project.targets.each do |target|
+
+        #账号
+        if target.name == "TTAccountSDK"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'TTACCOUNT_OLD_SINAWEIBO_AUTH=1']
+            end
+        end
+        target.build_configurations.each do |config|
+            config.build_settings['WARNING_CFLAGS'] ||= ['$(inherited)', '-Wno-documentation']
+        end
+
+        #INHOUSE宏,生效条件为业务库：问答、视频等
+        if target.name == "TTVideoService" || target.name == "TTWenda"  || target.name == "TTUGCFeature"|| target.name == "TTUGCFoundation"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
+            end
+        end
+    end
+end

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+red=$(tput setaf 1)
+cyan=$(tput setaf 6) #青色
+reset=$(tput sgr0)
+
+repo_name='tt_app_ios'
+
+echo $cyan"git pull --rebase"$reset
+
+git fetch --dry-run
+return_code=$?
+if [[ $return_code != 0 ]] ; then
+	echo $red"${repo_name}库无法进行fetch操作"$reset
+	exit 1
+fi
+git fetch
+
+git rebase
+return_code=$?
+if [[ $return_code != 0 ]] ; then
+	echo $red"${repo_name}库无法进行rebase操作"$reset
+	exit 1
+fi
+
+cd script
+./prepare
+
+
+
+

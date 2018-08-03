@@ -1,0 +1,8 @@
+#!/bin/sh
+
+file_str=`git status | grep 'modified:.*\.[hm]\|new\ file:.*\.[hm]'`
+root_dir=`pwd`
+path=$root_dir/Article/script/file_str_tmp.txt
+echo $file_str >> $path
+python $root_dir/Article/script/analyze_file.py $path $root_dir
+rm -rf $path
