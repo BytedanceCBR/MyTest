@@ -78,8 +78,10 @@
 		1A21663427FDAD3116B07FA1 /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */; };
 		1A2166443326C9F751414199 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */; };
 		1A2167B2223AB2F2DCBC51E4 /* TransactionHistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */; };
+		1A2168FECF7A896B48FF024E /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A22D03E0B259EB013B2 /* Client.swift */; };
 		1A216991C0D71F26E771F497 /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */; };
 		1A2169933612B8F22AEFDE73 /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */; };
+		1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A22D03E0B259EB013B2 /* Client.swift */; };
 		1B0C7E8E1B3D439D00361F3E /* ArticleCategoryWAPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */; };
 		1B5B58B41A1F1C7400A74773 /* ExploreSubscribeDataListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58B31A1F1C7400A74773 /* ExploreSubscribeDataListManager.m */; };
 		1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58BC1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m */; };
@@ -1122,7 +1124,6 @@
 		B347362F20F76FF8009F799A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
 		B347363020F76FF8009F799A /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B920F62A7800D4E8D0 /* BaseNavigationViewController.swift */; };
 		B347363120F76FF8009F799A /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26BA20F62A7800D4E8D0 /* TabViewController.swift */; };
-		B347363220F76FF8009F799A /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26BB20F62A7800D4E8D0 /* Client.swift */; };
 		B347363320F77003009F799A /* CommonUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26C220F62A7800D4E8D0 /* CommonUIStyle.swift */; };
 		B347363420F77015009F799A /* SimpleNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26C420F62A7800D4E8D0 /* SimpleNavBar.swift */; };
 		B347363520F77019009F799A /* NetworkCommonParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26C620F62A7800D4E8D0 /* NetworkCommonParams.swift */; };
@@ -1285,7 +1286,6 @@
 		B36E278120F62A7900D4E8D0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
 		B36E278220F62A7900D4E8D0 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B920F62A7800D4E8D0 /* BaseNavigationViewController.swift */; };
 		B36E278320F62A7900D4E8D0 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26BA20F62A7800D4E8D0 /* TabViewController.swift */; };
-		B36E278420F62A7900D4E8D0 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26BB20F62A7800D4E8D0 /* Client.swift */; };
 		B36E278520F62A7900D4E8D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26BC20F62A7800D4E8D0 /* Assets.xcassets */; };
 		B36E278620F62A7900D4E8D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B36E26BE20F62A7800D4E8D0 /* LaunchScreen.storyboard */; };
 		B36E278720F62A7900D4E8D0 /* CommonUIStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26C220F62A7800D4E8D0 /* CommonUIStyle.swift */; };
@@ -3656,6 +3656,7 @@
 		1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BDWebImagePhotoLoader.swift; sourceTree = "<group>"; };
 		1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryVM.swift; sourceTree = "<group>"; };
 		1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaConditionFilterPanel.swift; sourceTree = "<group>"; };
+		1A216A22D03E0B259EB013B2 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A216BB2987DC56ECD5883D7 /* LBSMapPageNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageNavBar.swift; sourceTree = "<group>"; };
 		1B0C7E8C1B3D439D00361F3E /* ArticleCategoryWAPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleCategoryWAPViewController.h; sourceTree = "<group>"; };
@@ -5678,7 +5679,6 @@
 		B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		B36E26B920F62A7800D4E8D0 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 		B36E26BA20F62A7800D4E8D0 /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
-		B36E26BB20F62A7800D4E8D0 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		B36E26BC20F62A7800D4E8D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B36E26BD20F62A7800D4E8D0 /* Bubble-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bubble-Bridging-Header.h"; sourceTree = "<group>"; };
 		B36E26BF20F62A7800D4E8D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -12265,7 +12265,7 @@
 				B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */,
 				B36E26B920F62A7800D4E8D0 /* BaseNavigationViewController.swift */,
 				B36E26BA20F62A7800D4E8D0 /* TabViewController.swift */,
-				B36E26BB20F62A7800D4E8D0 /* Client.swift */,
+				1A216A22D03E0B259EB013B2 /* Client.swift */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -16334,7 +16334,6 @@
 				A97DC4421F1333630002B455 /* TTRelationFooterView.m in Sources */,
 				ABBEA6F71F3343E7005DAD27 /* TTAppLogStartupTask.m in Sources */,
 				C305DE401E6FB9E8001F4967 /* TTVideoDetailGroupUnifyADView.m in Sources */,
-				B36E278420F62A7900D4E8D0 /* Client.swift in Sources */,
 				F87696681F31D0D900D59CA5 /* TTWebImageManager+TTVSupport.m in Sources */,
 				A9AFAE6C1F0E45C600C1E28D /* TTFeedContainerViewModel.m in Sources */,
 				438F9E9B1F94B8DF0050F83E /* TTVPlayerTipAdNewCreator.m in Sources */,
@@ -17721,6 +17720,7 @@
 				1A2167B2223AB2F2DCBC51E4 /* TransactionHistoryVM.swift in Sources */,
 				1A2166443326C9F751414199 /* BDWebImagePhotoLoader.swift in Sources */,
 				1A2162260DC2B214C8DE0819 /* SuggestionHistoryDataSource.swift in Sources */,
+				1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17967,7 +17967,6 @@
 				FEFA5374205FB1A8001F50D8 /* TTRelationFooterView.m in Sources */,
 				FEFA5376205FB1A8001F50D8 /* TTAppLogStartupTask.m in Sources */,
 				FEFA5377205FB1A8001F50D8 /* TTVideoDetailGroupUnifyADView.m in Sources */,
-				B347363220F76FF8009F799A /* Client.swift in Sources */,
 				FEFA5379205FB1A8001F50D8 /* TTWebImageManager+TTVSupport.m in Sources */,
 				FEFA537A205FB1A8001F50D8 /* TTFeedContainerViewModel.m in Sources */,
 				FEFA537C205FB1A8001F50D8 /* TTVPlayerTipAdNewCreator.m in Sources */,
@@ -19348,6 +19347,7 @@
 				FEFA59BD205FB1A8001F50D8 /* TTVideoEmbededAdButton.m in Sources */,
 				1A21663427FDAD3116B07FA1 /* AreaConditionFilterPanel.swift in Sources */,
 				1A2165EA1D8D8892EC43E4CE /* ErshouHouseDetailPageViewModel.swift in Sources */,
+				1A2168FECF7A896B48FF024E /* Client.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

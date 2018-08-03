@@ -33,8 +33,10 @@ class CategoryListViewModel: DetailPageViewModel {
     var navVC: UINavigationController?
     
     var oneTimeToast: ((String?) -> Void)?
-    
-    init(tableView: UITableView, navVC: UINavigationController?) {
+
+    init(
+            tableView: UITableView,
+            navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
         self.cellFactory = getHouseDetailCellFactory()
@@ -137,7 +139,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     .debug()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let data = response?.data {
-                            if self.dataSource.datas.count == 0 {
+                            if self.dataSource.datas.value.count == 0 {
                                 //TODO: f100
                             }
                             return parseFollowUpListRowItemNode(data, disposeBag: self.disposeBag, navVC: self.navVC)
@@ -154,14 +156,14 @@ class CategoryListViewModel: DetailPageViewModel {
 
     func reloadData() -> ([TableRowNode]) -> Void {
         return { [unowned self] datas in
-            self.dataSource.datas = self.dataSource.datas + datas
+            self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
             self.onDataLoaded?(datas.count)
         }
     }
 
     func cleanData() {
-        self.dataSource.datas = []
+        self.dataSource.datas.accept([])
     }
     
     func createOneTimeToast() -> (String?) -> Void {
@@ -178,7 +180,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var datas: [TableRowNode] = []
+    let datas = BehaviorRelay<[TableRowNode]>(value: [])
 
     var cellFactory: UITableViewCellFactory
 
@@ -196,17 +198,17 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datas.count
+        return datas.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch datas[indexPath.row].type {
+        switch datas.value[indexPath.row].type {
         case let .node(identifier):
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
-            datas[indexPath.row].itemRender(cell)
+            datas.value[indexPath.row].itemRender(cell)
             return cell
         default:
             return CycleImageCell()
@@ -222,13 +224,13 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        datas[indexPath.row].selector?()
+        datas.value[indexPath.row].selector?()
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             EnvContext.shared.toast.showLoadingToast("正在取消关注")
-            datas[indexPath.row]
+            datas.value[indexPath.row]
                     .editor?(editingStyle)
                     .debug()
                     .subscribe(onNext: { result in

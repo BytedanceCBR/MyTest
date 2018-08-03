@@ -76,6 +76,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         return indicator
     }()
 
+    lazy var infoMaskView: EmptyMaskView = {
+        let re = EmptyMaskView()
+        re.isHidden = true
+        re.label.text = "没有找到相关的信息，换个条件试试吧~"
+        return re
+    }()
+
     let conditionPanelState = ConditionPanelState()
 
     let searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
@@ -196,6 +203,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.top.equalTo(searchFilterPanel.snp.bottom)
         }
 
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+
         bindLoadMore()
 
         bindSearchRequest()
@@ -308,6 +320,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 .disposed(by: disposeBag)
         self.categoryListViewModel?.onDataLoaded = { [unowned self] _ in
             self.footIndicatorView.stopAnimating()
+            self.infoMaskView.isHidden = false
         }
     }
 

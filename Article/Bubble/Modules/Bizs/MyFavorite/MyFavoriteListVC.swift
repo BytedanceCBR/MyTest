@@ -57,7 +57,9 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.bottom.equalToSuperview()
         }
-        categoryListVM = CategoryListViewModel(tableView: tableView, navVC: self.navigationController)
+        categoryListVM = CategoryListViewModel(
+            tableView: tableView,
+            navVC: self.navigationController)
 
         categoryListVM?.requestFavoriteData(houseType: houseType)
         tableView.delegate = self
@@ -106,8 +108,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let datas = categoryListVM?.dataSource.datas {
-            if datas.count > indexPath.row {
-                datas[indexPath.row].selector?()
+            if datas.value.count > indexPath.row {
+                datas.value[indexPath.row].selector?()
             }
         }
     }
