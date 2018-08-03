@@ -77,9 +77,9 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                     let vc = SettingViewController(routeParamObj: TTRouteParamObjWithDict(["enter_type": "more"]))
                     self.openVC?(vc)
             }
-            <- parseContactUsNode(phoneNumber: "100-0937-3859") {
-                Utils.telecall(phoneNumber: "100-0937-3859")
-        }
+//            <- parseContactUsNode(phoneNumber: "100-0937-3859") {
+//                Utils.telecall(phoneNumber: "100-0937-3859")
+//        }
         return dataParser.parser
     }
 }
