@@ -11,10 +11,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-fileprivate enum CellType: String {
-    case bubble = "bubble"
-    case item = "item"
-}
+
 
 class CountryListVC: BaseViewController {
 
@@ -83,13 +80,14 @@ class CountryListVC: BaseViewController {
         dataSource.onItemSelect = self.onItemSelect
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
-        tableView.register(BubbleCell.self, forCellReuseIdentifier: CellType.bubble.rawValue)
-        tableView.register(CityItemCell.self, forCellReuseIdentifier: CellType.item.rawValue)
+        tableView.register(BubbleCell.self, forCellReuseIdentifier: CountryListCellType.bubble.rawValue)
+        tableView.register(CityItemCell.self, forCellReuseIdentifier: CountryListCellType.item.rawValue)
         tableView.reloadData()
         EnvContext.shared.client.generalBizconfig.generalCacheSubject
                 .subscribe(onNext: { [unowned self] data in
                     if let data = data {
-                        let listData = (parseHotCityList(data.hotCityList) <*> parseCityList(data.cityList))([])
+                        let history = EnvContext.shared.client.generalBizconfig.cityHistoryDataSource.getHistory()
+                        let listData = (parseHotCityList(data.hotCityList) <*> parseHistoryList(history) <*> parseCityList(data.cityList))([])
                         self.dataSource.datas = listData
                         self.tableView.reloadData()
                     }
@@ -276,6 +274,22 @@ fileprivate func parseHotCityList(_ hotCityList: [HotCityItem]) -> ([CountryList
                 pinyin: nil,
                 simplePinyin: nil,
                 children: hots)]
+    }
+}
+
+fileprivate func parseHistoryList(_ nodes: [CountryListNode]) -> ([CountryListNode]) -> [CountryListNode] {
+    return { theNodes in
+        if nodes.count > 0 {
+            return theNodes + [CountryListNode(
+                label: "历史",
+                type: .bubble,
+                cityId: nil,
+                pinyin: nil,
+                simplePinyin: nil,
+                children: nodes)]
+        } else {
+            return theNodes
+        }
     }
 }
 
@@ -568,11 +582,3 @@ fileprivate class HeaderView: UIView {
     }
 }
 
-fileprivate struct CountryListNode {
-    let label: String
-    let type: CellType
-    let cityId: Int?
-    let pinyin: String?
-    let simplePinyin: String?
-    let children: [CountryListNode]?
-}

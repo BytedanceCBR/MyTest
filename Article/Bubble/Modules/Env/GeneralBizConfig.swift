@@ -22,6 +22,8 @@ class GeneralBizConfig {
 
     let disposeBag = DisposeBag()
 
+    let cityHistoryDataSource = CountryListHistoryDataSource()
+
     init(locationManager: LocationManager) {
         self.locationManager = locationManager
 
@@ -29,6 +31,9 @@ class GeneralBizConfig {
             .filter { $0 != nil }
             .subscribe(onNext: { [unowned self] (cityId) in
                 self.setCurrentSelectCityId(cityId: cityId!)
+                if let item = self.cityItemById()(cityId) {
+                    self.cityHistoryDataSource.addHistory(item: item, maxSaveCount: 10)
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -52,6 +57,14 @@ class GeneralBizConfig {
             let cityItem = self?.generalCacheSubject.value?.cityList
                 .first { $0.cityId == cityId }
             return cityItem?.name
+        }
+    }
+
+    func cityItemById() -> (Int?) -> CityItem? {
+        return { [weak self] (cityId) in
+            let cityItem = self?.generalCacheSubject.value?.cityList
+                    .first { $0.cityId == cityId }
+            return cityItem
         }
     }
 
