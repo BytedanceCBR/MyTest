@@ -72,6 +72,7 @@ class Client: NSObject {
                     if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
                         self?.generalBizconfig.fetchConfiguration()
                     }
+                    self?.fetchSearchConfig()
                     self?.setCommonNetwork()
                 })
                 .disposed(by: disposeBag)
