@@ -158,7 +158,7 @@ class CategoryListViewModel: DetailPageViewModel {
         return { [unowned self] datas in
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
-            self.onDataLoaded?(datas.count)
+            self.onDataLoaded?(self.dataSource.datas.value.count)
         }
     }
 

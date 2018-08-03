@@ -318,9 +318,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     }
                 })
                 .disposed(by: disposeBag)
-        self.categoryListViewModel?.onDataLoaded = { [unowned self] _ in
+        self.categoryListViewModel?.onDataLoaded = { [unowned self] (count) in
             self.footIndicatorView.stopAnimating()
-            self.infoMaskView.isHidden = false
+            if count == 0 {
+                self.infoMaskView.isHidden = false
+            } else {
+                self.infoMaskView.isHidden = true
+            }
         }
     }
 
