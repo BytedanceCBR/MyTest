@@ -106,7 +106,7 @@ func parseUserInfoNode(
         } else {
             selector = {
 //                TTAccountManager.presentQuickLogin(fromVC: EnvContext.shared.rootNavController, type: TTAccountLoginDialogTitleType.default, source: "", completion: { (state) in
-//                    
+//
 //                })
                 TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"))
             }

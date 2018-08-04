@@ -90,6 +90,22 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
 
+    lazy var acceptCheckBox: UIButton = {
+        let re = UIButton()
+        re.setImage(#imageLiteral(resourceName: "checkbox-checked"), for: .selected)
+        re.setImage(#imageLiteral(resourceName: "checkbox"), for: .normal)
+        return re
+    }()
+
+    lazy var agreementLabel: YYLabel = {
+        let re = YYLabel()
+        re.numberOfLines = 0
+        re.lineBreakMode = NSLineBreakMode.byWordWrapping
+        re.textColor = hexStringToUIColor(hex: "#999999")
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        return re
+    }()
+
     private let disposeBag = DisposeBag()
 
     private var quickLoginViewModel: QuickLoginViewModel?
@@ -204,6 +220,26 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             maker.height.equalTo(46)
         }
 
+        view.addSubview(agreementLabel)
+        agreementLabel.snp.makeConstraints { maker in
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-25)
+            } else {
+                maker.bottom.equalTo(-25)
+            }
+            maker.left.equalTo(77)
+            maker.right.equalTo(-60)
+        }
+
+        view.addSubview(acceptCheckBox)
+        acceptCheckBox.snp.makeConstraints { maker in
+            maker.right.equalTo(agreementLabel.snp.left).offset(-5)
+            maker.height.width.equalTo(12)
+            maker.top.equalTo(agreementLabel.snp.top).offset(3)
+        }
+
+        setAgreementContent()
+
         if let quickLoginViewModel = self.quickLoginViewModel {
             sendVerifyCodeBtn.rx.tap
                     .do(onNext: { [unowned self] in self.showLoading(title: "正在获取验证码") })
@@ -251,6 +287,21 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let size = agreementLabel.sizeThatFits(CGSize(width: view.frame.width - 120, height: 1000))
+        agreementLabel.snp.remakeConstraints { maker in
+            maker.right.equalTo(-60)
+            maker.height.equalTo(size.height)
+            maker.left.equalTo(77)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-25)
+            } else {
+                maker.bottom.equalTo(-25)
+            }
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -288,6 +339,16 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    private func setAgreementContent() {
+        acceptCheckBox.isSelected = true
+        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
+        attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
+        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 8, length: 11))
+        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 8, length: 11))
+        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 20, length: 6))
+        agreementLabel.attributedText = attrText
+    }
+
     deinit {
         print("deinit QuickLoginVC")
     }
@@ -302,4 +363,9 @@ func openQuickLoginVC(disposeBag: DisposeBag) {
         })
         .disposed(by: disposeBag)
     EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+}
+
+fileprivate func commonTextStyle() -> [NSAttributedStringKey: Any] {
+    return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999"),
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
 }
