@@ -136,12 +136,13 @@ dispatch_async(dispatch_get_main_queue(), block);\
 }
 
 - (void)initRightBarButtonsWithSearchButtonEnable:(BOOL)enable {
-    self.rightView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"编辑" target:self action:@selector(_editActionFired:)];
+//    self.rightView = (TTNavigationBarItemContainerView *)[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"编辑" target:self action:@selector(_editActionFired:)];
     if (!enable) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.rightView];
         return;
     }
     NSMutableArray *buttons = [NSMutableArray array];
+    // f100 去掉编辑按钮
     [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:self.rightView]];
     
     UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc]   initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace   target:nil action:nil];
@@ -339,12 +340,12 @@ dispatch_async(dispatch_get_main_queue(), block);\
 - (void)changeRightButtonTextIfNeededAtIndex:(NSUInteger)index {
     if ([self.pageController.currentPageViewController respondsToSelector:@selector(isCurrentVCEditing)]) {
         if([((id<TTFeedFavoriteHistoryProtocol>)self.pageController.currentPageViewController) isCurrentVCEditing]) {
-            [self.rightView.button setTitle:NSLocalizedString(@"取消", nil) forState:UIControlStateNormal];
+//            [self.rightView.button setTitle:NSLocalizedString(@"取消", nil) forState:UIControlStateNormal];
             [self.titleLabel setText:[[[self class] edittingTitleStringArray] objectAtIndex:index]];
             [self.titleLabel sizeToFit];
         }
         else {
-            [self.rightView.button setTitle:NSLocalizedString(@"编辑", nil) forState:UIControlStateNormal];
+//            [self.rightView.button setTitle:NSLocalizedString(@"编辑", nil) forState:UIControlStateNormal];
             [self.titleLabel setText:NSLocalizedString(@"收藏", nil)];
             [self.titleLabel sizeToFit];
         }

@@ -54,7 +54,7 @@ static TTAccountLoginDynamicConfTextForTypeBlock s_loginDialogTitleHandler;
 
 + (NSString *)loginDialogTitleForType:(NSInteger /*TTAccountLoginDialogTitleType*/)type
 {
-    NSString *defaultTitle = NSLocalizedString(@"手机登录", nil);
+    NSString *defaultTitle = NSLocalizedString(@"手机快速登陆", nil);
     if (s_loginDialogTitleHandler) {
         NSString *exoticTitle = s_loginDialogTitleHandler(type);
         if ([exoticTitle length] > 0) {

@@ -56,8 +56,12 @@ class SuggestionListVC: BaseViewController {
 
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
-            maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(CommonUIStyle.NavBar.height)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(58)
+            } else {
+                maker.height.equalTo(65)
+            }
+            maker.top.left.right.equalToSuperview()
         }
 
         navBar.searchInput.rx.textInput.text

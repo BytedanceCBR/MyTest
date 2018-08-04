@@ -123,6 +123,6 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        return "取消订阅"
+        return "取消关注"
     }
 }

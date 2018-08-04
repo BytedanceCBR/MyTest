@@ -21,16 +21,36 @@ class QuickLoginViewModel {
 
     weak var sendSMSBtn: UIButton?
 
-    init(){
+    weak var phoneInput: UITextField?
 
+    var timerDisposable: Disposable?
+
+    init() {
         requestSMS
                 .filter { $0 != nil && $0!.isEmpty == false }
-                .subscribe(onNext: curry(self.requestSMSCode)(nil))
+                .subscribe(onNext: { [unowned self] s in
+                    self.requestSMSCode(captcha: nil, phoneNumber: s)
+                })
                 .disposed(by: disposeBag)
 
         requestLogin
                 .filter { $0 != nil }
-                .subscribe(onNext: self.handleLoginRequest)
+                .subscribe(onNext: { [unowned self] in
+                    self.handleLoginRequest(inputs: $0)
+                })
+                .disposed(by: disposeBag)
+    }
+
+    convenience init(sendSMSBtn: UIButton, phoneInput: UITextField) {
+        self.init()
+        self.sendSMSBtn = sendSMSBtn
+        self.phoneInput = phoneInput
+        phoneInput.rx.text
+                .filter { $0 != nil }
+                .map { [unowned self] (text) in
+                    text!.count >= 11 && self.timerDisposable == nil
+                }
+                .bind(to: sendSMSBtn.rx.isEnabled)
                 .disposed(by: disposeBag)
     }
 
@@ -53,7 +73,7 @@ class QuickLoginViewModel {
                     self.onResponse.accept(.successed)
                     EnvContext.shared.client.accountConfig.userInfo.accept(BDAccount.shared().user)
                     EnvContext.shared.toast.showToast("短信验证码发送成功")
-                }, onError: { error in
+                }, onError: { [unowned self] error in
                     self.onResponse.accept(.error(error))
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("短信发送请求失败")
@@ -75,7 +95,6 @@ class QuickLoginViewModel {
     func quickLogin(mobile: String, smsCode: String) {
         EnvContext.shared.toast.showLoadingToast("正在登录")
         requestQuickLogin(mobile: mobile, smsCode: smsCode)
-                .debug()
                 .subscribe(onNext: { [unowned self] void in
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("登录成功")
@@ -83,51 +102,48 @@ class QuickLoginViewModel {
                     self.onResponse.accept(.successed)
                     self.loginResponse.accept(.successed)
                     EnvContext.shared.client.accountConfig.setUserPhone(phoneNumber: mobile)
-                }, onError: { error in
+                }, onError: { [unowned self] error in
                     self.loginResponse.accept(.error(error))
+                    EnvContext.shared.toast.showToast("登录失败")
                 })
                 .disposed(by: disposeBag)
     }
 
     func blockRequestSendMessage(button: UIButton) {
         let maxElements = 60
-        Observable<Int>
-                .create { observer in
-                    var value = 1
-                    let timer = DispatchSource.makeTimerSource(
-                            flags: DispatchSource.TimerFlags(rawValue: UInt(0)),
-                            queue: DispatchQueue.main)
-                    timer.schedule(deadline: DispatchTime.now(), repeating: 1)
-                    timer.setEventHandler {
-                        if value <= maxElements {
-                            observer.onNext(value)
-                            value = value + 1
-                        }
-                    }
-                    timer.resume()
-                    return Disposables.create {
-                        timer.suspend()
-                    }
+        timerDisposable = Observable<Int>.interval(1, scheduler: MainScheduler.instance)
+                .map {
+                    maxElements - $0
                 }
-                .map { maxElements - $0 }
-                .debug()
-                .bind(onNext: curry(setButtonCountDown)(button))
-                .disposed(by: disposeBag)
+                .debug("blockRequestSendMessage")
+                .bind(onNext: setButtonCountDown(button: button))
+        disposeBag.insert(timerDisposable!)
     }
-    
-    func setButtonCountDown(button: UIButton, count: Int) {
-        if count == 0 {
-            QuickLoginVC.setVerifyCodeBtn(content: "获取验证码", btn: button)
-            button.isEnabled = true
-        } else {
-            button.isEnabled = false
-            QuickLoginVC.setVerifyCodeBtn(
-                content: "重新发送(\(count))S",
-                color: hexStringToUIColor(hex: "#999999"),
-                status: .disabled,
-                btn: button)
-        }
 
+    func setButtonCountDown(button: UIButton) -> (Int) -> Void {
+        return { [unowned self, weak button] (count) in
+            if count == 0 {
+                self.timerDisposable?.dispose()
+                self.timerDisposable = nil
+            }
+            if let button = button {
+                if count == 0 {
+                    QuickLoginVC.setVerifyCodeBtn(content: "获取验证码", btn: button)
+                    button.isEnabled = true
+                } else {
+                    button.isEnabled = false
+                    QuickLoginVC.setVerifyCodeBtn(
+                            content: "重新发送(\(count))S",
+                            color: hexStringToUIColor(hex: "#999999"),
+                            status: .disabled,
+                            btn: button)
+                }
+            }
+        }
+    }
+
+    deinit {
+        print("deinit")
     }
 
 }

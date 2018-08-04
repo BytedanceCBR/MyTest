@@ -435,6 +435,8 @@ static SSFeedbackManager *manager = nil;
     if (model == nil) {
         return;
     }
+    //TODO f100 这里临时禁掉服务器下发的文案
+    model.content = @"你好~有任何产品问题或建议都可以在这里反馈给我们哦～也可以通过QQ3507049274与我们取得联系。";
     NSData * arch = [NSKeyedArchiver archivedDataWithRootObject:model];
     [[NSUserDefaults standardUserDefaults] setObject:arch forKey:kSSFeedbackDefaultModelKey];
     [[NSUserDefaults standardUserDefaults] synchronize];

@@ -60,6 +60,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                 label: "我的收藏",
                 isShowBottomLine: true) {
                     if let vc = TTFavoriteHistoryViewController(routeParamObj: TTRouteParamObjWithDict(["stay_id": "favorite"])) {
+                        
                         self.openVC?(vc)
                     }
             }

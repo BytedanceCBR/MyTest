@@ -7,7 +7,7 @@
 */
 // f100
 "house_list"            = "_TtC6Bubble18CategoryListPageVC";
-
+"flogin"                = "_TtC6Bubble12QuickLoginVC";
 
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";

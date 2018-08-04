@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A3F06C676D3E509129CD69EE0DAA54A8"
+               BlueprintIdentifier = "A35D3B016241870D8A7B8A03D9DFA4F0"
                BuildableName = "libPods-NewsInHouse.a"
                BlueprintName = "Pods-NewsInHouse"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
@@ -86,6 +86,16 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
+         <AdditionalOption
+            key = "MallocStackLogging"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "PrefersMallocStackLoggingLite"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction

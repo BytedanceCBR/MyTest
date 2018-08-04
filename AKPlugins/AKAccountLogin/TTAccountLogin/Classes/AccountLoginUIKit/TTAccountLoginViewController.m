@@ -239,7 +239,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //        _switchButton.hidden = NO;
         _upTipLabel.hidden = NO;
         [_switchButton setTitle:NSLocalizedString(@"账号密码登录", nil) forState:UIControlStateNormal];
-        self.mobileInput.field.placeholder = NSLocalizedString(@"手机号", nil);
+        self.mobileInput.field.placeholder = NSLocalizedString(@"请输入手机号码", nil);
         self.captchaInput.field.placeholder = NSLocalizedString(@"请输入验证码", nil);
         self.captchaInput.field.secureTextEntry = NO;
         // self.captchaInput.field.keyboardType = UIKeyboardTypeDefault;

@@ -92,12 +92,13 @@ UIActionSheetDelegate
 #pragma mark - delegate for UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger numberOfSections = 2;
-    if ([self showTableviewSectionOfThirdAccounts])
-        numberOfSections++;
-    if ([self showTableviewSectionOfLogout])
-        numberOfSections++;
-    return numberOfSections;
+    return 1;
+//    NSInteger numberOfSections = 2;
+//    if ([self showTableviewSectionOfThirdAccounts])
+//        numberOfSections++;
+//    if ([self showTableviewSectionOfLogout])
+//        numberOfSections++;
+//    return numberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
