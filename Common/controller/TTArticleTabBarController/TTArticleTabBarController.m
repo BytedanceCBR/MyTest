@@ -258,8 +258,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self reloadTheme];
     for (TTTabBarItem * item in ((TTTabbar *)self.tabBar).tabItems) {
         if ([item isEqual:[((TTTabbar *)self.tabBar).tabItems firstObject]]) {
-            item.ttBadgeView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
-            item.ttBadgeView.lastBadgeViewStyle = TTBadgeNumberViewStyleDefault;
+            item.ttBadgeView.badgeViewStyle = TTBadgeNumberPoint;
+            item.ttBadgeView.lastBadgeViewStyle = TTBadgeNumberPoint;
         }
     }
 }
@@ -445,20 +445,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [self tabBarController:self didSelectViewController:self.viewControllers[index]];
         };
         
-//        BOOL canItemSelected = YES;
-//        NSString *toTabTag = ((TTTabbar *)self.tabBar).tabItems[index].identifier;
-//        if (!tta_IsLogin() && [toTabTag isEqualToString:kAKTabActivityTabKey]) {
-//            canItemSelected = NO;
-//            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-//                if (result) {
-//                    DidSelectItem();
-//                }
-//            }];
-//        }
-//
-//        if (canItemSelected) {
+        BOOL canItemSelected = YES;
+        NSString *toTabTag = ((TTTabbar *)self.tabBar).tabItems[index].identifier;
+        if (!tta_IsLogin() && [toTabTag isEqualToString:kFHouseMessageTabKey]) {
+            canItemSelected = NO;
+//            TTRouteUserInfo* obj = [[TTRouteUserInfo alloc] initWithInfo:@{@"callback": DidSelectItem}];
+//            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:obj];
+            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+                if (result) {
+                    DidSelectItem();
+                }
+            }];
+
+        }
+
+        if (canItemSelected) {
             DidSelectItem();
-//        }
+        }
     }];
 
     //设置默认tabKey

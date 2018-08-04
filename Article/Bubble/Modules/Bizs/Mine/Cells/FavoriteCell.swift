@@ -128,7 +128,7 @@ func parseFavoriteNode(disposeBag: DisposeBag, navVC: UINavigationController?) -
     let selectors = [HouseType.secondHandHouse,
                      HouseType.newHouse,
                      HouseType.neighborhood].map { (houseType) in
-                        return {
+                        return confirmUserAuth(navVC: navVC) { [weak navVC] in
                             let vc = MyFavoriteListVC(houseType: houseType)
                             vc.navBar.backBtn.rx.tap
                                 .subscribe(onNext: { void in
@@ -281,6 +281,24 @@ fileprivate func createFavoriteItemViewByEntryId(item: EntryItem) -> SpringBroad
         return SpringBroadItemView(image: #imageLiteral(resourceName: "home-icon-xiaoqu"), title: item.name ?? "找小区")
     default:
         return SpringBroadItemView(image: #imageLiteral(resourceName: "icon-zixun-1"), title: item.name ?? "资讯")
+    }
+}
+
+
+fileprivate func confirmUserAuth(
+    navVC: UINavigationController?,
+    callBack: @escaping () -> Void) -> () -> Void {
+    return {
+        if !BDAccount.shared().isLogin() {
+            let vc = QuickLoginVC { result in
+                if result {
+                    callBack()
+                }
+            }
+            navVC?.present(vc, animated: true, completion: nil)
+        } else {
+            callBack()
+        }
     }
 }
 

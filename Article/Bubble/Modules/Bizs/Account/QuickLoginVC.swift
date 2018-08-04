@@ -7,7 +7,14 @@ import Foundation
 import SnapKit
 import RxSwift
 import RxCocoa
+
+protocol QuickLoginVCDelegate {
+    func loginSuccessed()
+}
+
 class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
+    
+    var loginDelegate: QuickLoginVCDelegate?
 
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(backBtnImg: #imageLiteral(resourceName: "close"))
@@ -86,6 +93,8 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     private let disposeBag = DisposeBag()
 
     private var quickLoginViewModel: QuickLoginViewModel?
+    
+    private var complete: ((Bool) -> Void)?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -99,6 +108,23 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         self.navBar.backBtn.rx.tap.bind { [unowned self] void in
             if let navVC = self.navigationController {
                 navVC.popViewController(animated: true)
+            }
+        }.disposed(by: disposeBag)
+    }
+    
+    @objc
+    public init(complete: @escaping (Bool) -> Void) {
+        super.init(nibName: nil, bundle: nil)
+        self.complete = complete
+        self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
+        self.navBar.backBtn.rx.tap.bind { [unowned self] void in
+            if let navVC = self.navigationController {
+                navVC.popViewController(animated: true)
+                self.complete?(false)
+            } else {
+                self.dismiss(animated: true, completion: {
+                    self.complete?(false)
+                })
             }
         }.disposed(by: disposeBag)
     }
@@ -198,13 +224,18 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         EnvContext.shared.client.accountConfig.userInfo
-                .filter { $0 != nil }
-                .subscribe(onNext: { [unowned self] _ in
-                    if let navVC = self.navigationController {
-                        navVC.popViewController(animated: true)
-                    }
-                })
-                .disposed(by: disposeBag)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [unowned self] _ in
+                if let navVC = self.navigationController {
+                    navVC.popViewController(animated: true)
+                    self.complete?(true)
+                } else {
+                    self.dismiss(animated: true, completion: {
+                        self.complete?(true)
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
 
         Observable
             .combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)

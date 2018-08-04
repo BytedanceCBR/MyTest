@@ -722,7 +722,8 @@ TTFeedCollectionCellDelegate>
 - (void)ttFeedCollectionCellStartLoading:(id<TTFeedCollectionCell>)feedCollectionCell
 {
     if ([self.delegate respondsToSelector:@selector(ttFeedCollectionViewControllerDidStartLoading:)]) {
-        [self.delegate ttFeedCollectionViewControllerDidStartLoading:self];
+        //TODO: f100 解决双击这里，却刷新第一个tabitem的问题
+//        [self.delegate ttFeedCollectionViewControllerDidStartLoading:self];
     }
     
     if (!_refreshView.hidden && ([feedCollectionCell.categoryModel.categoryID isEqualToString:self.currentCategory.categoryID]) &&

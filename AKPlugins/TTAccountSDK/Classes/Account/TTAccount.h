@@ -9,13 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "TTAccountDefine.h"
 #import "TTAccountConfiguration.h"
+#import <BDAccount/BDAccountSDK.h>
 #if __has_include("TTAccountConfiguration+PlatformAccount.h")
 #import "TTAccountConfiguration+PlatformAccount.h"
 #endif
 
 
 
-#define tta_IsLogin() ([[TTAccount sharedAccount] isLogin])
+#define tta_IsLogin() ([[BDAccount sharedAccount] isLogin])
 
 NS_ASSUME_NONNULL_BEGIN
 

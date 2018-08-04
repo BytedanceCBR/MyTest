@@ -14,6 +14,7 @@
 #import <TTRoute.h>
 #import <TTAccountManager.h>
 #import <TTAlphaThemedButton.h>
+#import "Bubble-Swift.h"
 @interface AKLoginTrafficViewController () <AKRedPacketOptionalLoginViewDelegate>
 
 @property (nonatomic, strong)UILabel                                *titleLabel;
@@ -39,7 +40,7 @@
 
 + (void)presentLoginTrafficViewControllerWithCompleteBlock:(CompleteBlock)block
 {
-    AKLoginTrafficViewController *vc = [[AKLoginTrafficViewController alloc] initWithCompleteBlock:block];
+    QuickLoginVC *vc = [[QuickLoginVC alloc] initWithComplete:block];
     [ak_top_vc() presentViewController:vc animated:YES completion:nil];
 }
 
