@@ -17,7 +17,7 @@
 #import "TTEditUGCProfileViewModel+Notification.h"
 #import "NSString+TTLength.h"
 #import "TTEditUserProfileViewModel+Network.h"
-
+#import "Bubble-Swift.h"
 
 
 
@@ -255,6 +255,15 @@
                     
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:hint indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                 } else {
+                    
+                    // f100 修改BDAccount的代码
+                    BDAccountUser* user = [[BDAccount sharedAccount] user];
+                    if (user != nil) {
+                        user.avatarURL = imageURIString;
+                        [[BDAccount sharedAccount] setUser:user];
+                        [[[EnvContext shared] client] setUserInfoWithUser:user];
+                    }
+                    
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"头像修改成功", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                     
                     NSString *imageURL = avatarOrBg ? [userEntity.auditInfoSet userAvatarURLString] : userEntity.bgImgURL;

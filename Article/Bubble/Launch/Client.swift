@@ -163,6 +163,11 @@ class Client: NSObject {
     private func setupLocationManager() {
         locationManager.requestCurrentLocation()
     }
+    
+    @objc
+    func setUserInfo(user: BDAccountUser?) {
+        self.accountConfig.userInfo.accept(user)
+    }
 
     deinit {
         reachability.stopNotifier()

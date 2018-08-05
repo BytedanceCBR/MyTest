@@ -85,7 +85,7 @@
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
 #import <BDAccount/BDAccountSDK.h>
-
+#import "Bubble-Swift.h"
 //爱看
 #import "AKTaskSettingHelper.h"
 
@@ -166,6 +166,7 @@ static NSString *const TTVideoTrafficTipSettingKey = @"TTVideoTrafficTipSettingK
 UITableViewDelegate,
 UITableViewDataSource,
 UIActionSheetDelegate,
+BDAccountEventListener,
 TTEditUserProfileViewControllerDelegate
 > {
     CGFloat     _fileSize;
@@ -344,19 +345,22 @@ TTEditUserProfileViewControllerDelegate
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(registPushNotification:) name:kSettingViewRegistPushNotification object:nil];
     
-    [TTAccount addMulticastDelegate:self];
+    //TODO: f100 解决登出后，没有退出setting页面的问题
+    [BDAccount addListener:self];
     
 }
 
 - (void)unregisterNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [TTAccount removeMulticastDelegate:self];
+    //TODO: f100 解决登出后，没有退出setting页面的问题
+    [BDAccount removeListener:self];
 }
 
 #pragma mark - TTAccountMulticastProtocol
 
 - (void)onAccountLogout
 {
+    //TODO: f100 解决登出后，没有退出setting页面的问题
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"退出成功", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(goBack:) object:nil];
@@ -1389,11 +1393,12 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)logout {
     NSString *userID = [[BDAccount sharedAccount] userIdString];
-    
+    // f100 logout
     WeakSelf;
-    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
+    [BDAccountNetworkAPI requestLogout:^(BOOL success, NSError * _Nullable error) {
         StrongSelf;
-        
+        [[BDAccount sharedAccount] doLogout];
+        [[[EnvContext shared] client] setUserInfoWithUser: nil];
         BOOL shouldIgnoreError = NO;
         //未设置密码也可以退出登录
         if (error.code == 1037) {

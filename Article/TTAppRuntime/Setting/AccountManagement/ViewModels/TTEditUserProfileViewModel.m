@@ -19,7 +19,7 @@
 #import "ArticleMobilePasswordViewController.h"
 #import "ArticleMobileChangeViewController.h"
 #import "TTEditUserProfileViewController.h"
-
+#import "BDAccountSDK.h"
 
 
 @interface TTEditUserProfileViewModel ()
@@ -81,9 +81,11 @@ TTEditUserProfileViewDelegate
 
 - (void)refreshEditableUserInfo
 {
+    
+    BDAccountUser* userInfo = [[BDAccount sharedAccount] user];
     TTAccountUserAuditSet *newAuditInfo = [[TTAccountManager currentUser].auditInfoSet copy];
-    SSMyUserModel *myUser = [TTAccountManager sharedManager].myUser;
-    if (!newAuditInfo && !myUser) return;
+    
+    if (!newAuditInfo && !userInfo) return;
     
     if (!_editableAuditInfo) {
         _editableAuditInfo = [TTEditableUserAuditInfo new];
@@ -94,14 +96,15 @@ TTEditUserProfileViewDelegate
         } @finally {
         }
     }
+    // f100 取出TTAccount库
     _editableAuditInfo.isAuditing  = [newAuditInfo isAuditing];
     _editableAuditInfo.editEnabled = YES;//[newAuditInfo modifyUserInfoEnabled];
-    _editableAuditInfo.name        = [newAuditInfo username];
-    _editableAuditInfo.avatarURL   = [newAuditInfo userAvatarURLString];
-    _editableAuditInfo.userDescription = [newAuditInfo userDescription];
-    _editableAuditInfo.gender = @([myUser.gender integerValue]);
-    _editableAuditInfo.birthday = myUser.birthday;
-    _editableAuditInfo.area = myUser.area;
+    _editableAuditInfo.name        = userInfo.screenName;
+    _editableAuditInfo.avatarURL   = userInfo.avatarURL;
+    _editableAuditInfo.userDescription = userInfo.userDescription;
+    _editableAuditInfo.gender = @([userInfo.gender integerValue]);
+    _editableAuditInfo.birthday = userInfo.birthday;
+    _editableAuditInfo.area = userInfo.area;
 }
 
 - (void)registerNotifications
