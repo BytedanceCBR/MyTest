@@ -84,6 +84,7 @@
 #import "TTTabBarProvider.h"
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
+#import <BDAccount/BDAccountSDK.h>
 
 //爱看
 #import "AKTaskSettingHelper.h"
@@ -115,6 +116,8 @@ typedef NS_ENUM(NSUInteger, TTSettingSectionType) {
     kTTSettingSectionTypeTTCover,      // 头条封面、当前版本、使用帮助
     kTTSettingSectionTypeLogout,       // 退出登录
     //    kTTSettingSectionTypeUmengDebug,   // 友盟Debug
+    kTTSettingSectionTypeAbout,        //关于我们
+    
 };
 
 typedef NS_ENUM(NSUInteger, TTSettingCellType) {
@@ -142,6 +145,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeBlockUsersList,          // 黑名单
     
     SettingCellTypeLogout,                  // 退出登录
+    SettingCellTypeAbout,                   // 关于我们
 };
 typedef TTSettingCellType SettingCellType;
 
@@ -305,13 +309,13 @@ TTEditUserProfileViewControllerDelegate
 #ifdef DEBUG
     
     NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-    [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+    [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
     
     _aboutLabel.text = string;
 #endif
     if ([TTSandBoxHelper isInHouseApp]) {
         NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
         _aboutLabel.text = string;
     }
     
@@ -341,6 +345,7 @@ TTEditUserProfileViewControllerDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(registPushNotification:) name:kSettingViewRegistPushNotification object:nil];
     
     [TTAccount addMulticastDelegate:self];
+    
 }
 
 - (void)unregisterNotifications {
@@ -371,7 +376,7 @@ TTEditUserProfileViewControllerDelegate
     self.tapCount++;
 
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
@@ -379,7 +384,7 @@ TTEditUserProfileViewControllerDelegate
     if (self.tapCount > 5) {
         
         NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
         
         _aboutLabel.text = string;
         
@@ -765,6 +770,11 @@ TTEditUserProfileViewControllerDelegate
         cell.detailTextLabel.text = NSLocalizedString(@"3步注册开户", nil);
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypeAbout) {
+        cell.textLabel.text = @"关于我们";
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     // luohuaqing: bug fix. 在IOS8上，textLabel和detailTextLabel的默认font size会随系统设置的改变而改变
@@ -790,11 +800,12 @@ TTEditUserProfileViewControllerDelegate
 
 - (NSArray *)supportSettingSectionTypeArray
 {
-    if ([TTAccountManager isLogin]) {
+    if ([[BDAccount sharedAccount] isLogin]) {
         return @[@(kTTSettingSectionTypeAccount),
                  @(kTTSettingSectionTypeAbstractFont),
+                 @(kTTSettingSectionTypeAbout),
                  @(kTTSettingSectionTypeTTCover),
-                 @(kTTSettingSectionTypeLogout),];
+                 @(kTTSettingSectionTypeLogout)];
     } else {
         return @[@(kTTSettingSectionTypeAbstractFont),@(kTTSettingSectionTypeTTCover)];
     }
@@ -810,22 +821,24 @@ TTEditUserProfileViewControllerDelegate
         {
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
                                                                      @(SettingCellTypeClearCache),
-                                                                     @(SettingCellTypeFontMode),
+//                                                                     @(SettingCellTypeFontMode),
                                                                      @(SettingCellTypeLoadImageMode),
-                                                                     @(SettingCellTypeVideoTrafficTip),
+//                                                                     @(SettingCellTypeVideoTrafficTip),
                                                                      @(SettingCellTypePushNotification),]];
-            if ([AKTaskSettingHelper shareInstance].akBenefitEnable) {
-                [array addObject:@(SettingCellTypeCoinTaskSetting)];
-            }
-            if (_shouldShowBtn4RefreshSetting) {
-                [array insertObject:@(SettingCellTypeShowBtn4Refresh) atIndex:3];
-            }
+//            if ([AKTaskSettingHelper shareInstance].akBenefitEnable) {
+//                [array addObject:@(SettingCellTypeCoinTaskSetting)];
+//            }
+//            if (_shouldShowBtn4RefreshSetting) {
+//                [array insertObject:@(SettingCellTypeShowBtn4Refresh) atIndex:3];
+//            }
             return array;
         }
         case kTTSettingSectionTypeTTCover:
             return @[@(SettingCellTypeCheckNewVersion)];
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
+        case kTTSettingSectionTypeAbout:
+            return @[@(SettingCellTypeAbout)];
         default:
             return @[];
     }
@@ -1334,6 +1347,8 @@ TTEditUserProfileViewControllerDelegate
             [TTAccountManager presentQuickLoginFromVC:self.viewController type:TTAccountLoginDialogTitleTypeDefault source:@"" isPasswordStyle:YES completion:nil];
         }
         wrapperTrackEvent(@"ad_register", @"setting_ad_register_clk");
+    } else if (cellType == SettingCellTypeAbout) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
     }
     
     if(_delegate) {
@@ -1373,7 +1388,7 @@ TTEditUserProfileViewControllerDelegate
 }
 
 - (void)logout {
-    NSString *userID = [TTAccountManager userID];
+    NSString *userID = [[BDAccount sharedAccount] userIdString];
     
     WeakSelf;
     [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
@@ -1510,7 +1525,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)showEditUserView:(id)sender {
     wrapperTrackEvent(@"setting", @"enter_edit_profile");
     
-    if([TTAccountManager isLogin]) {
+    if([[BDAccount sharedAccount] isLogin]) {
         TTEditUserProfileViewController *profileVC = [TTEditUserProfileViewController new];
         profileVC.userType = [TTAccountManager accountUserType];
         profileVC.delegate = self;
