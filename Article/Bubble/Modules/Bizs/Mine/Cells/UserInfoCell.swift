@@ -130,11 +130,7 @@ func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void
         if let urlStr = info?.avatarURL {
             theCell.avatarView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default-avatar-icons"))
         } else {
-<<<<<<< HEAD
             theCell.avatarView.image = #imageLiteral(resourceName: "default-avatar-icons")
-=======
-            theCell.avatarView.image =  #imageLiteral(resourceName: "default-avatar-icons")
->>>>>>> 30ca0676f9ba9a74b5b18b1f84977a90a994dcf4
         }
     }
 }
