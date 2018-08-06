@@ -105,9 +105,6 @@ func parseUserInfoNode(
             }
         } else {
             selector = {
-//                TTAccountManager.presentQuickLogin(fromVC: EnvContext.shared.rootNavController, type: TTAccountLoginDialogTitleType.default, source: "", completion: { (state) in
-//
-//                })
                 TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"))
             }
         }
@@ -133,7 +130,7 @@ func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void
         if let urlStr = info?.avatarURL {
             theCell.avatarView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default-avatar-icons"))
         } else {
-            theCell.avatarView.bd_setImage(with: #imageLiteral(resourceName: "default-avatar-icons"))
+            theCell.avatarView.image = #imageLiteral(resourceName: "default-avatar-icons")
         }
     }
 }

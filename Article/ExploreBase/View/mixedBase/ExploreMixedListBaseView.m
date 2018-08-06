@@ -2307,9 +2307,9 @@ TTRefreshViewDelegate
                                                          }
                                                      }
                                                      
-                                                     if (![weakSelf needShowCitySelectBar]) {
-                                                         [weakSelf refreshSubEntranceBar];
-                                                     }
+//                                                     if (![weakSelf needShowCitySelectBar]) {
+//                                                         [weakSelf refreshSubEntranceBar];
+//                                                     }
                                                  }
                                                  
                                                  if (!isResponseFromRemote) {
