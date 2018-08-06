@@ -2453,6 +2453,7 @@ TTRefreshViewDelegate
                                              }
                                              
                                              if(isResponseFromRemote){
+                                                 [weakSelf tt_ShowTip: tip duration: duration tipTouchBlock:nil];
                                                  [weakSelf tt_endUpdataData:!isResponseFromRemote error:nil tip:tip duration:duration tipTouchBlock:^{
                                                      [weakSelf notifyBarAction:tipModel];
                                                      
