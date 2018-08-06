@@ -132,6 +132,8 @@ func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void
 
         if let urlStr = info?.avatarURL {
             theCell.avatarView.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default-avatar-icons"))
+        } else {
+            theCell.avatarView.bd_setImage(with: #imageLiteral(resourceName: "default-avatar-icons"))
         }
     }
 }

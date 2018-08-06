@@ -7,7 +7,7 @@
 //
 
 #import "TTEditUserProfileViewModel+Network.h"
-
+#import "BDAccountSDK.h"
 
 
 @implementation TTEditUserProfileViewModel (Network)

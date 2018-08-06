@@ -47,6 +47,12 @@ class MineVC: BaseViewController {
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .default
         
+        EnvContext.shared.client.accountConfig.userInfo
+                .bind { [unowned self] user in
+                    self.mineViewModel?.reload()
+                }
+                .disposed(by: disposeBag)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
