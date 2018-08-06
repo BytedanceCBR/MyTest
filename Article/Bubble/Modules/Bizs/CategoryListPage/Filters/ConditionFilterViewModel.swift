@@ -41,6 +41,7 @@ class ConditionFilterViewModel {
     func generatePanelProviderByItem(reload: @escaping () -> Void,
                                      item: SearchConditionItem,
                                      configs: [Node]) -> (Int) -> Void {
+        let categoryName = item.label
         switch item.itemId {
         case 1:
             return openConditionPanel(
@@ -60,7 +61,7 @@ class ConditionFilterViewModel {
                     setConditionItemTypeByParser(
                         item: item,
                         reload: reload,
-                        parser: parsePriceConditionItemLabel)(nodes)
+                        parser: curry(parsePriceConditionItemLabel)(categoryName))(nodes)
                 }))
         case 3:
             return openConditionPanel(

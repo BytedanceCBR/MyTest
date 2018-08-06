@@ -64,15 +64,15 @@ func catulateOffsetByKeybroadSize(_ panel: PriceListFilterPanel?, keybrodaSize: 
     return offset
 }
 
-func parsePriceConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parsePriceConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if let node = nodePath.last, node.label != "不限" {
         if nodePath.count > 1 {
-            return .condition("总价(\(nodePath.count))")
+            return .condition("\(label)(\(nodePath.count))")
         } else {
             return .condition(node.label)
         }
     }
-    return .noCondition("总价")
+    return .noCondition(label)
 }
 
 func parsePriceSearchCondition(nodePath: [Node]) -> (String) -> String {
