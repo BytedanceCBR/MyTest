@@ -98,9 +98,9 @@ class TransactionRecordCell: BaseUITableViewCell {
 
 }
 
-func parseTransactionRecordNode(_ data: NeighborhoodTotalSalesResponse?) -> () -> TableSectionNode? {
+func parseTransactionRecordNode(_ datas: [TotalSalesInnerItem]?) -> () -> TableSectionNode? {
     return {
-        if let datas = data?.data?.list {
+        if let datas = datas {
             if datas.count != 0 {
 
                 let renders = datas.take(3).map(curry(fillTransactionRecordCell))

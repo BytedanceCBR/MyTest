@@ -18,6 +18,7 @@ func requestSearch(
     if !query.isEmpty {
         url = "\(url)\(query)"
     }
+    print(url)
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,

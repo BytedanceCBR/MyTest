@@ -59,6 +59,9 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
+                    if let hasMore = response?.data?.hasMore {
+                        self.onDataLoaded?(hasMore)
+                    }
                     if let data = response?.data {
                         return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
                     } else {

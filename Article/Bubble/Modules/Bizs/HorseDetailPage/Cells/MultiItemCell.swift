@@ -217,11 +217,11 @@ class NeighborhoodItemView: UIView {
 
 }
 
-func parseSearchInNeighborhoodNode(_ data: SameNeighborhoodHouseResponse.Data?, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?, navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
-        if let datas = data?.items.take(5), datas.count > 0 {
+        if let datas = data?.items?.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
-            return TableSectionNode(items: [render], selectors: nil, label: "同小区房源", type: .node(identifier: MultiItemCell.identifier))
+            return TableSectionNode(items: [render], selectors: nil, label: "小区房源", type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }

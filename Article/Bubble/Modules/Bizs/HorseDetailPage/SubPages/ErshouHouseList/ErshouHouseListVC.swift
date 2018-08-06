@@ -56,7 +56,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.ttHideNavigationBar = true
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
-        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId)
+        
+//        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId)
+        ershouHouseListViewModel?.requestErshouHouseList(
+            query: "neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)",
+            condition: nil)
         
         self.conditionFilterViewModel = ConditionFilterViewModel(
                 conditionPanelView: conditionPanelView,
@@ -133,6 +137,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 .disposed(by: disposeBag)
 
         searchAndConditionFilterVM.queryCondition
+                .skip(2)
                 .map { [unowned self] (result) in
                     "house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" + result
                 }
