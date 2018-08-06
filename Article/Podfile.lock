@@ -1265,7 +1265,7 @@ CHECKOUT OPTIONS:
     :commit: fea3c88cb586f624970bdf5629f11aa1dc9c8521
     :git: git@code.byted.org:TTIOS/tt_pods_network.git
   TTPlatformBaseLib:
-    :commit: bcf78058e016ea6be4ba13d5b5f7d3a5d982e5a9
+    :commit: 800e1767622e8bcbd0e68b1c60c8b13745618588
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
 
 SPEC CHECKSUMS:

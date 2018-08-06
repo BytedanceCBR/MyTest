@@ -144,7 +144,7 @@ func oneTimeRender(_ parser: @escaping (BaseUITableViewCell) -> Void) -> (BaseUI
 func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodNameCell {
         theCell.nameLabel.text = data.name
-        theCell.subNameLabel.text = data.neighborhoodInfo?.locationFullName
+        theCell.subNameLabel.text = data.neighborhoodInfo?.address
         theCell.priceLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.locationIcon.rx.tap
                 .debug("aaa")
