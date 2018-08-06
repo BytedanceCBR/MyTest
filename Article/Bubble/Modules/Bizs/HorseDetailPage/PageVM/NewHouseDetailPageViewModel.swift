@@ -71,7 +71,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = response.data {
             let dataParser = DetailDataParser.monoid()
-                <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag)
+                <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
                 <- parseNewHouseCoreInfoNode(
                     data,

@@ -13,7 +13,7 @@ import JXPhotoBrowser
 class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate  {
 
     lazy var navBar: SimpleNavBar = {
-        let re = SimpleNavBar(backBtnImg: #imageLiteral(resourceName: "close"))
+        let re = SimpleNavBar(backBtnImg: #imageLiteral(resourceName: "icon-return"))
         re.removeGradientColor()
         return re
     }()
@@ -30,7 +30,7 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
         return result
     }()
 
-    private weak var showingBrowser: PhotoBrowser?
+    let selectIndex = BehaviorRelay<Int?>(value:nil)
 
     let items = BehaviorRelay<[PictureCategorySection]>(value: [])
 
@@ -103,24 +103,9 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
         browser.originPageIndex = index
         // 展示
         browser.show()
-        showingBrowser = browser
 
+        
     }
-
-    /// 装配附加视图插件
-//    private func setupOverlayPlugin(on browser: PhotoBrowser, index: Int) {
-//        guard overlayModels.count > index else {
-//            return
-//        }
-//        let overlayPlugin = OverlayPlugin()
-//        overlayPlugin.dataSourceProvider = { [unowned self] index in
-//            return self.overlayModels[index]
-//        }
-//        overlayPlugin.didTouchDeleteButton = { [unowned self] index in
-//            self.didTouchDeleteButton?(index)
-//        }
-//        browser.cellPlugins.append(overlayPlugin)
-//    }
 
     //MARK: - collectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -153,8 +138,12 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         let index = getIndexByIndexPath(sections: items.value, indexPath: indexPath)
-        openBrowser(index: index)
+        
+        self.selectIndex.accept(index)
+        self.dismiss(animated: true, completion: nil)
+
     }
 }
 
