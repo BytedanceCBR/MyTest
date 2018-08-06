@@ -213,6 +213,7 @@ func openNeighborhoodDetailPage(neighborhoodId: Int64, disposeBag: DisposeBag, n
         let detailPage = HorseDetailPageVC(
             houseId: neighborhoodId,
             houseType: .newHouse,
+            isShowFollowNavBtn: true,
             provider: getNeighborhoodDetailPageViewModel())
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in

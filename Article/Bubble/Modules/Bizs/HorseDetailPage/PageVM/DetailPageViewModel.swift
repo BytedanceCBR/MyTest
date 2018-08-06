@@ -61,7 +61,7 @@ extension DetailPageViewModel {
                 .subscribe(onNext: { response in
                     if response?.data?.followStatus ?? 1 == 0 {
                         self.followStatus.accept(.success(true))
-                        EnvContext.shared.toast.showToast("已收藏")
+                        EnvContext.shared.toast.showToast("关注成功")
                     }
                 }, onError: { error in
                     
@@ -102,7 +102,7 @@ extension DetailPageViewModel {
                         if response?.data?.followStatus ?? 1 == 0 {
                             EnvContext.shared.toast.dismissToast()
                             self.followStatus.accept(.success(false))
-                            EnvContext.shared.toast.showToast("取消收藏")
+                            EnvContext.shared.toast.showToast("取关成功")
                         }
                     }, onError: { error in
 
