@@ -14,7 +14,7 @@ import JXPhotoBrowser
 class CycleImageCell: BaseUITableViewCell {
 
     private var pageableViewModel: PageableViewModel?
-
+    
     private lazy var indexIndicator: UIView = {
         let re = UIView()
         re.backgroundColor = color(0, 0, 0, 0.3)
@@ -161,16 +161,66 @@ fileprivate func convertToPictureSection(_ models: [ImageModel]) -> [PictureCate
         })
 }
 
-fileprivate func openPictureBrowser(pictures: [PictureCategorySection], disposeBag: DisposeBag, selectedIndex: Int) {
-    let vc = PictureCategoryListVC()
-    vc.navBar.title.text = "楼盘相册"
-    vc.items.accept(pictures)
-    vc.navBar.backBtn.rx.tap
-        .subscribe(onNext: { void in
-            EnvContext.shared.rootNavController.popViewController(animated: true)
+
+fileprivate func openNewHousePictureBrowser(dataSource: PictureBrowserDataSource,
+                                            pictures: [PictureCategorySection],
+                                            disposeBag: DisposeBag,
+                                            navVC: UINavigationController?,
+                                            selectedIndex: Int) {
+    // 创建图片浏览器
+    let browser = PhotoBrowser(photoLoader: BDWebImagePhotoLoader())
+    // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
+    // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleNoHiding`。
+    browser.animationType = .scale
+    // 浏览器协议实现者
+    browser.photoBrowserDelegate = dataSource
+    // 装配页码指示器插件，提供了两种PageControl实现，若需要其它样式，可参照着自由定制
+    // 光点型页码指示器
+    //    browser.plugins.append(DefaultPageControlPlugin())
+    // 数字型页码指示器
+    let numberPageControlPlugin = NumberPageControlPlugin()
+    numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 30
+    browser.plugins.append(numberPageControlPlugin)
+    let plugin = PhotoBrowserShowAllPlugin()
+    browser.plugins.append(plugin)
+
+    plugin.didTouchBackButton = {
+        
+        TopMostViewControllerGetter.topMost?.dismiss(animated: true, completion: nil)
+    }
+    
+    plugin.didTouchShowAllButton = {
+        
+        print("didTouchShowAllButton")
+        let vc = PictureCategoryListVC()
+        vc.navBar.title.text = "楼盘相册"
+        vc.items.accept(pictures)
+        vc.navBar.backBtn.rx.tap
+            .subscribe(onNext: { () in
+                
+                TopMostViewControllerGetter.topMost?.dismiss(animated: true, completion: nil)
+
+            })
+            .disposed(by: disposeBag)
+        
+        vc.selectIndex.filter { $0 != nil }
+            .subscribe(onNext: { [weak browser] (index) in
+            
+            browser?.scrollToItem(index!, at: .centeredHorizontally, animated: false)
+
         })
         .disposed(by: disposeBag)
-    EnvContext.shared.rootNavController.pushViewController(vc, animated: true)
+        
+        let topVC = TopMostViewControllerGetter.topMost
+        topVC?.present(vc, animated: true, completion: nil)
+        
+    }
+    // 指定打开图片组中的哪张
+    browser.originPageIndex = selectedIndex
+    // 展示
+    browser.show()
+    
+    
 }
 
 fileprivate func openPictureBrowser(dataSource: PictureBrowserDataSource, disposeBag: DisposeBag, selectedIndex: Int) {
@@ -182,14 +232,12 @@ fileprivate func openPictureBrowser(dataSource: PictureBrowserDataSource, dispos
     // 浏览器协议实现者
     browser.photoBrowserDelegate = dataSource
     // 装配页码指示器插件，提供了两种PageControl实现，若需要其它样式，可参照着自由定制
-    // 光点型页码指示器
-//    browser.plugins.append(DefaultPageControlPlugin())
+
     // 数字型页码指示器
     let numberPageControlPlugin = NumberPageControlPlugin()
     numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 30
     browser.plugins.append(numberPageControlPlugin)
-//        // 装配附加视图插件
-//        setupOverlayPlugin(on: browser, index: index)
+
     // 指定打开图片组中的哪张
     browser.originPageIndex = selectedIndex
     // 展示
@@ -201,10 +249,13 @@ fileprivate struct ImageModel {
     let category: String
 }
 
-func parseNewHouseCycleImageNode(_ newHouseData: NewHouseData, disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseNewHouseCycleImageNode(
+    _ newHouseData: NewHouseData,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
 
-        let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup)(disposeBag)
+        let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup)(disposeBag)(navVC)
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -262,28 +313,48 @@ fileprivate func fillErshouHouseCycleImageCell(_ images: [ImageModel], disposeBa
     }
 }
 
-fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
+fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
+                                    disposeBag: DisposeBag,
+                                    navVC: UINavigationController?,
+                                    cell: BaseUITableViewCell) -> Void {
+
     if let theCell = cell as? CycleImageCell {
-        let imageItems = imageGroups?.map({ (group) -> ImageModel in
-            if let name = group.name, let url = group.images?.first?.url {
-                return ImageModel(url: url, category: name)
+
+        let imageItems = imageGroups?.map({ (group) -> [ImageModel] in
+            
+            if let name = group.name, let images = group.images {
+                let urls = images.filter { $0.url != nil }.map { $0.url! }
+                let imageItems = urls.map({ (url) -> ImageModel in
+                    return ImageModel(url: url, category: name)
+                    
+                })
+                return imageItems
+                
             } else {
-                return ImageModel(url: "", category: "")
+                return []
             }
-        })
+            
+        }).flatMap{ $0 }
 
+    theCell.headerImages = imageItems ?? []
+    theCell.count = imageItems?.count ?? 0
+    var dataSource: PictureBrowserDataSource?
 
-        theCell.headerImages = imageItems ?? []
-        theCell.count = imageItems?.count ?? 0
-        theCell.openPictureBrowser = { (index, view) in
-            let pictures = imageGroups?.map { (group) -> PictureCategorySection in
-                let urls = group.images?.filter { $0.url != nil }.map { $0.url! }
-                return PictureCategorySection(name: group.name ?? "", items: urls ?? [])
-            }
-            openPictureBrowser(pictures: pictures ?? [], disposeBag: disposeBag, selectedIndex: index)
-        }
+    let pictures = imageGroups?.map { (group) -> PictureCategorySection in
+        let urls = group.images?.filter { $0.url != nil }.map { $0.url! }
+        return PictureCategorySection(name: group.name ?? "", items: urls ?? [])
     }
+        
+    theCell.openPictureBrowser = {(index, view) in
+
+        let theDataSource = PictureBrowserDataSource(pictures: theCell.headerImages.map { $0.url }, target: view)
+        dataSource = theDataSource
+        openNewHousePictureBrowser(dataSource: theDataSource,pictures: pictures ?? [], disposeBag: disposeBag,navVC: navVC, selectedIndex: index)
+    }
+    }
+
 }
+
 
 fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
 

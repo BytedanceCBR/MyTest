@@ -514,6 +514,8 @@
 		52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FD8A4E16F2FA4A00B77520 /* ArticleShareManager.m */; };
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
+		612DCE502116EA4A0021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
+		612DCE512116EC640021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
 		6B0279721EF131C8006DF6BA /* ExploreEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */; };
 		6B1397E21B39348700070F03 /* TTSubEntranceBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397E11B39348700070F03 /* TTSubEntranceBar.m */; };
 		6B1397EB1B3934EA00070F03 /* TTSubEntranceObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397EA1B3934EA00070F03 /* TTSubEntranceObj.m */; };
@@ -4526,6 +4528,7 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserShowAllPlugin.swift; sourceTree = "<group>"; };
 		6B0279701EF131C8006DF6BA /* ExploreEntryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreEntryGroup.h; sourceTree = "<group>"; };
 		6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreEntryGroup.m; sourceTree = "<group>"; };
 		6B1397E01B39348700070F03 /* TTSubEntranceBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSubEntranceBar.h; sourceTree = "<group>"; };
@@ -12809,6 +12812,7 @@
 		B3E8EA90210D610C00AEE522 /* JXPhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */,
 				B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */,
 				1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */,
 			);
@@ -15331,7 +15335,6 @@
 				LastUpgradeCheck = 0640;
 				TargetAttributes = {
 					3AA5027F15876A1F00EB27FA = {
-						DevelopmentTeam = X46375UBYG;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -17214,6 +17217,7 @@
 				F87695801F31D0D700D59CA5 /* TTVVideoTabViewController.m in Sources */,
 				F876952C1F31D0D600D59CA5 /* TTVReportAction.m in Sources */,
 				FEF781F7207B3AD500EA65DC /* TTLauchProcessManager.m in Sources */,
+				612DCE502116EA4A0021153A /* PhotoBrowserShowAllPlugin.swift in Sources */,
 				A97DB97B1F1332DE0002B455 /* SSFeedbackPostView.m in Sources */,
 				F8718F591F6A912A00FA992A /* TTVSettingsConfiguration.m in Sources */,
 				A97DC3DA1F1333620002B455 /* TTInterestRequestModel.m in Sources */,
@@ -18842,6 +18846,7 @@
 				FEFA5772205FB1A8001F50D8 /* ExploreDetailBannerADView.m in Sources */,
 				FEFA5773205FB1A8001F50D8 /* TSVCardBottomInfoViewModel.m in Sources */,
 				FEFA5774205FB1A8001F50D8 /* TTAdDetailCommentModel.m in Sources */,
+				612DCE512116EC640021153A /* PhotoBrowserShowAllPlugin.swift in Sources */,
 				FEFA5775205FB1A8001F50D8 /* TTArticleDetailViewController.m in Sources */,
 				FEFA5776205FB1A8001F50D8 /* TTCollectDiskSpaceTask.m in Sources */,
 				FEFA5777205FB1A8001F50D8 /* TTCustomAnimationDelegate.m in Sources */,
@@ -19505,7 +19510,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -19603,7 +19608,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Automatic;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
