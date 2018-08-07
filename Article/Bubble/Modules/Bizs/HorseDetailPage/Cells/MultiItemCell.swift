@@ -393,21 +393,32 @@ func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> Nei
     return re
 }
 
-func parseFloorPanNode(_ newHouseData: NewHouseData, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) -> () -> TableSectionNode {
+func parseFloorPanNode(
+        _ newHouseData: NewHouseData,
+        navVC: UINavigationController?,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(followStatus)
+        let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(bottomBarBinder)
         return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
     }
 }
 
-func fillFloorPanCell(_ data: [FloorPan.Item], navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>, cell: BaseUITableViewCell) -> Void {
+func fillFloorPanCell(
+        _ data: [FloorPan.Item],
+        navVC: UINavigationController?,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder,
+        cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
         let views = data.take(5).map { item -> FloorPanItemView in
             let re = generateFloorPanItemView(item)
             re.tapGesture.rx.event
                 .subscribe(onNext: { [unowned re] recognizer in
                     if let id = item.id, let floorPanId = Int64(id) {
-                        openFloorPanCategoryDetailPage(floorPanId: floorPanId, disposeBag: re.disposeBag, navVC: navVC, followStatus: followStatus)()
+                        openFloorPanCategoryDetailPage(
+                                floorPanId: floorPanId,
+                                disposeBag: re.disposeBag,
+                                navVC: navVC,
+                                bottomBarBinder: bottomBarBinder)()
                     }
                 })
                 .disposed(by: re.disposeBag)
@@ -455,10 +466,13 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     return re
 }
 
-func parseFloorPanNode(_ items: [FloorPlanInfoData.Recommend]?, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) -> () -> TableSectionNode? {
+func parseFloorPanNode(
+        _ items: [FloorPlanInfoData.Recommend]?,
+        navVC: UINavigationController?,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
     return {
         if let items = items {
-            let cellRender = curry(fillFloorPanCell)(items)(navVC)(followStatus)
+            let cellRender = curry(fillFloorPanCell)(items)(navVC)(bottomBarBinder)
             return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
@@ -466,14 +480,22 @@ func parseFloorPanNode(_ items: [FloorPlanInfoData.Recommend]?, navVC: UINavigat
     }
 }
 
-func fillFloorPanCell(_ data: [FloorPlanInfoData.Recommend], navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>, cell: BaseUITableViewCell) -> Void {
+func fillFloorPanCell(
+        _ data: [FloorPlanInfoData.Recommend],
+        navVC: UINavigationController?,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder,
+        cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
         let views = data.take(5).map { item -> FloorPanItemView in
             let re = generateFloorPanItemView(item)
             re.tapGesture.rx.event
                     .subscribe(onNext: { [unowned re] recognizer in
                         if let id = item.id, let floorPanId = Int64(id) {
-                            openFloorPanCategoryDetailPage(floorPanId: floorPanId, disposeBag: re.disposeBag, navVC: navVC, followStatus: followStatus)()
+                            openFloorPanCategoryDetailPage(
+                                    floorPanId: floorPanId,
+                                    disposeBag: re.disposeBag,
+                                    navVC: navVC,
+                                    bottomBarBinder: bottomBarBinder)()
                         }
                     })
                     .disposed(by: re.disposeBag)

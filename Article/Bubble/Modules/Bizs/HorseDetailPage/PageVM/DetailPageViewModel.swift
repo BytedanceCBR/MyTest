@@ -13,6 +13,8 @@ protocol DetailPageViewModel: class {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
+    var disposeBag: DisposeBag { get }
+
 //    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
 //
 //    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
@@ -89,7 +91,11 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                TTAccountManager.presentQuickLogin(fromVC: EnvContext.shared.rootNavController, type: TTAccountLoginDialogTitleType.default, source: "", completion: { (state) in
+                TTAccountManager.presentQuickLogin(
+                        fromVC: EnvContext.shared.rootNavController,
+                        type: TTAccountLoginDialogTitleType.default,
+                        source: "",
+                        completion: { (state) in
 
                 })
                 return
@@ -108,6 +114,36 @@ extension DetailPageViewModel {
 
                     })
                     .disposed(by: disposeBag)
+        }
+    }
+
+    func bindBottomView() -> FollowUpBottomBarBinder {
+        return { [unowned self] (bottomBar) in
+            bottomBar.favouriteBtn.rx.tap
+                    .bind(onNext: self.followThisItem)
+                    .disposed(by: self.disposeBag)
+            self.followStatus
+                    .filter { (result) -> Bool in
+                        if case .success(_) = result {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+                    .map { (result) -> Bool in
+                        if case let .success(status) = result {
+                            return status
+                        } else {
+                            return false
+                        }
+                    }
+                    .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+                    .disposed(by: self.disposeBag)
+
+            bottomBar.contactBtn.rx.tap
+                    .withLatestFrom(self.contactPhone)
+                    .bind(onNext: Utils.telecall)
+                    .disposed(by: self.disposeBag)
         }
     }
 

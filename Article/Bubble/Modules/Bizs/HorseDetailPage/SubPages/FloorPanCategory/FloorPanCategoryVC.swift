@@ -44,11 +44,11 @@ class FloorPanCategoryVC: BaseSubPageViewController {
     var floorPanCategoryViewModel: FloorPanCategoryViewModel?
     
 
-    init(isHiddenBottomBar: Bool, floorPanId: String, followStatus: BehaviorRelay<Result<Bool>>) {
+    init(isHiddenBottomBar: Bool, floorPanId: String, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.floorPanId = floorPanId
         super.init(identifier: floorPanId,
                    isHiddenBottomBar: isHiddenBottomBar,
-                   followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
         self.navBar.title.text = "楼盘户型"
     }
 
@@ -63,7 +63,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
                 navVC: self.navigationController,
                 segmentedControl: segmentedControl,
                 leftFilterView: leftFilterView,
-                followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
         self.view.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { maker in
             maker.left.equalTo(15)

@@ -22,9 +22,9 @@ class GlobalPricingVC: BaseSubPageViewController, PageableVC {
 
     var globalPricingViewModel: GlobalPricingViewModel?
 
-    init(courtId: Int64, followStatus: BehaviorRelay<Result<Bool>>) {
+    init(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)", followStatus: followStatus)
+        super.init(identifier: "\(courtId)", bottomBarBinder: bottomBarBinder)
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -17,12 +17,12 @@ class FloorPanInfoVC: BaseSubPageViewController {
     init(isHiddenBottomBar: Bool,
          floorPanId: String,
          newHouseData: NewHouseData,
-         followStatus: BehaviorRelay<Result<Bool>>) {
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.floorPanId = floorPanId
         self.newHouseData = newHouseData
         super.init(identifier: floorPanId,
                    isHiddenBottomBar: isHiddenBottomBar,
-                   followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
         self.navBar.title.text = "楼盘信息"
         self.floorPanInfoViewModel = FloorPanInfoViewModel(tableView: tableView, newHouseData: newHouseData)
     }

@@ -17,16 +17,19 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 
     init(isHiddenBottomBar: Bool,
          floorPanId: Int64,
-         followStatus: BehaviorRelay<Result<Bool>>) {
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.floorPanId = floorPanId
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: false,
-            followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewModel = FloorPanCategoryDetailPageViewModel(tableView: tableView, navVC: self.navigationController, followStatus: followStatus)
+        self.viewModel = FloorPanCategoryDetailPageViewModel(
+                tableView: tableView,
+                navVC: self.navigationController)
+        self.viewModel?.bottomBarBinder = bottomBarBinder
         viewModel?.request(floorPanId: floorPanId)
         self.viewModel?.request(floorPanId: floorPanId)
     }
@@ -38,12 +41,16 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 }
 
 
-func openFloorPanCategoryDetailPage(floorPanId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
+func openFloorPanCategoryDetailPage(
+        floorPanId: Int64,
+        disposeBag: DisposeBag,
+        navVC: UINavigationController?,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
         let detailPage = FloorPanCategoryDetailPageVC(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
-                followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
 
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

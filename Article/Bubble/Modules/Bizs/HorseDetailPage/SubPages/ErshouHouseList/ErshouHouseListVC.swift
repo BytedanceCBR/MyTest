@@ -43,10 +43,10 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     init(title: String?,
          neighborhoodId: String,
          houseId: String? = nil,
-         followStatus: BehaviorRelay<Result<Bool>>) {
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
-        super.init(identifier: neighborhoodId, isHiddenBottomBar: true, followStatus: followStatus)
+        super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         if let title = title {
             self.navBar.title.text = title
         } else {

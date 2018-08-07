@@ -25,13 +25,12 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     
     weak var navVC: UINavigationController?
     
-    let followStatus: BehaviorRelay<Result<Bool>>
+    var bottomBarBinder: FollowUpBottomBarBinder?
     
-    init(tableView: UITableView, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) {
+    init(tableView: UITableView, navVC: UINavigationController?) {
         self.navVC = navVC
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
-        self.followStatus = followStatus
         super.init()
         cellFactory.register(tableView: tableView)
         tableView.dataSource = self
@@ -59,7 +58,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode()
-            <- parseFloorPanNode(data.recommend, navVC: navVC, followStatus: followStatus)
+            <- parseFloorPanNode(data.recommend, navVC: navVC, bottomBarBinder: bottomBarBinder ?? { _ in })
         return dataParser
     }
 

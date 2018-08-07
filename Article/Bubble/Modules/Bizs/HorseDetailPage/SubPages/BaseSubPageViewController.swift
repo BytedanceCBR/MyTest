@@ -9,6 +9,9 @@
 import UIKit
 import RxCocoa
 import RxSwift
+
+typealias FollowUpBottomBarBinder = (HouseDetailPageBottomBarView) -> Void
+
 class BaseSubPageViewController: BaseViewController {
 
     lazy var tableView: UITableView = {
@@ -36,32 +39,36 @@ class BaseSubPageViewController: BaseViewController {
 
     let disposeBag = DisposeBag()
 
-    var followStatus: BehaviorRelay<Result<Bool>>
+    var bottomBarBinder: FollowUpBottomBarBinder
 
     init(identifier: String,
          isHiddenBottomBar: Bool = false,
-         followStatus: BehaviorRelay<Result<Bool>>) {
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.identifier = identifier
         self.isHiddenBottomBar = isHiddenBottomBar
-        self.followStatus = followStatus
+        self.bottomBarBinder = bottomBarBinder
         super.init(nibName: nil, bundle: nil)
-        followStatus
-                .filter { (result) -> Bool in
-                    if case .success(_) = result {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-                .map { (result) -> Bool in
-                    if case let .success(status) = result {
-                        return status
-                    } else {
-                        return false
-                    }
-                }
-                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
-                .disposed(by: disposeBag)
+        bottomBarBinder(bottomBar)
+//        followStatus
+//                .filter { (result) -> Bool in
+//                    if case .success(_) = result {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
+//                .map { (result) -> Bool in
+//                    if case let .success(status) = result {
+//                        return status
+//                    } else {
+//                        return false
+//                    }
+//                }
+//                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+//                .disposed(by: disposeBag)
+//        bottomBar.favouriteBtn.rx.tap
+//                .bind(onNext: self.followThisItem)
+//                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {

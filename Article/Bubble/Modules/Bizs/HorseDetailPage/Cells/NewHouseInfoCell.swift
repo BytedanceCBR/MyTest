@@ -258,9 +258,9 @@ func parseNewHouseCoreInfoNode(
     openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
-    followStatus: BehaviorRelay<Result<Bool>>) -> () -> TableSectionNode {
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(followStatus)
+        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(bottomBarBinder)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
@@ -276,14 +276,14 @@ func fillNewHouseCoreInfoCell(
         openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
-        followStatus: BehaviorRelay<Result<Bool>>,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseInfoCell {
         theCell.pricingPerSqmLabel.text = data.coreInfo?.pricingPerSqm
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
         theCell.moreBtn.rx.tap
-            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag)(navVC)(followStatus))
+            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag)(navVC)(bottomBarBinder))
             .disposed(by: theCell.disposeBag)
 
         theCell.priceChangedNotify

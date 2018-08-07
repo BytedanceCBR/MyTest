@@ -20,7 +20,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     fileprivate var dataSource: DataSource
 
-    private let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     private var cellFactory: UITableViewCellFactory
 
@@ -104,29 +104,45 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     openCourtNotify: self.handleOpenCourtNotify(closeAlert: closeAlert ?? {}),
                     disposeBag: subDisposeBag!,
                     navVC: self.navVC,
-                    followStatus: followStatus)
+                    bottomBarBinder: self.bindBottomView())
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data)
                 <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [unowned self] in
-                    self.openFloorPanList(courtId: courtId, followStatus: self.followStatus)
+                    self.openFloorPanList(
+                            courtId: courtId,
+                            bottomBarBinder: self.bindBottomView())
                 }
                 <- parseFloorPanHeaderNode(data)
-                <- parseFloorPanNode(data, navVC: navVC, followStatus: followStatus)
+                <- parseFloorPanNode(data, navVC: navVC, bottomBarBinder: self.bindBottomView())
                 <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 > 0) { [unowned self] in
-                    openFloorPanCategoryPage(floorPanId: "\(courtId)", disposeBag: self.disposeBag, navVC: self.navVC, followStatus: self.followStatus)()
+                    openFloorPanCategoryPage(
+                            floorPanId: "\(courtId)",
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC,
+                            bottomBarBinder: self.bindBottomView())()
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data)
                 <- parseOpenAllNode(data.comment?.hasMore ?? false) { [unowned self] in
-                    self.openCommentList(courtId: courtId, followStatus: self.followStatus)
+                    self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
                 }
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data, disposeBag: disposeBag)
                 <- parseHeaderNode("全网比价",
                                    showLoadMore: true,
-                                   process: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC, followStatus: self.followStatus))
-                <- parseGlobalPricingNode(data, processor: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC, followStatus: self.followStatus))
+                                   process: openGlobalPricingList(
+                                           courtId: courtId,
+                                           disposeBag: disposeBag,
+                                           navVC: navVC,
+                                           bottomBarBinder: self.bindBottomView()))
+                <- parseGlobalPricingNode(
+                    data,
+                    processor: openGlobalPricingList(
+                            courtId: courtId,
+                            disposeBag: disposeBag,
+                            navVC: navVC,
+                            bottomBarBinder: self.bindBottomView()))
                     <- parseInfoNode("楼盘价格，由开发商统一报价，由于各平台更新速度不一致，导致价格有所差异，最终价格应以开发商报价为准；")
                 <- parseHeaderNode("猜你喜欢")
                 <- parseRelateCourtNode(relatedCourt.value, navVC: navVC)
@@ -137,8 +153,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         }
     }
 
-    func openCommentList(courtId: Int64, followStatus: BehaviorRelay<Result<Bool>>) {
-        let detailPage = HouseCommentVC(courtId: courtId, followStatus: followStatus)
+    func openCommentList(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        let detailPage = HouseCommentVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)
@@ -147,8 +163,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         navVC?.pushViewController(detailPage, animated: true)
     }
 
-    func openFloorPanList(courtId: Int64, followStatus: BehaviorRelay<Result<Bool>>) {
-        let detailPage = FloorPanListVC(courtId: courtId, followStatus: followStatus)
+    func openFloorPanList(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        let detailPage = FloorPanListVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)
@@ -301,8 +317,8 @@ func openRelatedNeighborhoodList(
     neighborhoodId: String,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
-    followStatus: BehaviorRelay<Result<Bool>>) {
-    let listVC = RelatedNeighborhoodListVC(neighborhoodId: neighborhoodId, followStatus: followStatus)
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+    let listVC = RelatedNeighborhoodListVC(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
@@ -315,9 +331,9 @@ func openGlobalPricingList(
     courtId: Int64,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
-    followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
-        let detailPage = GlobalPricingVC(courtId: courtId, followStatus: followStatus)
+        let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
@@ -332,13 +348,13 @@ func openFloorPanInfoPage(
     newHouseData: NewHouseData,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
-    followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
         let detailPage = FloorPanInfoVC(
             isHiddenBottomBar: false,
             floorPanId: floorPanId,
             newHouseData: newHouseData,
-            followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
 
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
@@ -353,12 +369,12 @@ func openFloorPanCategoryPage(
     floorPanId: String,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
-    followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
         let detailPage = FloorPanCategoryVC(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
-                followStatus: followStatus)
+                bottomBarBinder: bottomBarBinder)
 
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
