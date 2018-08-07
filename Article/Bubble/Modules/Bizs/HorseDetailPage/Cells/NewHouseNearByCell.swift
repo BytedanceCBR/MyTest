@@ -189,7 +189,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         }
         search.cancelAllRequests()
         let request = AMapPOIKeywordsSearchRequest()
-        request.keywords = poiType == POIType.traffic ? "地铁 公交" : poiType.rawValue
+        request.keywords = poiType == POIType.traffic ? "交通" : poiType.rawValue
+        request.types = poiType == POIType.traffic ? "交通" : poiType.rawValue
         request.location = AMapGeoPoint.location(withLatitude: CGFloat(center.latitude), longitude: CGFloat(center.longitude))
         request.requireExtension = true
         request.requireSubPOIs = true

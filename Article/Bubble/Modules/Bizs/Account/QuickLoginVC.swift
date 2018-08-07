@@ -43,6 +43,8 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         let re = UITextField()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.placeholder = "请输入手机号"
+        re.keyboardType = .phonePad
+        re.returnKeyType = .done
         return re
     }()
 
@@ -56,6 +58,8 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         let re = UITextField()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.placeholder = "请输入验证码"
+        re.keyboardType = .numberPad
+        re.returnKeyType = .go
         return re
     }()
 
@@ -284,7 +288,6 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 self.enableConfirmBtn(button: self.confirmBtn, isEnabled: isEnabled)
             })
             .disposed(by: disposeBag)
-
     }
 
     override func viewDidLayoutSubviews() {
@@ -304,6 +307,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.view.endEditing(true)
     }
 
     static func setVerifyCodeBtn(

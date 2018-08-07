@@ -194,10 +194,12 @@ class PriceListFilterPanel: UIView {
                             externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]")])
                     } else{
                         self.didSelect?([])
+
                     }
                 } else {
                     self.didSelect?(datas)
                 }
+                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -235,6 +237,7 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if nodes[indexPath.row].isNoLimit == 1 {
             didSelect?([nodes[indexPath.row]])
+            selectedIndexPaths.accept([])
             tableView.reloadData()
         } else {
             if !selectedIndexPaths.value.contains(indexPath) {

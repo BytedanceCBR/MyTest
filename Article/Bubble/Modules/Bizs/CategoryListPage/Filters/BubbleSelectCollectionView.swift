@@ -192,6 +192,7 @@ class BubbleSelectCollectionView: UIView {
                 .subscribe(onNext: { [unowned self] void in
                     self.dataSource.selectedIndexPaths = []
                     self.didSelect?([])
+                    self.collectionView.reloadData()
                 })
                 .disposed(by: disposeBag)
     }
@@ -236,14 +237,23 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if nodes[indexPath.section].isSupportMulti != true {
-            selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+            if selectedIndexPaths.contains(indexPath) {
+                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+            } else if selectedIndexPaths.contains(where: { $0.section == indexPath.section }) {
+                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+                selectedIndexPaths.insert(indexPath)
+            } else {
+                selectedIndexPaths.insert(indexPath)
+            }
+        } else {
+            if !selectedIndexPaths.contains(indexPath) {
+                selectedIndexPaths.insert(indexPath)
+            } else {
+                selectedIndexPaths.remove(indexPath)
+            }
         }
 
-        if !selectedIndexPaths.contains(indexPath) {
-            selectedIndexPaths.insert(indexPath)
-        } else {
-            selectedIndexPaths.remove(indexPath)
-        }
+
         collectionView.reloadData()    
     }
 

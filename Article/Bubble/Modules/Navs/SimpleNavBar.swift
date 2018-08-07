@@ -18,7 +18,7 @@ class SimpleNavBar: UIView {
     }()
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         return btn
     }()
 
@@ -125,7 +125,7 @@ class SimpleNavBar: UIView {
 class SearchNavBar: UIView {
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
     }()
@@ -213,7 +213,7 @@ class SearchNavBar: UIView {
 class CategorySearchNavBar: UIView {
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
     }()
@@ -395,6 +395,18 @@ class CategorySearchNavBar: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+class ExtendHotAreaButton: UIButton {
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        var bounds = self.bounds
+        let widthDelta = bounds.width
+        let heightDelta = bounds.height
+        bounds = bounds.insetBy(dx: -1 * widthDelta, dy: -1 * heightDelta)
+        return bounds.contains(point)
     }
 
 }

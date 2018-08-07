@@ -329,11 +329,13 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 fileprivate func fillNormalItem(cell: UITableViewCell, item: SuggestionItem, highlighted: String?) {
     if let theCell = cell as? SuggestionItemCell {
         if var text = item.text {
-            if item.text2 != nil && !item.text2!.isEmpty {
+            if let info = item.info as? [String: Any], info["is_cut"] != nil {
+                // do nothing
+            } else if item.text2 != nil && !item.text2!.isEmpty {
                 text = text + "-\(item.text2!)"
             }
             let attrTextProcess = highlightedText(originalText: text, highlitedText: highlighted)
-                    <*> commitText(commit: item.text2)
+//                    <*> commitText(commit: item.text2)
 
             theCell.label.attributedText = attrTextProcess(attrText(text: text))
         }

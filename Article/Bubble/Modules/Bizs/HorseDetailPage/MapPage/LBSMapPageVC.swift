@@ -85,7 +85,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
         mapView.showsUserLocation = true
-        mapView.zoomLevel = 14
+        mapView.zoomLevel = 15
         mapContainer.addSubview(mapView)
         mapView.snp.makeConstraints { maker in
             maker.top.bottom.right.left.equalToSuperview()
