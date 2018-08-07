@@ -157,7 +157,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text.isEmpty {
+        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty {
             return true
         }
         return false
