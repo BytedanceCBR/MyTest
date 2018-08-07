@@ -85,8 +85,13 @@ class SuggestionListVC: BaseViewController {
                 .disposed(by: disposeBag)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
         tableView.dataSource = tableViewModel
         tableView.delegate = tableViewModel
@@ -100,6 +105,7 @@ class SuggestionListVC: BaseViewController {
 
         houseType
             .subscribe(onNext: { [weak self] (type) in
+                self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
                 if let tableView = self?.tableView {
                     if self?.navBar.searchInput.text?.isEmpty == false {

@@ -171,7 +171,7 @@ class SearchNavBar: UIView {
         backBtn.snp.makeConstraints { maker in
             maker.left.equalTo(12)
             maker.width.height.equalTo(24)
-            maker.top.equalTo(30)
+            maker.bottom.equalTo(-10)
         }
 
         addSubview(searchAreaPanel)

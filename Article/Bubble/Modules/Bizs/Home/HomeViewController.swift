@@ -87,9 +87,13 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
         view.addSubview(tableView)
         tableView.separatorStyle = .none
-        tableView.snp.makeConstraints { (make) in
-            make.top.left.right.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
+        tableView.snp.makeConstraints { (maker) in
+            maker.top.left.right.equalToSuperview()
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
+            }
         }
         registerCell(tableView)
         if #available(iOS 11.0, *) {
@@ -125,9 +129,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
             }
         }
-        stateControl.onContentOffsetChanged = { [weak self] (state, offset) in
-            self?.navBar.alpha = (1 - (139 - offset.y) / 139) * 2
-        }
+//        stateControl.onContentOffsetChanged = { [weak self] (state, offset) in
+//            self?.navBar.alpha = (1 - (139 - offset.y) / 139) * 2
+//        }
         tableView.rx.contentOffset
                 .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
                 .disposed(by: disposeBag)
