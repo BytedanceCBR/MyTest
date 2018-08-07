@@ -236,7 +236,13 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             EnvContext.shared.toast.showLoadingToast("正在取消关注")
             datas.value[indexPath.row]
                     .editor?(editingStyle)
-                    .subscribe(onNext: { result in
+                    .subscribe(onNext: { [unowned self] result in
+                        tableView.beginUpdates()
+                        var theDatas = self.datas.value
+                        theDatas.remove(at: indexPath.row)
+                        self.datas.accept(theDatas)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.endUpdates()
                         EnvContext.shared.toast.dismissToast()
                         EnvContext.shared.toast.showToast("已取消关注")
                     }, onError: { error in
