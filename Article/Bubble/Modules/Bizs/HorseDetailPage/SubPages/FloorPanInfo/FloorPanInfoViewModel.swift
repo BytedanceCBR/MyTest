@@ -17,8 +17,12 @@ class FloorPanInfoViewModel: NSObject, UITableViewDelegate, UITableViewDataSourc
 
     var cellFactory: UITableViewCellFactory
 
-    init(tableView: UITableView) {
+    var newHouseData: NewHouseData
+
+    init(tableView: UITableView,
+         newHouseData: NewHouseData) {
         self.tableView = tableView
+        self.newHouseData = newHouseData
         self.cellFactory = getHouseDetailCellFactory()
         super.init()
         cellFactory.register(tableView: tableView)
@@ -43,7 +47,7 @@ class FloorPanInfoViewModel: NSObject, UITableViewDelegate, UITableViewDataSourc
                                     <- parsePropertiesNode(properties: parseThirdNode(data))
                                     <- parsePropertiesNode(properties: parseFourthNode(data))
                                     <- parsePermitListNode(data)
-                                    <- parseDisclaimerNode()
+                                    <- parseDisclaimerNode(newHouseData)
                             self.datas.accept(sectionParser.parser([]))
                         }
                     })

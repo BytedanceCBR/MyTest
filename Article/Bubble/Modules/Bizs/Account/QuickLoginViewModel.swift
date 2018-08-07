@@ -67,7 +67,6 @@ class QuickLoginViewModel {
             getSMSVerifyCodeCommand(
                 mobileString: phoneNumber,
                 bdCodeType: BDAccountStatusChangedReason.mobileSMSCodeLogin.rawValue)
-                .debug()
                 .subscribe(onNext: { [unowned self] result in
                     EnvContext.shared.toast.dismissToast()
                     self.onResponse.accept(.successed)

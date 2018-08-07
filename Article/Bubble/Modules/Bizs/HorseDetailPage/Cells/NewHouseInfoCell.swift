@@ -111,6 +111,17 @@ class NewHouseInfoCell: BaseUITableViewCell {
         return result
     }()
 
+    lazy var locationIcon: UIImageView = {
+        let re = UIImageView()
+        re.image = #imageLiteral(resourceName: "icon-location")
+        return re
+    }()
+
+    lazy var openMapBtn: UIButton = {
+        let re = UIButton()
+        return re
+    }()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(pricingPerSqmKeyLabel)
@@ -152,13 +163,28 @@ class NewHouseInfoCell: BaseUITableViewCell {
             maker.width.equalTo(24)
         }
 
+        contentView.addSubview(locationIcon)
+        locationIcon.snp.makeConstraints { maker in
+            maker.centerY.equalTo(courtAddressKey.snp.centerY)
+            maker.right.equalTo(-13)
+            maker.height.width.equalTo(20)
+        }
+
         contentView.addSubview(courtAddressLabel)
         courtAddressLabel.snp.makeConstraints { maker in
             maker.centerY.equalTo(courtAddressKey.snp.centerY)
             maker.left.equalTo(courtAddressKey.snp.right).offset(10)
-            maker.right.equalTo(-15)
+            maker.right.equalTo(locationIcon.snp.left).offset(5)
             maker.height.equalTo(22)
         }
+
+        contentView.addSubview(openMapBtn)
+        openMapBtn.snp.makeConstraints { maker in
+            maker.left.equalTo(courtAddressLabel.snp.left)
+            maker.right.equalTo(locationIcon.snp.right)
+            maker.top.equalTo(locationIcon.snp.top)
+            maker.bottom.equalTo(locationIcon.snp.bottom)
+         }
 
         contentView.addSubview(moreBtn)
         moreBtn.snp.makeConstraints { maker in
@@ -283,6 +309,18 @@ func fillNewHouseCoreInfoCell(
                         EnvContext.shared.toast.showToast("您已订阅过啦～")
                     } else {
                         priceChangeHandler(theCell.priceChangeNotifyRelay)
+                    }
+                }
+                .disposed(by: disposeBag)
+        let theDisposeBag = DisposeBag()
+        theCell.openMapBtn.rx.tap
+                .debug()
+                .bind { [unowned disposeBag] void in
+                    if let lat = data.coreInfo?.geodeLat, let lng = data.coreInfo?.geodeLng {
+                        openMapPage(
+                                lat: lat,
+                                lng: lng,
+                                disposeBag: theDisposeBag)()
                     }
                 }
                 .disposed(by: disposeBag)

@@ -110,7 +110,6 @@ class BaseSubPageViewController: BaseViewController {
                     houseType: houseType,
                     followId: followId,
                     actionType: followAction)
-                    .debug()
                     .subscribe(onNext: { response in
 
                     }, onError: { error in

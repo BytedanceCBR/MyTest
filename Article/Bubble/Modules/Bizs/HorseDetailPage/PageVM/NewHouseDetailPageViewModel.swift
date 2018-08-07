@@ -36,6 +36,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     
     weak var navVC: UINavigationController?
 
+    var subDisposeBag: DisposeBag?
+
     init(tableView: UITableView, navVC: UINavigationController?){
         self.tableView = tableView
         self.navVC = navVC
@@ -71,7 +73,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .disposed(by: disposeBag)
 
         requestRelatedCourtSearch(courtId: "\(houseId)")
-                .debug()
                 .subscribe(onNext: { [unowned self] response in
                     self.relatedCourt.accept(response)
                 })
@@ -91,6 +92,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     }
 
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
+        subDisposeBag = DisposeBag()
         if let data = response.data {
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
@@ -100,7 +102,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     floorPanId: "\(courtId)",
                     priceChangeHandler: self.handlePriceChangeNotify(closeAlert: closeAlert ?? {}),
                     openCourtNotify: self.handleOpenCourtNotify(closeAlert: closeAlert ?? {}),
-                    disposeBag: disposeBag, navVC: self.navVC)
+                    disposeBag: subDisposeBag!, navVC: self.navVC)
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data)

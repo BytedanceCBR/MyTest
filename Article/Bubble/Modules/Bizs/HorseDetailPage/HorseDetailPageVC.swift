@@ -196,7 +196,6 @@ class HorseDetailPageVC: BaseViewController {
         
         if isShowFollowNavBtn, let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
-                .debug()
                 .bind(onNext: detailPageViewModel.followThisItem)
                 .disposed(by: disposeBag)
             detailPageViewModel.followStatus

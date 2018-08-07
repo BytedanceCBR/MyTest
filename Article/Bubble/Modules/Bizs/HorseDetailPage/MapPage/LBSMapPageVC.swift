@@ -106,7 +106,6 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         // 绑定切换分类逻辑
         Observable
             .combineLatest(centerPointStr, searchCategory)
-            .debug()
             .filter { $0.0 != nil }
             .map { (e) -> (CLLocationCoordinate2D?, String) in
                 let (center, category) = e

@@ -136,7 +136,6 @@ class CategoryListViewModel: DetailPageViewModel {
         let loader = pageRequestFollowUpList(houseType: houseType)
         pageableLoader = { [unowned self] in
             loader()
-                    .debug()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let data = response?.data {
                             if self.dataSource.datas.value.count == 0 {
@@ -232,7 +231,6 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             EnvContext.shared.toast.showLoadingToast("正在取消关注")
             datas.value[indexPath.row]
                     .editor?(editingStyle)
-                    .debug()
                     .subscribe(onNext: { result in
                         EnvContext.shared.toast.dismissToast()
                         EnvContext.shared.toast.showToast("已取消关注")
