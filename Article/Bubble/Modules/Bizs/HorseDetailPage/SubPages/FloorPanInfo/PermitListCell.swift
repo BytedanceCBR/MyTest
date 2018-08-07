@@ -57,14 +57,34 @@ class PermitListCell: BaseUITableViewCell {
     }
 
     fileprivate func setItems(items: [ItemView]) {
-        items.forEach { view in
-            listView.addSubview(view)
+        items.enumerated().forEach { e in
+            let (offset, v) = e
+            listView.addSubview(v)
+            var prev: UIView?
+            v.snp.makeConstraints({ [weak prev] (maker) in
+                if offset == 0 {
+                    maker.top.equalToSuperview()
+                }
+                if offset == (items.count - 1) {
+                    maker.bottom.equalToSuperview()
+                }
+                
+                if let prev = prev {
+                    maker.top.equalTo(prev.snp.bottom)
+                }
+                prev = v
+                maker.left.equalTo(15)
+                maker.right.equalTo(-15)
+            })
         }
-        items.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: 0, averageLayout: false)
-        items.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
-        }
+//        items.forEach { view in
+//            listView.addSubview(view)
+//        }
+//        items.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: 0, averageLayout: false)
+//        items.snp.makeConstraints { maker in
+//            maker.left.equalTo(15)
+//            maker.right.equalTo(-15)
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -89,6 +109,7 @@ fileprivate class ItemView: UIView {
             re.font = CommonUIStyle.Font.pingFangRegular(15)
             re.textColor = hexStringToUIColor(hex: "#222222")
             re.textAlignment = .center
+            re.numberOfLines = 0
             re.text = s
             return re
         }

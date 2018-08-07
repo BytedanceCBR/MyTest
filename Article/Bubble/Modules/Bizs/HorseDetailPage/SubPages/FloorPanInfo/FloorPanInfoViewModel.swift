@@ -82,38 +82,38 @@ class FloorPanInfoViewModel: NSObject, UITableViewDelegate, UITableViewDataSourc
     }
 }
 
-fileprivate func parseFirstNode(_ detail: CourtMoreDetail) -> [String: String] {
-    return ["开发商": propertyValue(detail.developerName),
-            "楼盘状态": propertyValue(detail.saleStatus),
-            "参考价格": propertyValue(detail.pricingPerSqm),
-            "开盘时间": propertyValue(detail.openDate),
-            "交房时间": propertyValue(detail.deliveryDate)]
+fileprivate func parseFirstNode(_ detail: CourtMoreDetail) -> [(String, String)] {
+    return [("开发商", propertyValue(detail.developerName)),
+            ("楼盘状态", propertyValue(detail.saleStatus)),
+            ("参考价格", propertyValue(detail.pricingPerSqm)),
+            ("开盘时间", propertyValue(detail.openDate)),
+            ("交房时间", propertyValue(detail.deliveryDate))]
 }
 
-fileprivate func parseSecondNode(_ detail: CourtMoreDetail) -> [String: String] {
-    return ["环线": propertyValue(detail.circuitDesc),
-            "楼盘地址": propertyValue(detail.generalAddress),
-            "售楼地址": propertyValue(detail.saleAddress)]
+fileprivate func parseSecondNode(_ detail: CourtMoreDetail) -> [(String, String)] {
+    return [("环线", propertyValue(detail.circuitDesc)),
+            ("楼盘地址", propertyValue(detail.generalAddress)),
+            ("售楼地址", propertyValue(detail.saleAddress))]
 }
 
-fileprivate func parseThirdNode(_ detail: CourtMoreDetail) -> [String: String] {
-    return ["物业类型": propertyValue(detail.properyType),
-            "项目特色": propertyValue(detail.featureDesc),
-            "建筑类别": propertyValue(detail.buildingCategory),
-            "装修状况": propertyValue(detail.decoration),
-            "建筑类型": propertyValue(detail.buildingType),
-            "产权年限": propertyValue(detail.propertyRight)]
+fileprivate func parseThirdNode(_ detail: CourtMoreDetail) -> [(String, String)] {
+    return [("物业类型", propertyValue(detail.properyType)),
+            ("项目特色", propertyValue(detail.featureDesc)),
+            ("建筑类别", propertyValue(detail.buildingCategory)),
+            ("装修状况", propertyValue(detail.decoration)),
+            ("建筑类型", propertyValue(detail.buildingType)),
+            ("产权年限", propertyValue(detail.propertyRight))]
 }
 
-fileprivate func parseFourthNode(_ detail: CourtMoreDetail) -> [String: String] {
-    return ["物业公司": propertyValue(detail.propertyName),
-            "物业费用": propertyValue(detail.propertyPrice),
-            "水电燃气": propertyValue(detail.powerWaterGasDesc),
-            "供暖方式": propertyValue(detail.heating),
-            "绿化率": propertyValue(detail.greenRatio),
-            "车位情况": propertyValue(detail.parkingNum),
-            "容积率": propertyValue(detail.plotRatio),
-            "楼栋信息": propertyValue(detail.buildingDesc)]
+fileprivate func parseFourthNode(_ detail: CourtMoreDetail) -> [(String, String)] {
+    return [("物业公司", propertyValue(detail.propertyName)),
+            ("物业费用", propertyValue(detail.propertyPrice)),
+            ("水电燃气", propertyValue(detail.powerWaterGasDesc)),
+            ("供暖方式", propertyValue(detail.heating)),
+            ("绿化率", propertyValue(detail.greenRatio)),
+            ("车位情况", propertyValue(detail.parkingNum)),
+            ("容积率", propertyValue(detail.plotRatio)),
+            ("楼栋信息", propertyValue(detail.buildingDesc))]
 }
 
 var propertyValue: (String?) -> String = { input in
