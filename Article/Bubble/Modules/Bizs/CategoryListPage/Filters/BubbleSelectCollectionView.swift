@@ -32,7 +32,7 @@ func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping Con
 
 func parseHorseTypeConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count > 1 {
-        return .condition("\(label) (\(nodePath.count)")
+        return .condition("\(label) (\(nodePath.count))")
     } else if nodePath.count == 1 {
         return .condition(nodePath.first!.label)
     } else {

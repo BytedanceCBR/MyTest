@@ -199,8 +199,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
 
         view.addSubview(infoMaskView)

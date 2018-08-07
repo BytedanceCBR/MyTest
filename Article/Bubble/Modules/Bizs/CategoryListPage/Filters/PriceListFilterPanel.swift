@@ -192,6 +192,8 @@ class PriceListFilterPanel: UIView {
                             id: "",
                             label: "\(low)万-\(upper)万",
                             externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]")])
+                    } else{
+                        self.didSelect?([])
                     }
                 } else {
                     self.didSelect?(datas)

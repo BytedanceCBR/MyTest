@@ -110,7 +110,11 @@ class BaseSubPageViewController: BaseViewController {
             if !self.isHiddenBottomBar {
                 maker.bottom.equalTo(bottomBar.snp.top)
             } else {
-                maker.bottom.equalToSuperview()
+                if #available(iOS 11, *) {
+                    maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                } else {
+                    maker.bottom.equalToSuperview()
+                }
             }
 
         }

@@ -32,7 +32,7 @@ class CommonUIStyle {
 
         static let simpleDataFormat: DateFormatter = {
             let re = DateFormatter()
-            re.dateFormat = "dd-MM"
+            re.dateFormat = "MM-dds"
             return re
         }()
         
