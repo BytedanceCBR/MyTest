@@ -6,6 +6,7 @@
 import Foundation
 import SnapKit
 import RxSwift
+import RxCocoa
 class FloorPanHouseTypeCell: BaseUITableViewCell {
 
     open override class var identifier: String {
@@ -124,12 +125,13 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
 func parseFloorPanItemsNode(
         data: [FloorPan.Item],
         navVC: UINavigationController?,
-        disposeBag: DisposeBag) -> () -> [TableRowNode] {
+        disposeBag: DisposeBag,
+        followStatus: BehaviorRelay<Result<Bool>>) -> () -> [TableRowNode] {
     return {
         let renders = data
                 .map { curry(fillCell)($0) }
         let selector = data
-                .map { curry(openDetailPage)($0.id)(navVC)(disposeBag) }
+                .map { curry(openDetailPage)($0.id)(navVC)(disposeBag)(followStatus) }
         return zip(renders, selector).map {
             TableRowNode(
                     itemRender: $0.0,
@@ -143,10 +145,11 @@ func parseFloorPanItemsNode(
 fileprivate func openDetailPage(
         floorPanId: String?,
         navVC: UINavigationController?,
-        disposeBag: DisposeBag) -> () -> Void {
+        disposeBag: DisposeBag,
+        followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
     return {
         if let floorPanId = floorPanId, let id = Int64(floorPanId) {
-            openFloorPanCategoryDetailPage(floorPanId: id, disposeBag: disposeBag, navVC: navVC)()
+            openFloorPanCategoryDetailPage(floorPanId: id, disposeBag: disposeBag, navVC: navVC, followStatus: followStatus)()
         }
     }
 }

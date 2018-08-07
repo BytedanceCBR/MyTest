@@ -4,7 +4,8 @@
 //
 
 import Foundation
-
+import RxCocoa
+import RxSwift
 class FloorPanInfoVC: BaseSubPageViewController {
 
     let floorPanId: String
@@ -13,10 +14,15 @@ class FloorPanInfoVC: BaseSubPageViewController {
 
     var floorPanInfoViewModel: FloorPanInfoViewModel?
 
-    init(isHiddenBottomBar: Bool, floorPanId: String, newHouseData: NewHouseData) {
+    init(isHiddenBottomBar: Bool,
+         floorPanId: String,
+         newHouseData: NewHouseData,
+         followStatus: BehaviorRelay<Result<Bool>>) {
         self.floorPanId = floorPanId
         self.newHouseData = newHouseData
-        super.init(identifier: floorPanId, isHiddenBottomBar: isHiddenBottomBar)
+        super.init(identifier: floorPanId,
+                   isHiddenBottomBar: isHiddenBottomBar,
+                   followStatus: followStatus)
         self.navBar.title.text = "楼盘信息"
         self.floorPanInfoViewModel = FloorPanInfoViewModel(tableView: tableView, newHouseData: newHouseData)
     }

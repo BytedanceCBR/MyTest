@@ -36,10 +36,32 @@ class BaseSubPageViewController: BaseViewController {
 
     let disposeBag = DisposeBag()
 
-    init(identifier: String, isHiddenBottomBar: Bool = false) {
+    var followStatus: BehaviorRelay<Result<Bool>>
+
+    init(identifier: String,
+         isHiddenBottomBar: Bool = false,
+         followStatus: BehaviorRelay<Result<Bool>>) {
         self.identifier = identifier
         self.isHiddenBottomBar = isHiddenBottomBar
+        self.followStatus = followStatus
         super.init(nibName: nil, bundle: nil)
+        followStatus
+                .filter { (result) -> Bool in
+                    if case .success(_) = result {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                .map { (result) -> Bool in
+                    if case let .success(status) = result {
+                        return status
+                    } else {
+                        return false
+                    }
+                }
+                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {

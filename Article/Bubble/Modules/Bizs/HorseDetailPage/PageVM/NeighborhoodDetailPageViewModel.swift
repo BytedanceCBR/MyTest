@@ -150,7 +150,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseTransactionRecordNode(data.totalSales?.list)
                 <- parseOpenAllNode((data.totalSalesCount ?? 0 > 3)) { [unowned self] in
                     if let id = data.id {
-                        self.openTransactionHistoryPage(neighborhoodId: id)
+                        self.openTransactionHistoryPage(neighborhoodId: id, followStatus: self.followStatus)
                     }
                 }
                 <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
@@ -163,7 +163,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                                 title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
-                                navVC: self.navVC)
+                                navVC: self.navVC, followStatus: self.followStatus)
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -172,7 +172,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC)
+                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC, followStatus: self.followStatus)
                     }
                 }
             return dataParser.parser
@@ -181,8 +181,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
         }
     }
     
-    fileprivate func openTransactionHistoryPage(neighborhoodId: String) {
-        let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId)
+    fileprivate func openTransactionHistoryPage(
+        neighborhoodId: String,
+        followStatus: BehaviorRelay<Result<Bool>>) {
+        let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId, followStatus: followStatus)
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)

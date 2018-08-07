@@ -20,9 +20,9 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
     var houseCommentViewModel: HouseCommentViewModel?
 
 
-    init(courtId: Int64) {
+    init(courtId: Int64, followStatus: BehaviorRelay<Result<Bool>>) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)")
+        super.init(identifier: "\(courtId)", followStatus: followStatus)
     }
 
     required init?(coder aDecoder: NSCoder) {

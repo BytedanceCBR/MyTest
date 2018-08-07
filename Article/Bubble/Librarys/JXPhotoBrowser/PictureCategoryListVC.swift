@@ -132,7 +132,7 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
         at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
         if let theHeaderView = headerView as? PhotoSectionHeader {
-            theHeaderView.label.text = items.value[indexPath.section].name
+            theHeaderView.label.text = "\(items.value[indexPath.section].name)(\(items.value[indexPath.section].items.count))"
         }
         return headerView
     }

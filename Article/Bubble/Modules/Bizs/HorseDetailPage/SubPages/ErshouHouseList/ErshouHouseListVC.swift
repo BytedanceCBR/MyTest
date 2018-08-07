@@ -40,10 +40,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
     let theHouseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
-    init(title: String?, neighborhoodId: String, houseId: String? = nil) {
+    init(title: String?,
+         neighborhoodId: String,
+         houseId: String? = nil,
+         followStatus: BehaviorRelay<Result<Bool>>) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
-        super.init(identifier: neighborhoodId, isHiddenBottomBar: true)
+        super.init(identifier: neighborhoodId, isHiddenBottomBar: true, followStatus: followStatus)
         if let title = title {
             self.navBar.title.text = title
         } else {

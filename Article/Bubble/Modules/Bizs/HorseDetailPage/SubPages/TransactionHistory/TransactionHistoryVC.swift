@@ -18,9 +18,9 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
 
     var transactionHistoryVM: TransactionHistoryVM?
 
-    init(neighborhoodId: String) {
+    init(neighborhoodId: String, followStatus: BehaviorRelay<Result<Bool>>) {
         self.neighborhoodId = neighborhoodId
-        super.init(identifier: neighborhoodId)
+        super.init(identifier: neighborhoodId, followStatus: followStatus)
         self.transactionHistoryVM = TransactionHistoryVM(tableView: tableView)
         self.transactionHistoryVM?.onDataLoaded = self.onDataLoaded()
         self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)

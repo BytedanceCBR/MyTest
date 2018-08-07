@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 class FloorPanListVC: BaseSubPageViewController, PageableVC {
     
     var hasMore = true
@@ -21,10 +22,9 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
 
     var floorPanListViewModel: FloorPanListViewModel?
 
-
-    init(courtId: Int64) {
+    init(courtId: Int64, followStatus: BehaviorRelay<Result<Bool>>) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)")
+        super.init(identifier: "\(courtId)", followStatus: followStatus)
     }
 
     required init?(coder aDecoder: NSCoder) {

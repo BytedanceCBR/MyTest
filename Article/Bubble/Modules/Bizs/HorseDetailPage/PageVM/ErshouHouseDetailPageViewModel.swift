@@ -168,7 +168,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openErshouHouseList(title: nil, neighborhoodId: id, houseId: data.id, disposeBag: self.disposeBag, navVC: self.navVC)
+                        openErshouHouseList(title: nil, neighborhoodId: id, houseId: data.id, disposeBag: self.disposeBag, navVC: self.navVC, followStatus: self.followStatus)
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -177,7 +177,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: self.navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC)
+                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC, followStatus: self.followStatus)
                     }
                 }
                 <- parseHeaderNode("相关推荐")
@@ -200,8 +200,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
 }
 
-func openErshouHouseList(title: String?, neighborhoodId: String, houseId: String? = nil, disposeBag: DisposeBag, navVC: UINavigationController?) {
-    let listVC = ErshouHouseListVC(title: title, neighborhoodId: neighborhoodId, houseId: houseId)
+func openErshouHouseList(title: String?, neighborhoodId: String, houseId: String? = nil, disposeBag: DisposeBag, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) {
+    let listVC = ErshouHouseListVC(title: title, neighborhoodId: neighborhoodId, houseId: houseId, followStatus: followStatus)
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)

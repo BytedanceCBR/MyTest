@@ -24,11 +24,14 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     private let disposeBag = DisposeBag()
     
     weak var navVC: UINavigationController?
-
-    init(tableView: UITableView, navVC: UINavigationController?) {
+    
+    let followStatus: BehaviorRelay<Result<Bool>>
+    
+    init(tableView: UITableView, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) {
         self.navVC = navVC
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
+        self.followStatus = followStatus
         super.init()
         cellFactory.register(tableView: tableView)
         tableView.dataSource = self
@@ -41,6 +44,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
 
     func request(floorPanId: Int64) {
         requestFloorPlanInfo(floorPanId: "\(floorPanId)")
+                .debug()
                 .subscribe(onNext: { [unowned self] response in
                     if let data = response?.data {
                         self.datas.accept(self.dataParserByData(data: data).parser([]))
@@ -55,7 +59,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode()
-            <- parseFloorPanNode(data.recommend, navVC: navVC)
+            <- parseFloorPanNode(data.recommend, navVC: navVC, followStatus: followStatus)
         return dataParser
     }
 

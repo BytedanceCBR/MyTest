@@ -8,20 +8,25 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 
     private let floorPanId: Int64
 
     private var viewModel: FloorPanCategoryDetailPageViewModel?
 
-    init(isHiddenBottomBar: Bool, floorPanId: Int64) {
+    init(isHiddenBottomBar: Bool,
+         floorPanId: Int64,
+         followStatus: BehaviorRelay<Result<Bool>>) {
         self.floorPanId = floorPanId
-        super.init(identifier: "\(floorPanId)", isHiddenBottomBar: false)
+        super.init(identifier: "\(floorPanId)",
+            isHiddenBottomBar: false,
+            followStatus: followStatus)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewModel = FloorPanCategoryDetailPageViewModel(tableView: tableView, navVC: self.navigationController)
+        self.viewModel = FloorPanCategoryDetailPageViewModel(tableView: tableView, navVC: self.navigationController, followStatus: followStatus)
         viewModel?.request(floorPanId: floorPanId)
         self.viewModel?.request(floorPanId: floorPanId)
     }
@@ -33,11 +38,12 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 }
 
 
-func openFloorPanCategoryDetailPage(floorPanId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+func openFloorPanCategoryDetailPage(floorPanId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?, followStatus: BehaviorRelay<Result<Bool>>) -> () -> Void {
     return {
         let detailPage = FloorPanCategoryDetailPageVC(
                 isHiddenBottomBar: false,
-                floorPanId: floorPanId)
+                floorPanId: floorPanId,
+                followStatus: followStatus)
 
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

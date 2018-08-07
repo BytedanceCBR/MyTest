@@ -257,9 +257,10 @@ func parseNewHouseCoreInfoNode(
     priceChangeHandler: @escaping (BehaviorRelay<Bool>) -> Void,
     openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
     disposeBag: DisposeBag,
-    navVC: UINavigationController?) -> () -> TableSectionNode {
+    navVC: UINavigationController?,
+    followStatus: BehaviorRelay<Result<Bool>>) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)
+        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(followStatus)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
@@ -275,13 +276,14 @@ func fillNewHouseCoreInfoCell(
         openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
+        followStatus: BehaviorRelay<Result<Bool>>,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseInfoCell {
         theCell.pricingPerSqmLabel.text = data.coreInfo?.pricingPerSqm
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
         theCell.moreBtn.rx.tap
-            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag)(navVC))
+            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag)(navVC)(followStatus))
             .disposed(by: theCell.disposeBag)
 
         theCell.priceChangedNotify
@@ -315,7 +317,7 @@ func fillNewHouseCoreInfoCell(
         let theDisposeBag = DisposeBag()
         theCell.openMapBtn.rx.tap
                 .debug()
-                .bind { [unowned disposeBag] void in
+                .bind { void in
                     if let lat = data.coreInfo?.geodeLat, let lng = data.coreInfo?.geodeLng {
                         openMapPage(
                                 lat: lat,

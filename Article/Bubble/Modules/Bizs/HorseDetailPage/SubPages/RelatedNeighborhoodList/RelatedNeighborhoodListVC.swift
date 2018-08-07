@@ -19,11 +19,12 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
 
     let neighborhoodId: String
 
-    init(neighborhoodId: String) {
+    init(neighborhoodId: String, followStatus: BehaviorRelay<Result<Bool>>) {
         self.neighborhoodId = neighborhoodId
         super.init(
             identifier: neighborhoodId,
-            isHiddenBottomBar: true)
+            isHiddenBottomBar: true,
+            followStatus: followStatus)
         self.navBar.title.text = "周边小区"
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
     }
