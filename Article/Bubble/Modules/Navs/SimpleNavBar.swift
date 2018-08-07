@@ -156,6 +156,7 @@ class SearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.returnKeyType = .search
         return result
     }()
 
@@ -272,6 +273,7 @@ class CategorySearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.returnKeyType = .search
         return result
     }()
 

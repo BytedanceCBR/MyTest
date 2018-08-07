@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class SuggestionListVC: BaseViewController {
+class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
@@ -73,7 +73,7 @@ class SuggestionListVC: BaseViewController {
         navBar.searchInput.rx.textInput.text
                 .throttle(0.6, scheduler: MainScheduler.instance)
                 .filter { $0 == nil || $0 == "" }
-                .bind(onNext: { _ in
+                .bind(onNext: { text in
                     self.tableViewModel.suggestions.accept([])
                 })
                 .disposed(by: disposeBag)
@@ -154,6 +154,13 @@ class SuggestionListVC: BaseViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text.isEmpty {
+            return true
+        }
+        return false
     }
 
     private func displayPopupMenu() {

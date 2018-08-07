@@ -82,6 +82,12 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return re
     }()
 
+    lazy var seperateLineView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+
     var disposeBag = DisposeBag()
 
     fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
@@ -107,7 +113,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         contentView.addSubview(locationList)
         locationList.snp.makeConstraints { maker in
             maker.top.equalTo(segmentedControl.snp.bottom)
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.height.equalTo(156)
         }
 
@@ -117,6 +123,13 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             maker.width.greaterThanOrEqualTo(100)
             maker.height.equalTo(20)
         }
+
+        contentView.addSubview(seperateLineView)
+        seperateLineView.snp.makeConstraints { maker in
+            maker.height.equalTo(6)
+            maker.bottom.left.right.equalToSuperview()
+            maker.top.equalTo(locationList.snp.bottom)
+         }
 
         locationList.dataSource = locationListViewModel
         poiData
