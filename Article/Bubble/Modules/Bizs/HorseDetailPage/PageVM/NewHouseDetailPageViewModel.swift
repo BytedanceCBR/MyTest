@@ -12,6 +12,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
 
+    var relatedCourt = BehaviorRelay<RelatedCourtResponse?>(value: nil)
+
+    var newHouseDetail = BehaviorRelay<HouseDetailResponse?>(value: nil)
+
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -50,9 +54,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.coreInfo?.name)
-                        let result = self.processData(response: response, courtId: houseId)([])
-                        self.dataSource.datas = result
-                        self.tableView?.reloadData()
+
+                        self.newHouseDetail.accept(response)
                     }
 
                     if let contact = response?.data?.contact?["phone"] {
@@ -65,6 +68,25 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }, onError: { (error) in
                     print(error)
                 })
+                .disposed(by: disposeBag)
+
+        requestRelatedCourtSearch(courtId: "\(houseId)")
+                .debug()
+                .subscribe(onNext: { [unowned self] response in
+                    self.relatedCourt.accept(response)
+                })
+                .disposed(by: disposeBag)
+
+        Observable
+                .combineLatest(newHouseDetail, relatedCourt)
+                .bind { [unowned self] (e) in
+                    let (detail, _) = e
+                    if let detail = detail {
+                        let result = self.processData(response: detail, courtId: houseId)([])
+                        self.dataSource.datas = result
+                        self.tableView?.reloadData()
+                    }
+                }
                 .disposed(by: disposeBag)
     }
 
@@ -101,6 +123,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                                    showLoadMore: true,
                                    process: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC))
                 <- parseGlobalPricingNode(data, processor: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC))
+                <- parseHeaderNode("猜你喜欢")
+                <- parseRelateCourtNode(relatedCourt.value, navVC: navVC)
                 <- parseDisclaimerNode(data)
             return dataParser.parser
         } else {

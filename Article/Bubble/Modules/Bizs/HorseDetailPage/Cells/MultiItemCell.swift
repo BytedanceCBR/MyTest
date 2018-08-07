@@ -217,6 +217,46 @@ class NeighborhoodItemView: UIView {
 
 }
 
+func parseRelateCourtNode(_ data: RelatedCourtResponse?, navVC: UINavigationController?) -> () -> TableSectionNode? {
+    return {
+        if let datas = data?.data?.items?.take(5), datas.count > 0 {
+            let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
+            return TableSectionNode(items: [render], selectors: nil, label: "猜你喜欢", type: .node(identifier: MultiItemCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillSearchInNeighborhoodCell(items: [CourtItemInnerEntity], navVC: UINavigationController?, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? MultiItemCell {
+        let views = items.map { item -> FloorPanItemView in
+            let re = generateearchInNeighborhoodItemView(item)
+            re.tapGesture.rx.event
+                    .subscribe(onNext: { [unowned re] recognizer in
+                        if let id = item.id, let houseId = Int64(id) {
+                            openNewHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag, navVC: navVC)()
+                        }
+                    })
+                    .disposed(by: re.disposeBag)
+            return re
+        }
+
+        views.forEach { view in
+            theCell.groupView.addSubview(view)
+        }
+        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        views.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+        if let view = views.last {
+            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+                maker.height.equalTo(view.snp.height).offset(16)
+            }
+        }
+    }
+}
+
 func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?, navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         if let datas = data?.items?.take(5), datas.count > 0 {
@@ -255,6 +295,32 @@ func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], navVC: UINaviga
             }
         }
     }
+}
+
+func generateearchInNeighborhoodItemView(_ item: CourtItemInnerEntity) -> FloorPanItemView {
+    let re = FloorPanItemView()
+    if let urlStr = item.courtImage?.first?.url {
+        re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
+    }
+    let text = NSMutableAttributedString()
+    let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
+    attributeText.yy_color = hexStringToUIColor(hex: "#222222")
+    text.append(attributeText)
+
+    if let status = item.tags?.first {
+        let tag = createTagAttributeText(
+                content: status.content,
+                textColor: hexStringToUIColor(hex: status.textColor),
+                backgroundColor: hexStringToUIColor(hex: status.backgroundColor),
+                insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
+        tag.yy_baselineOffset = 2
+        text.append(tag)
+    }
+
+    re.descLabel.attributedText = text
+    re.priceLabel.text = item.displayPricePerSqm
+    return re
 }
 
 
@@ -376,8 +442,8 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
     if let status = item.saleStatus {
         let tag = createTagAttributeText(
                 content: status.content,
-                textColor: hexStringToUIColor(hex: "#33bf85"),
-                backgroundColor: hexStringToUIColor(hex: "#33bf85", alpha: 0.08),
+                textColor: hexStringToUIColor(hex: status.textColor),
+                backgroundColor: hexStringToUIColor(hex: status.backgroundColor),
                 insets: UIEdgeInsets(top: -3, left: -5, bottom: 0, right: -5))
         tag.yy_baselineOffset = 2
         text.append(tag)

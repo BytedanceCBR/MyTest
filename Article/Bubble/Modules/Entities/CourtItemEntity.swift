@@ -30,9 +30,9 @@ struct CourtSearchResponse: Mappable {
 
 struct SaleStatusItem: Mappable {
     var id: Int?
-    var content: String?
-    var backgroundColor: String?
-    var textColor: String?
+    var content: String = ""
+    var backgroundColor: String = ""
+    var textColor: String = ""
     
     init?(map: Map) {
     }
@@ -240,7 +240,6 @@ struct CourtUserSatusItem: Mappable {
     }
     
     mutating func mapping(map: Map) {
-        
         self.courtSubStatus <- map["court_sub_status"]
         self.pricingSubStauts <- map["pricing_sub_stauts"]
         self.CourtOpenSubscribeStatus <- map["CourtOpenSubscribeStatus"]
@@ -280,6 +279,7 @@ struct CourtItemInnerEntity: Mappable {
     var floorpanList: FloorpanListItem?
     var contact: [String: String]?
     var userStatus: CourtUserSatusItem?
+    var saleStatus: SaleStatusItem?
     
     init?(map: Map) {
         
@@ -302,7 +302,10 @@ struct CourtItemInnerEntity: Mappable {
         floorpanList <- map["floorpan_list"]
         contact <- map["contact"]
         userStatus <- map["user_status"]
+        saleStatus <- map["sale_status"]
     }
+
+
     
 }
 
