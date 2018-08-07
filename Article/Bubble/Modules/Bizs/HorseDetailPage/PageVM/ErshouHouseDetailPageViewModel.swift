@@ -168,7 +168,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openErshouHouseList(title: nil, neighborhoodId: id, houseId: data.id, disposeBag: self.disposeBag, navVC: self.navVC, bottomBarBinder: self.bindBottomView())
+                        openErshouHouseList(
+                            title: nil,
+                            neighborhoodId: id,
+                            houseId: data.id,
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC,
+                            searchSource: .oldDetail,
+                            bottomBarBinder: self.bindBottomView())
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -206,8 +213,14 @@ func openErshouHouseList(
         houseId: String? = nil,
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
+        searchSource: SearchSourceKey,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
-    let listVC = ErshouHouseListVC(title: title, neighborhoodId: neighborhoodId, houseId: houseId, bottomBarBinder: bottomBarBinder)
+    let listVC = ErshouHouseListVC(
+        title: title,
+        neighborhoodId: neighborhoodId,
+        houseId: houseId,
+        searchSource: searchSource,
+        bottomBarBinder: bottomBarBinder)
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)

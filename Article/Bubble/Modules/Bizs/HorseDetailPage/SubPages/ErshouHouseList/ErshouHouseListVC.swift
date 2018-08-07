@@ -39,13 +39,17 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     var conditionFilterViewModel: ConditionFilterViewModel?
 
     let theHouseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
+    
+    let searchSource: SearchSourceKey
 
     init(title: String?,
          neighborhoodId: String,
          houseId: String? = nil,
+         searchSource: SearchSourceKey,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
+        self.searchSource = searchSource
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         if let title = title {
             self.navBar.title.text = title
@@ -62,10 +66,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.ttHideNavigationBar = true
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
+        ershouHouseListViewModel?.title
+            .bind(to: self.navBar.title.rx.text)
+            .disposed(by: disposeBag)
         
-//        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId)
         ershouHouseListViewModel?.requestErshouHouseList(
-            query: "neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)",
+            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
             condition: nil)
         
         self.conditionFilterViewModel = ConditionFilterViewModel(

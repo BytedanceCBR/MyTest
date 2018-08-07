@@ -163,7 +163,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                                 title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
-                                navVC: self.navVC, bottomBarBinder: self.bindBottomView())
+                                navVC: self.navVC,
+                                searchSource: .neighborhoodDetail,
+                                bottomBarBinder: self.bindBottomView())
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in

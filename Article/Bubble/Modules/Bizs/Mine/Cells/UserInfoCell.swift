@@ -118,7 +118,7 @@ func parseUserInfoNode(
 
 func fillUserInfoCell(_ info: BDAccountUser?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
-        theCell.userName.text = info?.name ?? "登陆/注册"
+        theCell.userName.text = info?.name ?? "登录/注册"
         if info != nil {
             theCell.userDesc.text = "查看并编辑个人资料"
             theCell.editBtn.isHidden = false

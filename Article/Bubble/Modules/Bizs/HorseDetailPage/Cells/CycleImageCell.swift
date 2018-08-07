@@ -112,12 +112,13 @@ class CycleImageCell: BaseUITableViewCell {
             return re
         }
         if let pageableViewModel = pageableViewModel {
+            let imageHeight = UIScreen.main.bounds.height / 5 * 2
             pageableViewModel.pageView.isUserInteractionEnabled = true
 
             contentView.addSubview(pageableViewModel.pageView)
             pageableViewModel.pageView.snp.makeConstraints { maker in
                 maker.left.right.top.bottom.equalToSuperview()
-                maker.height.equalTo(247)
+                maker.height.equalTo(imageHeight)
             }
             
 

@@ -41,7 +41,7 @@ class SuggestionItemCell: UITableViewCell {
         secondaryLabel.snp.makeConstraints { maker in
             maker.top.equalTo(12)
             maker.right.equalToSuperview().offset(-15)
-            maker.left.equalTo(label.snp.right).offset(5).priority(.high)
+            maker.left.equalTo(label.snp.right).offset(-5).priority(.high)
             maker.width.greaterThanOrEqualTo(63).priority(.high)
         }
         contentView.lu.addBottomBorder()

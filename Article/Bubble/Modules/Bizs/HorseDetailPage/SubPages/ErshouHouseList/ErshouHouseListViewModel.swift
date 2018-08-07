@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 
 class ErshouHouseListViewModel: BaseSubPageViewModel {
+    
+    var title = BehaviorRelay<String>(value: "")
 
 //    func request(neightborhoodId: String) {
 //        let loader = pageRequestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId, query: "")
@@ -61,7 +63,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
-
+                    self.title.accept("小区房源(\(response?.data?.total ?? 0))")
                     if let hasMore = response?.data?.hasMore {
                         self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }
