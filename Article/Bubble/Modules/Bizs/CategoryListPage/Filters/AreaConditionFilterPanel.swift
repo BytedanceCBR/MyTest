@@ -36,17 +36,17 @@ func constructAreaConditionPanel(
     }
 }
 
-func parseAreaConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parseAreaConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count == 0 {
-        return .noCondition("区域")
+        return .noCondition(label)
     } else if nodePath.count == 1 {
         if let node = nodePath.first, node.isNoLimit != 1 /*判定是否是不限*/ {
             return .condition(node.label)
         } else {
-            return .noCondition("区域")
+            return .noCondition(label)
         }
     } else {
-        return .condition("区域(\(nodePath.count))")
+        return .condition("\(label)(\(nodePath.count))")
     }
 }
 

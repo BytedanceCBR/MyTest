@@ -30,13 +30,13 @@ func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping Con
     }
 }
 
-func parseHorseTypeConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parseHorseTypeConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count > 1 {
-        return .condition("户型 (\(nodePath.count)")
+        return .condition("\(label) (\(nodePath.count)")
     } else if nodePath.count == 1 {
         return .condition(nodePath.first!.label)
     } else {
-        return .noCondition("户型")
+        return .noCondition(label)
     }
 }
 
@@ -75,13 +75,13 @@ func constructMoreSelectCollectionPanel(nodes: [Node], _ action: @escaping Condi
     }
 }
 
-func parseMoreConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parseMoreConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count > 1 {
-        return .condition("更多(\(nodePath.count))")
+        return .condition("\(label)(\(nodePath.count))")
     } else if nodePath.count == 1 {
         return .condition(nodePath.first!.label)
     } else {
-        return .noCondition("更多")
+        return .noCondition(label)
     }
 }
 

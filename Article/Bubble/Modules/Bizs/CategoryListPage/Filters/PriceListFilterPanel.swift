@@ -30,7 +30,7 @@ func constructPriceListConditionPanel(nodes: [Node], _ action: @escaping Conditi
                 .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
                 .subscribe(onNext: { notification in
                     let userInfo = notification.userInfo!
-                    let  keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+                    let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
                     let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
 
                     let animations:(() -> Void) = {
@@ -147,20 +147,28 @@ class PriceListFilterPanel: UIView {
         dataSource.didSelect = { [unowned self] (nodes) in
             self.didSelect?(nodes)
         }
+
+        dataSource.selectedIndexPaths
+                .skip(1)
+                .filter { $0.count != 0 }
+                .bind { [unowned self] set in
+                    self.bottomInputView.upperPriceTextField.text = nil
+                    self.bottomInputView.lowerPriceTextField.text = nil
+                }.disposed(by: disposeBag)
     }
 
     func bindInputPanelObservable() {
         bottomInputView.upperPriceTextField.rx.text
                 .filter { $0?.isEmpty == false }
                 .subscribe(onNext: { [unowned self] s in
-                    self.dataSource.selectedIndexPaths = []
+                    self.dataSource.selectedIndexPaths.accept([])
                     self.tableView.reloadData()
                 })
                 .disposed(by: disposeBag)
         bottomInputView.lowerPriceTextField.rx.text
                 .filter { $0?.isEmpty == false }
                 .subscribe(onNext: { [unowned self] s in
-                    self.dataSource.selectedIndexPaths = []
+                    self.dataSource.selectedIndexPaths.accept([])
                     self.tableView.reloadData()
                 })
                 .disposed(by: disposeBag)
@@ -174,7 +182,7 @@ class PriceListFilterPanel: UIView {
         bottomInputView.configBtn.rx.tap
             .subscribe(onNext: { [unowned self] () in
                 let nodes = self.dataSource.nodes
-                let datas = self.dataSource.selectedIndexPaths.map { path -> Node in
+                let datas = self.dataSource.selectedIndexPaths.value.map { path -> Node in
                     nodes[path.row]
                 }
                 if datas.isEmpty {
@@ -198,9 +206,7 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
 
     var nodes: [Node] = []
 
-    var selectedIndexPath: IndexPath?
-
-    var selectedIndexPaths: Set<IndexPath> = []
+    let selectedIndexPaths = BehaviorRelay<Set<IndexPath>>(value: [])
 
     var didSelect: (([Node]) -> Void)?
 
@@ -212,7 +218,7 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
         if let theCell = cell as? PriceListItemCell {
             theCell.label.text = nodes[indexPath.row].label
-            if selectedIndexPaths.contains(indexPath) {
+            if selectedIndexPaths.value.contains(indexPath) {
                 theCell.checkboxBtn.isSelected = true
                 theCell.label.textColor = hexStringToUIColor(hex: "#f85959")
             } else {
@@ -229,10 +235,14 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
             didSelect?([nodes[indexPath.row]])
             tableView.reloadData()
         } else {
-            if !selectedIndexPaths.contains(indexPath) {
-                selectedIndexPaths.insert(indexPath)
+            if !selectedIndexPaths.value.contains(indexPath) {
+                var selected = selectedIndexPaths.value
+                selected.insert(indexPath)
+                selectedIndexPaths.accept(selected)
             } else {
-                selectedIndexPaths.remove(indexPath)
+                var selected = selectedIndexPaths.value
+                selected.remove(indexPath)
+                selectedIndexPaths.accept(selected)
             }
 
 
@@ -246,7 +256,6 @@ class PriceListItemCell: UITableViewCell {
     lazy var label: UILabel = {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(15)
-//        result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
         result.textColor = hexStringToUIColor(hex: "#222222")
         return result
     }()
