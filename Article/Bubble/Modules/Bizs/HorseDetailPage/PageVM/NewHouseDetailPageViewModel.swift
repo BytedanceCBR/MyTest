@@ -123,6 +123,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                                    showLoadMore: true,
                                    process: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC))
                 <- parseGlobalPricingNode(data, processor: openGlobalPricingList(courtId: courtId, disposeBag: disposeBag, navVC: navVC))
+                    <- parseInfoNode("楼盘价格，由开发商统一报价，由于各平台更新速度不一致，导致价格有所差异，最终价格应以开发商报价为准；")
                 <- parseHeaderNode("猜你喜欢")
                 <- parseRelateCourtNode(relatedCourt.value, navVC: navVC)
                 <- parseDisclaimerNode(data)

@@ -40,14 +40,17 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
     let theHouseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
-    init(neighborhoodId: String, houseId: String? = nil) {
+    init(title: String?, neighborhoodId: String, houseId: String? = nil) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true)
-        self.navBar.title.text = "同小区房源"
+        if let title = title {
+            self.navBar.title.text = title
+        } else {
+            self.navBar.title.text = "同小区房源"
+        }
+
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
-
-
     }
 
     override func viewDidLoad() {

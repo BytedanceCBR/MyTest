@@ -83,6 +83,7 @@
 		1A216991C0D71F26E771F497 /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */; };
 		1A2169933612B8F22AEFDE73 /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */; };
 		1A216A1DE8983807C36F6234 /* Utils+Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161BAA190C547FE584304 /* Utils+Device.swift */; };
+		1A216B4E31DA790C47D97E1C /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F0155D2102F8467B268 /* InformationCell.swift */; };
 		1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A22D03E0B259EB013B2 /* Client.swift */; };
 		1B0C7E8E1B3D439D00361F3E /* ArticleCategoryWAPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */; };
 		1B5B58B41A1F1C7400A74773 /* ExploreSubscribeDataListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58B31A1F1C7400A74773 /* ExploreSubscribeDataListManager.m */; };
@@ -1490,6 +1491,7 @@
 		B3C4BDD02116A4250076FFD8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4BDCF2116A4250076FFD8 /* AboutViewController.swift */; };
 		B3C4BDD12116AB0F0076FFD8 /* Utils+Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161BAA190C547FE584304 /* Utils+Device.swift */; };
 		B3C4BDD22116ABD20076FFD8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4BDCF2116A4250076FFD8 /* AboutViewController.swift */; };
+		B3E59A3D2119591D00B44F5B /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F0155D2102F8467B268 /* InformationCell.swift */; };
 		B3E8EA8F210D60A100AEE522 /* JXPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E8EA8E210D60A000AEE522 /* JXPhotoBrowser.framework */; };
 		B3E8EA92210D615E00AEE522 /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */; };
 		B3E8EA93210D66F800AEE522 /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */; };
@@ -3669,6 +3671,7 @@
 		1A216AA5C353950BF89ABECA /* CountryListHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListHistoryDataSource.swift; sourceTree = "<group>"; };
 		1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A216BB2987DC56ECD5883D7 /* LBSMapPageNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageNavBar.swift; sourceTree = "<group>"; };
+		1A216F0155D2102F8467B268 /* InformationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
 		1B0C7E8C1B3D439D00361F3E /* ArticleCategoryWAPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleCategoryWAPViewController.h; sourceTree = "<group>"; };
 		1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleCategoryWAPViewController.m; sourceTree = "<group>"; };
 		1B5B58B21A1F1C7400A74773 /* ExploreSubscribeDataListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreSubscribeDataListManager.h; sourceTree = "<group>"; };
@@ -12415,6 +12418,7 @@
 				B36E26E820F62A7800D4E8D0 /* ErshouHouseCoreInfoCell.swift */,
 				B36E26E920F62A7800D4E8D0 /* PropertyListCell.swift */,
 				B36E26EA20F62A7800D4E8D0 /* GlobalPricingCell.swift */,
+				1A216F0155D2102F8467B268 /* InformationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -17748,6 +17752,7 @@
 				1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */,
 				1A21680A28D13E7B391890E2 /* CountryListHistoryDataSource.swift in Sources */,
 				1A216A1DE8983807C36F6234 /* Utils+Device.swift in Sources */,
+				1A216B4E31DA790C47D97E1C /* InformationCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -18717,6 +18722,7 @@
 				FEFA56BA205FB1A8001F50D8 /* ExploreCollectionCellView.m in Sources */,
 				FEFA56BB205FB1A8001F50D8 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				FEFA56BC205FB1A8001F50D8 /* TTVCommentListItem.m in Sources */,
+				B3E59A3D2119591D00B44F5B /* InformationCell.swift in Sources */,
 				FEFA56BD205FB1A8001F50D8 /* TTNetworkStubSwitchViewController.m in Sources */,
 				FEFA56C0205FB1A8001F50D8 /* TTADBaseCell.m in Sources */,
 				FEFA56C1205FB1A8001F50D8 /* ArticleUpdateManager.m in Sources */,

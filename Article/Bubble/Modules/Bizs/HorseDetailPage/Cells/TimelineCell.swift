@@ -47,6 +47,7 @@ class TimelineCell: BaseUITableViewCell {
         result.numberOfLines = 2
         result.font = CommonUIStyle.Font.pingFangMedium(16)
         result.textColor = hexStringToUIColor(hex: "#707070")
+        result.lineBreakMode = .byWordWrapping
         return result
     }()
 
@@ -125,6 +126,7 @@ class TimelineCell: BaseUITableViewCell {
     func setContent(_ content: String, isExpand: Bool = false) {
         let style = NSMutableParagraphStyle()
 //        style.lineSpacing = 4
+        style.lineBreakMode = .byTruncatingTail
         let attrText = NSMutableAttributedString(
                 string: content,
                 attributes: [.font: CommonUIStyle.Font.pingFangMedium(16),
@@ -155,7 +157,7 @@ func fillTimelineCell(
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? TimelineCell {
         theCell.isFirstCell = isFirstCell
-        theCell.timeLabel.text = "03-20"
+        theCell.timeLabel.text = CommonUIStyle.DateTime.simpleDataFormat.string(from: Date(timeIntervalSince1970: TimeInterval(data.createTime)))
         theCell.titleLabel.text = data.title
         if let content = data.desc {              
             theCell.setContent(content, isExpand: isExpand)

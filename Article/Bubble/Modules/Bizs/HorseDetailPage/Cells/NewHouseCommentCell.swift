@@ -96,7 +96,7 @@ class NewHouseCommentCell: BaseUITableViewCell {
             maker.top.equalTo(contentLabel.snp.bottom).offset(16)
             maker.right.equalTo(fromLabel.snp.left)
             maker.bottom.equalToSuperview().offset(-15)
-            maker.width.equalTo(89)
+            maker.width.equalTo(100)
         }
 
 
@@ -155,7 +155,8 @@ func fillNewHouseCommentCell(
     isExpand: Bool = false,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseCommentCell {
-        theCell.fromLabel.text = data.source
+        theCell.fromLabel.text = "来自\(data.source ?? "")"
+        theCell.dateTiemLabel.text = CommonUIStyle.DateTime.dateFormat.string(from: Date(timeIntervalSince1970: TimeInterval(data.createTime ?? 0)))
         if let content = data.content {
             theCell.setContent(content: content, isExpand: isExpand)
         }

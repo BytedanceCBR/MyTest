@@ -4,9 +4,11 @@
 //
 
 import Foundation
-
+import RxCocoa
+import RxSwift
 
 class ErshouHouseListViewModel: BaseSubPageViewModel {
+
 //    func request(neightborhoodId: String) {
 //        let loader = pageRequestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId, query: "")
 //        pageableLoader = { [unowned self] in
@@ -59,6 +61,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
+
                     if let hasMore = response?.data?.hasMore {
                         self.onDataLoaded?(hasMore)
                     }
