@@ -16,7 +16,7 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel {
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
                     if let hasMore = response?.data?.hasMore {
-                        self.onDataLoaded?(hasMore)
+                        self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }
                     if let data = response?.data {
                         return parseNeighborhoodRowItemNode(data.items ?? [], disposeBag: self.disposeBag, navVC: self.navVC)

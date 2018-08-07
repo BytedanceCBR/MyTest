@@ -87,7 +87,7 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { [unowned self] data in
                     if let data = data {
                         let history = EnvContext.shared.client.generalBizconfig.cityHistoryDataSource.getHistory()
-                        let listData = (parseHotCityList(data.hotCityList) <*> parseHistoryList(history) <*> parseCityList(data.cityList))([])
+                        let listData = (parseHistoryList(history) <*> parseHotCityList(data.hotCityList) <*> parseCityList(data.cityList))([])
                         self.dataSource.datas = listData
                         self.tableView.reloadData()
                     }

@@ -201,6 +201,7 @@ class SearchNavBar: UIView {
         searchAreaBtn.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()
         }
+        self.lu.addBottomBorder()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -292,7 +293,7 @@ class CategorySearchNavBar: UIView {
         backBtn.snp.makeConstraints { maker in
             maker.left.equalTo(12)
             maker.width.height.equalTo(24)
-            maker.top.equalTo(30)
+            maker.bottom.equalToSuperview().offset(-10)
         }
 
         addSubview(searchAreaPanel)
@@ -357,6 +358,7 @@ class CategorySearchNavBar: UIView {
             maker.right.top.bottom.equalToSuperview()
             maker.left.equalTo(searchIcon.snp.left)
         }
+        self.lu.addBottomBorder()
     }
     
     

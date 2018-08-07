@@ -63,7 +63,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         categoryListVM?.requestFavoriteData(houseType: houseType)
         tableView.delegate = self
-        self.categoryListVM?.onDataLoaded = { [weak self] count in
+        self.categoryListVM?.onDataLoaded = { [weak self] (hasMore, count) in
             if count == 0 {
                 self?.showEmptyMaskView()
             }

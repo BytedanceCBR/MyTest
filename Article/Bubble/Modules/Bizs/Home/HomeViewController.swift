@@ -333,6 +333,7 @@ extension HomeViewController {
         vc.houseType.accept(houseType)
         vc.suggestionParams = condition
         vc.navBar.isShowTypeSelector = false
+        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
         let nav = self.navigationController
         nav?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
@@ -340,6 +341,19 @@ extension HomeViewController {
                     nav?.popViewController(animated: true)
                 })
                 .disposed(by: disposeBag)
+    }
+}
+
+func searchBarPlaceholder(_ houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "请输入楼盘名/地址"
+    case .neighborhood:
+        return "请输入小区/商圈/地铁"
+    case .secondHandHouse:
+        return "请输入小区/商圈/地铁"
+    default:
+        return ""
     }
 }
 

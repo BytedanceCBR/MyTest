@@ -308,6 +308,8 @@ fileprivate func openCategoryVC(_ houseType: HouseType, disposeBag: DisposeBag, 
         vc.houseType.accept(houseType)
         vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
         vc.navBar.isShowTypeSelector = false
+        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
+
         navVC?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

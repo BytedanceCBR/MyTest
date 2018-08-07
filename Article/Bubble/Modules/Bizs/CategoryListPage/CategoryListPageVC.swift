@@ -100,6 +100,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     var queryString = ""
 
     let associationalWord: String?
+    
+    var hasMore: Bool = true
 
     init(isOpenConditionFilter: Bool, associationalWord: String? = nil) {
         self.isOpenConditionFilter = isOpenConditionFilter
@@ -161,7 +163,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(CommonUIStyle.NavBar.height)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(CommonUIStyle.NavBar.height - 20)
+            } else {
+                maker.bottom.equalTo(view.snp.top).offset(CommonUIStyle.NavBar.height)
+            }
         }
 
         navBar.searchAreaBtn.rx.tap
@@ -220,7 +226,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in
             maker.top.equalTo(searchFilterPanel.snp.bottom)
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
         conditionPanelView.isHidden = true
 
@@ -229,37 +240,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     self?.searchAndConditionFilterVM.sendSearchRequest()
                 })
                 .disposed(by: disposeBag)
-
-//        EnvContext.shared.client.configCacheSubject
-//                .map {
-//                    $0?.filter
-//                }
-//                .map { items in
-//                    let result: [SearchConditionItem] = items?
-//                            .map(transferSearchConfigFilterItemTo) ?? []
-//                    let panelData: [[Node]] = items?.map {
-//                        if let options = $0.options {
-//                            return transferSearchConfigOptionToNode(
-//                                    options: options,
-//                                    isSupportMulti: $0.supportMulti)
-//                        } else {
-//                            return []
-//                        }
-//                    } ?? []
-//                    return (result, panelData)
-//                }
-//                .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
-//                    let reload: () -> Void = { [weak self] in
-//                        self?.conditionFilterViewModel?.reloadConditionPanel()
-//                    }
-//                    zip(items.0, items.1).forEach({ (e) in
-//                        let (item, nodes) = e
-//                        item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
-//                    })
-//                    self.conditionFilterViewModel?.filterConditions = items.0
-//                    self.conditionFilterViewModel?.reloadConditionPanel()
-//                })
-//                .disposed(by: disposeBag)
 
         Observable
                 .zip(houseType, EnvContext.shared.client.configCacheSubject)
@@ -317,18 +297,20 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 .subscribe(onNext: { [unowned self, unowned tableView] void in
                     if tableView.contentOffset.y > 0 &&
                             tableView.contentSize.height - tableView.frame.height - tableView.contentOffset.y <= 0 &&
-                            !self.footIndicatorView.isAnimating {
+                            !self.footIndicatorView.isAnimating && self.hasMore {
+                        self.footIndicatorView.loadingIndicator.isHidden = false
+                        self.footIndicatorView.message.text = "正在努力加载中"
                         self.footIndicatorView.startAnimating()
                         self.loadData()
                     }
                 })
                 .disposed(by: disposeBag)
-        self.categoryListViewModel?.onDataLoaded = { [unowned self] (count) in
+        self.categoryListViewModel?.onDataLoaded = { [unowned self] (hasMore, count) in
             self.footIndicatorView.stopAnimating()
-            if count == 0 {
-                self.infoMaskView.isHidden = false
-            } else {
-                self.infoMaskView.isHidden = true
+            self.hasMore = hasMore
+            if hasMore == false {
+                self.footIndicatorView.message.text = " -- END -- "
+                self.footIndicatorView.loadingIndicator.isHidden = true
             }
         }
     }

@@ -38,7 +38,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let count = response?.data?.items.count {
-                            self.onDataLoaded?(count >= 15)
+                            self.onDataLoaded?(count >= 15, count)
                         }
                         if let data = response?.data {
                             return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
@@ -63,7 +63,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
                 .map { [unowned self] response -> [TableRowNode] in
 
                     if let hasMore = response?.data?.hasMore {
-                        self.onDataLoaded?(hasMore)
+                        self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }
                     if let data = response?.data {
                         return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)

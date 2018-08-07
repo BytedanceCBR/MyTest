@@ -26,7 +26,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var pageableLoader: (() -> Void)?
 
-    var onDataLoaded: ((Int) -> Void)?
+    var onDataLoaded: ((Bool, Int) -> Void)?
 
     var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
     
@@ -73,6 +73,8 @@ class CategoryListViewModel: DetailPageViewModel {
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
                         self.oneTimeToast?(response?.data?.refreshTip)
+                        self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
+
                         if let data = response?.data {
                             return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
                         } else {
@@ -92,6 +94,7 @@ class CategoryListViewModel: DetailPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
+                        self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                         self.oneTimeToast?(response?.data?.refreshTip)
                         if let data = response?.data {
                             return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
@@ -116,6 +119,7 @@ class CategoryListViewModel: DetailPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
+                        self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                         self.oneTimeToast?(response?.data?.refreshTip)
                         if let data = response?.data {
                             return parseNeighborhoodRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
@@ -138,6 +142,8 @@ class CategoryListViewModel: DetailPageViewModel {
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let data = response?.data {
+                            self.onDataLoaded?(data.hasMore ?? false, data.items.count)
+
                             if self.dataSource.datas.value.count == 0 {
                                 //TODO: f100
                             }
@@ -157,7 +163,6 @@ class CategoryListViewModel: DetailPageViewModel {
         return { [unowned self] datas in
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
-            self.onDataLoaded?(self.dataSource.datas.value.count)
         }
     }
 

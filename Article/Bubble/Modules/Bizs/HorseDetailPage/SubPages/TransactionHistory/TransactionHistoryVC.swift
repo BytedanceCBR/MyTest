@@ -24,7 +24,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
         self.transactionHistoryVM = TransactionHistoryVM(tableView: tableView)
         self.transactionHistoryVM?.onDataLoaded = self.onDataLoaded()
         self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
-    }
+    } 
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
