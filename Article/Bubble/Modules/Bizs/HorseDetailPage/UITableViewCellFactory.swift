@@ -95,6 +95,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: SpringBroadCell.self)
             .addCellClass(cellType: GridOpBoardCell.self)
             .addCellClass(cellType: FlatGridCell.self)
+            .addCellClass(cellType: ErshouHousePriceChartCell.self)
             .addCellClass(cellType: InformationCell.self)
 
 

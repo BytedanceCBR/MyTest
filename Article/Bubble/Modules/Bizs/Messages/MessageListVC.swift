@@ -72,6 +72,9 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
         tableView.dataSource = tableListViewModel
         tableView.delegate = tableListViewModel
 
+        tableView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        tableView.separatorStyle = .none
+
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
 
     }
@@ -166,6 +169,8 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 theCell.priceLabel.text = data.price
                 theCell.roomSpaceLabel.text = data.pricePerSqm
                 
+                theCell.lineView.isHidden = (indexPath.row == items.count - 1) ? true : false
+
                 if let img = data.images?.first , let url = img.url {
                     theCell.setImageByUrl(url)
                 }

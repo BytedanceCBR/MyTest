@@ -75,16 +75,14 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
         
         override func layoutSubviews() {
             super.layoutSubviews()
-
-            var y = (self.bounds.height - backBtn.bounds.height) / 2
             
             backBtn.sizeToFit()
-            backBtn.frame = CGRect(x: 10, y: y, width: backBtn.bounds.width, height: backBtn.bounds.height)
+            backBtn.frame = CGRect(x: 10, y: 0, width: backBtn.bounds.width, height: self.bounds.height)
 
             let x = self.bounds.width - 20 - showBtn.bounds.width
-            y = (self.bounds.height - showBtn.bounds.height) / 2
+
             showBtn.sizeToFit()
-            showBtn.frame = CGRect(x: x, y: y, width: showBtn.bounds.width, height: showBtn.bounds.height)
+            showBtn.frame = CGRect(x: x, y: 0, width: showBtn.bounds.width, height: self.bounds.height)
         }
         
         @objc private func onBackButton() {

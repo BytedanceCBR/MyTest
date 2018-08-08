@@ -36,4 +36,7 @@
 #import "TTNavigationController.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import <TTRoute.h>
+#import <TTIndicatorView.h>
+
+
 #endif /* Article_Bridging_Header_h */

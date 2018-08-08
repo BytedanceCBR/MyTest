@@ -35,6 +35,11 @@ class CommonUIStyle {
             re.dateFormat = "MM-dd"
             return re
         }()
+        static let monthDataFormat: DateFormatter = {
+            let re = DateFormatter()
+            re.dateFormat = "MM月"
+            return re
+        }()
         
     }
 

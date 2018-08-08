@@ -11,6 +11,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import JXPhotoBrowser
+
+
 class CycleImageCell: BaseUITableViewCell {
 
     private var pageableViewModel: PageableViewModel?
@@ -356,7 +358,7 @@ fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
 
 }
 
-
+// MARK: PictureBrowserDataSource
 fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
 
     let pictures: [String]
@@ -395,4 +397,25 @@ fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
     public func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser, thumbnailViewForIndex index: Int) -> UIView? {
         return target
     }
+
+    func photoBrowser(_ photoBrowser: PhotoBrowser, didLongPressForIndex index: Int, image: UIImage) {
+        
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
+        
+    }
+    
+    @objc func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
+        
+        if let _ = error as NSError? {
+        
+            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: "保存失败", indicatorImage: UIImage(named: "close_popup_textpage")!, autoDismiss: true, dismissHandler: nil)        }
+        else {
+            
+            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: "保存成功", indicatorImage: UIImage(named: "doneicon_popup_textpage")!, autoDismiss: true, dismissHandler: nil)
+            
+        }
+        
+        
+    }
+    
 }
