@@ -309,9 +309,10 @@ extension ErshouHousePriceChartCell: IAxisValueFormatter {
             
         }
 
-        // add by zjing for test
-        return trend.values[min(max(Int(value), 0), trend.values.count - 1)].timeStr ?? ""
+        let timeStamp = trend.values[min(max(Int(value), 0), trend.values.count - 1)].timestamp
+        return CommonUIStyle.DateTime.monthDataFormat.string(from: Date(timeIntervalSince1970: TimeInterval(timeStamp ?? 0)))
 
+        
     }
 }
 
