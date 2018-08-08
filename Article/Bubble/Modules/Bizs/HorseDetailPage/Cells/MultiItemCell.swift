@@ -330,7 +330,7 @@ func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorP
         re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     let text = NSMutableAttributedString()
-    let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+    let attributeText = NSMutableAttributedString(string: item.displaySubtitle ?? "")
     attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
     attributeText.yy_color = hexStringToUIColor(hex: "#222222")
     text.append(attributeText)
