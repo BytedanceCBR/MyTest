@@ -24,7 +24,9 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     private let disposeBag = DisposeBag()
     
     weak var navVC: UINavigationController?
-
+    
+    var bottomBarBinder: FollowUpBottomBarBinder?
+    
     init(tableView: UITableView, navVC: UINavigationController?) {
         self.navVC = navVC
         self.tableView = tableView
@@ -56,7 +58,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode()
-            <- parseFloorPanNode(data.recommend, navVC: navVC)
+            <- parseFloorPanNode(data.recommend, navVC: navVC, bottomBarBinder: bottomBarBinder ?? { _ in })
         return dataParser
     }
 

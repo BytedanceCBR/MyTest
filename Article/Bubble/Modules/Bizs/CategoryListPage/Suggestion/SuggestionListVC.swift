@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class SuggestionListVC: BaseViewController {
+class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
@@ -73,7 +73,7 @@ class SuggestionListVC: BaseViewController {
         navBar.searchInput.rx.textInput.text
                 .throttle(0.6, scheduler: MainScheduler.instance)
                 .filter { $0 == nil || $0 == "" }
-                .bind(onNext: { _ in
+                .bind(onNext: { text in
                     self.tableViewModel.suggestions.accept([])
                 })
                 .disposed(by: disposeBag)
@@ -85,8 +85,13 @@ class SuggestionListVC: BaseViewController {
                 .disposed(by: disposeBag)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
         tableView.dataSource = tableViewModel
         tableView.delegate = tableViewModel
@@ -100,6 +105,7 @@ class SuggestionListVC: BaseViewController {
 
         houseType
             .subscribe(onNext: { [weak self] (type) in
+                self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
                 if let tableView = self?.tableView {
                     if self?.navBar.searchInput.text?.isEmpty == false {
@@ -148,6 +154,13 @@ class SuggestionListVC: BaseViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty {
+            return true
+        }
+        return false
     }
 
     private func displayPopupMenu() {
@@ -329,11 +342,13 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 fileprivate func fillNormalItem(cell: UITableViewCell, item: SuggestionItem, highlighted: String?) {
     if let theCell = cell as? SuggestionItemCell {
         if var text = item.text {
-            if item.text2 != nil && !item.text2!.isEmpty {
+            if let info = item.info as? [String: Any], info["is_cut"] != nil {
+                // do nothing
+            } else if item.text2 != nil && !item.text2!.isEmpty {
                 text = text + "-\(item.text2!)"
             }
             let attrTextProcess = highlightedText(originalText: text, highlitedText: highlighted)
-                    <*> commitText(commit: item.text2)
+//                    <*> commitText(commit: item.text2)
 
             theCell.label.attributedText = attrTextProcess(attrText(text: text))
         }

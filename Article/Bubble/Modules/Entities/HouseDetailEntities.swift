@@ -346,7 +346,7 @@ struct TimeLine: Mappable {
         }
         
         mutating func mapping(map: Map) {
-            createTime <- map["create_time"]
+            createTime <- map["created_time"]
             title <- map["title"]
             desc <- map["desc"]
         }

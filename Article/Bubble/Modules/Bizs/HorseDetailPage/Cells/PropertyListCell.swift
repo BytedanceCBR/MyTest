@@ -172,7 +172,7 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, cel
             var twoValueView: [UIView] = []
             groups[0].enumerated().forEach { (e) in
                 let (offset, info) = e
-                if (offset + 1) % 2 == 0 {
+                if (offset) % 2 == 0 {
                     let twoRow = TwoRowView()
                     let row = RowView()
                     setRowValue(info, row)

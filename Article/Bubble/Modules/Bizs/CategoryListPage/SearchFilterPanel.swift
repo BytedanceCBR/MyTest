@@ -252,12 +252,13 @@ extension SearchConfigOption {
         guard let type = self.type else {
             return ""
         }
-
-        if supportMulti == true {
-            return "\(type)[]=\(self.value)"
-        } else {
-            return "\(type)=\(self.value)"
-        }
+        
+        return "\(type)[]=\(self.value)"
+//        if supportMulti == true {
+//            return "\(type)[]=\(self.value)"
+//        } else {
+//            return "\(type)[]=\(self.value)"
+//        }
     }
 //
 //    func getOptionValueString(supportMulti: Bool) -> String {

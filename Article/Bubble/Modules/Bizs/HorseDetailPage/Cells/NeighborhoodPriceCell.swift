@@ -111,13 +111,13 @@ func fillNeighborhoodPriceCell(_ data: NeighborhoodDetailInfo?, cell: BaseUITabl
         theCell.priceLabel.text = data?.pricingPerSqm
         if let monthUp = data?.monthUp {
             let absValue = abs(monthUp) * 100
-            if absValue < 1 {
+            if absValue == 0 {
                 theCell.monthUpLabel.text = "持平"
                 theCell.monthUpTrend.isHidden = true
             } else {
                 theCell.monthUpLabel.text = String(format: "%.2f%%", arguments: [absValue])
                 theCell.monthUpTrend.isHidden = false
-                if monthUp >= 0 {
+                if monthUp > 0 {
                     theCell.monthUpLabel.textColor = hexStringToUIColor(hex: "#f85959")
                     theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_up")
                 } else {

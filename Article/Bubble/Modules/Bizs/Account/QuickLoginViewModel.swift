@@ -95,6 +95,7 @@ class QuickLoginViewModel {
     func quickLogin(mobile: String, smsCode: String) {
         EnvContext.shared.toast.showLoadingToast("正在登录")
         requestQuickLogin(mobile: mobile, smsCode: smsCode)
+                .debug()
                 .subscribe(onNext: { [unowned self] void in
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("登录成功")

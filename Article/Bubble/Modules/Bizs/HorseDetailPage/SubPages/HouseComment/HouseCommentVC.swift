@@ -20,9 +20,9 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
     var houseCommentViewModel: HouseCommentViewModel?
 
 
-    init(courtId: Int64) {
+    init(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)")
+        super.init(identifier: "\(courtId)", bottomBarBinder: bottomBarBinder)
     }
 
     required init?(coder aDecoder: NSCoder) {

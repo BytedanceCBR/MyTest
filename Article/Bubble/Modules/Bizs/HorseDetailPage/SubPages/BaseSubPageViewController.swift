@@ -9,6 +9,9 @@
 import UIKit
 import RxCocoa
 import RxSwift
+
+typealias FollowUpBottomBarBinder = (HouseDetailPageBottomBarView) -> Void
+
 class BaseSubPageViewController: BaseViewController {
 
     lazy var tableView: UITableView = {
@@ -36,10 +39,36 @@ class BaseSubPageViewController: BaseViewController {
 
     let disposeBag = DisposeBag()
 
-    init(identifier: String, isHiddenBottomBar: Bool = false) {
+    var bottomBarBinder: FollowUpBottomBarBinder
+
+    init(identifier: String,
+         isHiddenBottomBar: Bool = false,
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.identifier = identifier
         self.isHiddenBottomBar = isHiddenBottomBar
+        self.bottomBarBinder = bottomBarBinder
         super.init(nibName: nil, bundle: nil)
+        bottomBarBinder(bottomBar)
+//        followStatus
+//                .filter { (result) -> Bool in
+//                    if case .success(_) = result {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
+//                .map { (result) -> Bool in
+//                    if case let .success(status) = result {
+//                        return status
+//                    } else {
+//                        return false
+//                    }
+//                }
+//                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+//                .disposed(by: disposeBag)
+//        bottomBar.favouriteBtn.rx.tap
+//                .bind(onNext: self.followThisItem)
+//                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -81,7 +110,11 @@ class BaseSubPageViewController: BaseViewController {
             if !self.isHiddenBottomBar {
                 maker.bottom.equalTo(bottomBar.snp.top)
             } else {
-                maker.bottom.equalToSuperview()
+                if #available(iOS 11, *) {
+                    maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                } else {
+                    maker.bottom.equalToSuperview()
+                }
             }
 
         }
@@ -110,7 +143,6 @@ class BaseSubPageViewController: BaseViewController {
                     houseType: houseType,
                     followId: followId,
                     actionType: followAction)
-                    .debug()
                     .subscribe(onNext: { response in
 
                     }, onError: { error in

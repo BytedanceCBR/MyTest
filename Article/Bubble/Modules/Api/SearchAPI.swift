@@ -10,6 +10,11 @@ import Foundation
 import RxSwift
 import ObjectMapper
 
+enum SearchSourceKey: String {
+    case oldDetail = "old_detail"
+    case neighborhoodDetail = "neighborhood_detail"
+}
+
 func requestSearch(
     offset: Int64 = 0,
     query: String = "",
@@ -18,6 +23,7 @@ func requestSearch(
     if !query.isEmpty {
         url = "\(url)\(query)"
     }
+    print(url)
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,

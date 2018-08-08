@@ -4,9 +4,13 @@
 //
 
 import Foundation
-
+import RxCocoa
+import RxSwift
 
 class ErshouHouseListViewModel: BaseSubPageViewModel {
+    
+    var title = BehaviorRelay<String>(value: "")
+
 //    func request(neightborhoodId: String) {
 //        let loader = pageRequestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId, query: "")
 //        pageableLoader = { [unowned self] in
@@ -36,7 +40,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let count = response?.data?.items.count {
-                            self.onDataLoaded?(count >= 15)
+                            self.onDataLoaded?(count >= 15, count)
                         }
                         if let data = response?.data {
                             return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
@@ -59,6 +63,10 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
+                    self.title.accept("小区房源(\(response?.data?.total ?? 0))")
+                    if let hasMore = response?.data?.hasMore {
+                        self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
+                    }
                     if let data = response?.data {
                         return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
                     } else {

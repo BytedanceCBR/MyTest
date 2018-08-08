@@ -17,18 +17,16 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     fileprivate var dataSource: DataSource
 
-    private let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     private var cellFactory: UITableViewCellFactory
 
     private var neighborhoodDetailResponse = BehaviorRelay<NeighborhoodDetailResponse?>(value: nil)
 
-    private var totalSalesResponse = BehaviorRelay<NeighborhoodTotalSalesResponse?>(value: nil)
-
     //相关小区
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
     //小区内相关
-    private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
+    private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
 
     private var houseId: Int64 = -1
 
@@ -59,16 +57,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 }
                 .disposed(by: disposeBag)
 
-        totalSalesResponse
-                .skip(1)
-                .subscribe { [unowned self] event in
-                    let diss = DisposeBag()
-                    self.cellsDisposeBag = diss
-                    let datas = self.processData(diss)([])
-                    self.dataSource.datas = datas
-                    tableView.reloadData()
-                }
-                .disposed(by: disposeBag)
+
         relateNeighborhoodData
             .skip(1)
             .subscribe { [unowned self] event in
@@ -98,8 +87,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                         self.relateNeighborhoodData.accept(response)
                     })
                     .disposed(by: disposeBag)
-
-            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId)
+            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_type=\(HouseType.secondHandHouse.rawValue)")
+//            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId)
                     .subscribe(onNext: { [unowned self] response in
                         self.houseInSameNeighborhood.accept(response)
                     })
@@ -121,14 +110,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     self.requestReletedData()
                 }, onError: { (error) in
                     print(error)
-                })
-                .disposed(by: disposeBag)
-
-        requestNeighborhoodTotalSales(neighborhoodId: "\(houseId)", query: "")
-                .subscribe(onNext: { response in
-                    self.totalSalesResponse.accept(response)
-                }, onError: { error in
-
                 })
                 .disposed(by: disposeBag)
     }
@@ -163,31 +144,41 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseNeighborhoodPropertyListNode(data)
                 <- parseHeaderNode("周边配套")
                 <- parseNeighorhoodNearByNode(data, disposeBag: self.disposeBag)
-                <- parseHeaderNode("小区成交历史(\(totalSalesResponse.value?.data?.list?.count ?? 0))") { [unowned self] in
-                    self.totalSalesResponse.value?.data?.list?.count ?? 0 > 0
+                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
+                    data.totalSalesCount ?? 0 > 0
                 }
-                <- parseTransactionRecordNode(totalSalesResponse.value)
-                <- parseOpenAllNode((totalSalesResponse.value?.data?.list?.count ?? 0 > 3)) { [unowned self] in
+                <- parseTransactionRecordNode(data.totalSales?.list)
+                <- parseOpenAllNode((data.totalSalesCount ?? 0 > 3)) { [unowned self] in
                     if let id = data.id {
-                        self.openTransactionHistoryPage(neighborhoodId: id)
+                        self.openTransactionHistoryPage(neighborhoodId: id, bottomBarBinder: self.bindBottomView())
                     }
                 }
-                <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
-                    self.relateNeighborhoodData.value != nil
+                <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
+                    self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: self.navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.id {
-                        openErshouHouseList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC)
+                        openErshouHouseList(
+                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
+                                neighborhoodId: id,
+                                disposeBag: self.disposeBag,
+                                navVC: self.navVC,
+                                searchSource: .neighborhoodDetail,
+                                bottomBarBinder: self.bindBottomView())
                     }
                 }
-                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.items?.count ?? 0))") { [unowned self] in
+                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: navVC)
-                <- parseOpenAllNode((relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0)) { [unowned self] in
+                <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC)
+                        openRelatedNeighborhoodList(
+                                neighborhoodId: id,
+                                disposeBag: self.disposeBag,
+                                navVC: self.navVC,
+                                bottomBarBinder: self.bindBottomView())
                     }
                 }
             return dataParser.parser
@@ -196,8 +187,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
         }
     }
     
-    fileprivate func openTransactionHistoryPage(neighborhoodId: String) {
-        let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId)
+    fileprivate func openTransactionHistoryPage(
+        neighborhoodId: String,
+        bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)

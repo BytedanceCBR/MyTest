@@ -128,17 +128,18 @@
     //VideoTab
     [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseHomeTabKey atIndex:0 isRegular:YES];
 
+    // f100 去掉发现页签
     //HomeTab
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kTTTabHomeTabKey atIndex:1 isRegular:YES];
+    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMessageTabKey atIndex:1 isRegular:YES];
     //pm@李响说所有用户默认第三和第四个tab分别是微头条和火山小视频
-    NSString *thirdTag = [self thirdTabBarIdentifier];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:thirdTag atIndex:2 isRegular:YES];
+//    NSString *thirdTag = [self thirdTabBarIdentifier];
+    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:2 isRegular:YES];
     
 //    NSString *forthTag = [self forthTabBarIdentifier];
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:forthTag atIndex:3 isRegular:YES];
 
-    NSString *fifthTag = [self fifthTabBarIdentifier];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:fifthTag atIndex:3 isRegular:YES];
+//    NSString *fifthTag = [self fifthTabBarIdentifier];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:fifthTag atIndex:3 isRegular:YES];
 }
 
 - (NSString *)thirdTabBarIdentifier {

@@ -56,16 +56,20 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     private let categoryFilter: Observable<Filter>
     
     private weak var navVC: UINavigationController?
+    
+    let bottomBarBinder: FollowUpBottomBarBinder
 
     init(tableView: UITableView,
          navVC: UINavigationController?,
          segmentedControl: FWSegmentedControl,
-         leftFilterView: UIView) {
+         leftFilterView: UIView,
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.tableView = tableView
         self.navVC = navVC
         self.segmentedControl = segmentedControl
         self.leftFilterView = leftFilterView
         self.cellFactory = getHouseDetailCellFactory()
+        self.bottomBarBinder = bottomBarBinder
         categoryFilter = Observable
             .combineLatest(statusFilter, typeFilter)
             .map({ (e) -> Filter in
@@ -96,7 +100,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                 }
                 self.segmentedControl?.sectionTitleArray = ["全部"] + roomCategoryLabels
                 
-                self.datas.accept(parseFloorPanItemsNode(data: its.filter(f), navVC: self.navVC, disposeBag: self.disposeBag)())
+                self.datas.accept(parseFloorPanItemsNode(data: its.filter(f), navVC: self.navVC, disposeBag: self.disposeBag, bottomBarBinder: bottomBarBinder)())
 
                 self.segmentedControl?.indexChangeBlock = { [unowned self] (index) in
                     if index == 0 {

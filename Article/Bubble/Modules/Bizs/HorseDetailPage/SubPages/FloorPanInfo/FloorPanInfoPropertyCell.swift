@@ -97,7 +97,7 @@ fileprivate class PropertyItemView: UIView {
     }
 }
 
-fileprivate func fillPropertiesCell(properties: [String: String], cell: BaseUITableViewCell) {
+fileprivate func fillPropertiesCell(properties: [(String, String)], cell: BaseUITableViewCell) {
     if let theCell = cell as? FloorPanInfoPropertyCell {
         let views = properties.map { e -> PropertyItemView in
             let (key, value) = e
@@ -111,7 +111,7 @@ fileprivate func fillPropertiesCell(properties: [String: String], cell: BaseUITa
 }
 
 
-func parsePropertiesNode(properties: [String: String]) -> () -> TableSectionNode? {
+func parsePropertiesNode(properties: [(String, String)]) -> () -> TableSectionNode? {
     return {
         let render = curry(fillPropertiesCell)(properties)
         return TableSectionNode(

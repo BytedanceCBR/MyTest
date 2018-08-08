@@ -13,6 +13,8 @@ protocol DetailPageViewModel: class {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
+    var disposeBag: DisposeBag { get }
+
 //    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
 //
 //    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
@@ -61,7 +63,7 @@ extension DetailPageViewModel {
                 .subscribe(onNext: { response in
                     if response?.data?.followStatus ?? 1 == 0 {
                         self.followStatus.accept(.success(true))
-                        EnvContext.shared.toast.showToast("已收藏")
+                        EnvContext.shared.toast.showToast("关注成功")
                     }
                 }, onError: { error in
                     
@@ -89,7 +91,11 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                TTAccountManager.presentQuickLogin(fromVC: EnvContext.shared.rootNavController, type: TTAccountLoginDialogTitleType.default, source: "", completion: { (state) in
+                TTAccountManager.presentQuickLogin(
+                        fromVC: EnvContext.shared.rootNavController,
+                        type: TTAccountLoginDialogTitleType.default,
+                        source: "",
+                        completion: { (state) in
 
                 })
                 return
@@ -102,12 +108,42 @@ extension DetailPageViewModel {
                         if response?.data?.followStatus ?? 1 == 0 {
                             EnvContext.shared.toast.dismissToast()
                             self.followStatus.accept(.success(false))
-                            EnvContext.shared.toast.showToast("取消收藏")
+                            EnvContext.shared.toast.showToast("取关成功")
                         }
                     }, onError: { error in
 
                     })
                     .disposed(by: disposeBag)
+        }
+    }
+
+    func bindBottomView() -> FollowUpBottomBarBinder {
+        return { [unowned self] (bottomBar) in
+            bottomBar.favouriteBtn.rx.tap
+                    .bind(onNext: self.followThisItem)
+                    .disposed(by: self.disposeBag)
+            self.followStatus
+                    .filter { (result) -> Bool in
+                        if case .success(_) = result {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+                    .map { (result) -> Bool in
+                        if case let .success(status) = result {
+                            return status
+                        } else {
+                            return false
+                        }
+                    }
+                    .bind(to: bottomBar.favouriteBtn.rx.isSelected)
+                    .disposed(by: self.disposeBag)
+
+            bottomBar.contactBtn.rx.tap
+                    .withLatestFrom(self.contactPhone)
+                    .bind(onNext: Utils.telecall)
+                    .disposed(by: self.disposeBag)
         }
     }
 

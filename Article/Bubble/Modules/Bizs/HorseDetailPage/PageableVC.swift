@@ -37,8 +37,8 @@ extension PageableVC {
                 .disposed(by: disposeBag)
     }
 
-    func onDataLoaded() -> (Bool) -> Void {
-        return { (hasMore) in
+    func onDataLoaded() -> (Bool, Int) -> Void {
+        return { (hasMore, count) in
             self.hasMore = hasMore
             self.footIndicatorView?.stopAnimating()
             if hasMore == false {

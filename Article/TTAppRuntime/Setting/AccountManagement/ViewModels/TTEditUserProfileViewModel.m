@@ -99,7 +99,7 @@ TTEditUserProfileViewDelegate
     // f100 取出TTAccount库
     _editableAuditInfo.isAuditing  = [newAuditInfo isAuditing];
     _editableAuditInfo.editEnabled = YES;//[newAuditInfo modifyUserInfoEnabled];
-    _editableAuditInfo.name        = userInfo.screenName;
+    _editableAuditInfo.name        = userInfo.name;
     _editableAuditInfo.avatarURL   = userInfo.avatarURL;
     _editableAuditInfo.userDescription = userInfo.userDescription;
     _editableAuditInfo.gender = @([userInfo.gender integerValue]);

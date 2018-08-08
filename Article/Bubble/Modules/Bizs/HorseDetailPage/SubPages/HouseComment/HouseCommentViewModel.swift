@@ -15,7 +15,7 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
 
     var pageableLoader: (() -> Void)?
 
-    var onDataLoaded: ((Bool) -> Void)?
+    var onDataLoaded: ((Bool, Int) -> Void)?
 
     private var cellFactory: UITableViewCellFactory
 
@@ -41,7 +41,7 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
                         if let hasMore = response?.data?.hasMore {
-                            self.onDataLoaded?(hasMore)
+                            self.onDataLoaded?(hasMore, response?.data?.list?.count ?? 0)
                         }
                         if let data = response?.data {
                             return parseNewHouseCommentNode(data.list ?? [])()

@@ -74,16 +74,22 @@
 		1A216199FC20304C8AC5B61F /* LBSMapPageNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216BB2987DC56ECD5883D7 /* LBSMapPageNavBar.swift */; };
 		1A2162260DC2B214C8DE0819 /* SuggestionHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21614B5B52B75D221AF890 /* SuggestionHistoryDataSource.swift */; };
 		1A2164741E24CE3FA11C5286 /* TransactionHistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160C5FF2ED5DA6D363A87 /* TransactionHistoryVC.swift */; };
+		1A21651AD4FE7926D3EA6290 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160130DC272DFEAB13E18 /* BDWebImagePhotoLoader.swift */; };
+		1A2165C0DF6953FA0CF2213E /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216311A084744A7FC5C345 /* PictureCategoryListVC.swift */; };
 		1A2165EA1D8D8892EC43E4CE /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */; };
+		1A2165FBC1D89A4C7FF08A3A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167F1D5373A3D10A53A84 /* PhotoBrowserShowAllPlugin.swift */; };
 		1A21663427FDAD3116B07FA1 /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */; };
-		1A2166443326C9F751414199 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */; };
 		1A2167B2223AB2F2DCBC51E4 /* TransactionHistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */; };
 		1A21680A28D13E7B391890E2 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216AA5C353950BF89ABECA /* CountryListHistoryDataSource.swift */; };
+		1A216844716ADAB4F34D9CF9 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160130DC272DFEAB13E18 /* BDWebImagePhotoLoader.swift */; };
 		1A2168FECF7A896B48FF024E /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A22D03E0B259EB013B2 /* Client.swift */; };
 		1A216991C0D71F26E771F497 /* AreaConditionFilterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */; };
 		1A2169933612B8F22AEFDE73 /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */; };
 		1A216A1DE8983807C36F6234 /* Utils+Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161BAA190C547FE584304 /* Utils+Device.swift */; };
+		1A216B4E31DA790C47D97E1C /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F0155D2102F8467B268 /* InformationCell.swift */; };
+		1A216EEDCCEE1A67739E3F18 /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167F1D5373A3D10A53A84 /* PhotoBrowserShowAllPlugin.swift */; };
 		1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216A22D03E0B259EB013B2 /* Client.swift */; };
+		1A216F62D35E8C61B6AAF5AC /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216311A084744A7FC5C345 /* PictureCategoryListVC.swift */; };
 		1B0C7E8E1B3D439D00361F3E /* ArticleCategoryWAPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */; };
 		1B5B58B41A1F1C7400A74773 /* ExploreSubscribeDataListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58B31A1F1C7400A74773 /* ExploreSubscribeDataListManager.m */; };
 		1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58BC1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m */; };
@@ -1496,13 +1502,11 @@
 		B3C4BDD02116A4250076FFD8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4BDCF2116A4250076FFD8 /* AboutViewController.swift */; };
 		B3C4BDD12116AB0F0076FFD8 /* Utils+Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161BAA190C547FE584304 /* Utils+Device.swift */; };
 		B3C4BDD22116ABD20076FFD8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C4BDCF2116A4250076FFD8 /* AboutViewController.swift */; };
+		B3E59A3D2119591D00B44F5B /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216F0155D2102F8467B268 /* InformationCell.swift */; };
 		B3E8EA8F210D60A100AEE522 /* JXPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E8EA8E210D60A000AEE522 /* JXPhotoBrowser.framework */; };
-		B3E8EA92210D615E00AEE522 /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */; };
-		B3E8EA93210D66F800AEE522 /* PictureCategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */; };
 		B3E8EA95210D6AA300AEE522 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E8EA94210D6AA300AEE522 /* Kingfisher.framework */; };
 		B3E8EA97211064ED00AEE522 /* TransactionHistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160C5FF2ED5DA6D363A87 /* TransactionHistoryVC.swift */; };
 		B3E8EA98211064F000AEE522 /* TransactionHistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */; };
-		B3E8EA9921108D1D00AEE522 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */; };
 		B3E8EAA12111C8F900AEE522 /* NewsInHouseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EAA02111C8F900AEE522 /* NewsInHouseUITests.swift */; };
 		B3E8EAA92112FA1600AEE522 /* SuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EAA82112FA1600AEE522 /* SuggestionCell.swift */; };
 		B3E8EAAA2112FA3B00AEE522 /* SuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E8EAA82112FA1600AEE522 /* SuggestionCell.swift */; };
@@ -3665,16 +3669,19 @@
 		0CFBADFC1FA5AC0B00E7765A /* NSString+UnicharUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+UnicharUtilities.m"; sourceTree = "<group>"; };
 		0CFBADFD1FA5AC0B00E7765A /* NSString+UriCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+UriCompatibility.h"; sourceTree = "<group>"; };
 		0CFBADFE1FA5AC0B00E7765A /* NSString+UriCompatibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+UriCompatibility.m"; sourceTree = "<group>"; };
+		1A2160130DC272DFEAB13E18 /* BDWebImagePhotoLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BDWebImagePhotoLoader.swift; sourceTree = "<group>"; };
 		1A2160C5FF2ED5DA6D363A87 /* TransactionHistoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryVC.swift; sourceTree = "<group>"; };
 		1A21614B5B52B75D221AF890 /* SuggestionHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionHistoryDataSource.swift; sourceTree = "<group>"; };
 		1A2161BAA190C547FE584304 /* Utils+Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utils+Device.swift"; sourceTree = "<group>"; };
-		1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BDWebImagePhotoLoader.swift; sourceTree = "<group>"; };
+		1A216311A084744A7FC5C345 /* PictureCategoryListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PictureCategoryListVC.swift; sourceTree = "<group>"; };
+		1A2167F1D5373A3D10A53A84 /* PhotoBrowserShowAllPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserShowAllPlugin.swift; sourceTree = "<group>"; };
 		1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryVM.swift; sourceTree = "<group>"; };
 		1A216939CBB7FCE227D6A9E3 /* AreaConditionFilterPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AreaConditionFilterPanel.swift; sourceTree = "<group>"; };
 		1A216A22D03E0B259EB013B2 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		1A216AA5C353950BF89ABECA /* CountryListHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListHistoryDataSource.swift; sourceTree = "<group>"; };
 		1A216B7556B148C385FE83EF /* ErshouHouseDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHouseDetailPageViewModel.swift; sourceTree = "<group>"; };
 		1A216BB2987DC56ECD5883D7 /* LBSMapPageNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageNavBar.swift; sourceTree = "<group>"; };
+		1A216F0155D2102F8467B268 /* InformationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
 		1B0C7E8C1B3D439D00361F3E /* ArticleCategoryWAPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleCategoryWAPViewController.h; sourceTree = "<group>"; };
 		1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleCategoryWAPViewController.m; sourceTree = "<group>"; };
 		1B5B58B21A1F1C7400A74773 /* ExploreSubscribeDataListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreSubscribeDataListManager.h; sourceTree = "<group>"; };
@@ -5877,7 +5884,6 @@
 		B3AA9CD02100B3A700E141F5 /* FollowEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowEntities.swift; sourceTree = "<group>"; };
 		B3C4BDCF2116A4250076FFD8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		B3E8EA8E210D60A000AEE522 /* JXPhotoBrowser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JXPhotoBrowser.framework; path = Carthage/Build/iOS/JXPhotoBrowser.framework; sourceTree = "<group>"; };
-		B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCategoryListVC.swift; sourceTree = "<group>"; };
 		B3E8EA94210D6AA300AEE522 /* Kingfisher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kingfisher.framework; path = Carthage/Build/iOS/Kingfisher.framework; sourceTree = "<group>"; };
 		B3E8EA9E2111C8F900AEE522 /* NewsInHouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsInHouseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E8EAA02111C8F900AEE522 /* NewsInHouseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsInHouseUITests.swift; sourceTree = "<group>"; };
@@ -7192,6 +7198,16 @@
 				1A21682BE5311F43AEDBC652 /* TransactionHistoryVM.swift */,
 			);
 			path = TransactionHistory;
+			sourceTree = "<group>";
+		};
+		1A2169C080A16AA2579F6165 /* JXPhotoBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				1A2167F1D5373A3D10A53A84 /* PhotoBrowserShowAllPlugin.swift */,
+				1A216311A084744A7FC5C345 /* PictureCategoryListVC.swift */,
+				1A2160130DC272DFEAB13E18 /* BDWebImagePhotoLoader.swift */,
+			);
+			path = JXPhotoBrowser;
 			sourceTree = "<group>";
 		};
 		1A216B9752C8FF5F97F47501 /* Utils */ = {
@@ -12427,6 +12443,7 @@
 				6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */,
 				61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */,
 				61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */,
+				1A216F0155D2102F8467B268 /* InformationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -12635,7 +12652,7 @@
 		B36E273C20F62A7800D4E8D0 /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
-				B3E8EA90210D610C00AEE522 /* JXPhotoBrowser */,
+				B3E59A3E211A202400B44F5B /* Tracer */,
 				B3A2090A210AC29700DF3E42 /* RxReachability */,
 				B3A208F7210A20D200DF3E42 /* Automaton */,
 				B3891266210618C5009B9B13 /* AlertView */,
@@ -12648,6 +12665,7 @@
 				B36E277420F62A7800D4E8D0 /* Locations */,
 				B36E277620F62A7800D4E8D0 /* TagView */,
 				B36E277820F62A7800D4E8D0 /* Functions */,
+				1A2169C080A16AA2579F6165 /* JXPhotoBrowser */,
 			);
 			path = Librarys;
 			sourceTree = "<group>";
@@ -12837,14 +12855,11 @@
 			path = RxReachability;
 			sourceTree = "<group>";
 		};
-		B3E8EA90210D610C00AEE522 /* JXPhotoBrowser */ = {
+		B3E59A3E211A202400B44F5B /* Tracer */ = {
 			isa = PBXGroup;
 			children = (
-				612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */,
-				B3E8EA91210D615E00AEE522 /* PictureCategoryListVC.swift */,
-				1A2167D22C7FB0E347E423C5 /* BDWebImagePhotoLoader.swift */,
 			);
-			path = JXPhotoBrowser;
+			path = Tracer;
 			sourceTree = "<group>";
 		};
 		B3E8EA9F2111C8F900AEE522 /* NewsInHouseUITests */ = {
@@ -15402,7 +15417,7 @@
 						TestTargetID = FEFA5259205FB1A8001F50D8;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -17248,7 +17263,6 @@
 				F87695801F31D0D700D59CA5 /* TTVVideoTabViewController.m in Sources */,
 				F876952C1F31D0D600D59CA5 /* TTVReportAction.m in Sources */,
 				FEF781F7207B3AD500EA65DC /* TTLauchProcessManager.m in Sources */,
-				612DCE502116EA4A0021153A /* PhotoBrowserShowAllPlugin.swift in Sources */,
 				A97DB97B1F1332DE0002B455 /* SSFeedbackPostView.m in Sources */,
 				F8718F591F6A912A00FA992A /* TTVSettingsConfiguration.m in Sources */,
 				A97DC3DA1F1333620002B455 /* TTInterestRequestModel.m in Sources */,
@@ -17696,7 +17710,6 @@
 				F87696E41F31D0DA00D59CA5 /* NSDictionary+TTGeneratedContent.m in Sources */,
 				B36E278D20F62A7900D4E8D0 /* ConfigurationAPI.swift in Sources */,
 				FE5CEE1720510F040011B4D7 /* AKRedpacketEnvBaseView.m in Sources */,
-				B3E8EA92210D615E00AEE522 /* PictureCategoryListVC.swift in Sources */,
 				A4D1CB011F431D0600620AF5 /* TTVCellCommodityCenter.m in Sources */,
 				C305DE371E6FB9DC001F4967 /* TTAricleDetailLeftUnifyADView.m in Sources */,
 				6B2846A21DF5407100170DE7 /* TTLayOutUnifyADRightPicCellModel.m in Sources */,
@@ -17759,11 +17772,14 @@
 				1A2169933612B8F22AEFDE73 /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				1A2164741E24CE3FA11C5286 /* TransactionHistoryVC.swift in Sources */,
 				1A2167B2223AB2F2DCBC51E4 /* TransactionHistoryVM.swift in Sources */,
-				1A2166443326C9F751414199 /* BDWebImagePhotoLoader.swift in Sources */,
 				1A2162260DC2B214C8DE0819 /* SuggestionHistoryDataSource.swift in Sources */,
 				1A216F5CA8C2641D4596CD3C /* Client.swift in Sources */,
 				1A21680A28D13E7B391890E2 /* CountryListHistoryDataSource.swift in Sources */,
 				1A216A1DE8983807C36F6234 /* Utils+Device.swift in Sources */,
+				1A216B4E31DA790C47D97E1C /* InformationCell.swift in Sources */,
+				1A2165FBC1D89A4C7FF08A3A /* PhotoBrowserShowAllPlugin.swift in Sources */,
+				1A2165C0DF6953FA0CF2213E /* PictureCategoryListVC.swift in Sources */,
+				1A21651AD4FE7926D3EA6290 /* BDWebImagePhotoLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -18734,6 +18750,7 @@
 				FEFA56BA205FB1A8001F50D8 /* ExploreCollectionCellView.m in Sources */,
 				FEFA56BB205FB1A8001F50D8 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				FEFA56BC205FB1A8001F50D8 /* TTVCommentListItem.m in Sources */,
+				B3E59A3D2119591D00B44F5B /* InformationCell.swift in Sources */,
 				FEFA56BD205FB1A8001F50D8 /* TTNetworkStubSwitchViewController.m in Sources */,
 				FEFA56C0205FB1A8001F50D8 /* TTADBaseCell.m in Sources */,
 				FEFA56C1205FB1A8001F50D8 /* ArticleUpdateManager.m in Sources */,
@@ -18883,7 +18900,6 @@
 				FEFA5772205FB1A8001F50D8 /* ExploreDetailBannerADView.m in Sources */,
 				FEFA5773205FB1A8001F50D8 /* TSVCardBottomInfoViewModel.m in Sources */,
 				FEFA5774205FB1A8001F50D8 /* TTAdDetailCommentModel.m in Sources */,
-				612DCE512116EC640021153A /* PhotoBrowserShowAllPlugin.swift in Sources */,
 				FEFA5775205FB1A8001F50D8 /* TTArticleDetailViewController.m in Sources */,
 				FEFA5776205FB1A8001F50D8 /* TTCollectDiskSpaceTask.m in Sources */,
 				FEFA5777205FB1A8001F50D8 /* TTCustomAnimationDelegate.m in Sources */,
@@ -18937,7 +18953,6 @@
 				FEFA57AE205FB1A8001F50D8 /* TTRNavi.m in Sources */,
 				FEFA57AF205FB1A8001F50D8 /* TTLayOutPlainGroupPicCellModel.m in Sources */,
 				FEFA57B0205FB1A8001F50D8 /* TTMomentEnterCell.m in Sources */,
-				B3E8EA9921108D1D00AEE522 /* BDWebImagePhotoLoader.swift in Sources */,
 				FEFA57B2205FB1A8001F50D8 /* TTCommentDetailReplyCommentModel+TTVReplyModelProtocolSupport.m in Sources */,
 				FEFA57B3205FB1A8001F50D8 /* NewsBaseDelegate+AD.m in Sources */,
 				FE02C8242084965A004DE769 /* AKTableViewModel.m in Sources */,
@@ -19308,7 +19323,6 @@
 				B347368520F77069009F799A /* SuggestionListVC.swift in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,
-				B3E8EA93210D66F800AEE522 /* PictureCategoryListVC.swift in Sources */,
 				FEFA5960205FB1A8001F50D8 /* NSString+UriCompatibility.m in Sources */,
 				B347364820F77039009F799A /* NewHouseNearByCell.swift in Sources */,
 				FEFA5962205FB1A8001F50D8 /* TTVVideoDetailNatantInfoShareView.m in Sources */,
@@ -19397,6 +19411,9 @@
 				1A21663427FDAD3116B07FA1 /* AreaConditionFilterPanel.swift in Sources */,
 				1A2165EA1D8D8892EC43E4CE /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				1A2168FECF7A896B48FF024E /* Client.swift in Sources */,
+				1A216EEDCCEE1A67739E3F18 /* PhotoBrowserShowAllPlugin.swift in Sources */,
+				1A216F62D35E8C61B6AAF5AC /* PictureCategoryListVC.swift in Sources */,
+				1A216844716ADAB4F34D9CF9 /* BDWebImagePhotoLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19844,7 +19861,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_POSTPROCESSING = NO;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -19915,7 +19932,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -19949,7 +19966,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -20028,7 +20045,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

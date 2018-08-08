@@ -18,13 +18,13 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
 
     var transactionHistoryVM: TransactionHistoryVM?
 
-    init(neighborhoodId: String) {
+    init(neighborhoodId: String, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
-        super.init(identifier: neighborhoodId)
+        super.init(identifier: neighborhoodId, bottomBarBinder: bottomBarBinder)
         self.transactionHistoryVM = TransactionHistoryVM(tableView: tableView)
         self.transactionHistoryVM?.onDataLoaded = self.onDataLoaded()
         self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
-    }
+    } 
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

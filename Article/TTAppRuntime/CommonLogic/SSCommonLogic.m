@@ -913,7 +913,7 @@ NSString * const SSCommonLogicSettingQuickLoginAlertTitlesKey = @"SSCommonLogicS
 }
 
 + (NSString *)dialogTitleOfIndex:(NSUInteger)index {
-    NSString *defaultTtitle = NSLocalizedString(@"手机快速登陆", nil);
+    NSString *defaultTtitle = NSLocalizedString(@"手机快速登录", nil);
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if ([userDefaults objectForKey:SSCommonLogicSettingQuickLoginDialogTitlesKey]) {

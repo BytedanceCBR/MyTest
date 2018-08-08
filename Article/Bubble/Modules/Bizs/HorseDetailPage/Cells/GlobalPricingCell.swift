@@ -26,7 +26,7 @@ class GlobalPricingCell: BaseUITableViewCell {
         re.textColor = hexStringToUIColor(hex: "#999999")
         return re
     }()
-
+    
     open override class var identifier: String {
         return "GlobalPricingCell"
     }
@@ -51,6 +51,7 @@ class GlobalPricingCell: BaseUITableViewCell {
             maker.width.equalTo(56).priority(.high)
             maker.right.equalTo(fromLabel.snp.left).offset(-15)
         }
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -163,7 +164,7 @@ func parseGlobalPricingNode(_ items: [GlobalPrice.Item]) -> () -> [TableRowNode]
 func fillGlobalPricingListCell(_ data: GlobalPrice.Item, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? GlobalPricingListCell {
         theCell.priceLabel.text = data.pricingPerSqm
-        theCell.fromLabel.text = data.agencyName
+        theCell.fromLabel.text = "来自\(data.agencyName ?? "")"
     }
 }
 
@@ -171,6 +172,6 @@ func fillGlobalPricingListCell(_ data: GlobalPrice.Item, cell: BaseUITableViewCe
 func fillGlobalPricingCell(_ data: GlobalPrice.Item, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? GlobalPricingCell {
         theCell.priceLabel.text = data.pricingPerSqm
-        theCell.fromLabel.text = data.agencyName
+        theCell.fromLabel.text = "来自\(data.agencyName ?? "")"
     }
 }

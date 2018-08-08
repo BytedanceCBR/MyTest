@@ -16,7 +16,7 @@ class BaseSubPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate
 
     var pageableLoader: (() -> Void)?
 
-    var onDataLoaded: ((Bool) -> Void)?
+    var onDataLoaded: ((Bool, Int) -> Void)?
 
     var cellFactory: UITableViewCellFactory
 

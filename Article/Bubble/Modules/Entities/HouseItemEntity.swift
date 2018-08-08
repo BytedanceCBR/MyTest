@@ -31,6 +31,7 @@ struct HouseItemEntity: Mappable {
     var total: Int = 0
     var refreshTip: String?
     var searchId: String?
+    var hasMore: Bool? = false
     
     init?(map: Map) {
         
@@ -42,6 +43,7 @@ struct HouseItemEntity: Mappable {
         total <- map["total"]
         refreshTip <- map["refresh_tip"]
         searchId <- map["search_id"]
+        hasMore <- map["has_more"]
     }
 }
 

@@ -27,6 +27,9 @@ class HorseDetailPageVC: BaseViewController {
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
+//        re.rightBtn.isHidden = false
+        re.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-white"), for: .normal)
+        re.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-yellow"), for: .selected)
         return re
     }()
 
@@ -53,10 +56,13 @@ class HorseDetailPageVC: BaseViewController {
     var hud: MBProgressHUD?
 
     var alert: BubbleAlertController?
+    
+    var isShowFollowNavBtn = false
 
     init(houseId: Int64,
          houseType: HouseType,
          isShowBottomBar: Bool = false,
+         isShowFollowNavBtn: Bool = false,
          provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
         self.houseType = houseType
@@ -64,6 +70,8 @@ class HorseDetailPageVC: BaseViewController {
         self.pageViewModelProvider = provider
         super.init(nibName: nil, bundle: nil)
         self.automaticallyAdjustsScrollViewInsets = false
+        self.isShowFollowNavBtn = isShowFollowNavBtn
+        navBar.rightBtn.isHidden = !isShowFollowNavBtn
         barStyle
                 .bind { [unowned self] i in
                     self.ttStatusBarStyle = i
@@ -92,7 +100,7 @@ class HorseDetailPageVC: BaseViewController {
         view.backgroundColor = UIColor.white
 
         detailPageViewModel = pageViewModelProvider?(tableView, self.navigationController)
-
+        
         setupNavBar()
 
         if isShowBottomBar {
@@ -132,12 +140,12 @@ class HorseDetailPageVC: BaseViewController {
                     self?.navBar.setGradientColor()
                     UIApplication.shared.statusBarStyle = .lightContent
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
-                    self?.navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
+                    self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-white"), for: .normal)
             default:
                     self?.navBar.removeGradientColor()
                     UIApplication.shared.statusBarStyle = .default
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
-                    self?.navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-alt-simple-line-icons"), for: .normal)
+                    self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
             }
         }
         stateControl.onContentOffsetChanged = { [weak self] (state, offset) in
@@ -185,6 +193,29 @@ class HorseDetailPageVC: BaseViewController {
                     .bind(onNext: Utils.telecall)
                     .disposed(by: disposeBag)
         }
+        
+        if isShowFollowNavBtn, let detailPageViewModel = detailPageViewModel {
+            navBar.rightBtn.rx.tap
+                .bind(onNext: detailPageViewModel.followThisItem)
+                .disposed(by: disposeBag)
+            detailPageViewModel.followStatus
+                .filter { (result) -> Bool in
+                    if case .success(_) = result {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                .map { (result) -> Bool in
+                    if case let .success(status) = result {
+                        return status
+                    } else {
+                        return false
+                    }
+                }
+                .bind(to: navBar.rightBtn.rx.isSelected)
+                .disposed(by: disposeBag)
+        }
     }
 
     private func setupNavBar() {
@@ -199,7 +230,7 @@ class HorseDetailPageVC: BaseViewController {
             }
         }
         navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
-        navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
+//        navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
 //        self.detailPageViewModel?.titleValue
 //                .subscribe(onNext: { [unowned self] title in
 //                    self.navBar.title.text = title

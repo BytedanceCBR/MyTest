@@ -168,9 +168,13 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, navVC: UINavi
     return {
         let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)
         let selector = {
-            if let neighborhoodId = ershouHouseData.neighborhoodInfo?.id, let id = Int64(neighborhoodId) {
-                openNeighborhoodDetailPage(neighborhoodId: id, disposeBag: disposeBag, navVC: navVC)()
+            if let lat = ershouHouseData.neighborhoodInfo?.gaodeLat,
+                let lng = ershouHouseData.neighborhoodInfo?.gaodeLng {
+                openMapPage(lat: lat, lng: lng, disposeBag: disposeBag)()
             }
+//            if let neighborhoodId = ershouHouseData.neighborhoodInfo?.id, let id = Int64(neighborhoodId) {
+//                openNeighborhoodDetailPage(neighborhoodId: id, disposeBag: disposeBag, navVC: navVC)()
+//            }
         }
         return TableSectionNode(items: [render], selectors: [selector], label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
@@ -187,13 +191,13 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, cell: BaseUITableViewCe
 
         if let monthUp = data?.monthUp {
             let absValue = abs(monthUp) * 100
-            if absValue < 1 {
+            if absValue == 0 {
                 theCell.monthUpValueLabel.text = "持平"
                 theCell.monthUpTrend.isHidden = true
             } else {
                 theCell.monthUpValueLabel.text = String(format: "%.2f%%", arguments: [absValue])
                 theCell.monthUpTrend.isHidden = false
-                if monthUp >= 0 {
+                if monthUp > 0 {
                     theCell.monthUpValueLabel.textColor = hexStringToUIColor(hex: "#f85959")
                     theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_up")
                 } else {

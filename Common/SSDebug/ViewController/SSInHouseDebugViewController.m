@@ -46,7 +46,7 @@
     STTableViewSectionItem *section0 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"反馈" items:@[item00]];
     [dataSource addObject:section0];
     
-    STTableViewCellItem *item10 = [[STTableViewCellItem alloc] initWithTitle:@"仅支持手机号登陆" target:self action:NULL];
+    STTableViewCellItem *item10 = [[STTableViewCellItem alloc] initWithTitle:@"仅支持手机号登录" target:self action:NULL];
     item10.switchStyle = YES;
     item10.switchAction = @selector(_updateLoginPlatformPhoneOnly:);
     item10.checked = fe.login_phone_only;
@@ -58,7 +58,7 @@
     item11.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"ak_hidden_login_switch_button"];
     item11.detail = item11.checked ? @"显示账号密码登录中" : @"隐藏账号密码登录中";
     
-    STTableViewSectionItem *section1 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"登陆" items:@[item10,item11]];
+    STTableViewSectionItem *section1 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"登录" items:@[item10,item11]];
     [dataSource addObject:section1];
     
   

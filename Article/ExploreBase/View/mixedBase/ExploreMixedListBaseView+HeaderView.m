@@ -59,10 +59,12 @@
 
 - (BOOL)needShowSubEntranceBar
 {
-    NSArray *array = [TTSubEntranceManager subEntranceObjArrayForCategory:self.categoryID concernID:self.concernID];
-    if (array.count > 0 && [TTSubEntranceManager subEntranceTypeForCategory:self.categoryID] == SubEntranceTypeHead && ![self.categoryID isEqualToString:@"__all__"]) {
-        return YES;
-    }
+    
+    //TODO: f100 与android确定这里是否可以通过配置控制
+//    NSArray *array = [TTSubEntranceManager subEntranceObjArrayForCategory:self.categoryID concernID:self.concernID];
+//    if (array.count > 0 && [TTSubEntranceManager subEntranceTypeForCategory:self.categoryID] == SubEntranceTypeHead && ![self.categoryID isEqualToString:@"__all__"]) {
+//        return YES;
+//    }
     
     return NO;
 }

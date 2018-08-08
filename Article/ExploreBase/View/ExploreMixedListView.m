@@ -158,7 +158,7 @@ BOOL _umengFlagFirstEnterNewsCategory;
         [_listView scrollToTopAnimated:NO];
     }
     
-    //记录频道停留时常
+//    //记录频道停留时常
 //    if (self.isCurrentDisplayView) {
 //        
 //        /**

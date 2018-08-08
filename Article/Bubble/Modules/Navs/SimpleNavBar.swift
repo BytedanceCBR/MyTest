@@ -18,7 +18,7 @@ class SimpleNavBar: UIView {
     }()
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         return btn
     }()
 
@@ -125,7 +125,7 @@ class SimpleNavBar: UIView {
 class SearchNavBar: UIView {
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
     }()
@@ -156,6 +156,7 @@ class SearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.returnKeyType = .search
         return result
     }()
 
@@ -171,7 +172,7 @@ class SearchNavBar: UIView {
         backBtn.snp.makeConstraints { maker in
             maker.left.equalTo(12)
             maker.width.height.equalTo(24)
-            maker.top.equalTo(30)
+            maker.bottom.equalTo(-10)
         }
 
         addSubview(searchAreaPanel)
@@ -201,6 +202,7 @@ class SearchNavBar: UIView {
         searchAreaBtn.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()
         }
+        self.lu.addBottomBorder()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -212,7 +214,7 @@ class SearchNavBar: UIView {
 class CategorySearchNavBar: UIView {
 
     lazy var backBtn: UIButton = {
-        let btn = UIButton()
+        let btn = ExtendHotAreaButton()
         btn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
         return btn
     }()
@@ -271,6 +273,7 @@ class CategorySearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.returnKeyType = .search
         return result
     }()
 
@@ -292,7 +295,7 @@ class CategorySearchNavBar: UIView {
         backBtn.snp.makeConstraints { maker in
             maker.left.equalTo(12)
             maker.width.height.equalTo(24)
-            maker.top.equalTo(30)
+            maker.bottom.equalToSuperview().offset(-10)
         }
 
         addSubview(searchAreaPanel)
@@ -357,6 +360,7 @@ class CategorySearchNavBar: UIView {
             maker.right.top.bottom.equalToSuperview()
             maker.left.equalTo(searchIcon.snp.left)
         }
+        self.lu.addBottomBorder()
     }
     
     
@@ -393,6 +397,18 @@ class CategorySearchNavBar: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+class ExtendHotAreaButton: UIButton {
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        var bounds = self.bounds
+        let widthDelta = bounds.width
+        let heightDelta = bounds.height
+        bounds = bounds.insetBy(dx: -1 * widthDelta, dy: -1 * heightDelta)
+        return bounds.contains(point)
     }
 
 }

@@ -107,11 +107,20 @@ class NewHouseNameCell: BaseUITableViewCell {
             text.append(tag)
             let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 30, height: CGFloat.greatestFiniteMagnitude), text: text)
             let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+//            if lineHeight > height {
+//                if offset != 0 {
+//                    text.yy_insertString("\n", at: UInt(text.length - tag.length))
+//                }
+//                height = lineHeight
+//            }
+            //只显示一行
             if lineHeight > height {
                 if offset != 0 {
-                    text.yy_insertString("\n", at: UInt(text.length - tag.length))
+                    text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
                 }
-                height = lineHeight
+                if offset == 0 {
+                    height = lineHeight
+                }
             }
         }
 

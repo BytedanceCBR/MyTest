@@ -116,6 +116,16 @@
     
     void (^didCompletedBlock)(TTAccountUserEntity *, NSError *) = ^(TTAccountUserEntity *userEntity, NSError *error) {
         __strong typeof(wself) sself = wself;
+
+        BDAccountUser* user = [[BDAccount sharedAccount] user];
+        if (user != nil) {
+            user.name = userEntity.name;
+            user.screenName = userEntity.screenName;
+            user.userDescription = userEntity.userDescription;
+            [[BDAccount sharedAccount] setUser:user];
+            [[[EnvContext shared] client] setUserInfoWithUser:user];
+        }
+
         // update flags
         if (sself.editableAuditInfo.editingItem == kTTEditingUserItemTypeUsername) {
             sself.editableAuditInfo.modifiedFlags &= ~kTTUserInfoModifiedFlagUsername;
@@ -257,18 +267,20 @@
                 } else {
                     
                     // f100 修改BDAccount的代码
-                    BDAccountUser* user = [[BDAccount sharedAccount] user];
-                    if (user != nil) {
-                        user.avatarURL = imageURIString;
-                        [[BDAccount sharedAccount] setUser:user];
-                        [[[EnvContext shared] client] setUserInfoWithUser:user];
-                    }
-                    
+
+
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"头像修改成功", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
-                    
                     NSString *imageURL = avatarOrBg ? [userEntity.auditInfoSet userAvatarURLString] : userEntity.bgImgURL;
+
                     if (!isEmptyString(imageURL)) {
                         if (avatarOrBg) {
+
+                            BDAccountUser* user = [[BDAccount sharedAccount] user];
+                            if (user != nil) {
+                                user.avatarURL = imageURL;
+                                [[BDAccount sharedAccount] setUser:user];
+                                [[[EnvContext shared] client] setUserInfoWithUser:user];
+                            }
                             sself2.editableAuditInfo.avatarURL = imageURL;
                         } else {
                             // sself2.editableAuditInfo.bg_img_url = imageURL;

@@ -85,7 +85,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
         mapView.showsUserLocation = true
-        mapView.zoomLevel = 14
+        mapView.zoomLevel = 15
         mapContainer.addSubview(mapView)
         mapView.snp.makeConstraints { maker in
             maker.top.bottom.right.left.equalToSuperview()
@@ -106,7 +106,6 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         // 绑定切换分类逻辑
         Observable
             .combineLatest(centerPointStr, searchCategory)
-            .debug()
             .filter { $0.0 != nil }
             .map { (e) -> (CLLocationCoordinate2D?, String) in
                 let (center, category) = e

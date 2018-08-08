@@ -39,15 +39,25 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     var conditionFilterViewModel: ConditionFilterViewModel?
 
     let theHouseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
+    
+    let searchSource: SearchSourceKey
 
-    init(neighborhoodId: String, houseId: String? = nil) {
+    init(title: String?,
+         neighborhoodId: String,
+         houseId: String? = nil,
+         searchSource: SearchSourceKey,
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
-        super.init(identifier: neighborhoodId, isHiddenBottomBar: true)
-        self.navBar.title.text = "同小区房源"
+        self.searchSource = searchSource
+        super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
+        if let title = title {
+            self.navBar.title.text = title
+        } else {
+            self.navBar.title.text = "同小区房源"
+        }
+
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
-
-
     }
 
     override func viewDidLoad() {
@@ -56,7 +66,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.ttHideNavigationBar = true
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
-        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId)
+        ershouHouseListViewModel?.title
+            .bind(to: self.navBar.title.rx.text)
+            .disposed(by: disposeBag)
+        
+        ershouHouseListViewModel?.requestErshouHouseList(
+            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
+            condition: nil)
         
         self.conditionFilterViewModel = ConditionFilterViewModel(
                 conditionPanelView: conditionPanelView,
@@ -84,8 +100,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
 
         view.addSubview(conditionPanelView)
@@ -133,6 +154,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 .disposed(by: disposeBag)
 
         searchAndConditionFilterVM.queryCondition
+                .skip(2)
                 .map { [unowned self] (result) in
                     "house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" + result
                 }

@@ -463,6 +463,17 @@
     }];
 }
 
++ (TTAccountUserEntity *)convertBdUser: (BDAccountUser *) bdUser {
+    TTAccountUserEntity * result = [[TTAccountUserEntity alloc] init];
+    result.screenName = bdUser.screenName;
+    result.name = bdUser.name;
+    result.screenName = bdUser.screenName;
+    result.userDescription = bdUser.userDescription;
+    TTAccountUserAuditSet * set = [[TTAccountUserAuditEntity alloc] init];
+    result.auditInfoSet = set;
+    return result;
+}
+
 #pragma mark - 更新用户Profile
 
 + (id<TTAccountSessionTask>)startUpdateUserProfileWithDict:(NSDictionary *)dict
@@ -486,9 +497,8 @@
     }
     
     return [TTAccountNetworkManager postRequestForJSONWithURL:[TTAccountURLSetting TTAUpdateUserProfileURLString] params:params needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
-        TTAccountUserEntity *currentUser = [[TTAccount sharedAccount] user];
-        
+        BDAccountUser * user = [[BDAccount sharedAccount] user];
+        TTAccountUserEntity * currentUser = [self.class convertBdUser:user];
         TTAUpdateUserProfileRespModel *respMdl = [TTAUpdateUserProfileRespModel tta_modelWithJSON:jsonObj];
         
         if (!error && ([respMdl.data.error_description length] > 0 ||

@@ -22,6 +22,21 @@ class CommonUIStyle {
             UIFont(name: "PingFangSC-Semibold", size: size)!
          }
     }
+    
+    class DateTime {
+        static let dateFormat: DateFormatter = {
+            let re = DateFormatter()
+            re.dateFormat = "yyyy年MM月dd日"
+            return re
+        }()
+
+        static let simpleDataFormat: DateFormatter = {
+            let re = DateFormatter()
+            re.dateFormat = "MM-dds"
+            return re
+        }()
+        
+    }
 
     class TabBar {
         static let height: CGFloat = 48

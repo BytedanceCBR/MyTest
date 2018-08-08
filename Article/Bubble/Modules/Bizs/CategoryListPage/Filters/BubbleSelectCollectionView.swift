@@ -30,13 +30,13 @@ func constructBubbleSelectCollectionPanel(nodes: [Node], _ action: @escaping Con
     }
 }
 
-func parseHorseTypeConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parseHorseTypeConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count > 1 {
-        return .condition("户型 (\(nodePath.count)")
+        return .condition("\(label) (\(nodePath.count))")
     } else if nodePath.count == 1 {
         return .condition(nodePath.first!.label)
     } else {
-        return .noCondition("户型")
+        return .noCondition(label)
     }
 }
 
@@ -75,13 +75,13 @@ func constructMoreSelectCollectionPanel(nodes: [Node], _ action: @escaping Condi
     }
 }
 
-func parseMoreConditionItemLabel(nodePath: [Node]) -> ConditionItemType {
+func parseMoreConditionItemLabel(label: String, nodePath: [Node]) -> ConditionItemType {
     if nodePath.count > 1 {
-        return .condition("更多(\(nodePath.count))")
+        return .condition("\(label)(\(nodePath.count))")
     } else if nodePath.count == 1 {
         return .condition(nodePath.first!.label)
     } else {
-        return .noCondition("更多")
+        return .noCondition(label)
     }
 }
 
@@ -192,6 +192,7 @@ class BubbleSelectCollectionView: UIView {
                 .subscribe(onNext: { [unowned self] void in
                     self.dataSource.selectedIndexPaths = []
                     self.didSelect?([])
+                    self.collectionView.reloadData()
                 })
                 .disposed(by: disposeBag)
     }
@@ -236,14 +237,23 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if nodes[indexPath.section].isSupportMulti != true {
-            selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+            if selectedIndexPaths.contains(indexPath) {
+                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+            } else if selectedIndexPaths.contains(where: { $0.section == indexPath.section }) {
+                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
+                selectedIndexPaths.insert(indexPath)
+            } else {
+                selectedIndexPaths.insert(indexPath)
+            }
+        } else {
+            if !selectedIndexPaths.contains(indexPath) {
+                selectedIndexPaths.insert(indexPath)
+            } else {
+                selectedIndexPaths.remove(indexPath)
+            }
         }
 
-        if !selectedIndexPaths.contains(indexPath) {
-            selectedIndexPaths.insert(indexPath)
-        } else {
-            selectedIndexPaths.remove(indexPath)
-        }
+
         collectionView.reloadData()    
     }
 

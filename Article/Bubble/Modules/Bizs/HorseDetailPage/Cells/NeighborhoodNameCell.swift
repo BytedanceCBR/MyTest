@@ -144,10 +144,9 @@ func oneTimeRender(_ parser: @escaping (BaseUITableViewCell) -> Void) -> (BaseUI
 func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodNameCell {
         theCell.nameLabel.text = data.name
-        theCell.subNameLabel.text = data.neighborhoodInfo?.locationFullName
+        theCell.subNameLabel.text = data.neighborhoodInfo?.address
         theCell.priceLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.locationIcon.rx.tap
-                .debug("aaa")
                 .bind { [unowned disposeBag] recognizer in
                     if let lat = data.neighborhoodInfo?.gaodeLat,
                             let lng = data.neighborhoodInfo?.gaodeLng {
@@ -168,13 +167,13 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: Dispos
                 .disposed(by: disposeBag)
         if let monthUp = data.neighborhoodInfo?.monthUp {
             let absValue = abs(monthUp) * 100
-            if absValue < 1 {
+            if absValue == 0 {
                 theCell.monthUpLabel.text = "持平"
                 theCell.monthUpTrend.isHidden = true
             } else {
                 theCell.monthUpLabel.text = String(format: "%.2f%%", arguments: [absValue])
                 theCell.monthUpTrend.isHidden = false
-                if monthUp >= 0 {
+                if monthUp > 0 {
                     theCell.monthUpLabel.textColor = hexStringToUIColor(hex: "#f85959")
                     theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_up")
                 } else {
@@ -182,7 +181,6 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: Dispos
                     theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_down")
                 }
             }
-
         }
     }
 }

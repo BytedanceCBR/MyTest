@@ -63,7 +63,11 @@ class CountryListVC: BaseViewController {
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(64)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(58)
+            } else {
+                maker.height.equalTo(65)
+            }
         }
 
         view.addSubview(locationBar)
@@ -75,7 +79,12 @@ class CountryListVC: BaseViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.equalTo(locationBar.snp.bottom)
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
         }
         dataSource.onItemSelect = self.onItemSelect
         tableView.dataSource = dataSource
@@ -87,7 +96,7 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { [unowned self] data in
                     if let data = data {
                         let history = EnvContext.shared.client.generalBizconfig.cityHistoryDataSource.getHistory()
-                        let listData = (parseHotCityList(data.hotCityList) <*> parseHistoryList(history) <*> parseCityList(data.cityList))([])
+                        let listData = (parseHistoryList(history) <*> parseHotCityList(data.hotCityList) <*> parseCityList(data.cityList))([])
                         self.dataSource.datas = listData
                         self.tableView.reloadData()
                     }
@@ -95,7 +104,10 @@ class CountryListVC: BaseViewController {
                 .disposed(by: disposeBag)
 
         EnvContext.shared.client.locationManager.currentCity
+                .skip(1)
                 .subscribe(onNext: { [unowned self] geocode in
+                    EnvContext.shared.toast.dismissToast()
+                    EnvContext.shared.toast.showToast("定位成功")
                     if let geocode = geocode {
                         self.locationBar.countryLabel.text = geocode.city
                     }
@@ -104,6 +116,7 @@ class CountryListVC: BaseViewController {
 
         locationBar.reLocateBtn.rx.tap
                 .subscribe(onNext: { void in
+                    EnvContext.shared.toast.showLoadingToast("定位中")
                     EnvContext.shared.client.locationManager.requestCurrentLocation()
                 })
                 .disposed(by: disposeBag)
@@ -505,12 +518,16 @@ fileprivate class BubbleCell: UITableViewCell {
                 maker.height.equalTo(28).priority(.high)
                 maker.top.bottom.equalToSuperview()
             }
-
             btns.snp.distributeViewsAlong(
                     axisType: .horizontal,
                     fixedSpacing: 9,
                     leadSpacing: 24,
                     tailSpacing: -1)
+            if btns.count == 1 {
+                btns.first?.snp.makeConstraints { maker in
+                    maker.left.equalTo(24)
+                }
+            }
         }
 
         return (rowView, loader)
