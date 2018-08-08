@@ -515,8 +515,14 @@
 		52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FD8A4E16F2FA4A00B77520 /* ArticleShareManager.m */; };
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
+		61252023211A8BBB000FBC51 /* ErshouPriceMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */; };
+		61252024211A8BBB000FBC51 /* ErshouPriceMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */; };
+		61252026211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */; };
+		61252027211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */; };
 		612DCE502116EA4A0021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
 		612DCE512116EC640021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
+		6189BCE221184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */; };
+		6189BCE321184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */; };
 		6B0279721EF131C8006DF6BA /* ExploreEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */; };
 		6B1397E21B39348700070F03 /* TTSubEntranceBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397E11B39348700070F03 /* TTSubEntranceBar.m */; };
 		6B1397EB1B3934EA00070F03 /* TTSubEntranceObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397EA1B3934EA00070F03 /* TTSubEntranceObj.m */; };
@@ -4533,7 +4539,10 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouPriceMarkerView.swift; sourceTree = "<group>"; };
+		61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ErshouPriceMarkerView.xib; sourceTree = "<group>"; };
 		612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserShowAllPlugin.swift; sourceTree = "<group>"; };
+		6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHousePriceChartCell.swift; sourceTree = "<group>"; };
 		6B0279701EF131C8006DF6BA /* ExploreEntryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreEntryGroup.h; sourceTree = "<group>"; };
 		6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreEntryGroup.m; sourceTree = "<group>"; };
 		6B1397E01B39348700070F03 /* TTSubEntranceBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSubEntranceBar.h; sourceTree = "<group>"; };
@@ -12415,6 +12424,9 @@
 				B36E26E820F62A7800D4E8D0 /* ErshouHouseCoreInfoCell.swift */,
 				B36E26E920F62A7800D4E8D0 /* PropertyListCell.swift */,
 				B36E26EA20F62A7800D4E8D0 /* GlobalPricingCell.swift */,
+				6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */,
+				61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */,
+				61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -15458,6 +15470,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
+				61252026211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
 				2E14CCED1FE007C30093E05D /* sound3.caf in Resources */,
@@ -15575,6 +15588,7 @@
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
 				FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */,
+				61252027211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */,
 				FEFA5A1F205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				FEFA5A20205FB1A8001F50D8 /* NewsInHouse.release.xcconfig in Resources */,
 				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
@@ -16681,6 +16695,7 @@
 				F223E0D22002057600A03AC5 /* TTIESPlayerTask.m in Sources */,
 				A9AFA3D51F0E3AC700C1E28D /* SSTipModel.m in Sources */,
 				B36E279A20F62A7900D4E8D0 /* MultiItemCell.swift in Sources */,
+				6189BCE221184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */,
 				2D33174D1F305308009D2936 /* AccountButton.m in Sources */,
 				F87694A81F31D0D500D59CA5 /* TTVFeedListWebItem.m in Sources */,
 				52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */,
@@ -17531,6 +17546,7 @@
 				F87694441F31D0D500D59CA5 /* TTVVideoDetailNatantInfoViewController.m in Sources */,
 				F87695741F31D0D700D59CA5 /* TTVFeedListPageCell.m in Sources */,
 				FE1FC320206922D800664B00 /* ExploreMixedListBaseView+TrackEvent.m in Sources */,
+				61252023211A8BBB000FBC51 /* ErshouPriceMarkerView.swift in Sources */,
 				F876958C1F31D0D700D59CA5 /* TTVReplyListCell.m in Sources */,
 				B36E278E20F62A7900D4E8D0 /* RelatedSearchApi.swift in Sources */,
 				B36E27EF20F62A7A00D4E8D0 /* TGLineSpinFadeLoader.swift in Sources */,
@@ -18312,6 +18328,7 @@
 				B34736AF20F77083009F799A /* TGBallTrianglePath.swift in Sources */,
 				B389129E21061B04009B9B13 /* SimpleConfirmAlert.swift in Sources */,
 				FEFA54FF205FB1A8001F50D8 /* ExploreDetailMixedADView.m in Sources */,
+				6189BCE321184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */,
 				FEFA5500205FB1A8001F50D8 /* TTProfileNameContainerView.m in Sources */,
 				FEFA5501205FB1A8001F50D8 /* ExploreDetailNavigationBar.m in Sources */,
 				FEFA5503205FB1A8001F50D8 /* ExploreArticleCellViewConsts.m in Sources */,
@@ -19162,6 +19179,7 @@
 				FEFA58C4205FB1A8001F50D8 /* TTPersonalHomeTopNavView.m in Sources */,
 				FEFA58C6205FB1A8001F50D8 /* TTVPlayerTipAdOldCreator.m in Sources */,
 				FEFA58C7205FB1A8001F50D8 /* TTTabbar.m in Sources */,
+				61252024211A8BBB000FBC51 /* ErshouPriceMarkerView.swift in Sources */,
 				FEFA58C8205FB1A8001F50D8 /* TTVideoDetailHeaderPosterView.m in Sources */,
 				FEFA58C9205FB1A8001F50D8 /* ArticleWebListView.m in Sources */,
 				FEFA58CA205FB1A8001F50D8 /* TTVPartnerVideo+TTVVideoDetailNatantViewDataProtocolSupport.m in Sources */,

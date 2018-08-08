@@ -160,6 +160,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parsePropertyListNode(data)
                 <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: true, process: openBeighBor)
                 <- parseNeighborhoodInfoNode(data, navVC: self.navVC)
+                <- parseErshouHousePriceChartNode(data, navVC: self.navVC)
                 <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
