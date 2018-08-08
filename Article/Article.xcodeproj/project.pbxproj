@@ -12637,6 +12637,7 @@
 		B36E273C20F62A7800D4E8D0 /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				B3E59A3E211A202400B44F5B /* Tracer */,
 				B3A2090A210AC29700DF3E42 /* RxReachability */,
 				B3A208F7210A20D200DF3E42 /* Automaton */,
 				B3891266210618C5009B9B13 /* AlertView */,
@@ -12837,6 +12838,13 @@
 				B3A2090C210AC29700DF3E42 /* ObservableType+Reachability.swift */,
 			);
 			path = RxReachability;
+			sourceTree = "<group>";
+		};
+		B3E59A3E211A202400B44F5B /* Tracer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tracer;
 			sourceTree = "<group>";
 		};
 		B3E8EA9F2111C8F900AEE522 /* NewsInHouseUITests */ = {
