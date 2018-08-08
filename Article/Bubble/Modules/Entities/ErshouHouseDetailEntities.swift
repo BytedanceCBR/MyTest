@@ -63,7 +63,7 @@ struct ErshouHouseData: Mappable {
     var baseInfo: [ErshouHouseBaseInfo]?
     var neighborhoodInfo: NeighborhoodInfo?
     var contact: [String: Any] = [:]
-    var priceTrend: PriceTrend?
+    var priceTrend: [PriceTrend]?
     var housePriceRange: [Int: Int]?
     var tags: [TagItem] = []
     var userStatus: UserStatus?
@@ -140,7 +140,7 @@ struct UserStatus: Mappable {
 
 struct PriceTrend: Mappable {
     var name: String?
-    var values: [TrendItem]?
+    var values: [TrendItem] = []
     
     init?(map: Map) {
         
@@ -153,7 +153,7 @@ struct PriceTrend: Mappable {
 }
 
 struct TrendItem: Mappable {
-    var price: String?
+    var price: String? // 单位是分钱，不是元
     var timeStr: String?
     var timestamp: Int?
     
