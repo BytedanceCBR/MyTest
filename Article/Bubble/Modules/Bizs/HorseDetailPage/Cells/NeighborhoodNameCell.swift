@@ -19,6 +19,7 @@ class NeighborhoodNameCell: BaseUITableViewCell {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(24)
         re.textColor = hexStringToUIColor(hex: "#222222")
+        re.numberOfLines = 2
         return re
     }()
 
@@ -70,7 +71,6 @@ class NeighborhoodNameCell: BaseUITableViewCell {
         priceLabel.snp.makeConstraints { maker in
             maker.right.equalTo(-15)
             maker.top.equalTo(21)
-            maker.height.equalTo(25)
             maker.width.greaterThanOrEqualTo(95).priority(.high)
         }
 
