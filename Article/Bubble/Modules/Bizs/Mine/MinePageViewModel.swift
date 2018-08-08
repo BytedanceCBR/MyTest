@@ -55,15 +55,15 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                 openEditProfile: { [weak self] (vc) in self?.openVC?(vc) },
                 disposeBag: disposeBag)
             <- parseFavoriteNode(disposeBag: disposeBag, navVC: navVC)
-            <- parseOptionNode(
-                icon: #imageLiteral(resourceName: "star-simple-line-icons"),
-                label: "我的收藏",
-                isShowBottomLine: true) {
-                    if let vc = TTFavoriteHistoryViewController(routeParamObj: TTRouteParamObjWithDict(["stay_id": "favorite"])) {
-                        
-                        self.openVC?(vc)
-                    }
-            }
+//            <- parseOptionNode(
+//                icon: #imageLiteral(resourceName: "star-simple-line-icons"),
+//                label: "我的收藏",
+//                isShowBottomLine: true) {
+//                    if let vc = TTFavoriteHistoryViewController(routeParamObj: TTRouteParamObjWithDict(["stay_id": "favorite"])) {
+//
+//                        self.openVC?(vc)
+//                    }
+//            }
             <- parseOptionNode(
                 icon: #imageLiteral(resourceName: "bubbles-simple-line-icons"),
                 label: "用户反馈",
