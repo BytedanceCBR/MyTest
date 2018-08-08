@@ -35,4 +35,7 @@
 #import <TTAccountManager.h>
 #import "TTNavigationController.h"
 #import <TTRoute.h>
+#import <TTIndicatorView.h>
+
+
 #endif /* Article_Bridging_Header_h */

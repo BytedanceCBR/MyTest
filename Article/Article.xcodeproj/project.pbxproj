@@ -525,8 +525,7 @@
 		61252024211A8BBB000FBC51 /* ErshouPriceMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */; };
 		61252026211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */; };
 		61252027211A8BCE000FBC51 /* ErshouPriceMarkerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */; };
-		612DCE502116EA4A0021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
-		612DCE512116EC640021153A /* PhotoBrowserShowAllPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */; };
+		61252028211AF504000FBC51 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B36E277E20F62A7800D4E8D0 /* Info.plist */; };
 		6189BCE221184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */; };
 		6189BCE321184E840047BB5C /* ErshouHousePriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */; };
 		6B0279721EF131C8006DF6BA /* ExploreEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */; };
@@ -4548,7 +4547,6 @@
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
 		61252022211A8BBB000FBC51 /* ErshouPriceMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouPriceMarkerView.swift; sourceTree = "<group>"; };
 		61252025211A8BCE000FBC51 /* ErshouPriceMarkerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ErshouPriceMarkerView.xib; sourceTree = "<group>"; };
-		612DCE4F2116EA490021153A /* PhotoBrowserShowAllPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBrowserShowAllPlugin.swift; sourceTree = "<group>"; };
 		6189BCE121184E840047BB5C /* ErshouHousePriceChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErshouHousePriceChartCell.swift; sourceTree = "<group>"; };
 		6B0279701EF131C8006DF6BA /* ExploreEntryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreEntryGroup.h; sourceTree = "<group>"; };
 		6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreEntryGroup.m; sourceTree = "<group>"; };
@@ -15560,6 +15558,7 @@
 				FEFA59D5205FB1A8001F50D8 /* iconfont_new.ttf in Resources */,
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
 				FEFA59D7205FB1A8001F50D8 /* Photo.storyboard in Resources */,
+				61252028211AF504000FBC51 /* Info.plist in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				FEFA59DC205FB1A8001F50D8 /* index.ios.bundle in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
