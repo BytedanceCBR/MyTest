@@ -104,13 +104,19 @@ class CountryListVC: BaseViewController {
                 .disposed(by: disposeBag)
 
         EnvContext.shared.client.locationManager.currentCity
-                .skip(1)
                 .subscribe(onNext: { [unowned self] geocode in
-                    EnvContext.shared.toast.dismissToast()
-                    EnvContext.shared.toast.showToast("定位成功")
                     if let geocode = geocode {
+                        print(geocode)
                         self.locationBar.countryLabel.text = geocode.city
                     }
+                })
+                .disposed(by: disposeBag)
+
+        EnvContext.shared.client.locationManager.currentCity
+                .skip(1)
+                .subscribe(onNext: { geocode in
+                    EnvContext.shared.toast.dismissToast()
+                    EnvContext.shared.toast.showToast("定位成功")
                 })
                 .disposed(by: disposeBag)
 
