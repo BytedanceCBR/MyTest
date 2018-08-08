@@ -281,19 +281,10 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 extension ErshouHousePriceChartCell:ChartViewDelegate {
 
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
-        NSLog("chartValueSelected")
 
-
-        if let index = entry.data as? Int {
-
-
-
-        }
     }
 
     func chartValueNothingSelected(_ chartView: ChartViewBase) {
-        NSLog("chartValueNothingSelected")
-
 
     }
 
