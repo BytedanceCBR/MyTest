@@ -34,6 +34,10 @@ typedef enum {
 - (void)pushViewControllerByTransitioningAnimation:(UIViewController *)viewController animated:(BOOL)animated;
 
 - (UIViewController *)popViewControllerByTransitioningAnimationAnimated:(BOOL)animated;
+
+- (void)removeTabBarSnapshotForSuperView:(UIView *)superView;
+
+
 @end
 
 

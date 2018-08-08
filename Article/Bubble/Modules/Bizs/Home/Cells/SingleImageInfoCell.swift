@@ -144,6 +144,10 @@ class SingleImageInfoCell: BaseUITableViewCell {
         imageRequest = nil
         majorImageView.image = #imageLiteral(resourceName: "default_image")
     }
+    
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
 
 func fillHouseItemToCell(_ cell: SingleImageInfoCell, item: HouseItemInnerEntity) {

@@ -34,5 +34,6 @@
 #import "AKPhotoCarouselView.h"
 #import <TTAccountManager.h>
 #import "TTNavigationController.h"
+#import "UIViewController+NavigationBarStyle.h"
 #import <TTRoute.h>
 #endif /* Article_Bridging_Header_h */

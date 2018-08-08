@@ -252,6 +252,14 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        if let navVC = self.navigationController as? TTNavigationController {
+            navVC.removeTabBarSnapshot(forSuperView: self.view)
+        }
+    }
 
     private func bindSearchEvent() {
         suspendSearchBar.changeCountryBtn.rx.tap

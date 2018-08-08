@@ -70,6 +70,19 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        if let nav = self.navigationController as? TTNavigationController {
+//            nav.panRecognizer.isEnabled = false
+//            nav.interactivePopGestureRecognizer?.isEnabled = true
+//            nav.interactivePopGestureRecognizer?.delegate = nav as? UIGestureRecognizerDelegate
+//        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+
     private func setTitle(houseType: HouseType) {
         switch houseType {
             case .newHouse:
@@ -125,4 +138,27 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "取消关注"
     }
+}
+
+
+class NavGestureDelegateWrapper: NSObject, UIGestureRecognizerDelegate {
+    
+    weak var ttNav: UIGestureRecognizerDelegate?
+    
+    init(ttNav: TTNavigationController) {
+        self.ttNav = ttNav as? UIGestureRecognizerDelegate
+    }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return ttNav?.gestureRecognizerShouldBegin?(gestureRecognizer) ?? false
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return ttNav?.gestureRecognizer?(gestureRecognizer, shouldReceive:touch) ?? false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return ttNav?.gestureRecognizer?(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+    }
+    
 }

@@ -80,23 +80,25 @@ static inline CGFloat navigationBarTop() {
     
     self.maskView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        
-        self.swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipe:)];
-        self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-        self.swipeRecognizer.delegate = self;
-        [self.view addGestureRecognizer:self.swipeRecognizer];
-    }
-    else {
-        // 滑动手势
-        self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-        self.panRecognizer.delegate = self;
-        [self.view addGestureRecognizer:self.panRecognizer];
-        
-        // Disable the onboard gesture recognizer.
-        self.interactivePopGestureRecognizer.enabled = NO;
-    }
+    self.interactivePopGestureRecognizer.enabled = YES;
+    self.interactivePopGestureRecognizer.delegate = self;
+
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//
+//        self.swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipe:)];
+//        self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+//        self.swipeRecognizer.delegate = self;
+//        [self.view addGestureRecognizer:self.swipeRecognizer];
+//    }
+//    else {
+//        // 滑动手势
+//        self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+//        self.panRecognizer.delegate = self;
+//        [self.view addGestureRecognizer:self.panRecognizer];
+//
+//        // Disable the onboard gesture recognizer.
+//        self.interactivePopGestureRecognizer.enabled = NO;
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -120,55 +122,55 @@ static inline CGFloat navigationBarTop() {
 }
 
 #pragma mark ============= TODOP delete =============
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)myPopGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    //    otherGestureRecognizer.delaysTouchesBegan = YES;
-    // 修复单元格无法滑出删除功能的问题
-    if ([otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
-        UISwipeGestureRecognizer *recognizer = (UISwipeGestureRecognizer *)otherGestureRecognizer;
-        if (recognizer.direction & UISwipeGestureRecognizerDirectionRight) {
-            recognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-        }
-        return YES;
-    }
-    
-    if ([otherGestureRecognizer.view isKindOfClass:[UICollectionView class]]) {
-        return NO;
-    }
-    
-    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"UITableViewWrapperView")]) {
-        return YES;
-    };
-    
-    if ([self gestureView:otherGestureRecognizer.view isClass:[UITableViewCell class]]) {
-        return YES;
-    };
-    
-    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"UITableViewCellContentView")]) {
-        return YES;
-    };
-    
-    // TODO: 解决React Native页面中，存在左右滑动切换tab的页面结构，滑动到最左侧时，无法右滑返回的问题
-    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"RCTCustomScrollView")] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)otherGestureRecognizer;
-        UIScrollView *v = (UIScrollView *)otherGestureRecognizer.view;
-        CGPoint velocity = [panGestureRecognizer velocityInView:v];
-        BOOL xDirection = 0.5 * abs(velocity.x) > abs(velocity.y);
-        if (v.contentOffset.x == 0 && xDirection && velocity.x > 0) {
-            return YES;
-        }
-    }
-    
-    // 处理iOS11上私信消息中心的会话左滑删除手势失效的问题
-    if ([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] &&
-        [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
-        [otherGestureRecognizer.view isKindOfClass:[UITableView class]]) {
-        CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];
-        if (velocity.x < 0) return YES;
-    }
-    
-    return NO;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)myPopGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+//{
+//    //    otherGestureRecognizer.delaysTouchesBegan = YES;
+//    // 修复单元格无法滑出删除功能的问题
+//    if ([otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
+//        UISwipeGestureRecognizer *recognizer = (UISwipeGestureRecognizer *)otherGestureRecognizer;
+//        if (recognizer.direction & UISwipeGestureRecognizerDirectionRight) {
+//            recognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+//        }
+//        return YES;
+//    }
+//
+//    if ([otherGestureRecognizer.view isKindOfClass:[UICollectionView class]]) {
+//        return NO;
+//    }
+//
+//    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"UITableViewWrapperView")]) {
+//        return YES;
+//    };
+//
+//    if ([self gestureView:otherGestureRecognizer.view isClass:[UITableViewCell class]]) {
+//        return YES;
+//    };
+//
+//    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"UITableViewCellContentView")]) {
+//        return YES;
+//    };
+//
+//    // TODO: 解决React Native页面中，存在左右滑动切换tab的页面结构，滑动到最左侧时，无法右滑返回的问题
+//    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"RCTCustomScrollView")] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+//        UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)otherGestureRecognizer;
+//        UIScrollView *v = (UIScrollView *)otherGestureRecognizer.view;
+//        CGPoint velocity = [panGestureRecognizer velocityInView:v];
+//        BOOL xDirection = 0.5 * abs(velocity.x) > abs(velocity.y);
+//        if (v.contentOffset.x == 0 && xDirection && velocity.x > 0) {
+//            return YES;
+//        }
+//    }
+//
+//    // 处理iOS11上私信消息中心的会话左滑删除手势失效的问题
+//    if ([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] &&
+//        [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+//        [otherGestureRecognizer.view isKindOfClass:[UITableView class]]) {
+//        CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];
+//        if (velocity.x < 0) return YES;
+//    }
+//
+//    return NO;
+//}
 
 
 - (void)viewDidAppear:(BOOL)animated
@@ -575,26 +577,19 @@ static inline CGFloat navigationBarTop() {
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {
-    if ([self.viewControllers count] < 2){
-        return nil;
-    }
     [self removeKVO];
     
-    UIViewController *fromVC = [self.viewControllers lastObject];
-    UIViewController *toVC = nil;
-    UIViewController *vc = nil;
-    @try {
-        vc = [super popViewControllerAnimated:NO];
-        toVC = [self.viewControllers lastObject];
+    UIViewController *vc = [super popViewControllerAnimated:animated];
+    [vc view];
+    UIViewController *toVC = [self.viewControllers lastObject];
+
+    NSInteger index = [self.viewControllers indexOfObject:toVC];
+
+    if (![TTDeviceHelper isPadDevice] &&
+        index == 0 &&
+        [self.tabBarController.viewControllers containsObject:self]) {
+        [self addTabBarSnapshotForSuperView:toVC.view];
     }
-    @catch (NSException *exception) {
-        
-    }
-    
-    [self customPopToViewController:toVC fromViewController:fromVC animated:animated];
-    
-    [self ignorePushViewControllersIfNeeded:animated];
-    
     return vc;
 }
 
@@ -615,7 +610,7 @@ static inline CGFloat navigationBarTop() {
     [self customPopToViewController:toVC fromViewController:fromVC animated:animated];
     
     [self ignorePushViewControllersIfNeeded:animated];
-    
+
     return vcs;
 }
 
@@ -707,68 +702,68 @@ static inline CGFloat navigationBarTop() {
 
 #pragma mark Gesture Delegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
-        if (([touch.view isKindOfClass:[UISwitch class]]) || [touch.view.superview.superview isKindOfClass:[UISwitch class]]) {
-            return NO;
-        }
-        //fix:ipad下详情页字体设置弹出后swip手势优先响应的bug
-        UIView *view = touch.view;
-        while (view) {
-            if ([view isKindOfClass:NSClassFromString(@"SSActivityView")]) {
-                return NO;
-            }
-            view = view.superview;
-        }
-        return YES;
-    }
-    else {
-        if (self.shouldIgnorePushingViewControllers) {
-            return NO;
-        }
-        else if (![TTDeviceHelper isPadDevice] && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            return NO;
-        }
-        else
-        {
-            UIView *view = touch.view;
-            while (view) {
-                if ([view isKindOfClass:NSClassFromString(@"TTAdCanvasLoopPicCell")])
-                {
-                    return NO;
-                }
-                view = view.superview;
-            }
-        }
-        
-    }
-    return self.viewControllers.count > 1;
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && [gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
-        if (!self.topViewController.
-            ttDisableDragBack && self.viewControllers.count > 1) {
-            return YES;
-        } else {
-            return NO;
-        }
-    }
-    else {
-        if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-            if (!self.topViewController.
-                ttDisableDragBack && self.viewControllers.count > 1) {
-                return YES;
-            } else {
-                return NO;
-            }
-        }
-    }
-    
-    return self.viewControllers.count > 1;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+//
+//    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
+//        if (([touch.view isKindOfClass:[UISwitch class]]) || [touch.view.superview.superview isKindOfClass:[UISwitch class]]) {
+//            return NO;
+//        }
+//        //fix:ipad下详情页字体设置弹出后swip手势优先响应的bug
+//        UIView *view = touch.view;
+//        while (view) {
+//            if ([view isKindOfClass:NSClassFromString(@"SSActivityView")]) {
+//                return NO;
+//            }
+//            view = view.superview;
+//        }
+//        return YES;
+//    }
+//    else {
+//        if (self.shouldIgnorePushingViewControllers) {
+//            return NO;
+//        }
+//        else if (![TTDeviceHelper isPadDevice] && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+//            return NO;
+//        }
+//        else
+//        {
+//            UIView *view = touch.view;
+//            while (view) {
+//                if ([view isKindOfClass:NSClassFromString(@"TTAdCanvasLoopPicCell")])
+//                {
+//                    return NO;
+//                }
+//                view = view.superview;
+//            }
+//        }
+//
+//    }
+//    return self.viewControllers.count > 1;
+//}
+//
+//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+//
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && [gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
+//        if (!self.topViewController.
+//            ttDisableDragBack && self.viewControllers.count > 1) {
+//            return YES;
+//        } else {
+//            return NO;
+//        }
+//    }
+//    else {
+//        if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+//            if (!self.topViewController.
+//                ttDisableDragBack && self.viewControllers.count > 1) {
+//                return YES;
+//            } else {
+//                return NO;
+//            }
+//        }
+//    }
+//
+//    return self.viewControllers.count > 1;
+//}
 
 
 #pragma mark ---- 这下面都是为了iOS6啊 ~ 截屏神马的

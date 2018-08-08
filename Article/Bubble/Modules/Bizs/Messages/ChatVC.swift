@@ -86,6 +86,14 @@ class ChatVC: BaseViewController {
                 .disposed(by: disposeBag)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        if let navVC = self.navigationController as? TTNavigationController {
+            navVC.removeTabBarSnapshot(forSuperView: self.view)
+        }
+    }
+    
     /*
     // MARK: - Navigation
 
