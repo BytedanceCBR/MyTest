@@ -180,9 +180,15 @@ class UserMsgSectionView: UIView {
         return label
     }()
     
+    lazy var lineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = hexStringToUIColor(hex: "#e8e8e8")
+        return view
+    }()
+    
     init() {
         super.init(frame: CGRect.zero)
-        self.lu.addBottomBorder()
+
         self.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         addSubview(timeAreaBgView)
         timeAreaBgView.snp.makeConstraints { (maker) in
@@ -213,6 +219,12 @@ class UserMsgSectionView: UIView {
             maker.height.equalTo(25)
             maker.top.equalTo(18)
             maker.bottom.equalTo(-17)
+        }
+        self.addSubview(lineView)
+        lineView.snp.makeConstraints { maker in
+            maker.height.equalTo(0.5)
+            maker.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
         }
 
     }
