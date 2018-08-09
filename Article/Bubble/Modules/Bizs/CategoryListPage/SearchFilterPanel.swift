@@ -106,6 +106,17 @@ class SearchFilterPanel: UIView {
         reLayoutAllItems()
     }
 
+    func selectedItem() -> SearchConditionItem? {
+        return items.first(where: { $0.isExpand })
+    }
+
+    func selectedIndex() -> Int {
+        return items
+            .enumerated()
+            .first(where: { $0.1.isExpand })
+            .map { $0.0 } ?? 0
+    }
+
 }
 
 func setConditionItemTypeByParser(item: SearchConditionItem,
