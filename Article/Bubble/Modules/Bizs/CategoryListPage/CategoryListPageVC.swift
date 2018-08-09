@@ -356,6 +356,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.conditionFilterViewModel?.dissmissConditionPanel()
     }
 
     private func displayPopupMenu() {

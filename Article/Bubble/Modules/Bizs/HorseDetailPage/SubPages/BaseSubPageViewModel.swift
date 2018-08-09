@@ -31,6 +31,7 @@ class BaseSubPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate
         super.init()
         cellFactory.register(tableView: tableView)
         tableView.dataSource = self
+        tableView.delegate = self
         datas
             .subscribe(onNext: { [unowned self] datas in
                 self.tableView?.reloadData()
