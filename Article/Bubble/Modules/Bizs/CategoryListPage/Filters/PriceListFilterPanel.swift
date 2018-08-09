@@ -223,15 +223,25 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
         if let theCell = cell as? PriceListItemCell {
             theCell.label.text = nodes[indexPath.row].label
             if selectedIndexPaths.value.contains(indexPath) {
-                theCell.checkboxBtn.isSelected = true
-                theCell.label.textColor = hexStringToUIColor(hex: "#f85959")
+                setCellSelected(true, cell: theCell)
             } else {
-                theCell.checkboxBtn.isSelected = false
-                theCell.label.textColor = hexStringToUIColor(hex: "#222222")
+                setCellSelected(false, cell: theCell)
             }
             theCell.checkboxBtn.isHidden = nodes[indexPath.row].isNoLimit == 1
+            if selectedIndexPaths.value.count == 0, nodes[indexPath.row].isNoLimit == 1 {
+                setCellSelected(true, cell: theCell)
+            }
         }
         return cell ?? UITableViewCell()
+    }
+
+    fileprivate func setCellSelected(_ isSelected: Bool, cell: PriceListItemCell) {
+        cell.checkboxBtn.isSelected = isSelected
+        if isSelected {
+            cell.label.textColor = hexStringToUIColor(hex: "#f85959")
+        } else {
+            cell.label.textColor = hexStringToUIColor(hex: "#222222")
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

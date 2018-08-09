@@ -51,7 +51,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
     func requestData(houseType: HouseType, query: String, condition: String?) {
-        EnvContext.shared.toast.showLoadingToast("加载中")
+        EnvContext.shared.toast.showLoadingToast("正在加载")
         switch houseType {
         case .newHouse:
             requestNewHouseList(query: query, condition: condition)

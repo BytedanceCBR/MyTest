@@ -33,16 +33,8 @@ class ConditionFilterViewModel {
         self.searchAndConditionFilterVM = searchAndConditionFilterVM
         self.searchFilterPanel = searchFilterPanel
         conditionPanelView.rx.controlEvent(.touchUpInside)
-                .debug()
                 .bind { [unowned self] recognizer in
-                    if let item = searchFilterPanel.selectedItem() {
-                        item.isExpand = false
-                        if !item.isSeted {
-                            item.isHighlighted = false
-                        }
-                    }
-
-                    self.closeConditionPanel()
+                    self.dissmissConditionPanel()
                 }
                 .disposed(by: disposeBag)
     }
@@ -138,19 +130,30 @@ class ConditionFilterViewModel {
         }
     }
 
-    func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
+    private func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
         return { [weak self] (index, nodes) -> Void in
             apply(index, nodes)
             self?.closeConditionPanel()
         }
     }
 
-    func closeConditionPanel() {
+    private func closeConditionPanel() {
         self.conditionPanelView?.subviews.forEach { view in
             view.removeFromSuperview()
         }
         self.conditionPanelView?.isHidden = true
         self.reloadConditionPanel()
+    }
+
+    func dissmissConditionPanel() {
+        if let item = searchFilterPanel?.selectedItem() {
+            item.isExpand = false
+            if !item.isSeted {
+                item.isHighlighted = false
+            }
+        }
+
+        self.closeConditionPanel()
     }
 
     func reloadConditionPanel() -> Void {
