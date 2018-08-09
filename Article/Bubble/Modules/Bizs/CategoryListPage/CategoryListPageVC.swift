@@ -180,7 +180,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                                 nav?.popViewController(animated: true)
                             })
                             .disposed(by: self.disposeBag)
-                    vc.onSuggestSelect = { [weak nav] (condition, associationalWord) in
+                    vc.onSuggestSelect = { [weak nav] (query, condition, associationalWord) in
                         nav?.popViewController(animated: true)
 //                        self?.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
 //                            condition($0)
@@ -325,6 +325,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     "house_type=\(self.houseType.value.rawValue)" + result + self.queryString
                 }
                 .debounce(0.01, scheduler: MainScheduler.instance)
+                .debug("queryCondition")
                 .subscribe(onNext: { [unowned self] query in
                     self.categoryListViewModel?.requestData(houseType: self.houseType.value, query: query, condition: self.suggestionParams)
                 }, onError: { error in

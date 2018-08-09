@@ -326,10 +326,11 @@ extension HomeViewController {
                     nav?.popViewController(animated: true)
                 })
                 .disposed(by: self.disposeBag)
-        vc.onSuggestSelect = { [weak self, unowned vc] (condition, associationalWord) in
+        vc.onSuggestSelect = { [weak self, unowned vc] (query, condition, associationalWord) in
             self?.openCategoryList(
                 houseType: vc.houseType.value,
-                condition: condition,
+                condition: condition ?? "",
+                    query: query,
                 associationalWord: associationalWord)
         }
     }
@@ -338,12 +339,14 @@ extension HomeViewController {
     private func openCategoryList(
         houseType: HouseType,
         condition: String,
+            query: String,
         associationalWord: String? = nil) {
         let vc = CategoryListPageVC(
             isOpenConditionFilter: true,
             associationalWord: associationalWord)
         vc.houseType.accept(houseType)
         vc.suggestionParams = condition
+        vc.queryString = query
         vc.navBar.isShowTypeSelector = false
         vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
         let nav = self.navigationController
