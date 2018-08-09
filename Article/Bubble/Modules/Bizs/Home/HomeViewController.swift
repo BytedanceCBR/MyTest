@@ -59,6 +59,10 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     private var stateControl: HomeHeaderStateControl?
 
+    lazy var tapGesture: UITapGestureRecognizer = {
+        UITapGestureRecognizer()
+    }()
+
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
@@ -152,6 +156,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
         bindNetReachability()
+
+
     }
 
     private func setupErrorDisplay() {
@@ -169,6 +175,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 return selectedImage
             }
         }
+        //添加点击手势
+        pageableViewModel.pageView.addGestureRecognizer(tapGesture)
+
         pageableViewModel.pageView.isUserInteractionEnabled = true
         headerViewPanel.addSubview(pageableViewModel.pageView)
         pageableViewModel.pageView.snp.makeConstraints { maker in
@@ -179,11 +188,30 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         pageableViewModel.reloadData(currentPageOnly: false)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject
                 .subscribe(onNext: { [weak pageableViewModel] data in
-                    if let banners = data?.banners, banners.count > 1{
+                    if let banners = data?.banners, banners.count > 1 {
+
                     } else {
                         pageableViewModel?.pageView.isScrollEnabled = false
                     }
                     pageableViewModel?.reloadData(currentPageOnly: false)
+                })
+                .disposed(by: disposeBag)
+        tapGesture.rx.event
+                .withLatestFrom(pageableViewModel.currentPage.asObservable())
+                .bind(onNext: { [unowned self] (offset) in
+                    let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
+                    if let banners = config?.banners {
+                        let count  = banners.count
+                        if count > 0 {
+                            let index = offset % count
+                            let item = banners[index]
+                            if let url = item.url {
+                                TTRoute.shared().openURL(byPushViewController: URL(string: url))
+                            }
+                        }
+
+
+                    }
                 })
                 .disposed(by: disposeBag)
     }

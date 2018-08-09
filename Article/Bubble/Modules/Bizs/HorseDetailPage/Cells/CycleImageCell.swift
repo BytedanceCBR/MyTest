@@ -53,7 +53,7 @@ class CycleImageCell: BaseUITableViewCell {
         didSet {
             if let pageableViewModel = pageableViewModel {
                 pageableViewModel.reloadData(currentPageOnly: false)
-                pageableViewModel.pageView.isUserInteractionEnabled = headerImages.count > 1
+                pageableViewModel.pageView.isScrollEnabled = headerImages.count > 1
                 pictureDisposeBag = DisposeBag()
                 tapGesture.rx.event
                         .withLatestFrom(pageableViewModel.currentPage.asObservable())
