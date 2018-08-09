@@ -131,16 +131,6 @@ func parseNeighborhoodNameNode(_ data: NeighborhoodDetailData, disposeBag: Dispo
     }
 }
 
-func oneTimeRender(_ parser: @escaping (BaseUITableViewCell) -> Void) -> (BaseUITableViewCell) -> Void {
-    var executed = false
-    return { (cell) in
-        if !executed {
-            parser(cell)
-            executed = true
-        }
-    }
-}
-
 func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodNameCell {
         theCell.nameLabel.text = data.name

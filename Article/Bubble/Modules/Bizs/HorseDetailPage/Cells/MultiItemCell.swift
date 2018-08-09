@@ -462,7 +462,10 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
 
     re.descLabel.attributedText = text
     re.priceLabel.text = item.pricingPerSqm
-    re.spaceLabel.text = item.squaremeter
+    if let squaremeter = item.squaremeter {
+        
+        re.spaceLabel.text = "建面 \(squaremeter)"
+    }
     return re
 }
 

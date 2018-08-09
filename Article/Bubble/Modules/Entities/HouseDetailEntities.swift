@@ -380,7 +380,7 @@ struct NewHouseComment: Mappable {
         
         mutating func mapping(map: Map) {
             id <- map["id"]
-            createTime <- map["create_time"]
+            createTime <- map["created_time"]
             userName <- map["user_name"]
             content <- map["content"]
             fromUrl <- map["from_url"]

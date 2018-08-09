@@ -214,6 +214,16 @@ struct DetailDataParser {
     }
 }
 
+func oneTimeRender(_ parser: @escaping TableCellRender) -> TableCellRender {
+    var executed = false
+    return { (cell) in
+        if !executed {
+            parser(cell)
+            executed = true
+        }
+    }
+}
+
 extension DetailDataParser {
     func join(_ parser: @escaping () -> TableSectionNode?) -> DetailDataParser {
         return DetailDataParser { inputs in
