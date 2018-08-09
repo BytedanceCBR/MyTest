@@ -158,9 +158,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 }
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: self.navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
-                    if let id = data.id {
+                    if let id = data.id ,
+                        let title = data.name {
                         openErshouHouseList(
-                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
+//                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
+                                title: title,
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,

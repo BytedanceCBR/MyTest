@@ -168,9 +168,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
-                    if let id = data.neighborhoodInfo?.id {
+                    if let id = data.neighborhoodInfo?.id,
+                        let title = data.neighborhoodInfo?.name {
                         openErshouHouseList(
-                            title: nil,
+                            title: title,
                             neighborhoodId: id,
                             houseId: data.id,
                             disposeBag: self.disposeBag,
