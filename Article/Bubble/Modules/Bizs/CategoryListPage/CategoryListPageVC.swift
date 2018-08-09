@@ -268,7 +268,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             return config?.filter
                     }
                 }
-                .map { items in
+                .map { items in //
                     let result: [SearchConditionItem] = items?
                             .map(transferSearchConfigFilterItemTo) ?? []
                     let panelData: [[Node]] = items?.map {
@@ -321,6 +321,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.footIndicatorView.loadingIndicator.isHidden = true
             }
         }
+
+        self.categoryListViewModel?.dataSource.datas
+                .skip(1)
+                .map { $0.count > 0 }
+                .bind(to: infoMaskView.rx.isHidden)
+                .disposed(by: disposeBag)
+
     }
 
     @objc func loadData() {
