@@ -173,6 +173,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         navBar.searchAreaBtn.rx.tap
                 .subscribe(onNext: { void in
                     let vc = SuggestionListVC()
+                    vc.houseType.accept(self.houseType.value)
+                    vc.navBar.searchable = true
+                    vc.navBar.canSelectType = false
                     let nav = self.navigationController
                     nav?.pushViewController(vc, animated: true)
                     vc.navBar.backBtn.rx.tap
@@ -180,11 +183,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                                 nav?.popViewController(animated: true)
                             })
                             .disposed(by: self.disposeBag)
-                    vc.onSuggestSelect = { [weak nav] (condition, associationalWord) in
+                    vc.onSuggestSelect = { [weak nav, unowned self] (query, condition, associationalWord) in
                         nav?.popViewController(animated: true)
-//                        self?.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
-//                            condition($0)
-//                        }
+                        self.suggestionParams = condition
+                        self.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator { q in
+                            q + query
+                        }
+                        self.searchAndConditionFilterVM.sendSearchRequest()
+                        self.navBar.searchInput.placeholder = associationalWord
                         //TODO 处理条件变更后的设置
                     }
                 })
@@ -192,7 +198,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         navBar.searchTypeBtn.rx.tap
                 .subscribe(onNext: { [unowned self] void in
-                    self.displayPopupMenu()
+                    if self.navBar.canSelectType {
+                        self.displayPopupMenu()
+                    }
                 })
                 .disposed(by: disposeBag)
 
@@ -325,6 +333,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     "house_type=\(self.houseType.value.rawValue)" + result + self.queryString
                 }
                 .debounce(0.01, scheduler: MainScheduler.instance)
+                .debug("queryCondition")
                 .subscribe(onNext: { [unowned self] query in
                     self.categoryListViewModel?.requestData(houseType: self.houseType.value, query: query, condition: self.suggestionParams)
                 }, onError: { error in

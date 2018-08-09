@@ -29,7 +29,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     let disposeBag = DisposeBag()
 
     var tableViewModel: SuggestionListTableViewModel
-    var onSuggestSelect: ((String, String?) -> Void)?
+    var onSuggestSelect: ((String, String?, String?) -> Void)?
 
     let houseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
@@ -49,6 +49,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         self.panBeginAction = { [unowned self] in
             self.navBar.searchInput.resignFirstResponder()
         }
+        self.navBar.searchInput.delegate = self
         self.view.backgroundColor = UIColor.white
         navBar.searchTypeLabel.text = houseType.value.stringValue()
 
@@ -79,8 +80,10 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                 .disposed(by: disposeBag)
 
         navBar.searchTypeBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    self.displayPopupMenu()
+                .subscribe(onNext: { [unowned self, unowned navBar] void in
+                    if navBar.canSelectType {
+                        self.displayPopupMenu()
+                    }
                 })
                 .disposed(by: disposeBag)
         view.addSubview(tableView)
@@ -96,8 +99,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         tableView.dataSource = tableViewModel
         tableView.delegate = tableViewModel
 
-        tableViewModel.onSuggestionItemSelect = { [weak self] (condition, associationalWord) in
-            self?.onSuggestSelect?(condition, associationalWord)
+        tableViewModel.onSuggestionItemSelect = { [weak self] (condition, query, associationalWord) in
+            self?.onSuggestSelect?(condition, query, associationalWord)
         }
 
         tableView.register(SuggestionItemCell.self, forCellReuseIdentifier: "item")
@@ -157,7 +160,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty {
+        if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty, let text = self.navBar.searchInput.text {
+            onSuggestSelect?("&full_text=\(text)", nil, text)
             return true
         }
         return false
@@ -199,7 +203,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
     let disposeBag = DisposeBag()
 
-    var onSuggestionItemSelect: ((_ query: String,_ associationalWord: String?) -> Void)?
+    var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
 
     let houseType: BehaviorRelay<HouseType>
 
@@ -286,7 +290,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         suggestionHistoryDataSource.addHistoryItem(item: combineItems.value[indexPath.row], houseType: houseType.value)
         suggestionHistory.accept(suggestionHistoryDataSource.getHistoryByType(houseType: houseType.value))
         
-        onSuggestionItemSelect?(createQueryCondition(info), item.text)
+        onSuggestionItemSelect?("", createQueryCondition(info), item.text)
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

@@ -282,6 +282,13 @@ class CategorySearchNavBar: UIView {
             searchAreaBtn.isHidden = searchable
         }
     }
+    
+    var canSelectType = true {
+        didSet {
+            triangleImage.isHidden = !canSelectType
+
+        }
+    }
 
     var isShowTypeSelector = false {
         didSet {
