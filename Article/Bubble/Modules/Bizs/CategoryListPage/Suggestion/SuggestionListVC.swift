@@ -80,8 +80,10 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                 .disposed(by: disposeBag)
 
         navBar.searchTypeBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    self.displayPopupMenu()
+                .subscribe(onNext: { [unowned self, unowned navBar] void in
+                    if navBar.canSelectType {
+                        self.displayPopupMenu()
+                    }
                 })
                 .disposed(by: disposeBag)
         view.addSubview(tableView)
