@@ -151,12 +151,20 @@ fileprivate class QuickLoginPanel: UIView {
         return re
     }()
 
-    lazy var disclaimer: UILabel = {
-        let re = UILabel()
+    
+    lazy var acceptCheckBox: UIButton = {
+        let re = UIButton()
+        re.setImage(#imageLiteral(resourceName: "checkbox-checked"), for: .selected)
+        re.setImage(#imageLiteral(resourceName: "checkbox"), for: .normal)
+        return re
+    }()
+    
+    lazy var disclaimer: YYLabel = {
+        let re = YYLabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: "#cacaca")
+        re.textColor = hexStringToUIColor(hex: "#999999")
         re.numberOfLines = 0
-        re.text = "新用户将自动注册，并视为同意《xxxx 用户协议》"
+        re.lineBreakMode = NSLineBreakMode.byWordWrapping
         return re
     }()
 
@@ -172,6 +180,34 @@ fileprivate class QuickLoginPanel: UIView {
         re.isEnabled = false
         return re
     }()
+    
+//    override func layoutSubviews() {
+//
+//        super.layoutSubviews()
+//
+////        let size = disclaimer.sizeThatFits(CGSize(width: self.width - 20 - acceptCheckBox.right - 5, height: 1000))
+////        disclaimer.snp.remakeConstraints { maker in
+////            maker.left.equalTo(acceptCheckBox.snp.right).offset(5)
+////            maker.right.equalTo(-20)
+////            maker.top.equalTo(verifyCodeInputView.snp.bottom).offset(6)
+//////            maker.height.equalTo(size.height)
+////            maker.bottom.equalTo(self.confirmBtn.snp.top)
+////
+////        }
+//
+////        disclaimer.sizeToFit()
+////        disclaimer.width = self.width - 20 - acceptCheckBox.right - 5
+//
+//
+//        let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 20 - acceptCheckBox.right - 5, height: CGFloat.greatestFiniteMagnitude), text: disclaimer.attributedText ?? NSAttributedString(string: ""))
+//        let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+//
+//        disclaimer.height = lineHeight
+//
+//        self.confirmBtn.frame = CGRect(x: 0, y: disclaimer.bottom + 15, width: self.confirmBtn.width, height: self.confirmBtn.height)
+//        self.height = self.confirmBtn.bottom
+//
+//    }
 
     init() {
         super.init(frame: CGRect.zero)
@@ -221,19 +257,71 @@ fileprivate class QuickLoginPanel: UIView {
             maker.right.equalTo(-10)
         }
 
+        addSubview(acceptCheckBox)
+        addSubview(disclaimer)
+
+        acceptCheckBox.snp.makeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.height.width.equalTo(12)
+            maker.top.equalTo(disclaimer.snp.top).offset(3)
+        }
+        acceptCheckBox.isSelected = true
+        
         addSubview(confirmBtn)
         confirmBtn.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(disclaimer.snp.bottom).offset(15)
             maker.height.equalTo(46)
+            maker.bottom.equalToSuperview()
+
+        }
+        
+        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
+        
+        let commonTextStyle = {
+            return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#999999"),
+                    NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
         }
 
-        addSubview(disclaimer)
+        attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
+        attrText.yy_setTextHighlight(
+            NSRange(location: 8, length: 11),
+            color: hexStringToUIColor(hex: "#f85959"),
+            backgroundColor: nil,
+            userInfo: nil,
+            tapAction: { (_, text, range, _) in
+                if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
+                }
+        })
+
+        attrText.yy_setTextHighlight(
+            NSRange(location: 20, length: 6),
+            color: hexStringToUIColor(hex: "#f85959"),
+            backgroundColor: nil,
+            userInfo: nil,
+            tapAction: { (_, text, range, _) in
+                if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
+                }
+        })
+        disclaimer.attributedText = attrText
+
+        let re = UILabel()
+        re.text = "我已阅读并同意 《好多房用户使用协议》及《隐私协议》"
+        re.font = CommonUIStyle.Font.pingFangRegular(16)
+        re.textColor = hexStringToUIColor(hex: "#707070")
+        re.numberOfLines = 0
+        re.width = UIScreen.main.bounds.width - 100 - 20 - acceptCheckBox.right - 5
+        re.sizeToFit()
+                
         disclaimer.snp.makeConstraints { maker in
-            maker.left.equalTo(20)
+            maker.left.equalTo(acceptCheckBox.snp.right).offset(5)
             maker.right.equalTo(-20)
             maker.top.equalTo(verifyCodeInputView.snp.bottom).offset(6)
-            maker.bottom.equalTo(confirmBtn.snp.top).offset(-20)
+            maker.height.equalTo(re.height)
         }
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
