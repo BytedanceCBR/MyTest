@@ -34,6 +34,11 @@ class BubbleAlertController: UIAlertController {
             maker.width.equalTo(270)
         }
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
+    }
 }
 
 extension BubbleAlertController {

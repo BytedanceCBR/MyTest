@@ -73,6 +73,7 @@ class CategoryListViewModel: DetailPageViewModel {
         let cleanDataOnce = once(apply: { [weak self] in
             self?.cleanData()
         })
+        let dataReloader = reloadData()
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
@@ -87,7 +88,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     }
                 }
                 .subscribe(
-                    onNext: self.reloadData(),
+                    onNext: dataReloader,
                     onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
@@ -100,6 +101,7 @@ class CategoryListViewModel: DetailPageViewModel {
         let cleanDataOnce = once(apply: { [weak self] in
             self?.cleanData()
         })
+        let dataReloader = reloadData()
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
@@ -113,7 +115,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         }
                     }
                     .subscribe(
-                            onNext: self.reloadData(),
+                            onNext: dataReloader,
                             onError: self.processError())
                     .disposed(by: self.disposeBag)
         }
@@ -126,6 +128,7 @@ class CategoryListViewModel: DetailPageViewModel {
         let cleanDataOnce = once(apply: { [weak self] in
             self?.cleanData()
         })
+        let dataReloader = reloadData()
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
@@ -138,7 +141,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         return []
                     }
                 }
-                .subscribe(onNext: self.reloadData(),
+                .subscribe(onNext: dataReloader,
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
@@ -152,6 +155,7 @@ class CategoryListViewModel: DetailPageViewModel {
         let cleanDataOnce = once(apply: { [weak self] in
             self?.cleanData()
         })
+        let dataReloader = reloadData()
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
@@ -167,7 +171,7 @@ class CategoryListViewModel: DetailPageViewModel {
                             return []
                         }
                     }
-                    .subscribe(onNext: self.reloadData(),
+                    .subscribe(onNext: dataReloader,
                                onError: self.processError())
                     .disposed(by: self.disposeBag)
         }
@@ -175,16 +179,25 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
     func reloadData() -> ([TableRowNode]) -> Void {
+        var scrollToTop = false
         return { [unowned self] datas in
             EnvContext.shared.toast.dismissToast()
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
+            if !scrollToTop {
+                if datas.count > 0 {
+                    self.tableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                }
+                scrollToTop = true
+            }
         }
     }
 
     func cleanData() {
         self.dataSource.datas.accept([])
-        self.tableView?.reloadData()
+        if let tableView = self.tableView {
+            tableView.reloadData()
+        }
     }
     
     func once(apply: @escaping () -> Void) -> () -> Void {
