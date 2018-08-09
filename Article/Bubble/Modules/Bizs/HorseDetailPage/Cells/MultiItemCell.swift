@@ -257,9 +257,10 @@ func fillSearchInNeighborhoodCell(items: [CourtItemInnerEntity], navVC: UINaviga
     }
 }
 
-func parseSearchInNeighborhoodNode(_ data: HouseItemEntity?, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseSearchInNeighborhoodNode(_ data: SameNeighborhoodHouseResponse.Data?, navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
-        if let datas = data?.items?.take(5), datas.count > 0 {
+
+        if let datas = data?.items.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
             return TableSectionNode(items: [render], selectors: nil, label: "小区房源", type: .node(identifier: MultiItemCell.identifier))
         } else {
@@ -330,7 +331,7 @@ func generateearchInNeighborhoodItemView(_ item: HouseItemInnerEntity) -> FloorP
         re.icon.bd_setImage(with: URL(string: urlStr), placeholder: #imageLiteral(resourceName: "default_image"))
     }
     let text = NSMutableAttributedString()
-    let attributeText = NSMutableAttributedString(string: item.displaySubtitle ?? "")
+    let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
     attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
     attributeText.yy_color = hexStringToUIColor(hex: "#222222")
     text.append(attributeText)

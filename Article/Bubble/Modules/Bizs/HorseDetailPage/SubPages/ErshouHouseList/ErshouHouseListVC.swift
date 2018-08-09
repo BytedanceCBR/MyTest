@@ -42,6 +42,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     
     let searchSource: SearchSourceKey
 
+    let titleName = BehaviorRelay<String>(value: "小区房源")
+
     init(title: String?,
          neighborhoodId: String,
          houseId: String? = nil,
@@ -51,11 +53,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.houseId = houseId
         self.searchSource = searchSource
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
-        if let title = title {
-            self.navBar.title.text = title
-        } else {
-            self.navBar.title.text = "同小区房源"
-        }
+        self.titleName.accept(title ?? "小区房源")
 
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
     }
@@ -66,9 +64,10 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.ttHideNavigationBar = true
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
-        ershouHouseListViewModel?.title
-            .bind(to: self.navBar.title.rx.text)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(self.titleName, ershouHouseListViewModel!.title)
+                .map { $0.0 + $0.1 }
+                .bind(to: self.navBar.title.rx.text)
+                .disposed(by: disposeBag)
         
         ershouHouseListViewModel?.requestErshouHouseList(
             query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",

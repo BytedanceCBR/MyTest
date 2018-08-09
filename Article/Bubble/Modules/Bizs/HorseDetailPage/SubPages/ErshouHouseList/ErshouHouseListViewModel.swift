@@ -63,7 +63,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> [TableRowNode] in
-                    self.title.accept("小区房源(\(response?.data?.total ?? 0))")
+                    self.title.accept("(\(response?.data?.total ?? 0))")
                     if let hasMore = response?.data?.hasMore {
                         self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }

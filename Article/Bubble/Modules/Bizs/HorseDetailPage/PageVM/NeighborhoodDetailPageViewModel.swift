@@ -26,7 +26,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     //相关小区
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
     //小区内相关
-    private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
+    private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
 
     private var houseId: Int64 = -1
 
@@ -87,8 +87,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                         self.relateNeighborhoodData.accept(response)
                     })
                     .disposed(by: disposeBag)
-            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_type=\(HouseType.secondHandHouse.rawValue)")
-//            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId)
+//            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_type=\(HouseType.secondHandHouse.rawValue)")
+            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId)
                     .subscribe(onNext: { [unowned self] response in
                         self.houseInSameNeighborhood.accept(response)
                     })
@@ -154,13 +154,15 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     }
                 }
                 <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
-                    self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
+                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: self.navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
-                    if let id = data.id {
+                    if let id = data.id ,
+                        let title = data.name {
                         openErshouHouseList(
-                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
+//                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
+                                title: title,
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,

@@ -44,13 +44,14 @@ func pageRequestCourtSearch(query: String = "", suggestionParams: String = "") -
     var offset: Int64 = 0
     return {
         return requestCourtSearch(
-            offset: offset,
-            query: query)
-            .do(onNext: { (response) in
-                if let count = response?.data?.items?.count {
-                    offset = offset + Int64(count)
-                }
-            })
+                offset: offset,
+                query: query,
+                suggestionParams: suggestionParams)
+                .do(onNext: { (response) in
+                    if let count = response?.data?.items?.count {
+                        offset = offset + Int64(count)
+                    }
+                })
     }
 }
 

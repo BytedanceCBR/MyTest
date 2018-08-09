@@ -27,7 +27,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
 
-    private var houseInSameNeighborhood = BehaviorRelay<HouseRecommendResponse?>(value: nil)
+    private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
 
     private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
 
@@ -139,8 +139,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 })
                 .disposed(by: disposeBag)
             
-            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_id=\(houseId)&house_type=\(HouseType.secondHandHouse.rawValue)")
-//            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId, houseId: "\(houseId)")
+//            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_id=\(houseId)&house_type=\(HouseType.secondHandHouse.rawValue)")
+            requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId, houseId: "\(houseId)")
                 .subscribe(onNext: { [unowned self] response in
                     self.houseInSameNeighborhood.accept(response)
                 })
@@ -164,13 +164,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseNeighborhoodInfoNode(data, navVC: self.navVC)
                 <- parseErshouHousePriceChartNode(data, navVC: self.navVC)
                 <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
-                    self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
+                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data, navVC: navVC)
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
-                    if let id = data.neighborhoodInfo?.id {
+                    if let id = data.neighborhoodInfo?.id,
+                        let title = data.neighborhoodInfo?.name {
                         openErshouHouseList(
-                            title: nil,
+                            title: title,
                             neighborhoodId: id,
                             houseId: data.id,
                             disposeBag: self.disposeBag,
