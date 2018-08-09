@@ -351,10 +351,30 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         acceptCheckBox.isSelected = true
         let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
         attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
-        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 8, length: 11))
-        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 8, length: 11))
-        attrText.addAttributes(highLightTextStyle(), range: NSRange(location: 20, length: 6))
+        attrText.yy_setTextHighlight(
+                NSRange(location: 8, length: 11),
+                color: hexStringToUIColor(hex: "#f85959"),
+                backgroundColor: nil,
+                userInfo: nil,
+                tapAction: { (_, text, range, _) in
+                    if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                        TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
+                    }
+                })
+
+        attrText.yy_setTextHighlight(
+                NSRange(location: 20, length: 6),
+                color: hexStringToUIColor(hex: "#f85959"),
+                backgroundColor: nil,
+                userInfo: nil,
+                tapAction: { (_, text, range, _) in
+                    if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                        TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
+                    }
+                })
         agreementLabel.attributedText = attrText
+        
+        
     }
 
     deinit {
