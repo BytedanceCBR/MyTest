@@ -33,7 +33,6 @@ class ConditionFilterViewModel {
         self.searchAndConditionFilterVM = searchAndConditionFilterVM
         self.searchFilterPanel = searchFilterPanel
         conditionPanelView.rx.controlEvent(.touchUpInside)
-                .debug()
                 .bind { [unowned self] recognizer in
                     self.dissmissConditionPanel()
                 }

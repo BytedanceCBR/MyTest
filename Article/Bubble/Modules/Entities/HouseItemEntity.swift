@@ -73,6 +73,10 @@ struct HouseItemInnerEntity: Mappable {
     
     // Mappable
     mutating func mapping(map: Map) {
+
+        var info: [String: Any] = [:]
+        info <- map["base_info"]
+
         id <- map["id"]
         title <- map["title"]
         uploadAt <- map["upload_at"]
@@ -90,7 +94,6 @@ struct HouseItemInnerEntity: Mappable {
         displayPrice <- map["display_price"]
         displayPricePerSqm <- map["display_price_per_sqm"]
         tags <- map["tags"]
-
 
     }
     

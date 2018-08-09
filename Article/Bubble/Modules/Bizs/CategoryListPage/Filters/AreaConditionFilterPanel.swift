@@ -373,17 +373,25 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
             theCell.label.text = nodes[indexPath.row].label
             theCell.checkboxBtn.isHidden = !isShowCheckBox || nodes[indexPath.row].isEmpty == 1
             if selectedIndexPaths.contains(indexPath) {
-                theCell.checkboxBtn.isSelected = true
-                theCell.label.textColor = hexStringToUIColor(hex: "#f85959")
+                setCellSelected(true, cell: theCell)
             }
 
             if selectedIndexPaths.count == 0 && indexPath.row == 0 {
-                theCell.isHighlighted = true
+                setCellSelected(true, cell: theCell)
             }
 
             return theCell
         } else {
             return UITableViewCell()
+        }
+    }
+
+    func setCellSelected(_ isSelected: Bool, cell: AreaConditionCell) {
+        cell.checkboxBtn.isSelected = isSelected
+        if isSelected {
+            cell.label.textColor = hexStringToUIColor(hex: "#f85959")
+        } else {
+            cell.label.textColor = hexStringToUIColor(hex: "#222222")
         }
     }
 
