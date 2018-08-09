@@ -249,51 +249,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 })
                 .disposed(by: disposeBag)
 
-        Observable
-                .zip(houseType, EnvContext.shared.client.configCacheSubject)
-                .filter { (e) in
-                    let (_, config) = e
-                    return config != nil
-                }
-                .map { (e) -> ([SearchConfigFilterItem]?) in
-                    let (type, config) = e
-                    switch type {
-                        case HouseType.newHouse:
-                            return config?.courtFilter
-                        case HouseType.secondHandHouse:
-                            return config?.filter
-                        case HouseType.neighborhood:
-                            return config?.neighborhoodFilter
-                        default:
-                            return config?.filter
-                    }
-                }
-                .map { items in //
-                    let result: [SearchConditionItem] = items?
-                            .map(transferSearchConfigFilterItemTo) ?? []
-                    let panelData: [[Node]] = items?.map {
-                        if let options = $0.options {
-                            return transferSearchConfigOptionToNode(
-                                    options: options,
-                                    isSupportMulti: $0.supportMulti)
-                        } else {
-                            return []
-                        }
-                    } ?? []
-                    return (result, panelData)
-                }
-                .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
-                    let reload: () -> Void = { [weak self] in
-                        self?.conditionFilterViewModel?.reloadConditionPanel()
-                    }
-                    zip(items.0, items.1).forEach({ (e) in
-                        let (item, nodes) = e
-                        item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
-                    })
-                    self.conditionFilterViewModel?.filterConditions = items.0
-                    self.conditionFilterViewModel?.reloadConditionPanel()
-                })
-                .disposed(by: disposeBag)
         self.searchAndConditionFilterVM.sendSearchRequest()
 
     }
@@ -340,9 +295,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     "house_type=\(self.houseType.value.rawValue)" + result + self.queryString
                 }
                 .debounce(0.01, scheduler: MainScheduler.instance)
-                .debug("queryCondition")
                 .subscribe(onNext: { [unowned self] query in
-                    self.categoryListViewModel?.requestData(houseType: self.houseType.value, query: query, condition: self.suggestionParams)
+                    self.categoryListViewModel?.requestData(
+                            houseType: self.houseType.value,
+                            query: query,
+                            condition: self.suggestionParams)
                 }, onError: { error in
                     print(error)
                 }, onCompleted: {
@@ -359,11 +316,66 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        resetConditionData()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.conditionFilterViewModel?.dissmissConditionPanel()
+        self.searchAndConditionFilterVM.cleanCondition()
+    }
+
+    private func resetConditionData() {
+        Observable
+                .zip(houseType, EnvContext.shared.client.configCacheSubject)
+                .filter { (e) in
+                    let (_, config) = e
+                    return config != nil
+                }
+                .map { (e) -> ([SearchConfigFilterItem]?) in
+                    let (type, config) = e
+                    switch type {
+                    case HouseType.newHouse:
+                        return config?.courtFilter
+                    case HouseType.secondHandHouse:
+                        return config?.filter
+                    case HouseType.neighborhood:
+                        return config?.neighborhoodFilter
+                    default:
+                        return config?.filter
+                    }
+                }
+                .map { items in //
+                    let result: [SearchConditionItem] = items?
+                            .map(transferSearchConfigFilterItemTo) ?? []
+                    let panelData: [[Node]] = items?.map {
+                        if let options = $0.options {
+                            return transferSearchConfigOptionToNode(
+                                    options: options,
+                                    isSupportMulti: $0.supportMulti)
+                        } else {
+                            return []
+                        }
+                    } ?? []
+                    return (result, panelData)
+                }
+                .subscribe(onNext: { [unowned self] (items: ([SearchConditionItem], [[Node]])) in
+                    let reload: () -> Void = { [weak self] in
+                        self?.conditionFilterViewModel?.reloadConditionPanel()
+                    }
+                    zip(items.0, items.1).forEach({ (e) in
+                        let (item, nodes) = e
+                        item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(reload: reload, item: item, data: nodes)
+                    })
+                    self.conditionFilterViewModel?.filterConditions = items.0
+                    self.conditionFilterViewModel?.reloadConditionPanel()
+                })
+                .disposed(by: disposeBag)
     }
 
     private func displayPopupMenu() {

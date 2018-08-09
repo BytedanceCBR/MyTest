@@ -48,5 +48,10 @@ class SearchAndConditionFilterViewModel {
     func sendSearchRequest() {
         queryCondition.accept(getConditions())
     }
+
+    func cleanCondition() {
+        conditions = [:]
+        queryCondition.accept("")
+    }
 }
 
