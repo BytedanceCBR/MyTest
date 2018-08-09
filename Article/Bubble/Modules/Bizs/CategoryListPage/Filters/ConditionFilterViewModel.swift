@@ -7,7 +7,8 @@
 //
 
 import Foundation
-
+import RxSwift
+import RxCocoa
 class ConditionFilterViewModel {
 
 
@@ -23,12 +24,27 @@ class ConditionFilterViewModel {
         []
     }()
 
-    init(conditionPanelView: UIView,
+    let disposeBag = DisposeBag()
+
+    init(conditionPanelView: UIControl,
          searchFilterPanel: SearchFilterPanel,
          searchAndConditionFilterVM: SearchAndConditionFilterViewModel) {
         self.conditionPanelView = conditionPanelView
         self.searchAndConditionFilterVM = searchAndConditionFilterVM
         self.searchFilterPanel = searchFilterPanel
+        conditionPanelView.rx.controlEvent(.touchUpInside)
+                .debug()
+                .bind { [unowned self] recognizer in
+                    if let item = searchFilterPanel.selectedItem() {
+                        item.isExpand = false
+                        if !item.isSeted {
+                            item.isHighlighted = false
+                        }
+                    }
+
+                    self.closeConditionPanel()
+                }
+                .disposed(by: disposeBag)
     }
 
     func initSearchConditionItemPanel(
@@ -124,13 +140,17 @@ class ConditionFilterViewModel {
 
     func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
         return { [weak self] (index, nodes) -> Void in
-            self?.conditionPanelView?.subviews.forEach { view in
-                view.removeFromSuperview()
-            }
-            self?.conditionPanelView?.isHidden = true
             apply(index, nodes)
-            self?.reloadConditionPanel()
+            self?.closeConditionPanel()
         }
+    }
+
+    func closeConditionPanel() {
+        self.conditionPanelView?.subviews.forEach { view in
+            view.removeFromSuperview()
+        }
+        self.conditionPanelView?.isHidden = true
+        self.reloadConditionPanel()
     }
 
     func reloadConditionPanel() -> Void {
