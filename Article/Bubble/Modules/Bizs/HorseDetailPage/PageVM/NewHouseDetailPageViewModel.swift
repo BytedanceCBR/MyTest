@@ -115,7 +115,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 }
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data, navVC: navVC, bottomBarBinder: self.bindBottomView())
-                <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 > 0) { [unowned self] in
+                <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 >= 5) { [unowned self] in
                     openFloorPanCategoryPage(
                             floorPanId: "\(courtId)",
                             disposeBag: self.disposeBag,
