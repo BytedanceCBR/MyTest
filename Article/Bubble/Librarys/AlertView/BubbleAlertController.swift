@@ -30,10 +30,15 @@ class BubbleAlertController: UIAlertController {
         contentView.clipsToBounds = true
         self.view.addSubview(contentView)
         contentView.snp.makeConstraints { maker in
-            maker.top.bottom.left.right.equalToSuperview()
-            maker.width.equalTo(270)
+            maker.top.bottom.equalToSuperview()
+            maker.width.equalTo(UIScreen.main.bounds.width - 100)
+            maker.centerX.equalToSuperview()
+
         }
+        
     }
+
+    
 }
 
 extension BubbleAlertController {
