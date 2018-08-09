@@ -190,7 +190,7 @@ class PriceListFilterPanel: UIView {
                             let upper = Int(self.bottomInputView.upperPriceTextField.text ?? "") {
                         self.didSelect?([Node(
                             id: "",
-                            label: "\(low)万-\(upper)万",
+                            label: "\(low)-\(upper)万",
                             externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]")])
                     } else{
                         self.didSelect?([])

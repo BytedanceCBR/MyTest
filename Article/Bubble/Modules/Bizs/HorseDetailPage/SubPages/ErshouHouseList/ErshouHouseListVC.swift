@@ -28,8 +28,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         return result
     }()
 
-    lazy var conditionPanelView: UIView = {
-        let result = UIView()
+    lazy var conditionPanelView: UIControl = {
+        let result = UIControl()
         result.backgroundColor = hexStringToUIColor(hex: "#222222", alpha: 0.3)
         return result
     }()

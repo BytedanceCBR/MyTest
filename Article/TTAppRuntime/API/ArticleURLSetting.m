@@ -347,7 +347,7 @@
 
 + (NSString*)userProtocolURLString
 {
-    return @"https://www.toutiao.com/user_agreement/?app=interesting_news&hideAll=1&status_bar_height=60";
+    return @"https://m.quduzixun.com/f100/download/user_agreement.html";
 }
 
 #pragma mark -- 删除

@@ -30,6 +30,8 @@
 //#import "TTSFResourcesManager.h"
 #import "AKActivityViewController.h"
 #import "Bubble-Swift.h"
+#import "FTTNavigationController.h"
+
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
 static NSString *lastTabIdentifier;
@@ -62,6 +64,9 @@ static NSString *lastTabIdentifier;
 
 + (UINavigationController *)naviVCForIdentifier:(NSString *)identifier {
     UIViewController *rootVC = [self rootVCForIdentifier:identifier];
+    if ([identifier isEqualToString:kFHouseMineTabKey]) {
+        return [[FTTNavigationController alloc] initWithRootViewController:rootVC];
+    }
     UINavigationController *naviVC = [self naviWithRootVC:rootVC];
     
     return naviVC;

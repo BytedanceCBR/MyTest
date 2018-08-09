@@ -51,7 +51,6 @@ class NewHouseNameCell: BaseUITableViewCell {
             maker.left.equalTo(15)
             maker.right.equalToSuperview().offset(-15)
             maker.top.equalToSuperview().offset(15)
-            maker.height.equalTo(34)
         }
 
         contentView.addSubview(aliasLabel)

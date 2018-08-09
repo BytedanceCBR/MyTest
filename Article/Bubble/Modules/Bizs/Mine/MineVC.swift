@@ -28,6 +28,10 @@ class MineVC: BaseViewController {
 
     var mineViewModel: MinePageViewModel?
 
+    deinit {
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
@@ -58,9 +62,21 @@ class MineVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        
+
 //        let url = URL(string: "sslocal://webview?url=http://www.baidu.com")
 //        TTRoute.shared().openURL(byPushViewController: url)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        if let navVC = self.navigationController as? TTNavigationController {
+            navVC.removeTabBarSnapshot(forSuperView: self.view)
+        }
     }
 
     override func didReceiveMemoryWarning() {

@@ -51,6 +51,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
     func requestData(houseType: HouseType, query: String, condition: String?) {
+        EnvContext.shared.toast.showLoadingToast("加载中")
         switch houseType {
         case .newHouse:
             requestNewHouseList(query: query, condition: condition)
@@ -69,31 +70,40 @@ class CategoryListViewModel: DetailPageViewModel {
     func requestNewHouseList(query: String, condition: String?) {
         let loader = pageRequestCourtSearch(query: query, suggestionParams: condition ?? "")
         oneTimeToast = createOneTimeToast()
+        let cleanDataOnce = once(apply: { [weak self] in
+            self?.cleanData()
+        })
         pageableLoader = { [unowned self] in
             loader()
-                    .map { [unowned self] response -> [TableRowNode] in
-                        self.oneTimeToast?(response?.data?.refreshTip)
-                        self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
-
-                        if let data = response?.data {
-                            return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
-                        } else {
-                            return []
-                        }
+                .map { [unowned self] response -> [TableRowNode] in
+                    cleanDataOnce()
+                    self.oneTimeToast?(response?.data?.refreshTip)
+                    self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
+                    
+                    if let data = response?.data {
+                        return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                    } else {
+                        return []
                     }
-                    .subscribe(onNext: self.reloadData())
-                    .disposed(by: self.disposeBag)
+                }
+                .subscribe(
+                    onNext: self.reloadData(),
+                    onError: self.processError())
+                .disposed(by: self.disposeBag)
         }
-        cleanData()
         pageableLoader?()
     }
 
     func requestErshouHouseList(query: String, condition: String?) {
         let loader = pageRequestErshouHouseSearch(query: query, suggestionParams: condition ?? "")
         oneTimeToast = createOneTimeToast()
+        let cleanDataOnce = once(apply: { [weak self] in
+            self?.cleanData()
+        })
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
+                        cleanDataOnce()
                         self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                         self.oneTimeToast?(response?.data?.refreshTip)
                         if let data = response?.data {
@@ -104,33 +114,34 @@ class CategoryListViewModel: DetailPageViewModel {
                     }
                     .subscribe(
                             onNext: self.reloadData(),
-                            onError: { error in
-                                print(error)
-                            })
+                            onError: self.processError())
                     .disposed(by: self.disposeBag)
         }
-        cleanData()
         pageableLoader?()
     }
 
     func requestNeigborhoodList(query: String, condition: String?) {
         let loader = pageRequestNeighborhoodSearch(query: query, suggestionParams: condition ?? "")
         oneTimeToast = createOneTimeToast()
+        let cleanDataOnce = once(apply: { [weak self] in
+            self?.cleanData()
+        })
         pageableLoader = { [unowned self] in
             loader()
-                    .map { [unowned self] response -> [TableRowNode] in
-                        self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
-                        self.oneTimeToast?(response?.data?.refreshTip)
-                        if let data = response?.data {
-                            return parseNeighborhoodRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
-                        } else {
-                            return []
-                        }
+                .map { [unowned self] response -> [TableRowNode] in
+                    cleanDataOnce()
+                    self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
+                    self.oneTimeToast?(response?.data?.refreshTip)
+                    if let data = response?.data {
+                        return parseNeighborhoodRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                    } else {
+                        return []
                     }
-                    .subscribe(onNext: self.reloadData())
-                    .disposed(by: self.disposeBag)
+                }
+                .subscribe(onNext: self.reloadData(),
+                           onError: self.processError())
+                .disposed(by: self.disposeBag)
         }
-        cleanData()
         pageableLoader?()
     }
 
@@ -138,9 +149,13 @@ class CategoryListViewModel: DetailPageViewModel {
     func requestFavoriteData(houseType: HouseType) {
         dataSource.canCancelFollowUp = true
         let loader = pageRequestFollowUpList(houseType: houseType)
+        let cleanDataOnce = once(apply: { [weak self] in
+            self?.cleanData()
+        })
         pageableLoader = { [unowned self] in
             loader()
                     .map { [unowned self] response -> [TableRowNode] in
+                        cleanDataOnce()
                         if let data = response?.data {
                             self.onDataLoaded?(data.hasMore ?? false, data.items.count)
 
@@ -152,15 +167,16 @@ class CategoryListViewModel: DetailPageViewModel {
                             return []
                         }
                     }
-                    .subscribe(onNext: self.reloadData())
+                    .subscribe(onNext: self.reloadData(),
+                               onError: self.processError())
                     .disposed(by: self.disposeBag)
         }
-        cleanData()
         pageableLoader?()
     }
 
     func reloadData() -> ([TableRowNode]) -> Void {
         return { [unowned self] datas in
+            EnvContext.shared.toast.dismissToast()
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
         }
@@ -168,6 +184,17 @@ class CategoryListViewModel: DetailPageViewModel {
 
     func cleanData() {
         self.dataSource.datas.accept([])
+        self.tableView?.reloadData()
+    }
+    
+    func once(apply: @escaping () -> Void) -> () -> Void {
+        var executed = false
+        return {
+            if !executed {
+                apply()
+                executed = true
+            }
+        }
     }
     
     func createOneTimeToast() -> (String?) -> Void {
@@ -177,6 +204,13 @@ class CategoryListViewModel: DetailPageViewModel {
                 EnvContext.shared.toast.showToast(message)
                 hasToast = true
             }
+        }
+    }
+    
+    func processError() -> (Error?) -> Void {
+        return { _ in
+            EnvContext.shared.toast.dismissToast()
+            EnvContext.shared.toast.showToast("加载失败")
         }
     }
 
@@ -256,6 +290,10 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     })
                     .disposed(by: disposeBag)
         }
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 
 }

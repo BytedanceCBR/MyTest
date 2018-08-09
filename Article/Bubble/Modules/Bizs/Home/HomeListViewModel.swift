@@ -42,7 +42,7 @@ class HomeListViewModel: DetailPageViewModel {
         requestHouseRecommend()
             .map { [unowned self] response -> [TableSectionNode] in
                 let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
-                let entrys = config?.entryList
+                let entrys = config?.entryList.filter { $0.entryId != 5 }
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag, navVC: self.navVC)
