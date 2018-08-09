@@ -316,7 +316,6 @@ func fillNewHouseCoreInfoCell(
                 .disposed(by: disposeBag)
         let theDisposeBag = DisposeBag()
         theCell.openMapBtn.rx.tap
-                .debug()
                 .bind { void in
                     if let lat = data.coreInfo?.geodeLat, let lng = data.coreInfo?.geodeLng {
                         openMapPage(

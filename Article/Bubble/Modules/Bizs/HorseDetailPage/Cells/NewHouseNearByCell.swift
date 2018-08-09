@@ -88,11 +88,15 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return re
     }()
 
+    fileprivate var pointAnnotation: MyMAAnnotation?
+
     var disposeBag = DisposeBag()
 
     fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
 
     var centerPoint: CLLocationCoordinate2D?
+
+    private let lock = NSLock()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -138,9 +142,11 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                 })
                 .disposed(by: disposeBag)
         segmentedControl.indexChangeBlock = { [weak self] index in
-            self?.poiData.value.forEach { annotation in
-                self?.mapView.removeAnnotation(annotation)
+            self?.lock.lock()
+            defer {
+                self?.lock.unlock()
             }
+
             if let poiType = self?.categorys[index] {
                 self?.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
                 self?.requestPOIInfoByType(poiType: poiType)
@@ -188,22 +194,28 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         let pointAnnotation = MyMAAnnotation()
         pointAnnotation.type = .center
         pointAnnotation.coordinate = center
+        self.pointAnnotation = pointAnnotation
 
-
-        ([pointAnnotation] + poiData.value).forEach { annotation in
+        (poiData.value + [pointAnnotation]).forEach { annotation in
             mapView.addAnnotation(annotation)
         }
     }
 
     func requestPOIInfoByType(poiType: POIType) {
+        poiData.value.forEach { annotation in
+            mapView.removeAnnotation(annotation)
+        }
+        if let pointAnnotation = pointAnnotation {
+            mapView.removeAnnotations([pointAnnotation])
+        }
         guard let center = centerPoint else {
             assertionFailure()
             return
         }
         search.cancelAllRequests()
         let request = AMapPOIKeywordsSearchRequest()
-        request.keywords = poiType == POIType.traffic ? "交通" : poiType.rawValue
-        request.types = poiType == POIType.traffic ? "交通" : poiType.rawValue
+        request.keywords = poiType == POIType.traffic ? "公交地铁" : poiType.rawValue
+//        request.types = poiType == POIType.traffic ? "公交地铁" : poiType.rawValue
         request.location = AMapGeoPoint.location(withLatitude: CGFloat(center.latitude), longitude: CGFloat(center.longitude))
         request.requireExtension = true
         request.requireSubPOIs = true
