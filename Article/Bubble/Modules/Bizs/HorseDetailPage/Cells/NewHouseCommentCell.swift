@@ -156,6 +156,7 @@ func fillNewHouseCommentCell(
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseCommentCell {
         theCell.fromLabel.text = "来自\(data.source ?? "")"
+        
         theCell.dateTiemLabel.text = CommonUIStyle.DateTime.dateFormat.string(from: Date(timeIntervalSince1970: TimeInterval(data.createTime ?? 0)))
         if let content = data.content {
             theCell.setContent(content: content, isExpand: isExpand)
