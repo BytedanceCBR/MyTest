@@ -38,7 +38,10 @@ class BubbleAlertController: UIAlertController {
         
     }
 
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
+    }
 }
 
 extension BubbleAlertController {

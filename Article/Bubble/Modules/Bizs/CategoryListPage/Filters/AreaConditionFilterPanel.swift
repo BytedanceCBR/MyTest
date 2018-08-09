@@ -46,7 +46,7 @@ func parseAreaConditionItemLabel(label: String, nodePath: [Node]) -> ConditionIt
             return .noCondition(label)
         }
     } else {
-        return .condition("\(label)(\(nodePath.count))")
+        return .condition("\(nodePath.first!.parentLabel ?? label)(\(nodePath.count))")
     }
 }
 
@@ -493,6 +493,7 @@ struct Node {
     let isSupportMulti: Bool
     let isEmpty: Int
     let isNoLimit: Int
+    let parentLabel: String?
     let children: [Node]
 
     init(id: String,
@@ -501,6 +502,7 @@ struct Node {
          isSupportMulti: Bool,
          isEmpty: Int,
          isNoLimit: Int,
+         parentLabel: String? = nil,
          children: [Node]) {
         self.id = id
         self.label = label
@@ -508,6 +510,7 @@ struct Node {
         self.isSupportMulti = isSupportMulti
         self.isEmpty = isEmpty
         self.isNoLimit = isNoLimit
+        self.parentLabel = parentLabel
         self.children = children
     }
 
@@ -518,6 +521,7 @@ struct Node {
         self.isNoLimit = 0
         self.externalConfig = externalConfig
         self.isSupportMulti = false
+        self.parentLabel = nil
         self.children = []
     }
 }

@@ -241,7 +241,10 @@ func transferSearchConfigFilterItemTo(_ configFilter: SearchConfigFilterItem) ->
         label: configFilter.text ?? "")
 }
 
-func transferSearchConfigOptionToNode(options: [SearchConfigOption], isSupportMulti: Bool) -> [Node] {
+func transferSearchConfigOptionToNode(
+    options: [SearchConfigOption],
+    isSupportMulti: Bool,
+    parentLabel: String? = nil) -> [Node] {
     return options.map({ (option) -> Node in
         /// 服务器的格式设计造成这里只能在一遇到标记为可以多选后，则将其所有子节点都理解为可以多选。
         let theIsSupportMulti = option.supportMulti ?? false || isSupportMulti
@@ -253,7 +256,11 @@ func transferSearchConfigOptionToNode(options: [SearchConfigOption], isSupportMu
             isSupportMulti: theIsSupportMulti,
             isEmpty: option.isEmpty,
             isNoLimit: option.isNoLimit,
-            children: transferSearchConfigOptionToNode(options: option.options ?? [], isSupportMulti: theIsSupportMulti))
+            parentLabel: parentLabel,
+            children: transferSearchConfigOptionToNode(
+                options: option.options ?? [],
+                isSupportMulti: theIsSupportMulti,
+                parentLabel: option.text))
     })
 }
 
