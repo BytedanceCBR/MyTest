@@ -280,7 +280,7 @@ TTEditUserProfileViewControllerDelegate
     self.footerContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _tableView.width, 0)];
     
     self.userProtocolButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-    [_userProtocolButton setTitle:NSLocalizedString(@"爱看用户协议", @"") forState:UIControlStateNormal];
+    [_userProtocolButton setTitle:NSLocalizedString(@"好多房用户协议", @"") forState:UIControlStateNormal];
     _userProtocolButton.titleColorThemeKey = kColorText6;
     _userProtocolButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
     _userProtocolButton.titleLabel.font = [UIFont systemFontOfSize:[SettingView fontSizeOfUserProtocolButton]];
@@ -411,7 +411,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)userProtocolButtonClicked:(id)sender
 {
     SSWebViewController * webViewController = [[SSWebViewController alloc] initWithSupportIPhoneRotate:NO];
-    [webViewController setTitleText:NSLocalizedString(@"爱看用户协议", nil)];
+    [webViewController setTitleText:NSLocalizedString(@"好多房用户协议", nil)];
     [webViewController requestWithURLString:[ArticleURLSetting userProtocolURLString]];
     
     
@@ -805,7 +805,7 @@ TTEditUserProfileViewControllerDelegate
 - (NSArray *)supportSettingSectionTypeArray
 {
     if ([[BDAccount sharedAccount] isLogin]) {
-        return @[@(kTTSettingSectionTypeAccount),
+        return @[
                  @(kTTSettingSectionTypeAbstractFont),
                  @(kTTSettingSectionTypeAbout),
                  @(kTTSettingSectionTypeTTCover),

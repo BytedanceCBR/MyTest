@@ -114,7 +114,7 @@ func fillDisclaimerCell(disclaimer: Disclaimer?, cell: BaseUITableViewCell) -> V
                     backgroundColor: nil,
                     userInfo: nil,
                     tapAction: { (_, text, range, _) in
-                        if let url = item.linkUrl?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                        if let url = item.linkUrl,
                             let theUrl = URL(string: url) {
                             print(theUrl)
                             TTRoute.shared().openURL(byPushViewController: theUrl)
