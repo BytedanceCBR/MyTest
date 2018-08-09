@@ -103,6 +103,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     
     var hasMore: Bool = true
 
+    var disposeable: Disposable?
+
     init(isOpenConditionFilter: Bool, associationalWord: String? = nil) {
         self.isOpenConditionFilter = isOpenConditionFilter
         self.associationalWord = associationalWord
@@ -171,11 +173,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         navBar.searchAreaBtn.rx.tap
-                .subscribe(onNext: { void in
+                .subscribe(onNext: { [unowned self] void in
                     let vc = SuggestionListVC()
                     vc.houseType.accept(self.houseType.value)
+                    vc.houseType
+                        .bind(to: self.houseType)
+                        .disposed(by: self.disposeBag)
                     vc.navBar.searchable = true
-                    vc.navBar.canSelectType = false
                     let nav = self.navigationController
                     nav?.pushViewController(vc, animated: true)
                     vc.navBar.backBtn.rx.tap
@@ -242,12 +246,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             }
         }
         conditionPanelView.isHidden = true
-
-        houseType.subscribe(onNext: { [weak self] (type) in
-                    self?.navBar.searchTypeLabel.text = type.stringValue()
-                    self?.searchAndConditionFilterVM.sendSearchRequest()
-                })
-                .disposed(by: disposeBag)
 
         self.searchAndConditionFilterVM.sendSearchRequest()
 
@@ -316,18 +314,22 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        resetConditionData()
+        disposeable = houseType.subscribe(onNext: { [weak self] (type) in
+            self?.navBar.searchTypeLabel.text = type.stringValue()
+            self?.searchAndConditionFilterVM.sendSearchRequest()
+        })
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.conditionFilterViewModel?.dissmissConditionPanel()
         self.searchAndConditionFilterVM.cleanCondition()
+        resetConditionData()
+        disposeable?.dispose()
     }
 
     private func resetConditionData() {
