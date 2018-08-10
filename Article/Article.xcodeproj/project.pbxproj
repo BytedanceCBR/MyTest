@@ -1363,6 +1363,8 @@
 		B34736CD20F770AE009F799A /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36E26A820F61A8300D4E8D0 /* RxCocoa.framework */; };
 		B34736CE20F770AE009F799A /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36E26A920F61A8300D4E8D0 /* RxSwift.framework */; };
 		B34736CF20F770AE009F799A /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B36E26AA20F61A8400D4E8D0 /* SnapKit.framework */; };
+		B34D22A5211D527700A367C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34D22A4211D527700A367C0 /* LaunchScreen.storyboard */; };
+		B34D22A6211D527700A367C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34D22A4211D527700A367C0 /* LaunchScreen.storyboard */; };
 		B36E277F20F62A7900D4E8D0 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26B520F62A7800D4E8D0 /* BubbleImages.xcassets */; };
 		B36E278020F62A7900D4E8D0 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B720F62A7800D4E8D0 /* EnvContext.swift */; };
 		B36E278120F62A7900D4E8D0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
@@ -5753,6 +5755,7 @@
 		B31D9B8B20FE0D91001010BD /* AccountConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountConfig.swift; sourceTree = "<group>"; };
 		B31D9B9C20FE0EE6001010BD /* QuickLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickLoginViewModel.swift; sourceTree = "<group>"; };
 		B31D9B9D20FE0EE6001010BD /* QuickLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickLoginVC.swift; sourceTree = "<group>"; };
+		B34D22A4211D527700A367C0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B36E248C20F6192900D4E8D0 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
 		B36E26A620F61A8200D4E8D0 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
 		B36E26A720F61A8300D4E8D0 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
@@ -12483,6 +12486,7 @@
 				B36E26BD20F62A7800D4E8D0 /* Bubble-Bridging-Header.h */,
 				B36E26BE20F62A7800D4E8D0 /* LaunchScreen.storyboard */,
 				B36E277E20F62A7800D4E8D0 /* Info.plist */,
+				B34D22A4211D527700A367C0 /* LaunchScreen.storyboard */,
 			);
 			path = Bubble;
 			sourceTree = "<group>";
@@ -15506,6 +15510,7 @@
 				6B4296231BA14541000B7F10 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				F876957C1F31D0D700D59CA5 /* TTVTab.storyboard in Resources */,
 				6BDDD2741D479A0F006079E7 /* assets in Resources */,
+				B34D22A5211D527700A367C0 /* LaunchScreen.storyboard in Resources */,
 				D046AB9A1BB024EA0042210A /* recommend_cancel.png in Resources */,
 				7B4772771CFC438A00D3F8DC /* Stub_Article_Information.txt in Resources */,
 				C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -15574,6 +15579,7 @@
 				FEFA59ED205FB1A8001F50D8 /* IPhoneProjectLogicSetting.strings in Resources */,
 				FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */,
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
+				B34D22A6211D527700A367C0 /* LaunchScreen.storyboard in Resources */,
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FEFA59F2205FB1A8001F50D8 /* ThirdParty.xcassets in Resources */,
@@ -19859,7 +19865,6 @@
 			baseConfigurationReference = C909215DDB737E0D0896C018 /* Pods-NewsInHouse.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-News";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
@@ -19964,7 +19969,6 @@
 			baseConfigurationReference = 424A8E3A264441B1F08B6F18 /* Pods-NewsInHouse.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-News";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
