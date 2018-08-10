@@ -9,6 +9,12 @@
 import UIKit
 
 class CommonUIStyle {
+    
+    class Screen {
+        static let widthScale: CGFloat = UIScreen.main.bounds.width / 375
+
+    }
+    
     class Font {
         static let pingFangRegular: (CGFloat) -> UIFont = { (size) in
             UIFont(name: "PingFangSC-Regular", size: size)!

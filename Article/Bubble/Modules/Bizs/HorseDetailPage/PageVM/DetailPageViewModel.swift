@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
 protocol DetailPageViewModel: class {
 
     var followStatus: BehaviorRelay<Result<Bool>> { get }
@@ -51,9 +52,8 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                TTAccountManager.presentQuickLogin(fromVC: EnvContext.shared.rootNavController, type: TTAccountLoginDialogTitleType.default, source: "", completion: { (state) in
-
-                })
+                
+                AKLoginTrafficViewController.present(complete: nil)
                 return
             }
             requestFollow(
@@ -91,13 +91,8 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                TTAccountManager.presentQuickLogin(
-                        fromVC: EnvContext.shared.rootNavController,
-                        type: TTAccountLoginDialogTitleType.default,
-                        source: "",
-                        completion: { (state) in
+                AKLoginTrafficViewController.present(complete: nil)
 
-                })
                 return
             }
             requestCancelFollow(

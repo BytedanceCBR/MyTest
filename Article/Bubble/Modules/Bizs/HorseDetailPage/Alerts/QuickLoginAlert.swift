@@ -180,34 +180,7 @@ fileprivate class QuickLoginPanel: UIView {
         re.isEnabled = false
         return re
     }()
-    
-//    override func layoutSubviews() {
-//
-//        super.layoutSubviews()
-//
-////        let size = disclaimer.sizeThatFits(CGSize(width: self.width - 20 - acceptCheckBox.right - 5, height: 1000))
-////        disclaimer.snp.remakeConstraints { maker in
-////            maker.left.equalTo(acceptCheckBox.snp.right).offset(5)
-////            maker.right.equalTo(-20)
-////            maker.top.equalTo(verifyCodeInputView.snp.bottom).offset(6)
-//////            maker.height.equalTo(size.height)
-////            maker.bottom.equalTo(self.confirmBtn.snp.top)
-////
-////        }
-//
-////        disclaimer.sizeToFit()
-////        disclaimer.width = self.width - 20 - acceptCheckBox.right - 5
-//
-//
-//        let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 20 - acceptCheckBox.right - 5, height: CGFloat.greatestFiniteMagnitude), text: disclaimer.attributedText ?? NSAttributedString(string: ""))
-//        let lineHeight = tagLayout?.textBoundingSize.height ?? 0
-//
-//        disclaimer.height = lineHeight
-//
-//        self.confirmBtn.frame = CGRect(x: 0, y: disclaimer.bottom + 15, width: self.confirmBtn.width, height: self.confirmBtn.height)
-//        self.height = self.confirmBtn.bottom
-//
-//    }
+
 
     init() {
         super.init(frame: CGRect.zero)
@@ -263,7 +236,7 @@ fileprivate class QuickLoginPanel: UIView {
         acceptCheckBox.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.height.width.equalTo(12)
-            maker.top.equalTo(disclaimer.snp.top).offset(3)
+            maker.top.equalTo(disclaimer.snp.top).offset(7)
         }
         acceptCheckBox.isSelected = true
         
@@ -290,7 +263,7 @@ fileprivate class QuickLoginPanel: UIView {
             backgroundColor: nil,
             userInfo: nil,
             tapAction: { (_, text, range, _) in
-                if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                 }
         })
@@ -301,7 +274,7 @@ fileprivate class QuickLoginPanel: UIView {
             backgroundColor: nil,
             userInfo: nil,
             tapAction: { (_, text, range, _) in
-                if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                 }
         })
@@ -312,9 +285,9 @@ fileprivate class QuickLoginPanel: UIView {
         re.font = CommonUIStyle.Font.pingFangRegular(16)
         re.textColor = hexStringToUIColor(hex: "#707070")
         re.numberOfLines = 0
-        re.width = UIScreen.main.bounds.width - 100 - 20 - acceptCheckBox.right - 5
+        re.width = 270 - acceptCheckBox.right - 5 - 20
         re.sizeToFit()
-                
+        
         disclaimer.snp.makeConstraints { maker in
             maker.left.equalTo(acceptCheckBox.snp.right).offset(5)
             maker.right.equalTo(-20)
