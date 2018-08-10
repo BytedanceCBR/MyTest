@@ -133,17 +133,17 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     }
     
     @objc
-    public init(complete: @escaping (Bool) -> Void) {
+    public init(complete: ((Bool) -> Void)?) {
         super.init(nibName: nil, bundle: nil)
         self.complete = complete
         self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
         self.navBar.backBtn.rx.tap.bind { [unowned self] void in
             if let navVC = self.navigationController {
-                navVC.popViewController(animated: true)
                 self.complete?(false)
+                navVC.popViewController(animated: true)
             } else {
+                self.complete?(false)
                 self.dismiss(animated: true, completion: {
-                    self.complete?(false)
                 })
             }
         }.disposed(by: disposeBag)
