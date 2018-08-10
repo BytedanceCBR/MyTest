@@ -408,17 +408,29 @@ class BubbleNavigationBar: UIView {
         return result
     }()
 
+    lazy var bottomLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#d8d8d8")
+        return re
+    }()
+
     init() {
         super.init(frame: CGRect.zero)
         backgroundColor = UIColor.white
         addSubview(suspendSearchBar)
-        self.lu.addBottomBorder()
         suspendSearchBar.snp.makeConstraints { (make) in
             make.left.equalTo(15)
             make.right.equalToSuperview().offset(-15)
             make.bottom.equalToSuperview().offset(-10)
             make.height.equalTo(40)
         }
+
+        addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(0.5)
+         }
+
     }
 
     required init?(coder aDecoder: NSCoder) {
