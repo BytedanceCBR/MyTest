@@ -12,6 +12,8 @@ import RxSwift
 import RxCocoa
 class BubbleAlertController: UIAlertController {
 
+    var lastY:CGFloat = 0
+    
     lazy var contentView: UIView = {
         let re = UIView()
         return re
@@ -31,10 +33,59 @@ class BubbleAlertController: UIAlertController {
         self.view.addSubview(contentView)
         contentView.snp.makeConstraints { maker in
             maker.top.bottom.equalToSuperview()
-            maker.width.equalTo(UIScreen.main.bounds.width - 100)
+            maker.width.equalTo(270)
             maker.centerX.equalToSuperview()
+            maker.width.equalToSuperview()
 
         }
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
+            .subscribe(onNext: { notification in
+                let userInfo = notification.userInfo!
+                let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+                
+                let animations:(() -> Void) = { [unowned self] in
+
+                    let offsetY = keyBoardBounds.height - (UIScreen.main.bounds.height - self.view.bottom)
+                    self.view.frame = CGRect(x: self.view.origin.x, y: self.view.origin.y - offsetY, width: self.view.width, height: self.view.height)
+                    self.lastY = offsetY
+                    
+                    
+                }
+                
+                if duration > 0 {
+                    let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+                    UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+                }else{
+                    animations()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UIKeyboardWillHide, object: nil)
+            .subscribe(onNext: { notification in
+                let userInfo = notification.userInfo!
+
+                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+                
+                let animations:(() -> Void) = { [unowned self] in
+                    
+                    self.view.frame = CGRect(x: self.view.origin.x, y: self.view.origin.y + self.lastY, width: self.view.width, height: self.view.height)
+                    
+                    
+                }
+                
+                if duration > 0 {
+                    let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+                    UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+                }else{
+                    animations()
+                }
+            })
+            .disposed(by: disposeBag)
+        
         
     }
 
@@ -102,7 +153,7 @@ class BubbleAlertTitleView: UIView {
 
         addSubview(closeBtn)
         closeBtn.snp.makeConstraints { maker in
-            maker.height.width.equalTo(20)
+            maker.height.width.equalTo(40)
             maker.top.equalTo(8)
             maker.right.equalTo(-8)
         }
