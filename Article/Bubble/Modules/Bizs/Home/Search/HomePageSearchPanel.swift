@@ -84,7 +84,6 @@ class HomePageSearchPanel: UIView {
         self.layer.borderColor = hexStringToUIColor(hex: "#e8e8e8").cgColor
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 4
-        self.lu.addBottomBorder()
     }
 
     private func setupCountryLabel() {

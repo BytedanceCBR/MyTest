@@ -39,6 +39,8 @@ extension ConditionAggregator {
     }
 }
 
+typealias FilterConditionResetter = () -> Void
+
 class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     let disposeBag = DisposeBag()
@@ -175,15 +177,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         navBar.searchAreaBtn.rx.tap
                 .subscribe(onNext: { [unowned self] void in
                     let vc = SuggestionListVC()
+                    vc.filterConditionResetter = self.filterConditionResetter()
                     vc.houseType.accept(self.houseType.value)
                     vc.houseType
-                        .bind(to: self.houseType)
-                        .disposed(by: self.disposeBag)
+                            .skip(1)
+                            .bind(to: self.houseType)
+                            .disposed(by: self.disposeBag)
                     vc.navBar.searchable = true
                     let nav = self.navigationController
                     nav?.pushViewController(vc, animated: true)
                     vc.navBar.backBtn.rx.tap
-                            .subscribe(onNext: { [weak nav] void in
+                            .subscribe(onNext: { [weak nav, unowned self] void in
                                 nav?.popViewController(animated: true)
                             })
                             .disposed(by: self.disposeBag)
@@ -248,6 +252,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         conditionPanelView.isHidden = true
 
         self.searchAndConditionFilterVM.sendSearchRequest()
+        self.resetConditionData()
+
 
     }
     
@@ -314,10 +320,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        disposeable = houseType.subscribe(onNext: { [weak self] (type) in
-            self?.navBar.searchTypeLabel.text = type.stringValue()
-            self?.searchAndConditionFilterVM.sendSearchRequest()
-        })
+        if disposeable == nil {
+            disposeable = houseType.subscribe(onNext: { [weak self] (type) in
+                self?.navBar.searchTypeLabel.text = type.stringValue()
+                self?.searchAndConditionFilterVM.sendSearchRequest()
+            })
+        }
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -326,10 +335,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.conditionFilterViewModel?.dissmissConditionPanel()
-        self.searchAndConditionFilterVM.cleanCondition()
-        resetConditionData()
-        disposeable?.dispose()
+
+    }
+
+    func filterConditionResetter() -> () -> Void {
+        return { [weak self] in
+            self?.conditionFilterViewModel?.dissmissConditionPanel()
+            self?.searchAndConditionFilterVM.cleanCondition()
+            self?.resetConditionData()
+            self?.disposeable?.dispose()
+            self?.disposeable = nil
+        }
     }
 
     private func resetConditionData() {

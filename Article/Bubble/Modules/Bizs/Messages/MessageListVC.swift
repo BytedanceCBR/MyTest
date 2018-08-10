@@ -37,11 +37,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     
     let disposeBag = DisposeBag()
     
-    lazy var tableListViewModel: ChatDetailListTableViewModel = {
-        //TODO
-        ChatDetailListTableViewModel(navVC: nil)
-    }()
-    
+    private var tableListViewModel: ChatDetailListTableViewModel?
+
     var messageId: String?
     
     private var minCursor: String?
@@ -51,6 +48,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+        self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController)
 
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
@@ -90,7 +88,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
                     query: "")
                     .subscribe(onNext: { [unowned self] (responsed) in
                         if let responseData = responsed?.data?.items, responseData.count != 0 {
-                            self.tableListViewModel.datas = responseData
+                            self.tableListViewModel?.datas = responseData
                             self.tableView.reloadData()
                         } else {
                             self.showEmptyMaskView()
