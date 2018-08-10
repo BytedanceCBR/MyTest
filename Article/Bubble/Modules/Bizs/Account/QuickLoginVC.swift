@@ -357,7 +357,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 backgroundColor: nil,
                 userInfo: nil,
                 tapAction: { (_, text, range, _) in
-                    if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    if let url = "https://m.quduzixun.com/f100/download/user_agreement.html&title=好多房用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                         TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                     }
                 })
@@ -368,7 +368,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 backgroundColor: nil,
                 userInfo: nil,
                 tapAction: { (_, text, range, _) in
-                    if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    if let url = "https://m.quduzixun.com/f100/download/private_policy.html&title=隐私声明&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                         TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                     }
                 })
