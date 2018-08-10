@@ -35,6 +35,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     private var popupMenuView: PopupMenuView?
 
+    var filterConditionResetter: FilterConditionResetter?
+
     init() {
         tableViewModel = SuggestionListTableViewModel(houseType: houseType)
         super.init(nibName: nil, bundle: nil)
@@ -52,7 +54,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         self.navBar.searchInput.delegate = self
         self.view.backgroundColor = UIColor.white
         navBar.searchTypeLabel.text = houseType.value.stringValue()
-
+        tableViewModel.filterConditionResetter = self.filterConditionResetter
         UIApplication.shared.statusBarStyle = .default
 
         view.addSubview(navBar)
@@ -155,6 +157,14 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         navBar.searchInput.becomeFirstResponder()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -162,6 +172,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty, let text = self.navBar.searchInput.text {
             onSuggestSelect?("&full_text=\(text)", nil, text)
+            filterConditionResetter?()
             return true
         }
         return false
@@ -208,6 +219,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     let houseType: BehaviorRelay<HouseType>
 
     lazy var sectionHeaderView = SuggestionHeaderView()
+
+    var filterConditionResetter: FilterConditionResetter?
     
     private lazy var suggestionHistoryDataSource: SuggestionHistoryDataSource = {
         SuggestionHistoryDataSource()
@@ -223,6 +236,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 .disposed(by: disposeBag)
         houseType
             .bind(onNext: { [unowned self] houseType in
+                self.filterConditionResetter?()
                 self.suggestionHistory.accept(self.suggestionHistoryDataSource.getHistoryByType(houseType: houseType))
             })
             .disposed(by: disposeBag)
@@ -291,6 +305,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         suggestionHistory.accept(suggestionHistoryDataSource.getHistoryByType(houseType: houseType.value))
         
         onSuggestionItemSelect?("", createQueryCondition(info), item.text)
+        filterConditionResetter?()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

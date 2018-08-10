@@ -198,7 +198,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 .disposed(by: disposeBag)
         tapGesture.rx.event
                 .withLatestFrom(pageableViewModel.currentPage.asObservable())
-                .bind(onNext: { [unowned self] (offset) in
+                .bind(onNext: { (offset) in
                     let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
                     if let banners = config?.banners {
                         let count  = banners.count
