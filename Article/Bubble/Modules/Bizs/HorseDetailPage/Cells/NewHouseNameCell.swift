@@ -71,8 +71,8 @@ class NewHouseNameCell: BaseUITableViewCell {
         contentView.addSubview(tagsView)
         tagsView.snp.makeConstraints { maker in
             maker.top.equalTo(secondaryLabel.snp.bottom).offset(-3)
-            maker.left.equalTo(secondaryLabel.snp.left)
-            maker.bottom.equalToSuperview().offset(-19)
+            maker.left.equalTo(nameLabel.snp.left).offset(-2)
+            maker.bottom.equalToSuperview().offset(-16)
             maker.width.equalToSuperview().offset(-30)
         }
         contentView.lu

@@ -187,7 +187,6 @@ class NeighborhoodItemView: UIView {
         descLabel.snp.makeConstraints { maker in
             maker.left.equalTo(4)
             maker.right.equalToSuperview().offset(-4)
-            maker.height.equalTo(22)
             maker.top.equalTo(icon.snp.bottom).offset(10)
         }
 
@@ -195,7 +194,6 @@ class NeighborhoodItemView: UIView {
         spaceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(4)
             maker.right.equalToSuperview().offset(-4)
-            maker.height.equalTo(17)
             maker.top.equalTo(descLabel.snp.bottom).offset(4)
         }
 
@@ -203,7 +201,6 @@ class NeighborhoodItemView: UIView {
         priceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(4)
             maker.right.equalToSuperview().offset(-4)
-            maker.height.equalTo(22)
             maker.top.equalTo(spaceLabel.snp.bottom).offset(4)
             maker.bottom.equalToSuperview()
 

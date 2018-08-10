@@ -17,15 +17,15 @@ class CommonUIStyle {
     
     class Font {
         static let pingFangRegular: (CGFloat) -> UIFont = { (size) in
-            UIFont(name: "PingFangSC-Regular", size: size)!
+            UIFont(name: "PingFangSC-Regular", size: size) ?? UIFont.systemFont(ofSize: size)
         }
 
         static let pingFangMedium: (CGFloat) -> UIFont = { (size) in
-            UIFont(name: "PingFangSC-Medium", size: size)!
+            UIFont(name: "PingFangSC-Medium", size: size) ?? UIFont.boldSystemFont(ofSize: size)
         }
 
         static let pingFangSemibold: (CGFloat) -> UIFont = { (size) in
-            UIFont(name: "PingFangSC-Semibold", size: size)!
+            UIFont(name: "PingFangSC-Semibold", size: size) ?? UIFont.boldSystemFont(ofSize: size)
          }
     }
     

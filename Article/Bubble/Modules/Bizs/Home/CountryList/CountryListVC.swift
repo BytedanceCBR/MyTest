@@ -373,9 +373,9 @@ class LocationBar: UIView {
     lazy var reLocateBtn: UIButton = {
         let result = UIButton()
         result.backgroundColor = UIColor.clear
+        result.titleLabel?.font = CommonUIStyle.Font.pingFangRegular(15)
         result.setTitle("重新定位", for: .normal)
         result.setTitleColor(hexStringToUIColor(hex: "#f85959"), for: .normal)
-        //TODO: fixbug 调整按钮文字字体
         return result
     }()
 
