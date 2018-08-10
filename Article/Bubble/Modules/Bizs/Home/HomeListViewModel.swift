@@ -52,7 +52,7 @@ class HomeListViewModel: DetailPageViewModel {
                             self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
                         }
                         <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, navVC: self.navVC)
-                        <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0) {
+                        <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0, isShowBottomBar: false) {
                             self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
                     }
                     return dataParser.parser([])

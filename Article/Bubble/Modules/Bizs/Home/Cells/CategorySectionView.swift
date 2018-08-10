@@ -24,8 +24,7 @@ class CategorySectionView: UIView {
         addSubview(categoryLabel)
         categoryLabel.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.height.equalTo(22)
-            maker.top.equalToSuperview().offset(16)
+            maker.top.equalToSuperview().offset(20)
             maker.bottom.equalToSuperview()
         }
     }

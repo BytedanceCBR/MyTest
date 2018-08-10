@@ -83,7 +83,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
         self.contentView.addSubview(majorImageView)
         majorImageView.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(15)
-            maker.top.equalToSuperview().offset(16)
+            maker.top.equalToSuperview().offset(13)
             maker.bottom.equalTo(-16)
             maker.width.equalTo(114)
             maker.height.equalTo(85)
