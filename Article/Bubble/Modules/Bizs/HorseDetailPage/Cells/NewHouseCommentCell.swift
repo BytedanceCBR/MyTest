@@ -32,6 +32,7 @@ class NewHouseCommentCell: BaseUITableViewCell {
     lazy var contentLabel: UILabel = {
         let re = UILabel()
         re.numberOfLines = 2
+        re.textColor = hexStringToUIColor(hex: "#222222")
         return re
     }()
 
@@ -54,7 +55,7 @@ class NewHouseCommentCell: BaseUITableViewCell {
     lazy var fromLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(13)
-        re.textColor = hexStringToUIColor(hex: "#707070")
+        re.textColor = hexStringToUIColor(hex: "#999999")
         re.textAlignment = .right
         return re
     }()
