@@ -19,33 +19,65 @@ class OpenAllCell: BaseUITableViewCell {
 
     lazy var openAllBtn: UIButton = {
         let result = UIButton()
-        let attriStr = NSAttributedString(
-                string: "查看更多 >",
-                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16) ?? UIFont.systemFont(ofSize: 16),
-                             NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#222222")])
-        result.setAttributedTitle(attriStr, for: .normal)
-        result.backgroundColor = UIColor.white
         return result
+    }()
+
+    lazy var title: UILabel = {
+        let re = UILabel()
+        let attriStr = NSMutableAttributedString(
+                string: "查看更多",
+                attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                             NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#222222")])
+
+        re.backgroundColor = UIColor.white
+        re.attributedText = attriStr
+        return re
+    }()
+
+    lazy var bottomMaskView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+
+    lazy var settingArrowImageView: UIImageView = {
+        let re = UIImageView()
+        re.image = #imageLiteral(resourceName: "setting-arrow-1")
+        return re
     }()
 
     var disposeBag: DisposeBag?
 
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
-        let maskView = UIView()
-        contentView.addSubview(maskView)
-        maskView.snp.makeConstraints { maker in
-            maker.left.top.right.equalToSuperview()
-            maker.bottom.equalToSuperview().offset(-6)
+
+        contentView.addSubview(bottomMaskView)
+        bottomMaskView.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(6)
         }
 
-        maskView.addSubview(openAllBtn)
-        maskView.lu.addTopBorder()
+        contentView.addSubview(openAllBtn)
         openAllBtn.snp.makeConstraints { maker in
-            maker.left.right.top.bottom.equalToSuperview()
-            maker.height.equalTo(48)
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(6)
+            maker.bottom.equalTo(bottomMaskView.snp.top).offset(-6)
         }
+
+        contentView.addSubview(title)
+        title.snp.makeConstraints { maker in
+            maker.center.equalTo(openAllBtn)
+        }
+
+        contentView.addSubview(settingArrowImageView)
+        settingArrowImageView.snp.makeConstraints { maker in
+            maker.height.equalTo(8)
+            maker.width.equalTo(6)
+            maker.centerY.equalTo(openAllBtn.snp.centerY)
+            maker.left.equalTo(title.snp.right).offset(6)
+         }
+
 
     }
 
@@ -68,13 +100,27 @@ class OpenAllCell: BaseUITableViewCell {
         super.prepareForReuse()
         disposeBag = nil
     }
+
+    func setIsShowBottomBar(isHsowBottomBar: Bool) {
+        bottomMaskView.snp.updateConstraints { maker in
+            if isHsowBottomBar {
+                maker.height.equalTo(6)
+            } else {
+                maker.height.equalTo(0)
+            }
+        }
+    }
+
 }
 
 
-func parseOpenAllNode(_ hasMore: Bool, callBack: @escaping () -> Void) -> () -> TableSectionNode {
+func parseOpenAllNode(
+        _ hasMore: Bool,
+        isShowBottomBar: Bool = true,
+        callBack: @escaping () -> Void) -> () -> TableSectionNode {
     return {
         if hasMore {
-            let cellRender = curry(fillOpenAllCell)(callBack)
+            let cellRender = curry(fillOpenAllCell)(isShowBottomBar)(callBack)
             return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
         } else {
             return TableSectionNode(items: [], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
@@ -82,8 +128,12 @@ func parseOpenAllNode(_ hasMore: Bool, callBack: @escaping () -> Void) -> () -> 
     }
 }
 
-func fillOpenAllCell(callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
+func fillOpenAllCell(
+    isShowBottomBar: Bool = true,
+    callBack: @escaping () -> Void,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? OpenAllCell {
+        theCell.setIsShowBottomBar(isHsowBottomBar: isShowBottomBar)
         let disposeBag = DisposeBag()
         theCell.disposeBag = disposeBag
         theCell.openAllBtn.rx.tap
