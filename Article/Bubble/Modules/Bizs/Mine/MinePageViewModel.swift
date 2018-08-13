@@ -70,6 +70,10 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                 isShowBottomLine: true) {
                     let vc = SSFeedbackViewController()
                     self.openVC?(vc)
+                    TracerParams.momoid()
+                    
+                    let map = ["event_type":"house_app2c", "click_type":"feedback", "page_type":"minetab"]
+                    recordEvent(key: TraceEventName.click_minetab, params: map)
             }
             <- parseOptionNode(
                 icon: #imageLiteral(resourceName: "setting-simple-line-icons"),
@@ -77,6 +81,9 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                 isShowBottomLine: true) {
                     let vc = SettingViewController(routeParamObj: TTRouteParamObjWithDict(["enter_type": "more"]))
                     self.openVC?(vc)
+                    
+                    let map = ["event_type":"house_app2c", "click_type":"setting", "page_type":"minetab"]
+                    recordEvent(key: TraceEventName.click_minetab, params: map)
             }
 //            <- parseContactUsNode(phoneNumber: "100-0937-3859") {
 //                Utils.telecall(phoneNumber: "100-0937-3859")
