@@ -10,8 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-
-
+import Reachability
 
 class CountryListVC: BaseViewController {
 
@@ -106,7 +105,6 @@ class CountryListVC: BaseViewController {
         EnvContext.shared.client.locationManager.currentCity
                 .subscribe(onNext: { [unowned self] geocode in
                     if let geocode = geocode {
-                        print(geocode)
                         self.locationBar.countryLabel.text = geocode.city
                     }
                 })
@@ -116,14 +114,22 @@ class CountryListVC: BaseViewController {
                 .skip(1)
                 .subscribe(onNext: { geocode in
                     EnvContext.shared.toast.dismissToast()
-                    EnvContext.shared.toast.showToast("定位成功")
+                    if geocode != nil {
+                        EnvContext.shared.toast.showToast("定位成功")
+                    } else {
+                        EnvContext.shared.toast.showToast("定位失败")
+                    }
                 })
                 .disposed(by: disposeBag)
 
         locationBar.reLocateBtn.rx.tap
                 .subscribe(onNext: { void in
-                    EnvContext.shared.toast.showLoadingToast("定位中")
-                    EnvContext.shared.client.locationManager.requestCurrentLocation()
+                    if EnvContext.shared.client.reachability.connection != .none {
+                        EnvContext.shared.toast.showLoadingToast("定位中")
+                        EnvContext.shared.client.locationManager.requestCurrentLocation()
+                    } else {
+                        EnvContext.shared.toast.showLoadingToast("网络异常")
+                    }
                 })
                 .disposed(by: disposeBag)
 
