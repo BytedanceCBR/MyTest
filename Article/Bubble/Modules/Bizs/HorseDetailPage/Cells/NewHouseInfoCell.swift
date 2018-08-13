@@ -262,7 +262,7 @@ func parseNewHouseCoreInfoNode(
     return {
         let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(bottomBarBinder)
         return TableSectionNode(
-            items: [cellRender],
+            items: [oneTimeRender(cellRender)],
             selectors: nil,
             label: "",
             type: .node(identifier: NewHouseInfoCell.identifier))

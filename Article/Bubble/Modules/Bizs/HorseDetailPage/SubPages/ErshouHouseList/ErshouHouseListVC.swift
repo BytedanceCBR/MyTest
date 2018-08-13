@@ -169,6 +169,22 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
 
         self.searchAndConditionFilterVM.sendSearchRequest()
+
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        // 进入列表页埋点
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

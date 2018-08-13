@@ -6,10 +6,12 @@
 import Foundation
 import RxSwift
 import RxCocoa
-infix operator <|>: SequencePrecedence
 
-func <|>(l: ConditionAggregator, r: ConditionAggregator) -> ConditionAggregator {
-    return ConditionAggregator { r.aggregator(l.aggregator($0)) }
+
+public struct TracerParams {
+
+    let paramsGetter: TracerPramasGetter
+
 }
 
 class SearchAndConditionFilterViewModel {

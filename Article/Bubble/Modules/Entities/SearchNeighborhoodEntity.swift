@@ -33,6 +33,7 @@ struct NeighborhoodItemEntity: Mappable {
     var total: Int = 0
     var refreshTip: String?
     var searchId: String?
+    var logPB: [String: Any]?
 
     init?(map: Map) {
     }
@@ -43,6 +44,7 @@ struct NeighborhoodItemEntity: Mappable {
         total <- map["total"]
         refreshTip <- map["refresh_tip"]
         searchId <- map["search_id"]
+        logPB <- map["log_pb"]
     }
 }
 
@@ -80,7 +82,8 @@ struct NeighborhoodInnerItemEntity: Mappable {
     var baseInfoMap: BaseInfoMapItem?
     var images: [ImageItem]?
     var displayStatusInfo: String?
-    
+    var logPB: [String: Any]?
+
     init?(map: Map) {
         
     }
@@ -102,6 +105,7 @@ struct NeighborhoodInnerItemEntity: Mappable {
         gaodeLng <- map["gaode_lng"]
         gaodeLat <- map["gaode_lat"]
         displayStatusInfo <- map["display_stats_info"]
+        logPB <- map["log_pb"]
     }
     
 }
@@ -126,6 +130,7 @@ struct SameNeighborhoodHouseResponse: Mappable {
         var items: [HouseItemInnerEntity] = []
         var hasMore: Bool = false
         var total: Int = 0
+        var logPB: [String: Any]?
 
         init?(map: Map) {
 
@@ -135,6 +140,7 @@ struct SameNeighborhoodHouseResponse: Mappable {
             items <- map["items"]
             hasMore <- map["has_more"]
             total <- map["total"]
+            logPB <- map["log_pb"]
         }
     }
 

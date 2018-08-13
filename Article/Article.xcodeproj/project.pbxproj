@@ -1375,6 +1375,13 @@
 		B34D22AA21214D6A00A367C0 /* TabWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22A921214D6A00A367C0 /* TabWatcher.swift */; };
 		B34D22AB21214D6A00A367C0 /* TabWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22A921214D6A00A367C0 /* TabWatcher.swift */; };
 		B34D22AC21214D7400A367C0 /* MetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21614E4FE832400A0583D9 /* MetaData.swift */; };
+		B34D22AE21216B5200A367C0 /* CommonEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22AD21216B5200A367C0 /* CommonEntities.swift */; };
+		B34D22AF21216B5200A367C0 /* CommonEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22AD21216B5200A367C0 /* CommonEntities.swift */; };
+		B34D22B32121728000A367C0 /* EventKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B22121728000A367C0 /* EventKeys.swift */; };
+		B34D22B4212177FA00A367C0 /* EventKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B22121728000A367C0 /* EventKeys.swift */; };
+		B34D22B621218C5A00A367C0 /* JoinOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B521218C5A00A367C0 /* JoinOf.swift */; };
+		B34D22B721218CAF00A367C0 /* JoinOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B521218C5A00A367C0 /* JoinOf.swift */; };
+		B34D22B82121AADF00A367C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26BC20F62A7800D4E8D0 /* Assets.xcassets */; };
 		B36E277F20F62A7900D4E8D0 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26B520F62A7800D4E8D0 /* BubbleImages.xcassets */; };
 		B36E278020F62A7900D4E8D0 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B720F62A7800D4E8D0 /* EnvContext.swift */; };
 		B36E278120F62A7900D4E8D0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
@@ -5771,6 +5778,9 @@
 		B31D9B9D20FE0EE6001010BD /* QuickLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickLoginVC.swift; sourceTree = "<group>"; };
 		B34D22A4211D527700A367C0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B34D22A921214D6A00A367C0 /* TabWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabWatcher.swift; sourceTree = "<group>"; };
+		B34D22AD21216B5200A367C0 /* CommonEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEntities.swift; sourceTree = "<group>"; };
+		B34D22B22121728000A367C0 /* EventKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
+		B34D22B521218C5A00A367C0 /* JoinOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinOf.swift; sourceTree = "<group>"; };
 		B36E248C20F6192900D4E8D0 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
 		B36E26A620F61A8200D4E8D0 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
 		B36E26A720F61A8300D4E8D0 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
@@ -7383,6 +7393,7 @@
 				1A21614E4FE832400A0583D9 /* MetaData.swift */,
 				B34D22A921214D6A00A367C0 /* TabWatcher.swift */,
 				61FB9102212169B800656E7F /* TraceEventName.swift */,
+				B34D22B22121728000A367C0 /* EventKeys.swift */,
 			);
 			path = Trace;
 			sourceTree = "<group>";
@@ -12610,6 +12621,7 @@
 				1A21697554C49E9584D5EDE0 /* Home */,
 				1A2160768107BFAE806A3DE5 /* HorseDetailPage */,
 				1A2169CD16444796F2D15F8E /* Trace */,
+				B34D22B521218C5A00A367C0 /* JoinOf.swift */,
 			);
 			path = Bizs;
 			sourceTree = "<group>";
@@ -12696,6 +12708,7 @@
 				B36E273920F62A7800D4E8D0 /* NeighborhoodDetailEntities.swift */,
 				B36E273A20F62A7800D4E8D0 /* ErshouHouseDetailEntities.swift */,
 				B36E273B20F62A7800D4E8D0 /* CourtItemEntity.swift */,
+				B34D22AD21216B5200A367C0 /* CommonEntities.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -15633,6 +15646,7 @@
 				FEFA5A04205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				FEF9CAC4206BAF3E00455765 /* README.md in Resources */,
+				B34D22B82121AADF00A367C0 /* Assets.xcassets in Resources */,
 				FEFA5A09205FB1A8001F50D8 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A0B205FB1A8001F50D8 /* TTVTab.storyboard in Resources */,
 				FEFA5A0C205FB1A8001F50D8 /* assets in Resources */,
@@ -16820,6 +16834,7 @@
 				FEF9CAB2206B925200455765 /* TTVideoAutoPlayManager.m in Sources */,
 				2DB9A6DB1F29BB86005E4A06 /* TTAdShareBoardModel.m in Sources */,
 				6BE020A11B215BE600F9E484 /* ExploreOrderedActionCell.m in Sources */,
+				B34D22B32121728000A367C0 /* EventKeys.swift in Sources */,
 				C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */,
 				8460FAB61D0FD5AD00BC4778 /* ExploreDetailBaseADView.m in Sources */,
 				482E891F16AE6BD100662285 /* ArticleAvatarView.m in Sources */,
@@ -16835,6 +16850,7 @@
 				2DCAD0781DDC27FC00EBF9CF /* ExploreDetailAppointGroupPicADView.m in Sources */,
 				F87695DC1F31D0D800D59CA5 /* TTBaseCell.m in Sources */,
 				A9AFAD0E1F0E44F800C1E28D /* TTArticleDetailDefine.m in Sources */,
+				B34D22B621218C5A00A367C0 /* JoinOf.swift in Sources */,
 				F876936C1F31D0D300D59CA5 /* TTVCommentListReplyView.m in Sources */,
 				8460FAD71D0FD8FF00BC4778 /* ExploreDetailPhoneLeftPicADView.m in Sources */,
 				A9AFAD3A1F0E44F800C1E28D /* TTNovelRecordManager.m in Sources */,
@@ -17559,6 +17575,7 @@
 				A97DB8471F1332DB0002B455 /* ArticleURLSetting.m in Sources */,
 				AB1622011F500EFA00B4CC0C /* SSTitleBarView.m in Sources */,
 				6B0279721EF131C8006DF6BA /* ExploreEntryGroup.m in Sources */,
+				B34D22AE21216B5200A367C0 /* CommonEntities.swift in Sources */,
 				A97DB8571F1332DB0002B455 /* TTRNCommonABTest.m in Sources */,
 				B36E281C20F62A7A00D4E8D0 /* Curry.swift in Sources */,
 				4340CE2C1E82836500D5BAF5 /* TTVideoDefinationTracker.m in Sources */,
@@ -18460,6 +18477,7 @@
 				FEFA556A205FB1A8001F50D8 /* ExploreDetailNatantHeaderItemBase.m in Sources */,
 				FEC2AA342063A5EE00BCBAFF /* AKUIHelper.m in Sources */,
 				FEFA556B205FB1A8001F50D8 /* TTTableViewBaseCellView.m in Sources */,
+				B34D22B4212177FA00A367C0 /* EventKeys.swift in Sources */,
 				FEFA556C205FB1A8001F50D8 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */,
 				FEFA556E205FB1A8001F50D8 /* ExploreBaseADCell.m in Sources */,
 				FEFA556F205FB1A8001F50D8 /* TTLayOutCellViewBase+UFCell.m in Sources */,
@@ -18475,6 +18493,7 @@
 				FEFA557E205FB1A8001F50D8 /* TTVShareDetailTracker.m in Sources */,
 				FEFA5580205FB1A8001F50D8 /* TTVVideoDetailNatantInfoViewModel.m in Sources */,
 				FEFA5581205FB1A8001F50D8 /* ExploreCollectionBookCellModel.m in Sources */,
+				B34D22B721218CAF00A367C0 /* JoinOf.swift in Sources */,
 				FEFA5583205FB1A8001F50D8 /* TTHandleShorcutItemTask.m in Sources */,
 				FEFA5585205FB1A8001F50D8 /* TTAdRefreshRelateModel.m in Sources */,
 				FEFA5586205FB1A8001F50D8 /* TTAdVideoViewFactory.m in Sources */,
@@ -19199,6 +19218,7 @@
 				FEFA58D8205FB1A8001F50D8 /* ArticleBadgeManager.m in Sources */,
 				FEFA58D9205FB1A8001F50D8 /* TTVReplyModel.m in Sources */,
 				FEFA58DA205FB1A8001F50D8 /* TTEditUserProfileViewModel+Network.m in Sources */,
+				B34D22AF21216B5200A367C0 /* CommonEntities.swift in Sources */,
 				FEFA58DB205FB1A8001F50D8 /* ExploreArticleWebCellView.m in Sources */,
 				B34736AE20F77083009F799A /* TGBallClipRotateMultiple.swift in Sources */,
 				FEFA58DC205FB1A8001F50D8 /* ArticleURLSetting.m in Sources */,
@@ -19910,7 +19930,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C909215DDB737E0D0896C018 /* Pods-NewsInHouse.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-News";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
@@ -20014,7 +20034,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 424A8E3A264441B1F08B6F18 /* Pods-NewsInHouse.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-News";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;

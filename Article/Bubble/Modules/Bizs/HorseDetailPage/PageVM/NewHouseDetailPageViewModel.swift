@@ -316,9 +316,11 @@ func getNewHouseDetailPageViewModel(
 func openRelatedNeighborhoodList(
     neighborhoodId: String,
     disposeBag: DisposeBag,
+    tracerParams: TracerParams,
     navVC: UINavigationController?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) {
     let listVC = RelatedNeighborhoodListVC(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
+    listVC.tracerParams = tracerParams
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)

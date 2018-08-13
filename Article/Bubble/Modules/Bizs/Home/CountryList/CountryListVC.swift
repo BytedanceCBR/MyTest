@@ -479,6 +479,12 @@ fileprivate class BubbleCell: UITableViewCell {
             let (view, _) = e
             contentView.addSubview(view)
         }
+
+        rows.forEach { e in
+            let (_, loader) = e
+            loader()
+        }
+
         let rowViews = rows.map {
             $0.0
         }
@@ -496,10 +502,7 @@ fileprivate class BubbleCell: UITableViewCell {
             maker.left.right.equalToSuperview()
             maker.height.equalTo(28).priority(.high)
         }
-        rows.forEach { e in
-            let (_, loader) = e
-            loader()
-        }
+
     }
 
     func createRow(nodes: [CountryListNode], itemClick: @escaping (Int) -> Void) -> (UIView, () -> Void) {
@@ -527,19 +530,18 @@ fileprivate class BubbleCell: UITableViewCell {
         let loader: () -> Void = {
             btns.forEach { (btn) in
                 rowView.addSubview(btn)
-
             }
-
+            btns.snp.distributeViewsAlong(
+                axisType: .horizontal,
+                fixedSpacing: 9,
+                leadSpacing: 24,
+                tailSpacing: -1)
             btns.snp.makeConstraints { maker in
                 maker.width.equalTo(75).priority(.high)
                 maker.height.equalTo(28).priority(.high)
                 maker.top.bottom.equalToSuperview()
             }
-            btns.snp.distributeViewsAlong(
-                    axisType: .horizontal,
-                    fixedSpacing: 9,
-                    leadSpacing: 24,
-                    tailSpacing: -1)
+
             if btns.count == 1 {
                 btns.first?.snp.makeConstraints { maker in
                     maker.left.equalTo(24)

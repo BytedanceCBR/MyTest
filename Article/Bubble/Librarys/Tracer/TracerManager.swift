@@ -6,31 +6,55 @@ import Foundation
 
 typealias TracerPramasGetter = ([String: Any]) -> [String: Any]
 
-typealias TracerPremeter = () -> [String: Any]
+public typealias TracerPremeter = () -> [String: Any]
 
-struct TracerParams {
-
-    let paramsGetter: TracerPramasGetter
-
+extension TracerParams {
     static func momoid() -> TracerParams {
         return TracerParams { input in
             return input
         }
     }
-
 }
 
-infix operator <*>: SequencePrecedence
-
-func <*>(params: TracerParams, parameter: @escaping TracerPremeter) -> TracerParams {
-    return TracerParams {
-        params.paramsGetter($0).merging(parameter(), uniquingKeysWith: { $1 })
+func mapTracerParams(_ value: [String: Any]) -> TracerPremeter {
+    return {
+        return value
     }
+}
+
+func toTracerParams(_ value: Any, key: String) -> TracerPremeter {
+    return {
+        [key: value]
+    }
+}
+
+func toTracerParams(_ value: Int, key: String) -> TracerPremeter {
+    return {
+        [key: value]
+    }
+}
+
+func toTracerParams(_ value: String, key: String) -> TracerPremeter {
+    return {
+        [key: value]
+    }
+}
+
+func toTraceParams<T>(_ value: T, apply: @escaping (T) -> [String: Any]) -> TracerPremeter {
+    return{
+        apply(value)
+    }
+}
+
+func paramsOfMap(_ data: [String: Any]) -> TracerParams {
+    return TracerParams.momoid() <|> mapTracerParams(data)
 }
 
 class TracerManager {
 
     private var records: [TracerRecord]
+
+    var defaultParams: [String: Any]?
 
     init() {
         self.records = [ConsoleEventRecord()]
@@ -45,7 +69,7 @@ class TracerManager {
             if let traceParams = traceParams {
                 record.recordEvent(
                     key: event,
-                    params: traceParams.paramsGetter([:]))
+                    params: traceParams.paramsGetter(defaultParams ?? [:]))
             }
         }
     }
@@ -62,6 +86,6 @@ func traceStayTime(key: String = "stay_time") -> () -> [String: Any] {
     let startTime = Date().timeIntervalSince1970
     return {
         let stayTime = Date().timeIntervalSince1970 - startTime
-        return [key: stayTime]
+        return [key: Int64(stayTime * 1000)]
     }
 }

@@ -256,13 +256,39 @@ fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView], cell: BaseU
 }
 
 fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+    var params = EnvContext.shared.homePageParams <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("maintab", key: "enter_from") <|>
+            toTracerParams("maintab_icon", key: "element_from") <|>
+            toTracerParams("icon", key: "maintab_entrance")
     switch item.entryId {
     case 1:
-        return openCategoryVC(.secondHandHouse, disposeBag: disposeBag, navVC: navVC)
+        params = params <|>
+                toTracerParams("old", key: "icon_type")
+        EnvContext.shared.homePageParams = params
+        return openCategoryVC(
+            .secondHandHouse,
+            disposeBag: disposeBag,
+            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.old_list.rawValue]) <|> params,
+            navVC: navVC)
     case 2:
-        return openCategoryVC(.newHouse, disposeBag: disposeBag, navVC: navVC)
+        params = params <|>
+                toTracerParams("new", key: "icon_type")
+        EnvContext.shared.homePageParams = params
+        return openCategoryVC(
+            .newHouse, disposeBag:
+            disposeBag,
+            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.new_list.rawValue]) <|> params,
+            navVC: navVC)
     case 4:
-        return openCategoryVC(.neighborhood, disposeBag: disposeBag, navVC: navVC)
+        params = params <|>
+                toTracerParams("neighborhood", key: "icon_type")
+        EnvContext.shared.homePageParams = params
+        return openCategoryVC(
+            .neighborhood,
+            disposeBag: disposeBag,
+            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_list.rawValue]) <|> params,
+            navVC: navVC)
     default:
         return {
             NotificationCenter.default.post(name: .discovery, object: nil)
@@ -302,9 +328,14 @@ fileprivate func confirmUserAuth(
     }
 }
 
-fileprivate func openCategoryVC(_ houseType: HouseType, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+fileprivate func openCategoryVC(
+    _ houseType: HouseType,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> Void {
     return {
         let vc = CategoryListPageVC(isOpenConditionFilter: true)
+        vc.tracerParams = tracerParams
         vc.houseType.accept(houseType)
         vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
         vc.navBar.isShowTypeSelector = false

@@ -68,7 +68,7 @@ struct ErshouHouseData: Mappable {
     var tags: [TagItem] = []
     var userStatus: UserStatus?
     var disclaimer: Disclaimer?
-    
+    var logPB: [String: Any]?
     init?(map: Map) {
         
     }
@@ -87,6 +87,7 @@ struct ErshouHouseData: Mappable {
         tags <- map["tags"]
         userStatus <- map["user_status"]
         disclaimer <- map["disclaimer"]
+        logPB <- map["log_pb"]
     }
 }
 

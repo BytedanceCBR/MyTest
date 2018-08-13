@@ -167,6 +167,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .neighborhoodDetail,
+                                tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]),
                                 bottomBarBinder: self.bindBottomView())
                     }
                 }
@@ -179,6 +180,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                         openRelatedNeighborhoodList(
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
+                                tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]),
                                 navVC: self.navVC,
                                 bottomBarBinder: self.bindBottomView())
                     }

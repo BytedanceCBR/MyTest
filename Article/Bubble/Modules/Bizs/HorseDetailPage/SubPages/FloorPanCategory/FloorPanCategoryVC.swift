@@ -116,5 +116,21 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         }
 
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
+        tracerParams = tracerParams <|> toTracerParams(HouseCategory.house_model_list.rawValue, key: EventKeys.category_name)
+
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
     }
 }
