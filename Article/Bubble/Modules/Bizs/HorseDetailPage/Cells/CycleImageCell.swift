@@ -187,41 +187,42 @@ fileprivate func openNewHousePictureBrowser(dataSource: PictureBrowserDataSource
     let plugin = PhotoBrowserShowAllPlugin()
     browser.plugins.append(plugin)
 
-    plugin.didTouchBackButton = {
+    plugin.didTouchBackButton = { [weak browser] in
         
-        TopMostViewControllerGetter.topMost?.dismiss(animated: true, completion: nil)
+        browser?.dismiss(animated: true, completion: nil)
     }
     
-    plugin.didTouchShowAllButton = {
+    plugin.didTouchShowAllButton = { [weak browser] in
         
-        print("didTouchShowAllButton")
         let vc = PictureCategoryListVC()
         vc.navBar.title.text = "楼盘相册"
         vc.items.accept(pictures)
         vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { () in
+            .subscribe(onNext: {[weak vc] () in
                 
-                TopMostViewControllerGetter.topMost?.dismiss(animated: true, completion: nil)
+                vc?.dismiss(animated: true, completion: nil)
 
             })
             .disposed(by: disposeBag)
         
         vc.selectIndex.filter { $0 != nil }
             .subscribe(onNext: { [weak browser] (index) in
-            
-            browser?.scrollToItem(index!, at: .centeredHorizontally, animated: false)
+                
+            browser?.scrollToItem(index ?? 0, at: .centeredHorizontally, animated: false)
 
         })
         .disposed(by: disposeBag)
         
-        let topVC = TopMostViewControllerGetter.topMost
+        let topVC = TopMostViewControllerGetter.topMost(of: navVC)
         topVC?.present(vc, animated: true, completion: nil)
         
     }
     // 指定打开图片组中的哪张
     browser.originPageIndex = selectedIndex
     // 展示
-    browser.show()
+    
+    let topVC = TopMostViewControllerGetter.topMost(of: navVC)
+    browser.show(from: topVC)
     
     
 }
@@ -320,9 +321,9 @@ fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
                                     disposeBag: DisposeBag,
                                     navVC: UINavigationController?,
                                     cell: BaseUITableViewCell) -> Void {
-
+    
     if let theCell = cell as? CycleImageCell {
-
+        
         let imageItems = imageGroups?.map({ (group) -> [ImageModel] in
             
             if let name = group.name, let images = group.images {
@@ -338,24 +339,28 @@ fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
             }
             
         }).flatMap{ $0 }
-
-    theCell.headerImages = imageItems ?? []
-    theCell.count = imageItems?.count ?? 0
-    var dataSource: PictureBrowserDataSource?
-
-    let pictures = imageGroups?.map { (group) -> PictureCategorySection in
-        let urls = group.images?.filter { $0.url != nil }.map { $0.url! }
-        return PictureCategorySection(name: group.name ?? "", items: urls ?? [])
-    }
         
-    theCell.openPictureBrowser = {(index, view) in
-
-        let theDataSource = PictureBrowserDataSource(pictures: theCell.headerImages.map { $0.url }, target: view)
-        dataSource = theDataSource
-        openNewHousePictureBrowser(dataSource: theDataSource,pictures: pictures ?? [], disposeBag: disposeBag,navVC: navVC, selectedIndex: index)
+        theCell.headerImages = imageItems ?? []
+        theCell.count = imageItems?.count ?? 0
+        var dataSource: PictureBrowserDataSource?
+        
+        let pictures = imageGroups?.map { (group) -> PictureCategorySection in
+            let urls = group.images?.filter { $0.url != nil }.map { $0.url! }
+            return PictureCategorySection(name: group.name ?? "", items: urls ?? [])
+        }
+        
+        theCell.openPictureBrowser = { [unowned theCell] (index, view) in
+            let theDataSource = PictureBrowserDataSource(pictures: theCell.headerImages.map { $0.url }, target: view)
+            dataSource = theDataSource
+            openNewHousePictureBrowser(
+                dataSource: theDataSource,
+                pictures: pictures ?? [],
+                disposeBag: disposeBag,
+                navVC: navVC,
+                selectedIndex: index)
+        }
     }
-    }
-
+    
 }
 
 // MARK: PictureBrowserDataSource
