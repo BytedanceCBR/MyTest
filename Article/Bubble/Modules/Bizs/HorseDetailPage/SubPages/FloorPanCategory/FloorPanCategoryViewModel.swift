@@ -100,6 +100,10 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                 }
                 self.segmentedControl?.sectionTitleArray = ["全部"] + roomCategoryLabels
                 
+                if its.filter(f).count < 1 {
+
+                    EnvContext.shared.toast.showToast("暂无相关房型~")
+                }
                 self.datas.accept(parseFloorPanItemsNode(data: its.filter(f), navVC: self.navVC, disposeBag: self.disposeBag, bottomBarBinder: bottomBarBinder)())
 
                 self.segmentedControl?.indexChangeBlock = { [unowned self] (index) in
