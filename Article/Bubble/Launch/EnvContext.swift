@@ -26,6 +26,11 @@ class EnvContext: NSObject {
     lazy var toast: ToastAlertCenter = {
         ToastAlertCenter()
     }()
+    
+    private override init() {
+        
+        super.init()
+    }
 }
 
 class NetworkConfig: NSObject {
