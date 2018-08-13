@@ -687,6 +687,8 @@
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
 		61252028211AF504000FBC51 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B36E277E20F62A7800D4E8D0 /* Info.plist */; };
+		61FB9103212169B800656E7F /* TraceEventName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB9102212169B800656E7F /* TraceEventName.swift */; };
+		61FB910421216AE400656E7F /* TraceEventName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB9102212169B800656E7F /* TraceEventName.swift */; };
 		6B0279721EF131C8006DF6BA /* ExploreEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */; };
 		6B1397E21B39348700070F03 /* TTSubEntranceBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397E11B39348700070F03 /* TTSubEntranceBar.m */; };
 		6B1397EB1B3934EA00070F03 /* TTSubEntranceObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1397EA1B3934EA00070F03 /* TTSubEntranceObj.m */; };
@@ -4640,6 +4642,7 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		61FB9102212169B800656E7F /* TraceEventName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TraceEventName.swift; sourceTree = "<group>"; };
 		6B0279701EF131C8006DF6BA /* ExploreEntryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreEntryGroup.h; sourceTree = "<group>"; };
 		6B0279711EF131C8006DF6BA /* ExploreEntryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreEntryGroup.m; sourceTree = "<group>"; };
 		6B1397E01B39348700070F03 /* TTSubEntranceBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSubEntranceBar.h; sourceTree = "<group>"; };
@@ -7379,6 +7382,7 @@
 			children = (
 				1A21614E4FE832400A0583D9 /* MetaData.swift */,
 				B34D22A921214D6A00A367C0 /* TabWatcher.swift */,
+				61FB9102212169B800656E7F /* TraceEventName.swift */,
 			);
 			path = Trace;
 			sourceTree = "<group>";
@@ -16424,6 +16428,7 @@
 				A9AFAE6C1F0E45C600C1E28D /* TTFeedContainerViewModel.m in Sources */,
 				438F9E9B1F94B8DF0050F83E /* TTVPlayerTipAdNewCreator.m in Sources */,
 				F87695901F31D0D700D59CA5 /* TTVReplyListCellLayout.m in Sources */,
+				61FB9103212169B800656E7F /* TraceEventName.swift in Sources */,
 				F87693C01F31D0D400D59CA5 /* TTVDetailRelatedMoreItem.m in Sources */,
 				2DDA76651F72165C00209EEF /* UITextField+TTTouchAreaAddition.m in Sources */,
 				F87695601F31D0D700D59CA5 /* Article+Extention.m in Sources */,
@@ -18063,6 +18068,7 @@
 				FEFA5376205FB1A8001F50D8 /* TTAppLogStartupTask.m in Sources */,
 				FEFA5377205FB1A8001F50D8 /* TTVideoDetailGroupUnifyADView.m in Sources */,
 				FEFA5379205FB1A8001F50D8 /* TTWebImageManager+TTVSupport.m in Sources */,
+				61FB910421216AE400656E7F /* TraceEventName.swift in Sources */,
 				FEFA537A205FB1A8001F50D8 /* TTFeedContainerViewModel.m in Sources */,
 				FEFA537C205FB1A8001F50D8 /* TTVPlayerTipAdNewCreator.m in Sources */,
 				FEFA537D205FB1A8001F50D8 /* TTVReplyListCellLayout.m in Sources */,
