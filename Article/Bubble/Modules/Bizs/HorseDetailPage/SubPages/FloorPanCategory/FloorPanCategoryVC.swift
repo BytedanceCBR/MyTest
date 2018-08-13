@@ -34,8 +34,20 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         re.selectionIndicatorColor = hexStringToUIColor(hex: "#f85959")
         return re
     }()
+    
+    lazy var bottomLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#e8e8e8")
+        return re
+    }()
 
     var leftFilterView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+    
+    var leftView: UIView = {
         let re = UIView()
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
@@ -72,10 +84,27 @@ class FloorPanCategoryVC: BaseSubPageViewController {
             maker.height.equalTo(40)
         }
 
+        self.view.addSubview(bottomLine)
+        
+        bottomLine.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(segmentedControl.snp.bottom)
+            maker.height.equalTo(0.5)
+           
+        }
+        
+        self.view.addSubview(leftView)
+        leftView.snp.makeConstraints { maker in
+            maker.width.equalTo(80)
+            maker.top.equalTo(bottomLine.snp.bottom)
+            maker.left.equalToSuperview()
+            maker.bottom.equalTo(tableView)
+        }
+        
         self.view.addSubview(leftFilterView)
         leftFilterView.snp.makeConstraints { maker in
             maker.width.equalTo(80)
-            maker.top.equalTo(segmentedControl.snp.bottom)
+            maker.top.equalTo(bottomLine.snp.bottom)
             maker.left.equalToSuperview()
         }
 
