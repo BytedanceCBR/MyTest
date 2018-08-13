@@ -50,7 +50,7 @@ func paramsOfMap(_ data: [String: Any]) -> TracerParams {
     return TracerParams.momoid() <|> mapTracerParams(data)
 }
 
-class TracerManager {
+class TracerManager: NSObject {
 
     private var records: [TracerRecord]
 
