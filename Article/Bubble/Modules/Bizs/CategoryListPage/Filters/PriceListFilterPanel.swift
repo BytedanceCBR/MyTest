@@ -321,11 +321,14 @@ fileprivate class PriceBottomInputView: UIView {
     lazy var lowerPriceTextField: UITextField = {
         let re = UITextField()
         re.placeholder = "最低价格 (万)"
-        re.textAlignment = .center
+        re.textAlignment = .left
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.layer.cornerRadius = 4
         re.keyboardType = .numberPad
+        re.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        re.leftViewMode = .always
+
         return re
     }()
 
@@ -334,9 +337,11 @@ fileprivate class PriceBottomInputView: UIView {
         re.placeholder = "最高价格 (万)"
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textAlignment = .center
+        re.textAlignment = .left
         re.layer.cornerRadius = 4
         re.keyboardType = .numberPad
+        re.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        re.leftViewMode = .always
         return re
     }()
 
@@ -402,7 +407,7 @@ fileprivate class PriceBottomInputView: UIView {
 
         priceInputBoard.addSubview(upperPriceTextField)
         upperPriceTextField.snp.makeConstraints { maker in
-            maker.left.equalTo(seperaterLineView.snp.right).offset(10)
+            maker.left.equalTo(seperaterLineView.snp.right).offset(5)
             maker.top.equalTo(8)
             maker.bottom.equalTo(-8)
             maker.height.equalTo(28)
