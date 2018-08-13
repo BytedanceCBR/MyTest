@@ -73,11 +73,13 @@ class SearchFilterPanel: UIView {
                             label: item.label,
                             color: hexStringToUIColor(hex: "#f85959"),
                             icon: #imageLiteral(resourceName: "icon-triangle-retract"))
+                    result.triangle.image = #imageLiteral(resourceName: "icon-triangle-retract")
                 } else {
                     result.setConditionLabelText(
                             label: item.label,
                             color: hexStringToUIColor(hex: "#f85959"),
                             icon: #imageLiteral(resourceName: "icon-triangle-open-highlighted"))
+                    result.triangle.image = #imageLiteral(resourceName: "icon-triangle-open-highlighted")
                 }
 
             } else {
@@ -85,6 +87,7 @@ class SearchFilterPanel: UIView {
                         label: item.label,
                         color: hexStringToUIColor(hex: "#222222"),
                         icon: #imageLiteral(resourceName: "icon-triangle-open"))
+                result.triangle.image = #imageLiteral(resourceName: "icon-triangle-open")
             }
             return result
         }
@@ -189,7 +192,8 @@ class SearchConditionItemView: UIView {
         super.init(frame: CGRect.zero)
         addSubview(conditionLabel)
         conditionLabel.snp.makeConstraints { maker in
-            maker.left.right.centerY.equalToSuperview()
+            maker.centerY.equalToSuperview()
+            maker.left.greaterThanOrEqualToSuperview().offset(5).priority(.high)
             maker.height.equalTo(15)
         }
 
@@ -197,6 +201,13 @@ class SearchConditionItemView: UIView {
         clickBtn.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()
         }
+
+        addSubview(triangle)
+        triangle.snp.makeConstraints { maker in
+            maker.left.equalTo(conditionLabel.snp.right)
+            maker.right.lessThanOrEqualToSuperview().priority(.high)
+            maker.centerY.equalTo(conditionLabel.snp.centerY)
+         }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -208,10 +219,10 @@ class SearchConditionItemView: UIView {
         let attributeText = NSMutableAttributedString(string: "\(label) ")
         let attributes: [NSAttributedStringKey: Any] = [.font: CommonUIStyle.Font.pingFangRegular(15)]
         attributeText.setAttributes(attributes, range: NSRange(location: 0, length: label.count + 1))
-        let attachment = NSTextAttachment()
-        attachment.image = icon
-        let attachmentText = NSAttributedString(attachment: attachment)
-        attributeText.append(attachmentText)
+//        let attachment = NSTextAttachment()
+//        attachment.image = icon
+//        let attachmentText = NSAttributedString(attachment: attachment)
+//        attributeText.append(attachmentText)
         conditionLabel.attributedText = attributeText
     }
 

@@ -379,13 +379,18 @@ class LocationBar: UIView {
         return result
     }()
 
+    lazy var bottomBar: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(countryLabel)
         countryLabel.snp.makeConstraints { maker in
             maker.left.equalTo(24)
             maker.top.equalTo(14)
-            maker.bottom.equalToSuperview().offset(-14)
             maker.height.equalTo(22)
         }
 
@@ -401,8 +406,14 @@ class LocationBar: UIView {
         reLocateBtn.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-24)
             maker.top.equalTo(14)
-            maker.bottom.equalToSuperview().offset(-14)
             maker.height.equalTo(22)
+        }
+
+        addSubview(bottomBar)
+        bottomBar.snp.makeConstraints { (maker) in
+            maker.top.equalTo(countryLabel.snp.bottom).offset(14)
+            maker.bottom.left.right.equalToSuperview()
+            maker.height.equalTo(8)
         }
 
     }
