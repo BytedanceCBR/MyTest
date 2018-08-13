@@ -230,6 +230,7 @@
 		1A216D587F78887EEC5A864A /* FloorPanCategoryDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216300EB3183F95E110125 /* FloorPanCategoryDetailPageVC.swift */; };
 		1A216D58E762A9A86A656E7D /* ErshouHousePriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2166CEAF407B1731D9EBEC /* ErshouHousePriceChartCell.swift */; };
 		1A216D5AAD34A685C3ED63C3 /* DisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216314394F90101506A716 /* DisclaimerCell.swift */; };
+		1A216D95AE720DB8E8EEEBD2 /* TracerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B6B4BC89E7049D450C6 /* TracerManager.swift */; };
 		1A216DA30D740F96810DBC6B /* ErshouHouseDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21678712C5E3F4B7B9C9D2 /* ErshouHouseDetailPageViewModel.swift */; };
 		1A216DC1F20B27F60CF556F0 /* SlidePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A21635508CC5662455353E3 /* SlidePageView.swift */; };
 		1A216DD1410CAA0F745ED077 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216390CA96B623ADC15429 /* SearchTextField.swift */; };
@@ -3741,6 +3742,7 @@
 		1A216B1564D307AD2217FAF2 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		1A216B355E37A1DC0F51B5C2 /* CountryListHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListHistoryDataSource.swift; sourceTree = "<group>"; };
 		1A216B42A4CDC099A3DC710E /* FloorPanListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanListViewModel.swift; sourceTree = "<group>"; };
+		1A216B6B4BC89E7049D450C6 /* TracerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TracerManager.swift; sourceTree = "<group>"; };
 		1A216B7397A0BCCB3C2DDE0C /* GlobalPricingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalPricingVC.swift; sourceTree = "<group>"; };
 		1A216C46EC9D05FE2A12C358 /* HomeViewTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewTableViewDataSource.swift; sourceTree = "<group>"; };
 		1A216C64DB2E292A2C05F65F /* BaseSubPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseSubPageViewModel.swift; sourceTree = "<group>"; };
@@ -7314,6 +7316,13 @@
 				1A216320843E14F2EE57D05A /* TransactionHistoryVM.swift */,
 			);
 			path = TransactionHistory;
+			sourceTree = "<group>";
+		};
+		1A216633C7F6D6D389FD4C84 /* Record */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Record;
 			sourceTree = "<group>";
 		};
 		1A21697554C49E9584D5EDE0 /* Home */ = {
@@ -12866,6 +12875,8 @@
 		B3E59A3E211A202400B44F5B /* Tracer */ = {
 			isa = PBXGroup;
 			children = (
+				1A216B6B4BC89E7049D450C6 /* TracerManager.swift */,
+				1A216633C7F6D6D389FD4C84 /* Record */,
 			);
 			path = Tracer;
 			sourceTree = "<group>";
@@ -17792,6 +17803,7 @@
 				1A216070200844F77A54EC7E /* ErshouHouseDetailPageViewModel.swift in Sources */,
 				1A216D075E198470ACEFC0CA /* CityListViewModel.swift in Sources */,
 				1A216A4F2001FB40E9D46597 /* BDImageViewProvider.swift in Sources */,
+				1A216D95AE720DB8E8EEEBD2 /* TracerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
