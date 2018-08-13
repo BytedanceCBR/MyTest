@@ -53,6 +53,12 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         re.font = CommonUIStyle.Font.pingFangRegular(10)
         return re
     }()
+    
+    lazy var bottomLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f3f3f3")
+        return re
+    }()
 
     private var request: BDWebImageRequest?
 
@@ -93,7 +99,7 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
 
         contentView.addSubview(statusBGView)
         statusBGView.snp.makeConstraints { maker in
-            maker.right.equalTo(-18)
+            maker.right.equalTo(-15)
             maker.centerY.equalTo(priceLabel.snp.centerY)
             maker.height.equalTo(15)
             maker.width.equalTo(26)
@@ -106,6 +112,15 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
             maker.height.equalTo(10)
             maker.width.equalTo(20)
         }
+        
+        contentView.addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { maker in
+            maker.left.equalTo(iconView)
+            maker.height.equalTo(0.5)
+            maker.right.equalTo(statusBGView)
+
+        }
+
     }
 
     func setImageIcon(url: String) {
@@ -160,9 +175,19 @@ fileprivate func fillCell(
     if let theCell = cell as? FloorPanHouseTypeCell {
         theCell.nameLabel.text = item.title
         theCell.roomSpaceLabel.text = item.squaremeter
-        theCell.priceLabel.text = item.pricingPerSqm
+        
+        if let pricingPerSqm = item.pricingPerSqm {
+            
+            theCell.priceLabel.text = "建面 \(pricingPerSqm)"
+        }
         if let url = item.images?.first?.url {
             theCell.setImageIcon(url: url)
         }
+        
+        guard let saleStatus = item.saleStatus else { return }
+        theCell.statusLabel.text = saleStatus.content
+        theCell.statusLabel.textColor = hexStringToUIColor(hex: saleStatus.textColor ?? "#ffffff")
+        theCell.statusBGView.backgroundColor = hexStringToUIColor(hex: saleStatus.backgroundColor ?? "#ffffff")
+        
     }
 }
