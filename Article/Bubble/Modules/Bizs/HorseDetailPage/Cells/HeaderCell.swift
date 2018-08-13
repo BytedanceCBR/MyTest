@@ -38,14 +38,25 @@ class HeaderCell: BaseUITableViewCell {
         return re
     }()
 
+    var adjustBottomSpace: CGFloat {
+        didSet {
+            if label.superview != nil {
+                label.snp.updateConstraints { (maker) in
+                    maker.bottom.equalToSuperview().offset(adjustBottomSpace)
+                }
+            }
+        }
+    }
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        self.adjustBottomSpace = -16
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(15)
             maker.top.equalTo(16)
             maker.height.equalTo(22)
-            maker.bottom.equalToSuperview().offset(-16)
+            maker.bottom.equalToSuperview().offset(-13)
          }
 
         contentView.addSubview(arrowsImg)
@@ -89,7 +100,7 @@ class HeaderCell: BaseUITableViewCell {
 func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.timeLine?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("楼盘动态")("查看更多 >")(false)
+            let cellRender = curry(fillHeaderCell)("楼盘动态")("查看更多 >")(false)(-13)
             return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
@@ -100,7 +111,7 @@ func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
 func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.floorPan?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("楼盘户型")("查看更多 >")(false)
+            let cellRender = curry(fillHeaderCell)("楼盘户型")("查看更多 >")(false)(-13)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -115,7 +126,7 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
 func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.comment?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("全网点评")("查看更多 >")(false)
+            let cellRender = curry(fillHeaderCell)("全网点评")("查看更多 >")(false)(-13)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -131,13 +142,14 @@ func parseHeaderNode(
         _ title: String,
         subTitle: String = "查看更多",
         showLoadMore: Bool = false,
+        adjustBottomSpace: CGFloat = -13,
         process: TableCellSelectedProcess? = nil,
         filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHeaderCell)(title)(subTitle)(showLoadMore)
+            let cellRender = curry(fillHeaderCell)(title)(subTitle)(showLoadMore)(adjustBottomSpace)
             var selectors: [TableCellSelectedProcess] = []
             if process != nil {
                 selectors.append(process!)
@@ -151,11 +163,12 @@ func parseHeaderNode(
     }
 }
 
-func fillHeaderCell(_ title: String, subTitle: String, showLoadMore: Bool, cell: BaseUITableViewCell) -> Void {
+func fillHeaderCell(_ title: String, subTitle: String, showLoadMore: Bool, adjustBottomSpace: CGFloat, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HeaderCell {
         theCell.label.text = title
         theCell.loadMore.text = subTitle
         theCell.arrowsImg.isHidden = !showLoadMore
         theCell.loadMore.isHidden = !showLoadMore
+        theCell.adjustBottomSpace = adjustBottomSpace
     }
 }

@@ -94,7 +94,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         tableView.snp.makeConstraints { (maker) in
             maker.top.left.right.equalToSuperview()
             if #available(iOS 11, *) {
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(4)
             } else {
                 maker.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
             }

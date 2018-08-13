@@ -60,9 +60,15 @@ class SingleImageInfoCell: BaseUITableViewCell {
 
     lazy var lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = hexStringToUIColor(hex: "#e8e8e8")
+        view.backgroundColor = hexStringToUIColor(hex: "#d8d8d8")
         return view
     }()
+
+    override var isTail: Bool {
+        didSet {
+            lineView.isHidden = isTail
+        }
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -70,7 +76,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+        isTail = false
 
         self.contentView.addSubview(lineView)
         lineView.snp.makeConstraints { maker in

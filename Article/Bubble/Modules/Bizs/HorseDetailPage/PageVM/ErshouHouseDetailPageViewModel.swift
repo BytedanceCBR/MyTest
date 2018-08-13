@@ -189,7 +189,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                         openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC, bottomBarBinder: self.bindBottomView())
                     }
                 }
-                <- parseHeaderNode("相关推荐")
+                <- parseHeaderNode("相关推荐", adjustBottomSpace: 0)
                 <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser

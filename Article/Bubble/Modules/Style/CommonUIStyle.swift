@@ -50,7 +50,7 @@ class CommonUIStyle {
     }
 
     class TabBar {
-        static let height: CGFloat = 48
+        static let height: CGFloat = 44
     }
 
     class NavBar {
