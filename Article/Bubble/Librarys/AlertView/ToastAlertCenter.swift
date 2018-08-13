@@ -27,7 +27,8 @@ class ToastAlertCenter {
             duration: duration,
             position: .center,
             style: style) { [weak self] didTap in
-                self?.toastAlert.removeFromSuperview()
+                
+                self?.dismissToast()
             }
 
     }
@@ -47,6 +48,7 @@ class ToastAlertCenter {
         toastAlert.hideProgressHud()
         toastAlert.hideAllToasts()
         toastAlert.removeFromSuperview()
+
     }
 }
 

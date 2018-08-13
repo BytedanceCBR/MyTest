@@ -30,6 +30,11 @@ class EnvContext: NSObject {
     lazy var tracer: TracerManager = {
         TracerManager()
     }()
+    
+    private override init() {
+        super.init()
+    }
+
 }
 
 class NetworkConfig: NSObject {
