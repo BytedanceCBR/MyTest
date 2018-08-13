@@ -219,10 +219,6 @@ class SearchConditionItemView: UIView {
         let attributeText = NSMutableAttributedString(string: "\(label) ")
         let attributes: [NSAttributedStringKey: Any] = [.font: CommonUIStyle.Font.pingFangRegular(15)]
         attributeText.setAttributes(attributes, range: NSRange(location: 0, length: label.count + 1))
-//        let attachment = NSTextAttachment()
-//        attachment.image = icon
-//        let attachmentText = NSAttributedString(attachment: attachment)
-//        attributeText.append(attachmentText)
         conditionLabel.attributedText = attributeText
     }
 

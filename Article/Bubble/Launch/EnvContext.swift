@@ -26,11 +26,15 @@ class EnvContext: NSObject {
     lazy var toast: ToastAlertCenter = {
         ToastAlertCenter()
     }()
+
+    lazy var tracer: TracerManager = {
+        TracerManager()
+    }()
     
     private override init() {
-        
         super.init()
     }
+
 }
 
 class NetworkConfig: NSObject {
@@ -42,4 +46,15 @@ class NetworkConfig: NSObject {
     }
 }
 
+func recordEvent(key: String, params: TracerParams) {
+    EnvContext.shared.tracer.writeEvent(key, traceParams: params)
+}
 
+func thresholdTracer(threshold: Double) -> (String, TracerParams) -> Void {
+    let startTime = Date().timeIntervalSince1970
+    return { (key, params) in
+        if Date().timeIntervalSince1970 - startTime > threshold {
+            recordEvent(key: key, params: params)
+        }
+    }
+}
