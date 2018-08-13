@@ -4,8 +4,11 @@
 //
 
 import Foundation
-
 class BaseUITableViewCell: UITableViewCell {
+
+    var isHead = false
+    var isTail = false
+
     open class var identifier: String {
         return "base"
     }
@@ -18,6 +21,7 @@ class BaseUITableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
 }
 
 extension BaseUITableViewCell {

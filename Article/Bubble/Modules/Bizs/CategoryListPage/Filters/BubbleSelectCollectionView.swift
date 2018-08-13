@@ -105,7 +105,7 @@ class BubbleSelectCollectionView: UIView {
         result.backgroundColor = UIColor.white
         result.lu.addTopBorder(color: hexStringToUIColor(hex: "#f4f5f6"))
 
-        result.setTitle("不限条件", for: .normal)
+        result.setTitle("重置", for: .normal)
         result.setTitleColor(hexStringToUIColor(hex: "#222222"), for: .normal)
         return result
     }()
@@ -287,7 +287,7 @@ fileprivate class BubbleCollectionCell: UICollectionViewCell {
     }
     lazy var label: UILabel = {
         let result = UILabel()
-        result.textColor = hexStringToUIColor(hex: "#222222")
+        result.textColor = hexStringToUIColor(hex: "#505050")
         result.highlightedTextColor = hexStringToUIColor(hex: "#f85959")
         result.adjustsFontSizeToFitWidth = true
         result.font = CommonUIStyle.Font.pingFangRegular(12)

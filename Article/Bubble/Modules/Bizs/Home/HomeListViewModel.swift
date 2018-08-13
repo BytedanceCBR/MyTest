@@ -252,6 +252,11 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            if indexPath.row == 0 {
+                cell.isHead = true
+            } else if datas[indexPath.section].items.count == (indexPath.row + 1) {
+                cell.isTail = true
+            }
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
