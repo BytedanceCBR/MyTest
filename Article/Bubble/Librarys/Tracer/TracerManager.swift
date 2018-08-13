@@ -20,25 +20,35 @@ struct TracerParams {
 
 }
 
+infix operator <*>: SequencePrecedence
+
+func <*>(params: TracerParams, parameter: @escaping TracerPremeter) -> TracerParams {
+    return TracerParams {
+        params.paramsGetter($0).merging(parameter(), uniquingKeysWith: { $1 })
+    }
+}
+
 class TracerManager {
 
-    @objc static let shared = TracerManager()
+    private var records: [TracerRecord]
 
     init() {
-
+        self.records = [ConsoleEventRecord()]
     }
-
-
 
     func writeEvent(
             _ event: String,
             traceParams: TracerParams? =  nil,
             kind: String? = nil,
             params: [String: Any]? = nil) {
-
+        records.forEach { record in
+            if let traceParams = traceParams {
+                record.recordEvent(
+                    key: event,
+                    params: traceParams.paramsGetter([:]))
+            }
+        }
     }
-
-
 
 }
 
@@ -46,4 +56,12 @@ protocol TracerRecord {
 
     func recordEvent(key: String, params: [String: Any])
 
+}
+
+func traceStayTime(key: String = "stay_time") -> () -> [String: Any] {
+    let startTime = Date().timeIntervalSince1970
+    return {
+        let stayTime = Date().timeIntervalSince1970 - startTime
+        return [key: stayTime]
+    }
 }
