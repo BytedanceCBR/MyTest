@@ -38,6 +38,9 @@ class BubbleAlertController: UIAlertController {
             maker.width.equalToSuperview()
 
         }
+        contentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapAction)))
+        contentView.isUserInteractionEnabled = true
+        
         NotificationCenter.default.rx
             .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
             .subscribe(onNext: { notification in
@@ -106,7 +109,12 @@ extension BubbleAlertController {
         titleView.closeBtn.rx.tap.bind(onNext: onClose).disposed(by: disposeBag)
         self.titleView = titleView
     }
+    
+    @objc func tapAction() {
 
+    }
+    
+    
     func onClose() {
         self.dismiss(animated: true)
     }

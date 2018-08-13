@@ -261,11 +261,18 @@ class HorseDetailPageVC: BaseViewController {
                 title: title,
                 subTitle: subTitle,
                 alert: alert)
-        self.present(alert, animated: true)
+        self.present(alert, animated: true, completion: {
+            
+            self.alert?.view.superview?.isUserInteractionEnabled = true
+            self.alert?.view.superview?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.closeAlertView)))
+
+        })
+        
+        self.alert = alert
     }
 
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
-        alert = BubbleAlertController(
+        let alert = BubbleAlertController(
                 title: title,
                 message: nil,
                 preferredStyle: .alert)
@@ -274,12 +281,19 @@ class HorseDetailPageVC: BaseViewController {
                 title: title,
                 subTitle: subTitle,
                 phoneNumber: phoneNumber ?? "",
-                bubbleAlertController: alert!)
-        self.present(alert!, animated: true)
+                bubbleAlertController: alert)
+        self.present(alert, animated: true, completion: {
+            
+            self.alert?.view.superview?.isUserInteractionEnabled = true
+            self.alert?.view.superview?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.closeAlertView)))
+            
+        })
+        self.alert = alert
+
         return alertView.configBtn.rx.tap.map { () }
     }
 
-    func closeAlertView() {
+    @objc func closeAlertView() {
         alert?.dismiss(animated: true)
     }
 
