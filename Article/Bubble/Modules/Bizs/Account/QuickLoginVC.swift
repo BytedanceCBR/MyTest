@@ -140,9 +140,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         self.navBar.backBtn.rx.tap.bind { [unowned self] void in
             if let navVC = self.navigationController {
                 self.complete?(false)
+                self.view.endEditing(true)
                 navVC.popViewController(animated: true)
             } else {
                 self.complete?(false)
+                self.view.endEditing(true)
                 self.dismiss(animated: true, completion: {
                 })
             }
@@ -267,11 +269,13 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             .filter { $0 != nil }
             .subscribe(onNext: { [unowned self] _ in
                 if let navVC = self.navigationController {
-                    navVC.popViewController(animated: true)
                     self.complete?(true)
+                    self.view.endEditing(true)
+                    navVC.popViewController(animated: true)
                 } else {
+                    self.complete?(true)
+                    self.view.endEditing(true)
                     self.dismiss(animated: true, completion: {
-                        self.complete?(true)
                     })
                 }
             })
