@@ -181,7 +181,7 @@ class CategoryListViewModel: DetailPageViewModel {
     func reloadData() -> ([TableRowNode]) -> Void {
         var scrollToTop = false
         return { [unowned self] datas in
-            EnvContext.shared.toast.dismissToast()
+//            EnvContext.shared.toast.dismissToast()
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
             self.tableView?.reloadData()
             if !scrollToTop {
@@ -213,6 +213,7 @@ class CategoryListViewModel: DetailPageViewModel {
     func createOneTimeToast() -> (String?) -> Void {
         var hasToast = false
         return { (message) in
+            EnvContext.shared.toast.dismissToast()
             if !hasToast, let message = message {
                 EnvContext.shared.toast.showToast(message)
                 hasToast = true
