@@ -321,7 +321,6 @@ class CategorySearchNavBar: UIView {
             maker.top.equalTo(4)
             maker.bottom.equalToSuperview().offset(-4)
             maker.height.equalTo(20)
-            maker.width.greaterThanOrEqualTo(28)
         }
         searchTypeLabel.sizeToFit()
 
@@ -329,7 +328,7 @@ class CategorySearchNavBar: UIView {
         searchAreaPanel.addSubview(triangleImage)
         triangleImage.snp.makeConstraints { maker in
             maker.left.equalTo(searchTypeLabel.snp.right).offset(6).priority(.high)
-            maker.left.equalToSuperview().offset(58).priority(.medium)
+//            maker.left.equalToSuperview().offset(58).priority(.medium)
             maker.height.width.equalTo(9)
             maker.centerY.equalToSuperview()
         }

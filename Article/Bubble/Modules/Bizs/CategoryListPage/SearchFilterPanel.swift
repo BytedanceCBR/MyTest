@@ -29,7 +29,6 @@ class SearchFilterPanel: UIView {
     init() {
         super.init(frame: CGRect.zero)
         let color = hexStringToUIColor(hex: "#e8e8e8")
-        self.lu.addTopBorder(color: color)
         self.lu.addBottomBorder(color: color)
     }
 
