@@ -102,10 +102,16 @@ func parseUserInfoNode(
             selector = {
                 let vc = TTEditUserProfileViewController()
                 openEditProfile(vc)
+                
+                let map = ["event_type":"house_app2c", "click_type":"edit_info", "page_type":"minetab"]
+                recordEvent(key: TraceEventName.click_minetab, params: map)
             }
         } else {
             selector = {
                 TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"))
+                
+                let map = ["event_type":"house_app2c", "click_type":"login", "page_type":"minetab"]
+                recordEvent(key: TraceEventName.click_minetab, params: map)
             }
         }
         return TableSectionNode(
