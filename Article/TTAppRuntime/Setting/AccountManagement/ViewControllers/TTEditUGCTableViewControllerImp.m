@@ -31,6 +31,9 @@
 #import "TTEditUserPickView.h"
 #import "TTIndicatorView.h"
 
+#import "Bubble-Swift.h"
+
+
 typedef NS_ENUM(NSUInteger, TTSectionType) {
     kTTSectionTypeNone = 0,
     kTTSectionTypeUserInfo,
@@ -153,6 +156,10 @@ UIActionSheetDelegate
     switch ([self cellTypeOfIndexPath:indexPath]) {
         case kTTCellTypeUserAvatar: {
             [self changeAvatarDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
+            
+            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"avatar", @"page_type":@"edit_info"};
+            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
+            
             break;
         }
             
@@ -163,11 +170,19 @@ UIActionSheetDelegate
             
         case kTTCellTypeUserUsername: {
             [self changeUsernameDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
+            
+            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"nickname", @"page_type":@"edit_info"};
+            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
+            
             break;
+            
         }
             
         case kTTCellTypeUserSelfIntroduction: {
             [self changeDescriptionDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
+            
+            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"motto", @"page_type":@"edit_info"};
+            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
             break;
         }
         case kTTCellTypeUserGender: {

@@ -27,6 +27,7 @@ class EnvContext: NSObject {
         ToastAlertCenter()
     }()
 
+    @objc 
     lazy var tracer: TracerManager = {
         let re = TracerManager()
         re.defaultParams = ["event_type": "house_app2c"]
@@ -53,6 +54,11 @@ class NetworkConfig: NSObject {
 func recordEvent(key: String, params: TracerParams) {
     EnvContext.shared.tracer.writeEvent(key, traceParams: params)
 }
+
+func recordEvent(key: String, params: [String: Any]? = nil) {
+    EnvContext.shared.tracer.writeEvent(key, params: params)
+}
+
 
 func thresholdTracer(threshold: Double) -> (String, TracerParams) -> Void {
     let startTime = Date().timeIntervalSince1970

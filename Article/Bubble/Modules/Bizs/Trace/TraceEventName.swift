@@ -7,8 +7,8 @@
 
 import UIKit
 
-class TraceEventName {
-
+class TraceEventName: NSObject {
+    @objc
     static let click_minetab: String = "click_minetab" // 我的tab点击子页面
 
     static let enter_category = "enter_category" // 进入列表页

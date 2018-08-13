@@ -56,10 +56,24 @@ class TracerManager {
 
     var defaultParams: [String: Any]?
 
-    init() {
+    override init() {
         self.records = [ConsoleEventRecord()]
     }
 
+    
+    @objc
+    func writeEvent(
+        _ event: String,
+        params: [String: Any]? = nil) {
+        records.forEach { record in
+            if let theParams = params {
+                record.recordEvent(
+                    key: event,
+                    params: theParams)
+            }
+        }
+    }
+    
     func writeEvent(
             _ event: String,
             traceParams: TracerParams? =  nil,
@@ -70,6 +84,10 @@ class TracerManager {
                 record.recordEvent(
                     key: event,
                     params: traceParams.paramsGetter(defaultParams ?? [:]))
+            }else if let theParams = params {
+                record.recordEvent(
+                    key: event,
+                    params: theParams)
             }
         }
     }
