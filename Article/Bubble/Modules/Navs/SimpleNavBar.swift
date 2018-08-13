@@ -184,18 +184,20 @@ class SearchNavBar: UIView {
         }
 
         searchAreaPanel.addSubview(searchIcon)
-        searchIcon.snp.makeConstraints { maker in
-            maker.left.top.equalTo(2)
-            maker.height.width.equalTo(24)
-        }
-
         searchAreaPanel.addSubview(searchInput)
+        
+        searchIcon.snp.makeConstraints { maker in
+            maker.left.equalTo(2)
+            maker.height.width.equalTo(24)
+            maker.centerY.equalTo(searchInput)
+        }
+        
         searchInput.snp.makeConstraints { maker in
             maker.left.equalTo(searchIcon.snp.right).offset(1)
             maker.right.equalToSuperview()
             maker.top.equalToSuperview().offset(5)
             maker.bottom.equalToSuperview().offset(-3)
-            maker.height.equalTo(20)
+
         }
 
         searchAreaPanel.addSubview(searchAreaBtn)

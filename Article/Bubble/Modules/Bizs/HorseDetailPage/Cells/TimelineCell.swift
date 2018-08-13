@@ -45,7 +45,7 @@ class TimelineCell: BaseUITableViewCell {
     lazy var contentLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 2
-        result.font = CommonUIStyle.Font.pingFangMedium(16)
+        result.font = CommonUIStyle.Font.pingFangRegular(16)
         result.textColor = hexStringToUIColor(hex: "#707070")
         result.lineBreakMode = .byWordWrapping
         return result
@@ -129,7 +129,7 @@ class TimelineCell: BaseUITableViewCell {
         style.lineBreakMode = .byTruncatingTail
         let attrText = NSMutableAttributedString(
                 string: content,
-                attributes: [.font: CommonUIStyle.Font.pingFangMedium(16),
+                attributes: [.font: CommonUIStyle.Font.pingFangRegular(16),
                              .foregroundColor: hexStringToUIColor(hex: "#707070"),
                              .paragraphStyle: style])
         contentLabel.attributedText = attrText
