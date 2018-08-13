@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-
+import Reachability
 class ConditionPanelState {
     var currentIndex: Int
     var isShowPanel: Bool
@@ -261,6 +261,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         stayTimeParams = tracerParams <|> traceStayTime()
         // 进入列表页埋点
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+
+        Reachability.rx.isReachable
+                .bind { [unowned self] reachable in
+                    if !reachable {
+                        self.infoMaskView.isHidden = false
+                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
+                    } else {
+                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                    }
+                }
+                .disposed(by: disposeBag)
     }
     
     func bindLoadMore() {
