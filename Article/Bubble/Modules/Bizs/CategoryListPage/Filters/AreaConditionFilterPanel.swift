@@ -71,8 +71,8 @@ class AreaConditionFilterPanel: UIView {
     }()
 
     fileprivate lazy var dataSources: [ConditionTableViewDataSource] = {
-        (0..<3).map { _ in
-            ConditionTableViewDataSource()
+        (0..<3).map { index in
+            ConditionTableViewDataSource(index: index)
         }
     }()
 
@@ -93,6 +93,12 @@ class AreaConditionFilterPanel: UIView {
         return result
     }()
 
+    lazy var lineView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#d8d8d8")
+        return re
+    }()
+
     private var nodes: [Node]
 
     var didSelect: (([Node]) -> Void)?
@@ -109,7 +115,6 @@ class AreaConditionFilterPanel: UIView {
         self.nodes = nodes
         super.init(frame: CGRect.zero)
         initPanelWithNativeDS()
-        tableViews[1].lu.addRightBorder()
     }
 
     func initPanelWithNativeDS() {
@@ -224,6 +229,14 @@ class AreaConditionFilterPanel: UIView {
                 animated: false,
                 scrollPosition: .none)
 
+        let secondTableView = tableViews[1]
+        addSubview(lineView)
+        lineView.snp.makeConstraints { [unowned secondTableView] maker in
+            maker.left.equalTo(secondTableView.snp.right).offset(0.5)
+            maker.width.equalTo(0.5)
+            maker.bottom.top.equalTo(secondTableView)
+        }
+
     }
 
     func displayNormalCondition() {
@@ -244,13 +257,13 @@ class AreaConditionFilterPanel: UIView {
         tableViews[ConditionType.category.rawValue].snp.remakeConstraints { maker in
             maker.left.top.equalToSuperview()
             maker.bottom.equalTo(clearBtn.snp.top)
-            maker.width.equalTo(minWidth())
+            maker.width.equalTo(UIScreen.main.bounds.width / 10 * 2)
         }
         tableViews[ConditionType.subCategory.rawValue].snp.remakeConstraints { maker in
             maker.top.equalToSuperview()
             maker.bottom.equalTo(clearBtn.snp.top)
             maker.left.equalTo(tableViews[ConditionType.category.rawValue].snp.right)
-            maker.width.equalTo(minWidth())
+            maker.width.equalTo(UIScreen.main.bounds.width / 10 * 3)
         }
     }
 
@@ -361,6 +374,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     var isShowCheckBox = false
 
     var isMultiSelected = false
+
+    let index: Int
+
+    init(index: Int) {
+        self.index = index
+    }
 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
