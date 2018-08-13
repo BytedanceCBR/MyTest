@@ -128,7 +128,7 @@ class CountryListVC: BaseViewController {
                         EnvContext.shared.toast.showLoadingToast("定位中")
                         EnvContext.shared.client.locationManager.requestCurrentLocation()
                     } else {
-                        EnvContext.shared.toast.showLoadingToast("网络异常")
+                        EnvContext.shared.toast.showToast("网络异常")
                     }
                 })
                 .disposed(by: disposeBag)
