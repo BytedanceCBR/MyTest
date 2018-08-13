@@ -29,12 +29,16 @@ class EnvContext: NSObject {
 
     @objc 
     lazy var tracer: TracerManager = {
-        TracerManager()
+        let re = TracerManager()
+        re.defaultParams = ["event_type": "house_app2c"]
+        return re
     }()
     
     private override init() {
         super.init()
     }
+
+    var homePageParams = TracerParams.momoid()
 
 }
 

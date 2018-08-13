@@ -78,6 +78,7 @@ class OpenAllCell: BaseUITableViewCell {
             maker.left.equalTo(title.snp.right).offset(6)
          }
 
+        contentView.lu.addTopBorder()
 
     }
 

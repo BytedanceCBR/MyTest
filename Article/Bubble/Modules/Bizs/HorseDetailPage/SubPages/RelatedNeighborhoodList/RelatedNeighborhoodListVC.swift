@@ -34,6 +34,20 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         self.relatedNeighborhoodListViewModel = RelatedNeighborhoodListViewModel(tableView: tableView, navVC: self.navigationController)
         self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()
         self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
+        // 进入列表页埋点
+        stayTimeParams = tracerParams <|> traceStayTime()
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

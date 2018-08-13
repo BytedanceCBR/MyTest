@@ -133,9 +133,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
             }
         }
-//        stateControl.onContentOffsetChanged = { [weak self] (state, offset) in
-//            self?.navBar.alpha = (1 - (139 - offset.y) / 139) * 2
-//        }
+
         tableView.rx.contentOffset
                 .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
                 .disposed(by: disposeBag)
@@ -156,8 +154,6 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
         bindNetReachability()
-
-
     }
 
     private func setupErrorDisplay() {
@@ -206,11 +202,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                             let index = offset % count
                             let item = banners[index]
                             if let url = item.url {
-                                TTRoute.shared().openURL(byPushViewController: URL(string: url))
+                                TTRoute.shared().openURL(byPushViewController: URL(string: "\(url)&hide_more=1"))
                             }
                         }
-
-
                     }
                 })
                 .disposed(by: disposeBag)

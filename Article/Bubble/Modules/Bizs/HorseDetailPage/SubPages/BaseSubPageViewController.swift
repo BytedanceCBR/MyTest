@@ -41,6 +41,10 @@ class BaseSubPageViewController: BaseViewController {
 
     var bottomBarBinder: FollowUpBottomBarBinder
 
+    var tracerParams = TracerParams.momoid()
+
+    var stayTimeParams: TracerParams?
+
     init(identifier: String,
          isHiddenBottomBar: Bool = false,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {

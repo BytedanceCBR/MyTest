@@ -66,7 +66,7 @@ struct HouseItemInnerEntity: Mappable {
     var displayBuiltYear: String?
     var displayPricePerSqm: String?
     var displayPrice: String?
-    
+    var logPB: [String: Any]?
     init?(map: Map) {
         
     }
@@ -94,7 +94,7 @@ struct HouseItemInnerEntity: Mappable {
         displayPrice <- map["display_price"]
         displayPricePerSqm <- map["display_price_per_sqm"]
         tags <- map["tags"]
-
+        logPB <- map["log_pb"]
     }
     
 }

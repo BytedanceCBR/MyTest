@@ -30,7 +30,7 @@ struct SuggestionItem: Mappable {
     var text2: String?
     var info: Any?
     var count: Int = 0
-    var logPb: String?
+    var logPb: [String: Any]?
     var score: String?
     var houseType: Int = 0
     var tips: String?

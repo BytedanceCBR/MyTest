@@ -66,7 +66,8 @@ struct CourtMoreDetail: Mappable {
     var plotRatio : String?
     var buildingDesc : String?
     var permitList : [PermitList]?
-    
+    var logPB: [String: Any]?
+
     init?(map: Map) {
         
     }
@@ -95,6 +96,8 @@ struct CourtMoreDetail: Mappable {
         plotRatio <- map["plot_ratio"]
         buildingDesc <- map["building_desc"]
         permitList <- map["permit_list"]
+        logPB <- map["log_pb"]
+
     }
 }
 
@@ -199,6 +202,8 @@ struct NewHouseData: Mappable {
     var globalPricing: GlobalPrice?
     var userStatus: UserStatus?
     var disclaimer: Disclaimer?
+    var logPB: [String: Any]?
+
     init?(map: Map) {
         
     }
@@ -217,6 +222,7 @@ struct NewHouseData: Mappable {
         globalPricing <- map["global_pricing"]
         userStatus <- map["user_status"]
         disclaimer <- map["disclaimer"]
+        logPB <- map["log_pb"]
     }
 }
 

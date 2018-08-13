@@ -177,6 +177,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
                             searchSource: .oldDetail,
+                            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]),
                             bottomBarBinder: self.bindBottomView())
                     }
                 }
@@ -186,7 +187,12 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: self.navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-                        openRelatedNeighborhoodList(neighborhoodId: id, disposeBag: self.disposeBag, navVC: self.navVC, bottomBarBinder: self.bindBottomView())
+                        openRelatedNeighborhoodList(
+                            neighborhoodId: id,
+                            disposeBag: self.disposeBag,
+                            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]),
+                            navVC: self.navVC,
+                            bottomBarBinder: self.bindBottomView())
                     }
                 }
                 <- parseHeaderNode("相关推荐", adjustBottomSpace: 0)
@@ -216,6 +222,7 @@ func openErshouHouseList(
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
         searchSource: SearchSourceKey,
+        tracerParams: TracerParams = TracerParams.momoid(),
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
     let listVC = ErshouHouseListVC(
         title: title,
@@ -223,6 +230,7 @@ func openErshouHouseList(
         houseId: houseId,
         searchSource: searchSource,
         bottomBarBinder: bottomBarBinder)
+    listVC.tracerParams = tracerParams
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)

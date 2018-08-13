@@ -34,6 +34,21 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
         super.viewDidLoad()
         navBar.title.text = "小区成交历史"
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
+
+        tracerParams = tracerParams <|> toTracerParams(HouseCategory.neighborhood_trade_list.rawValue, key: EventKeys.category_name)
+        stayTimeParams = tracerParams <|> traceStayTime()
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
     }
     
     func loadMore() {

@@ -47,6 +47,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     
     var suggestionParams: String?
 
+    var tracerParams = TracerParams.momoid()
+
+    var stayTimeParams: TracerParams?
+
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
         result.searchInput.placeholder = "请输入小区/商圈/地铁"
@@ -253,8 +257,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
-
-
+        
+        stayTimeParams = tracerParams <|> traceStayTime()
+        // 进入列表页埋点
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
     }
     
     func bindLoadMore() {
@@ -326,11 +332,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.searchAndConditionFilterVM.sendSearchRequest()
             })
         }
-
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
