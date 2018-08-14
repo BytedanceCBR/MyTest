@@ -140,13 +140,18 @@ class TimelineCell: BaseUITableViewCell {
 
 }
 
-func parseTimelineNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
+func parseTimelineNode(_ newHouseData: NewHouseData, processor: @escaping TableCellSelectedProcess) -> () -> TableSectionNode {
     return {
         let renders = newHouseData.timeLine?.list?.enumerated().map { (e) -> TableCellRender in
             let (offset, item) = e
             return curry(fillTimelineCell)(item)(offset == 0)(false)
         }
-        return TableSectionNode(items: renders ?? [], selectors: nil, label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
+        var selectors:[TableCellSelectedProcess]?
+        if let list = newHouseData.timeLine?.list {
+            
+            selectors = list.map { _ in processor }
+        }
+        return TableSectionNode(items: renders ?? [], selectors: selectors, label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
     }
 }
 

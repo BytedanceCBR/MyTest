@@ -124,7 +124,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     bottomBarBinder: self.bindBottomView())
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
-                <- parseTimelineNode(data)
+                <- parseTimelineNode(data,
+                                     processor: { [unowned self] in
+                                        
+                                        self.openFloorPanList(
+                                            courtId: courtId,
+                                            bottomBarBinder: self.bindBottomView())
+                })
                 <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [unowned self] in
                     self.openFloorPanList(
                             courtId: courtId,
@@ -140,7 +146,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                             bottomBarBinder: self.bindBottomView())()
                 }
                 <- parseCommentHeaderNode(data)
-                <- parseNewHouseCommentNode(data)
+                <- parseNewHouseCommentNode(data,
+                                            processor: { [unowned self] in
+                         
+                                                self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
+                    })
                 <- parseOpenAllNode(data.comment?.hasMore ?? false) { [unowned self] in
                     self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
                 }
@@ -443,8 +453,12 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
-            datas[indexPath.section].selectors?[indexPath.row]()
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false{
+            
+            if indexPath.row < datas[indexPath.section].selectors!.count {
+                
+                datas[indexPath.section].selectors?[indexPath.row]()
+            }
         }
     }
 
