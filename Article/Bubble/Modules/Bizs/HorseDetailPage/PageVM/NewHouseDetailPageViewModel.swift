@@ -226,7 +226,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     if let status = response?.status, status == 0 {
                         EnvContext.shared.toast.dismissToast()
                         self.closeAlert?()
-                        EnvContext.shared.toast.showToast("开盘通知订阅成功")
+                        EnvContext.shared.toast.showToast("订阅成功")
                     }
                 }, onError: { error in
 
@@ -266,7 +266,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     if let status = response?.status, status == 0 {
                         EnvContext.shared.toast.dismissToast()
                         self.closeAlert?()
-                        EnvContext.shared.toast.showToast("变价通知订阅成功")
+                        EnvContext.shared.toast.showToast("订阅成功")
                     }
                 }, onError: { error in
 
