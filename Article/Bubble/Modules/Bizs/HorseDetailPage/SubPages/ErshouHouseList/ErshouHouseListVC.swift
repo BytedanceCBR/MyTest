@@ -77,9 +77,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 .bind(to: self.navBar.title.rx.text)
                 .disposed(by: disposeBag)
         
-        ershouHouseListViewModel?.requestErshouHouseList(
-            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
-            condition: nil)
+        requestData()
         
         self.conditionFilterViewModel = ConditionFilterViewModel(
                 conditionPanelView: conditionPanelView,
@@ -186,6 +184,9 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 if !reachable {
                     self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
                 } else {
+                    if self.ershouHouseListViewModel?.datas.value.count == 0 {
+                        self.requestData()
+                    }
                     self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
                 }
             }
@@ -198,6 +199,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
         // 进入列表页埋点
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+
+    fileprivate func requestData() {
+        ershouHouseListViewModel?.requestErshouHouseList(
+            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
+            condition: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {

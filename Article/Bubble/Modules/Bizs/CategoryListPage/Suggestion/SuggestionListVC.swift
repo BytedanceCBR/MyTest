@@ -153,9 +153,11 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                 .disposed(by: disposeBag)
 
         tableView.rx.didScroll
-                .debounce(0.1, scheduler: MainScheduler.instance)
+                .throttle(0.2, scheduler: MainScheduler.instance)
                 .bind { void in
-                    self.view.endEditing(true)
+                    if self.tableViewModel.combineItems.value.count > 0 {
+                        self.view.endEditing(true)
+                    }
                 }.disposed(by: disposeBag)
     }
 

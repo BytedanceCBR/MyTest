@@ -69,7 +69,7 @@ class HorseDetailPageVC: BaseViewController {
             re.label.text = "网络不给力，点击屏幕重试"
             re.isHidden = false
         } else {
-            re.label.text = "没有找到相关的信息，换个条件试试吧~"
+//            re.label.text = "没有找到相关的信息，换个条件试试吧~"
             re.isHidden = true
         }
         return re
@@ -156,8 +156,6 @@ class HorseDetailPageVC: BaseViewController {
                 .bind { [unowned self] reachable in
                     if !reachable {
                         self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                    } else {
-                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
                     }
                 }
                 .disposed(by: disposeBag)

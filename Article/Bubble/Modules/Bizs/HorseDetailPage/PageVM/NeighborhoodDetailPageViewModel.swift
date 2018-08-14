@@ -112,9 +112,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
         self.houseId = houseId
         if EnvContext.shared.client.reachability.connection == .none {
             infoMaskView?.isHidden = false
-            return
+        } else {
+            infoMaskView?.isHidden = true
         }
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
+                .retryOnConnect(timeout: 50)
+                .retry(10)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let status = response?.data?.neighbordhoodStatus {
                         self.followStatus.accept(Result.success(status.neighborhoodSubStatus ?? 0 == 1))
@@ -122,6 +125,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)
                     self.requestReletedData()
+                    self.infoMaskView?.isHidden = true
                 }, onError: { (error) in
                     EnvContext.shared.toast.showToast("数据加载失败")
                 })
