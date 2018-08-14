@@ -36,11 +36,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     var cellsDisposeBag: DisposeBag!
 
-    init(tableView: UITableView, navVC: UINavigationController?) {
+    weak var infoMaskView: EmptyMaskView?
+
+    init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
         self.cellFactory = getHouseDetailCellFactory()
         self.dataSource = DataSource(cellFactory: cellFactory)
+        self.infoMaskView = infoMaskView
         tableView.dataSource = self.dataSource
         tableView.delegate = self.dataSource
 
@@ -78,6 +81,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 self.tableView?.reloadData()
             }
             .disposed(by: disposeBag)
+
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                if self.houseId != -1 {
+                    self.requestData(houseId: self.houseId)
+                }
+            }.disposed(by: disposeBag)
     }
 
     func requestReletedData() {
@@ -100,6 +110,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView?.isHidden = false
+            return
+        }
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
                 .subscribe(onNext: { [unowned self] (response) in
                     if let status = response?.data?.neighbordhoodStatus {
@@ -109,7 +123,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     self.neighborhoodDetailResponse.accept(response)
                     self.requestReletedData()
                 }, onError: { (error) in
-                    print(error)
+                    EnvContext.shared.toast.showToast("数据加载失败")
                 })
                 .disposed(by: disposeBag)
     }
@@ -205,9 +219,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
 }
 
-func getNeighborhoodDetailPageViewModel() -> (UITableView, UINavigationController?) -> DetailPageViewModel {
-    return { (tableView, navVC) in
-        NeighborhoodDetailPageViewModel(tableView: tableView, navVC: navVC)
+func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?) -> DetailPageViewModel {
+    return { (tableView, infoMaskView, navVC) in
+        NeighborhoodDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
     }
 }
 

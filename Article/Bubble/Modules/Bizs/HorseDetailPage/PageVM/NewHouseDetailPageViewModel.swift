@@ -38,20 +38,35 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var subDisposeBag: DisposeBag?
 
-    init(tableView: UITableView, navVC: UINavigationController?){
+    weak var infoMaskView: EmptyMaskView?
+
+    init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?){
         self.tableView = tableView
         self.navVC = navVC
         self.cellFactory = getHouseDetailCellFactory()
         self.dataSource = DataSource(cellFactory: cellFactory)
+        self.infoMaskView = infoMaskView
+        super.init()
         tableView.dataSource = self.dataSource
         tableView.delegate = self.dataSource
 
         cellFactory.register(tableView: tableView)
 
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                if self.houseId != -1 {
+                    self.requestData(houseId: self.houseId)
+                }
+            }.disposed(by: disposeBag)
+
     }
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView?.isHidden = false
+            return
+        }
         requestNewHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
@@ -89,6 +104,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     }
                 }
                 .disposed(by: disposeBag)
+
+
     }
 
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
@@ -291,9 +308,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
 func getNewHouseDetailPageViewModel(
         detailPageVC: HorseDetailPageVC,
+        infoMaskView: EmptyMaskView,
         navVC: UINavigationController?,
         tableView: UITableView) -> NewHouseDetailPageViewModel {
-    let re = NewHouseDetailPageViewModel(tableView: tableView, navVC: navVC)
+    let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
     re.showQuickLoginAlert = { [weak detailPageVC] (title, subTitle) in
         detailPageVC?.showQuickLoginAlert(title: title, subTitle: subTitle)
     }
