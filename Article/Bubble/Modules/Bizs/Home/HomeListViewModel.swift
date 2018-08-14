@@ -63,6 +63,7 @@ class HomeListViewModel: DetailPageViewModel {
             .subscribe(onNext: { [unowned self] response in
                 self.dataSource.datas = response
                 self.tableView?.reloadData()
+                self.tableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
                 }, onError: { error in
                     print(error)
             }, onCompleted: {
