@@ -72,4 +72,15 @@ class BaseSubPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate
     func cleanData() {
         self.datas.accept([])
     }
+
+    func processError() -> (Error?) -> Void {
+        return { [unowned self] _ in
+            if EnvContext.shared.client.reachability.connection != .none {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("加载失败")
+            } else {
+                self.datas.accept([])
+            }
+        }
+    }
 }

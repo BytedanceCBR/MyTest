@@ -59,6 +59,11 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
     }
 
     func requestErshouHouseList(query: String, condition: String?) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.datas.accept([])
+            return
+        }
         let loader = pageRequestErshouHouseSearch(query: query, suggestionParams: condition ?? "")
         pageableLoader = { [unowned self] in
             loader()
@@ -77,9 +82,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
                     onNext: { [unowned self] (datas) in
                         self.datas.accept(self.datas.value + datas)
                     },
-                    onError: { error in
-                        print(error)
-                })
+                    onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
         cleanData()

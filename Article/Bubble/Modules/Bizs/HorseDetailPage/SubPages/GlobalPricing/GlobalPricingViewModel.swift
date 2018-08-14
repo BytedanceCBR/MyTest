@@ -39,6 +39,13 @@ class GlobalPricingViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func request(courtId: Int64) {
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.datas.accept([])
+            return
+        }
+
         let loader = pageRequestNewHousePrice(houseId: courtId, count: 15)
         pageableLoader = { [unowned self] in
             loader()

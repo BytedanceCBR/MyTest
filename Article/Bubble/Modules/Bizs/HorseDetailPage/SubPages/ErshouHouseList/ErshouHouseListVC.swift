@@ -7,7 +7,7 @@ import Foundation
 import SnapKit
 import RxCocoa
 import RxSwift
-
+import Reachability
 class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     
     var hasMore = true
@@ -63,6 +63,14 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.hidesBottomBarWhenPushed = true
         self.ttHideNavigationBar = true
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
+
+        ershouHouseListViewModel?.datas
+            .skip(1)
+            .debug()
+            .map { $0.count > 0 }
+            .bind(to: infoMaskView.rx.isHidden)
+            .disposed(by: disposeBag)
+
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
         Observable.combineLatest(self.titleName, ershouHouseListViewModel!.title)
                 .map { $0.0 + $0.1 }
@@ -167,8 +175,24 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 })
                 .disposed(by: disposeBag)
 
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+        // 绑定网络状态监控
+        Reachability.rx.isReachable
+            .debug("Reachability.rx.isReachable")
+            .bind { [unowned self] reachable in
+                if !reachable {
+                    self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
+                } else {
+                    self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                }
+            }
+            .disposed(by: disposeBag)
 
-        self.searchAndConditionFilterVM.sendSearchRequest()
+
+//        self.searchAndConditionFilterVM.sendSearchRequest()
 
         stayTimeParams = tracerParams <|> traceStayTime()
 

@@ -85,7 +85,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
-        re.label.text = "没有找到相关的信息，换个条件试试吧~"
+        if EnvContext.shared.client.reachability.connection == .none {
+            re.label.text = "网络不给力，点击屏幕重试"
+        } else {
+            re.label.text = "没有找到相关的信息，换个条件试试吧~"
+        }
         return re
     }()
 
