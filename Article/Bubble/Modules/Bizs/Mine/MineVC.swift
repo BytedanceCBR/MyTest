@@ -21,6 +21,7 @@ class MineVC: BaseViewController {
         if #available(iOS 11.0, *) {
             re.contentInsetAdjustmentBehavior = .never
         }
+        re.rowHeight = UITableViewAutomaticDimension
         return re
     }()
 

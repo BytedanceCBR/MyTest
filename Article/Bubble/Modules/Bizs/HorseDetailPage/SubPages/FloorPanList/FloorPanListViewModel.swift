@@ -27,6 +27,8 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
         super.init()
         cellFactory.register(tableView: tableView)
         tableView.dataSource = self
+        tableView.delegate = self
+
         datas
                 .skip(1)
                 .subscribe(onNext: { [unowned self] datas in

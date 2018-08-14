@@ -26,6 +26,7 @@ class ChatVC: BaseViewController {
         if #available(iOS 11.0, *) {
             re.contentInsetAdjustmentBehavior = .never
         }
+        re.rowHeight = UITableViewAutomaticDimension
         re.separatorStyle = .none
         return re
     }()

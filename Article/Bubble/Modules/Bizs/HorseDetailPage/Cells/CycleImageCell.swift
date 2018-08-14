@@ -58,7 +58,9 @@ class CycleImageCell: BaseUITableViewCell {
                 tapGesture.rx.event
                         .withLatestFrom(pageableViewModel.currentPage.asObservable())
                         .bind(onNext: { [unowned self] in
-                            self.openPictureBrowser?($0, self)
+                            if self.headerImages.count != 0 {
+                                self.openPictureBrowser?($0, self)
+                            }
                         })
                         .disposed(by: pictureDisposeBag!)
             }

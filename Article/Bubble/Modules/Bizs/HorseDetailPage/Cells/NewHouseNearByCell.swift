@@ -28,6 +28,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
     lazy var locationList: UITableView = {
         let re = UITableView()
+        re.rowHeight = UITableViewAutomaticDimension
         re.separatorStyle = .none
         re.allowsSelection = false
         re.isUserInteractionEnabled = false
