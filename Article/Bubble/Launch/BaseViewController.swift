@@ -23,6 +23,8 @@ class BaseViewController: UIViewController {
         self.ttHideNavigationBar = true
         view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
+        self.hidesBottomBarWhenPushed = true
+
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -277,9 +277,11 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.tabBarController?.tabBar.isHidden = false
-        if let navVC = self.navigationController as? TTNavigationController {
-            navVC.removeTabBarSnapshot(forSuperView: self.view)
+        if self.navigationController?.topViewController == self {
+            self.tabBarController?.tabBar.isHidden = false
+            if let navVC = self.navigationController as? TTNavigationController {
+                navVC.removeTabBarSnapshot(forSuperView: self.view)
+            }
         }
     }
 

@@ -33,8 +33,23 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
         super.viewDidLoad()
         navBar.title.text = "全网点评"
         houseCommentViewModel = HouseCommentViewModel(tableView: tableView)
-
-        houseCommentViewModel?.request(courtId: courtId)
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView.isHidden = false
+            infoMaskView.label.text = "网络异常"
+        } else {
+            houseCommentViewModel?.request(courtId: courtId)
+        }
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.houseCommentViewModel?.request(courtId: self.courtId)
+            }
+            .disposed(by: disposeBag)
+        self.houseCommentViewModel?.datas.bind(onNext: { [unowned self] (datas) in
+            if datas.count > 0 {
+                self.infoMaskView.isHidden = true
+            }
+            })
+            .disposed(by: disposeBag)
         houseCommentViewModel?.onDataLoaded = self.onDataLoaded()
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
 

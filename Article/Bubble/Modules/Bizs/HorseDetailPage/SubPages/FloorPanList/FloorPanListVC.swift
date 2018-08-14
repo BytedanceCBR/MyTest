@@ -36,7 +36,25 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
         navBar.title.text = "楼盘动态"
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
         floorPanListViewModel = FloorPanListViewModel(tableView: tableView)
-        floorPanListViewModel?.request(courtId: courtId)
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView.isHidden = false
+            infoMaskView.label.text = "网络异常"
+        } else {
+            floorPanListViewModel?.request(courtId: courtId)
+        }
+
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.floorPanListViewModel?.request(courtId: self.courtId)
+            }
+            .disposed(by: disposeBag)
+
+        self.floorPanListViewModel?.datas.bind(onNext: { [unowned self] (datas) in
+            if datas.count > 0 {
+                self.infoMaskView.isHidden = true
+            }
+            })
+            .disposed(by: disposeBag)
         floorPanListViewModel?.onDataLoaded = self.onDataLoaded()
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
     }
