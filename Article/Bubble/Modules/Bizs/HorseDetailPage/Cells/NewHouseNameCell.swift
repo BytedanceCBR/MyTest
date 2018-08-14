@@ -28,6 +28,8 @@ class NewHouseNameCell: BaseUITableViewCell {
         result.font = CommonUIStyle.Font.pingFangRegular(12)
         result.textColor = hexStringToUIColor(hex: "#999999")
         result.text = "别名"
+        result.textAlignment = .left
+
         return result
     }()
 
@@ -57,21 +59,20 @@ class NewHouseNameCell: BaseUITableViewCell {
         aliasLabel.snp.makeConstraints { maker in
             maker.top.equalTo(nameLabel.snp.bottom).offset(6)
             maker.left.equalTo(nameLabel.snp.left)
-            maker.height.equalTo(0).priority(.high)
+            maker.height.equalTo(0)
         }
 
         contentView.addSubview(secondaryLabel)
         secondaryLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(nameLabel.snp.bottom).offset(6)
+            maker.top.equalTo(aliasLabel)
             maker.left.equalTo(aliasLabel.snp.right).offset(4)
-            maker.right.equalTo(nameLabel.snp.right)
-            maker.height.equalTo(0).priority(.high)
+            maker.height.equalTo(0)
         }
 
         contentView.addSubview(tagsView)
         tagsView.snp.makeConstraints { maker in
-            maker.top.equalTo(secondaryLabel.snp.bottom).offset(-3)
-            maker.left.equalTo(nameLabel.snp.left).offset(-2)
+            maker.top.equalTo(aliasLabel.snp.bottom).offset(5)
+            maker.left.equalTo(nameLabel.snp.left)
             maker.bottom.equalToSuperview().offset(-16)
             maker.width.equalToSuperview().offset(-30)
         }
@@ -130,28 +131,18 @@ class NewHouseNameCell: BaseUITableViewCell {
         if let alias = alias, !alias.isEmpty {
             secondaryLabel.text = alias
 
-            aliasLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(nameLabel.snp.bottom).offset(6)
-                maker.left.equalTo(nameLabel.snp.left)
-                maker.height.equalTo(17).priority(.high)
+            aliasLabel.snp.updateConstraints { maker in
+                maker.height.equalTo(17)
             }
-            secondaryLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(nameLabel.snp.bottom).offset(6)
-                maker.left.equalTo(nameLabel.snp.left)
-                maker.right.equalTo(nameLabel.snp.right)
-                maker.height.equalTo(17).priority(.high)
+            secondaryLabel.snp.updateConstraints { maker in
+                maker.height.equalTo(17)
             }
         } else {
-            aliasLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(nameLabel.snp.bottom).offset(6)
-                maker.left.equalTo(nameLabel.snp.left)
-                maker.height.equalTo(0).priority(.high)
+            aliasLabel.snp.updateConstraints { maker in
+                maker.height.equalTo(0)
             }
-            secondaryLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(nameLabel.snp.bottom).offset(6)
-                maker.left.equalTo(aliasLabel.snp.left)
-                maker.right.equalTo(nameLabel.snp.right)
-                maker.height.equalTo(0).priority(.high)
+            secondaryLabel.snp.updateConstraints { maker in
+                maker.height.equalTo(0)
             }
         }
     }
@@ -214,7 +205,7 @@ func createTagAttributeText(
         content: String,
         textColor: UIColor,
         backgroundColor: UIColor,
-        insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -3, bottom: -2, right: -3)) -> NSMutableAttributedString {
+        insets: UIEdgeInsets = UIEdgeInsets(top: -2, left: -6, bottom: -2, right: -3)) -> NSMutableAttributedString {
     let attributeText = NSMutableAttributedString(string: content)
     attributeText.yy_insertString("  ", at: 0)
     attributeText.yy_appendString("  ")
