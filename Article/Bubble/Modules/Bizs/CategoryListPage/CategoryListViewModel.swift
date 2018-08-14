@@ -51,6 +51,11 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
     func requestData(houseType: HouseType, query: String, condition: String?) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.dataSource.datas.accept([])
+            return
+        }
         EnvContext.shared.toast.showLoadingToast("正在加载")
         switch houseType {
         case .newHouse:
@@ -150,6 +155,12 @@ class CategoryListViewModel: DetailPageViewModel {
 
 
     func requestFavoriteData(houseType: HouseType) {
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.dataSource.datas.accept([])
+            return
+        }
         dataSource.canCancelFollowUp = true
         let loader = pageRequestFollowUpList(houseType: houseType)
         let cleanDataOnce = once(apply: { [weak self] in
@@ -222,9 +233,13 @@ class CategoryListViewModel: DetailPageViewModel {
     }
     
     func processError() -> (Error?) -> Void {
-        return { _ in
-            EnvContext.shared.toast.dismissToast()
-            EnvContext.shared.toast.showToast("加载失败")
+        return { [unowned self] _ in
+            if EnvContext.shared.client.reachability.connection != .none {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("加载失败")
+            } else {
+                self.dataSource.datas.accept([])
+            }
         }
     }
 
