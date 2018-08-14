@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 import Reachability
 
-typealias DetailPageViewModelProvider = (UITableView, UINavigationController?) -> DetailPageViewModel
+typealias DetailPageViewModelProvider = (UITableView, EmptyMaskView, UINavigationController?) -> DetailPageViewModel
 
 class HorseDetailPageVC: BaseViewController {
 
@@ -115,7 +115,7 @@ class HorseDetailPageVC: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        detailPageViewModel = pageViewModelProvider?(tableView, self.navigationController)
+        detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController)
         
         setupNavBar()
 
@@ -155,10 +155,8 @@ class HorseDetailPageVC: BaseViewController {
         Reachability.rx.isReachable
                 .bind { [unowned self] reachable in
                     if !reachable {
-                        self.infoMaskView.isHidden = false
                         self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
                     } else {
-                        self.infoMaskView.isHidden = true
                         self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
                     }
                 }

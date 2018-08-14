@@ -11,6 +11,7 @@ import SnapKit
 import RxCocoa
 import RxSwift
 import MapKit
+import Reachability
 class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     lazy var search: AMapSearchAPI = {
@@ -222,6 +223,11 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     func requestPOIInfo(center: CLLocationCoordinate2D, category: String) {
         search.cancelAllRequests()
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            EnvContext.shared.toast.showToast("暂无相关信息")
+            return 
+        }
         let request = AMapPOIKeywordsSearchRequest()
         request.keywords = category
         request.location = AMapGeoPoint.location(withLatitude: CGFloat(center.latitude), longitude: CGFloat(center.longitude))
