@@ -126,6 +126,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.isOpenConditionFilter = false
         self.associationalWord = nil
         super.init(nibName: nil, bundle: nil)
+        self.navBar.isShowTypeSelector = false
         if let theHouseType = paramObj?.allParams["house_type"] as? String {
             houseType.accept(HouseType(rawValue: Int(theHouseType)!) ?? .secondHandHouse)
         }
