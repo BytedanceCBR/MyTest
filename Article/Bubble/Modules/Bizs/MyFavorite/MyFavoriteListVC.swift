@@ -9,7 +9,15 @@ import RxSwift
 import RxCocoa
 import Reachability
 
-class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
+class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
+
+    var hasMore: Bool
+
+    lazy var footIndicatorView: LoadingIndicatorView? = {
+        let re = LoadingIndicatorView()
+        return re
+    }()
+
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar()
         re.removeGradientColor()
@@ -19,6 +27,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     lazy var tableView: UITableView = {
         let re = UITableView()
         re.rowHeight = UITableViewAutomaticDimension
+        re.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         re.separatorStyle = .none
         return re
     }()
@@ -37,6 +46,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     init(houseType: HouseType) {
         self.houseType = houseType
+        self.hasMore = true
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -46,6 +56,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
@@ -73,7 +84,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             tableView: tableView,
             navVC: self.navigationController)
 
-        
+        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
+
         if EnvContext.shared.client.reachability.connection == .none {
             self.emptyMaskView.isHidden = false
             self.emptyMaskView.label.text = "网络异常"
@@ -88,22 +100,36 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
 
         tableView.delegate = self
+
+
+        let onDataLoaded = self.onDataLoaded()
         self.categoryListVM?.onDataLoaded = { [weak self] (hasMore, count) in
-            if count == 0 {
+            onDataLoaded(hasMore, count)
+            if count == 0, hasMore == false {
                 self?.showEmptyMaskView()
             } else {
                 self?.emptyMaskView.isHidden = true
             }
         }
+
+        tableView.rx.didScroll
+            .throttle(0.3, latest: false, scheduler: MainScheduler.instance)
+            .filter { [unowned self] _ in self.hasMore }
+            .debug("setupLoadmoreIndicatorView")
+            .subscribe(onNext: { [unowned self, unowned tableView] void in
+                if tableView.contentOffset.y > 0 &&
+                    tableView.contentSize.height - tableView.frame.height - tableView.contentOffset.y <= 0 &&
+                    self.footIndicatorView?.isAnimating ?? true == false {
+                    self.footIndicatorView?.startAnimating()
+                    self.loadMore()
+                }
+            })
+            .disposed(by: disposeBag)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        if let nav = self.navigationController as? TTNavigationController {
-//            nav.panRecognizer.isEnabled = false
-//            nav.interactivePopGestureRecognizer?.isEnabled = true
-//            nav.interactivePopGestureRecognizer?.delegate = nav as? UIGestureRecognizerDelegate
-//        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -125,7 +151,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
 
     private func showEmptyMaskView() {
-
+        emptyMaskView.isHidden = false
         switch houseType {
         case .newHouse:
             emptyMaskView.label.text = "啊哦～你还没有关注的新房"
@@ -138,6 +164,10 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         }
     }
 
+    func loadMore() {
+        print("loadMore")
+        categoryListVM?.pageableLoader?()
+    }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
