@@ -22,6 +22,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     lazy var tableView: UITableView = {
         let result = UITableView()
+        result.rowHeight = UITableViewAutomaticDimension
         result.separatorStyle = .none
         return result
     }()

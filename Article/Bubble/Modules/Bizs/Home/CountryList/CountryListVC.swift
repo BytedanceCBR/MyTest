@@ -34,6 +34,7 @@ class CountryListVC: BaseViewController {
 
     lazy var tableView: UITableView = {
         let result = UITableView()
+        result.rowHeight = UITableViewAutomaticDimension
         result.separatorStyle = .none
         result.sectionIndexBackgroundColor = UIColor.clear
         result.sectionIndexColor = hexStringToUIColor(hex: "#222222")
