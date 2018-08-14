@@ -74,31 +74,31 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
         tableView.separatorStyle = .none
 
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
+        if let messageId = messageId {
+            requestUserMessageList(
+                listId: messageId,
+                minCursor: "",
+                limit: "10",
+                query: "")
+                .subscribe(onNext: { [unowned self] (responsed) in
+                    if let responseData = responsed?.data?.items, responseData.count != 0 {
+                        self.tableListViewModel?.datas = responseData
+                        self.tableView.reloadData()
+                    } else {
+                        self.showEmptyMaskView()
+                    }
 
+                    }, onError: { (error) in
+                        print(error)
+                })
+                .disposed(by: disposeBag)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UIApplication.shared.statusBarStyle = .default
-        if let messageId = messageId {
-            requestUserMessageList(
-                    listId: messageId,
-                    minCursor: "",
-                    limit: "10",
-                    query: "")
-                    .subscribe(onNext: { [unowned self] (responsed) in
-                        if let responseData = responsed?.data?.items, responseData.count != 0 {
-                            self.tableListViewModel?.datas = responseData
-                            self.tableView.reloadData()
-                        } else {
-                            self.showEmptyMaskView()
-                        }
 
-                    }, onError: { (error) in
-                        print(error)
-                    })
-                    .disposed(by: disposeBag)
-        }
     }
     
     override func didReceiveMemoryWarning() {
