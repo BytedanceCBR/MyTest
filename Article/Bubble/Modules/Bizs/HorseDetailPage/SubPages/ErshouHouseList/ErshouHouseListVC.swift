@@ -162,7 +162,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 .disposed(by: disposeBag)
 
         searchAndConditionFilterVM.queryCondition
-                .skip(2)
+                .skip(1)
                 .map { [unowned self] (result) in
                     "house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" + result
                 }
@@ -187,7 +187,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                     if self.ershouHouseListViewModel?.datas.value.count == 0 {
                         self.requestData()
                     }
-                    self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+//                    self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
                 }
             }
             .disposed(by: disposeBag)
