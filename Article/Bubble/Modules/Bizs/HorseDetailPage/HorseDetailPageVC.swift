@@ -36,6 +36,8 @@ class HorseDetailPageVC: BaseViewController {
 
     private lazy var tableView: UITableView = {
         let result = UITableView()
+        result.rowHeight = UITableViewAutomaticDimension
+
         result.separatorStyle = .none
         if #available(iOS 11.0, *) {
             result.contentInsetAdjustmentBehavior = .never

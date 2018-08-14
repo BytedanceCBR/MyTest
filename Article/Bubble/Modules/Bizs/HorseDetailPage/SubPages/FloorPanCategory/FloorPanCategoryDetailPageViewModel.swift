@@ -34,6 +34,8 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
         super.init()
         cellFactory.register(tableView: tableView)
         tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = UITableViewAutomaticDimension
         datas
                 .subscribe(onNext: { [unowned self] _ in
                     self.tableView?.reloadData()
@@ -91,6 +93,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
         datas.value[indexPath.section].selectors?[indexPath.row]()
     }
 
+    // 解决ios10cell高度不正常问题
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }

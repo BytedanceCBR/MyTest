@@ -17,6 +17,7 @@ class BaseSubPageViewController: BaseViewController {
     lazy var tableView: UITableView = {
         let re = UITableView()
         re.separatorStyle = .none
+        re.rowHeight = UITableViewAutomaticDimension
         re.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         return re
     }()

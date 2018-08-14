@@ -16,6 +16,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     lazy var tableView: UITableView = {
         let re = UITableView()
+        re.rowHeight = UITableViewAutomaticDimension
         re.separatorStyle = .none
         return re
     }()

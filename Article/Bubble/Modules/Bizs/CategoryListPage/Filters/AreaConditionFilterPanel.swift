@@ -65,6 +65,7 @@ class AreaConditionFilterPanel: UIView {
         (0..<3).map { _ in
             let result = UITableView()
             result.separatorStyle = .none
+            result.rowHeight = UITableViewAutomaticDimension
             result.register(AreaConditionCell.self, forCellReuseIdentifier: "item")
             return result
         }

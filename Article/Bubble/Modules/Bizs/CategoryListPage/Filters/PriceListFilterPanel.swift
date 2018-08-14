@@ -94,6 +94,8 @@ class PriceListFilterPanel: UIView {
     lazy var tableView: UITableView = {
         let result = UITableView()
         result.separatorStyle = .none
+        result.rowHeight = UITableViewAutomaticDimension
+
         return result
     }()
 
