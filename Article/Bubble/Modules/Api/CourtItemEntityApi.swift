@@ -16,8 +16,8 @@ func requestCourtSearch(
         suggestionParams: String = "") -> Observable<CourtSearchResponse?> {
 
     var url = "\(EnvContext.networkConfig.host)/f100/api/search_court?"
-    if !query.isEmpty {
-        url = "\(url)\(query)"
+    if !query.isEmpty, let theQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+        url = "\(url)\(theQuery)"
     }
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
