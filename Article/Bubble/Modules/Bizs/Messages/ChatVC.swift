@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
+import Reachability
+
 class ChatVC: BaseViewController {
     
     lazy var navBar: SimpleNavBar = {
@@ -32,7 +34,13 @@ class ChatVC: BaseViewController {
     }()
 
     let disposeBag = DisposeBag()
-    
+
+    lazy var emptyMaskView: EmptyMaskView = {
+        let re = EmptyMaskView()
+        re.isHidden = true
+        return re
+    }()
+
     private var tableViewModel: ChatListTableViewModel?
     
     override func viewDidLoad() {
@@ -61,8 +69,12 @@ class ChatVC: BaseViewController {
         
         tableView.register(ChatCell.self, forCellReuseIdentifier: ChatCell.identifier)
         tableView.reloadData()
-        
 
+        view.addSubview(emptyMaskView)
+        emptyMaskView.icon.image = #imageLiteral(resourceName: "empty_message")
+        emptyMaskView.snp.makeConstraints { maker in
+            maker.top.bottom.right.left.equalTo(tableView)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,16 +87,34 @@ class ChatVC: BaseViewController {
         UIApplication.shared.statusBarStyle = .default
         self.navigationController?.navigationBar.isHidden = true
         // Do any additional setup after loading the view.
+        if EnvContext.shared.client.reachability.connection == .none {
+            emptyMaskView.isHidden = false
+            emptyMaskView.label.text = "网络异常"
+        } else {
+            requestData()
+        }
+
+        emptyMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.requestData()
+            }
+            .disposed(by: disposeBag)
+    }
+
+    fileprivate func requestData() {
         requestUserUnread(query:"")
-                .subscribe(onNext: { [unowned self] (responsed) in
-                    if let responseData = responsed?.data?.unread {
-                        self.tableViewModel?.datas = responseData
-                        self.tableView.reloadData()
-                    }
-                }, onError: { (error) in
-                    print(error)
-                })
-                .disposed(by: disposeBag)
+            .subscribe(onNext: { [unowned self] (responsed) in
+                if let responseData = responsed?.data?.unread {
+                    self.tableViewModel?.datas = responseData
+                    self.tableView.reloadData()
+                    self.emptyMaskView.isHidden = true
+
+                }
+            }, onError: { [unowned self] (error) in
+                self.emptyMaskView.isHidden = false
+                self.emptyMaskView.label.text = "网络异常"
+            })
+            .disposed(by: disposeBag)
     }
     
     override func viewDidAppear(_ animated: Bool) {
