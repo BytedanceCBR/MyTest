@@ -130,7 +130,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data, disposeBag: disposeBag)
                 <- parseHeaderNode("全网比价",
-                                   showLoadMore: true,
+                                   showLoadMore: data.globalPricing?.hasMore ?? false,
                                    process: openGlobalPricingList(
                                            courtId: courtId,
                                            disposeBag: disposeBag,
