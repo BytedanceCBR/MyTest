@@ -40,6 +40,7 @@ static const NSUInteger kTabBarSnapShotTag = 2001;
 @property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, assign) BOOL viewDidLoadDone;
 @property (nonatomic, strong) UIColor *originalColor;
+@property (nonatomic, strong) UIImageView *snapShot;
 @end
 
 static inline CGFloat navigationBarTop() {
@@ -588,7 +589,8 @@ static inline CGFloat navigationBarTop() {
     if (![TTDeviceHelper isPadDevice] &&
         index == 0 &&
         [self.tabBarController.viewControllers containsObject:self]) {
-        [self addTabBarSnapshotForSuperView:toVC.view];
+        [self addTabBarSnapshotForSuperViewFromCache:toVC.view];
+
     }
     return vc;
 }
@@ -1081,8 +1083,9 @@ static inline CGFloat navigationBarTop() {
     UIImageView *snapShot = [[UIImageView alloc] initWithImage:image];
     snapShot.frame = tabBarSnapShot.bounds;
     [tabBarSnapShot addSubview:snapShot];
+    self.snapShot = snapShot;
     tabBar.layer.hidden = YES;
-    
+
     tabBarSnapShot.tag = kTabBarSnapShotTag;
     
     return tabBarSnapShot;
@@ -1091,6 +1094,27 @@ static inline CGFloat navigationBarTop() {
 
 + (BOOL)refactorNaviEnabled {
     return YES;
+}
+
+- (void)addTabBarSnapshotForSuperViewFromCache:(UIView *)superView {
+    if (![superView viewWithTag:kTabBarSnapShotTag]) {
+        UITabBar *tabBar = self.tabBarController.tabBar;
+        UIView *tabBarSnapShot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tabBar.frame), CGRectGetHeight(tabBar.superview.frame))];
+
+        //iOS10 TabBar高斯模糊效果的子视图换成了UIVisualEffectview 直接截图是截不到的
+        //https://developer.apple.com/reference/uikit/uivisualeffectview
+        if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
+            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleLight];
+            UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            effectView.frame = tabBar.frame;
+            [tabBarSnapShot addSubview:effectView];
+            [tabBarSnapShot addSubview:_snapShot];
+            _snapShot = nil;
+            tabBarSnapShot.tag = kTabBarSnapShotTag;
+            [superView addSubview:tabBarSnapShot];
+
+        }
+    }
 }
 
 - (void)addTabBarSnapshotForSuperView:(UIView *)superView {

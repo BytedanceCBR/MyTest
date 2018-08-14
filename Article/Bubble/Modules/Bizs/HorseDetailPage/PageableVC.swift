@@ -26,6 +26,7 @@ extension PageableVC {
         tableView.rx.didScroll
                 .throttle(0.3, latest: false, scheduler: MainScheduler.instance)
                 .filter { [unowned self] _ in self.hasMore }
+                .debug("setupLoadmoreIndicatorView")
                 .subscribe(onNext: { [unowned self, unowned tableView] void in
                     if tableView.contentOffset.y > 0 &&
                                tableView.contentSize.height - tableView.frame.height - tableView.contentOffset.y <= 0 &&

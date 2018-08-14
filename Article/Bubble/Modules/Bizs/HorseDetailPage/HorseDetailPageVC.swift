@@ -16,6 +16,7 @@ import Reachability
 typealias DetailPageViewModelProvider = (UITableView, EmptyMaskView, UINavigationController?) -> DetailPageViewModel
 
 class HorseDetailPageVC: BaseViewController {
+    fileprivate var pageFrameObv: NSKeyValueObservation?
 
     private let houseId: Int64
     private let houseType: HouseType
@@ -94,6 +95,7 @@ class HorseDetailPageVC: BaseViewController {
                     self.ttNeedChangeNavBar = true
                 }
                 .disposed(by: disposeBag)
+
     }
 
 
@@ -113,6 +115,9 @@ class HorseDetailPageVC: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        pageFrameObv = bottomBar.observe(\.frame, options: [.new, .old]) { (view, value) in
+            print("\(view) - \(value)")
+        }
         view.backgroundColor = UIColor.white
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController)
@@ -268,19 +273,16 @@ class HorseDetailPageVC: BaseViewController {
             }
         }
         navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
-//        navBar.rightBtn.setBackgroundImage(#imageLiteral(resourceName: "share-icon"), for: .normal)
-//        self.detailPageViewModel?.titleValue
-//                .subscribe(onNext: { [unowned self] title in
-//                    self.navBar.title.text = title
-//                })
-//                .disposed(by: disposeBag)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         UIApplication.shared.statusBarStyle = .lightContent
-//        self.tabBarController?.tabBar.isHidden = true
+        self.view.setNeedsLayout()
+        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {

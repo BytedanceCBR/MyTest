@@ -36,7 +36,24 @@ class GlobalPricingVC: BaseSubPageViewController, PageableVC {
         navBar.title.text = "全网比价"
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
         globalPricingViewModel = GlobalPricingViewModel(tableView: tableView)
-        globalPricingViewModel?.request(courtId: courtId)
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView.isHidden = false
+            infoMaskView.label.text = "网络异常"
+        } else {
+            globalPricingViewModel?.request(courtId: courtId)
+        }
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.globalPricingViewModel?.request(courtId: self.courtId)
+            }
+            .disposed(by: disposeBag)
+        self.globalPricingViewModel?.datas.bind(onNext: { [unowned self] (datas) in
+            if datas.count > 0 {
+                self.infoMaskView.isHidden = true
+            }
+        })
+            .disposed(by: disposeBag)
         globalPricingViewModel?.onDataLoaded = self.onDataLoaded()
     }
 

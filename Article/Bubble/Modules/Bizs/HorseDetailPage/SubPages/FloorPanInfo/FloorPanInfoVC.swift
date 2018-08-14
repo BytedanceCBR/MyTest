@@ -33,8 +33,30 @@ class FloorPanInfoVC: BaseSubPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.floorPanInfoViewModel?.request(
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView.isHidden = false
+            infoMaskView.label.text = "网络异常"
+        } else {
+            self.floorPanInfoViewModel?.request(
                 floorPanId: floorPanId,
                 newHouseData: newHouseData)
+        }
+
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.floorPanInfoViewModel?.request(
+                    floorPanId: self.floorPanId,
+                    newHouseData: self.newHouseData)
+            }
+            .disposed(by: disposeBag)
+
+        self.floorPanInfoViewModel?.datas.bind(onNext: { [unowned self] (datas) in
+            if datas.count > 0 {
+                self.infoMaskView.isHidden = true
+            }
+        })
+            .disposed(by: disposeBag)
+
     }
 }
