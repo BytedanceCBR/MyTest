@@ -91,6 +91,10 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
         datas.value[indexPath.section].selectors?[indexPath.row]()
     }
 
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
     func cleanData() {
         self.datas.accept([])
     }

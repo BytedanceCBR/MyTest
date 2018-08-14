@@ -446,6 +446,10 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         }
     }
 
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
 }
 
 fileprivate class AreaConditionCell: UITableViewCell {

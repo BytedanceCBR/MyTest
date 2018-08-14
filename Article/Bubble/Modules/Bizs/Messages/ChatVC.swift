@@ -165,4 +165,8 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
         self.navVC?.pushViewController(vc, animated: true)
     }
 
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
 }
