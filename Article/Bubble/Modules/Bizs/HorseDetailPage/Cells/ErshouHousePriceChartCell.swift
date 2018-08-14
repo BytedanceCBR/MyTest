@@ -163,7 +163,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         bottomLine.snp.makeConstraints { maker in
             maker.left.equalTo(15)
             maker.right.equalTo(-15)
-            maker.top.equalTo(chartView.snp.bottom).offset(20)
+            maker.top.equalTo(chartView.snp.bottom)
             maker.height.equalTo(1)
             maker.bottom.equalToSuperview()
         }
@@ -192,6 +192,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.yOffset = 20
         l.formToTextSpace = 5
         l.xEntrySpace = 10
+        l.calculatedLineSizes = [CGSize(width: 20, height: 20)]
+        l.stackSpace = 20
 
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
