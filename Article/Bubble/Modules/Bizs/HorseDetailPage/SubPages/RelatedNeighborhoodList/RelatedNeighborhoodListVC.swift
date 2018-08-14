@@ -32,6 +32,14 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.relatedNeighborhoodListViewModel = RelatedNeighborhoodListViewModel(tableView: tableView, navVC: self.navigationController)
+
+        self.relatedNeighborhoodListViewModel?.datas
+            .skip(1)
+            .debug()
+            .map { $0.count > 0 }
+            .bind(to: infoMaskView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
         self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()
         self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
         // 进入列表页埋点

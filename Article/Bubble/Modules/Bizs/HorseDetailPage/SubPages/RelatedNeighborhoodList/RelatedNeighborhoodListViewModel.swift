@@ -11,6 +11,13 @@ import Foundation
 class RelatedNeighborhoodListViewModel: BaseSubPageViewModel {
 
     func request(neighborhoodId: String) {
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.datas.accept([])
+            return
+        }
+
         let loader = pageRequestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId, count: 15, query: "")
         pageableLoader = { [unowned self] in
             loader()
@@ -29,7 +36,7 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel {
                 })
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+//        cleanData()
         pageableLoader?()
     }
     

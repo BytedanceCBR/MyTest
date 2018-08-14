@@ -54,6 +54,7 @@ class CategoryListViewModel: DetailPageViewModel {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
             self.dataSource.datas.accept([])
+            self.tableView?.reloadData()
             return
         }
         EnvContext.shared.toast.showLoadingToast("正在加载")
@@ -92,6 +93,8 @@ class CategoryListViewModel: DetailPageViewModel {
                         return []
                     }
                 }
+                .retryOnConnect(timeout: 60)
+                .retry(10)
                 .subscribe(
                     onNext: dataReloader,
                     onError: self.processError())
@@ -119,6 +122,8 @@ class CategoryListViewModel: DetailPageViewModel {
                             return []
                         }
                     }
+                    .retryOnConnect(timeout: 60)
+                    .retry(10)
                     .subscribe(
                             onNext: dataReloader,
                             onError: self.processError())
@@ -146,6 +151,8 @@ class CategoryListViewModel: DetailPageViewModel {
                         return []
                     }
                 }
+                .retryOnConnect(timeout: 60)
+                .retry(10)
                 .subscribe(onNext: dataReloader,
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
@@ -182,6 +189,8 @@ class CategoryListViewModel: DetailPageViewModel {
                             return []
                         }
                     }
+                    .retryOnConnect(timeout: 60)
+                    .retry(10)
                     .subscribe(onNext: dataReloader,
                                onError: self.processError())
                     .disposed(by: self.disposeBag)
@@ -238,7 +247,8 @@ class CategoryListViewModel: DetailPageViewModel {
                 EnvContext.shared.toast.dismissToast()
                 EnvContext.shared.toast.showToast("加载失败")
             } else {
-                self.dataSource.datas.accept([])
+//                self.dataSource.datas.accept([])
+//                self.tableView?.reloadData()
             }
         }
     }

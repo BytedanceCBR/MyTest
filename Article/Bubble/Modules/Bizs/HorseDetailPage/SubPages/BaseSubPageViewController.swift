@@ -9,7 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
-
+import Reachability
 typealias FollowUpBottomBarBinder = (HouseDetailPageBottomBarView) -> Void
 
 class BaseSubPageViewController: BaseViewController {
@@ -28,6 +28,17 @@ class BaseSubPageViewController: BaseViewController {
 
     lazy var bottomBar: HouseDetailPageBottomBarView = {
         let re = HouseDetailPageBottomBarView()
+        return re
+    }()
+
+    lazy var infoMaskView: EmptyMaskView = {
+        let re = EmptyMaskView()
+        re.isHidden = true
+        if EnvContext.shared.client.reachability.connection == .none {
+            re.label.text = "网络不给力，点击屏幕重试"
+        } else {
+            re.label.text = "没有找到相关的信息，换个条件试试吧~"
+        }
         return re
     }()
 
@@ -122,7 +133,21 @@ class BaseSubPageViewController: BaseViewController {
             }
 
         }
-        // Do any additional setup after loading the view.
+
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+        // 绑定网络状态监控
+        Reachability.rx.isReachable
+                .bind { [unowned self] reachable in
+                    if !reachable {
+                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
+                    } else {
+                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                    }
+                }
+                .disposed(by: disposeBag)
 
         bottomBar.favouriteBtn.rx.tap
             .bind(onNext: self.followIt(
@@ -154,6 +179,10 @@ class BaseSubPageViewController: BaseViewController {
                     })
                     .disposed(by: self.disposeBag)
         }
+    }
+    
+    func showEmptyInfo() {
+
     }
 
 }
