@@ -126,8 +126,13 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         super.init(nibName: nil, bundle: nil)
         self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
         self.navBar.backBtn.rx.tap.bind { [unowned self] void in
-            if let navVC = self.navigationController {
+            if let navVC = self.navigationController,navVC.viewControllers.count > 1 {
+                self.view.endEditing(true)
                 navVC.popViewController(animated: true)
+            } else {
+                self.view.endEditing(true)
+                self.dismiss(animated: true, completion: {
+                })
             }
         }.disposed(by: disposeBag)
     }
@@ -138,7 +143,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         self.complete = complete
         self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
         self.navBar.backBtn.rx.tap.bind { [unowned self] void in
-            if let navVC = self.navigationController {
+            if let navVC = self.navigationController,navVC.viewControllers.count > 1 {
                 self.complete?(false)
                 self.view.endEditing(true)
                 navVC.popViewController(animated: true)

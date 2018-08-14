@@ -231,11 +231,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         tableView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
-            if #available(iOS 11, *) {
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            } else {
-                maker.bottom.equalToSuperview()
-            }
+            maker.bottom.equalToSuperview()
         }
 
         view.addSubview(infoMaskView)
@@ -251,11 +247,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         conditionPanelView.snp.makeConstraints { maker in
             maker.top.equalTo(searchFilterPanel.snp.bottom)
             maker.left.right.equalToSuperview()
-            if #available(iOS 11, *) {
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            } else {
-                maker.bottom.equalToSuperview()
-            }
+            maker.bottom.equalToSuperview()
+
         }
         conditionPanelView.isHidden = true
 

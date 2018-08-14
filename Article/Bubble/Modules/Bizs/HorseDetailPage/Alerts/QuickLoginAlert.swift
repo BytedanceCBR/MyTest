@@ -279,6 +279,7 @@ fileprivate class QuickLoginPanel: UIView {
                 }
         })
         disclaimer.attributedText = attrText
+        disclaimer.isUserInteractionEnabled = true
 
         let re = UILabel()
         re.text = "我已阅读并同意 《好多房用户使用协议》及《隐私协议》"
@@ -287,7 +288,8 @@ fileprivate class QuickLoginPanel: UIView {
         re.numberOfLines = 0
         re.width = 270 - acceptCheckBox.right - 5 - 20
         re.sizeToFit()
-        
+        re.isUserInteractionEnabled = true
+
         disclaimer.snp.makeConstraints { maker in
             maker.left.equalTo(acceptCheckBox.snp.right).offset(5)
             maker.right.equalTo(-20)
