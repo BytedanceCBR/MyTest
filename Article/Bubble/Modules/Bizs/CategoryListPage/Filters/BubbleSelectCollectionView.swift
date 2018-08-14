@@ -157,14 +157,21 @@ class BubbleSelectCollectionView: UIView {
 
         addSubview(clearBtn)
         clearBtn.snp.makeConstraints { maker in
-            maker.bottom.left.equalToSuperview()
+            maker.left.equalToSuperview()
             maker.right.equalTo(self.snp.centerX)
             maker.height.equalTo(44)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
+
         }
 
         addSubview(confirmBtn)
         confirmBtn.snp.makeConstraints { maker in
-            maker.bottom.right.equalToSuperview()
+            maker.right.equalToSuperview()
+            maker.bottom.equalTo(clearBtn)
             maker.left.equalTo(self.snp.centerX)
             maker.height.equalTo(44)
         }

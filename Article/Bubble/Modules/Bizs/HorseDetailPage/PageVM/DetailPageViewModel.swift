@@ -53,7 +53,7 @@ extension DetailPageViewModel {
                     })
                     .disposed(by: loginDisposeBag)
                 
-                AKLoginTrafficViewController.present(complete: nil)
+                TTRoute.shared().openURL(byPresentViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
                 return
             }
             requestFollow(
@@ -91,7 +91,7 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                AKLoginTrafficViewController.present(complete: nil)
+                TTRoute.shared().openURL(byPresentViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
 
                 return
             }
