@@ -11,6 +11,7 @@ import SnapKit
 import Charts
 import RxSwift
 import RxCocoa
+import Reachability
 
 typealias DetailPageViewModelProvider = (UITableView, UINavigationController?) -> DetailPageViewModel
 
@@ -58,6 +59,19 @@ class HorseDetailPageVC: BaseViewController {
     var alert: BubbleAlertController?
     
     var isShowFollowNavBtn = false
+
+    lazy var infoMaskView: EmptyMaskView = {
+        let re = EmptyMaskView()
+        re.isHidden = true
+        if EnvContext.shared.client.reachability.connection == .none {
+            re.label.text = "网络不给力，点击屏幕重试"
+            re.isHidden = false
+        } else {
+            re.label.text = "没有找到相关的信息，换个条件试试吧~"
+            re.isHidden = true
+        }
+        return re
+    }()
 
     init(houseId: Int64,
          houseType: HouseType,
@@ -129,7 +143,33 @@ class HorseDetailPageVC: BaseViewController {
                 maker.top.left.right.equalToSuperview()
             }
         }
+
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+
+        // 绑定网络状态监控
+        Reachability.rx.isReachable
+                .bind { [unowned self] reachable in
+                    if !reachable {
+                        self.infoMaskView.isHidden = false
+                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
+                    } else {
+                        self.infoMaskView.isHidden = true
+                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                    }
+                }
+                .disposed(by: disposeBag)
+
         detailPageViewModel?.requestData(houseId: houseId)
+
+        // 绑定点击重试
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.detailPageViewModel?.requestData(houseId: self.houseId)
+            }
+            .disposed(by: disposeBag)
 
         view.bringSubview(toFront: navBar)
 

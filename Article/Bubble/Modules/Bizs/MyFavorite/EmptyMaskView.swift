@@ -25,6 +25,11 @@ class EmptyMaskView: UIView {
         return re
     }()
 
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+
     init() {
         super.init(frame: CGRect.zero)
         backgroundColor = UIColor.white
@@ -49,6 +54,8 @@ class EmptyMaskView: UIView {
             maker.height.equalTo(20)
             maker.bottom.equalToSuperview()
         }
+
+        addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
