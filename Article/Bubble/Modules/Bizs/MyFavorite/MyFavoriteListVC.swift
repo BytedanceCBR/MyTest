@@ -7,6 +7,8 @@ import Foundation
 import SnapKit
 import RxSwift
 import RxCocoa
+import Reachability
+
 class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar()
@@ -23,12 +25,15 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     lazy var emptyMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
+        re.isHidden = true
         return re
     }()
 
     private var categoryListVM: CategoryListViewModel?
 
     private let houseType: HouseType
+
+    let disposeBag = DisposeBag()
 
     init(houseType: HouseType) {
         self.houseType = houseType
@@ -58,15 +63,36 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.bottom.equalToSuperview()
         }
+
+        view.addSubview(emptyMaskView)
+        emptyMaskView.snp.makeConstraints { maker in
+            maker.top.bottom.right.left.equalTo(tableView)
+        }
+
         categoryListVM = CategoryListViewModel(
             tableView: tableView,
             navVC: self.navigationController)
 
-        categoryListVM?.requestFavoriteData(houseType: houseType)
+        
+        if EnvContext.shared.client.reachability.connection == .none {
+            self.emptyMaskView.isHidden = false
+            self.emptyMaskView.label.text = "网络异常"
+        } else {
+            categoryListVM?.requestFavoriteData(houseType: houseType)
+        }
+
+        emptyMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.categoryListVM?.requestFavoriteData(houseType: self.houseType)
+            }
+            .disposed(by: disposeBag)
+
         tableView.delegate = self
         self.categoryListVM?.onDataLoaded = { [weak self] (hasMore, count) in
             if count == 0 {
                 self?.showEmptyMaskView()
+            } else {
+                self?.emptyMaskView.isHidden = true
             }
         }
     }
@@ -99,10 +125,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
 
     private func showEmptyMaskView() {
-        view.addSubview(emptyMaskView)
-        emptyMaskView.snp.makeConstraints { maker in
-            maker.top.bottom.right.left.equalTo(tableView)
-        }
+
         switch houseType {
         case .newHouse:
             emptyMaskView.label.text = "啊哦～你还没有关注的新房"
