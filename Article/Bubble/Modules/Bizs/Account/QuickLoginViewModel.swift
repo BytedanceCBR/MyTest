@@ -134,7 +134,7 @@ class QuickLoginViewModel {
                 } else {
                     button.isEnabled = false
                     QuickLoginVC.setVerifyCodeBtn(
-                            content: "重新发送(\(count))S",
+                            content: "重新发送(\(count)S)",
                             color: hexStringToUIColor(hex: "#999999"),
                             status: .disabled,
                             btn: button)
