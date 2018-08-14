@@ -113,7 +113,10 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 maker.bottom.equalToSuperview()
             }
         }
-
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in
             maker.top.equalTo(searchFilterPanel.snp.bottom)
@@ -173,10 +176,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 })
                 .disposed(by: disposeBag)
 
-        view.addSubview(infoMaskView)
-        infoMaskView.snp.makeConstraints { maker in
-            maker.edges.equalTo(tableView.snp.edges)
-        }
+
         // 绑定网络状态监控
         Reachability.rx.isReachable
             .debug("Reachability.rx.isReachable")
