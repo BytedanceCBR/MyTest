@@ -241,7 +241,6 @@ class NewHouseInfoCell: BaseUITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        disposeBag = DisposeBag()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -283,37 +282,43 @@ func fillNewHouseCoreInfoCell(
         theCell.openDataLabel.text = data.coreInfo?.constructionOpendate
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
         theCell.moreBtn.rx.tap
-            .subscribe(onNext: curry(openFloorPanInfoPage)(floorPanId)(data)(disposeBag)(navVC)(bottomBarBinder))
+            .subscribe(onNext: { [weak disposeBag] in
+                if let disposeBag = disposeBag {
+                    openFloorPanInfoPage(
+                        floorPanId: floorPanId,
+                        newHouseData: data,
+                        disposeBag: disposeBag,
+                        navVC: navVC,
+                        bottomBarBinder: bottomBarBinder)()
+                }
+            })
             .disposed(by: theCell.disposeBag)
-
-        theCell.priceChangedNotify
-                .setAttributedTitle(setContentByStatus(
-                text: "变价通知",
-                status: data.userStatus?.pricingSubStauts ?? 0 == 0), for: .normal)
-
-        theCell.openNotify
-                .setAttributedTitle(setContentByStatus(
-                text: "开盘通知",
-                status: data.userStatus?.courtOpenSubStatus ?? 0 == 0), for: .normal)
+        theCell.priceChangeNotifyRelay.accept(data.userStatus?.pricingSubStauts ?? 0 != 0)
+        theCell.openChangeNotifyRelay.accept(data.userStatus?.courtOpenSubStatus ?? 0 != 0)
 
         theCell.openNotify.rx.tap
-                .subscribe { event in
-                    if data.userStatus?.courtOpenSubStatus ?? 0 == 1 {
-                        EnvContext.shared.toast.showToast("您已订阅过啦～")
-                    } else {
-                        openCourtNotify(theCell.openChangeNotifyRelay)
-                    }
+            .debug("theCell.openNotify.rx.tap")
+            .withLatestFrom(theCell.openChangeNotifyRelay)
+            .bind(onNext: { (isFollowUp) in
+                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
+                    
+                    EnvContext.shared.toast.showToast("您已订阅过啦～")
+                } else {
+                    openCourtNotify(theCell.openChangeNotifyRelay)
                 }
-                .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
         theCell.priceChangedNotify.rx.tap
-                .subscribe { event in
-                    if data.userStatus?.pricingSubStauts ?? 0 == 1 {
-                        EnvContext.shared.toast.showToast("您已订阅过啦～")
-                    } else {
-                        priceChangeHandler(theCell.priceChangeNotifyRelay)
-                    }
+            .withLatestFrom(theCell.priceChangeNotifyRelay)
+            .bind(onNext: { (isFollowUp) in
+                
+                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
+                    EnvContext.shared.toast.showToast("您已订阅过啦～")
+                } else {
+                    priceChangeHandler(theCell.priceChangeNotifyRelay)
                 }
-                .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
         let theDisposeBag = DisposeBag()
         theCell.openMapBtn.rx.tap
                 .bind { void in

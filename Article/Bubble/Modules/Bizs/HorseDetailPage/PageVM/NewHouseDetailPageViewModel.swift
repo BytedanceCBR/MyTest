@@ -131,7 +131,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     bottomBarBinder: self.bindBottomView())
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
-                <- parseTimelineNode(data)
+                <- parseTimelineNode(data,
+                                     processor: { [unowned self] in
+                                        
+                                        self.openFloorPanList(
+                                            courtId: courtId,
+                                            bottomBarBinder: self.bindBottomView())
+                })
                 <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [unowned self] in
                     self.openFloorPanList(
                             courtId: courtId,
@@ -147,14 +153,18 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                             bottomBarBinder: self.bindBottomView())()
                 }
                 <- parseCommentHeaderNode(data)
-                <- parseNewHouseCommentNode(data)
+                <- parseNewHouseCommentNode(data,
+                                            processor: { [unowned self] in
+                         
+                                                self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
+                    })
                 <- parseOpenAllNode(data.comment?.hasMore ?? false) { [unowned self] in
                     self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
                 }
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data, disposeBag: disposeBag)
                 <- parseHeaderNode("全网比价",
-                                   showLoadMore: true,
+                                   showLoadMore: data.globalPricing?.hasMore ?? false,
                                    process: openGlobalPricingList(
                                            courtId: courtId,
                                            disposeBag: disposeBag,
@@ -223,7 +233,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     if let status = response?.status, status == 0 {
                         EnvContext.shared.toast.dismissToast()
                         self.closeAlert?()
-                        EnvContext.shared.toast.showToast("开盘通知订阅成功")
+                        EnvContext.shared.toast.showToast("订阅成功")
                     }
                 }, onError: { error in
 
@@ -263,7 +273,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     if let status = response?.status, status == 0 {
                         EnvContext.shared.toast.dismissToast()
                         self.closeAlert?()
-                        EnvContext.shared.toast.showToast("变价通知订阅成功")
+                        EnvContext.shared.toast.showToast("订阅成功")
                     }
                 }, onError: { error in
 
@@ -450,8 +460,12 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
-            datas[indexPath.section].selectors?[indexPath.row]()
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false{
+            
+            if indexPath.row < datas[indexPath.section].selectors!.count {
+                
+                datas[indexPath.section].selectors?[indexPath.row]()
+            }
         }
     }
 

@@ -140,14 +140,21 @@ class NewHouseCommentCell: BaseUITableViewCell {
     }
 }
 
-func parseNewHouseCommentNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
+func parseNewHouseCommentNode(_ newHouseData: NewHouseData, processor: @escaping TableCellSelectedProcess) -> () -> TableSectionNode {
     return {
+
         let renders = newHouseData.comment?.list?.map(curry(fillNewHouseCommentCell)).map { $0(false) }
-        return TableSectionNode(
-            items: renders ?? [],
-            selectors: nil,
-            label: "全网点评",
-            type: .node(identifier: NewHouseCommentCell.identifier))
+        var selectors:[TableCellSelectedProcess]?
+        if let list = newHouseData.comment?.list {
+
+            selectors = list.map { _ in processor }
+        }
+
+        return TableSectionNode(items: renders ?? [],
+                                selectors: selectors,
+                                label: "全网点评",
+                                type: .node(identifier: NewHouseCommentCell.identifier))
+
     }
 }
 
