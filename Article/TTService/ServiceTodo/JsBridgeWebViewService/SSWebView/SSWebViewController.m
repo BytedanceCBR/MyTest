@@ -131,7 +131,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
         }
         
-        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
+        NSNumber *hideMore = [params valueForKey:@"hide_more"];
+        self.hideMore = hideMore.boolValue;
 
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
