@@ -123,6 +123,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
             .subscribe(onNext: { [unowned self] (e) in
                 let (center, category) = e
                 self.requestPOIInfo(center: center, category: category)
+                self.setLocation(lat: "\(center.latitude)", lng: "\(center.longitude)")
             })
             .disposed(by: disposeBag)
 
@@ -226,7 +227,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
         if EnvContext.shared.client.reachability.connection == .none {
             EnvContext.shared.toast.showToast("暂无相关信息")
-            return 
+            return
         }
         let request = AMapPOIKeywordsSearchRequest()
         request.keywords = category
