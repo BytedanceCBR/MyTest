@@ -84,6 +84,10 @@ class FloorPanInfoViewModel: NSObject, UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         datas.value[indexPath.section].selectors?[indexPath.row]()
     }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
 }
 
 fileprivate func parseFirstNode(_ detail: CourtMoreDetail) -> [(String, String)] {

@@ -264,6 +264,11 @@ class PriceListTableViewDataSource: NSObject, UITableViewDataSource, UITableView
             tableView.reloadData()
         }
     }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
 }
 
 class PriceListItemCell: UITableViewCell {

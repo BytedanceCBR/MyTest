@@ -224,6 +224,10 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         return result
     }
 
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
     fileprivate func getDisplayDatas() -> [CountryListNode] {
         if filterStr?.isEmpty ?? true {
             return datas

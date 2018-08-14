@@ -150,6 +150,12 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                     tableView.reloadData()
                 }
                 .disposed(by: disposeBag)
+
+        tableView.rx.didScroll
+                .debounce(0.1, scheduler: MainScheduler.instance)
+                .bind { void in
+                    self.view.endEditing(true)
+                }.disposed(by: disposeBag)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -310,6 +316,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return sectionHeaderView
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 
     func sendQuery(
