@@ -181,19 +181,17 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.form = .line
         l.font = CommonUIStyle.Font.pingFangRegular(13)
         l.textColor = hexStringToUIColor(hex: "505050")
-        l.horizontalAlignment = .left
+        l.horizontalAlignment = .center
         l.verticalAlignment = .bottom
         l.orientation = .horizontal
         l.drawInside = false
-
-        l.calculatedLineSizes = [CGSize(width: 20, height: 20)]
-        l.stackSpace = 20
+        l.wordWrapEnabled = true
 
         // 线条描述的间距
-        l.xOffset = 30
+//        l.xOffset = 50
+        l.yOffset = 20
         l.formToTextSpace = 5
-        l.xEntrySpace = 20
-        l.yEntrySpace = 30
+        l.xEntrySpace = 10
 
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis

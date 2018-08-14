@@ -412,7 +412,7 @@ TTEditUserProfileViewControllerDelegate
 {
     SSWebViewController * webViewController = [[SSWebViewController alloc] initWithSupportIPhoneRotate:NO];
     [webViewController setTitleText:NSLocalizedString(@"好多房用户协议", nil)];
-    [webViewController requestWithURLString:[ArticleURLSetting userProtocolURLString]];
+    [webViewController requestWithURLString:[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userProtocolURLString]]];
     
     
     UINavigationController *topVC = [TTUIResponderHelper topNavigationControllerFor: self];
@@ -1262,7 +1262,7 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)_showIPhoneActionSheetForClearCache
 {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"您确定要清除缓存吗？清除之后浏览过的图片均会被清除", nil)
                                                         delegate:self
                                                cancelButtonTitle:NSLocalizedString(@"取消", nil)
                                           destructiveButtonTitle:nil

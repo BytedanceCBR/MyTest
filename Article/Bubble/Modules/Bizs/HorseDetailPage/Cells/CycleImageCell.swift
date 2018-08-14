@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import JXPhotoBrowser
+import Photos
 
 
 class CycleImageCell: BaseUITableViewCell {
@@ -415,7 +416,14 @@ fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
         
         if let _ = error as NSError? {
         
-            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: "保存失败", indicatorImage: UIImage(named: "close_popup_textpage")!, autoDismiss: true, dismissHandler: nil)        }
+            var errorTip:String = "保存失败"
+            
+            let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+            if status != .authorized {
+                
+                errorTip = "无照片访问权限"
+            }
+            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: errorTip, indicatorImage: UIImage(named: "close_popup_textpage")!, autoDismiss: true, dismissHandler: nil)        }
         else {
             
             TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: "保存成功", indicatorImage: UIImage(named: "doneicon_popup_textpage")!, autoDismiss: true, dismissHandler: nil)
