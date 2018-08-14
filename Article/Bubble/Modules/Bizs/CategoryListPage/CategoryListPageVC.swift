@@ -265,7 +265,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         Reachability.rx.isReachable
                 .bind { [unowned self] reachable in
                     if !reachable {
-                        self.infoMaskView.isHidden = false
                         self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
                     } else {
                         self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
@@ -273,7 +272,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 }
                 .disposed(by: disposeBag)
     }
-    
+
     func bindLoadMore() {
         tableView.tableFooterView = footIndicatorView
         tableView.rx.didScroll
