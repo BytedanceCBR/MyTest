@@ -37,8 +37,6 @@ class BaseSubPageViewController: BaseViewController {
         re.isHidden = true
         if EnvContext.shared.client.reachability.connection == .none {
             re.label.text = "网络不给力，点击屏幕重试"
-        } else {
-            re.label.text = "没有找到相关的信息，换个条件试试吧~"
         }
         return re
     }()
@@ -144,8 +142,6 @@ class BaseSubPageViewController: BaseViewController {
                 .bind { [unowned self] reachable in
                     if !reachable {
                         self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                    } else {
-                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
                     }
                 }
                 .disposed(by: disposeBag)

@@ -98,14 +98,19 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         self.houseId = houseId
         if EnvContext.shared.client.reachability.connection == .none {
             infoMaskView?.isHidden = false
-            return
+        } else {
+            infoMaskView?.isHidden = true
         }
         requestErshouHouseDetail(houseId: houseId)
+                .retryOnConnect(timeout: 50)
+                .retry(10)
+                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)
                         self.ershouHouseData.accept(response)
                         self.requestReletedData()
+                        self.infoMaskView?.isHidden = true
                     }
 
                     if let status = response?.data?.userStatus {
@@ -115,7 +120,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     print(error)
                 })
                 .disposed(by: disposeBag)
+
         requestRelatedHouseSearch(houseId: "\(houseId)")
+            .retryOnConnect(timeout: 50)
+            .retry(10)
             .subscribe(onNext: { [unowned self] response in
                 self.relateErshouHouseData.accept(response)
             })

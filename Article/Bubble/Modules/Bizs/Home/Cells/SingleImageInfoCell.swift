@@ -147,6 +147,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         imageRequest = nil
         majorImageView.image = #imageLiteral(resourceName: "default_image")
     }
