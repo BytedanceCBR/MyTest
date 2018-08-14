@@ -195,8 +195,12 @@ func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UINav
                 houseId: houseId,
                 houseType: .newHouse,
                 isShowBottomBar: true)
-        detailPage.pageViewModelProvider = { [unowned detailPage] (tableView, navVC) in
-            getNewHouseDetailPageViewModel(detailPageVC: detailPage, navVC: navVC, tableView: tableView)
+        detailPage.pageViewModelProvider = { [unowned detailPage] (tableView, infoMaskView, navVC) in
+            getNewHouseDetailPageViewModel(
+                detailPageVC: detailPage,
+                infoMaskView: infoMaskView,
+                navVC: navVC,
+                tableView: tableView)
         }
 
         detailPage.navBar.backBtn.rx.tap

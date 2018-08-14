@@ -37,11 +37,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     
     weak var navVC: UINavigationController?
 
-    init(tableView: UITableView, navVC: UINavigationController?) {
+    weak var infoMaskView: EmptyMaskView?
+
+    init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.navVC = navVC
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()
         self.dataSource = DataSource(cellFactory: cellFactory)
+        self.infoMaskView = infoMaskView
         tableView.dataSource = self.dataSource
         tableView.delegate = self.dataSource
 
@@ -83,10 +86,20 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 self.tableView?.reloadData()
             }
             .disposed(by: disposeBag)
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                if self.houseId != -1 {
+                    self.requestData(houseId: self.houseId)
+                }
+            }.disposed(by: disposeBag)
     }
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
+        if EnvContext.shared.client.reachability.connection == .none {
+            infoMaskView?.isHidden = false
+            return
+        }
         requestErshouHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
@@ -290,8 +303,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 }
 
 func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
-    return { (tableView, navVC) in
-        ErshouHouseDetailPageViewModel(tableView: tableView, navVC: navVC)
+    return { (tableView, infoMaskView, navVC) in
+        ErshouHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
     }
 }
 
