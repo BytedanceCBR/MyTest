@@ -65,14 +65,18 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
         self.houseId = houseId
         if EnvContext.shared.client.reachability.connection == .none {
             infoMaskView?.isHidden = false
-            return
+        } else {
+            infoMaskView?.isHidden = true
         }
         requestNewHouseDetail(houseId: houseId)
+                .retryOnConnect(timeout: 50)
+                .retry(10)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.coreInfo?.name)
 
                         self.newHouseDetail.accept(response)
+                        self.infoMaskView?.isHidden = true
                     }
 
                     if let contact = response?.data?.contact?["phone"] {
@@ -88,7 +92,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .disposed(by: disposeBag)
 
         requestRelatedCourtSearch(courtId: "\(houseId)")
+                .retryOnConnect(timeout: 50)
+                .retry(10)
                 .subscribe(onNext: { [unowned self] response in
+                    self.infoMaskView?.isHidden = true
                     self.relatedCourt.accept(response)
                 })
                 .disposed(by: disposeBag)

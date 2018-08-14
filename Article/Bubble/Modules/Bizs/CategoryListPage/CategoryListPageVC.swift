@@ -243,6 +243,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.edges.equalTo(tableView.snp.edges)
         }
 
+        infoMaskView.tapGesture.rx.event
+            .bind { (_) in
+                self.searchAndConditionFilterVM.sendSearchRequest()
+            }
+            .disposed(by: disposeBag)
+
         bindLoadMore()
 
         bindSearchRequest()
@@ -271,7 +277,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     if !reachable {
                         self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
                     } else {
-                        self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+
                     }
                 }
                 .disposed(by: disposeBag)
@@ -298,6 +304,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             if hasMore == false {
                 self.footIndicatorView.message.text = " -- END -- "
                 self.footIndicatorView.loadingIndicator.isHidden = true
+            }
+            if count > 0 {
+                self.infoMaskView.isHidden = false
+            } else {
+                self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
             }
         }
 

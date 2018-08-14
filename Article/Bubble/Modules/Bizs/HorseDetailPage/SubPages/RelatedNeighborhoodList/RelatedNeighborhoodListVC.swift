@@ -41,7 +41,19 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             .disposed(by: disposeBag)
         
         self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()
-        self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
+
+        if EnvContext.shared.client.reachability.connection != .none {
+            self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
+        } else {
+            infoMaskView.isHidden = false
+        }
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (isReachable) in
+                if self.relatedNeighborhoodListViewModel?.datas.value.count == 0 {
+                    self.relatedNeighborhoodListViewModel?.request(neighborhoodId: self.neighborhoodId)
+                }
+            }.disposed(by: disposeBag)
+
         // 进入列表页埋点
         stayTimeParams = tracerParams <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
