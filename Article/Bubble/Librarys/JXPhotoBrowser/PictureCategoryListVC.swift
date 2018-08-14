@@ -94,7 +94,7 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
         // 浏览器协议实现者
         browser.photoBrowserDelegate = self
 
-        let numberPageControlPlugin = NumberPageControlPlugin()
+        let numberPageControlPlugin = HouseNumberPageControlPlugin()
         numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 10
         browser.plugins.append(numberPageControlPlugin)
 //        // 装配附加视图插件
