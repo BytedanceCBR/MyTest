@@ -105,6 +105,9 @@ func parseUserInfoNode(
                 
                 let map = ["event_type":"house_app2c", "click_type":"edit_info", "page_type":"minetab"]
                 recordEvent(key: TraceEventName.click_minetab, params: map)
+                
+                recordEvent(key: TraceEventName.go_detail, params: ["page_type":"personal_info", "enter_from": "minetab"])
+
             }
         } else {
             selector = {

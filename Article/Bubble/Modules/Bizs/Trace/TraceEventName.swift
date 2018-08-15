@@ -16,6 +16,8 @@ class TraceEventName: NSObject {
     static let stay_category = "stay_category" //停留时间
     
     @objc
-    static let enter_tab = "enter_tab" //进入tab
+    static let enter_tab = "enter_tab" // 进入tab
+
+    static let go_detail = "go_detail" // 我的tab详情页
 
 }

@@ -459,6 +459,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                     DidSelectItem();
                 }
             }];
+            
+            [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
+
 
         }
 
@@ -1742,7 +1745,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         return;
     }
     TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
-    NSString *tab_name = nil;
+    NSString *tab_name = @"be_null";
     NSString *enter_type = @"click_tab";
     NSString *with_tips = @"0";
     
@@ -1753,7 +1756,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         tab_name = @"message";
     }
     else if ([tag isEqualToString:kFHouseMineTabKey]){
-        tab_name = @"mine_tab";
+        tab_name = @"mine";
     }
     if (badgeView.badgeValue) {
         
