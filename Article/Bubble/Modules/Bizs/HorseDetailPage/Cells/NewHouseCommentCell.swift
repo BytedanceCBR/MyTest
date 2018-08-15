@@ -145,7 +145,7 @@ func parseNewHouseCommentNode(_ newHouseData: NewHouseData, processor: @escaping
 
         let renders = newHouseData.comment?.list?.map(curry(fillNewHouseCommentCell)).map { $0(false) }
         var selectors:[TableCellSelectedProcess]?
-        if let list = newHouseData.comment?.list {
+        if let list = newHouseData.comment?.list,(newHouseData.comment?.hasMore ?? false) == true {
 
             selectors = list.map { _ in processor }
         }
