@@ -130,6 +130,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         if let theHouseType = paramObj?.allParams["house_type"] as? String {
             houseType.accept(HouseType(rawValue: Int(theHouseType)!) ?? .secondHandHouse)
         }
+        let userInfo = paramObj?.userInfo
+        if let params = userInfo?.allInfo {
+            self.tracerParams = paramsOfMap(params as! [String : Any]) <|>
+                toTracerParams(houseTypeString(houseType.value), key: "category_name")
+        }
 
         queryString = paramObj?.allParams
             .filter({ (e) -> Bool in
@@ -147,6 +152,19 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.navBar.backBtn.rx.tap.bind { void in
             self.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
+    }
+
+    fileprivate func houseTypeString(_ houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "new_list"
+        case .neighborhood:
+            return "neighborhood_list"
+        case .secondHandHouse:
+            return "old_list"
+        default:
+            return "be_null"
+        }
     }
     
 
@@ -261,7 +279,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
-        
+        tracerParams = tracerParams <|>
+            toTracerParams("pre_load_more", key: "refresh_type")
         stayTimeParams = tracerParams <|> traceStayTime()
         // 进入列表页埋点
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)

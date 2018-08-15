@@ -14,6 +14,7 @@
 #import "TTDefaultBinaryResponseSerializer.h"
 #import "TTDefaultResponseModelResponseSerializer.h"
 #import "TTDefaultResponsePreprocessor.h"
+#import "TTHTTPRequestSerializerBaseAFNetworking.h"
 
 #import "TTNetworkUtilities.h"
 #import "TTPostDataHttpRequestSerializer.h"
@@ -63,15 +64,15 @@
     [TTNetworkManager setCityName: city];
     //end by songlu
     
-    BOOL isHttpDnsEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isHttpDnsEnabled;
+//    BOOL isHttpDnsEnabled = [TTRouteSelectionServer Config sharedTTRouteSelectionServerConfig].isHttpDnsEnabled;
 //    isHttpDnsEnabled = YES;//TODO: hard code
-    [TTNetworkManager setHttpDnsEnabled:isHttpDnsEnabled];
+    [TTNetworkManager setHttpDnsEnabled:YES];
     
     BOOL isChromiumEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isChromiumEnabled;
     isChromiumEnabled = YES;//TODO: hard code
-    if (isChromiumEnabled) {
-        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
-    }
+//    if (isChromiumEnabled) {
+//        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
+//    }
 //    } else {
 //        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
 //    }
@@ -95,7 +96,8 @@
     [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
 
     // 网络库default serializer初始化
-    [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[BDTDefaultHTTPRequestSerializer class]];
+//    [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[BDTDefaultHTTPRequestSerializer class]];
+    [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[TTHTTPRequestSerializerBaseAFNetworking class]];
     [[TTNetworkManager shareInstance] setDefaultJSONResponseSerializerClass:[TTDefaultJSONResponseSerializer class]];
     [[TTNetworkManager shareInstance] setDefaultBinaryResponseSerializerClass:[TTDefaultBinaryResponseSerializer class]];
     [[TTNetworkManager shareInstance] setDefaultResponseModelResponseSerializerClass:[TTDefaultResponseModelResponseSerializer class]];

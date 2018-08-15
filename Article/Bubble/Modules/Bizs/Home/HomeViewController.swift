@@ -53,7 +53,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     var homeSpringBoardViewModel: HomeSpringBoardViewModel!
 
-    private var detailPageViewModel: DetailPageViewModel?
+    private var detailPageViewModel: HomeListViewModel?
 
     private var cycleImagePageableViewModel: PageableViewModel?
 
@@ -62,6 +62,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     lazy var tapGesture: UITapGestureRecognizer = {
         UITapGestureRecognizer()
     }()
+
+    private var homePageCommonParams: TracerParams = TracerParams.momoid()
 
     init() {
         self.dataSource = HomeViewTableViewDataSource()
@@ -73,6 +75,19 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                     self.ttNeedChangeNavBar = true
                 }
                 .disposed(by: disposeBag)
+
+        homePageCommonParams = EnvContext.shared.homePageParams <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("maintab", key: "enter_from") <|>
+            toTracerParams("maintab_icon", key: "element_from") <|>
+            toTracerParams("icon", key: "maintab_entrance") <|>
+            beNull(key: "filter") <|>
+            beNull(key: "log_pb") <|>
+            beNull(key: "maintab_search") <|>
+            beNull(key: "operation_name") <|>
+            beNull(key: "card_type") <|>
+            beNull(key: "icon_type") <|>
+            beNull(key: "search")
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -84,6 +99,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
         self.detailPageViewModel = HomeListViewModel(tableView: tableView, navVC: self.navigationController)
+        self.detailPageViewModel?.homePageCommonParams = homePageCommonParams
         self.setupPageableViewModel()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor.clear

@@ -194,7 +194,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
 
 //        self.searchAndConditionFilterVM.sendSearchRequest()
-
+        tracerParams = tracerParams <|>
+            toTracerParams("pre_load_more", key: "refresh_type")
         stayTimeParams = tracerParams <|> traceStayTime()
 
         // 进入列表页埋点

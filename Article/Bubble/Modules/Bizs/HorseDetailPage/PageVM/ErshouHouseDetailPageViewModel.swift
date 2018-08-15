@@ -173,9 +173,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = ershouHouseData.value?.data {
-
             let openBeighBor = openFloorPanDetailPage(floorPanId: data.neighborhoodInfo?.id)
-
+            let theParams = TracerParams.momoid() <|> paramsOfMap(data.logPB ?? [:])
             let dataParser = DetailDataParser.monoid()
                 <- parseErshouHouseCycleImageNode(data, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
@@ -191,6 +190,15 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id,
                         let title = data.neighborhoodInfo?.name {
+
+                        let params = theParams <|>
+                            paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+                            EnvContext.shared.homePageParams <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams("click", key: "enter_type") <|>
+                            toTracerParams("same_neighborhood_loadmore", key: "element_from") <|>
+                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
+                            toTracerParams("list", key: "maintab_entrance")
                         openErshouHouseList(
                             title: title,
                             neighborhoodId: id,
@@ -198,7 +206,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
                             searchSource: .oldDetail,
-                            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]),
+                            tracerParams: params,
                             bottomBarBinder: self.bindBottomView())
                     }
                 }
@@ -208,10 +216,21 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: self.navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
+
+                        let params = theParams <|>
+                            paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
+                            EnvContext.shared.homePageParams <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams("click", key: "enter_type") <|>
+                            toTracerParams("neighborhood_nearby_loadmore", key: "element_from") <|>
+                            toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb") <|>
+                            toTracerParams("list", key: "maintab_entrance")
+
+
                         openRelatedNeighborhoodList(
                             neighborhoodId: id,
                             disposeBag: self.disposeBag,
-                            tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]),
+                            tracerParams: params,
                             navVC: self.navVC,
                             bottomBarBinder: self.bindBottomView())
                     }
