@@ -137,26 +137,6 @@ func parseFavoriteNode(disposeBag: DisposeBag, navVC: UINavigationController?) -
                                     beNull(key: "log_pb") <|>
                                     toTracerParams(categoryNameByHouseType(houseType: houseType), key: "category_name")
                             vc.tracerParams = params
-
-                            var category_name = "be_null"
-                            switch houseType {
-                                
-                            case .newHouse:
-                                // "新房"
-                                category_name = "new_follow_list"
-                            case .secondHandHouse:
-                                // "二手房"
-                                category_name = "old_follow_list"
-                            case .neighborhood:
-                                // "小区"
-                                category_name = "neighborhood_follow_list"
-                            default:
-                                break
-                                
-                            }
-                            vc.tracerParams = vc.tracerParams <|>
-                                toTracerParams(category_name, key: "category_name")
-                            
                             vc.navBar.backBtn.rx.tap
                                 .subscribe(onNext: { void in
                                     navVC?.popViewController(animated: true)
