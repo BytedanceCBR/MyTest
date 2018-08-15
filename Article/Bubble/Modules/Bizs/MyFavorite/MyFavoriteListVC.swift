@@ -41,6 +41,9 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
     private var categoryListVM: CategoryListViewModel?
 
     private let houseType: HouseType
+    
+    var tracerParams = TracerParams.momoid()
+
 
     let disposeBag = DisposeBag()
 
@@ -167,6 +170,12 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
     func loadMore() {
         print("loadMore")
         categoryListVM?.pageableLoader?()
+        
+        tracerParams = tracerParams <|>
+            toTracerParams("pre_load_more", key: "refresh_type")
+        
+        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+        
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

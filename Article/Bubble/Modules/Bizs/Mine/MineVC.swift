@@ -28,6 +28,9 @@ class MineVC: BaseViewController {
     let disposeBag = DisposeBag()
 
     var mineViewModel: MinePageViewModel?
+    
+    var tracerParams = TracerParams.momoid()
+
 
     deinit {
 

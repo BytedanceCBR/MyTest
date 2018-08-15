@@ -48,7 +48,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     private var tableListViewModel: ChatDetailListTableViewModel?
 
     var messageId: String?
-    
+    var tracerParams = TracerParams.momoid()
+
     private var minCursor: String?
     
     private let limit = "10"
@@ -56,7 +57,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     var pageableLoader: (() -> Void)?
     
     var dataLoader: ((Bool, Int) -> Void)?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
@@ -110,6 +111,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
                         self.dataLoader?(self.hasMore, responseData.count)
                         self.tableListViewModel?.datas = responseData
                         self.tableView.reloadData()
+  
                     } else {
                         self.showEmptyMaskView()
                     }
@@ -149,6 +151,12 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     }
     
     func loadMore() {
+        
+        tracerParams = tracerParams <|>
+            toTracerParams("pre_load_more", key: "refresh_type")
+
+        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+
         self.pageableLoader?()
     }
     

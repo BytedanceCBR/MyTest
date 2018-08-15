@@ -20,4 +20,6 @@ class TraceEventName: NSObject {
 
     static let go_detail = "go_detail" // 我的tab详情页
 
+    static let category_refresh = "category_refresh" // 发现tab category刷新
+
 }
