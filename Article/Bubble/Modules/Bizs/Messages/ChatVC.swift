@@ -107,12 +107,15 @@ class ChatVC: BaseViewController {
                 if let responseData = responsed?.data?.unread {
                     self.tableViewModel?.datas = responseData
                     self.tableView.reloadData()
-                    self.emptyMaskView.isHidden = true
+                    if responseData.count == 0 {
+                        self.showEmptyInfo()
+                    } else {
+                        self.emptyMaskView.isHidden = true
+                    }
 
                 }
             }, onError: { [unowned self] (error) in
-                self.emptyMaskView.isHidden = false
-                self.emptyMaskView.label.text = "网络异常"
+                self.showNetworkError()
             })
             .disposed(by: disposeBag)
     }
@@ -123,6 +126,16 @@ class ChatVC: BaseViewController {
         if let navVC = self.navigationController as? TTNavigationController {
             navVC.removeTabBarSnapshot(forSuperView: self.view)
         }
+    }
+    
+    fileprivate func showEmptyInfo() {
+        self.emptyMaskView.isHidden = false
+        self.emptyMaskView.label.text = "还没有关注的信息"
+    }
+    
+    fileprivate func showNetworkError() {
+        self.emptyMaskView.isHidden = false
+        self.emptyMaskView.label.text = "网络异常"
     }
     
     /*
@@ -187,6 +200,27 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = MessageListVC()
         vc.messageId = datas[indexPath.row].id
+        
+        
+        var category_name = "be_null"
+        switch vc.messageId {
+    
+        case "300":
+            // "新房"
+            category_name = "new_message_list"
+        case "301":
+            // "二手房"
+            category_name = "old_message_list"
+        case "303":
+            // "小区"
+            category_name = "neighborhood_message_list"
+        default:
+            break
+            
+        }
+        vc.tracerParams = vc.tracerParams <|>
+            toTracerParams(category_name, key: "category_name")
+        
         vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
         vc.navBar.backBtn.rx.tap
             .subscribe(onNext: { [unowned self] void in

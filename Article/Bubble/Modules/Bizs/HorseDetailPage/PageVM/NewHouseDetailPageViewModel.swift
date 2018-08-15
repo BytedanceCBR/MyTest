@@ -147,7 +147,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data, navVC: navVC, bottomBarBinder: self.bindBottomView())
                 <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 >= 5) { [unowned self] in
-                    let traceParams = theParams <|>
+                    let traceParams = theParams
 
                     openFloorPanCategoryPage(
                             floorPanId: "\(courtId)",
