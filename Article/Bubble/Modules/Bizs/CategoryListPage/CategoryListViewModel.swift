@@ -93,8 +93,6 @@ class CategoryListViewModel: DetailPageViewModel {
                         return []
                     }
                 }
-                .retryOnConnect(timeout: 60)
-                .retry(10)
                 .subscribe(
                     onNext: dataReloader,
                     onError: self.processError())
@@ -122,8 +120,6 @@ class CategoryListViewModel: DetailPageViewModel {
                             return []
                         }
                     }
-                    .retryOnConnect(timeout: 60)
-                    .retry(10)
                     .subscribe(
                             onNext: dataReloader,
                             onError: self.processError())
@@ -151,8 +147,6 @@ class CategoryListViewModel: DetailPageViewModel {
                         return []
                     }
                 }
-                .retryOnConnect(timeout: 60)
-                .retry(10)
                 .subscribe(onNext: dataReloader,
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
@@ -242,7 +236,8 @@ class CategoryListViewModel: DetailPageViewModel {
     }
     
     func processError() -> (Error?) -> Void {
-        return { [unowned self] _ in
+        return { [unowned self] error in
+            print(error)
             if EnvContext.shared.client.reachability.connection != .none {
                 EnvContext.shared.toast.dismissToast()
                 EnvContext.shared.toast.showToast("加载失败")
