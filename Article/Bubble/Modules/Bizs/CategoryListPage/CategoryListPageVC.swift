@@ -154,20 +154,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }.disposed(by: disposeBag)
     }
 
-    fileprivate func houseTypeString(_ houseType: HouseType) -> String {
-        switch houseType {
-        case .newHouse:
-            return "new_list"
-        case .neighborhood:
-            return "neighborhood_list"
-        case .secondHandHouse:
-            return "old_list"
-        default:
-            return "be_null"
-        }
-    }
-    
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -279,8 +265,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
-        tracerParams = tracerParams <|>
-            toTracerParams("pre_load_more", key: "refresh_type")
         stayTimeParams = tracerParams <|> traceStayTime()
         // 进入列表页埋点
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
@@ -334,6 +318,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     @objc func loadData() {
+        let refreshParams = self.tracerParams <|>
+                toTracerParams("pre_load_more", key: "refresh_type")
+        recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         categoryListViewModel?.pageableLoader?()
     }
 
@@ -377,6 +364,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         if let stayTimeParams = stayTimeParams {
             recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
         }
+        stayTimeParams = nil
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -464,4 +452,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         popupMenuView?.showOnTargetView()
     }
 
+}
+
+func houseTypeString(_ houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "new_list"
+    case .neighborhood:
+        return "neighborhood_list"
+    case .secondHandHouse:
+        return "old_list"
+    default:
+        return "be_null"
+    }
 }

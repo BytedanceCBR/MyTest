@@ -39,6 +39,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     weak var infoMaskView: EmptyMaskView?
 
+    var traceParams = TracerParams.momoid()
+
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.navVC = navVC
         self.tableView = tableView
@@ -174,7 +176,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = ershouHouseData.value?.data {
             let openBeighBor = openFloorPanDetailPage(floorPanId: data.neighborhoodInfo?.id)
-            let theParams = TracerParams.momoid() <|> paramsOfMap(data.logPB ?? [:])
+            let theParams = TracerParams.momoid() <|>
+                EnvContext.shared.homePageParams <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("list", key: "maintab_entrance") <|>
+                toTracerParams("old_detail", key: "enter_from")
+
             let dataParser = DetailDataParser.monoid()
                 <- parseErshouHouseCycleImageNode(data, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
@@ -193,12 +202,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
-                            EnvContext.shared.homePageParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
-                            toTracerParams("click", key: "enter_type") <|>
                             toTracerParams("same_neighborhood_loadmore", key: "element_from") <|>
-                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("list", key: "maintab_entrance")
+                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb")
                         openErshouHouseList(
                             title: title,
                             neighborhoodId: id,
@@ -219,13 +224,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
-                            EnvContext.shared.homePageParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
-                            toTracerParams("click", key: "enter_type") <|>
                             toTracerParams("neighborhood_nearby_loadmore", key: "element_from") <|>
-                            toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("list", key: "maintab_entrance")
-
+                            toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb")
 
                         openRelatedNeighborhoodList(
                             neighborhoodId: id,

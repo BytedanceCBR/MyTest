@@ -65,6 +65,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     private var homePageCommonParams: TracerParams = TracerParams.momoid()
 
+    private var stayTabParams = TracerParams.momoid()
+    private var theThresholdTracer: ((String, TracerParams) -> Void)?
+
     init() {
         self.dataSource = HomeViewTableViewDataSource()
         super.init(nibName: nil, bundle: nil)
@@ -285,10 +288,17 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        self.theThresholdTracer = thresholdTracer()
+        self.stayTabParams = TracerParams.momoid() <|>
+                toTracerParams("main", key: "tab_name") <|>
+                toTracerParams("click_tab", key: "enter_type") <|>
+                toTracerParams("0", key: "with_tips") <|>
+                traceStayTime()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.theThresholdTracer?(TraceEventName.stay_tab, self.stayTabParams)
     }
     
     override func viewDidAppear(_ animated: Bool) {

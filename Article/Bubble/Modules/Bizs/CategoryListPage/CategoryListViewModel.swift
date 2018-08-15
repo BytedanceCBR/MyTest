@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    
+    var traceParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 

@@ -38,6 +38,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     weak var infoMaskView: EmptyMaskView?
 
+    var traceParams = TracerParams.momoid()
+
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
@@ -154,13 +156,25 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
+            let theParams = self.traceParams <|>
+                EnvContext.shared.homePageParams <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+                beNull(key: "card_type") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("neighborhood_detail", key: "enter_from")
+
+
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data)
-                <- parseHeaderNode("小区概况")
+                <- parseHeaderNode("小区概况") {
+                    data.baseInfo != nil
+                }
                 <- parseNeighborhoodPropertyListNode(data)
-                <- parseHeaderNode("周边配套")
+                <- parseHeaderNode("周边配套") {
+                    data.neighborhoodInfo != nil
+                }
                 <- parseNeighorhoodNearByNode(data, disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
                     data.totalSalesCount ?? 0 > 0
@@ -168,7 +182,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseTransactionRecordNode(data.totalSales?.list)
                 <- parseOpenAllNode((data.totalSalesCount ?? 0 > 3)) { [unowned self] in
                     if let id = data.id {
-                        self.openTransactionHistoryPage(neighborhoodId: id, bottomBarBinder: self.bindBottomView())
+                        let transactionTrace = theParams <|>
+                            toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+                            toTracerParams("neighborhood_trade_loadmore", key: "element_from")
+
+                        self.openTransactionHistoryPage(
+                            neighborhoodId: id,
+                            traceParams: transactionTrace,
+                            bottomBarBinder: self.bindBottomView())
                     }
                 }
                 <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
@@ -180,8 +201,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                         let title = data.name {
 
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
-                            EnvContext.shared.homePageParams <|>
-                            toTracerParams("click", key: "enter_type") <|>
+                            theParams <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
                             toTracerParams("same_neighborhood_loadmore", key: "element_from")
 
                         openErshouHouseList(
@@ -203,8 +225,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     if let id = data.neighborhoodInfo?.id {
 
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
-                            EnvContext.shared.homePageParams <|>
-                            toTracerParams("click", key: "enter_type") <|>
+                            theParams <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb") <|>
                             toTracerParams("neighborhood_nearby_loadmore", key: "element_from")
 
                         openRelatedNeighborhoodList(
@@ -223,8 +246,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     
     fileprivate func openTransactionHistoryPage(
         neighborhoodId: String,
+        traceParams: TracerParams,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
+        vc.tracerParams = traceParams
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)

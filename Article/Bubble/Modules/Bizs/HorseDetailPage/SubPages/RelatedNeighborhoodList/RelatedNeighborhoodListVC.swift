@@ -26,7 +26,6 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             isHiddenBottomBar: true,
                 bottomBarBinder: bottomBarBinder)
         self.navBar.title.text = "周边小区"
-        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
     }
     
     override func viewDidLoad() {
@@ -42,6 +41,8 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         
         self.relatedNeighborhoodListViewModel?.onDataLoaded = self.onDataLoaded()
 
+        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
+
         if EnvContext.shared.client.reachability.connection != .none {
             self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
         } else {
@@ -54,8 +55,6 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
                 }
             }.disposed(by: disposeBag)
 
-        tracerParams = tracerParams <|>
-            toTracerParams("pre_load_more", key: "refresh_type")
         // 进入列表页埋点
         stayTimeParams = tracerParams <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
@@ -77,6 +76,9 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
     }
 
     func loadMore() {
+        let refreshParams = self.tracerParams <|>
+                toTracerParams("pre_load_more", key: "refresh_type")
+        recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         relatedNeighborhoodListViewModel?.pageableLoader?()
     }
 }

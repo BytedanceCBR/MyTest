@@ -42,6 +42,9 @@ class ChatVC: BaseViewController {
     }()
 
     private var tableViewModel: ChatListTableViewModel?
+
+    private var stayTabParams = TracerParams.momoid()
+    private var theThresholdTracer: ((String, TracerParams) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,6 +102,12 @@ class ChatVC: BaseViewController {
                 self.requestData()
             }
             .disposed(by: disposeBag)
+        self.theThresholdTracer = thresholdTracer()
+        self.stayTabParams = TracerParams.momoid() <|>
+                toTracerParams("message", key: "tab_name") <|>
+                toTracerParams("click_tab", key: "enter_type") <|>
+                toTracerParams("0", key: "with_tips") <|>
+                traceStayTime()
     }
 
     fileprivate func requestData() {
@@ -127,7 +136,12 @@ class ChatVC: BaseViewController {
             navVC.removeTabBarSnapshot(forSuperView: self.view)
         }
     }
-    
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.theThresholdTracer?(TraceEventName.stay_tab, self.stayTabParams)
+    }
+
     fileprivate func showEmptyInfo() {
         self.emptyMaskView.isHidden = false
         self.emptyMaskView.label.text = "还没有关注的信息"
@@ -137,7 +151,7 @@ class ChatVC: BaseViewController {
         self.emptyMaskView.isHidden = false
         self.emptyMaskView.label.text = "网络异常"
     }
-    
+
     /*
     // MARK: - Navigation
 
@@ -164,6 +178,11 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
                                            "300": "新房",
                                            "302": "租房",
                                            "303": "小区"]
+
+    let categoryNames = ["old_message_list",
+                         "new_message_list",
+                         "be_null",
+                         "neighborhood_message_list"]
     var datas: [UserUnreadInnerMsg] = []
     
     private let disposeBag = DisposeBag()
@@ -199,6 +218,12 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = MessageListVC()
+        let params = TracerParams.momoid() <|>
+                toTracerParams("click", key: "enter_type") <|>
+                beNull(key: "log_pb") <|>
+                toTracerParams(categoryNames[indexPath.row], key: "category_name")
+
+        vc.traceParams = params
         vc.messageId = datas[indexPath.row].id
         
         

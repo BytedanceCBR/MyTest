@@ -119,8 +119,6 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         tracerParams = tracerParams <|>
             toTracerParams("click", key: "enter_type") <|>
             toTracerParams(HouseCategory.house_model_list.rawValue, key: EventKeys.category_name)
-        tracerParams = tracerParams <|>
-            toTracerParams("pre_load_more", key: "refresh_type")
 
         stayTimeParams = tracerParams <|> traceStayTime()
 

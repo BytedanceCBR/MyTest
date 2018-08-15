@@ -40,6 +40,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     weak var infoMaskView: EmptyMaskView?
 
+    var traceParams = TracerParams.momoid()
+
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?){
         self.tableView = tableView
         self.navVC = navVC
@@ -118,7 +120,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         subDisposeBag = DisposeBag()
         if let data = response.data {
-            let theParams = TracerParams.momoid() <|> paramsOfMap(data.logPB ?? [:])
+            let theParams = EnvContext.shared.homePageParams <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("list", key: "maintab_entrance") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
@@ -147,10 +153,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data, navVC: navVC, bottomBarBinder: self.bindBottomView())
                 <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 >= 5) { [unowned self] in
-                    let traceParams = theParams
-
+                    let floorPanTraceParams = theParams <|>
+                        toTracerParams("house_model_list", key: "category_name") <|>
+                        toTracerParams("house_model_loadmore", key: "element_from") <|>
+                        toTracerParams("slide", key: "card_type")
                     openFloorPanCategoryPage(
                             floorPanId: "\(courtId)",
+                            traceParams: floorPanTraceParams,
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
                             bottomBarBinder: self.bindBottomView())()
@@ -407,6 +416,7 @@ func openFloorPanInfoPage(
 
 func openFloorPanCategoryPage(
     floorPanId: String,
+    traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
@@ -415,9 +425,7 @@ func openFloorPanCategoryPage(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
                 bottomBarBinder: bottomBarBinder)
-        let params = EnvContext.shared.homePageParams
-
-        detailPage.tracerParams = params
+        detailPage.tracerParams = traceParams
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     navVC?.popViewController(animated: true)

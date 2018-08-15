@@ -54,8 +54,6 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.searchSource = searchSource
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.titleName.accept(title ?? "小区房源")
-
-        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
     }
 
     override func viewDidLoad() {
@@ -76,7 +74,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 .map { $0.0 + $0.1 }
                 .bind(to: self.navBar.title.rx.text)
                 .disposed(by: disposeBag)
-        
+
+        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
         requestData()
         
         self.conditionFilterViewModel = ConditionFilterViewModel(
@@ -194,8 +193,6 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
 
 //        self.searchAndConditionFilterVM.sendSearchRequest()
-        tracerParams = tracerParams <|>
-            toTracerParams("pre_load_more", key: "refresh_type")
         stayTimeParams = tracerParams <|> traceStayTime()
 
         // 进入列表页埋点
@@ -224,6 +221,9 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     }
 
     func loadMore() {
+        let refreshParams = self.tracerParams <|>
+                toTracerParams("pre_load_more", key: "refresh_type")
+        recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         ershouHouseListViewModel?.pageableLoader?()
     }
 

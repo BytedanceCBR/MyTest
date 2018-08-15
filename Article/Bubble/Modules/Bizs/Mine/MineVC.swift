@@ -32,6 +32,9 @@ class MineVC: BaseViewController {
     var tracerParams = TracerParams.momoid()
 
 
+    private var stayTabParams = TracerParams.momoid()
+    private var theThresholdTracer: ((String, TracerParams) -> Void)?
+
     deinit {
 
     }
@@ -66,13 +69,19 @@ class MineVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-
+        self.theThresholdTracer = thresholdTracer()
+        self.stayTabParams = TracerParams.momoid() <|>
+                toTracerParams("mine", key: "tab_name") <|>
+                toTracerParams("click_tab", key: "enter_type") <|>
+                toTracerParams("0", key: "with_tips") <|>
+                traceStayTime()
 //        let url = URL(string: "sslocal://webview?url=http://www.baidu.com")
 //        TTRoute.shared().openURL(byPushViewController: url)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.theThresholdTracer?(TraceEventName.stay_tab, self.stayTabParams)
     }
     
     override func viewDidAppear(_ animated: Bool) {
