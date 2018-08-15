@@ -34,8 +34,11 @@ func requestUserUnread(query: String = "") -> Observable<UserUnreadMessageRespon
         })
 }
 
-
-func requestUserMessageList(listId: String = "", minCursor: String = "", limit: String="0", query: String = "") -> Observable<UserListMessageResponse?> {
+func requestUserMessageList(
+    listId: String = "",
+    minCursor: String = "",
+    limit: String="10",
+    query: String = "") -> Observable<UserListMessageResponse?> {
     var url = "\(EnvContext.networkConfig.host)/f100/api/msg/list?list_id=\(listId)&minCursor=\(minCursor)&limit=\(limit)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
@@ -57,4 +60,22 @@ func requestUserMessageList(listId: String = "", minCursor: String = "", limit: 
                 return nil
             }
         })
+}
+
+
+func pageRequestUserMessageList(
+    listId: String = "",
+    limit: String="10",
+    query: String = "") -> () -> Observable<UserListMessageResponse?> {
+    var course: String = ""
+    return {
+        return requestUserMessageList(
+            listId: listId,
+            minCursor: course,
+            limit: limit,
+            query: query)
+            .do(onNext: { (response) in
+                course = response?.data?.minCursor ?? ""
+            })
+    }
 }

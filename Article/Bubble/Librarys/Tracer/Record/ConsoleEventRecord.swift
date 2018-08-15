@@ -10,14 +10,14 @@ class ConsoleEventRecord: TracerRecord {
         if #available(iOS 11.0, *) {
             if let data = try? JSONSerialization.data(withJSONObject: params, options: [.prettyPrinted, .sortedKeys]) as Data,
                 let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                print("event: (\(key)) -> \(json)")
+                print("event: \n\n \(key) : \(json) \n")
             } else {
                 assertionFailure("打点数据记录失败")
             }
         } else {
             if let data = try? JSONSerialization.data(withJSONObject: params, options: [.prettyPrinted]) as Data,
                 let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                print("event: (\(key)) -> \(json)")
+                print("event: \n\n \(key) : \(json) \n")
             } else {
                 assertionFailure("打点数据记录失败")
             }

@@ -107,12 +107,15 @@ class ChatVC: BaseViewController {
                 if let responseData = responsed?.data?.unread {
                     self.tableViewModel?.datas = responseData
                     self.tableView.reloadData()
-                    self.emptyMaskView.isHidden = true
+                    if responseData.count == 0 {
+                        self.showEmptyInfo()
+                    } else {
+                        self.emptyMaskView.isHidden = true
+                    }
 
                 }
             }, onError: { [unowned self] (error) in
-                self.emptyMaskView.isHidden = false
-                self.emptyMaskView.label.text = "网络异常"
+                self.showNetworkError()
             })
             .disposed(by: disposeBag)
     }
@@ -123,6 +126,16 @@ class ChatVC: BaseViewController {
         if let navVC = self.navigationController as? TTNavigationController {
             navVC.removeTabBarSnapshot(forSuperView: self.view)
         }
+    }
+    
+    fileprivate func showEmptyInfo() {
+        self.emptyMaskView.isHidden = false
+        self.emptyMaskView.label.text = "还没有关注的信息"
+    }
+    
+    fileprivate func showNetworkError() {
+        self.emptyMaskView.isHidden = false
+        self.emptyMaskView.label.text = "网络异常"
     }
     
     /*
