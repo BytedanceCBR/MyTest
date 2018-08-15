@@ -391,7 +391,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
         if let theCell = cell as? AreaConditionCell {
             theCell.label.text = nodes[indexPath.row].label
-            theCell.checkboxBtn.isHidden = !isShowCheckBox || nodes[indexPath.row].isEmpty == 1
+            theCell.showCheckbox(isShowCheckBox && nodes[indexPath.row].isEmpty != 1)
             if selectedIndexPaths.contains(indexPath) {
                 setCellSelected(true, cell: theCell)
             }
@@ -487,13 +487,24 @@ fileprivate class AreaConditionCell: UITableViewCell {
         bgView.backgroundColor = UIColor.clear
         selectedBackgroundView = bgView
         label.snp.makeConstraints { maker in
-            maker.left.right.equalTo(25)
+            maker.left.equalTo(15)
             maker.top.equalTo(12)
             maker.height.equalTo(21)
-            maker.right.equalTo(checkboxBtn.snp.left).offset(10)
+            maker.right.equalTo(checkboxBtn.snp.left).offset(15)
             //TODO: fixbug 文字右侧约束不起作用
         }
 
+    }
+
+    fileprivate func showCheckbox(_ showCheckBox: Bool) {
+        checkboxBtn.isHidden = !showCheckBox
+        checkboxBtn.snp.updateConstraints { (maker) in
+            if showCheckBox {
+                maker.right.equalTo(-23)
+            } else {
+                maker.right.equalTo(0)
+            }
+        }
     }
 
     fileprivate override func prepareForReuse() {
