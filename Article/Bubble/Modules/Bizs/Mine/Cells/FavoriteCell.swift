@@ -260,7 +260,14 @@ fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: Disp
             toTracerParams("click", key: "enter_type") <|>
             toTracerParams("maintab", key: "enter_from") <|>
             toTracerParams("maintab_icon", key: "element_from") <|>
-            toTracerParams("icon", key: "maintab_entrance")
+            toTracerParams("icon", key: "maintab_entrance") <|>
+            beNull(key: "filter") <|>
+            beNull(key: "log_pb") <|>
+            beNull(key: "maintab_search") <|>
+            beNull(key: "operation_name") <|>
+            beNull(key: "card_type") <|>
+            beNull(key: "icon_type") <|>
+            beNull(key: "search")
     switch item.entryId {
     case 1:
         params = params <|>

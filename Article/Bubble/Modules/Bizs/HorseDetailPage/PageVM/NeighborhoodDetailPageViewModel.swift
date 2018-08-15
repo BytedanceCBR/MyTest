@@ -178,6 +178,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.id ,
                         let title = data.name {
+
+                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+                            EnvContext.shared.homePageParams <|>
+                            toTracerParams("click", key: "enter_type") <|>
+                            toTracerParams("same_neighborhood_loadmore", key: "element_from")
+
                         openErshouHouseList(
 //                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
                                 title: title,
@@ -185,7 +191,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .neighborhoodDetail,
-                                tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]),
+                                tracerParams: params,
                                 bottomBarBinder: self.bindBottomView())
                     }
                 }
@@ -195,12 +201,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
+
+                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
+                            EnvContext.shared.homePageParams <|>
+                            toTracerParams("click", key: "enter_type") <|>
+                            toTracerParams("neighborhood_nearby_loadmore", key: "element_from")
+
                         openRelatedNeighborhoodList(
-                                neighborhoodId: id,
-                                disposeBag: self.disposeBag,
-                                tracerParams: paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]),
-                                navVC: self.navVC,
-                                bottomBarBinder: self.bindBottomView())
+                            neighborhoodId: id,
+                            disposeBag: self.disposeBag,
+                            tracerParams: params,
+                            navVC: self.navVC,
+                            bottomBarBinder: self.bindBottomView())
                     }
                 }
             return dataParser.parser

@@ -27,6 +27,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     weak var navVC: UINavigationController?
 
+    var homePageCommonParams: TracerParams = TracerParams.momoid()
+
     init(tableView: UITableView, navVC: UINavigationController?) {
         self.navVC = navVC
         self.tableView = tableView
@@ -46,15 +48,30 @@ class HomeListViewModel: DetailPageViewModel {
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag, navVC: self.navVC)
-                        <- parseOpNode(config?.opData, disposeBag: self.disposeBag)
+                        <- parseOpNode(config?.opData, traceParams: self.homePageCommonParams, disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
-                            self.openCategoryList(houseType: .secondHandHouse, condition: ConditionAggregator.monoid().aggregator)
+                            let traceParams = self.homePageCommonParams <|>
+                                toTracerParams("list_loadmore", key: "maintab_entrance") <|>
+                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                                toTracerParams("old_list", key: "category_name")
+
+                            self.openCategoryList(
+                                houseType: .secondHandHouse,
+                                traceParams: traceParams,
+                                condition: ConditionAggregator.monoid().aggregator)
                         }
                         <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0, isShowBottomBar: false) {
-                            self.openCategoryList(houseType: .newHouse, condition: ConditionAggregator.monoid().aggregator)
-                    }
+                            let traceParams = self.homePageCommonParams <|>
+                                toTracerParams("list_loadmore", key: "maintab_entrance") <|>
+                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                                toTracerParams("new_list", key: "category_name")
+                            self.openCategoryList(
+                                houseType: .newHouse,
+                                traceParams: traceParams,
+                                condition: ConditionAggregator.monoid().aggregator)
+                        }
                     return dataParser.parser([])
                 } else {
                     return []
@@ -81,8 +98,12 @@ class HomeListViewModel: DetailPageViewModel {
             disposeBag: disposeBag)()
     }
 
-    private func openCategoryList(houseType: HouseType, condition: @escaping (String) -> String) {
+    private func openCategoryList(
+        houseType: HouseType,
+        traceParams: TracerParams,
+        condition: @escaping (String) -> String) {
         let vc = CategoryListPageVC(isOpenConditionFilter: true)
+        vc.tracerParams = traceParams
         vc.houseType.accept(houseType)
         vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
             condition($0)
@@ -98,15 +119,23 @@ class HomeListViewModel: DetailPageViewModel {
 
 }
 
-fileprivate func parseOpNode(_ data: OpData?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
+fileprivate func parseOpNode(
+    _ data: OpData?,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> () -> TableSectionNode? {
+    let theParams = traceParams <|>
+        toTracerParams("operation", key: "maintab_entrance")
     if data?.opStyle == 1 {
-        return parseFlatOpNode(data?.items ?? [], disposeBag: disposeBag)
+        return parseFlatOpNode(data?.items ?? [], traceParams: theParams, disposeBag: disposeBag)
     } else {
-        return parseGridOpNode(data?.items ?? [], disposeBag: disposeBag)
+        return parseGridOpNode(data?.items ?? [], traceParams: theParams, disposeBag: disposeBag)
     }
 }
 
-func parseNewHouseListItemNode(_ data: CourtRecommendSection?, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseNewHouseListItemNode(
+    _ data: CourtRecommendSection?,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         let selectors = data?.items?
                 .filter { $0.id != nil }
@@ -129,7 +158,10 @@ func parseNewHouseListItemNode(_ data: CourtRecommendSection?, disposeBag: Dispo
     }
 }
 
-func paresNewHouseListRowItemNode(_ data: [CourtItemInnerEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> [TableRowNode] {
+func paresNewHouseListRowItemNode(
+    _ data: [CourtItemInnerEntity]?,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?) -> [TableRowNode] {
     let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
