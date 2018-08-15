@@ -439,6 +439,33 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
             let render = curry(fillFollowUpListItemCell)(item)
             let editor = { (style: UITableViewCellEditingStyle) -> Observable<TableRowEditResult> in
                 if let ht = HouseType(rawValue: item.houseType ?? -1), let followId = item.followId {
+                    
+                    var tracerParams = TracerParams.momoid()
+                    let logPB = item.logPB ?? "be_null"
+
+                    var category_name = "be_null"
+                    switch ht {
+                        
+                    case .newHouse:
+                        // "新房"
+                        category_name = "new_follow_list"
+                    case .secondHandHouse:
+                        // "二手房"
+                        category_name = "old_follow_list"
+                    case .neighborhood:
+                        // "小区"
+                        category_name = "neighborhood_follow_list"
+                    default:
+                        break
+                        
+                    }
+                    tracerParams = tracerParams <|>
+                        toTracerParams(category_name, key: "page_type") <|>
+                    toTracerParams(followId, key: "group_id") <|>
+                    toTracerParams(logPB, key: "impr_id")
+
+                    recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
+                    
                     return cancelFollowUp(houseType: ht, followId: followId)
                 } else {
                     return .empty()

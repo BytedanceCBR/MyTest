@@ -26,4 +26,8 @@ class TraceEventName: NSObject {
 
     static let category_refresh = "category_refresh" // 发现tab category刷新
 
+    static let delete_follow = "delete_follow" // 删除关注/取消关注
+
+
+
 }
