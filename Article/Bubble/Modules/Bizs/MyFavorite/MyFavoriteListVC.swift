@@ -44,10 +44,7 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
     
     var tracerParams = TracerParams.momoid()
 
-
     let disposeBag = DisposeBag()
-
-    var tracerParams = TracerParams.momoid()
 
     var stayTimeParams: TracerParams?
 
