@@ -11,8 +11,15 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-class MessageListVC: BaseViewController, UITableViewDelegate {
-
+class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
+    
+    var hasMore = false
+    
+    lazy var footIndicatorView: LoadingIndicatorView? = {
+        let re = LoadingIndicatorView()
+        return re
+    }()
+    
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
         re.rightBtn.isHidden = true
@@ -27,6 +34,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
         if #available(iOS 11.0, *) {
             re.contentInsetAdjustmentBehavior = .never
         }
+        re.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         return re
     }()
 
@@ -40,10 +48,15 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     private var tableListViewModel: ChatDetailListTableViewModel?
 
     var messageId: String?
-    
+    var tracerParams = TracerParams.momoid()
+
     private var minCursor: String?
     
     private let limit = "10"
+    
+    var pageableLoader: (() -> Void)?
+    
+    var dataLoader: ((Bool, Int) -> Void)?
 
     var traceParams = TracerParams.momoid()
 
@@ -51,6 +64,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
         self.view.backgroundColor = UIColor.white
         self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController)
         self.tableListViewModel?.traceParams = traceParams
@@ -79,23 +93,36 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
 
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
         if let messageId = messageId {
-            requestUserMessageList(
-                listId: messageId,
-                minCursor: "",
-                limit: "10",
-                query: "")
+            loadData(messageId: messageId)
+        }
+    }
+    
+    fileprivate func loadData(messageId: String) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            return
+        }
+        
+        let loader = pageRequestUserMessageList(listId: messageId,
+                                                limit: "10",
+                                                query: "")
+        pageableLoader = { [unowned self] in
+            loader()
                 .subscribe(onNext: { [unowned self] (responsed) in
                     if let responseData = responsed?.data?.items, responseData.count != 0 {
+                        self.hasMore = responsed?.data?.hasMore ?? false
+                        self.dataLoader?(self.hasMore, responseData.count)
                         self.tableListViewModel?.datas = responseData
                         self.tableView.reloadData()
+  
                     } else {
                         self.showEmptyMaskView()
                     }
-
+                    
                     }, onError: { (error) in
                         print(error)
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: self.disposeBag)
         }
 
         stayTimeParams = traceParams <|> traceStayTime()
@@ -128,6 +155,20 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
             maker.top.bottom.right.left.equalTo(tableView)
         }
         emptyMaskView.label.text = "啊哦～你还没有收到消息～"
+    }
+    
+    private func showNetworkError() {
+        //TODO:
+    }
+    
+    func loadMore() {
+        
+        tracerParams = tracerParams <|>
+            toTracerParams("pre_load_more", key: "refresh_type")
+
+        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+
+        self.pageableLoader?()
     }
     
 }

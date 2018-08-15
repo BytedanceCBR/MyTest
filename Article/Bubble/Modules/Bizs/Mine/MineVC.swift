@@ -28,6 +28,9 @@ class MineVC: BaseViewController {
     let disposeBag = DisposeBag()
 
     var mineViewModel: MinePageViewModel?
+    
+    var tracerParams = TracerParams.momoid()
+
 
     private var stayTabParams = TracerParams.momoid()
     private var theThresholdTracer: ((String, TracerParams) -> Void)?

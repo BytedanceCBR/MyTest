@@ -91,6 +91,9 @@
 #import "AKProfileBenefitManager.h"
 #import "AKLoginTrafficViewController.h"
 
+#import "Bubble-Swift.h"
+
+
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
 extern NSString *const kFRHadShowFirstForumLikeTips;
@@ -456,6 +459,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                     DidSelectItem();
                 }
             }];
+            
+            [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
+
 
         }
 
@@ -1085,7 +1091,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //            firstLoad = NO;
 //        }
         [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
+        
+    } else if ([[self currentTabIdentifier] isEqualToString:kFHouseHomeTabKey]) {
+
+        [self trackBadgeWithTabBarTag:kFHouseHomeTabKey];
+        
+    }else if ([[self currentTabIdentifier] isEqualToString:kFHouseMessageTabKey]) {
+        
+        [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
+
+    }else if ([[self currentTabIdentifier] isEqualToString:kFHouseMineTabKey]) {
+        
+        [self trackBadgeWithTabBarTag:kFHouseMineTabKey];
+
     }
+    
+    
     TLS_LOG(@"didSelectViewController=%ld", self.selectedIndex);
     
 
@@ -1716,6 +1737,42 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //}
 
 #pragma mark - 红点统计
+- (void)trackBadgeWithTabBarTag:(NSString *)tag {
+
+    NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:tag];
+    
+    if (index >= self.viewControllers.count) {
+        return;
+    }
+    TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
+    NSString *tab_name = @"be_null";
+    NSString *enter_type = @"click_tab";
+    NSString *with_tips = @"0";
+    
+    if ([tag isEqualToString:kFHouseHomeTabKey]) {
+        tab_name = @"main";
+    }
+    else if ([tag isEqualToString:kFHouseMessageTabKey]) {
+        tab_name = @"message";
+    }
+    else if ([tag isEqualToString:kFHouseMineTabKey]){
+        tab_name = @"mine";
+    }
+    if (badgeView.badgeValue) {
+        
+        with_tips = @"1";
+    }
+    
+    NSMutableDictionary *params = @{@"with_tips": with_tips, @"enter_type": enter_type}.mutableCopy;
+    if (tab_name.length > 0) {
+        
+        [params setObject:tab_name forKey:@"tab_name"];
+    }
+
+    [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
+    
+}
+
 
 - (void)trackBadgeWithLabel:(NSString *)label tabBarTag:(NSString *)tag
 {

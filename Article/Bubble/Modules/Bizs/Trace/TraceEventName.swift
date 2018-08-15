@@ -18,4 +18,12 @@ class TraceEventName: NSObject {
     static let category_refresh = "category_refresh" //刷新数据
 
     static let stay_tab = "stay_tab"
+
+    @objc
+    static let enter_tab = "enter_tab" // 进入tab
+
+    static let go_detail = "go_detail" // 我的tab详情页
+
+    static let category_refresh = "category_refresh" // 发现tab category刷新
+
 }
