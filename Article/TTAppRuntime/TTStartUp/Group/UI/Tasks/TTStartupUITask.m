@@ -35,7 +35,6 @@
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
-    [[[EnvContext shared] client] onStart];
     [[self class] makeKeyWindowVisible];
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];

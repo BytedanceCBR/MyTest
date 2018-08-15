@@ -171,7 +171,7 @@ def appPods
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
 
     #-----头条网络库-----
-    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+    pod 'TTNetworkManager'
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
 #    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'

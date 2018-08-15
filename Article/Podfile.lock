@@ -1,4 +1,28 @@
 PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - AKCommentPlugin (0.1.0):
     - AKShareServicePlugin
     - BDTArticle
@@ -686,9 +710,10 @@ PODS:
     - TTThemed
     - TTTracker
     - TTUserSettings
-  - TTNetworkManager (2.2.8.25):
-    - boringssl (~> 0.0.4)
-    - Godzippa (~> 1.0)
+  - TTNetworkManager (2.2.8.35):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+    - boringssl (~> 0.0.6)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -1141,7 +1166,7 @@ DEPENDENCIES:
   - TTLCSService (= 0.1.1)
   - TTMonitor (from `../AKPlugins/TTMonitor`)
   - TTNetBusiness (= 0.0.10)
-  - TTNetworkManager (from `git@code.byted.org:TTIOS/tt_pods_network.git`, commit `fea3c88cb586f624970bdf5629f11aa1dc9c8521`)
+  - TTNetworkManager
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -1228,9 +1253,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKImagePicker
   TTMonitor:
     :path: ../AKPlugins/TTMonitor
-  TTNetworkManager:
-    :commit: fea3c88cb586f624970bdf5629f11aa1dc9c8521
-    :git: git@code.byted.org:TTIOS/tt_pods_network.git
   TTNewsAccountBusiness:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
@@ -1261,14 +1283,13 @@ CHECKOUT OPTIONS:
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
-  TTNetworkManager:
-    :commit: fea3c88cb586f624970bdf5629f11aa1dc9c8521
-    :git: git@code.byted.org:TTIOS/tt_pods_network.git
   TTPlatformBaseLib:
     :commit: 800e1767622e8bcbd0e68b1c60c8b13745618588
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
 
 SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKPay: 51c55908428310a6ed799582c6b802b38470b7b5
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
@@ -1346,7 +1367,7 @@ SPEC CHECKSUMS:
   TTLCSService: 879748b3251901ee407a7ed42bc3c52006008dd9
   TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
   TTNetBusiness: e05af99f3547ffb9a00eab5ec3035c8ab52d552d
-  TTNetworkManager: 2a38ca8d1daefef71af9066be296de4450b39483
+  TTNetworkManager: e083787b500995545abb205aabe0cee54fb6b267
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
@@ -1387,6 +1408,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: b106ac532ea3c7d4ac5d575f63eac80c98b2d7fe
+PODFILE CHECKSUM: cb9d66854d172cebedbd4358bcbbcad1dcac86aa
 
 COCOAPODS: 1.4.0
