@@ -17,19 +17,10 @@ class CountryListVC: BaseViewController {
     lazy private var searchConfigCache: YYCache? = {
         YYCache(name: "countryListHistory")
     }()
-
-
-    lazy var navBar: SearchNavBar = {
-        let result = SearchNavBar()
-        result.searchInput.returnKeyType = .go
-        result.searchInput.placeholder = "请输入城市名"
-        result.searchable = true
-        result.backBtn.rx.tap
-                .subscribe({ [unowned self]  void in
-                    self.onClose?(self)
-                })
-                .disposed(by: disposeBag)
-        return result
+    
+    lazy var navBar: SimpleNavBar = {
+        let re = SimpleNavBar()
+        return re
     }()
 
     lazy var tableView: UITableView = {
@@ -60,20 +51,25 @@ class CountryListVC: BaseViewController {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = .default
         self.view.backgroundColor = UIColor.white
-        view.addSubview(navBar)
+        
+        navBar.title.text = "城市选择"
+        self.view.addSubview(navBar)
+        navBar.removeGradientColor()
         navBar.snp.makeConstraints { maker in
+            
             maker.left.right.top.equalToSuperview()
             if #available(iOS 11, *) {
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(58)
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
             } else {
                 maker.height.equalTo(65)
             }
         }
-
+        
         view.addSubview(locationBar)
         locationBar.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
+
         }
 
         view.addSubview(tableView)
@@ -134,15 +130,6 @@ class CountryListVC: BaseViewController {
                 })
                 .disposed(by: disposeBag)
 
-        navBar.searchInput.rx.text
-                .debounce(0.3, scheduler: MainScheduler.instance)
-                // 过滤输入法的不可见字符
-                .map { $0?.filter { $0 != " " }.lowercased() }
-                .subscribe(onNext: { [unowned self] s in
-                    self.dataSource.setFilterCondition(filterStr: s)
-                    self.tableView.reloadData()
-                })
-                .disposed(by: disposeBag)
     }
 
     override func viewWillAppear(_ animated: Bool) {
