@@ -81,6 +81,7 @@ struct UserFollowData: Mappable {
         var tags: [Tag]?
         var images: [ImageItem] = []
         var houseType: Int?
+        var logPB: Any?
 
         init?(map: Map) {
 
@@ -96,6 +97,7 @@ struct UserFollowData: Mappable {
             tags <- map["tags"]
             images <- map["images"]
             houseType <- map["house_type"]
+            logPB <- map["log_pb"]
         }
     }
 
