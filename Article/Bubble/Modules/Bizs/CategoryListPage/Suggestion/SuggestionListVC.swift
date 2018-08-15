@@ -325,6 +325,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         return UITableViewAutomaticDimension
     }
 
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            return 34
+    }
+
     func sendQuery(
             tableView: UITableView) -> (String?) -> Void {
         return { [unowned self] (query) in
