@@ -44,6 +44,10 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
 
     let disposeBag = DisposeBag()
 
+    var tracerParams = TracerParams.momoid()
+
+    var stayTimeParams: TracerParams?
+
     init(houseType: HouseType) {
         self.houseType = houseType
         self.hasMore = true
@@ -126,6 +130,10 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
             })
             .disposed(by: disposeBag)
 
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -134,6 +142,10 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
+        stayTimeParams = nil
     }
 
     private func setTitle(houseType: HouseType) {

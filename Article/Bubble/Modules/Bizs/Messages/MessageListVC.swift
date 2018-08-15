@@ -45,11 +45,15 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
     
     private let limit = "10"
 
+    var traceParams = TracerParams.momoid()
+
+    var stayTimeParams: TracerParams?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController)
-
+        self.tableListViewModel?.traceParams = traceParams
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
@@ -93,14 +97,25 @@ class MessageListVC: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
         }
+
+        stayTimeParams = traceParams <|> traceStayTime()
+
+        recordEvent(key: TraceEventName.enter_category, params: traceParams)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UIApplication.shared.statusBarStyle = .default
-
     }
-    
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = stayTimeParams {
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+        }
+        stayTimeParams = nil
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -124,6 +139,8 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     let disposeBag = DisposeBag()
     
     weak var navVC: UINavigationController?
+
+    var traceParams = TracerParams.momoid()
     
     init(navVC: UINavigationController?) {
         self.navVC = navVC

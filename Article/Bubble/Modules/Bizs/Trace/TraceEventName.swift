@@ -14,4 +14,8 @@ class TraceEventName: NSObject {
     static let enter_category = "enter_category" // 进入列表页
 
     static let stay_category = "stay_category" //停留时间
+
+    static let category_refresh = "category_refresh" //刷新数据
+
+    static let stay_tab = "stay_tab"
 }

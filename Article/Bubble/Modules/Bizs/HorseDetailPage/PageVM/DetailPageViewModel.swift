@@ -16,6 +16,8 @@ protocol DetailPageViewModel: class {
 
     var disposeBag: DisposeBag { get }
 
+    var traceParams: TracerParams { get set }
+
 //    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
 //
 //    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }

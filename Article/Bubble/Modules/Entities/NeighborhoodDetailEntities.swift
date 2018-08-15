@@ -146,6 +146,7 @@ struct NeighborhoodDetailData: Mappable {
     var totalSales: TotalSalesItem?
     var tags: [TagItem]?
     var neighbordhoodStatus: NeighborhoodUsertatus?
+    var logPB: Any?
 
     
     init?(map: Map) {
@@ -165,6 +166,7 @@ struct NeighborhoodDetailData: Mappable {
         coreInfo <- map["core_info"]
         abtestVersions <- map["abtest_versions"]
         neighbordhoodStatus <- map["neighbordhood_status"]
+        logPB <- map["log_pb"]
     }
 }
 

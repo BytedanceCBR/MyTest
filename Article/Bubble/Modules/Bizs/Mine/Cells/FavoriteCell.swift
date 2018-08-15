@@ -130,6 +130,11 @@ func parseFavoriteNode(disposeBag: DisposeBag, navVC: UINavigationController?) -
                      HouseType.neighborhood].map { (houseType) in
                         return confirmUserAuth(navVC: navVC) { [weak navVC] in
                             let vc = MyFavoriteListVC(houseType: houseType)
+                            let params = TracerParams.momoid() <|>
+                                    toTracerParams("click", key: "enter_type") <|>
+                                    beNull(key: "log_pb") <|>
+                                    toTracerParams(categoryNameByHouseType(houseType: houseType), key: "category_name")
+                            vc.tracerParams = params
                             vc.navBar.backBtn.rx.tap
                                 .subscribe(onNext: { void in
                                     navVC?.popViewController(animated: true)
@@ -149,6 +154,19 @@ func parseFavoriteNode(disposeBag: DisposeBag, navVC: UINavigationController?) -
     return {
         let cellRender = curry(fillFavoriteCell)(items)
         return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: FavoriteCell.identifier))
+    }
+}
+
+fileprivate func categoryNameByHouseType(houseType: HouseType) -> String {
+    switch houseType {
+        case .newHouse:
+            return "new_follow_list"
+        case .secondHandHouse:
+            return "old_follow_list"
+        case .neighborhood:
+            return "neighborhood_follow_list"
+        default:
+            return "be_null"
     }
 }
 

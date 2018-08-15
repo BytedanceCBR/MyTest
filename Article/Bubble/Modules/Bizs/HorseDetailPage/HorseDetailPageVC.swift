@@ -63,6 +63,8 @@ class HorseDetailPageVC: BaseViewController {
     
     var isShowFollowNavBtn = false
 
+    var traceParams = TracerParams.momoid()
+
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
@@ -121,7 +123,7 @@ class HorseDetailPageVC: BaseViewController {
         view.backgroundColor = UIColor.white
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController)
-        
+        detailPageViewModel?.traceParams = traceParams
         setupNavBar()
 
         if isShowBottomBar {

@@ -57,7 +57,6 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
 
         tracerParams = tracerParams <|>
             toTracerParams("click", key: "enter_type") <|>
-            toTracerParams("pre_load_more", key: "refresh_type") <|>
             toTracerParams(HouseCategory.neighborhood_trade_list.rawValue, key: EventKeys.category_name)
         stayTimeParams = tracerParams <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
@@ -75,6 +74,9 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
     }
     
     func loadMore() {
+        let refreshParams = self.tracerParams <|>
+                toTracerParams("pre_load_more", key: "refresh_type")
+        recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         transactionHistoryVM?.pageableLoader?()
     }
     

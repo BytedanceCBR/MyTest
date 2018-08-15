@@ -60,7 +60,7 @@ func recordEvent(key: String, params: [String: Any]? = nil) {
 }
 
 
-func thresholdTracer(threshold: Double) -> (String, TracerParams) -> Void {
+func thresholdTracer(_ threshold: Double = 3) -> (String, TracerParams) -> Void {
     let startTime = Date().timeIntervalSince1970
     return { (key, params) in
         if Date().timeIntervalSince1970 - startTime > threshold {
