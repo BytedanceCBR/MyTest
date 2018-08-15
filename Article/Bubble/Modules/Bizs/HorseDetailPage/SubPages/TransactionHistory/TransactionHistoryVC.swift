@@ -55,7 +55,10 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             })
             .disposed(by: disposeBag)
 
-        tracerParams = tracerParams <|> toTracerParams(HouseCategory.neighborhood_trade_list.rawValue, key: EventKeys.category_name)
+        tracerParams = tracerParams <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("pre_load_more", key: "refresh_type") <|>
+            toTracerParams(HouseCategory.neighborhood_trade_list.rawValue, key: EventKeys.category_name)
         stayTimeParams = tracerParams <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
     }

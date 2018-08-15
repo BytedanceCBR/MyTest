@@ -46,6 +46,12 @@ func toTraceParams<T>(_ value: T, apply: @escaping (T) -> [String: Any]) -> Trac
     }
 }
 
+func beNull(key: String) -> TracerPremeter {
+    return {
+        [key: "be_null"]
+    }
+}
+
 func paramsOfMap(_ data: [String: Any]) -> TracerParams {
     return TracerParams.momoid() <|> mapTracerParams(data)
 }

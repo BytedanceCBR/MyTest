@@ -83,7 +83,11 @@ fileprivate class ItemView: UIView {
     
 }
 
-fileprivate func fillItemView(_ items: [OpData.Item], disposeBag: DisposeBag, cell: BaseUITableViewCell) {
+fileprivate func fillItemView(
+    _ items: [OpData.Item],
+    traceParams: TracerParams,
+    disposeBag: DisposeBag,
+    cell: BaseUITableViewCell) {
     if let theCell = cell as? FlatGridCell {
         let itemViews = items.map { item -> ItemView in
             let re = ItemView()
@@ -94,7 +98,12 @@ fileprivate func fillItemView(_ items: [OpData.Item], disposeBag: DisposeBag, ce
             }
             re.tapGesture.rx.event.subscribe(onNext: { (_) in
                 if let openUrl = item.openUrl {
-                    TTRoute.shared().openURL(byPushViewController: URL(string: openUrl))
+                    let theTraceParams = traceParams <|>
+                        toTracerParams(item.title ?? "be_null", key: "operation_name") <|>
+                        toTracerParams("maintab_operation", key: "element_from")
+                    let paramsMap = theTraceParams.paramsGetter([:])
+                    let userInfo = TTRouteUserInfo(info: paramsMap)
+                    TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                 }
             }).disposed(by: disposeBag)
             return re
@@ -104,9 +113,12 @@ fileprivate func fillItemView(_ items: [OpData.Item], disposeBag: DisposeBag, ce
     }
 }
 
-func parseFlatOpNode(_ items: [OpData.Item], disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseFlatOpNode(
+    _ items: [OpData.Item],
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
-        let cellRender = curry(fillItemView)(items)(disposeBag)
+        let cellRender = curry(fillItemView)(items)(traceParams)(disposeBag)
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,

@@ -118,6 +118,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         subDisposeBag = DisposeBag()
         if let data = response.data {
+            let theParams = TracerParams.momoid() <|> paramsOfMap(data.logPB ?? [:])
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
@@ -412,7 +413,9 @@ func openFloorPanCategoryPage(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
                 bottomBarBinder: bottomBarBinder)
+        let params = EnvContext.shared.homePageParams
 
+        detailPage.tracerParams = params
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     navVC?.popViewController(animated: true)

@@ -129,12 +129,15 @@ fileprivate class GridView: UIView {
     }
 }
 
-func parseGridOpNode(_ items: [OpData.Item], disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseGridOpNode(
+    _ items: [OpData.Item],
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> () -> TableSectionNode? {
 //    assert(items.count == 4)
     if items.count >= 4 {
         let its = items.take(4)
         return {
-            let cellRender = curry(fillGridOpCell)(its)(disposeBag)
+            let cellRender = curry(fillGridOpCell)(its)(traceParams)(disposeBag)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -147,7 +150,11 @@ func parseGridOpNode(_ items: [OpData.Item], disposeBag: DisposeBag) -> () -> Ta
 
 }
 
-fileprivate func fillGridOpCell(_ items: [OpData.Item], disposeBag: DisposeBag, cell: BaseUITableViewCell) {
+fileprivate func fillGridOpCell(
+    _ items: [OpData.Item],
+    traceParams: TracerParams,
+    disposeBag: DisposeBag,
+    cell: BaseUITableViewCell) {
     if let theCell = cell as? GridOpBoardCell {
         if items.count >= 4 {
             theCell.grids.enumerated().forEach { e in
@@ -159,7 +166,12 @@ fileprivate func fillGridOpCell(_ items: [OpData.Item], disposeBag: DisposeBag, 
                 view.desc.text = items[index].description
                 view.tapGesture.rx.event.subscribe(onNext: { _ in
                     if let openUrl = items[index].openUrl {
-                        TTRoute.shared().openURL(byPushViewController: URL(string: openUrl))
+                        let theTraceParams = traceParams <|>
+                            toTracerParams(items[index].title ?? "be_null", key: "operation_name") <|>
+                            toTracerParams("maintab_operation", key: "element_from")
+                        let paramsMap = theTraceParams.paramsGetter([:])
+                        let userInfo = TTRouteUserInfo(info: paramsMap)
+                        TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                     }
                 }).disposed(by: disposeBag)
             }
