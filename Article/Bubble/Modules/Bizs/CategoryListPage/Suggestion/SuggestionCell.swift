@@ -104,20 +104,27 @@ class SuggestionNewHouseItemCell: UITableViewCell {
         }
 
         contentView.addSubview(subLabel)
+        contentView.addSubview(secondarySubLabel)
+
+        
         subLabel.snp.makeConstraints { (maker) in
             maker.top.equalTo(label.snp.bottom).offset(6)
             maker.left.equalTo(15)
-            maker.width.greaterThanOrEqualTo(250)
             maker.bottom.equalTo(-13)
             maker.height.equalTo(17)
         }
         
-        contentView.addSubview(secondarySubLabel)
+        secondarySubLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        secondarySubLabel.setContentHuggingPriority(.required, for: .horizontal)
+        
+        subLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        subLabel.setContentHuggingPriority(.required, for: .horizontal)
+        
         secondarySubLabel.snp.makeConstraints { (maker) in
             maker.centerY.equalTo(subLabel.snp.centerY)
             maker.right.equalTo(-15)
-            maker.left.equalTo(subLabel.snp.right).offset(5).priority(.high)
-            maker.width.greaterThanOrEqualTo(63).priority(.high)
+            maker.left.equalTo(subLabel.snp.right).offset(5)
+
         }
 
         contentView.lu.addBottomBorder()
