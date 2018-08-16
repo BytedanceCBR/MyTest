@@ -340,6 +340,7 @@ def appPods
     pod 'AMap3DMap'
     pod 'AMapSearch'
     pod  'OpenUDID', '0.1.0'
+    pod 'TTDebugAssistant', '0.2.31'
 end
 target 'News' do
     appPods

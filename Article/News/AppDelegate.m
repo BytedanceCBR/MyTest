@@ -13,7 +13,6 @@
 // 3.x code
 
 #import "AppDelegate.h"
-
 #define APPSEE_ENABLE 0
 
 extern NSString * const SSCommonLogicSettingWebViewQueryStringEnableKey;
@@ -32,6 +31,7 @@ extern NSString * const SSCommonLogicSettingWebViewQueryStringListKey;
 //#else
 //    return @"wx50d801314d9eb858";
 //#endif
+    
     // 爱看微信appid
     return @"wxc41809a35822b397";
 }
@@ -106,6 +106,7 @@ extern NSString *const kTTAppseeEnableKey;
         [self initAppsee];
     }
 #endif
+
     
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
     

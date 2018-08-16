@@ -608,6 +608,9 @@ PODS:
     - TTPlatformBaseLib
     - TTPlatformUIModel
     - TTTracker
+  - TTDebugAssistant (0.2.31):
+    - MBProgressHUD
+    - RSSwizzle (~> 0.1.0)
   - TTDialogDirector/Camera (0.1.2):
     - TTDialogDirector/Core
   - TTDialogDirector/Contacts (0.1.2):
@@ -1144,6 +1147,7 @@ DEPENDENCIES:
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
   - TTBatchItemAction (= 0.1.7)
+  - TTDebugAssistant (= 0.2.31)
   - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/Core (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
@@ -1351,6 +1355,7 @@ SPEC CHECKSUMS:
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
   TTBatchItemAction: 259f7f729555c8dead78087322aef619fb08c031
+  TTDebugAssistant: 33defeaa56e80776a781e5ffbe149cae2fb44e52
   TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
   TTEntityBase: 2a3c254d18dfdb80e7f4f0c4ab5b19b35a5763fa
@@ -1408,6 +1413,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: cb9d66854d172cebedbd4358bcbbcad1dcac86aa
+PODFILE CHECKSUM: 96bdf22da9556ce591f0fbaa902595a29a204241
 
 COCOAPODS: 1.4.0

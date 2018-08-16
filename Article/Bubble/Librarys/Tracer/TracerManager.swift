@@ -63,7 +63,7 @@ class TracerManager: NSObject {
     var defaultParams: [String: Any]?
 
     override init() {
-        self.records = [ConsoleEventRecord()]
+        self.records = [ConsoleEventRecord(), TTTracerRecord()]
     }
 
     
