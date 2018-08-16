@@ -279,7 +279,10 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
             let mergeInputs = Observable.combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
             confirmBtn.rx.tap
-                    .do(onNext: { [unowned self] in self.showLoading(title: "正在登录中") })
+                    .do(onNext: { [unowned self] in
+                        self.showLoading(title: "正在登录中")
+                        recordEvent(key: TraceEventName.click_login, params: self.tracerParams)
+                    })
                     .withLatestFrom(mergeInputs)
                     .bind(to: quickLoginViewModel.requestLogin)
                     .disposed(by: disposeBag)

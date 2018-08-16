@@ -63,7 +63,11 @@ class QuickLoginAlertViewModel {
 
         let mergeInputs = Observable.combineLatest(re.phoneTextField.rx.text, re.verifyCodeTextField.rx.text)
         re.confirmBtn.rx.tap
-                .do(onNext: { self.showLoading(title: "正在登录中") })
+                .do(onNext: { [unowned self] in
+                    self.showLoading(title: "正在登录中")
+                    recordEvent(key: TraceEventName.click_login, params: self.quickLoginAlert?.tracerParams ?? TracerParams.momoid())
+
+                })
                 .withLatestFrom(mergeInputs)
                 .bind(to: quickLoginVM.requestLogin)
                 .disposed(by: disposeBag)
