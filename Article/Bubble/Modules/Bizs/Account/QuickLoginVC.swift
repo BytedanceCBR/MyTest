@@ -14,6 +14,8 @@ protocol QuickLoginVCDelegate {
 
 class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     
+    var tracerParams = TracerParams.momoid()
+
     var loginDelegate: QuickLoginVCDelegate?
 
     lazy var navBar: SimpleNavBar = {
@@ -135,10 +137,16 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 })
             }
         }.disposed(by: disposeBag)
+        
+        let userInfo = paramObj?.userInfo
+        if let params = userInfo?.allInfo {
+            self.tracerParams = paramsOfMap(params as! [String : Any])
+        }
+        
     }
     
     @objc
-    public init(complete: ((Bool) -> Void)?) {
+    public init(complete: ((Bool) -> Void)?, params:[String: Any]? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.complete = complete
         self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
@@ -154,6 +162,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 })
             }
         }.disposed(by: disposeBag)
+        
+        if let theParams = params {
+            self.tracerParams = paramsOfMap(theParams)
+        }
+        
     }
 
     override func viewDidLoad() {
@@ -297,6 +310,9 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 self.enableConfirmBtn(button: self.confirmBtn, isEnabled: isEnabled)
             })
             .disposed(by: disposeBag)
+        
+        recordEvent(key: TraceEventName.login_page, params: self.tracerParams)
+
     }
 
     override func viewDidLayoutSubviews() {

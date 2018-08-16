@@ -140,13 +140,14 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
 func parseFloorPanItemsNode(
         data: [FloorPan.Item],
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         disposeBag: DisposeBag,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> [TableRowNode] {
     return {
         let renders = data
                 .map { curry(fillCell)($0) }
         let selector = data
-                .map { curry(openDetailPage)($0.id)(navVC)(disposeBag)(bottomBarBinder) }
+                .map { curry(openDetailPage)($0.id)(navVC)(followPage)(disposeBag)(bottomBarBinder) }
         return zip(renders, selector).map {
             TableRowNode(
                     itemRender: $0.0,
@@ -160,11 +161,14 @@ func parseFloorPanItemsNode(
 fileprivate func openDetailPage(
         floorPanId: String?,
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         disposeBag: DisposeBag,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
         if let floorPanId = floorPanId, let id = Int64(floorPanId) {
-            openFloorPanCategoryDetailPage(floorPanId: id, disposeBag: disposeBag, navVC: navVC, bottomBarBinder: bottomBarBinder)()
+            
+            followPage.accept("house_model_detail")
+            openFloorPanCategoryDetailPage(floorPanId: id, disposeBag: disposeBag, navVC: navVC, followPage: followPage, bottomBarBinder: bottomBarBinder)()
         }
     }
 }

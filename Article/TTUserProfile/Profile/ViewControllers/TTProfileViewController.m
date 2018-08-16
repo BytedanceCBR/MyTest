@@ -637,11 +637,13 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     if ([TTAccount sharedAccount].isLogin) {
         operation();
     } else {
+        
+        NSDictionary *params = @{@"enter_from": @"minetab", @"enter_type": @"login"};
         [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
             if (result) {
                 operation();
             }
-        }];
+        } params:params];
     }
 }
 

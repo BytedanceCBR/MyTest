@@ -10,6 +10,10 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
+    
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
+
+    var followTraceParams: TracerParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
@@ -94,6 +98,9 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     self.requestData(houseId: self.houseId)
                 }
             }.disposed(by: disposeBag)
+        
+        self.bindFollowPage()
+
     }
 
     func requestData(houseId: Int64) {
@@ -565,7 +572,7 @@ func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UI
     return {
         let detailPage = HorseDetailPageVC(
             houseId: houseId,
-            houseType: .newHouse,
+            houseType: .secondHandHouse,
             isShowBottomBar: true,
             provider: getErshouHouseDetailPageViewModel())
         detailPage.navBar.backBtn.rx.tap

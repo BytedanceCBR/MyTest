@@ -111,10 +111,21 @@ func parseUserInfoNode(
             }
         } else {
             selector = {
-                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"))
+                
+                var tracerParams = TracerParams.momoid()
+                tracerParams = tracerParams <|>
+                    toTracerParams("minetab", key: "enter_from") <|>
+                    toTracerParams("login", key: "enter_type")
+
+                let paramsMap = tracerParams.paramsGetter([:])
+                let userInfo = TTRouteUserInfo(info: paramsMap)
+                
+                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfo)
                 
                 let map = ["event_type":"house_app2c", "click_type":"login", "page_type":"minetab"]
                 recordEvent(key: TraceEventName.click_minetab, params: map)
+
+                
             }
         }
         return TableSectionNode(
