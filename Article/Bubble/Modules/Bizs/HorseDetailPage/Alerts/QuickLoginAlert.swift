@@ -51,10 +51,12 @@ class QuickLoginAlertViewModel {
                 .bind(onNext: curry(self.enableConfirmBtn)(re.confirmBtn))
                 .disposed(by: disposeBag)
 
+        let paramsGetter = self.recordClickVerifyCode()
         re.sendSmsCodeBtn.rx.tap
                 .do(onNext: { [unowned self] in
                     self.showLoading(title: "正在获取验证码")
                     self.quickLoginVM.blockRequestSendMessage(button: re.sendSmsCodeBtn)
+                    paramsGetter()
                 })
                 .withLatestFrom(re.phoneTextField.rx.text)
                 .bind(to: quickLoginVM.requestSMS).disposed(by: disposeBag)
@@ -79,6 +81,19 @@ class QuickLoginAlertViewModel {
                 .disposed(by: disposeBag)
 
         return re
+    }
+    
+    func recordClickVerifyCode() -> (() -> Void) {
+        var executed = 0
+        return { [unowned self] in
+            let tempExecuted = executed
+            if executed == 0 {
+                executed = 1
+            }
+            
+            recordEvent(key: TraceEventName.click_verifycode, params: (self.quickLoginAlert?.tracerParams ?? TracerParams.momoid()) <|> toTracerParams(tempExecuted, key: "is_resent"))
+
+        }
     }
 
     func enableConfirmBtn(button: UIButton, isEnabled: Bool) {

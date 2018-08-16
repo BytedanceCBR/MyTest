@@ -265,8 +265,14 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         setAgreementContent()
 
         if let quickLoginViewModel = self.quickLoginViewModel {
+            let paramsGetter = self.recordClickVerifyCode()
             sendVerifyCodeBtn.rx.tap
-                    .do(onNext: { [unowned self] in self.showLoading(title: "正在获取验证码") })
+                    .do(onNext: { [unowned self] in
+                        
+                        self.showLoading(title: "正在获取验证码")
+                        recordEvent(key: TraceEventName.click_verifycode, params: self.tracerParams <|> paramsGetter())
+
+                    })
                     .withLatestFrom(phoneInput.rx.text)
                     .bind(to: quickLoginViewModel.requestSMS)
                     .disposed(by: disposeBag)
@@ -313,6 +319,17 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         
         recordEvent(key: TraceEventName.login_page, params: self.tracerParams)
 
+    }
+    
+    func recordClickVerifyCode() -> (() -> TracerParams) {
+        var executed = 0
+        return {
+            let tempExecuted = executed
+            if executed == 0 {
+                executed = 1
+            }
+            return TracerParams.momoid() <|> toTracerParams(tempExecuted, key: "is_resent")
+        }
     }
 
     override func viewDidLayoutSubviews() {

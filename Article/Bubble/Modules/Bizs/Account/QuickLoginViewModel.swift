@@ -16,7 +16,7 @@ class QuickLoginViewModel {
     let onResponse: BehaviorRelay<RequestSMSCodeResult?> = BehaviorRelay<RequestSMSCodeResult?>(value: nil)
 
     let loginResponse: BehaviorRelay<RequestQuickLoginResult?> = BehaviorRelay<RequestQuickLoginResult?>(value: nil)
-
+    
     private let disposeBag = DisposeBag()
 
     weak var sendSMSBtn: UIButton?
@@ -116,7 +116,6 @@ class QuickLoginViewModel {
                 .map {
                     maxElements - $0
                 }
-                .debug("blockRequestSendMessage")
                 .bind(onNext: setButtonCountDown(button: button))
         disposeBag.insert(timerDisposable!)
     }
