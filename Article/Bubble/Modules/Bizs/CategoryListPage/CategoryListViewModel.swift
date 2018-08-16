@@ -12,7 +12,11 @@ import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
     
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
+    
     var traceParams = TracerParams.momoid()
+
+    var followTraceParams: TracerParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 

@@ -12,13 +12,18 @@ import RxCocoa
 class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 
     private let floorPanId: Int64
-
+    
     private var viewModel: FloorPanCategoryDetailPageViewModel?
+
+    private var followPage: BehaviorRelay<String> = BehaviorRelay(value: "house_model_detail")
 
     init(isHiddenBottomBar: Bool,
          floorPanId: Int64,
+         followPage: BehaviorRelay<String>,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.floorPanId = floorPanId
+        self.followPage = followPage
+
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: false,
                 bottomBarBinder: bottomBarBinder)
@@ -28,7 +33,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
         super.viewDidLoad()
         self.viewModel = FloorPanCategoryDetailPageViewModel(
                 tableView: tableView,
-                navVC: self.navigationController)
+                navVC: self.navigationController,
+                followPage: self.followPage)
         self.viewModel?.bottomBarBinder = bottomBarBinder
         viewModel?.request(floorPanId: floorPanId)
         self.viewModel?.request(floorPanId: floorPanId)
@@ -45,11 +51,13 @@ func openFloorPanCategoryDetailPage(
         floorPanId: Int64,
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
         let detailPage = FloorPanCategoryDetailPageVC(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
+                followPage: followPage,
                 bottomBarBinder: bottomBarBinder)
 
         detailPage.navBar.backBtn.rx.tap

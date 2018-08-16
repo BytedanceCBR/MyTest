@@ -35,6 +35,8 @@ fileprivate func filterByRoomCount(count: Int, item: FloorPan.Item)  -> Bool {
 
 class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "house_model_list")
+
     weak var tableView: UITableView?
 
     weak var segmentedControl: FWSegmentedControl?
@@ -61,9 +63,12 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
     init(tableView: UITableView,
          navVC: UINavigationController?,
+         followPage: BehaviorRelay<String>,
          segmentedControl: FWSegmentedControl,
          leftFilterView: UIView,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        
+        self.followPage = followPage
         self.tableView = tableView
         self.navVC = navVC
         self.segmentedControl = segmentedControl
@@ -104,7 +109,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
                     EnvContext.shared.toast.showToast("暂无相关房型~")
                 }
-                self.datas.accept(parseFloorPanItemsNode(data: its.filter(f), navVC: self.navVC, disposeBag: self.disposeBag, bottomBarBinder: bottomBarBinder)())
+                self.datas.accept(parseFloorPanItemsNode(data: its.filter(f), navVC: self.navVC, followPage: self.followPage, disposeBag: self.disposeBag, bottomBarBinder: bottomBarBinder)())
 
                 self.segmentedControl?.indexChangeBlock = { [unowned self] (index) in
                     if index == 0 {
@@ -123,8 +128,26 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                 self.reloadData()
             })
             .disposed(by: disposeBag)
+        
+//        self.bindFollowPage()
+        
     }
 
+//    func bindFollowPage() {
+//
+//        self.followPage
+//            .skip(1)
+//            .subscribe(onNext: { [unowned self] followPage in
+//
+//                self.followTraceParams = self.followTraceParams <|>
+//                    toTracerParams(followPage, key: "enter_from")
+//
+//            })
+//            .disposed(by: disposeBag)
+//
+//
+//    }
+    
     func reloadData() {
         tableView?.reloadData()
     }

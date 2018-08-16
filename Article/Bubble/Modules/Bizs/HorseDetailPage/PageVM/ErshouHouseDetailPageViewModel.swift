@@ -10,6 +10,10 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
+    
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
+
+    var followTraceParams: TracerParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
@@ -94,6 +98,9 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     self.requestData(houseId: self.houseId)
                 }
             }.disposed(by: disposeBag)
+        
+        self.bindFollowPage()
+
     }
 
     func requestData(houseId: Int64) {
@@ -443,24 +450,8 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
                     var tracerParams = TracerParams.momoid()
                     let logPB = item.logPB ?? "be_null"
 
-                    var category_name = "be_null"
-                    switch ht {
-                        
-                    case .newHouse:
-                        // "新房"
-                        category_name = "new_follow_list"
-                    case .secondHandHouse:
-                        // "二手房"
-                        category_name = "old_follow_list"
-                    case .neighborhood:
-                        // "小区"
-                        category_name = "neighborhood_follow_list"
-                    default:
-                        break
-                        
-                    }
                     tracerParams = tracerParams <|>
-                        toTracerParams(category_name, key: "page_type") <|>
+                    toTracerParams(categoryNameByHouseType(houseType: ht), key: "page_type") <|>
                     toTracerParams(followId, key: "group_id") <|>
                     toTracerParams(logPB, key: "impr_id")
 
@@ -484,6 +475,20 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
     })
 
 }
+
+fileprivate func categoryNameByHouseType(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "new_follow_list"
+    case .secondHandHouse:
+        return "old_follow_list"
+    case .neighborhood:
+        return "neighborhood_follow_list"
+    default:
+        return "be_null"
+    }
+}
+
 
 fileprivate func openDetailPage(houseType: HouseType?, followUpId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
     guard let houseType = houseType else {
@@ -567,7 +572,7 @@ func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UI
     return {
         let detailPage = HorseDetailPageVC(
             houseId: houseId,
-            houseType: .newHouse,
+            houseType: .secondHandHouse,
             isShowBottomBar: true,
             provider: getErshouHouseDetailPageViewModel())
         detailPage.navBar.backBtn.rx.tap

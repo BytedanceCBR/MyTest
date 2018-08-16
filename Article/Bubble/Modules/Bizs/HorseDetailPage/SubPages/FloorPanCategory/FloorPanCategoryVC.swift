@@ -10,6 +10,9 @@ import RxCocoa
 class FloorPanCategoryVC: BaseSubPageViewController {
 
     var floorPanId: String
+    
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "house_model_list")
+
 
     lazy var segmentedControl: FWSegmentedControl = {
         let re = FWSegmentedControl.segmentedWith(
@@ -56,8 +59,12 @@ class FloorPanCategoryVC: BaseSubPageViewController {
     var floorPanCategoryViewModel: FloorPanCategoryViewModel?
     
 
-    init(isHiddenBottomBar: Bool, floorPanId: String, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+    init(isHiddenBottomBar: Bool, floorPanId: String,
+         followPage: BehaviorRelay<String>,
+         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        
         self.floorPanId = floorPanId
+        self.followPage = followPage
         super.init(identifier: floorPanId,
                    isHiddenBottomBar: isHiddenBottomBar,
                 bottomBarBinder: bottomBarBinder)
@@ -73,6 +80,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.floorPanCategoryViewModel = FloorPanCategoryViewModel(
                 tableView: tableView,
                 navVC: self.navigationController,
+                followPage: self.followPage,
                 segmentedControl: segmentedControl,
                 leftFilterView: leftFilterView,
                 bottomBarBinder: bottomBarBinder)
@@ -127,6 +135,9 @@ class FloorPanCategoryVC: BaseSubPageViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        followPage.accept("house_model_list")
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {

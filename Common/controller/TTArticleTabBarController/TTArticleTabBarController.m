@@ -454,12 +454,15 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             canItemSelected = NO;
 //            TTRouteUserInfo* obj = [[TTRouteUserInfo alloc] initWithInfo:@{@"callback": DidSelectItem}];
 //            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:obj];
+
+            NSDictionary *params = @{@"enter_from": @"messagetab", @"enter_type": @"tab"};
             [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+                
                 if (result) {
                     DidSelectItem();
                 }
-            }];
-            
+            } params:params];
+                        
             [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
 
 
@@ -1763,12 +1766,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         with_tips = @"1";
     }
     
-    NSMutableDictionary *params = @{@"with_tips": with_tips, @"enter_type": enter_type}.mutableCopy;
-    if (tab_name.length > 0) {
-        
-        [params setObject:tab_name forKey:@"tab_name"];
-    }
-
+    NSMutableDictionary *params = @{@"with_tips": with_tips, @"enter_type": enter_type, @"tab_name": tab_name}.mutableCopy;
     [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
     
 }

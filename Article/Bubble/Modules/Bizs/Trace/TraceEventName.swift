@@ -26,6 +26,11 @@ class TraceEventName: NSObject {
 
     static let delete_follow = "delete_follow" // 删除关注/取消关注
 
+    @objc
+    static let login_page = "login_page" // 进入登录页
 
+    static let click_verifycode = "click_verifycode" // 登录页点击获取验证码
+
+    static let click_login = "click_login" // 进入登录页
 
 }
