@@ -1382,6 +1382,8 @@
 		B34D22B621218C5A00A367C0 /* JoinOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B521218C5A00A367C0 /* JoinOf.swift */; };
 		B34D22B721218CAF00A367C0 /* JoinOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B521218C5A00A367C0 /* JoinOf.swift */; };
 		B34D22B82121AADF00A367C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26BC20F62A7800D4E8D0 /* Assets.xcassets */; };
+		B34D22BA212518F400A367C0 /* TTTracerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B9212518F400A367C0 /* TTTracerRecord.swift */; };
+		B34D22BB212518F400A367C0 /* TTTracerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B9212518F400A367C0 /* TTTracerRecord.swift */; };
 		B36E277F20F62A7900D4E8D0 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26B520F62A7800D4E8D0 /* BubbleImages.xcassets */; };
 		B36E278020F62A7900D4E8D0 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B720F62A7800D4E8D0 /* EnvContext.swift */; };
 		B36E278120F62A7900D4E8D0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
@@ -5781,6 +5783,7 @@
 		B34D22AD21216B5200A367C0 /* CommonEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonEntities.swift; sourceTree = "<group>"; };
 		B34D22B22121728000A367C0 /* EventKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
 		B34D22B521218C5A00A367C0 /* JoinOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinOf.swift; sourceTree = "<group>"; };
+		B34D22B9212518F400A367C0 /* TTTracerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTTracerRecord.swift; sourceTree = "<group>"; };
 		B36E248C20F6192900D4E8D0 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
 		B36E26A620F61A8200D4E8D0 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
 		B36E26A720F61A8300D4E8D0 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
@@ -7345,6 +7348,7 @@
 			isa = PBXGroup;
 			children = (
 				1A21682F14D75BCD0B9AEEE6 /* ConsoleEventRecord.swift */,
+				B34D22B9212518F400A367C0 /* TTTracerRecord.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -15784,6 +15788,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
+				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -15861,6 +15866,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -16058,6 +16064,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
+				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -16135,6 +16142,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -16561,6 +16569,7 @@
 				A97DC44E1F1333630002B455 /* TTProfileViewController+Notification.m in Sources */,
 				F87696EC1F31D0DA00D59CA5 /* TTDetailNatantRelatedVideoGroupView.m in Sources */,
 				43AAB8071F975800004B4071 /* TTVideoFinishRelatedViewService.m in Sources */,
+				B34D22BA212518F400A367C0 /* TTTracerRecord.swift in Sources */,
 				F876941C1F31D0D400D59CA5 /* TTVVideoDetailNatantVideoBanner.m in Sources */,
 				F87696701F31D0D900D59CA5 /* TTVideoTip.m in Sources */,
 				F87696881F31D0D900D59CA5 /* TTVideoTabViewController.m in Sources */,
@@ -18204,6 +18213,7 @@
 				FEFA5409205FB1A8001F50D8 /* ArticleSearchSuggestionView.m in Sources */,
 				FEFA540A205FB1A8001F50D8 /* TSVActivityBannerCollectionViewCell.m in Sources */,
 				FEFA540B205FB1A8001F50D8 /* TTVVideoInformationResponse+TTVArticleProtocolSupport.m in Sources */,
+				B34D22BB212518F400A367C0 /* TTTracerRecord.swift in Sources */,
 				FEFA540C205FB1A8001F50D8 /* TTProfileViewController+Notification.m in Sources */,
 				FEFA540D205FB1A8001F50D8 /* TTDetailNatantRelatedVideoGroupView.m in Sources */,
 				B34D22AB21214D6A00A367C0 /* TabWatcher.swift in Sources */,
