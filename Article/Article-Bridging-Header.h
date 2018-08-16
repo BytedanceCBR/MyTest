@@ -38,6 +38,6 @@
 #import <TTRoute.h>
 #import <TTIndicatorView.h>
 #import "AKLoginTrafficViewController.h"
-#import <TTTracker/TTTracker.h>
+#import <TTTracker.h>
 
 #endif /* Article_Bridging_Header_h */

@@ -22,6 +22,7 @@
 #import "DebugUmengIndicator.h"
 #import <TTTracker/TTTrackerCleaner.h>
 #import "SSWebViewUtil.h"
+#import "TTDebugAssistant.h"
 
 @implementation TTAppLogStartupTask
 
@@ -55,6 +56,10 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[self class] startupTracker];
+
+#if INHOUSE
+    [TTDebugAssistant show];
+#endif
     [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
         //保存today extenstion的impression
         NSMutableDictionary * todayExtenstionImpressions = [ExploreExtenstionDataHelper fetchTodayExtenstionDict];
