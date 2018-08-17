@@ -232,7 +232,6 @@ func operationShowonceRecord(params: TracerParams) -> ElementRecord {
 
 func elementShowOnceRecord(params: TracerParams) -> ElementRecord {
     var isExecuted = false
-    print("elementShowOnceRecord: \(isExecuted)")
     return { (theParams) in
         if isExecuted {
             return
@@ -240,6 +239,18 @@ func elementShowOnceRecord(params: TracerParams) -> ElementRecord {
         isExecuted = true
         let recordParams = theParams <|> params
         recordEvent(key: "element_show", params: recordParams)
+    }
+}
+
+func onceRecord(key: String, params: TracerParams) -> ElementRecord {
+    var isExecured = false
+    return { (theParams) in
+        if isExecured {
+            return
+        }
+        isExecured = true
+        let recordParams = theParams <|> params
+        recordEvent(key: key, params: recordParams)
     }
 }
 

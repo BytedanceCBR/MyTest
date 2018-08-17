@@ -172,12 +172,10 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, navVC: UINavi
                 let lng = ershouHouseData.neighborhoodInfo?.gaodeLng {
                 openMapPage(lat: lat, lng: lng, disposeBag: disposeBag)()
             }
-//            if let neighborhoodId = ershouHouseData.neighborhoodInfo?.id, let id = Int64(neighborhoodId) {
-//                openNeighborhoodDetailPage(neighborhoodId: id, disposeBag: disposeBag, navVC: navVC)()
-//            }
         }
         let params = TracerParams.momoid() <|>
-                toTracerParams("neighborhood_detail", key: "element_type")
+                toTracerParams("neighborhood_detail", key: "element_type") <|>
+                toTracerParams(ershouHouseData.logPB, key: "log_pb")
         return TableSectionNode(
                 items: [render],
                 selectors: [selector],
