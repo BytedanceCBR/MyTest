@@ -113,6 +113,7 @@ func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData) -> () -> TableSe
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                tracer: nil,
                 label: "",
                 type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
     }
@@ -138,6 +139,7 @@ func parseErshouHouseCoreInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> T
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
+                tracer: nil,
             label: "",
             type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
     }

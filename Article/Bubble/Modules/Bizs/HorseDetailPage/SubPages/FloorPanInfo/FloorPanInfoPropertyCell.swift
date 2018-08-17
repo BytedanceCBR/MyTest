@@ -114,9 +114,12 @@ fileprivate func fillPropertiesCell(properties: [(String, String)], cell: BaseUI
 func parsePropertiesNode(properties: [(String, String)]) -> () -> TableSectionNode? {
     return {
         let render = curry(fillPropertiesCell)(properties)
+        let params = TracerParams.momoid() <|>
+                toTracerParams("house_info", key: "element_type")
         return TableSectionNode(
                 items: [render],
                 selectors: [],
+                tracer: [elementShowOnceRecord(params: params)],
                 label: "",
                 type: .node(identifier: FloorPanInfoPropertyCell.identifier))
     }

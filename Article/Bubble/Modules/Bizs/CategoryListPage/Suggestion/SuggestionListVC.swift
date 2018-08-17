@@ -180,6 +180,9 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if self.navBar.searchInput.text != nil && !self.navBar.searchInput.text!.isEmpty, let text = self.navBar.searchInput.text {
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("{\"full_text\": \"\(text)\"}", key: "search") <|>
+                    beNull(key: "filter")
             onSuggestSelect?("&full_text=\(text)", nil, text)
             filterConditionResetter?()
             return true
@@ -312,8 +315,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         let info = item.info
         suggestionHistoryDataSource.addHistoryItem(item: combineItems.value[indexPath.row], houseType: houseType.value)
         suggestionHistory.accept(suggestionHistoryDataSource.getHistoryByType(houseType: houseType.value))
-        
-        onSuggestionItemSelect?("", createQueryCondition(info), item.text)
+        let condition = createQueryCondition(info)
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                toTracerParams(condition, key: "search") <|>
+                beNull(key: "filter")
+        onSuggestionItemSelect?("", condition, item.text)
         filterConditionResetter?()
     }
 

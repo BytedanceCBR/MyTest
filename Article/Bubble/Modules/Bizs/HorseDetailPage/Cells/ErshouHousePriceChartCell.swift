@@ -313,7 +313,14 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData, navVC: U
 
     return {
         let render = curry(fillErshouHousePriceChartCell)(ershouHouseData.priceTrend)
-        return TableSectionNode(items: [render], selectors: nil, label: "", type: .node(identifier: ErshouHousePriceChartCell.identifier))
+        let params = TracerParams.momoid() <|>
+                toTracerParams("price_trend", key: "element_type")
+        return TableSectionNode(
+                items: [render],
+                selectors: nil,
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "",
+                type: .node(identifier: ErshouHousePriceChartCell.identifier))
     }
     
 

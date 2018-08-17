@@ -155,7 +155,7 @@ func parseFavoriteNode(disposeBag: DisposeBag, navVC: UINavigationController?) -
     }
     return {
         let cellRender = curry(fillFavoriteCell)(items)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: FavoriteCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: FavoriteCell.identifier))
     }
 }
 
@@ -265,7 +265,7 @@ func parseSpringboardNode(_ items: [EntryItem], disposeBag: DisposeBag, navVC: U
     }
     return {
         let cellRender = curry(fillSpringboardCell)(views)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
+        return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
     }
 }
 
@@ -276,23 +276,11 @@ fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView], cell: BaseU
 }
 
 fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
-    var params = EnvContext.shared.homePageParams <|>
-            toTracerParams("click", key: "enter_type") <|>
-            toTracerParams("maintab", key: "enter_from") <|>
-            toTracerParams("maintab_icon", key: "element_from") <|>
-            toTracerParams("icon", key: "maintab_entrance") <|>
-            beNull(key: "filter") <|>
-            beNull(key: "log_pb") <|>
-            beNull(key: "maintab_search") <|>
-            beNull(key: "operation_name") <|>
-            beNull(key: "card_type") <|>
-            beNull(key: "icon_type") <|>
-            beNull(key: "search")
+    var params = TracerParams.momoid()
     switch item.entryId {
     case 1:
         params = params <|>
                 toTracerParams("old", key: "icon_type")
-        EnvContext.shared.homePageParams = params
         return openCategoryVC(
             .secondHandHouse,
             disposeBag: disposeBag,
@@ -301,7 +289,6 @@ fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: Disp
     case 2:
         params = params <|>
                 toTracerParams("new", key: "icon_type")
-        EnvContext.shared.homePageParams = params
         return openCategoryVC(
             .newHouse, disposeBag:
             disposeBag,
@@ -310,7 +297,6 @@ fileprivate func createSpringBroadItemSelector(item: EntryItem, disposeBag: Disp
     case 4:
         params = params <|>
                 toTracerParams("neighborhood", key: "icon_type")
-        EnvContext.shared.homePageParams = params
         return openCategoryVC(
             .neighborhood,
             disposeBag: disposeBag,
@@ -361,8 +347,20 @@ fileprivate func openCategoryVC(
     tracerParams: TracerParams,
     navVC: UINavigationController?) -> () -> Void {
     return {
+        var params = EnvContext.shared.homePageParams <|>
+                toTracerParams("maintab", key: "enter_from") <|>
+                toTracerParams("maintab_icon", key: "element_from") <|>
+                toTracerParams("icon", key: "maintab_entrance") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("left_pic", key: "card_type") <|>
+                beNull(key: "log_pb") <|>
+                tracerParams
+
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                params
+
         let vc = CategoryListPageVC(isOpenConditionFilter: true)
-        vc.tracerParams = tracerParams
+        vc.tracerParams = tracerParams <|> params
         vc.houseType.accept(houseType)
         vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
         vc.navBar.isShowTypeSelector = false

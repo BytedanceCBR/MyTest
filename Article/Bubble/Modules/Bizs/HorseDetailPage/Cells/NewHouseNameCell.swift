@@ -152,7 +152,12 @@ class NewHouseNameCell: BaseUITableViewCell {
 func parseNewHouseNameNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseNameCell)(newHouseData)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NewHouseNameCell.identifier))
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                tracer: nil,
+                label: "",
+                type: .node(identifier: NewHouseNameCell.identifier))
     }
 }
 
@@ -181,7 +186,12 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
 func parseErshouHouseNameNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillErshouHouseNameCell)(ershouHouseData)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NewHouseNameCell.identifier))
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                tracer: nil,
+                label: "",
+                type: .node(identifier: NewHouseNameCell.identifier))
     }
 }
 

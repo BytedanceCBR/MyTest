@@ -156,6 +156,7 @@ func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, navVC: U
             return TableSectionNode(
                     items: renders,
                     selectors: selectors,
+                    tracer: nil,
                     label: "新房房源",
                     type: .node(identifier: NeighborhoodItemCell.identifier))
         } else {
@@ -175,6 +176,7 @@ func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, dispo
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
+                tracer: nil,
                 type: .node(identifier: NeighborhoodItemCell.identifier),
                 editor: nil)
         })

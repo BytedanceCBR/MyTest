@@ -102,7 +102,12 @@ class NeighborhoodPriceCell: BaseUITableViewCell {
 func parseNeighborhoodPriceNode(_ data: NeighborhoodDetailData) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillNeighborhoodPriceCell)(data.neighborhoodInfo)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NeighborhoodPriceCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            tracer: nil,
+            label: "",
+            type: .node(identifier: NeighborhoodPriceCell.identifier))
     }
 }
 

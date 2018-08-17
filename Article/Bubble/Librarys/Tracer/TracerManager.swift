@@ -14,6 +14,16 @@ extension TracerParams {
             return input
         }
     }
+
+    func selector(key: String) -> TracerParams {
+        return TracerParams { input in
+            let result = input.filter { (e) in
+                let (k, v) = e
+                return k == key
+            }
+            return result
+        }
+    }
 }
 
 func mapTracerParams(_ value: [String: Any]) -> TracerPremeter {
@@ -73,9 +83,12 @@ class TracerManager: NSObject {
         params: [String: Any]? = nil) {
         records.forEach { record in
             if let theParams = params {
+                let mergedParams = theParams.merging(defaultParams ?? [:], uniquingKeysWith: { (l, r) -> Any in
+                    l
+                })
                 record.recordEvent(
                     key: event,
-                    params: theParams)
+                    params: mergedParams)
             }
         }
     }

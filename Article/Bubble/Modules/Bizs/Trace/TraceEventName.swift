@@ -26,6 +26,6 @@ class TraceEventName: NSObject {
 
     static let delete_follow = "delete_follow" // 删除关注/取消关注
 
-
+    static let element_show = "element_show"
 
 }

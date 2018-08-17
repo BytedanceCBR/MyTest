@@ -123,12 +123,14 @@ struct OpData: Mappable {
         var backgroundColor: String?
         var textColor: String?
         var logPb: Any?
+        var id: String = ""
 
         init?(map: Map) {
 
         }
 
         mutating func mapping(map: Map) {
+            id <- map["id"]
             hotCityList <- map["hot_city_list"]
             title <- map["title"]
             description <- map["description"]

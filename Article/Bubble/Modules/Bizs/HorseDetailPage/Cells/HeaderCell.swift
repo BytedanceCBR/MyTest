@@ -101,7 +101,12 @@ func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
     return {
         if newHouseData.timeLine?.list?.count ?? 0 > 0 {
             let cellRender = curry(fillHeaderCell)("楼盘动态")("查看更多 >")(false)(-13)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: HeaderCell.identifier))
+            return TableSectionNode(
+                    items: [cellRender],
+                    selectors: nil,
+                    tracer: nil,
+                    label: "",
+                    type: .node(identifier: HeaderCell.identifier))
         } else {
             return nil
         }
@@ -115,6 +120,7 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                    tracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         } else {
@@ -130,6 +136,7 @@ func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                    tracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         } else {
@@ -157,6 +164,7 @@ func parseHeaderNode(
             return TableSectionNode(
                 items: [cellRender],
                 selectors: selectors,
+                    tracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         }

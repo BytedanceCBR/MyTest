@@ -132,8 +132,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
         let userInfo = paramObj?.userInfo
         if let params = userInfo?.allInfo {
+            print(params)
             self.tracerParams = paramsOfMap(params as! [String : Any]) <|>
                 toTracerParams(houseTypeString(houseType.value), key: "category_name")
+            print(self.tracerParams.paramsGetter([:]))
         }
 
         queryString = paramObj?.allParams
@@ -265,9 +267,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
-        stayTimeParams = tracerParams <|> traceStayTime()
-        // 进入列表页埋点
-        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+//        stayTimeParams = tracerParams <|> traceStayTime() <|> EnvContext.shared.homePageParams
+//        // 进入列表页埋点
+//        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
 
         Reachability.rx.isReachable
                 .bind { [unowned self] reachable in
@@ -335,6 +337,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             houseType: self.houseType.value,
                             query: query,
                             condition: self.suggestionParams)
+
+                    let tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+                    self.stayTimeParams = tracerParams <|> traceStayTime()
+                    // 进入列表页埋点
+                    recordEvent(key: TraceEventName.enter_category, params: tracerParams)
                 }, onError: { error in
                     print(error)
                 }, onCompleted: {

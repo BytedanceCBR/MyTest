@@ -1384,6 +1384,8 @@
 		B34D22B82121AADF00A367C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26BC20F62A7800D4E8D0 /* Assets.xcassets */; };
 		B34D22BA212518F400A367C0 /* TTTracerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B9212518F400A367C0 /* TTTracerRecord.swift */; };
 		B34D22BB212518F400A367C0 /* TTTracerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22B9212518F400A367C0 /* TTTracerRecord.swift */; };
+		B34D22BD2125715D00A367C0 /* TableViewTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22BC2125715D00A367C0 /* TableViewTracer.swift */; };
+		B34D22BE2125715D00A367C0 /* TableViewTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34D22BC2125715D00A367C0 /* TableViewTracer.swift */; };
 		B36E277F20F62A7900D4E8D0 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26B520F62A7800D4E8D0 /* BubbleImages.xcassets */; };
 		B36E278020F62A7900D4E8D0 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B720F62A7800D4E8D0 /* EnvContext.swift */; };
 		B36E278120F62A7900D4E8D0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
@@ -5784,6 +5786,7 @@
 		B34D22B22121728000A367C0 /* EventKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
 		B34D22B521218C5A00A367C0 /* JoinOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinOf.swift; sourceTree = "<group>"; };
 		B34D22B9212518F400A367C0 /* TTTracerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTTracerRecord.swift; sourceTree = "<group>"; };
+		B34D22BC2125715D00A367C0 /* TableViewTracer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTracer.swift; sourceTree = "<group>"; };
 		B36E248C20F6192900D4E8D0 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
 		B36E26A620F61A8200D4E8D0 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
 		B36E26A720F61A8300D4E8D0 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
@@ -7398,6 +7401,7 @@
 				B34D22A921214D6A00A367C0 /* TabWatcher.swift */,
 				61FB9102212169B800656E7F /* TraceEventName.swift */,
 				B34D22B22121728000A367C0 /* EventKeys.swift */,
+				B34D22BC2125715D00A367C0 /* TableViewTracer.swift */,
 			);
 			path = Trace;
 			sourceTree = "<group>";
@@ -17488,6 +17492,7 @@
 				A5A127EB1F39A141009FDDD1 /* TTAccountTestSettings.m in Sources */,
 				C2CEC5D91EE50389005156B6 /* TTCategoryBadgeNumberManager.m in Sources */,
 				2D3317211F305308009D2936 /* ArticleMobileBindViewController.m in Sources */,
+				B34D22BD2125715D00A367C0 /* TableViewTracer.swift in Sources */,
 				F87694001F31D0D400D59CA5 /* TTVVideoDetailNatantInfoView.m in Sources */,
 				F87693841F31D0D300D59CA5 /* TTVDetailContentEntity.m in Sources */,
 				B36E281420F62A7A00D4E8D0 /* LoadingIndicatorView.swift in Sources */,
@@ -19132,6 +19137,7 @@
 				FEFA5862205FB1A8001F50D8 /* ArticleAppPageHelper.m in Sources */,
 				FEFA5863205FB1A8001F50D8 /* ExploreArticlePureTitleCell.m in Sources */,
 				FEFA5864205FB1A8001F50D8 /* TSVShortVideoDetailExitManager.m in Sources */,
+				B34D22BE2125715D00A367C0 /* TableViewTracer.swift in Sources */,
 				FEFA5865205FB1A8001F50D8 /* SDWebImageDownloaderOperationBugFix.m in Sources */,
 				FE49F27B2068C87800DE434C /* TTUGCImageCompressHelper.m in Sources */,
 				FEFA5866205FB1A8001F50D8 /* TTAdFullScreenVideoBottomActionView.m in Sources */,
