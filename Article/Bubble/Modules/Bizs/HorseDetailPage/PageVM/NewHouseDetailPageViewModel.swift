@@ -6,7 +6,7 @@
 import Foundation
 import RxCocoa
 import RxSwift
-class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
+class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
     
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "new_detail")
 
@@ -20,8 +20,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var newHouseDetail = BehaviorRelay<HouseDetailResponse?>(value: nil)
     
-
-
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -65,6 +63,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 if self.houseId != -1 {
                     self.requestData(houseId: self.houseId)
                 }
+            }.disposed(by: disposeBag)
+        tableView.rx.didScroll
+            .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
+            .bind { [unowned self, weak tableView] void in
+                self.traceDisplayCell(tableView: tableView, datas: self.dataSource.datas)
             }.disposed(by: disposeBag)
 
         self.bindFollowPage()
@@ -111,18 +114,30 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .disposed(by: disposeBag)
 
         Observable
-                .combineLatest(newHouseDetail, relatedCourt)
+                .zip(newHouseDetail, relatedCourt)
                 .bind { [unowned self] (e) in
                     let (detail, _) = e
                     if let detail = detail {
                         let result = self.processData(response: detail, courtId: houseId)([])
                         self.dataSource.datas = result
                         self.tableView?.reloadData()
+                        DispatchQueue.main.async {
+                            self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                        }
                     }
                 }
                 .disposed(by: disposeBag)
 
 
+    }
+
+    func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
+            self.callTracer(
+                tracer: datas[indexPath.section].tracer,
+                atIndexPath: indexPath,
+                traceParams: TracerParams.momoid())
+        })
     }
 
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {

@@ -347,6 +347,7 @@ func parseNewHouseCycleImageNode(
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                tracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }
@@ -365,6 +366,7 @@ func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData, disposeB
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                tracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }
@@ -383,6 +385,7 @@ func parseCycleImageNode(_ images: [ImageItem]?, disposeBag: DisposeBag) -> () -
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                tracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }

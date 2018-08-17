@@ -119,9 +119,20 @@ func parseFlatOpNode(
     disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let cellRender = curry(fillItemView)(items)(traceParams)(disposeBag)
+        let onceRecords = items.map { item -> ElementRecord in
+            let theTraceParams = traceParams <|>
+                    toTracerParams(item.id, key: "operation_id") <|>
+                    toTracerParams(item.logPb, key: "log_pb") <|>
+                    toTracerParams(item.title ?? "", key: "operation_name")
+            return operationShowonceRecord(params: theTraceParams)
+        }
+        let record: ElementRecord = { (params) in
+            onceRecords.forEach { $0(params) }
+        }
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                tracer: [record],
                 label: "",
                 type: .node(identifier: FlatGridCell.identifier))
     }

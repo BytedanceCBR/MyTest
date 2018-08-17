@@ -216,9 +216,44 @@ enum TableCellType {
     case node(identifier: String)
 }
 
+typealias ElementRecord = (TracerParams) -> Void
+
+func operationShowonceRecord(params: TracerParams) -> ElementRecord {
+    var isExecuted = false
+    return { (theParams) in
+        if isExecuted {
+            return
+        }
+        let recordParams = theParams <|> params
+        recordEvent(key: "operation_show", params: recordParams)
+        isExecuted = true
+    }
+}
+
+func elementShowOnceRecord(params: TracerParams) -> ElementRecord {
+    var isExecuted = false
+    print("elementShowOnceRecord: \(isExecuted)")
+    return { (theParams) in
+        if isExecuted {
+            return
+        }
+        isExecuted = true
+        let recordParams = theParams <|> params
+        recordEvent(key: "element_show", params: recordParams)
+    }
+}
+
+func elementShowRecord(params: TracerParams) -> ElementRecord {
+    return { (theParams) in
+        let recordParams = theParams <|> params
+        recordEvent(key: "element_show", params: recordParams)
+    }
+}
+
 struct TableSectionNode {
     let items: [TableCellRender]
     var selectors: [TableCellSelectedProcess]? = nil
+    var tracer: [ElementRecord]? = nil
     let label: String
     let type: TableCellType
 }
@@ -231,6 +266,7 @@ enum TableRowEditResult {
 struct TableRowNode {
     let itemRender: TableCellRender
     var selector: TableCellSelectedProcess? = nil
+    var tracer: ElementRecord? = nil
     let type: TableCellType
     var editor: ((UITableViewCellEditingStyle) -> Observable<TableRowEditResult>)?
 }

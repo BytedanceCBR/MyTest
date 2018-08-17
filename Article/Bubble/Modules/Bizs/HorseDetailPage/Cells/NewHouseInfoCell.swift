@@ -261,9 +261,24 @@ func parseNewHouseCoreInfoNode(
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(followPage)(bottomBarBinder)
+        let priceChangeParams = TracerParams.momoid() <|>
+            toTracerParams("price_notice", key: "element_type")
+        let priceRecord = elementShowOnceRecord(params: priceChangeParams)
+        let opingParams = TracerParams.momoid() <|>
+            toTracerParams("openning_notice", key: "element_type")
+        let opingRecord = elementShowOnceRecord(params: opingParams)
+        let houseInfoParams = TracerParams.momoid() <|>
+            toTracerParams("house_info", key: "element_type")
+        let houseInfoRecord = elementShowOnceRecord(params: houseInfoParams)
+        let record: (TracerParams) -> Void = { (params) in
+            priceRecord(params)
+            opingRecord(params)
+            houseInfoRecord(params)
+        }
         return TableSectionNode(
             items: [oneTimeRender(cellRender)],
             selectors: nil,
+            tracer: [record],
             label: "",
             type: .node(identifier: NewHouseInfoCell.identifier))
     }

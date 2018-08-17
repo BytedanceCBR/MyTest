@@ -145,7 +145,14 @@ func parseGlobalPricingNode(_ newHouseData: NewHouseData, processor: @escaping T
         }
         let cellRenders = list[..<(list.count > 3 ? 3 : list.count)].map { curry(fillGlobalPricingCell)($0) }
         let selectors = list[..<(list.count > 3 ? 3 : list.count)].map { _ in processor }
-        return TableSectionNode(items: cellRenders, selectors: selectors, label: "", type: .node(identifier: GlobalPricingCell.identifier))
+        let params = TracerParams.momoid() <|>
+                toTracerParams("price_compare", key: "element_type")
+        return TableSectionNode(
+                items: cellRenders,
+                selectors: selectors,
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "",
+                type: .node(identifier: GlobalPricingCell.identifier))
     }
 }
 
@@ -155,6 +162,7 @@ func parseGlobalPricingNode(_ items: [GlobalPrice.Item]) -> () -> [TableRowNode]
             return TableRowNode(
                 itemRender: render,
                 selector: nil,
+                tracer: nil,
                 type: .node(identifier: GlobalPricingListCell.identifier), editor: nil)
         })
         return renders

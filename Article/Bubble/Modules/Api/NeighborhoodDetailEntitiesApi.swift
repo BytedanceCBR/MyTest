@@ -69,7 +69,7 @@ func pageRequestNeighborhoodTotalSales(neighborhoodId: String = "", query: Strin
             offset: offset,
             count: count)
             .do(onNext: { (response) in
-                if let count = response?.data?.list?.count {
+                if response?.data?.list?.count != nil {
                     offset = offset + 1
                 }
             })

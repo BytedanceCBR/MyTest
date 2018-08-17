@@ -122,9 +122,19 @@ func parseOpenAllNode(
     return {
         if hasMore {
             let cellRender = curry(fillOpenAllCell)(isShowBottomBar)(callBack)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                    tracer: nil,
+                label: "",
+                type: .node(identifier: OpenAllCell.identifier))
         } else {
-            return TableSectionNode(items: [], selectors: nil, label: "", type: .node(identifier: OpenAllCell.identifier))
+            return TableSectionNode(
+                    items: [],
+                    selectors: nil,
+                    tracer: nil,
+                    label: "",
+                    type: .node(identifier: OpenAllCell.identifier))
         }
     }
 }

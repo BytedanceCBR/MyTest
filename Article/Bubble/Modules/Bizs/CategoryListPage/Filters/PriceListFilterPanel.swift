@@ -193,10 +193,11 @@ class PriceListFilterPanel: UIView {
                         self.didSelect?([Node(
                             id: "",
                             label: "\(low)-\(upper)万",
-                            externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]")])
+                            externalConfig: "price[]=[\(low * 10000),\(upper * 10000)]",
+                            filterCondition: "[\(low * 10000),\(upper * 10000)" as Any,
+                            key: "price[]")])
                     } else{
                         self.didSelect?([])
-
                     }
                 } else {
                     self.didSelect?(datas)

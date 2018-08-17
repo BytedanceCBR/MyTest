@@ -525,6 +525,8 @@ struct Node {
     let id: String
     let label: String
     let externalConfig: String
+    let filterCondition: Any?
+    let key: String
     let isSupportMulti: Bool
     let isEmpty: Int
     let isNoLimit: Int
@@ -534,6 +536,8 @@ struct Node {
     init(id: String,
          label: String,
          externalConfig: String,
+         filterCondition: Any?,
+         key: String,
          isSupportMulti: Bool,
          isEmpty: Int,
          isNoLimit: Int,
@@ -542,6 +546,8 @@ struct Node {
         self.id = id
         self.label = label
         self.externalConfig = externalConfig
+        self.filterCondition = filterCondition
+        self.key = key
         self.isSupportMulti = isSupportMulti
         self.isEmpty = isEmpty
         self.isNoLimit = isNoLimit
@@ -549,12 +555,19 @@ struct Node {
         self.children = children
     }
 
-    init(id: String, label: String, externalConfig: String) {
+    init(
+        id: String,
+        label: String,
+        externalConfig: String,
+        filterCondition: Any?,
+        key: String) {
         self.id = id
         self.label = label
         self.isEmpty = 0
         self.isNoLimit = 0
         self.externalConfig = externalConfig
+        self.filterCondition = filterCondition
+        self.key = key
         self.isSupportMulti = false
         self.parentLabel = nil
         self.children = []

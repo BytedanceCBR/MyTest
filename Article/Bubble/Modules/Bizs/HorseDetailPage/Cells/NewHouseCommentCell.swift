@@ -149,9 +149,11 @@ func parseNewHouseCommentNode(_ newHouseData: NewHouseData, processor: @escaping
 
             selectors = list.map { _ in processor }
         }
-
+        let params = TracerParams.momoid() <|>
+                toTracerParams("house_comment", key: "element_type")
         return TableSectionNode(items: renders ?? [],
                                 selectors: selectors,
+                tracer: [elementShowOnceRecord(params: params)],
                                 label: "全网点评",
                                 type: .node(identifier: NewHouseCommentCell.identifier))
 
@@ -178,6 +180,7 @@ func parseNewHouseCommentNode(_ items: [NewHouseComment.Item]) -> () -> [TableRo
             TableRowNode(
                 itemRender: render(true),
                 selector: nil,
+                    tracer: nil,
                 type: .node(identifier: NewHouseCommentCell.identifier),
                 editor: nil)
         })

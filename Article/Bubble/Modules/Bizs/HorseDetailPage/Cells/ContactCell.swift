@@ -91,9 +91,15 @@ func parseNewHouseContactNode(_ newHouseData: NewHouseData) -> () -> TableSectio
     return {
         
         if let phone = newHouseData.contact?["phone"], phone.count > 0 {
-            
+            let params = TracerParams.momoid() <|>
+                    toTracerParams("call_page", key: "element_type")
             let cellRender = curry(fillNewHouseContactCell)(newHouseData)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: ContactCell.identifier))
+            return TableSectionNode(
+                    items: [cellRender],
+                    selectors: nil,
+                    tracer: [elementShowOnceRecord(params: params)],
+                    label: "",
+                    type: .node(identifier: ContactCell.identifier))
         }else {
             
             return nil
