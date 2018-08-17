@@ -218,7 +218,14 @@ func parseRelateCourtNode(_ data: RelatedCourtResponse?, navVC: UINavigationCont
     return {
         if let datas = data?.data?.items?.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
-            return TableSectionNode(items: [render], selectors: nil, label: "猜你喜欢", type: .node(identifier: MultiItemCell.identifier))
+            let params = TracerParams.momoid() <|>
+                    toTracerParams("related", key: "element_type")
+            return TableSectionNode(
+                    items: [render],
+                    selectors: nil,
+                    tracer: [elementShowOnceRecord(params:params)],
+                    label: "猜你喜欢",
+                    type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }
@@ -259,7 +266,14 @@ func parseSearchInNeighborhoodNode(_ data: SameNeighborhoodHouseResponse.Data?, 
 
         if let datas = data?.items.take(5), datas.count > 0 {
             let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
-            return TableSectionNode(items: [render], selectors: nil, label: "小区房源", type: .node(identifier: MultiItemCell.identifier))
+            let params = TracerParams.momoid() <|>
+                    toTracerParams("same_neighborhood", key: "element_type")
+            return TableSectionNode(
+                    items: [render],
+                    selectors: nil,
+                    tracer: [elementShowOnceRecord(params: params)],
+                    label: "小区房源",
+                    type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }
@@ -344,7 +358,14 @@ func parseRelatedNeighborhoodNode(_ datas: [NeighborhoodInnerItemEntity]?, navVC
     return {
         if let datas = datas, datas.count > 0 {
             let render = curry(fillRelatedNeighborhoodCell)(datas)(navVC)
-            return TableSectionNode(items: [render], selectors: nil, label: "周边小区", type: .node(identifier: MultiItemCell.identifier))
+            let params = TracerParams.momoid() <|>
+                    toTracerParams("neighborhood_nearby", key: "element_type")
+            return TableSectionNode(
+                    items: [render],
+                    selectors: nil,
+                    tracer: [elementShowOnceRecord(params: params)],
+                    label: "周边小区",
+                    type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }
@@ -398,7 +419,14 @@ func parseFloorPanNode(
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(followPage)(bottomBarBinder)
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
+        let params = TracerParams.momoid() <|>
+                toTracerParams("neighborhood_nearby", key: "element_type")
+        return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "楼盘户型",
+                type: .node(identifier: MultiItemCell.identifier))
     }
 }
 
@@ -480,8 +508,15 @@ func parseFloorPanNode(
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
     return {
         if let items = items {
+            let params = TracerParams.momoid() <|>
+                    toTracerParams("house_model", key: "element_type")
             let cellRender = curry(fillFloorPanCell)(items)(navVC)(followPage)(bottomBarBinder)
-            return TableSectionNode(items: [cellRender], selectors: nil, label: "楼盘户型", type: .node(identifier: MultiItemCell.identifier))
+            return TableSectionNode(
+                    items: [cellRender],
+                    selectors: nil,
+                    tracer: [elementShowOnceRecord(params: params)],
+                    label: "楼盘户型",
+                    type: .node(identifier: MultiItemCell.identifier))
         } else {
             return nil
         }

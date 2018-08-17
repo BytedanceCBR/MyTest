@@ -176,7 +176,14 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, navVC: UINavi
 //                openNeighborhoodDetailPage(neighborhoodId: id, disposeBag: disposeBag, navVC: navVC)()
 //            }
         }
-        return TableSectionNode(items: [render], selectors: [selector], label: "", type: .node(identifier: NeighborhoodInfoCell.identifier))
+        let params = TracerParams.momoid() <|>
+                toTracerParams("neighborhood_detail", key: "element_type")
+        return TableSectionNode(
+                items: [render],
+                selectors: [selector],
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "",
+                type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 

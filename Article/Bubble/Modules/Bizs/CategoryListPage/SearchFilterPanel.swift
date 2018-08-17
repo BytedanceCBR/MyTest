@@ -255,10 +255,13 @@ func transferSearchConfigOptionToNode(
         /// 服务器的格式设计造成这里只能在一遇到标记为可以多选后，则将其所有子节点都理解为可以多选。
         let theIsSupportMulti = option.supportMulti ?? false || isSupportMulti
         let externalConfig = option.getOptionValueString(supportMulti: theIsSupportMulti)
+
         return Node(
             id: option.text ?? "",
             label: option.text ?? "",
             externalConfig: externalConfig,
+            filterCondition: option.value as Any,
+            key: "\(option.type ?? "")[]",
             isSupportMulti: theIsSupportMulti,
             isEmpty: option.isEmpty,
             isNoLimit: option.isNoLimit,

@@ -93,6 +93,7 @@ func parseOptionNode(
         return TableSectionNode(
             items: [render],
             selectors: callback != nil ? [callback!] : nil,
+                tracer: nil,
             label: "",
             type: .node(identifier: MineOptionCell.identifier))
     }
@@ -116,10 +117,13 @@ fileprivate func fillOptionCell(icon: UIImage,
 
 func parseContactUsNode(phoneNumber: String, callback: (() -> Void)?) -> () -> TableSectionNode? {
     let render = curry(fillContactUsCell)(phoneNumber)
+    let traceParams = TracerParams.momoid() <|>
+            toTracerParams("call_page", key: "element_type")
     return {
         return TableSectionNode(
                 items: [render],
                 selectors: callback != nil ? [callback!] : nil,
+                tracer: nil,
                 label: "",
                 type: .node(identifier: MineOptionCell.identifier))
     }

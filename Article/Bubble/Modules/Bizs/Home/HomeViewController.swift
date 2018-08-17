@@ -288,17 +288,32 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        EnvContext.shared.homePageParams = TracerParams.momoid() <|>
+            beNull(key: "filter") <|>
+            beNull(key: "maintab_search") <|>
+            beNull(key: "operation_name") <|>
+            beNull(key: "icon_type") <|>
+            beNull(key: "element_from") <|>
+            beNull(key: "maintab_entrance") <|>
+            beNull(key: "enter_from") <|>
+            beNull(key: "search")
+        self.homePageCommonParams = self.homePageCommonParams <|>
+            EnvContext.shared.homePageParams
+
         self.theThresholdTracer = thresholdTracer()
         self.stayTabParams = TracerParams.momoid() <|>
                 toTracerParams("main", key: "tab_name") <|>
                 toTracerParams("click_tab", key: "enter_type") <|>
                 toTracerParams("0", key: "with_tips") <|>
                 traceStayTime()
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.theThresholdTracer?(TraceEventName.stay_tab, self.stayTabParams)
+
+
     }
     
     override func viewDidAppear(_ animated: Bool) {

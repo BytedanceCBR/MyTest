@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
+class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
     
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
 
@@ -63,33 +63,47 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             .bind(to: contactPhone)
             .disposed(by: disposeBag)
         super.init()
-        ershouHouseData
-            .subscribe { [unowned self] event in
-                let result = self.processData()([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-            }
-            .disposed(by: disposeBag)
+//        ershouHouseData
+//            .subscribe { [unowned self] event in
+//                let result = self.processData()([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//                self.traceDisplayCell(tableView: tableView, datas: self.dataSource.datas)
+//            }
+//            .disposed(by: disposeBag)
+//
+//        relateNeighborhoodData
+//            .subscribe { [unowned self] event in
+//                let result = self.processData()([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//            }
+//            .disposed(by: disposeBag)
+//        houseInSameNeighborhood
+//            .subscribe { [unowned self] event in
+//                let result = self.processData()([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//            }
+//            .disposed(by: disposeBag)
+//        relateErshouHouseData
+//            .subscribe { [unowned self] event in
+//                let result = self.processData()([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//            }
+//            .disposed(by: disposeBag)
 
-        relateNeighborhoodData
-            .subscribe { [unowned self] event in
+        Observable
+            .zip(ershouHouseData, relateNeighborhoodData, houseInSameNeighborhood, relateErshouHouseData)
+            .skip(1)
+            .bind { [unowned self] (_) in
                 let result = self.processData()([])
                 self.dataSource.datas = result
                 self.tableView?.reloadData()
-            }
-            .disposed(by: disposeBag)
-        houseInSameNeighborhood
-            .subscribe { [unowned self] event in
-                let result = self.processData()([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-            }
-            .disposed(by: disposeBag)
-        relateErshouHouseData
-            .subscribe { [unowned self] event in
-                let result = self.processData()([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
+                DispatchQueue.main.async {
+                    self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                }
             }
             .disposed(by: disposeBag)
         infoMaskView.tapGesture.rx.event
@@ -98,6 +112,23 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     self.requestData(houseId: self.houseId)
                 }
             }.disposed(by: disposeBag)
+
+        tableView.rx.didScroll
+            .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
+            .bind { [unowned self, weak tableView] void in
+                self.traceDisplayCell(tableView: tableView, datas: self.dataSource.datas)
+            }.disposed(by: disposeBag)
+
+
+    }
+
+    func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
+                self.callTracer(
+                    tracer: datas[indexPath.section].tracer,
+                    atIndexPath: indexPath,
+                    traceParams: TracerParams.momoid())
+        })
         
         self.bindFollowPage()
 
@@ -111,9 +142,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
             infoMaskView?.isHidden = true
         }
         requestErshouHouseDetail(houseId: houseId)
-                .retryOnConnect(timeout: 50)
-                .retry(10)
-                .debug()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)
@@ -131,8 +159,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                 .disposed(by: disposeBag)
 
         requestRelatedHouseSearch(houseId: "\(houseId)")
-            .retryOnConnect(timeout: 50)
-            .retry(10)
             .subscribe(onNext: { [unowned self] response in
                 self.relateErshouHouseData.accept(response)
             })
@@ -286,7 +312,7 @@ func openErshouHouseList(
     navVC?.pushViewController(listVC, animated: true)
 }
 
-fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
+fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource, TableViewTracer {
 
     var datas: [TableSectionNode] = []
 
@@ -327,6 +353,13 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         }
     }
 
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        callTracer(
+//            tracer: datas[indexPath.section].tracer,
+//            atIndexPath: indexPath,
+//            traceParams: TracerParams.momoid())
+//    }
+
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -334,6 +367,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+
 }
 
 func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
@@ -352,6 +386,7 @@ func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: D
             return TableSectionNode(
                 items: renders,
                 selectors: selectors,
+                    tracer: nil,
                 label: "精选好房",
                 type: .node(identifier: SingleImageInfoCell.identifier))
         } else {
@@ -370,6 +405,7 @@ func parseErshouHouseListItemNode(_ data: HouseRecommendSection?, disposeBag: Di
             return TableSectionNode(
                 items: renders,
                 selectors: selectors,
+                tracer: nil,
                 label: data?.title ?? "精选好房",
                 type: .node(identifier: SingleImageInfoCell.identifier))
         } else {
@@ -389,6 +425,7 @@ func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
+                tracer: nil,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
         })
@@ -470,6 +507,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
         return TableRowNode(
             itemRender: render,
             selector: selector,
+            tracer: nil,
             type: .node(identifier: SingleImageInfoCell.identifier),
             editor: editor)
     })

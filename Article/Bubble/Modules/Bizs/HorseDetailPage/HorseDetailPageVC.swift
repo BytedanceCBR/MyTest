@@ -261,6 +261,7 @@ class HorseDetailPageVC: BaseViewController {
                 .bind(to: navBar.rightBtn.rx.isSelected)
                 .disposed(by: disposeBag)
         }
+
     }
 
     private func setupNavBar() {

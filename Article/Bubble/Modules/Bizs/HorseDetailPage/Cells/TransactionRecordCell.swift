@@ -102,11 +102,13 @@ func parseTransactionRecordNode(_ datas: [TotalSalesInnerItem]?) -> () -> TableS
     return {
         if let datas = datas {
             if datas.count != 0 {
-
+                let params = TracerParams.momoid() <|>
+                        toTracerParams("neighborhood_trade", key: "element_type")
                 let renders = datas.take(3).map(curry(fillTransactionRecordCell))
                 return TableSectionNode(
                     items: renders,
                     selectors: nil,
+                        tracer: [elementShowOnceRecord(params: params)],
                     label: "",
                     type: .node(identifier: TransactionRecordCell.identifier))
             }
@@ -119,9 +121,14 @@ func parseTransactionRecordNode(_ data: NeighborhoodTotalSalesResponse?) -> () -
     return {
         if let datas = data?.data?.list {
             if datas.count != 0 {
-                
+
                 let renders = datas.map(curry(fillTransactionRecordCell))
-                return renders.map { TableRowNode(itemRender: $0, selector: nil, type: .node(identifier: TransactionRecordCell.identifier), editor: nil) }
+
+                return renders.map { TableRowNode(
+                        itemRender: $0,
+                        selector: nil,
+                        tracer: nil,
+                        type: .node(identifier: TransactionRecordCell.identifier), editor: nil) }
             }
         }
         return []

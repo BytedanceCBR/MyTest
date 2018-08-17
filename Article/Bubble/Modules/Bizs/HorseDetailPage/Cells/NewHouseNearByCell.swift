@@ -380,12 +380,15 @@ func parseNeighorhoodNearByNode(_ data: NeighborhoodDetailData, disposeBag: Disp
     return {
         let cellRender = curry(fillNeighorhoodNearByCell)(data)
         var selector: (() -> Void)?
+        let params = TracerParams.momoid() <|>
+                toTracerParams("map", key: "element_type")
         if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
             selector = openMapPage(lat:lat, lng: lng, disposeBag: disposeBag)
         }
         return TableSectionNode(
             items: [cellRender],
             selectors: selector != nil ? [selector!] : nil,
+                tracer: [elementShowOnceRecord(params: params)],
             label: "",
             type: .node(identifier: NewHouseNearByCell.identifier))
     }
@@ -406,10 +409,12 @@ func parseNewHouseNearByNode(_ newHouseData: NewHouseData, disposeBag: DisposeBa
         if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
             selector = openMapPage(lat:lat, lng: lng, disposeBag: disposeBag)
         }
-
+        let params = TracerParams.momoid() <|>
+                toTracerParams("map", key: "element_type")
         return TableSectionNode(
             items: [cellRender],
             selectors: selector != nil ? [selector!] : nil,
+                tracer: [elementShowOnceRecord(params: params)],
             label: "",
             type: .node(identifier: NewHouseNearByCell.identifier))
     }

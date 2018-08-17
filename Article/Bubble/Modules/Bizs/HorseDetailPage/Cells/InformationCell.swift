@@ -58,6 +58,11 @@ fileprivate func fillCell(content: String?, cell: BaseUITableViewCell) {
 func parseInfoNode(_ content: String?) -> () -> TableSectionNode {
     return {
         let render = curry(fillCell)(content)
-        return TableSectionNode(items: [render], selectors: [], label: "", type: .node(identifier: InformationCell.identifier))
+        return TableSectionNode(
+                items: [render],
+                selectors: [],
+                tracer: nil,
+                label: "",
+                type: .node(identifier: InformationCell.identifier))
     }
 }

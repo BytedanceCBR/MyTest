@@ -130,3 +130,14 @@ func groups<T>(items: [T], rowCount: Int) -> [[T]] {
         return result
     }
 }
+
+func valueWithDefault<K, T>(
+        map: [K: T],
+        key: K,
+        defaultValue: T) -> T {
+    if let result = map[key] {
+        return result
+    } else {
+        return defaultValue
+    }
+}

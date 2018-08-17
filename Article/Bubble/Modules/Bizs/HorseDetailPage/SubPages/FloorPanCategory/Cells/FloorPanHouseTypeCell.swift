@@ -152,6 +152,7 @@ func parseFloorPanItemsNode(
             TableRowNode(
                     itemRender: $0.0,
                     selector: $0.1,
+                    tracer: nil,
                     type: .node(identifier: FloorPanHouseTypeCell.identifier),
                     editor: nil)
         }

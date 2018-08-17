@@ -151,7 +151,14 @@ func parseTimelineNode(_ newHouseData: NewHouseData, processor: @escaping TableC
             
             selectors = list.map { _ in processor }
         }
-        return TableSectionNode(items: renders ?? [], selectors: selectors, label: "楼盘动态", type: .node(identifier: TimelineCell.identifier))
+        let params = TracerParams.momoid() <|>
+                toTracerParams("house_history", key: "element_type")
+        return TableSectionNode(
+                items: renders ?? [],
+                selectors: selectors,
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "楼盘动态",
+                type: .node(identifier: TimelineCell.identifier))
     }
 }
 
@@ -177,6 +184,7 @@ func parseTimelineNode(_ items: [TimeLine.Item]) -> () -> [TableRowNode] {
             return TableRowNode(
                     itemRender: render(offset == 0)(true),
                     selector: nil,
+                    tracer: nil,
                     type: .node(identifier: TimelineCell.identifier),
                     editor: nil)
         })

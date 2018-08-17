@@ -55,6 +55,10 @@ class ConditionFilterViewModel {
             return openConditionPanel(
                 state: self.conditionPanelState,
                 apply: constructAreaConditionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
+                    var conditions = self.searchAndConditionFilterVM.conditionTracer.value
+                    conditions[index] = nodes
+                    self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
+
                     self.searchAndConditionFilterVM.addCondition(index: index, condition: parseAreaSearchCondition(nodePath: nodes))
                     setConditionItemTypeByParser(
                         item: item,
@@ -65,7 +69,11 @@ class ConditionFilterViewModel {
             return openConditionPanel(
                 state: self.conditionPanelState,
                 apply: constructPriceListConditionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
-                    self.searchAndConditionFilterVM.addCondition(index: index, condition: parsePriceSearchCondition(nodePath: nodes))
+                    var conditions = self.searchAndConditionFilterVM.conditionTracer.value
+                    conditions[index] = nodes
+                    self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
+
+                    self.searchAndConditionFilterVM.addCondition(index: index, condition: parseAreaSearchCondition(nodePath: nodes))
                     setConditionItemTypeByParser(
                         item: item,
                         reload: reload,
@@ -75,6 +83,10 @@ class ConditionFilterViewModel {
             return openConditionPanel(
                 state: self.conditionPanelState,
                 apply: constructBubbleSelectCollectionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
+                    var conditions = self.searchAndConditionFilterVM.conditionTracer.value
+                    conditions[index] = nodes
+                    self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
+
                     self.searchAndConditionFilterVM.addCondition(index: index, condition: parseHorseTypeSearchCondition(nodePath: nodes))
                     setConditionItemTypeByParser(
                         item: item,
@@ -85,6 +97,10 @@ class ConditionFilterViewModel {
             return openConditionPanel(
                 state: self.conditionPanelState,
                 apply: constructMoreSelectCollectionPanel(nodes: configs, self.closeConditionPanel { (index, nodes) in
+                    var conditions = self.searchAndConditionFilterVM.conditionTracer.value
+                    conditions[index] = nodes
+                    self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
+
                     self.searchAndConditionFilterVM.addCondition(index: index, condition: parseHorseTypeSearchCondition(nodePath: nodes))
                     setConditionItemTypeByParser(
                         item: item,

@@ -138,9 +138,20 @@ func parseGridOpNode(
         let its = items.take(4)
         return {
             let cellRender = curry(fillGridOpCell)(its)(traceParams)(disposeBag)
+            let onceRecords = items.map { item -> ElementRecord in
+                let theTraceParams = traceParams <|>
+                        toTracerParams(item.logPb, key: "log_pb") <|>
+                        toTracerParams(item.title ?? "", key: "operation_name") <|>
+                        toTracerParams(item.id, key: "operation_id")
+                return operationShowonceRecord(params: theTraceParams)
+            }
+            let record: ElementRecord = { (params) in
+                onceRecords.forEach { $0(params) }
+            }
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
+                    tracer: [record],
                 label: "",
                 type: .node(identifier: GridOpBoardCell.identifier))
         }

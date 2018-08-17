@@ -127,7 +127,12 @@ class NeighborhoodNameCell: BaseUITableViewCell {
 func parseNeighborhoodNameNode(_ data: NeighborhoodDetailData, disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let cellRender = oneTimeRender(curry(fillNeighborhoodNameCell)(data)(disposeBag))
-        return TableSectionNode(items: [cellRender], selectors: nil, label: "", type: .node(identifier: NeighborhoodNameCell.identifier))
+        return TableSectionNode(
+            items: [cellRender],
+            selectors: nil,
+            tracer: nil,
+            label: "",
+            type: .node(identifier: NeighborhoodNameCell.identifier))
     }
 }
 

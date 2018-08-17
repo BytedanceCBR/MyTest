@@ -51,10 +51,11 @@ class HomeListViewModel: DetailPageViewModel {
             .map { [unowned self] response -> [TableSectionNode] in
                 let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
                 let entrys = config?.entryList.filter { $0.entryId != 5 }
+                let homeCommonParams = EnvContext.shared.homePageParams
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag, navVC: self.navVC)
-                        <- parseOpNode(config?.opData, traceParams: self.homePageCommonParams, disposeBag: self.disposeBag)
+                        <- parseOpNode(config?.opData, traceParams: homeCommonParams, disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
                             let traceParams = self.homePageCommonParams <|>
@@ -130,7 +131,10 @@ fileprivate func parseOpNode(
     traceParams: TracerParams,
     disposeBag: DisposeBag) -> () -> TableSectionNode? {
     let theParams = traceParams <|>
-        toTracerParams("operation", key: "maintab_entrance")
+            toTracerParams("operation", key: "maintab_entrance") <|>
+            toTracerParams(data?.opStyle ?? "", key: "operation_style") <|>
+            beNull(key: "log_pb") <|>
+            toTracerParams("maintab", key: "page_type")
     if data?.opStyle == 1 {
         return parseFlatOpNode(data?.items ?? [], traceParams: theParams, disposeBag: disposeBag)
     } else {
@@ -156,6 +160,7 @@ func parseNewHouseListItemNode(
             return TableSectionNode(
                     items: renders,
                     selectors: selectors,
+                    tracer: nil,
                     label: data?.title ?? "优选楼盘",
                     type: .node(identifier: SingleImageInfoCell.identifier))
         } else {
@@ -179,6 +184,7 @@ func paresNewHouseListRowItemNode(
             return TableRowNode(
                 itemRender: render,
                 selector: selector,
+                    tracer: nil,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
         }
@@ -267,7 +273,7 @@ func openNeighborhoodDetailPage(neighborhoodId: Int64, disposeBag: DisposeBag, n
     }
 }
 
-fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
+fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource, TableViewTracer {
 
     var datas: [TableSectionNode] = []
 
@@ -289,8 +295,24 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        //控件展现打点
+        var params = EnvContext.shared.homePageParams
+        if let type = homeListTypeBySection(indexPath.section), indexPath.row == 0 {
+            params = params <|>
+                    toTracerParams(type, key: "element_type") <|>
+                    toTracerParams("maintab", key: "page_type") <|>
+                    toTracerParams("maintab", key: "maintab_entrance") <|>
+                    beNull(key: "group_id")
+            recordEvent(key: TraceEventName.element_show, params: params)
+        }
+
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            callTracer(
+                    tracer: datas[indexPath.section].tracer,
+                    atIndexPath: indexPath,
+                    traceParams: EnvContext.shared.homePageParams)
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
@@ -333,4 +355,15 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         return UITableViewAutomaticDimension
     }
 
+}
+
+fileprivate func homeListTypeBySection(_ section: Int) -> String? {
+    switch section {
+        case 2:
+            return "maintab_old_list"
+        case 4:
+            return "maintab_new_list"
+        default:
+            return nil
+    }
 }

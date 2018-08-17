@@ -20,6 +20,10 @@ class SearchAndConditionFilterViewModel {
 
     let queryCondition = BehaviorRelay<String>(value: "")
 
+    let conditionTracer = BehaviorRelay<[Int: [Node]]>(value: [:])
+
+    let disposeBag = DisposeBag()
+
     var queryConditionAggregator = ConditionAggregator.monoid() {
         didSet {
             queryCondition.accept(getConditions())
@@ -27,6 +31,17 @@ class SearchAndConditionFilterViewModel {
     }
 
     init() {
+        conditionTracer
+            .map { $0.values }
+            .map { $0.reduce([:], mapCondition) }
+            .map(jsonStringMapper)
+            .debug("conditionTracer")
+            .bind { (condition) in
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(condition, key: "filter")
+            }.disposed(by: disposeBag)
+
+
     }
 
     func addCondition(index: Int, condition: @escaping (String) -> String) {
@@ -57,3 +72,20 @@ class SearchAndConditionFilterViewModel {
     }
 }
 
+fileprivate func mapCondition(result: [String: [Any]], nodes: [Node]) -> [String: [Any]] {
+    var result = result
+    nodes.forEach { node in
+        var values = valueWithDefault(map: result, key: node.key, defaultValue: [Node]())
+        values.append(node.filterCondition)
+        result[node.key] = values
+    }
+    return result
+}
+
+fileprivate func jsonStringMapper(value:  [String: [Any]]) -> String {
+    if let data = try? JSONSerialization.data(withJSONObject: value, options: []) as Data,
+        let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+        return json as String
+    }
+    return ""
+}
