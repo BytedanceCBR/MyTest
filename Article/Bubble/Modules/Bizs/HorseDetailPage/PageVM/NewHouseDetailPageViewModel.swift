@@ -20,7 +20,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
 
     var newHouseDetail = BehaviorRelay<HouseDetailResponse?>(value: nil)
     
-
+    var informParams: TracerParams = EnvContext.shared.homePageParams
 
     weak var tableView: UITableView?
 
@@ -128,6 +128,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         subDisposeBag = DisposeBag()
         if let data = response.data {
+            
+            self.informParams = self.informParams <|>
+            toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+            toTracerParams(self.houseId, key: "group_id")
+            
             let theParams = EnvContext.shared.homePageParams <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
                 toTracerParams("click", key: "enter_type") <|>
@@ -243,7 +248,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
 
+            var informParams = self.informParams <|>
+                toTracerParams("openning_notice", key: "enter_type")
+
             if EnvContext.shared.client.accountConfig.userInfo.value == nil {
+                informParams = informParams <|> toTracerParams(0, key: "is_login")
+
                 self.showQuickLoginAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
                 EnvContext.shared.client.accountConfig.userInfo
                         .skip(1)
@@ -255,7 +265,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                                 followId: "\(self.houseId)",
                                 disposeBag: self.disposeBag))
                         .disposed(by: self.disposeBag)
+                
             } else {
+                informParams = informParams <|> toTracerParams(1, key: "is_login")
+
                 let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
                         .flatMap({ [unowned self] () -> Observable<UserFollowResponse?> in
                             EnvContext.shared.toast.showLoadingToast("订阅开盘通知")
@@ -275,13 +288,24 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                         })
                         .bind(to: isFollowup)
                         .disposed(by: self.disposeBag)
+                
+
             }
+            
+            recordEvent(key: TraceEventName.inform_show, params: informParams)
+
         }
     }
 
     func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
+            
+            var informParams = self.informParams <|>
+                toTracerParams("price_notice", key: "enter_type")
+     
             if EnvContext.shared.client.accountConfig.userInfo.value == nil {
+                informParams = informParams <|> toTracerParams(0, key: "is_login")
+
                 self.showQuickLoginAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
                 EnvContext.shared.client.accountConfig.userInfo
                         .skip(1)
@@ -294,6 +318,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                                 disposeBag: self.disposeBag))
                         .disposed(by: self.disposeBag)
             } else {
+                informParams = informParams <|> toTracerParams(1, key: "is_login")
+
                 let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
                     .flatMap({ [unowned self] () ->  Observable<UserFollowResponse?> in
                         EnvContext.shared.toast.showLoadingToast("订阅变价通知")
@@ -319,6 +345,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel {
                     .bind(to: isFollowup)
                     .disposed(by: self.disposeBag)
             }
+            
+            recordEvent(key: TraceEventName.inform_show, params: informParams)
+
         }
     }
 

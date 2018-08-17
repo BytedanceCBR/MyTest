@@ -453,7 +453,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
                     tracerParams = tracerParams <|>
                     toTracerParams(categoryNameByHouseType(houseType: ht), key: "page_type") <|>
                     toTracerParams(followId, key: "group_id") <|>
-                    toTracerParams(logPB, key: "impr_id")
+                    toTracerParams(logPB, key: "log_pb")
 
                     recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
                     

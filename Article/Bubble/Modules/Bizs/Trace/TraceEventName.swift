@@ -33,4 +33,6 @@ class TraceEventName: NSObject {
 
     static let click_login = "click_login" // 进入登录页
 
+    static let inform_show = "inform_show" // 变价通知、开盘通知弹窗
+
 }
