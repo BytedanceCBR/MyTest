@@ -132,11 +132,15 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     }
 
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("new_detail", key: "page_type") <|>
+                toTracerParams("\(self.houseId)", key: "group_id")
+
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
             self.callTracer(
                 tracer: datas[indexPath.section].tracer,
                 atIndexPath: indexPath,
-                traceParams: TracerParams.momoid())
+                traceParams: params)
         })
     }
 
