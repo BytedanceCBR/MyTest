@@ -125,11 +125,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
     }
 
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("old_detail", key: "page_type") <|>
+                toTracerParams("\(self.houseId)", key: "group_id")
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
                 self.callTracer(
                     tracer: datas[indexPath.section].tracer,
                     atIndexPath: indexPath,
-                    traceParams: TracerParams.momoid())
+                    traceParams: params)
         })
         
         self.bindFollowPage()
@@ -386,11 +389,29 @@ func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: D
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
             .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
+
+        let params = TracerParams.momoid() <|>
+                toTracerParams("old", key: "house_type") <|>
+                toTracerParams("left_pic", key: "card_type")
+
+        let records = data?
+                .filter {
+                    $0.id != nil
+                }
+                .enumerated()
+                .map { (e) -> ElementRecord in
+                    let (offset, item) = e
+                    let theParams = params <|>
+                            toTracerParams(offset, key: "rank") <|>
+                            toTracerParams(item.id ?? "be_null", key: "group_id")
+                    return onceRecord(key: "house_show", params: theParams)
+                }
+
         if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
             return TableSectionNode(
                 items: renders,
                 selectors: selectors,
-                    tracer: nil,
+                    tracer: records,
                 label: "精选好房",
                 type: .node(identifier: SingleImageInfoCell.identifier))
         } else {

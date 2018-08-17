@@ -7,7 +7,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 
-class NeighborhoodDetailPageViewModel: DetailPageViewModel {
+class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     
     var logPB: Any?
 
@@ -57,38 +57,57 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
 
         cellFactory.register(tableView: tableView)
 
-        neighborhoodDetailResponse
+//        neighborhoodDetailResponse
+//                .skip(1)
+//                .subscribe { [unowned self] event in
+//                    let diss = DisposeBag()
+//                    self.cellsDisposeBag = diss
+//                    let datas = self.processData(diss)([])
+//                    self.dataSource.datas = datas
+//                    tableView.reloadData()
+//                }
+//                .disposed(by: disposeBag)
+//
+//
+//        relateNeighborhoodData
+//            .skip(1)
+//            .subscribe { [unowned self] event in
+//                let diss = DisposeBag()
+//                self.cellsDisposeBag = diss
+//                let result = self.processData(diss)([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//            }
+//            .disposed(by: disposeBag)
+//        houseInSameNeighborhood
+//            .skip(1)
+//            .subscribe { [unowned self] event in
+//                let diss = DisposeBag()
+//                self.cellsDisposeBag = diss
+//                let result = self.processData(diss)([])
+//                self.dataSource.datas = result
+//                self.tableView?.reloadData()
+//            }
+//            .disposed(by: disposeBag)
+        Observable.zip(neighborhoodDetailResponse, relateNeighborhoodData, houseInSameNeighborhood)
                 .skip(1)
-                .subscribe { [unowned self] event in
+                .bind { (_) in
                     let diss = DisposeBag()
                     self.cellsDisposeBag = diss
-                    let datas = self.processData(diss)([])
-                    self.dataSource.datas = datas
-                    tableView.reloadData()
+                    let result = self.processData(diss)([])
+                    self.dataSource.datas = result
+                    self.tableView?.reloadData()
+                    DispatchQueue.main.async {
+                        self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                    }
                 }
                 .disposed(by: disposeBag)
 
-
-        relateNeighborhoodData
-            .skip(1)
-            .subscribe { [unowned self] event in
-                let diss = DisposeBag()
-                self.cellsDisposeBag = diss
-                let result = self.processData(diss)([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-            }
-            .disposed(by: disposeBag)
-        houseInSameNeighborhood
-            .skip(1)
-            .subscribe { [unowned self] event in
-                let diss = DisposeBag()
-                self.cellsDisposeBag = diss
-                let result = self.processData(diss)([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-            }
-            .disposed(by: disposeBag)
+        tableView.rx.didScroll
+                .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
+                .bind { [unowned self, weak tableView] void in
+                    self.traceDisplayCell(tableView: tableView, datas: self.dataSource.datas)
+                }.disposed(by: disposeBag)
 
         infoMaskView.tapGesture.rx.event
             .bind { [unowned self] (_) in
@@ -99,6 +118,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
         
         self.bindFollowPage()
         
+    }
+
+    func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("\(self.houseId)", key: "group_id")
+
+        tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
+            self.callTracer(
+                    tracer: datas[indexPath.section].tracer,
+                    atIndexPath: indexPath,
+                    traceParams: params)
+        })
     }
 
     func requestReletedData() {
@@ -127,8 +158,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
             infoMaskView?.isHidden = true
         }
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)")
-                .retryOnConnect(timeout: 50)
-                .retry(10)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let status = response?.data?.neighbordhoodStatus {
                         self.followStatus.accept(Result.success(status.neighborhoodSubStatus ?? 0 == 1))

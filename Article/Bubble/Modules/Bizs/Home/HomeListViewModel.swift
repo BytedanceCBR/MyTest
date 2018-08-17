@@ -311,10 +311,6 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 
         switch datas[indexPath.section].type {
         case let .node(identifier):
-            callTracer(
-                    tracer: datas[indexPath.section].tracer,
-                    atIndexPath: indexPath,
-                    traceParams: EnvContext.shared.homePageParams)
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
@@ -351,10 +347,32 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         datas[indexPath.section].selectors?[indexPath.row]()
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                toTracerParams("maintab", key: "page_type") <|>
+                toTracerParams("maintab_list", key: "element_type") <|>
+                beNull(key: "log_pb") <|>
+                toTracerParams("list", key: "maintab_entrance")
+    }
+
+    fileprivate func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let houseShowParams = houseParams()
+
+        callTracer(
+                tracer: datas[indexPath.section].tracer,
+                atIndexPath: indexPath,
+                traceParams: houseShowParams)
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
+    }
+
+    fileprivate func houseParams() -> TracerParams {
+        return EnvContext.shared.homePageParams <|>
+            toTracerParams("maintab", key: "page_type") <|>
+            toTracerParams("maintab_list", key: "element_type") <|>
+            beNull(key: "log_pb") <|>
+            toTracerParams("list", key: "maintab_entrance")
     }
 
 }
