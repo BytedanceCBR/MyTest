@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel {
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "neighborhood_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -170,6 +172,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                 toTracerParams("click", key: "enter_type") <|>
                 toTracerParams("neighborhood_detail", key: "enter_from")
 
+            self.logPB = data.logPB
 
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage, disposeBag: self.disposeBag)

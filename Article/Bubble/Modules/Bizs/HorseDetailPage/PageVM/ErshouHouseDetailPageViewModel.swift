@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -217,6 +219,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 toTracerParams("list", key: "maintab_entrance") <|>
                 toTracerParams("old_detail", key: "enter_from")
 
+            self.logPB = data.logPB
+            
             let dataParser = DetailDataParser.monoid()
                 <- parseErshouHouseCycleImageNode(data, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
@@ -483,16 +487,6 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
             let render = curry(fillFollowUpListItemCell)(item)
             let editor = { (style: UITableViewCellEditingStyle) -> Observable<TableRowEditResult> in
                 if let ht = HouseType(rawValue: item.houseType ?? -1), let followId = item.followId {
-                    
-                    var tracerParams = TracerParams.momoid()
-                    let logPB = item.logPB ?? "be_null"
-
-                    tracerParams = tracerParams <|>
-                    toTracerParams(categoryNameByHouseType(houseType: ht), key: "page_type") <|>
-                    toTracerParams(followId, key: "group_id") <|>
-                    toTracerParams(logPB, key: "log_pb")
-
-                    recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
                     
                     return cancelFollowUp(houseType: ht, followId: followId)
                 } else {

@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "new_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -155,6 +157,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                 toTracerParams("click", key: "enter_type") <|>
                 toTracerParams("list", key: "maintab_entrance") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
+            
+            self.logPB = data.logPB
+
             let dataParser = DetailDataParser.monoid()
                 <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)

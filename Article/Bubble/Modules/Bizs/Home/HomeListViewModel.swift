@@ -9,6 +9,8 @@ import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
 
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
 
     var traceParams = TracerParams.momoid()
