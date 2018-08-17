@@ -266,7 +266,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         return { [unowned self] (isFollowup) in
 
             var informParams = self.informParams <|>
-                toTracerParams("openning_notice", key: "enter_type")
+                toTracerParams("openning_notice", key: "element_type")
 
             if EnvContext.shared.client.accountConfig.userInfo.value == nil {
                 informParams = informParams <|> toTracerParams(0, key: "is_login")
@@ -286,12 +286,19 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             } else {
                 informParams = informParams <|> toTracerParams(1, key: "is_login")
 
-                let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
-                        .flatMap({ [unowned self] () -> Observable<UserFollowResponse?> in
+                let obv = self.showFollowupAlert?("开盘通知", "订阅开盘通知，楼盘开盘信息会及时发送到您的手机")
+                obv?
+                    .bind(onNext: { (_) in
+                        recordEvent(key: TraceEventName.click_confirm, params: informParams)
+                    })
+                    .disposed(by: self.disposeBag)
+                
+                let followupResponseObv: Observable<UserFollowResponse?>? = obv?
+                            .flatMap({ [unowned self] ()  -> Observable<UserFollowResponse?> in
                             EnvContext.shared.toast.showLoadingToast("订阅开盘通知")
                             return self.followItObv(houseType: .newHouse, followAction: .openFloorPan, followId: "\(self.houseId)")
                         })
-                obv?.subscribe(onNext: { [unowned self] response in
+                followupResponseObv?.subscribe(onNext: { [unowned self] response in
                     if let status = response?.status, status == 0 {
                         EnvContext.shared.toast.dismissToast()
                         self.closeAlert?()
@@ -300,7 +307,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                 }, onError: { error in
 
                 }).disposed(by: self.disposeBag)
-                obv?.map({ (response) -> Bool in
+                followupResponseObv?.map({ (response) -> Bool in
                             return response != nil && response?.status == 0
                         })
                         .bind(to: isFollowup)
@@ -318,7 +325,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         return { [unowned self] (isFollowup) in
             
             var informParams = self.informParams <|>
-                toTracerParams("price_notice", key: "enter_type")
+                toTracerParams("price_notice", key: "element_type")
      
             if EnvContext.shared.client.accountConfig.userInfo.value == nil {
                 informParams = informParams <|> toTracerParams(0, key: "is_login")
@@ -337,24 +344,34 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             } else {
                 informParams = informParams <|> toTracerParams(1, key: "is_login")
 
-                let obv: Observable<UserFollowResponse?>? = self.showFollowupAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
+                let obv = self.showFollowupAlert?("变价通知", "订阅变价通知，楼盘变价信息会及时发送到您的手机")
+                obv?
+                    .debug()
+                    .bind(onNext: { (_) in
+                        recordEvent(key: TraceEventName.click_confirm, params: informParams)
+                    })
+                    .disposed(by: self.disposeBag)
+                
+                let followupResponseObv: Observable<UserFollowResponse?>? = obv?
                     .flatMap({ [unowned self] () ->  Observable<UserFollowResponse?> in
                         EnvContext.shared.toast.showLoadingToast("订阅变价通知")
                         return self.followItObv(houseType: .newHouse, followAction: .newHousePriceChanged, followId: "\(self.houseId)")
                     })
 
 
-                obv?.subscribe(onNext: { [unowned self] response in
-                    if let status = response?.status, status == 0 {
-                        EnvContext.shared.toast.dismissToast()
-                        self.closeAlert?()
-                        EnvContext.shared.toast.showToast("订阅成功")
-                    }
-                }, onError: { error in
+                followupResponseObv?
+                    .subscribe(onNext: { [unowned self] response in
+                        if let status = response?.status, status == 0 {
+                            EnvContext.shared.toast.dismissToast()
+                            self.closeAlert?()
+                            EnvContext.shared.toast.showToast("订阅成功")
+                        }
+                        }, onError: { error in
+                            
+                    })
+                    .disposed(by: self.disposeBag)
 
-                }).disposed(by: self.disposeBag)
-
-                obv?
+                followupResponseObv?
                     .map({ (response) -> Bool in
                         closeAlert()
                         return response != nil && response?.status == 0

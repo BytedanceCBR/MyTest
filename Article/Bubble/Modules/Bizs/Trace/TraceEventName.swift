@@ -37,4 +37,6 @@ class TraceEventName: NSObject {
 
     static let inform_show = "inform_show" // 变价通知、开盘通知弹窗
 
+    static let click_confirm = "click_confirm" // (登录状态)变价通知、开盘通知弹窗点击确认
+
 }
