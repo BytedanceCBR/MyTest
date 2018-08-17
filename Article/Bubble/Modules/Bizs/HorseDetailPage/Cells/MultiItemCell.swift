@@ -415,9 +415,10 @@ func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> Nei
 func parseFloorPanNode(
         _ newHouseData: NewHouseData,
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(bottomBarBinder)
+        let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(followPage)(bottomBarBinder)
         let params = TracerParams.momoid() <|>
                 toTracerParams("neighborhood_nearby", key: "element_type")
         return TableSectionNode(
@@ -432,6 +433,7 @@ func parseFloorPanNode(
 func fillFloorPanCell(
         _ data: [FloorPan.Item],
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
@@ -440,10 +442,14 @@ func fillFloorPanCell(
             re.tapGesture.rx.event
                 .subscribe(onNext: { [unowned re] recognizer in
                     if let id = item.id, let floorPanId = Int64(id) {
+                        
+                        followPage.accept("house_model_detail")
+
                         openFloorPanCategoryDetailPage(
                                 floorPanId: floorPanId,
                                 disposeBag: re.disposeBag,
                                 navVC: navVC,
+                                followPage: followPage,
                                 bottomBarBinder: bottomBarBinder)()
                     }
                 })
@@ -498,12 +504,13 @@ func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItemView {
 func parseFloorPanNode(
         _ items: [FloorPlanInfoData.Recommend]?,
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
     return {
         if let items = items {
             let params = TracerParams.momoid() <|>
                     toTracerParams("house_model", key: "element_type")
-            let cellRender = curry(fillFloorPanCell)(items)(navVC)(bottomBarBinder)
+            let cellRender = curry(fillFloorPanCell)(items)(navVC)(followPage)(bottomBarBinder)
             return TableSectionNode(
                     items: [cellRender],
                     selectors: nil,
@@ -519,6 +526,7 @@ func parseFloorPanNode(
 func fillFloorPanCell(
         _ data: [FloorPlanInfoData.Recommend],
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
@@ -527,10 +535,14 @@ func fillFloorPanCell(
             re.tapGesture.rx.event
                     .subscribe(onNext: { [unowned re] recognizer in
                         if let id = item.id, let floorPanId = Int64(id) {
+                            
+                            followPage.accept("house_model_detail")
+
                             openFloorPanCategoryDetailPage(
                                     floorPanId: floorPanId,
                                     disposeBag: re.disposeBag,
                                     navVC: navVC,
+                                    followPage: followPage,
                                     bottomBarBinder: bottomBarBinder)()
                         }
                     })

@@ -6,7 +6,11 @@
 import Foundation
 import RxCocoa
 import RxSwift
-class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTracer {
+class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "new_detail")
+
+    var followTraceParams: TracerParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
@@ -15,7 +19,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
     var relatedCourt = BehaviorRelay<RelatedCourtResponse?>(value: nil)
 
     var newHouseDetail = BehaviorRelay<HouseDetailResponse?>(value: nil)
-
+    
     weak var tableView: UITableView?
 
     fileprivate var dataSource: DataSource
@@ -65,6 +69,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
             .bind { [unowned self, weak tableView] void in
                 self.traceDisplayCell(tableView: tableView, datas: self.dataSource.datas)
             }.disposed(by: disposeBag)
+
+        self.bindFollowPage()
+
     }
 
     func requestData(houseId: Int64) {
@@ -151,6 +158,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
                     openCourtNotify: self.handleOpenCourtNotify(closeAlert: closeAlert ?? {}),
                     disposeBag: subDisposeBag!,
                     navVC: self.navVC,
+                    followPage: self.followPage,
                     bottomBarBinder: self.bindBottomView())
                 <- parseNewHouseContactNode(data)
                 <- parseTimeLineHeaderNode(data)
@@ -167,7 +175,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
                             bottomBarBinder: self.bindBottomView())
                 }
                 <- parseFloorPanHeaderNode(data)
-                <- parseFloorPanNode(data, navVC: navVC, bottomBarBinder: self.bindBottomView())
+                <- parseFloorPanNode(data, navVC: navVC, followPage: self.followPage, bottomBarBinder: self.bindBottomView())
                 <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 >= 5) { [unowned self] in
                     let floorPanTraceParams = theParams <|>
                         toTracerParams("house_model_list", key: "category_name") <|>
@@ -178,6 +186,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
                             traceParams: floorPanTraceParams,
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
+                            followPage: self.followPage,
                             bottomBarBinder: self.bindBottomView())()
                 }
                 <- parseCommentHeaderNode(data)
@@ -197,6 +206,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
                                            courtId: courtId,
                                            disposeBag: disposeBag,
                                            navVC: navVC,
+                                           followPage: self.followPage,
                                            bottomBarBinder: self.bindBottomView()))
                 <- parseGlobalPricingNode(
                     data,
@@ -204,6 +214,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
                             courtId: courtId,
                             disposeBag: disposeBag,
                             navVC: navVC,
+                            followPage: self.followPage,
                             bottomBarBinder: self.bindBottomView()))
                     <- parseInfoNode("楼盘价格，由开发商统一报价，由于各平台更新速度不一致，导致价格有所差异，最终价格应以开发商报价为准；")
                 <- parseHeaderNode("猜你喜欢")
@@ -216,6 +227,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
     }
 
     func openCommentList(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        
+        self.followTraceParams = self.followTraceParams <|>
+            toTracerParams("house_comment_detail", key: "enter_from")
+        
         let detailPage = HouseCommentVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
@@ -226,6 +241,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel , TableViewTrac
     }
 
     func openFloorPanList(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+        
+        self.followTraceParams = self.followTraceParams <|>
+            toTracerParams("house_history_detail", key: "enter_from")
+        
         let detailPage = FloorPanListVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
@@ -396,8 +415,10 @@ func openGlobalPricingList(
     courtId: Int64,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
+    followPage: BehaviorRelay<String>,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
+        
         let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
@@ -405,6 +426,8 @@ func openGlobalPricingList(
             })
             .disposed(by: disposeBag)
         navVC?.pushViewController(detailPage, animated: true)
+        
+        followPage.accept("price_compare_detail")
     }
 }
 
@@ -413,8 +436,10 @@ func openFloorPanInfoPage(
     newHouseData: NewHouseData,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
+    followPage: BehaviorRelay<String>,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
+        
         let detailPage = FloorPanInfoVC(
             isHiddenBottomBar: false,
             floorPanId: floorPanId,
@@ -427,6 +452,9 @@ func openFloorPanInfoPage(
                 })
                 .disposed(by: disposeBag)
         navVC?.pushViewController(detailPage, animated: true)
+        
+        followPage.accept("house_info_detail")
+
     }
 }
 
@@ -435,11 +463,14 @@ func openFloorPanCategoryPage(
     traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
+    followPage: BehaviorRelay<String>,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
+
         let detailPage = FloorPanCategoryVC(
                 isHiddenBottomBar: false,
                 floorPanId: floorPanId,
+                followPage: followPage,
                 bottomBarBinder: bottomBarBinder)
         detailPage.tracerParams = traceParams
         detailPage.navBar.backBtn.rx.tap
@@ -448,6 +479,9 @@ func openFloorPanCategoryPage(
                 })
                 .disposed(by: disposeBag)
         navVC?.pushViewController(detailPage, animated: true)
+        
+        followPage.accept("house_model_list")
+
     }
 }
 

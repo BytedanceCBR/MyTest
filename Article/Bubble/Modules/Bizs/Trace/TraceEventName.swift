@@ -28,4 +28,11 @@ class TraceEventName: NSObject {
 
     static let element_show = "element_show"
 
+    @objc
+    static let login_page = "login_page" // 进入登录页
+
+    static let click_verifycode = "click_verifycode" // 登录页点击获取验证码
+
+    static let click_login = "click_login" // 进入登录页
+
 }

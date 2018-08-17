@@ -18,6 +18,10 @@ protocol DetailPageViewModel: class {
 
     var traceParams: TracerParams { get set }
 
+    var followTraceParams: TracerParams { get set }
+
+    var followPage: BehaviorRelay<String> { get set }
+
 //    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
 //
 //    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
@@ -31,10 +35,27 @@ protocol DetailPageViewModel: class {
     func requestData(houseId: Int64)
 
     func followThisItem()
+    
+    func bindFollowPage()
 
 }
 
 extension DetailPageViewModel {
+    
+    func bindFollowPage() {
+    
+        self.followPage
+            .skip(1)
+            .subscribe(onNext: { [unowned self] followPage in
+                
+                self.followTraceParams = self.followTraceParams <|>
+                    toTracerParams(followPage, key: "enter_from")
+                
+            })
+            .disposed(by: disposeBag)
+        
+        
+    }
 
     func followIt(
         houseType: HouseType,
@@ -42,7 +63,7 @@ extension DetailPageViewModel {
         followId: String,
         disposeBag: DisposeBag) -> () -> Void {
         var loginDisposeBag = DisposeBag()
-        return {
+        return { [weak self] in
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
             if userInfo.value == nil {
@@ -55,7 +76,18 @@ extension DetailPageViewModel {
                     })
                     .disposed(by: loginDisposeBag)
                 
-                TTRoute.shared().openURL(byPresentViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
+                var userInfo = TTRouteUserInfo()
+                if var followTraceParams = self?.followTraceParams {
+                    
+                    followTraceParams = followTraceParams <|>
+                        toTracerParams("follow", key: "enter_type")
+                    let paramsMap = followTraceParams.paramsGetter([:])
+                    userInfo = TTRouteUserInfo(info: paramsMap)
+                    
+                }
+                
+                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfo)
+                
                 return
             }
             requestFollow(
@@ -64,7 +96,7 @@ extension DetailPageViewModel {
                 actionType: followAction)
                 .subscribe(onNext: { response in
                     if response?.data?.followStatus ?? 1 == 0 {
-                        self.followStatus.accept(.success(true))
+                        self?.followStatus.accept(.success(true))
                         EnvContext.shared.toast.showToast("关注成功")
                     }
                 }, onError: { error in
@@ -73,6 +105,7 @@ extension DetailPageViewModel {
                 .disposed(by: disposeBag)
         }
     }
+    
 
     func cancelFollowIt(
             houseType: HouseType,
@@ -93,8 +126,9 @@ extension DetailPageViewModel {
                         loginDisposeBag = DisposeBag()
                     })
                     .disposed(by: loginDisposeBag)
-                TTRoute.shared().openURL(byPresentViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
 
+                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
+                
                 return
             }
             requestCancelFollow(

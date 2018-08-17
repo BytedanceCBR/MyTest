@@ -21,7 +21,12 @@ class BubbleAlertController: UIAlertController {
 
     var titleView: UIView?
 
+    var panel: UIView?
+
     private let disposeBag = DisposeBag()
+    
+    var tracerParams: TracerParams?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +43,16 @@ class BubbleAlertController: UIAlertController {
             maker.width.equalToSuperview()
 
         }
-        contentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapAction)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapAction))
+//        tap.delegate = self
+        contentView.addGestureRecognizer(tap)
         contentView.isUserInteractionEnabled = true
+        
+        if let theTracerParams = self.tracerParams {
+
+            // 登录
+            recordEvent(key: TraceEventName.login_page, params: theTracerParams)
+        }
         
         NotificationCenter.default.rx
             .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -130,9 +143,48 @@ extension BubbleAlertController {
             maker.left.right.equalToSuperview()
             maker.bottom.equalToSuperview().priority(.high)
         }
+        
+        self.panel = view
+        
     }
 
 }
+
+//extension BubbleAlertController: UIGestureRecognizerDelegate {
+//
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+//
+////        if ([touch.view isKindOfClass:[YYLabel class]]) {
+////            YYLabel *label = (YYLabel *)touch.view;
+////            NSRange highlightRange;
+////            YYTextHighlight *highlight = [label _getHighlightAtPoint:[touch locationInView:label] range:&highlightRange];
+////            if (highlight) {
+////                return NO;
+////            }
+////            return YES;
+////        }
+////        return YES;
+//
+//        if let label = touch.view as? YYLabel {
+//
+//            return true
+//        }
+//
+//        return false
+//    }
+//
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//
+////        if let target = gestureRecognizer.target as? YYLabel {
+////
+////            return true
+////        }
+//
+//        return false
+//
+//    }
+//
+//}
 
 class BubbleAlertTitleView: UIView {
 

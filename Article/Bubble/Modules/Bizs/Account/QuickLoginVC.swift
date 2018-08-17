@@ -14,6 +14,8 @@ protocol QuickLoginVCDelegate {
 
 class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     
+    var tracerParams = TracerParams.momoid()
+
     var loginDelegate: QuickLoginVCDelegate?
 
     lazy var navBar: SimpleNavBar = {
@@ -135,10 +137,16 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 })
             }
         }.disposed(by: disposeBag)
+        
+        let userInfo = paramObj?.userInfo
+        if let params = userInfo?.allInfo {
+            self.tracerParams = paramsOfMap(params as! [String : Any])
+        }
+        
     }
     
     @objc
-    public init(complete: ((Bool) -> Void)?) {
+    public init(complete: ((Bool) -> Void)?, params:[String: Any]? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.complete = complete
         self.quickLoginViewModel = QuickLoginViewModel(sendSMSBtn: sendVerifyCodeBtn, phoneInput: phoneInput)
@@ -154,6 +162,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 })
             }
         }.disposed(by: disposeBag)
+        
+        if let theParams = params {
+            self.tracerParams = paramsOfMap(theParams)
+        }
+        
     }
 
     override func viewDidLoad() {
@@ -252,15 +265,24 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         setAgreementContent()
 
         if let quickLoginViewModel = self.quickLoginViewModel {
+            let paramsGetter = self.recordClickVerifyCode()
             sendVerifyCodeBtn.rx.tap
-                    .do(onNext: { [unowned self] in self.showLoading(title: "正在获取验证码") })
+                    .do(onNext: { [unowned self] in
+                        
+                        self.showLoading(title: "正在获取验证码")
+                        recordEvent(key: TraceEventName.click_verifycode, params: self.tracerParams <|> paramsGetter())
+
+                    })
                     .withLatestFrom(phoneInput.rx.text)
                     .bind(to: quickLoginViewModel.requestSMS)
                     .disposed(by: disposeBag)
 
             let mergeInputs = Observable.combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
             confirmBtn.rx.tap
-                    .do(onNext: { [unowned self] in self.showLoading(title: "正在登录中") })
+                    .do(onNext: { [unowned self] in
+                        self.showLoading(title: "正在登录中")
+                        recordEvent(key: TraceEventName.click_login, params: self.tracerParams)
+                    })
                     .withLatestFrom(mergeInputs)
                     .bind(to: quickLoginViewModel.requestLogin)
                     .disposed(by: disposeBag)
@@ -297,6 +319,20 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 self.enableConfirmBtn(button: self.confirmBtn, isEnabled: isEnabled)
             })
             .disposed(by: disposeBag)
+        
+        recordEvent(key: TraceEventName.login_page, params: self.tracerParams)
+
+    }
+    
+    func recordClickVerifyCode() -> (() -> TracerParams) {
+        var executed = 0
+        return {
+            let tempExecuted = executed
+            if executed == 0 {
+                executed = 1
+            }
+            return TracerParams.momoid() <|> toTracerParams(tempExecuted, key: "is_resent")
+        }
     }
 
     override func viewDidLayoutSubviews() {

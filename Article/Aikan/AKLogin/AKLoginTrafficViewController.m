@@ -40,7 +40,13 @@
 
 + (void)presentLoginTrafficViewControllerWithCompleteBlock:(CompleteBlock)block
 {
-    QuickLoginVC *vc = [[QuickLoginVC alloc] initWithComplete:block];
+    [self presentLoginTrafficViewControllerWithCompleteBlock:block params:nil];
+}
+
++(void)presentLoginTrafficViewControllerWithCompleteBlock:(CompleteBlock)block params:(NSDictionary *)params {
+    
+    QuickLoginVC *vc = [[QuickLoginVC alloc] initWithComplete:block params:params];
+    
     [ak_top_vc() presentViewController:vc animated:YES completion:nil];
 }
 

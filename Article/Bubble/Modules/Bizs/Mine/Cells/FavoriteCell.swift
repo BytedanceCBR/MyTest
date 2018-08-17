@@ -329,11 +329,19 @@ fileprivate func confirmUserAuth(
     callBack: @escaping () -> Void) -> () -> Void {
     return {
         if !BDAccount.shared().isLogin() {
-            let vc = QuickLoginVC { result in
+            let vc = QuickLoginVC(complete: { (result) in
+                
                 if result {
                     callBack()
                 }
-            }
+            })
+            
+            var tracerParams = TracerParams.momoid()
+            tracerParams = tracerParams <|>
+                toTracerParams("minetab", key: "enter_from") <|>
+                toTracerParams("house_follow", key: "enter_type")
+            vc.tracerParams = tracerParams
+            
             navVC?.present(vc, animated: true, completion: nil)
         } else {
             callBack()

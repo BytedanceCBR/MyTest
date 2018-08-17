@@ -8,6 +8,10 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel {
+    
+    var followPage: BehaviorRelay<String> = BehaviorRelay(value: "neighborhood_detail")
+
+    var followTraceParams: TracerParams = TracerParams.momoid()
 
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
@@ -90,6 +94,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel {
                     self.requestData(houseId: self.houseId)
                 }
             }.disposed(by: disposeBag)
+        
+        self.bindFollowPage()
+        
     }
 
     func requestReletedData() {

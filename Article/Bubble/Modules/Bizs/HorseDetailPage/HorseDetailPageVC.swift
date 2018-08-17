@@ -121,7 +121,7 @@ class HorseDetailPageVC: BaseViewController {
             print("\(view) - \(value)")
         }
         view.backgroundColor = UIColor.white
-
+        
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController)
         detailPageViewModel?.traceParams = traceParams
         setupNavBar()
@@ -276,7 +276,7 @@ class HorseDetailPageVC: BaseViewController {
             }
         }
         navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
-
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -286,6 +286,22 @@ class HorseDetailPageVC: BaseViewController {
         self.view.setNeedsLayout()
         self.tabBarController?.tabBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
+        
+        self.detailPageViewModel?.followPage.accept(self.enterFromByHouseType(houseType: self.houseType))
+        
+    }
+    
+    fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "new_detail"
+        case .secondHandHouse:
+            return "old_detail"
+        case .neighborhood:
+            return "neighborhood_detail"
+        default:
+            return "be_null"
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -300,6 +316,23 @@ class HorseDetailPageVC: BaseViewController {
             title: title,
             message: nil,
             preferredStyle: .alert)
+        
+        var enter_type: String?
+        if title == "开盘通知" {
+            enter_type = "openning_notice"
+        }else if title == "变价通知" {
+            enter_type = "price_notice"
+        }
+        
+        if let enterType = enter_type {
+            
+            var tracerParams = TracerParams.momoid()
+            tracerParams = tracerParams <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams(enterType, key: "enter_type")
+            alert.tracerParams = tracerParams
+            
+        }
         quickLoginVM = QuickLoginAlertViewModel(
                 title: title,
                 subTitle: subTitle,
@@ -312,6 +345,7 @@ class HorseDetailPageVC: BaseViewController {
         })
         
         self.alert = alert
+        
     }
 
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {

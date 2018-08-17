@@ -257,9 +257,10 @@ func parseNewHouseCoreInfoNode(
     openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
+    followPage: BehaviorRelay<String>,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode {
     return {
-        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(bottomBarBinder)
+        let cellRender = curry(fillNewHouseCoreInfoCell)(newHouseData)(floorPanId)(priceChangeHandler)(openCourtNotify)(disposeBag)(navVC)(followPage)(bottomBarBinder)
         let priceChangeParams = TracerParams.momoid() <|>
             toTracerParams("price_notice", key: "element_type")
         let priceRecord = elementShowOnceRecord(params: priceChangeParams)
@@ -290,6 +291,7 @@ func fillNewHouseCoreInfoCell(
         openCourtNotify: @escaping (BehaviorRelay<Bool>) -> Void,
         disposeBag: DisposeBag,
         navVC: UINavigationController?,
+        followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseInfoCell {
@@ -304,6 +306,7 @@ func fillNewHouseCoreInfoCell(
                         newHouseData: data,
                         disposeBag: disposeBag,
                         navVC: navVC,
+                        followPage: followPage,
                         bottomBarBinder: bottomBarBinder)()
                 }
             })
