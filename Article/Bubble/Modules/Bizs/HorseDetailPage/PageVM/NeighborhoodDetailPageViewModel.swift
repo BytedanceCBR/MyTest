@@ -220,6 +220,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     data.neighborhoodInfo != nil
                 }
                 <- parseNeighorhoodNearByNode(data, disposeBag: self.disposeBag)
+                <- parseNeighboorhoodPriceChartNode(data, navVC: self.navVC)
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
                     data.totalSalesCount ?? 0 > 0
                 }
