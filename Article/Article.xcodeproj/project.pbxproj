@@ -1602,6 +1602,7 @@
 		D0F68CB81D800F6C00785B03 /* TTUnifyADVideoCategoryLargePicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F68CB71D800F6C00785B03 /* TTUnifyADVideoCategoryLargePicCell.m */; };
 		D0F68CBE1D811B4900785B03 /* TTVideoCellActionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F68CBD1D811B4900785B03 /* TTVideoCellActionBar.m */; };
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
+		D43981DB21295574009797A1 /* NHErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43981DA21295574009797A1 /* NHErrorViewModel.swift */; };
 		D500CFA2205AABCF00FBDAF5 /* AKLoginTrafficViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */; };
 		D5041EFA2058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041EF12058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m */; };
 		D5041EFB2058029000BAEE7F /* AKAwardCoinTipModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041EF22058029000BAEE7F /* AKAwardCoinTipModel.m */; };
@@ -6042,6 +6043,7 @@
 		D0F68CBD1D811B4900785B03 /* TTVideoCellActionBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCellActionBar.m; sourceTree = "<group>"; };
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
+		D43981DA21295574009797A1 /* NHErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NHErrorViewModel.swift; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D5041EF12058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKAwardCoinVideoMonitorManager.m; sourceTree = "<group>"; };
@@ -12560,6 +12562,7 @@
 		B36E26C020F62A7800D4E8D0 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				D43981D921295523009797A1 /* Error */,
 				B36E26C120F62A7800D4E8D0 /* Style */,
 				B36E26C320F62A7800D4E8D0 /* Navs */,
 				B36E26C520F62A7800D4E8D0 /* Env */,
@@ -13299,6 +13302,14 @@
 				D0EAC22E1E0ADD26007EB2AA /* TTSearchSugModel.m */,
 			);
 			name = SearchIDLModel;
+			sourceTree = "<group>";
+		};
+		D43981D921295523009797A1 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				D43981DA21295574009797A1 /* NHErrorViewModel.swift */,
+			);
+			path = Error;
 			sourceTree = "<group>";
 		};
 		D500CF9F205AABCF00FBDAF5 /* AKLogin */ = {
@@ -15482,8 +15493,16 @@
 						TestTargetID = FEFA5259205FB1A8001F50D8;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = X46375UBYG;
+						DevelopmentTeam = YHC3ZJUH4P;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -18354,6 +18373,7 @@
 				FEFA54BB205FB1A8001F50D8 /* SubscribeEntryGetRemoteDataOperation.m in Sources */,
 				FEFA54BE205FB1A8001F50D8 /* TTDBCenter.m in Sources */,
 				FEFA54BF205FB1A8001F50D8 /* TTEditableUserAuditInfo.m in Sources */,
+				D43981DB21295574009797A1 /* NHErrorViewModel.swift in Sources */,
 				FEFA54C0205FB1A8001F50D8 /* FriendListView.m in Sources */,
 				FEFA54C1205FB1A8001F50D8 /* ArticleMomentProfileWapView.m in Sources */,
 				FEFA54C2205FB1A8001F50D8 /* NewsBaseDelegate+Service.m in Sources */,
@@ -19949,13 +19969,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_POSTPROCESSING = NO;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = YHC3ZJUH4P;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -20053,13 +20072,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = YHC3ZJUH4P;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
