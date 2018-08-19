@@ -261,7 +261,7 @@
                     
                     NSString *hint = [error.userInfo objectForKey:@"description"];
                     if (isEmptyString(hint)) hint = [error.userInfo objectForKey:TTAccountErrMsgKey];
-                    if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
+//                    if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
                     
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:hint indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                 } else {

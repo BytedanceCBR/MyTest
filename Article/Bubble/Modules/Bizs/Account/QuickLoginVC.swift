@@ -313,10 +313,10 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
 
         
-        acceptCheckBox.rx.tap.subscribe { [unowned self] event in
+        acceptCheckBox.rx.tap.subscribe { [weak self] event in
             
-            self.acceptCheckBox.isSelected = !self.acceptCheckBox.isSelected
-            self.acceptRelay.accept(self.acceptCheckBox.isSelected)
+            self?.acceptCheckBox.isSelected = !(self?.acceptCheckBox.isSelected ?? false)
+            self?.acceptRelay.accept(self?.acceptCheckBox.isSelected ?? true)
             }
             .disposed(by: disposeBag)
        
