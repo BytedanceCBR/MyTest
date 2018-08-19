@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "neighborhood_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -199,9 +201,15 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams("click", key: "enter_type") <|>
                 toTracerParams("neighborhood_detail", key: "enter_from")
 
+            self.logPB = data.logPB
 
+            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("neighborhood_detail", key: "page_type")
+            pictureParams = pictureParams <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
+            
             let dataParser = DetailDataParser.monoid()
-                <- parseCycleImageNode(data.neighborhoodImage, disposeBag: self.disposeBag)
+                <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data)
                 <- parseHeaderNode("小区概况") {

@@ -33,6 +33,21 @@ class TraceEventName: NSObject {
 
     static let click_verifycode = "click_verifycode" // 登录页点击获取验证码
 
-    static let click_login = "click_login" // 进入登录页
+    static let click_login = "click_login" // 登录页点击登录
+
+    static let inform_show = "inform_show" // 变价通知、开盘通知弹窗
+
+    static let click_confirm = "click_confirm" // (登录状态)变价通知、开盘通知弹窗点击确认
+
+    static let click_follow = "click_follow" // 点击关注
+    
+    static let picture_show = "picture_show" // 图片展示
+
+    static let picture_save = "picture_save" // 图片保存
+
+    static let picture_gallery = "picture_gallery" // 进入图集
+
+    
+    
 
 }
