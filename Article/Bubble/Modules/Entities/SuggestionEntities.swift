@@ -35,6 +35,7 @@ struct SuggestionItem: Mappable {
     var houseType: Int = 0
     var tips: String?
     var tips2: String?
+    var logPB: Any?
 
     init?(map: Map) {
 
@@ -51,5 +52,6 @@ struct SuggestionItem: Mappable {
         houseType <- map["house_type"]
         tips2 <- map["tips2"]
         tips <- map["tips"]
+        logPB <- map["log_pb"]
     }
 }

@@ -49,6 +49,7 @@ class CountryListHistoryDataSource {
         let cityNode = CountryListNode(
                 label: item.name ?? "",
                 type: .bubble,
+                query: .history,
                 cityId: item.cityId,
                 pinyin: item.fullPinyin,
                 simplePinyin: item.simplePinyin,
@@ -70,9 +71,17 @@ enum CountryListCellType: String {
     case item = "item"
 }
 
+enum CountryQueryType: String {
+    case hot = "hot"
+    case history = "history"
+    case list = "list"
+    case location = "location"
+}
+
 struct CountryListNode : Mappable {
     var label: String = ""
     var type: CountryListCellType = .item
+    var query: CountryQueryType = .list
     var cityId: Int?
     var pinyin: String?
     var simplePinyin: String?
@@ -84,12 +93,14 @@ struct CountryListNode : Mappable {
     init(
         label: String,
         type: CountryListCellType,
+        query: CountryQueryType,
         cityId: Int?,
         pinyin: String?,
         simplePinyin: String?,
         children: [CountryListNode]?) {
         self.label = label
         self.type = type
+        self.query = query
         self.cityId = cityId
         self.pinyin = pinyin
         self.simplePinyin = simplePinyin
@@ -99,6 +110,7 @@ struct CountryListNode : Mappable {
     mutating func mapping(map: Map) {
         label <- map["label"]
         type <- map["type"]
+        query <- map["query"]
         cityId <- map["cityId"]
         pinyin <- map["pinyin"]
         simplePinyin <- map["simplePinyin"]

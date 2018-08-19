@@ -170,16 +170,37 @@ func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, dispo
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
         .map { openNeighborhoodDetailPage(neighborhoodId: $0!, disposeBag: disposeBag, navVC: navVC) }
-    if let renders = items?.map(curry(fillNeighborhoodItemCell)), let selectors = selectors {
-        return zip(selectors, renders).map({ (e) -> TableRowNode in
-            let (selector, render) = e
+
+    let params = TracerParams.momoid() <|>
+        toTracerParams("neighborhood", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
+
+    let records = items?
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (offset, item) = e
+            let theParams = params <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id")
+            return onceRecord(key: "house_show", params: theParams)
+    }
+
+    if let renders = items?.map(curry(fillNeighborhoodItemCell)),
+        let selectors = selectors ,
+        let records = records {
+        let items = zip(selectors, records)
+
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
             return TableRowNode(
                 itemRender: render,
-                selector: selector,
-                tracer: nil,
+                selector: item.0,
+                tracer: item.1,
                 type: .node(identifier: NeighborhoodItemCell.identifier),
                 editor: nil)
-        })
+        }
     } else {
         return []
     }

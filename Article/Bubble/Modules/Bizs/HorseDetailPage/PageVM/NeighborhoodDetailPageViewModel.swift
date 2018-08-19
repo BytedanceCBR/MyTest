@@ -218,6 +218,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseTransactionRecordNode(data.totalSales?.list)
                 <- parseOpenAllNode((data.totalSalesCount ?? 0 > 3)) { [unowned self] in
                     if let id = data.id {
+
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_trade", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+
                         let transactionTrace = theParams <|>
                             toTracerParams("neighborhood_trade_list", key: "category_name") <|>
                             toTracerParams("neighborhood_trade_loadmore", key: "element_from")
@@ -235,6 +243,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.id ,
                         let title = data.name {
+
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
 
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             theParams <|>
@@ -259,7 +274,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
                             theParams <|>
                             toTracerParams("slide", key: "card_type") <|>

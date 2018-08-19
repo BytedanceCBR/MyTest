@@ -236,6 +236,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     if let id = data.neighborhoodInfo?.id,
                         let title = data.neighborhoodInfo?.name {
 
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             toTracerParams("same_neighborhood_loadmore", key: "element_from") <|>
@@ -257,6 +264,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: self.navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
+
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
 
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
@@ -440,16 +454,35 @@ func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
         .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
-    if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
-        return zip(selectors, renders).map({ (e) -> TableRowNode in
-            let (selector, render) = e
+
+    let params = TracerParams.momoid() <|>
+        toTracerParams("old", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
+    let records = data?
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (offset, item) = e
+            let theParams = params <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id")
+            return onceRecord(key: "house_show", params: theParams)
+    }
+    if let renders = data?.map(curry(fillErshouHouseListitemCell)),
+        let selectors = selectors,
+        let records = records {
+        let items = zip(selectors, records)
+
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
             return TableRowNode(
                 itemRender: render,
-                selector: selector,
-                tracer: nil,
+                selector: item.0,
+                tracer: item.1,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
-        })
+        }
     } else {
         return []
     }

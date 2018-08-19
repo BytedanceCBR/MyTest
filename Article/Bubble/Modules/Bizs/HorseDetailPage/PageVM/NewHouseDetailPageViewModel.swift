@@ -177,6 +177,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     self.openFloorPanList(
                             courtId: courtId,
                             bottomBarBinder: self.bindBottomView())
+                    let params = EnvContext.shared.homePageParams <|>
+                        toTracerParams("house_history", key: "element_type") <|>
+                        toTracerParams(courtId, key: "group_id") <|>
+                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams("new_detail", key: "page_type")
+                    recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseFloorPanHeaderNode(data)
                 <- parseFloorPanNode(data, navVC: navVC, followPage: self.followPage, bottomBarBinder: self.bindBottomView())
@@ -192,6 +198,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                             navVC: self.navVC,
                             followPage: self.followPage,
                             bottomBarBinder: self.bindBottomView())()
+                    let params = EnvContext.shared.homePageParams <|>
+                        toTracerParams("house_model", key: "element_type") <|>
+                        toTracerParams(courtId, key: "group_id") <|>
+                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams("new_detail", key: "page_type")
+                    recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data,
@@ -201,6 +213,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     })
                 <- parseOpenAllNode(data.comment?.hasMore ?? false) { [unowned self] in
                     self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
+                    let params = EnvContext.shared.homePageParams <|>
+                        toTracerParams("house_comment", key: "element_type") <|>
+                        toTracerParams(courtId, key: "group_id") <|>
+                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams("new_detail", key: "page_type")
+                    recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseHeaderNode("周边位置")
                 <- parseNewHouseNearByNode(data, disposeBag: disposeBag)
@@ -208,6 +226,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                    showLoadMore: data.globalPricing?.hasMore ?? false,
                                    process: openGlobalPricingList(
                                            courtId: courtId,
+                                           data: data,
                                            disposeBag: disposeBag,
                                            navVC: navVC,
                                            followPage: self.followPage,
@@ -216,6 +235,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     data,
                     processor: openGlobalPricingList(
                             courtId: courtId,
+                            data: data,
                             disposeBag: disposeBag,
                             navVC: navVC,
                             followPage: self.followPage,
@@ -417,12 +437,18 @@ func openRelatedNeighborhoodList(
 
 func openGlobalPricingList(
     courtId: Int64,
+    data: NewHouseData,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
     followPage: BehaviorRelay<String>,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
-        
+        let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("price_compare", key: "element_type") <|>
+                toTracerParams(courtId, key: "group_id") <|>
+                toTracerParams(data.logPB, key: "log_pb") <|>
+                toTracerParams("new_detail", key: "page_type")
+        recordEvent(key: "click_loadmore", params: params)
         let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
