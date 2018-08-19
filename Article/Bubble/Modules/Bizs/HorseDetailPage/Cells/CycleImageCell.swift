@@ -146,6 +146,36 @@ class CycleImageCell: BaseUITableViewCell {
                             }
                         })
                         .disposed(by: pictureDisposeBag!)
+
+                let tracer = self.imageTracerGen(images: self.headerImages, traceParams: self.traceParams)
+                pageableViewModel.currentPage
+                    .subscribe(onNext: { [unowned self] (index) in
+                        if self.headerImages.count != 0 && index >= 0{
+                            tracer(index)
+                        }
+                        })
+                    .disposed(by: pictureDisposeBag!)
+
+            }
+        }
+    }
+    
+    fileprivate func imageTracerGen(images: [ImageModel], traceParams: TracerParams?) -> (Int) -> Void {
+        
+        var array: [Int] = []
+        return { index in
+            
+            if var theTracerParams = traceParams {
+                
+                let offset = index % images.count
+                let imageModel = images[offset]
+                if !array.contains(offset) {
+                    
+                    theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id") <|>
+                        toTracerParams("small", key: "show_type")
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    array.append(offset)
+                }
             }
         }
     }
@@ -155,15 +185,6 @@ class CycleImageCell: BaseUITableViewCell {
 
         self.setupPageableViewModel { [weak self] i in
             let url = self?.selectHeaderView(index: i)
-            
-            if var tracerParams = self?.traceParams, let picture_id = url, picture_id.count > 0 {
-                
-                tracerParams = tracerParams <|> toTracerParams(picture_id, key: "picture_id") <|>
-                    toTracerParams("small", key: "show_type")
-                recordEvent(key: TraceEventName.picture_show, params: tracerParams)
-                
-            }
-            
             return url ?? ""
         }
 
