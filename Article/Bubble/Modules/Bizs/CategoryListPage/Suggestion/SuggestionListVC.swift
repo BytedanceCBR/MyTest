@@ -233,6 +233,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     lazy var sectionHeaderView = SuggestionHeaderView()
 
     var filterConditionResetter: FilterConditionResetter?
+
+    var associatedCount = 0
+
+    var logPB: Any?
     
     private lazy var suggestionHistoryDataSource: SuggestionHistoryDataSource = {
         SuggestionHistoryDataSource()
@@ -321,6 +325,14 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 beNull(key: "filter")
         onSuggestionItemSelect?("", condition, item.text)
         filterConditionResetter?()
+        let params = TracerParams.momoid() <|>
+            toTracerParams(item.text ?? "be_null", key: "word_text") <|>
+            toTracerParams(self.associatedCount, key: "associate_cnt") <|>
+            toTracerParams(indexPath.row, key: "rank") <|>
+            toTracerParams(item.id ?? "be_null", key: "word_id") <|>
+            toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams("search", key: "element_type")
+        recordEvent(key: "associate_word_click", params: params)
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -335,15 +347,37 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             return 34
     }
 
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        let item = combineItems.value[indexPath.row]
+
+    }
+
     func sendQuery(
             tableView: UITableView) -> (String?) -> Void {
         return { [unowned self] (query) in
+            self.associatedCount = self.associatedCount + 1
             if let query = query {
                 self.highlighted = query
-                requestSuggestion(cityId: 133, horseType: self.houseType.value.rawValue, query: query)
+                let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+                requestSuggestion(cityId: cityId ?? 122, horseType: self.houseType.value.rawValue, query: query)
                         .subscribe(onNext: { [unowned self] (responsed) in
                             if let responseData = responsed?.data {
                                 self.suggestions.accept(responseData)
+
+                                let wordList = responseData.enumerated().map({ (e) -> [String: Any] in
+                                    let (offset, item) = e
+                                    return ["text": item.text ?? "be_null",
+                                            "word_id": item.id ?? "be_null",
+                                            "rank": offset]
+                                })
+                                let pramas = TracerParams.momoid() <|>
+                                    mapTracerParams(["word_list": wordList]) <|>
+                                    toTracerParams(self.associatedCount, key: "associate_cnt") <|>
+                                    toTracerParams(wordList.count, key: "word_cnt") <|>
+                                    beNull(key: "log_pb") <|>
+                                    toTracerParams("search", key: "element_type")
+
+                                recordEvent(key: "associate_word_show", params: pramas)
                             }
                         }, onError: { (error) in
                             print(error)

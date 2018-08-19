@@ -249,6 +249,7 @@ struct CourtItemEntity: Mappable {
     var items: [CourtItemInnerEntity]?
     var refreshTip: String?
     var hasMore: Bool = false
+    var logPB: Any?
 
     init?(map: Map) {
     }
@@ -256,6 +257,7 @@ struct CourtItemEntity: Mappable {
     mutating func mapping(map: Map) {
         self.items <- map["items"]
         refreshTip <- map["refresh_tip"]
+        logPB <- map["log_pb"]
         hasMore <- map["has_more"]
     }
 }
@@ -280,6 +282,7 @@ struct CourtItemInnerEntity: Mappable {
     var contact: [String: String]?
     var userStatus: CourtUserSatusItem?
     var saleStatus: SaleStatusItem?
+    var logPB: Any?
     
     init?(map: Map) {
         
@@ -303,6 +306,7 @@ struct CourtItemInnerEntity: Mappable {
         contact <- map["contact"]
         userStatus <- map["user_status"]
         saleStatus <- map["sale_status"]
+        logPB <- map["log_pb"]
     }
 
 

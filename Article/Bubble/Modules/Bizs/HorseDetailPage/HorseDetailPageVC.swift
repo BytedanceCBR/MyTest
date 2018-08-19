@@ -65,6 +65,8 @@ class HorseDetailPageVC: BaseViewController {
 
     var traceParams = TracerParams.momoid()
 
+    var stayPageParams: TracerParams? = TracerParams.momoid()
+
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
@@ -262,6 +264,10 @@ class HorseDetailPageVC: BaseViewController {
                 .disposed(by: disposeBag)
         }
 
+        stayPageParams = traceParams <|> traceStayTime()
+
+        recordEvent(key: "go_detail", params: traceParams)
+
     }
 
     private func setupNavBar() {
@@ -309,6 +315,10 @@ class HorseDetailPageVC: BaseViewController {
         if let navigationController = self.navigationController {
             navigationController.view.bringSubview(toFront: navigationController.navigationBar)
         }
+        if let stayPageParams = stayPageParams {
+            recordEvent(key: "stay_page", params: stayPageParams)
+        }
+        stayPageParams = nil
     }
 
     func showQuickLoginAlert(title: String, subTitle: String) {

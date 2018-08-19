@@ -300,6 +300,12 @@ func fillNewHouseCoreInfoCell(
         theCell.courtAddressLabel.text = data.coreInfo?.courtAddress
         theCell.moreBtn.rx.tap
             .subscribe(onNext: { [weak disposeBag] in
+                let params = EnvContext.shared.homePageParams <|>
+                        toTracerParams("house_info", key: "element_type") <|>
+                        toTracerParams(floorPanId, key: "group_id") <|>
+                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams("new_detail", key: "page_type")
+                recordEvent(key: "click_loadmore", params: params)
                 if let disposeBag = disposeBag {
                     openFloorPanInfoPage(
                         floorPanId: floorPanId,
@@ -315,7 +321,6 @@ func fillNewHouseCoreInfoCell(
         theCell.openChangeNotifyRelay.accept(data.userStatus?.courtOpenSubStatus ?? 0 != 0)
 
         theCell.openNotify.rx.tap
-            .debug("theCell.openNotify.rx.tap")
             .withLatestFrom(theCell.openChangeNotifyRelay)
             .bind(onNext: { (isFollowUp) in
                 if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
