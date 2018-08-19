@@ -17,4 +17,10 @@ extension TableViewTracer {
             tracer[atIndexPath.row](traceParams)
         }
     }
+
+    func callTracer(tracer: ElementRecord?, traceParams: TracerParams) {
+        if let tracer = tracer {
+            tracer(traceParams)
+        }
+    }
 }

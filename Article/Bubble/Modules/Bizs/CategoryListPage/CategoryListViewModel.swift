@@ -96,7 +96,8 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                     
                     if let data = response?.data {
-                        return paresNewHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                        let params = TracerParams.momoid()
+                        return paresNewHouseListRowItemNode(data.items, traceParams: params, disposeBag: self.disposeBag, navVC: self.navVC)
                     } else {
                         return []
                     }
@@ -244,8 +245,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
     
     func processError() -> (Error?) -> Void {
-        return { [unowned self] error in
-            print(error)
+        return { error in
             if EnvContext.shared.client.reachability.connection != .none {
                 EnvContext.shared.toast.dismissToast()
                 EnvContext.shared.toast.showToast("加载失败")
@@ -258,7 +258,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 }
 
-class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate , TableViewTracer {
 
     let datas = BehaviorRelay<[TableRowNode]>(value: [])
 
@@ -305,6 +305,12 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         datas.value[indexPath.row].selector?()
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row < datas.value.count {
+            callTracer(tracer: datas.value[indexPath.row].tracer, traceParams: EnvContext.shared.homePageParams)
+        }
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
