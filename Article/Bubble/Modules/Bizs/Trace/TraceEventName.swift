@@ -41,9 +41,12 @@ class TraceEventName: NSObject {
 
     static let click_follow = "click_follow" // 点击关注
     
-    
-    
-    
+    static let picture_show = "picture_show" // 图片展示
+
+    static let picture_save = "picture_save" // 图片保存
+
+    static let picture_gallery = "picture_gallery" // 进入图集
+
     
     
 

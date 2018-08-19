@@ -162,10 +162,16 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                 toTracerParams("list", key: "maintab_entrance") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
             
+            let paramsMap = followTraceParams.paramsGetter([:])
+            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
+            pictureParams = pictureParams <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
+
             self.logPB = data.logPB
 
             let dataParser = DetailDataParser.monoid()
-                <- parseNewHouseCycleImageNode(data, disposeBag: disposeBag, navVC: self.navVC)
+                <- parseNewHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
                 <- parseNewHouseCoreInfoNode(
                     data,

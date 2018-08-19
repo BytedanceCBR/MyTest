@@ -36,6 +36,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
                 navVC: self.navigationController,
                 followPage: self.followPage)
         self.viewModel?.bottomBarBinder = bottomBarBinder
+        self.viewModel?.floorPanId = self.floorPanId
+
         viewModel?.request(floorPanId: floorPanId)
         self.viewModel?.request(floorPanId: floorPanId)
     }
