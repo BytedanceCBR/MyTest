@@ -124,7 +124,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
                 })
                 .disposed(by: self.disposeBag)
         }
-
+        tracerParams <|>
+            beNull(key: "card_type")
         stayTimeParams = traceParams <|> traceStayTime()
 
         recordEvent(key: TraceEventName.enter_category, params: traceParams)

@@ -56,6 +56,8 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             }.disposed(by: disposeBag)
 
         // 进入列表页埋点
+        tracerParams = tracerParams <|>
+            beNull(key: "card_type")
         stayTimeParams = tracerParams <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
     }

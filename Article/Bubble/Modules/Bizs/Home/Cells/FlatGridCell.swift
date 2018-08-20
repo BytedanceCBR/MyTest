@@ -121,9 +121,11 @@ func parseFlatOpNode(
         let cellRender = curry(fillItemView)(items)(traceParams)(disposeBag)
         let onceRecords = items.map { item -> ElementRecord in
             let theTraceParams = traceParams <|>
-                    toTracerParams(item.id, key: "operation_id") <|>
-                    toTracerParams(item.logPb, key: "log_pb") <|>
-                    toTracerParams(item.title ?? "", key: "operation_name")
+                toTracerParams(item.id, key: "operation_id") <|>
+                toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+                toTracerParams("left_pic", key: "card_type") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams(item.title ?? "", key: "operation_name")
             return operationShowonceRecord(params: theTraceParams)
         }
         let record: ElementRecord = { (params) in

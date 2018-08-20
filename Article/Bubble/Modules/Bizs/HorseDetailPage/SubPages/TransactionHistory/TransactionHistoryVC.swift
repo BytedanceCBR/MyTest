@@ -54,7 +54,8 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             }
             })
             .disposed(by: disposeBag)
-
+        tracerParams = tracerParams <|>
+            beNull(key: "card_type")
         tracerParams = tracerParams <|>
             toTracerParams("click", key: "enter_type") <|>
             toTracerParams(HouseCategory.neighborhood_trade_list.rawValue, key: EventKeys.category_name)
