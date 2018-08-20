@@ -37,6 +37,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     let searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
 
     var conditionFilterViewModel: ConditionFilterViewModel?
+    
+    var errorVM:NHErrorViewModel?
 
     let theHouseType = BehaviorRelay<HouseType>(value: .secondHandHouse)
     
@@ -69,6 +71,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
             .bind(to: infoMaskView.rx.isHidden)
             .disposed(by: disposeBag)
 
+        
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
         Observable.combineLatest(self.titleName, ershouHouseListViewModel!.title)
                 .map { $0.0 + $0.1 }
@@ -101,7 +104,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
             maker.left.right.equalToSuperview()
             maker.height.equalTo(40)
         }
-
+        tableView.backgroundColor = UIColor.white
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
@@ -112,10 +115,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                 maker.bottom.equalToSuperview()
             }
         }
-        view.addSubview(infoMaskView)
-        infoMaskView.snp.makeConstraints { maker in
-            maker.edges.equalTo(tableView.snp.edges)
-        }
+       
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in
             maker.top.equalTo(searchFilterPanel.snp.bottom)
@@ -174,22 +174,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
                 })
                 .disposed(by: disposeBag)
-
-
-        // 绑定网络状态监控
-        Reachability.rx.isReachable
-            .debug("Reachability.rx.isReachable")
-            .bind { [unowned self] reachable in
-                if !reachable {
-                    self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                } else {
-                    if self.ershouHouseListViewModel?.datas.value.count == 0 {
+        
+        //第一次进入请求数据
+        if self.ershouHouseListViewModel?.datas.value.count == 0 {
                         self.requestData()
-                    }
-//                    self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
-                }
-            }
-            .disposed(by: disposeBag)
+        }
 
         tracerParams = tracerParams <|>
             beNull(key: "card_type")
@@ -198,6 +187,28 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
         // 进入列表页埋点
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        setupErrorDisplay()
+    }
+
+    private func setupErrorDisplay() {
+        //增加error页
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView)
+        infoMaskView.isHidden = true
+        view.addSubview(infoMaskView)
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+        // 绑定网络状态监控
+        self.errorVM?.onRequestViewDidLoad()
+        
+        infoMaskView.tapGesture.rx.event
+            .bind { [unowned self] (_) in
+                self.requestData()
+            }
+            .disposed(by: disposeBag)
     }
 
     fileprivate func requestData() {

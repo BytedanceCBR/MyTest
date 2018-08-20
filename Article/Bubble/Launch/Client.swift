@@ -145,7 +145,7 @@ class Client: NSObject {
         }
     }
 
-    private func fetchSearchConfig() {
+    func fetchSearchConfig() {
         requestSearchConfig()
                 .observeOn(CurrentThreadScheduler.instance)
                 .subscribeOn(CurrentThreadScheduler.instance)

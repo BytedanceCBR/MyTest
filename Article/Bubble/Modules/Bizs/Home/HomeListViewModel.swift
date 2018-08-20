@@ -36,6 +36,8 @@ class HomeListViewModel: DetailPageViewModel {
     weak var navVC: UINavigationController?
 
     var homePageCommonParams: TracerParams = TracerParams.momoid()
+    
+    var onError: ((Error) -> Void)?
 
     init(tableView: UITableView, navVC: UINavigationController?) {
         self.navVC = navVC
@@ -49,6 +51,7 @@ class HomeListViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
+        EnvContext.shared.toast.showLoadingToast("加载中")
         requestHouseRecommend()
             .map { [unowned self] response -> [TableSectionNode] in
                 let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
@@ -110,8 +113,11 @@ class HomeListViewModel: DetailPageViewModel {
                 self.dataSource.datas = response
                 self.tableView?.reloadData()
                 self.tableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
-                }, onError: { error in
+                EnvContext.shared.toast.dismissToast()
+                }, onError: { [unowned self] error in
                     print(error)
+                EnvContext.shared.toast.dismissToast()
+                    self.onError?(error)
             }, onCompleted: {
 
             })

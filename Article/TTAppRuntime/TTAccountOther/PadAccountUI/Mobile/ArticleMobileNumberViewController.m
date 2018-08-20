@@ -275,7 +275,7 @@
 
 - (void)_goLoginViewController
 {
-    wrapperTrackEvent(@"login_register", @"click_login");
+//    wrapperTrackEvent(@"login_register", @"click_login");
     NSArray *viewControllers = self.navigationController.viewControllers;
     if (viewControllers.count >= 2) {
         ArticleMobileLoginViewController *viewController = viewControllers[[viewControllers indexOfObject:self] - 1];

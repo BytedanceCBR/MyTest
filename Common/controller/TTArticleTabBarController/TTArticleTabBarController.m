@@ -1142,7 +1142,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
             [[NSNotificationCenter defaultCenter] postNotificationName:kMomentTabbarKeepClickedNotification object:self userInfo:nil];
             if (badgeView.hidden) {
-                wrapperTrackEvent(@"navbar", @"click_follow");
+//                wrapperTrackEvent(@"navbar", @"click_follow");
             } else {
                 wrapperTrackEvent(@"navbar", @"click_follow_tip");
             }
@@ -1199,12 +1199,12 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [logv3Dic setValue:self.autoEnterShortVideoTab ? @1 : @0 forKey:@"is_auto"];
             [logv3Dic setValue:[[TSVTabTipManager sharedManager] isShowingRedDot] ? @1 : @0 forKey:@"with_tips"];
             self.autoEnterShortVideoTab = NO;
-            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
+//            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
         } else {
             [logv3Dic setValue:badgeView.hidden?@0:@1 forKey:@"with_tips"];
             [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
             self.autoEnterTab = NO;
-            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
+//            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
         }
         
         if ([[self currentTabIdentifier] isEqualToString:kTTTabHomeTabKey]) {
@@ -1626,7 +1626,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [valueDict setValue:@(((long long)(stayTime * 1000))) forKey:@"value"];
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTrackerWrapper category:@"umeng" event:@"stay_tab" label:[[self class] tabStayStringForIndex:index] dict:valueDict];
+//        [TTTrackerWrapper category:@"umeng" event:@"stay_tab" label:[[self class] tabStayStringForIndex:index] dict:valueDict];
     }
     
     //log3.0 doubleSending
@@ -1635,9 +1635,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     NSString *selectedTabName = [[self class] tabStayStringForIndex:index];
     [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
     if ([selectedTabName isEqualToString:@"hotsoon_video"]) {//小视频tab 该埋点必须发
-        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic];
+//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic];
     } else {
-        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic isDoubleSending:YES];
     }
 }
 

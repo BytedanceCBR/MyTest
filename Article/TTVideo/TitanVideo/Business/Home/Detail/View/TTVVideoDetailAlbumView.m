@@ -324,7 +324,7 @@
         duration = 0;
     }
     duration = duration * 1000;
-    wrapperTrackEventWithCustomKeys(@"stay_category", @"video_album", [[NSNumber numberWithFloat:duration] stringValue], nil, nil);
+//    wrapperTrackEventWithCustomKeys(@"stay_category", @"video_album", [[NSNumber numberWithFloat:duration] stringValue], nil, nil);
     _startTime = 0;
 }
 
