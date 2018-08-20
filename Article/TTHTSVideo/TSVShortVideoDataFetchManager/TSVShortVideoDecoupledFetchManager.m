@@ -204,7 +204,7 @@
         [params setValue:self.trackingEnterFrom forKey:@"list_entrance"];
         [params setValue:refreshTypeStr forKey:@"refresh_type"];
         
-        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
+//        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
     }
 }
 

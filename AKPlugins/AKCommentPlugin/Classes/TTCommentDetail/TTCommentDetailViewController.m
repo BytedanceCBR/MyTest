@@ -144,7 +144,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [extra setValue:_pageState.detailModel.groupModel.itemID forKey:@"item_id"];
         [extra setValue:_recommendReason forKey:@"recommend_reason"];
         [extra setValue:@(duration/1000.0).stringValue forKey:@"ext_value"];
-        wrapperTrackEventWithCustomKeys(@"stay_page", [@"click_" stringByAppendingString:_categoryName], _pageState.detailModel.groupModel.groupID, nil, extra);
+//        wrapperTrackEventWithCustomKeys(@"stay_page", [@"click_" stringByAppendingString:_categoryName], _pageState.detailModel.groupModel.groupID, nil, extra);
         
         //新加的详情页关联时常
         NSString *enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
@@ -267,7 +267,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [goDetailExtraDic setValue:self.recommendReason forKey:@"recommend_reason"];
         NSString *enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"go_detail" label:enterFrom value:_groupId source:nil extraDic:goDetailExtraDic];
+//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"go_detail" label:enterFrom value:_groupId source:nil extraDic:goDetailExtraDic];
         }
         
         //log3.0 doubleSending
@@ -281,7 +281,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [logv3Dic setValue:_clickArea forKey:@"click_area"];
         [logv3Dic setValue:_follow forKey:@"follow"];
         [logv3Dic setValue:self.recommendReason forKey:@"recommend_reason"];
-        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
     }
 }
 

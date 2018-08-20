@@ -70,7 +70,7 @@
     [dict setValue:self.concernID forKey:@"concern_id"];
     [dict setValue:@(self.refer) forKey:@"refer"];
     [dict setValue:label forKey:@"refresh_type"];
-    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }
 
 - (void)trackLoadStatusEventWithErorr:(NSError *)error isLoadMore:(BOOL)isLoadMore

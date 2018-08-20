@@ -607,14 +607,14 @@
             [paramsD setValue:self.logPb forKey:@"log_pb"];
             id value = @([self article].uniqueID);
             
-            [NewsDetailLogicManager trackEventTag:@"stay_page"
-                                            label:_eventLabel
-                                            value:value
-                                         extValue:[NSNumber numberWithDouble:duration]
-                                           fromID:self.paramDicts[kNewsDetailViewConditionRelateReadFromGID]
-                                             adID:[self currentADID]
-                                           params:paramsD
-                                       groupModel:_article.groupModel];
+//            [NewsDetailLogicManager trackEventTag:@"stay_page"
+//                                            label:_eventLabel
+//                                            value:value
+//                                         extValue:[NSNumber numberWithDouble:duration]
+//                                           fromID:self.paramDicts[kNewsDetailViewConditionRelateReadFromGID]
+//                                             adID:[self currentADID]
+//                                           params:paramsD
+//                                       groupModel:_article.groupModel];
         }
         if ([[self currentADID] longLongValue] != 0) {
             [NewsDetailLogicManager trackEventTag:@"stay_page2"
@@ -626,19 +626,19 @@
     }
     
     NSString *enterFromString = [NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.eventLabel categoryID:[self currentCategoryId]];
-    [TTTrackerWrapper eventV3:@"stay_page" params:({
-        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJSONDict];
-        [params setValue:self.article.groupModel.groupID forKey:@"group_id"];
-        [params setValue:self.article.groupModel.itemID forKey:@"item_id"];
-        [params setValue:enterFromString forKey:@"enter_from"];
-        [params setValue:[self.paramDicts tt_stringValueForKey:kNewsDetailViewConditionCategoryIDKey] forKey:@"category_name"];
-        [params setValue:@(duration * 1000).stringValue forKey:@"stay_time"];
-        [params setValue:self.logPb forKey:@"log_pb"];
-        [params setValue:[self currentADID] forKey:@"ad_id"];
-        [params setValue:[self.article.novelData tt_stringValueForKey:@"book_id"] forKey:@"novel_id"];
-        [params addEntriesFromDictionary:self.otherExtraDic];
-        [params copy];
-    }) isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"stay_page" params:({
+//        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJSONDict];
+//        [params setValue:self.article.groupModel.groupID forKey:@"group_id"];
+//        [params setValue:self.article.groupModel.itemID forKey:@"item_id"];
+//        [params setValue:enterFromString forKey:@"enter_from"];
+//        [params setValue:[self.paramDicts tt_stringValueForKey:kNewsDetailViewConditionCategoryIDKey] forKey:@"category_name"];
+//        [params setValue:@(duration * 1000).stringValue forKey:@"stay_time"];
+//        [params setValue:self.logPb forKey:@"log_pb"];
+//        [params setValue:[self currentADID] forKey:@"ad_id"];
+//        [params setValue:[self.article.novelData tt_stringValueForKey:@"book_id"] forKey:@"novel_id"];
+//        [params addEntriesFromDictionary:self.otherExtraDic];
+//        [params copy];
+//    }) isDoubleSending:YES];
     
     // 注入关联时长
     [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.article.groupModel.groupID

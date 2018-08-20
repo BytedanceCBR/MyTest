@@ -276,7 +276,7 @@ UIScrollViewDelegate>
             [dict setValue:@"click_category" forKey:@"enter_from"];
             [dict setValue:@"main_tab" forKey:@"list_entrance"];
             [dict setValue:@100380 forKey:@"demand_id"];
-            [TTTrackerWrapper eventV3:@"enter_category" params:dict];
+//            [TTTrackerWrapper eventV3:@"enter_category" params:dict];
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{

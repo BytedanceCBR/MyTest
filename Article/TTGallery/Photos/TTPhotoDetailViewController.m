@@ -235,7 +235,7 @@
     id value = self.detailModel.article.groupModel.groupID;
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
+//        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
     }
     
     //log3.0 doubleSending
@@ -263,7 +263,7 @@
         [logv3Dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
 
-    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 }
 
 #pragma mark Life cycle & Components load
