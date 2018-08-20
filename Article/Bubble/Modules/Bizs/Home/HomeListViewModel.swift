@@ -53,12 +53,15 @@ class HomeListViewModel: DetailPageViewModel {
             .map { [unowned self] response -> [TableSectionNode] in
                 let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
                 let entrys = config?.entryList.filter { $0.entryId != 5 }
-                let homeCommonParams = EnvContext.shared.homePageParams
+                let homeCommonParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("list", key: "maintab_entrance") <|>
+                    toTracerParams("left_pic", key: "card_type") <|>
+                    toTracerParams("list", key: "element_from")
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
                         <- parseSpringboardNode(entrys ?? [], disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpNode(config?.opData, traceParams: homeCommonParams, disposeBag: self.disposeBag)
-                        <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                        <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, tracerParams: homeCommonParams, navVC: self.navVC)
                         <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
                             EnvContext.shared.homePageParams = self.homePageCommonParams <|>
                                     toTracerParams("list_loadmore", key: "maintab_entrance") <|>
@@ -79,7 +82,7 @@ class HomeListViewModel: DetailPageViewModel {
                                 toTracerParams("new_detail", key: "page_type")
                             recordEvent(key: "click_loadmore", params: loadMoreParams)
                         }
-                        <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, navVC: self.navVC)
+                        <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, tracerParams: homeCommonParams, navVC: self.navVC)
                         <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0, isShowBottomBar: false) {
                             EnvContext.shared.homePageParams =  self.homePageCommonParams <|>
                                 toTracerParams("list_loadmore", key: "maintab_entrance") <|>
@@ -163,15 +166,24 @@ fileprivate func parseOpNode(
 func parseNewHouseListItemNode(
     _ data: CourtRecommendSection?,
     disposeBag: DisposeBag,
+    tracerParams: TracerParams,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
+    let params = TracerParams.momoid() <|>
+        toTracerParams("maintab", key: "enter_from") <|>
+        toTracerParams("list", key: "maintab_entrance") <|>
+        toTracerParams("maintab_list", key: "element_from")
+
     return {
         let selectors = data?.items?
                 .filter { $0.id != nil }
                 .map { Int64($0.id!) }
-                .map { openNewHouseDetailPage(
-                    houseId: $0!, disposeBag:
-                    disposeBag, navVC:
-                    navVC)
+                .map {
+                    openNewHouseDetailPage(
+                        houseId: $0!,
+                        disposeBag:
+                        disposeBag,
+                        tracerParams: params,
+                        navVC:navVC)
                 }
         let params = TracerParams.momoid() <|>
                 toTracerParams("new", key: "house_type") <|>
@@ -205,10 +217,15 @@ func paresNewHouseListRowItemNode(
         traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?) -> [TableRowNode] {
+    let theParams = TracerParams.momoid() <|>
+        toTracerParams("maintab", key: "enter_from") <|>
+        toTracerParams("list", key: "maintab_entrance") <|>
+        toTracerParams("maintab_list", key: "element_from")
+
     let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
+        .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: theParams, navVC: navVC) }
     let params = TracerParams.momoid() <|>
             toTracerParams("new", key: "house_type") <|>
             toTracerParams("left_pic", key: "card_type")
@@ -283,12 +300,20 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity, cell: BaseUITableVie
     }
 }
 
-func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+func openNewHouseDetailPage(
+    houseId: Int64,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
                 houseId: houseId,
                 houseType: .newHouse,
                 isShowBottomBar: true)
+        detailPage.traceParams = EnvContext.shared.homePageParams <|>
+            toTracerParams("left_pic", key: "card_type")
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+            tracerParams
         detailPage.pageViewModelProvider = { [unowned detailPage] (tableView, infoMaskView, navVC) in
             getNewHouseDetailPageViewModel(
                 detailPageVC: detailPage,
@@ -306,13 +331,21 @@ func openNewHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UINav
     }
 }
 
-func openNeighborhoodDetailPage(neighborhoodId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+func openNeighborhoodDetailPage(
+    neighborhoodId: Int64,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
             houseId: neighborhoodId,
             houseType: .neighborhood,
             isShowFollowNavBtn: true,
             provider: getNeighborhoodDetailPageViewModel())
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+            tracerParams
+        detailPage.traceParams = EnvContext.shared.homePageParams <|>
+            toTracerParams("left_pic", key: "card_type")
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)

@@ -256,18 +256,35 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
+
         if let houseId = datas[indexPath.section].items?[indexPath.row].id {
             if let houseTypeId = datas[indexPath.section].items?[indexPath.row].houseType {
+
+                let params = TracerParams.momoid() <|>
+                    toTracerParams("left_pic", key: "enter_from") <|>
+                    toTracerParams("\(indexPath.row)", key: "rank")
                 let houseType: HouseType = HouseType(rawValue: houseTypeId) ?? .newHouse
 
                 switch houseType {
                 case .newHouse:
-                    openNewHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag, navVC: navVC)()
+                    openNewHouseDetailPage(
+                        houseId: Int64(houseId) ?? 0,
+                        disposeBag: disposeBag,
+                        tracerParams: params <|> toTracerParams("new_message_list", key: "page_type"),
+                        navVC: navVC)()
                 case .secondHandHouse:
-                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag, navVC: navVC)()
+                    openErshouHouseDetailPage(
+                        houseId: Int64(houseId) ?? 0,
+                        disposeBag: disposeBag,
+                        tracerParams: params <|> toTracerParams("old_message_list", key: "page_type"),
+                        navVC: navVC)()
                 default:
-                    openErshouHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag, navVC: navVC)()
+                    openErshouHouseDetailPage(
+                        houseId: Int64(houseId) ?? 0,
+                        disposeBag: disposeBag,
+                        tracerParams: params <|> toTracerParams("neighborhood_message_list", key: "page_type"),
+                        navVC: navVC)()
                 }
             } else {
                 assertionFailure()

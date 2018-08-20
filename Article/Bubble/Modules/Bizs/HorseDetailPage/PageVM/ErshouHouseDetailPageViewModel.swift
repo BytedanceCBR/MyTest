@@ -299,7 +299,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                 }
                 <- parseHeaderNode("相关推荐", adjustBottomSpace: 0)
-                <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag, navVC: self.navVC)
+                <- parseErshouHouseListItemNode(relateErshouHouseData.value?.data?.items, disposeBag: disposeBag, tracerParams: theParams, navVC: self.navVC)
                 <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
@@ -310,7 +310,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
     fileprivate func openFloorPanDetailPage(floorPanId: String?) -> () -> Void {
         return { [unowned self] in
             if let floorPanId = floorPanId, let id = Int64(floorPanId) {
-                openNeighborhoodDetailPage(neighborhoodId: Int64(id), disposeBag: self.disposeBag, navVC: self.navVC)()
+                let params = TracerParams.momoid()
+                openNeighborhoodDetailPage(neighborhoodId: Int64(id), disposeBag: self.disposeBag, tracerParams: params, navVC: self.navVC)()
             }
         }
     }
@@ -406,16 +407,22 @@ func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {
     }
 }
 
-func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseErshouHouseListItemNode(
+    _ data: [HouseItemInnerEntity]?,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
+        let params = tracerParams <|>
+            toTracerParams("old", key: "house_type") <|>
+            toTracerParams("left_pic", key: "card_type")
+
         let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
+            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: params, navVC: navVC) }
 
-        let params = TracerParams.momoid() <|>
-                toTracerParams("old", key: "house_type") <|>
-                toTracerParams("left_pic", key: "card_type")
+
 
         let records = data?
                 .filter {
@@ -443,12 +450,19 @@ func parseErshouHouseListItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: D
     }
 }
 
-func parseErshouHouseListItemNode(_ data: HouseRecommendSection?, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseErshouHouseListItemNode(
+    _ data: HouseRecommendSection?,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
+        let params = tracerParams <|>
+            toTracerParams("old", key: "house_type") <|>
+            toTracerParams("left_pic", key: "card_type")
         let selectors = data?.items?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
+            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: params, navVC: navVC) }
         if let renders = data?.items?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
             return TableSectionNode(
                 items: renders,
@@ -463,14 +477,14 @@ func parseErshouHouseListItemNode(_ data: HouseRecommendSection?, disposeBag: Di
 }
 
 func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> [TableRowNode] {
-    let selectors = data?
-        .filter { $0.id != nil }
-        .map { Int64($0.id!) }
-        .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
-
     let params = TracerParams.momoid() <|>
         toTracerParams("old", key: "house_type") <|>
         toTracerParams("left_pic", key: "card_type")
+    let selectors = data?
+        .filter { $0.id != nil }
+        .map { Int64($0.id!) }
+        .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: params, navVC: navVC) }
+
     let records = data?
         .filter { $0.id != nil }
         .enumerated()
@@ -586,18 +600,21 @@ fileprivate func categoryNameByHouseType(houseType: HouseType) -> String {
 
 
 fileprivate func openDetailPage(houseType: HouseType?, followUpId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+    let params = TracerParams.momoid() <|>
+        toTracerParams("old", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
     guard let houseType = houseType else {
-        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, navVC: navVC)
+        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     }
     switch houseType {
     case .newHouse:
-        return openNewHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, navVC: navVC)
+        return openNewHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     case .secondHandHouse:
-        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, navVC: navVC)
+        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     case .neighborhood:
-        return openNeighborhoodDetailPage(neighborhoodId: followUpId, disposeBag: disposeBag, navVC: navVC)
+        return openNeighborhoodDetailPage(neighborhoodId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     default:
-        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, navVC: navVC)
+        return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     }
 }
 
@@ -663,13 +680,19 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item, cell: BaseUITableView
     }
 }
 
-func openErshouHouseDetailPage(houseId: Int64, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> Void {
+func openErshouHouseDetailPage(
+    houseId: Int64,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> Void {
     return {
         let detailPage = HorseDetailPageVC(
             houseId: houseId,
             houseType: .secondHandHouse,
             isShowBottomBar: true,
             provider: getErshouHouseDetailPageViewModel())
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|> tracerParams
+        detailPage.traceParams = EnvContext.shared.homePageParams
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { [weak navVC] void in
                 navVC?.popViewController(animated: true)
