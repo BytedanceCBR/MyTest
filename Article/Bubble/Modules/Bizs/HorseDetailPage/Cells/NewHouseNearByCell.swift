@@ -295,13 +295,13 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
 func categoryTraceParams(poiType: POIType) -> String {
     switch poiType {
-    case subway:
+    case .subway:
         return "subway"
-    case mall:
+    case .mall:
         return "shopping"
-    case hospital:
+    case .hospital:
         return "hospital"
-    case education:
+    case .education:
         return "school"
     default:
         return "be_null"
