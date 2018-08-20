@@ -44,6 +44,14 @@ class ChatCell: BaseUITableViewCell {
         let re = UIImageView()
         return re
     }()
+
+    lazy var unreadRedDotView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f85959")
+        re.layer.cornerRadius = 4
+        re.isHidden = true
+        return re
+    }()
     
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -83,10 +91,18 @@ class ChatCell: BaseUITableViewCell {
             maker.height.equalTo(17)
         }
         
+        contentView.addSubview(unreadRedDotView)
+        unreadRedDotView.snp.makeConstraints { maker in
+            maker.width.height.equalTo(8)
+            maker.right.top.equalTo(iconImageView)
+        }
 
-        
     }
-    
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        unreadRedDotView.isHidden = true
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

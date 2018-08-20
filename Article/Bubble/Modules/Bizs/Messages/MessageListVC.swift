@@ -29,7 +29,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     }()
 
     lazy var tableView: UITableView = {
-        let re = UITableView(frame: CGRect.zero, style: .grouped)
+        let re = UITableView(frame: CGRect.zero, style: .plain)
         re.separatorStyle = .none
         if #available(iOS 11.0, *) {
             re.contentInsetAdjustmentBehavior = .never
@@ -48,7 +48,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     private var tableListViewModel: ChatDetailListTableViewModel?
 
     var messageId: String?
-    var tracerParams = TracerParams.momoid()
 
     private var minCursor: String?
     
@@ -64,6 +63,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
         self.view.backgroundColor = UIColor.white
         self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController)
@@ -102,6 +102,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
             // 无网络时直接返回空，不请求
             return
         }
+
+        self.dataLoader = self.onDataLoaded()
         
         let loader = pageRequestUserMessageList(listId: messageId,
                                                 limit: "10",
@@ -114,17 +116,18 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
                         self.dataLoader?(self.hasMore, responseData.count)
                         self.tableListViewModel?.datas = responseData
                         self.tableView.reloadData()
-  
                     } else {
                         self.showEmptyMaskView()
                     }
                     
-                    }, onError: { (error) in
+                    }, onError: { [unowned self] (error) in
                         print(error)
+                        self.showNetworkError()
                 })
                 .disposed(by: self.disposeBag)
         }
-        tracerParams <|>
+        pageableLoader?()
+        traceParams = traceParams <|>
             beNull(key: "card_type")
         stayTimeParams = traceParams <|> traceStayTime()
 
@@ -164,17 +167,17 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC  {
     
     func loadMore() {
         
-        tracerParams = tracerParams <|>
+        traceParams = traceParams <|>
             toTracerParams("pre_load_more", key: "refresh_type")
 
-        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+        recordEvent(key: TraceEventName.category_refresh, params: traceParams)
 
         self.pageableLoader?()
     }
     
 }
 
-class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDataSource {
+fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDataSource {
     
     var datas: [UserListMsgItem] = []
 
@@ -201,59 +204,57 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: ChatDetailListCell.identifier, for: indexPath)
         if let theCell = cell as? ChatDetailListCell {
-            
+
             if let items = datas[indexPath.section].items {
                 let data = items[indexPath.row]
                 theCell.majorTitle.text = data.title
                 theCell.extendTitle.text = data.description
                 let text = NSMutableAttributedString()
-                
+
                 let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
                     createTagAttrString(
                         item.content,
                         textColor: hexStringToUIColor(hex: item.textColor),
                         backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
                 })
-                
+
                 attrTexts?.forEach({ (attrText) in
                     text.append(attrText)
                 })
-                
+
                 theCell.areaLabel.attributedText = text
                 theCell.priceLabel.text = data.price
                 theCell.roomSpaceLabel.text = data.pricePerSqm
-                
+
                 theCell.lineView.isHidden = (indexPath.row == items.count - 1) ? true : false
 
                 if let img = data.images?.first , let url = img.url {
                     theCell.setImageByUrl(url)
                 }
-                
+
             }
         }
-        
+
         return cell
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UserMsgSectionView()
         view.tipsLabel.text = datas[section].title
         view.dateLabel.text = datas[section].dateStr
         return view
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0
     }
 
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let houseId = datas[indexPath.section].items?[indexPath.row].id {
@@ -277,5 +278,13 @@ class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-    
+
+    fileprivate func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let sectionHeaderViewHeight: CGFloat = 122
+        if (scrollView.contentOffset.y <= sectionHeaderViewHeight && scrollView.contentOffset.y>=0) {
+            scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+        } else if (scrollView.contentOffset.y >= sectionHeaderViewHeight) {
+            scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderViewHeight, 0, 0, 0);
+        }
+    }
 }
