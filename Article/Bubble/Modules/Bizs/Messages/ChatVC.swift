@@ -23,6 +23,8 @@ class ChatVC: BaseViewController {
         return re
     }()
 
+    var timerDisposable: Disposable?
+
     lazy var tableView: UITableView = {
         let re = UITableView()
         if #available(iOS 11.0, *) {
@@ -108,6 +110,18 @@ class ChatVC: BaseViewController {
                 toTracerParams("click_tab", key: "enter_type") <|>
                 toTracerParams("0", key: "with_tips") <|>
                 traceStayTime()
+
+        EnvContext.shared.client.accountConfig.userInfo
+                .bind { [unowned self] user in
+                    if user == nil {
+                        self.stopUnreadMessagePolling()
+                        self.tableViewModel?.datas = []
+                        self.tableView.reloadData()
+                        self.showEmptyInfo()
+                    } else {
+                        self.startUnreadMessagePolling()
+                    }
+                }.disposed(by: disposeBag)
     }
 
     fileprivate func requestData() {
@@ -150,6 +164,17 @@ class ChatVC: BaseViewController {
     fileprivate func showNetworkError() {
         self.emptyMaskView.isHidden = false
         self.emptyMaskView.label.text = "网络异常"
+    }
+
+    fileprivate func startUnreadMessagePolling() {
+        timerDisposable = Observable<Int>.interval(30, scheduler: MainScheduler.instance)
+            .bind(onNext: { [unowned self] (_) in
+                self.requestData()
+            })
+    }
+
+    fileprivate func stopUnreadMessagePolling() {
+        timerDisposable = nil
     }
 
     /*
@@ -212,6 +237,9 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             if let text2 = item.dateStr {
                 theCell.rightLabel.text = text2
             }
+            if let unreadCount = item.unread, unreadCount > 0 {
+                theCell.unreadRedDotView.isHidden = false
+            }
         }
         return cell ?? ChatCell()
     }
@@ -243,7 +271,7 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             break
             
         }
-        vc.tracerParams = vc.tracerParams <|>
+        vc.traceParams = vc.traceParams <|>
             toTracerParams(category_name, key: "category_name")
         
         vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]

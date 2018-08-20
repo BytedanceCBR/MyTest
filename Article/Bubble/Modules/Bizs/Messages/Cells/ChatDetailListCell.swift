@@ -73,17 +73,16 @@ class ChatDetailListCell: BaseUITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        
-        self.contentView.addSubview(lineView)
+
+        contentView.addSubview(lineView)
         lineView.snp.makeConstraints { maker in
             maker.height.equalTo(0.5)
             maker.bottom.equalToSuperview()
             maker.left.equalToSuperview().offset(15)
             maker.right.equalToSuperview().offset(-15)
         }
-        
-        self.contentView.addSubview(majorImageView)
+
+        contentView.addSubview(majorImageView)
         majorImageView.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(15)
             maker.top.equalToSuperview().offset(16)
@@ -91,7 +90,7 @@ class ChatDetailListCell: BaseUITableViewCell {
             maker.width.equalTo(114)
             maker.height.equalTo(85)
         }
-        
+
         let infoPanel = UIView()
         self.addSubview(infoPanel)
         infoPanel.snp.makeConstraints { maker in
@@ -99,21 +98,21 @@ class ChatDetailListCell: BaseUITableViewCell {
             maker.top.bottom.equalToSuperview()
             maker.right.equalToSuperview().offset(-15)
         }
-        
+
         infoPanel.addSubview(majorTitle)
         majorTitle.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.height.equalTo(23)
             maker.top.equalToSuperview().offset(13)
         }
-        
+
         infoPanel.addSubview(extendTitle)
         extendTitle.snp.makeConstraints { [unowned majorTitle] maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(majorTitle.snp.bottom).offset(5)
             maker.height.equalTo(17)
         }
-        
+
         infoPanel.addSubview(areaLabel)
         areaLabel.snp.makeConstraints { [unowned extendTitle] maker in
             maker.left.right.equalToSuperview()
@@ -127,8 +126,8 @@ class ChatDetailListCell: BaseUITableViewCell {
             maker.top.equalTo(areaLabel.snp.bottom).offset(5)
             maker.height.equalTo(17)
         }
-        
-        
+
+
         infoPanel.addSubview(roomSpaceLabel)
         roomSpaceLabel.snp.makeConstraints { [unowned priceLabel] maker in
             maker.left.equalTo(priceLabel.snp.right).offset(5)
@@ -205,13 +204,13 @@ class UserMsgSectionView: UIView {
             maker.top.equalTo(4)
             maker.bottom.equalTo(-4)
         }
-        
+
         addSubview(tipsBgView)
         tipsBgView.snp.makeConstraints { (maker) in
             maker.top.equalTo(timeAreaBgView.snp.bottom).offset(15)
             maker.bottom.left.right.equalToSuperview()
         }
-        
+
         tipsBgView.addSubview(tipsLabel)
         tipsLabel.snp.makeConstraints { maker in
             maker.left.equalTo(15)

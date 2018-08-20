@@ -383,6 +383,12 @@ extension HomeViewController {
     }
 
     private func openSearchPanel() {
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                toTracerParams("search", key: "element_from") <|>
+                toTracerParams("search", key: "maintab_entrance") <|>
+                beNull(key: "operation_name") <|>
+                beNull(key: "maintab_search") <|>
+                beNull(key: "icon_type")
         let vc = SuggestionListVC()
         let nav = self.navigationController
         nav?.pushViewController(vc, animated: true)

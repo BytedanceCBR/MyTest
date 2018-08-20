@@ -180,6 +180,7 @@
 		1A2167BF151373E3FBCAD087 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E2967986700196B82CD /* FloorPanListVC.swift */; };
 		1A2167D8799555701845801F /* MarqueeGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216EF945E7593C8D3456AB /* MarqueeGroupView.swift */; };
 		1A21681C1CC1D05E7AD8D3B3 /* NewHouseNearByCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216557EAE9BDEF358FAF2F /* NewHouseNearByCell.swift */; };
+		1A216830A218821EE2BD92BD /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161389EAA522B7D58482E /* MessagesListVC.swift */; };
 		1A21683B818ECD2EE70AC183 /* HouseCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216E5B47C664A03A670A2A /* HouseCommentViewModel.swift */; };
 		1A216844716ADAB4F34D9CF9 /* BDWebImagePhotoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2160130DC272DFEAB13E18 /* BDWebImagePhotoLoader.swift */; };
 		1A21689E4391C954EE6B36C0 /* GlobalPricingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A216B7397A0BCCB3C2DDE0C /* GlobalPricingVC.swift */; };
@@ -1263,6 +1264,7 @@
 		B31D9B9F20FE0EE7001010BD /* QuickLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9B9C20FE0EE6001010BD /* QuickLoginViewModel.swift */; };
 		B31D9BA020FE0EE7001010BD /* QuickLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9B9D20FE0EE6001010BD /* QuickLoginVC.swift */; };
 		B31D9BA120FE0EE7001010BD /* QuickLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31D9B9D20FE0EE6001010BD /* QuickLoginVC.swift */; };
+		B332BF6F212AA42F00B8DC24 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2161389EAA522B7D58482E /* MessagesListVC.swift */; };
 		B347362D20F76784009F799A /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B36E26B520F62A7800D4E8D0 /* BubbleImages.xcassets */; };
 		B347362E20F76FF8009F799A /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B720F62A7800D4E8D0 /* EnvContext.swift */; };
 		B347362F20F76FF8009F799A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E26B820F62A7800D4E8D0 /* BaseViewController.swift */; };
@@ -3702,6 +3704,7 @@
 		1A216097A752C3065D43D8CB /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1A21610840999FB241F8F450 /* GridOpBoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridOpBoardCell.swift; sourceTree = "<group>"; };
 		1A21612119213FEEDB5E10B4 /* WebImageItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebImageItemView.swift; sourceTree = "<group>"; };
+		1A2161389EAA522B7D58482E /* MessagesListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesListVC.swift; sourceTree = "<group>"; };
 		1A21614B5B52B75D221AF890 /* SuggestionHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionHistoryDataSource.swift; sourceTree = "<group>"; };
 		1A21614E4FE832400A0583D9 /* MetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaData.swift; sourceTree = "<group>"; };
 		1A2161515845DDB00B09B593 /* TransactionHistoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryVC.swift; sourceTree = "<group>"; };
@@ -12640,6 +12643,7 @@
 				B36E271A20F62A7800D4E8D0 /* Cells */,
 				B36E271D20F62A7800D4E8D0 /* MessageListVC.swift */,
 				B36E271E20F62A7800D4E8D0 /* ChatVC.swift */,
+				1A2161389EAA522B7D58482E /* MessagesListVC.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -17864,6 +17868,7 @@
 				1A216D95AE720DB8E8EEEBD2 /* TracerManager.swift in Sources */,
 				1A2164AE58563BDEC17D0A9E /* ConsoleEventRecord.swift in Sources */,
 				1A2165544A9E462C5C95BA9C /* MetaData.swift in Sources */,
+				1A216830A218821EE2BD92BD /* MessagesListVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19459,6 +19464,7 @@
 				1A21669134F4095CE45DE72B /* ContactCell.swift in Sources */,
 				1A21623965FF692F9529CF05 /* NewHouseNearByCell.swift in Sources */,
 				1A21604C69C0F484DBF8B811 /* NewHouseInfoCell.swift in Sources */,
+				B332BF6F212AA42F00B8DC24 /* MessagesListVC.swift in Sources */,
 				1A2166363D9C178DBD99184A /* OpenAllCell.swift in Sources */,
 				1A2163A9922F56F51B47DBE1 /* NewHouseNameCell.swift in Sources */,
 				1A216D5AAD34A685C3ED63C3 /* DisclaimerCell.swift in Sources */,
