@@ -178,7 +178,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
-        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,reuestRetryText:"xxxxxxx",reuestRetryImage:"empty_message")
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,reuestRetryText:"网络不给力，点击屏幕重试")
         
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
