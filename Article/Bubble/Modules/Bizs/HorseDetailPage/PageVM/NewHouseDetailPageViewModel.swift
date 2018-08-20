@@ -151,17 +151,20 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         subDisposeBag = DisposeBag()
         if let data = response.data {
-            
             self.informParams = self.informParams <|>
             toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
             toTracerParams(self.houseId, key: "group_id")
             
-            let theParams = EnvContext.shared.homePageParams <|>
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
                 toTracerParams("click", key: "enter_type") <|>
-                toTracerParams("list", key: "maintab_entrance") <|>
+                toTracerParams("list", key: "maintab_entrance")
+            let theParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
-            
+            let coreInfoParams = theParams <|>
+                    toTracerParams("house_info_detail", key: "page_type") <|>
+                    toTracerParams(data.logPB ?? [:], key: "log_pb")
+
             let paramsMap = followTraceParams.paramsGetter([:])
             var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
             pictureParams = pictureParams <|>
@@ -181,84 +184,133 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     disposeBag: subDisposeBag!,
                     navVC: self.navVC,
                     followPage: self.followPage,
-                    bottomBarBinder: self.bindBottomView())
-                <- parseNewHouseContactNode(data)
+                    bottomBarBinder: self.bindBottomView(params: coreInfoParams))
+                <- parseNewHouseContactNode(data, courtId: "\(courtId)")
                 <- parseTimeLineHeaderNode(data)
                 <- parseTimelineNode(data,
                                      processor: { [unowned self] in
-                                        
+                                        let params = EnvContext.shared.homePageParams <|>
+                                            toTracerParams("house_history_detail", key: "element_type") <|>
+                                            toTracerParams(courtId, key: "group_id") <|>
+                                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                            toTracerParams("new_detail", key: "page_type")
                                         self.openFloorPanList(
                                             courtId: courtId,
-                                            bottomBarBinder: self.bindBottomView())
+                                            bottomBarBinder: self.bindBottomView(params: params))
                 })
                 <- parseOpenAllNode(data.timeLine?.hasMore ?? false) { [unowned self] in
+                    let phoneTracer = TracerParams.momoid() <|>
+                        toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams("house_history_detail", key: "page_type")
                     self.openFloorPanList(
-                            courtId: courtId,
-                            bottomBarBinder: self.bindBottomView())
+                        courtId: courtId,
+                        bottomBarBinder: self.bindBottomView(params: phoneTracer))
                     let params = EnvContext.shared.homePageParams <|>
                         toTracerParams("house_history", key: "element_type") <|>
                         toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "page_type")
                     recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseFloorPanHeaderNode(data)
-                <- parseFloorPanNode(data, navVC: navVC, followPage: self.followPage, bottomBarBinder: self.bindBottomView())
+                <- parseFloorPanNode(
+                    data,
+                    navVC: navVC,
+                    followPage: self.followPage,
+                    bottomBarBinder: self.bindBottomView(params: theParams <|> toTracerParams("house_model_list", key: "page_type")))
                 <- parseOpenAllNode(data.floorPan?.list?.count ?? 0 >= 5) { [unowned self] in
                     let floorPanTraceParams = theParams <|>
                         toTracerParams("house_model_list", key: "category_name") <|>
                         toTracerParams("house_model_loadmore", key: "element_from") <|>
                         toTracerParams("slide", key: "card_type")
+
+                    let phoneTracer = TracerParams.momoid() <|>
+                        toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams("house_model_list", key: "page_type")
                     openFloorPanCategoryPage(
-                            floorPanId: "\(courtId)",
-                            traceParams: floorPanTraceParams,
-                            disposeBag: self.disposeBag,
-                            navVC: self.navVC,
-                            followPage: self.followPage,
-                            bottomBarBinder: self.bindBottomView())()
+                        floorPanId: "\(courtId)",
+                        traceParams: floorPanTraceParams,
+                        disposeBag: self.disposeBag,
+                        navVC: self.navVC,
+                        followPage: self.followPage,
+                        bottomBarBinder: self.bindBottomView(params: phoneTracer))()
                     let params = EnvContext.shared.homePageParams <|>
                         toTracerParams("house_model", key: "element_type") <|>
                         toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "page_type")
                     recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseCommentHeaderNode(data)
                 <- parseNewHouseCommentNode(data,
                                             processor: { [unowned self] in
-                         
-                                                self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
-                    })
+                                                let params = EnvContext.shared.homePageParams <|>
+                                                    toTracerParams("house_comment", key: "element_type") <|>
+                                                    toTracerParams(courtId, key: "group_id") <|>
+                                                    toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                                    toTracerParams("new_detail", key: "page_type")
+                                                self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView(params: params))
+                })
                 <- parseOpenAllNode(data.comment?.hasMore ?? false) { [unowned self] in
-                    self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView())
+                    let phoneTracer = TracerParams.momoid() <|>
+                        toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams("house_comment_detail", key: "page_type")
+
+
+                    self.openCommentList(courtId: courtId, bottomBarBinder: self.bindBottomView(params: phoneTracer))
                     let params = EnvContext.shared.homePageParams <|>
                         toTracerParams("house_comment", key: "element_type") <|>
                         toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "page_type")
                     recordEvent(key: "click_loadmore", params: params)
                 }
                 <- parseHeaderNode("周边位置")
-                <- parseNewHouseNearByNode(data, disposeBag: disposeBag)
+                <- parseNewHouseNearByNode(data, houseId: "\(self.houseId)", disposeBag: disposeBag)
                 <- parseHeaderNode("全网比价",
                                    showLoadMore: data.globalPricing?.hasMore ?? false,
-                                   process: openGlobalPricingList(
-                                           courtId: courtId,
-                                           data: data,
-                                           disposeBag: disposeBag,
-                                           navVC: navVC,
-                                           followPage: self.followPage,
-                                           bottomBarBinder: self.bindBottomView()))
+                                   process:{ [unowned self] in
+                                       let phoneTracer = TracerParams.momoid() <|>
+                                               toTracerParams("call_bottom", key: "element_type") <|>
+                                               toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                               toTracerParams("price_compare_detail", key: "page_type")
+//                                    let params = EnvContext.shared.homePageParams <|>
+//                                        toTracerParams("price_compare_detail", key: "element_type") <|>
+//                                        toTracerParams(courtId, key: "group_id") <|>
+//                                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                                        toTracerParams("new_detail", key: "page_type")
+                                    openGlobalPricingList(
+                                        courtId: courtId,
+                                        data: data,
+                                        disposeBag: self.disposeBag,
+                                        navVC: self.navVC,
+                                        followPage: self.followPage,
+                                        bottomBarBinder: self.bindBottomView(params: phoneTracer))()
+                })
                 <- parseGlobalPricingNode(
                     data,
-                    processor: openGlobalPricingList(
+                    processor:{ [unowned self] in
+                        let phoneTracer = TracerParams.momoid() <|>
+                                toTracerParams("call_bottom", key: "element_type") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("price_compare_detail", key: "page_type")
+//                        let params = EnvContext.shared.homePageParams <|>
+//                            toTracerParams("price_compare_detail", key: "element_type") <|>
+//                            toTracerParams(courtId, key: "group_id") <|>
+//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                            toTracerParams("new_detail", key: "page_type")
+                        openGlobalPricingList(
                             courtId: courtId,
                             data: data,
-                            disposeBag: disposeBag,
-                            navVC: navVC,
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC,
                             followPage: self.followPage,
-                            bottomBarBinder: self.bindBottomView()))
-                    <- parseInfoNode("楼盘价格，由开发商统一报价，由于各平台更新速度不一致，导致价格有所差异，最终价格应以开发商报价为准；")
+                            bottomBarBinder: self.bindBottomView(params: phoneTracer))()
+                })
+                <- parseInfoNode("楼盘价格，由开发商统一报价，由于各平台更新速度不一致，导致价格有所差异，最终价格应以开发商报价为准；")
                 <- parseHeaderNode("猜你喜欢")
                 <- parseRelateCourtNode(relatedCourt.value, navVC: navVC)
                 <- parseDisclaimerNode(data)
@@ -505,7 +557,7 @@ func openGlobalPricingList(
         let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("price_compare", key: "element_type") <|>
                 toTracerParams(courtId, key: "group_id") <|>
-                toTracerParams(data.logPB, key: "log_pb") <|>
+                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams("new_detail", key: "page_type")
         recordEvent(key: "click_loadmore", params: params)
         let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)

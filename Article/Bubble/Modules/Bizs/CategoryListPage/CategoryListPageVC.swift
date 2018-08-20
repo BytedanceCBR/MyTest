@@ -85,11 +85,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
-        if EnvContext.shared.client.reachability.connection == .none {
-            re.label.text = "网络不给力，点击屏幕重试"
-        } else {
-            re.label.text = "没有找到相关的信息，换个条件试试吧~"
-        }
+//        if EnvContext.shared.client.reachability.connection == .none {
+//            re.label.text = "网络不给力，点击屏幕重试"
+//        } else {
+//            re.label.text = "没有找到相关的信息，换个条件试试吧~"
+//        }
         return re
     }()
 
@@ -104,6 +104,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     private var popupMenuView: PopupMenuView?
 
     private var categoryListViewModel: CategoryListViewModel?
+    
+    private var errorVM : NHErrorViewModel?
 
     private let isOpenConditionFilter: Bool
 
@@ -132,10 +134,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
         let userInfo = paramObj?.userInfo
         if let params = userInfo?.allInfo {
-            print(params)
             self.tracerParams = paramsOfMap(params as! [String : Any]) <|>
                 toTracerParams(houseTypeString(houseType.value), key: "category_name")
-            print(self.tracerParams.paramsGetter([:]))
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                paramsOfMap(params as! [String : Any])
+
         }
 
         queryString = paramObj?.allParams
@@ -176,7 +179,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
-
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,reuestRetryText:"网络不给力，点击屏幕重试")
+        
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
         view.addSubview(navBar)
@@ -271,15 +275,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
 
-        Reachability.rx.isReachable
-                .bind { [unowned self] reachable in
-                    if !reachable {
-                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                    } else {
-
-                    }
-                }
-                .disposed(by: disposeBag)
+        self.errorVM?.onRequestViewDidLoad()
     }
 
     func bindLoadMore() {
@@ -338,7 +334,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             query: query,
                             condition: self.suggestionParams)
 
-                    let tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+                    let tracerParams = EnvContext.shared.homePageParams <|>
+                        self.tracerParams <|>
+                        beNull(key: "card_type")
+
                     self.stayTimeParams = tracerParams <|> traceStayTime()
                     // 进入列表页埋点
                     recordEvent(key: TraceEventName.enter_category, params: tracerParams)

@@ -16,6 +16,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return "NewHouseNearByCell"
     }
 
+    var tracerParams = TracerParams.momoid()
+
     lazy var mapView: MAMapView = {
         let re = MAMapView(frame: CGRect.zero)
         re.showsCompass = false
@@ -144,16 +146,19 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     self.resetAnnotations(annotations)
                 })
                 .disposed(by: disposeBag)
-        segmentedControl.indexChangeBlock = { [weak self] index in
-            self?.lock.lock()
+
+        segmentedControl.indexChangeBlock = { [unowned self] index in
+            self.lock.lock()
             defer {
-                self?.lock.unlock()
+                self.lock.unlock()
             }
 
-            if let poiType = self?.categorys[index] {
-                self?.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
-                self?.requestPOIInfoByType(poiType: poiType)
-            }
+            let poiType = self.categorys[index]
+            let params = self.tracerParams <|>
+                toTracerParams(categoryTraceParams(poiType: poiType), key: "map_tag")
+            recordEvent(key: "click_map", params: params)
+            self.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
+            self.requestPOIInfoByType(poiType: poiType)
         }
 
 //        poiData
@@ -287,6 +292,21 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     }
 }
 
+func categoryTraceParams(poiType: POIType) -> String {
+    switch poiType {
+    case .subway:
+        return "subway"
+    case .mall:
+        return "shopping"
+    case .hospital:
+        return "hospital"
+    case .education:
+        return "school"
+    default:
+        return "be_null"
+    }
+}
+
 enum POIType: String {
     case center
     case subway = "地铁"
@@ -376,14 +396,25 @@ class LocationListViewModel: NSObject, UITableViewDataSource {
     }
 }
 
-func parseNeighorhoodNearByNode(_ data: NeighborhoodDetailData, disposeBag: DisposeBag) -> () -> TableSectionNode {
+func parseNeighorhoodNearByNode(
+    _ data: NeighborhoodDetailData,
+    houseId: String,
+    disposeBag: DisposeBag) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNeighorhoodNearByCell)(data)
         var selector: (() -> Void)?
         let params = TracerParams.momoid() <|>
-                toTracerParams("map", key: "element_type")
+                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(houseId, key: "group_id") <|>
+                toTracerParams("map_list", key: "click_type") <|>
+                toTracerParams("neighborhood_detail", key: "enter_from")
         if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
-            selector = openMapPage(lat:lat, lng: lng, disposeBag: disposeBag)
+            recordEvent(key: "click_map", params: params)
+            selector = openMapPage(
+                lat:lat,
+                lng: lng,
+                traceParams: params,
+                disposeBag: disposeBag)
         }
         return TableSectionNode(
             items: [cellRender],
@@ -402,15 +433,27 @@ func fillNeighorhoodNearByCell(_ data: NeighborhoodDetailData, cell: BaseUITable
     }
 }
 
-func parseNewHouseNearByNode(_ newHouseData: NewHouseData, disposeBag: DisposeBag) -> () -> TableSectionNode {
+func parseNewHouseNearByNode(
+    _ newHouseData: NewHouseData,
+    houseId: String,
+    disposeBag: DisposeBag) -> () -> TableSectionNode {
     return {
         let cellRender = curry(fillNewHouseNearByCell)(newHouseData)
         var selector: (() -> Void)?
-        if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
-            selector = openMapPage(lat:lat, lng: lng, disposeBag: disposeBag)
-        }
         let params = TracerParams.momoid() <|>
-                toTracerParams("map", key: "element_type")
+            toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(houseId, key: "group_id") <|>
+                toTracerParams("map_list", key: "click_type") <|>
+                toTracerParams("new_detail", key: "enter_from")
+        if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
+            recordEvent(key: "click_map", params: params)
+            selector = openMapPage(
+                lat:lat,
+                lng: lng,
+                traceParams: params,
+                disposeBag: disposeBag)
+        }
+
         return TableSectionNode(
             items: [cellRender],
             selectors: selector != nil ? [selector!] : nil,
@@ -428,9 +471,17 @@ func fillNewHouseNearByCell(_ data: NewHouseData, cell: BaseUITableViewCell) -> 
     }
 }
 
-func openMapPage(lat: String, lng: String, disposeBag: DisposeBag) -> () -> Void {
+func openMapPage(
+    lat: String,
+    lng: String,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> () -> Void {
     return {
+        let clickParams = traceParams <|>
+            toTracerParams("map", key: "click_type")
+            recordEvent(key: "click_map", params: clickParams)
         let vc = LBSMapPageVC()
+        vc.tracerParams = traceParams
         vc.centerPointStr.accept((lat, lng))
         vc.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

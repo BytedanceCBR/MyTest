@@ -191,7 +191,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
             }
             .disposed(by: disposeBag)
 
-
+        tracerParams = tracerParams <|>
+            beNull(key: "card_type")
 //        self.searchAndConditionFilterVM.sendSearchRequest()
         stayTimeParams = tracerParams <|> traceStayTime()
 

@@ -8,7 +8,7 @@ import RxSwift
 import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
-
+    
     var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
@@ -60,26 +60,42 @@ class HomeListViewModel: DetailPageViewModel {
                         <- parseOpNode(config?.opData, traceParams: homeCommonParams, disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
-                            let traceParams = self.homePageCommonParams <|>
-                                toTracerParams("list_loadmore", key: "maintab_entrance") <|>
-                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                            EnvContext.shared.homePageParams = self.homePageCommonParams <|>
+                                    toTracerParams("list_loadmore", key: "maintab_entrance") <|>
+                                    toTracerParams("maintab_list_loadmore", key: "element_from")
+
+                            let traceParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("old_list", key: "category_name")
 
                             self.openCategoryList(
                                 houseType: .secondHandHouse,
                                 traceParams: traceParams,
                                 condition: ConditionAggregator.monoid().aggregator)
+
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("maintab_old_list", key: "element_type") <|>
+                                beNull(key: "group_id") <|>
+                                    beNull(key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                            recordEvent(key: "click_loadmore", params: loadMoreParams)
                         }
                         <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0, isShowBottomBar: false) {
-                            let traceParams = self.homePageCommonParams <|>
+                            EnvContext.shared.homePageParams =  self.homePageCommonParams <|>
                                 toTracerParams("list_loadmore", key: "maintab_entrance") <|>
-                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                                toTracerParams("maintab_list_loadmore", key: "element_from")
+                            let traceParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("new_list", key: "category_name")
                             self.openCategoryList(
                                 houseType: .newHouse,
                                 traceParams: traceParams,
                                 condition: ConditionAggregator.monoid().aggregator)
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("maintab_new_list", key: "element_type") <|>
+                                beNull(key: "group_id") <|>
+                                beNull(key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                            recordEvent(key: "click_loadmore", params: loadMoreParams)
                         }
                     return dataParser.parser([])
                 } else {
