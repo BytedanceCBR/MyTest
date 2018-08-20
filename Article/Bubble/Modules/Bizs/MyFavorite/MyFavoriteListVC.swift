@@ -90,13 +90,6 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
 
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
 
-        if EnvContext.shared.client.reachability.connection == .none {
-            self.emptyMaskView.isHidden = false
-            self.emptyMaskView.label.text = "网络异常"
-        } else {
-            categoryListVM?.requestFavoriteData(houseType: houseType)
-        }
-
         emptyMaskView.tapGesture.rx.event
             .bind { [unowned self] (_) in
                 self.categoryListVM?.requestFavoriteData(houseType: self.houseType)
@@ -135,6 +128,16 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
 
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)
 
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if EnvContext.shared.client.reachability.connection == .none {
+            self.emptyMaskView.isHidden = false
+            self.emptyMaskView.label.text = "网络异常"
+        } else {
+            categoryListVM?.requestFavoriteData(houseType: houseType)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
