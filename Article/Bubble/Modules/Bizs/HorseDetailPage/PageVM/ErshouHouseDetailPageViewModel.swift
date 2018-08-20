@@ -10,7 +10,11 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+
+    var logPB: Any?
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -212,16 +216,27 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = ershouHouseData.value?.data {
             let openBeighBor = openFloorPanDetailPage(floorPanId: data.neighborhoodInfo?.id)
-            let theParams = TracerParams.momoid() <|>
-                EnvContext.shared.homePageParams <|>
-                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
-                toTracerParams("slide", key: "card_type") <|>
-                toTracerParams("click", key: "enter_type") <|>
-                toTracerParams("list", key: "maintab_entrance") <|>
-                toTracerParams("old_detail", key: "enter_from")
 
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("old_detail", key: "enter_from") <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("list", key: "maintab_entrance")
+            let theParams = self.traceParams <|>
+                    EnvContext.shared.homePageParams <|>
+                    toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+                    beNull(key: "card_type") <|>
+                    toTracerParams("slide", key: "card_type") <|>
+                    toTracerParams("click", key: "enter_type")
+
+            self.logPB = data.logPB
+            
+            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("old_detail", key: "page_type")
+            pictureParams = pictureParams <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
+            
             let dataParser = DetailDataParser.monoid()
-                <- parseErshouHouseCycleImageNode(data, disposeBag: disposeBag)
+                <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePropertyListNode(data)
@@ -236,6 +251,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     if let id = data.neighborhoodInfo?.id,
                         let title = data.neighborhoodInfo?.name {
 
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             toTracerParams("same_neighborhood_loadmore", key: "element_from") <|>
@@ -248,7 +270,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             navVC: self.navVC,
                             searchSource: .oldDetail,
                             tracerParams: params,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: loadMoreParams))
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -257,6 +279,13 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: self.navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
+
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
 
                         let params = theParams <|>
                             paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
@@ -268,7 +297,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             disposeBag: self.disposeBag,
                             tracerParams: params,
                             navVC: self.navVC,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: loadMoreParams))
                     }
                 }
                 <- parseHeaderNode("相关推荐", adjustBottomSpace: 0)
@@ -440,16 +469,35 @@ func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
         .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
-    if let renders = data?.map(curry(fillErshouHouseListitemCell)), let selectors = selectors {
-        return zip(selectors, renders).map({ (e) -> TableRowNode in
-            let (selector, render) = e
+
+    let params = TracerParams.momoid() <|>
+        toTracerParams("old", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
+    let records = data?
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (offset, item) = e
+            let theParams = params <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id")
+            return onceRecord(key: "house_show", params: theParams)
+    }
+    if let renders = data?.map(curry(fillErshouHouseListitemCell)),
+        let selectors = selectors,
+        let records = records {
+        let items = zip(selectors, records)
+
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
             return TableRowNode(
                 itemRender: render,
-                selector: selector,
-                tracer: nil,
+                selector: item.0,
+                tracer: item.1,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
-        })
+        }
     } else {
         return []
     }
@@ -504,16 +552,6 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData, disposeBag: DisposeBag
             let render = curry(fillFollowUpListItemCell)(item)
             let editor = { (style: UITableViewCellEditingStyle) -> Observable<TableRowEditResult> in
                 if let ht = HouseType(rawValue: item.houseType ?? -1), let followId = item.followId {
-                    
-                    var tracerParams = TracerParams.momoid()
-                    let logPB = item.logPB ?? "be_null"
-
-                    tracerParams = tracerParams <|>
-                    toTracerParams(categoryNameByHouseType(houseType: ht), key: "page_type") <|>
-                    toTracerParams(followId, key: "group_id") <|>
-                    toTracerParams(logPB, key: "impr_id")
-
-                    recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
                     
                     return cancelFollowUp(houseType: ht, followId: followId)
                 } else {

@@ -47,6 +47,8 @@ class CountryListVC: BaseViewController {
     var onClose: ((UIViewController) -> Void)?
     let onItemSelect = PublishSubject<Int>()
 
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = .default
@@ -92,7 +94,11 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { [unowned self] data in
                     if let data = data {
                         let history = EnvContext.shared.client.generalBizconfig.cityHistoryDataSource.getHistory()
-                        let listData = (parseHistoryList(history) <*> parseHotCityList(data.hotCityList) <*> parseCityList(data.cityList))([])
+
+                        let listData = (parseHistoryList(history) <*>
+                            parseHotCityList(data.hotCityList) <*>
+                            parseCityList(data.cityList))([])
+
                         self.dataSource.datas = listData
                         self.tableView.reloadData()
                     }
@@ -146,6 +152,9 @@ class CountryListVC: BaseViewController {
 
 class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
+    var tracerParams = TracerParams.momoid() <|>
+        toTracerParams("maintab", key: "page_type")
+
     fileprivate var datas: [CountryListNode] = [] {
         didSet {
             self.filteredData = nil
@@ -182,8 +191,12 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         switch sectionNode.type {
         case .bubble:
             if let theCell = cell as? BubbleCell, let nodes = sectionNode.children {
-                theCell.setNodes(nodes: nodes) { [weak self] (cityId) in
-                    self?.onItemSelect?.onNext(cityId)
+                theCell.setNodes(nodes: nodes) { [weak self] (node) in
+                    let params = self?.tracerParams ?? TracerParams.momoid() <|>
+                        toTracerParams("list", key: "query_type") <|>
+                        toTracerParams(node.label, key: "city")
+                    recordEvent(key: "city_filter", params: params)
+                    self?.onItemSelect?.onNext(node.cityId ?? -1)
                 }
             }
         default:
@@ -201,6 +214,10 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
                 onItemSelect?.onNext(cityId)
             }
         }
+        let params = tracerParams <|>
+            toTracerParams("list", key: "query_type") <|>
+            toTracerParams(node.label, key: "city")
+        recordEvent(key: "city_filter", params: params)
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -256,6 +273,7 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
             return CountryListNode(
                     label: node.label,
                     type: node.type,
+                    query: .history,
                     cityId: node.cityId,
                     pinyin: node.pinyin,
                     simplePinyin: node.simplePinyin,
@@ -279,6 +297,7 @@ fileprivate func parseHotCityList(_ hotCityList: [HotCityItem]) -> ([CountryList
             CountryListNode(
                     label: $0.name ?? "",
                     type: .bubble,
+                    query: .hot,
                     cityId: $0.cityId,
                     pinyin: nil,
                     simplePinyin: nil,
@@ -287,6 +306,7 @@ fileprivate func parseHotCityList(_ hotCityList: [HotCityItem]) -> ([CountryList
         return nodes + [CountryListNode(
                 label: "热门",
                 type: .bubble,
+                query: .hot,
                 cityId: nil,
                 pinyin: nil,
                 simplePinyin: nil,
@@ -300,6 +320,7 @@ fileprivate func parseHistoryList(_ nodes: [CountryListNode]) -> ([CountryListNo
             return theNodes + [CountryListNode(
                 label: "历史",
                 type: .bubble,
+                query: .history,
                 cityId: nil,
                 pinyin: nil,
                 simplePinyin: nil,
@@ -317,6 +338,7 @@ fileprivate func parseCityList(_ cityList: [CityItem]) -> ([CountryListNode]) ->
                     let node = CountryListNode(
                             label: item.name ?? "",
                             type: .item,
+                            query: .list,
                             cityId: item.cityId,
                             pinyin: item.fullPinyin,
                             simplePinyin: item.simplePinyin,
@@ -331,6 +353,7 @@ fileprivate func parseCityList(_ cityList: [CityItem]) -> ([CountryListNode]) ->
                     return CountryListNode(
                             label: key,
                             type: .item,
+                            query: .list,
                             cityId: nil,
                             pinyin: nil,
                             simplePinyin: nil,
@@ -469,7 +492,7 @@ fileprivate class BubbleCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setNodes(nodes: [CountryListNode], itemClick: @escaping (Int) -> Void) {
+    func setNodes(nodes: [CountryListNode], itemClick: @escaping (CountryListNode) -> Void) {
         let rows = groups(items: nodes, rowCount: 4).map { nodes -> (UIView, () -> Void) in
             createRow(nodes: nodes, itemClick: itemClick)
         }
@@ -503,7 +526,7 @@ fileprivate class BubbleCell: UITableViewCell {
 
     }
 
-    func createRow(nodes: [CountryListNode], itemClick: @escaping (Int) -> Void) -> (UIView, () -> Void) {
+    func createRow(nodes: [CountryListNode], itemClick: @escaping (CountryListNode) -> Void) -> (UIView, () -> Void) {
         disposeBag = DisposeBag()
         if nodes.count == 0 {
             return (UIView(), {})
@@ -516,9 +539,7 @@ fileprivate class BubbleCell: UITableViewCell {
             if let disposeBag = self?.disposeBag {
                 result.rx.controlEvent(UIControlEvents.touchUpInside)
                         .subscribe(onNext: { void in
-                            if let cityId = node.cityId {
-                                itemClick(cityId)
-                            }
+                            itemClick(node)
                         })
                         .disposed(by: disposeBag)
             }

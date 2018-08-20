@@ -29,7 +29,7 @@ class SimpleNavBar: UIView {
     }()
 
     lazy var rightBtn: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.isHidden = true
         return re
     }()

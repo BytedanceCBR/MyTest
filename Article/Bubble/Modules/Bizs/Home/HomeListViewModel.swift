@@ -8,6 +8,10 @@ import RxSwift
 import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
+    
+    var logPB: Any?
+
+    var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
 
@@ -58,26 +62,42 @@ class HomeListViewModel: DetailPageViewModel {
                         <- parseOpNode(config?.opData, traceParams: homeCommonParams, disposeBag: self.disposeBag)
                         <- parseErshouHouseListItemNode(data.house?.items, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.house?.items?.count ?? 0 > 0) { [unowned self] in
-                            let traceParams = self.homePageCommonParams <|>
-                                toTracerParams("list_loadmore", key: "maintab_entrance") <|>
-                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                            EnvContext.shared.homePageParams = self.homePageCommonParams <|>
+                                    toTracerParams("list_loadmore", key: "maintab_entrance") <|>
+                                    toTracerParams("maintab_list_loadmore", key: "element_from")
+
+                            let traceParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("old_list", key: "category_name")
 
                             self.openCategoryList(
                                 houseType: .secondHandHouse,
                                 traceParams: traceParams,
                                 condition: ConditionAggregator.monoid().aggregator)
+
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("maintab_old_list", key: "element_type") <|>
+                                beNull(key: "group_id") <|>
+                                    beNull(key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                            recordEvent(key: "click_loadmore", params: loadMoreParams)
                         }
                         <- parseNewHouseListItemNode(data.court, disposeBag: self.disposeBag, navVC: self.navVC)
                         <- parseOpenAllNode(data.court?.items?.count ?? 0 > 0, isShowBottomBar: false) {
-                            let traceParams = self.homePageCommonParams <|>
+                            EnvContext.shared.homePageParams =  self.homePageCommonParams <|>
                                 toTracerParams("list_loadmore", key: "maintab_entrance") <|>
-                                toTracerParams("maintab_list_loadmore", key: "element_from") <|>
+                                toTracerParams("maintab_list_loadmore", key: "element_from")
+                            let traceParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("new_list", key: "category_name")
                             self.openCategoryList(
                                 houseType: .newHouse,
                                 traceParams: traceParams,
                                 condition: ConditionAggregator.monoid().aggregator)
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("maintab_new_list", key: "element_type") <|>
+                                beNull(key: "group_id") <|>
+                                beNull(key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                            recordEvent(key: "click_loadmore", params: loadMoreParams)
                         }
                     return dataParser.parser([])
                 } else {
@@ -155,12 +175,25 @@ func parseNewHouseListItemNode(
                     disposeBag, navVC:
                     navVC)
                 }
-        
+        let params = TracerParams.momoid() <|>
+                toTracerParams("new", key: "house_type") <|>
+                toTracerParams("left_pic", key: "card_type")
+        let records = data?.items?
+                .filter { $0.id != nil }
+                .enumerated()
+                .map { (e) -> ElementRecord in
+                    let (offset, item) = e
+                    let theParams = params <|>
+                            toTracerParams(offset, key: "rank") <|>
+                            toTracerParams(item.id ?? "be_null", key: "group_id")
+                    return onceRecord(key: "house_show", params: theParams)
+                }
+
         if let renders = data?.items?.map(curry(fillNewHouseListitemCell)), let selectors = selectors {
             return TableSectionNode(
                     items: renders,
                     selectors: selectors,
-                    tracer: nil,
+                    tracer: records,
                     label: data?.title ?? "优选楼盘",
                     type: .node(identifier: SingleImageInfoCell.identifier))
         } else {
@@ -171,20 +204,38 @@ func parseNewHouseListItemNode(
 
 func paresNewHouseListRowItemNode(
     _ data: [CourtItemInnerEntity]?,
+        traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?) -> [TableRowNode] {
     let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
             .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag, navVC: navVC) }
-    if let renders = data?.map(curry(fillNewHouseListitemCell)), let selectors = selectors {
+    let params = TracerParams.momoid() <|>
+            toTracerParams("new", key: "house_type") <|>
+            toTracerParams("left_pic", key: "card_type")
 
-        return zip(renders, selectors).map { (e) -> TableRowNode in
-            let (render, selector) = e
+    let records = data?
+            .filter { $0.id != nil }
+            .enumerated()
+            .map { (e) -> ElementRecord in
+                let (offset, item) = e
+                let theParams = params <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams(item.id ?? "be_null", key: "group_id")
+                return onceRecord(key: "house_show", params: theParams)
+            }
+    if let renders = data?.map(curry(fillNewHouseListitemCell)),
+       let selectors = selectors,
+       let records = records {
+        let items = zip(selectors, records)
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
             return TableRowNode(
                 itemRender: render,
-                selector: selector,
-                    tracer: nil,
+                selector: item.0,
+                    tracer: item.1,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
         }

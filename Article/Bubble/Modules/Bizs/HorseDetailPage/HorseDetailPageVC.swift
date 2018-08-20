@@ -65,6 +65,8 @@ class HorseDetailPageVC: BaseViewController {
 
     var traceParams = TracerParams.momoid()
 
+    var stayPageParams: TracerParams? = TracerParams.momoid()
+
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
@@ -235,7 +237,15 @@ class HorseDetailPageVC: BaseViewController {
 
             bottomBar.contactBtn.rx.tap
                     .withLatestFrom(detailPageViewModel.contactPhone)
-                    .bind(onNext: Utils.telecall)
+                    .bind(onNext: { [unowned self] (phone) in
+                        let params = EnvContext.shared.homePageParams <|>
+                                toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("\(self.houseId)", key: "group_id") <|>
+                                toTracerParams("call_bottom", key: "element_type")
+                        recordEvent(key: "click_call", params: params)
+                        Utils.telecall(phoneNumber: phone)
+                    })
                     .disposed(by: disposeBag)
         }
         
@@ -261,6 +271,10 @@ class HorseDetailPageVC: BaseViewController {
                 .bind(to: navBar.rightBtn.rx.isSelected)
                 .disposed(by: disposeBag)
         }
+
+        stayPageParams = traceParams <|> traceStayTime()
+
+        recordEvent(key: "go_detail", params: traceParams)
 
     }
 
@@ -309,6 +323,10 @@ class HorseDetailPageVC: BaseViewController {
         if let navigationController = self.navigationController {
             navigationController.view.bringSubview(toFront: navigationController.navigationBar)
         }
+        if let stayPageParams = stayPageParams {
+            recordEvent(key: "stay_page", params: stayPageParams)
+        }
+        stayPageParams = nil
     }
 
     func showQuickLoginAlert(title: String, subTitle: String) {
