@@ -16,6 +16,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return "NewHouseNearByCell"
     }
 
+    var tracerParams = TracerParams.momoid()
+
     lazy var mapView: MAMapView = {
         let re = MAMapView(frame: CGRect.zero)
         re.showsCompass = false
@@ -144,15 +146,19 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     self.resetAnnotations(annotations)
                 })
                 .disposed(by: disposeBag)
-        segmentedControl.indexChangeBlock = { [weak self] index in
-            self?.lock.lock()
+
+        segmentedControl.indexChangeBlock = { [unowned self] index in
+            self.lock.lock()
             defer {
-                self?.lock.unlock()
+                self.lock.unlock()
             }
 
-            if let poiType = self?.categorys[index] {
-                self?.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
-                self?.requestPOIInfoByType(poiType: poiType)
+            if let poiType = self.categorys[index] {
+                let params = self.tracerParams <|>
+                        toTracerParams(categoryTraceParams(poiType: poiType), key: "map_tag")
+                recordEvent(key: "click_map", params: params)
+                self.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
+                self.requestPOIInfoByType(poiType: poiType)
             }
         }
 
@@ -284,6 +290,21 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     override func prepareForReuse() {
         super.prepareForReuse()
         search.cancelAllRequests()
+    }
+}
+
+func categoryTraceParams(poiType: POIType) -> String {
+    switch poiType {
+    case subway:
+        return "subway"
+    case mall:
+        return "shopping"
+    case hospital:
+        return "hospital"
+    case education:
+        return "school"
+    default:
+        return "be_null"
     }
 }
 

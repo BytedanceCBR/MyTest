@@ -8,7 +8,7 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
-    
+
     var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "neighborhood_detail")

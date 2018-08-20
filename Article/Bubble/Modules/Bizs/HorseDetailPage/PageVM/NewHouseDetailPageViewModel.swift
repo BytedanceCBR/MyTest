@@ -151,7 +151,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     fileprivate func processData(response: HouseDetailResponse, courtId: Int64) -> ([TableSectionNode]) -> [TableSectionNode] {
         subDisposeBag = DisposeBag()
         if let data = response.data {
-
             self.informParams = self.informParams <|>
             toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
             toTracerParams(self.houseId, key: "group_id")
@@ -163,7 +162,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             let theParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
             let coreInfoParams = theParams <|>
-                    toTracerParams("house_info_detail", key: "page_type")
+                    toTracerParams("house_info_detail", key: "page_type") <|>
+                    toTracerParams(data.logPB ?? [:], key: "log_pb")
 
             let paramsMap = followTraceParams.paramsGetter([:])
             var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
@@ -277,11 +277,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                                toTracerParams("call_bottom", key: "element_type") <|>
                                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                                toTracerParams("price_compare_detail", key: "page_type")
-                                    let params = EnvContext.shared.homePageParams <|>
-                                        toTracerParams("price_compare_detail", key: "element_type") <|>
-                                        toTracerParams(courtId, key: "group_id") <|>
-                                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                        toTracerParams("new_detail", key: "page_type")
+//                                    let params = EnvContext.shared.homePageParams <|>
+//                                        toTracerParams("price_compare_detail", key: "element_type") <|>
+//                                        toTracerParams(courtId, key: "group_id") <|>
+//                                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                                        toTracerParams("new_detail", key: "page_type")
                                     openGlobalPricingList(
                                         courtId: courtId,
                                         data: data,
@@ -297,11 +297,11 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                 toTracerParams("call_bottom", key: "element_type") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("price_compare_detail", key: "page_type")
-                        let params = EnvContext.shared.homePageParams <|>
-                            toTracerParams("price_compare_detail", key: "element_type") <|>
-                            toTracerParams(courtId, key: "group_id") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                            toTracerParams("new_detail", key: "page_type")
+//                        let params = EnvContext.shared.homePageParams <|>
+//                            toTracerParams("price_compare_detail", key: "element_type") <|>
+//                            toTracerParams(courtId, key: "group_id") <|>
+//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                            toTracerParams("new_detail", key: "page_type")
                         openGlobalPricingList(
                             courtId: courtId,
                             data: data,
@@ -557,7 +557,7 @@ func openGlobalPricingList(
         let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("price_compare", key: "element_type") <|>
                 toTracerParams(courtId, key: "group_id") <|>
-                toTracerParams(data.logPB, key: "log_pb") <|>
+                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams("new_detail", key: "page_type")
         recordEvent(key: "click_loadmore", params: params)
         let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
