@@ -51,8 +51,8 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
         let userInfo = EnvContext.shared.client.accountConfig.userInfo.value
         
         // add by zjing for test
-        let alert = UIAlertView(title: "fillUserInfoCell URL", message: userInfo?.avatarURL ?? "be_null", delegate: nil, cancelButtonTitle: "确认")
-        alert.show()
+//        let alert = UIAlertView(title: "fillUserInfoCell URL", message: userInfo?.avatarURL ?? "be_null", delegate: nil, cancelButtonTitle: "确认")
+//        alert.show()
 
         let dataParser = DetailDataParser.monoid()
             <- parseUserInfoNode(
