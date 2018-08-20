@@ -27,6 +27,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         let re = EmptyMaskView()
         return re
     }()
+    
+    private var errorVM : NHErrorViewModel!
 
     lazy var headerViewPanel: UIView = {
         UIView(frame: CGRect(
@@ -103,6 +105,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         self.hidesBottomBarWhenPushed = false
         self.detailPageViewModel = HomeListViewModel(tableView: tableView, navVC: self.navigationController)
         self.detailPageViewModel?.homePageCommonParams = homePageCommonParams
+        self.errorVM = NHErrorViewModel(errorMask:infoDisplay,reuestRetryText:"网络不给力，点击屏幕重试")
         self.setupPageableViewModel()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor.clear
@@ -173,6 +176,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
         bindNetReachability()
+        
+        self.errorVM.onRequestViewDidLoad()
     }
 
     private func setupErrorDisplay() {
