@@ -107,6 +107,11 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         self.detailPageViewModel?.homePageCommonParams = homePageCommonParams
         self.errorVM = NHErrorViewModel(errorMask:infoDisplay,reuestRetryText:"网络不给力，点击屏幕重试")
         self.setupPageableViewModel()
+        
+        self.detailPageViewModel?.onError = { [weak self] (error) in
+            self?.errorVM?.onRequestError(error: error)
+        }
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor.clear
 

@@ -108,6 +108,7 @@ class NHErrorViewModel: NSObject {
             self.errorMask.icon.image = UIImage(named:self.requestErrorImage)
         }
     }
+    
     //网络正常，无数据状态
     func onRequestNilData() {
         self.isHaveData = false
