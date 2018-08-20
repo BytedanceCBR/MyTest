@@ -132,10 +132,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
         let userInfo = paramObj?.userInfo
         if let params = userInfo?.allInfo {
-            print(params)
             self.tracerParams = paramsOfMap(params as! [String : Any]) <|>
                 toTracerParams(houseTypeString(houseType.value), key: "category_name")
-            print(self.tracerParams.paramsGetter([:]))
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                paramsOfMap(params as! [String : Any])
+
         }
 
         queryString = paramObj?.allParams
