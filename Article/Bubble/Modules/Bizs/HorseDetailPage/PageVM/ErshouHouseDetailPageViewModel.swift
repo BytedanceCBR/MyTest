@@ -12,8 +12,6 @@ import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
     var logPB: Any?
-    
-    var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
 
@@ -227,6 +225,11 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     beNull(key: "card_type") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("click", key: "enter_type")
+
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("old_detail", key: "enter_from") <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("list", key: "maintab_entrance")
 
             self.logPB = data.logPB
             
