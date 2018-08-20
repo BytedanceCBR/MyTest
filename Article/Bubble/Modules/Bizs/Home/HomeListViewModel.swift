@@ -49,6 +49,7 @@ class HomeListViewModel: DetailPageViewModel {
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
+        EnvContext.shared.toast.showLoadingToast("加载中")
         requestHouseRecommend()
             .map { [unowned self] response -> [TableSectionNode] in
                 let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
@@ -106,8 +107,10 @@ class HomeListViewModel: DetailPageViewModel {
                 self.dataSource.datas = response
                 self.tableView?.reloadData()
                 self.tableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
+                EnvContext.shared.toast.dismissToast()
                 }, onError: { error in
                     print(error)
+                EnvContext.shared.toast.dismissToast()
             }, onCompleted: {
 
             })
