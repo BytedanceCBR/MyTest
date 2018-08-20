@@ -187,7 +187,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         }
         
         infoDisplay.tapGesture.rx.event
-            .bind { (_) in
+            .bind {  [unowned self] (_) in
                 self.errorVM.onRequestInvalidNetWork()
                 EnvContext.shared.client.fetchSearchConfig()
                 self.detailPageViewModel!.requestData(houseId: -1)

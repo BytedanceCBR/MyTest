@@ -91,7 +91,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //            .disposed(by: disposeBag)
         Observable.zip(neighborhoodDetailResponse, relateNeighborhoodData, houseInSameNeighborhood)
                 .skip(1)
-                .bind { (_) in
+                .bind {  [unowned self] (_) in
                     let diss = DisposeBag()
                     self.cellsDisposeBag = diss
                     let result = self.processData(diss)([])

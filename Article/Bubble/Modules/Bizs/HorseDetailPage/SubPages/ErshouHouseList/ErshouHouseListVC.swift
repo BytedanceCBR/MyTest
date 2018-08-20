@@ -204,7 +204,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         self.errorVM?.onRequestViewDidLoad()
         
         infoMaskView.tapGesture.rx.event
-            .bind { (_) in
+            .bind { [unowned self] (_) in
                 self.requestData()
             }
             .disposed(by: disposeBag)

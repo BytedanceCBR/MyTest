@@ -247,7 +247,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         infoMaskView.tapGesture.rx.event
-            .bind { (_) in
+            .bind { [unowned self] (_) in
                  if !self.hasNone
                  {
                     self.searchAndConditionFilterVM.sendSearchRequest()
