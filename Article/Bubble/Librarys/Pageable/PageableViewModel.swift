@@ -124,8 +124,22 @@ open class PageableViewModel: NSObject {
 
             })
             .disposed(by: disposeBag)
+
+
     }
 
+    func pictureShowOnceRecord(params: TracerParams) -> ElementRecord {
+        var isExecuted = false
+        return { (theParams) in
+            if isExecuted {
+                return
+            }
+            let recordParams = theParams <|> params
+            recordEvent(key: "operation_show", params: recordParams)
+            isExecuted = true
+        }
+    }
+    
     func onPageLayout() {
         let pageWidth = pageView.frame.size.width
         let contentWidth = pageWidth * (CGFloat(bufferSize) * 2 + 1)

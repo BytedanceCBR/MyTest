@@ -129,24 +129,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
             })
             .disposed(by: disposeBag)
         
-//        self.bindFollowPage()
-        
     }
-
-//    func bindFollowPage() {
-//
-//        self.followPage
-//            .skip(1)
-//            .subscribe(onNext: { [unowned self] followPage in
-//
-//                self.followTraceParams = self.followTraceParams <|>
-//                    toTracerParams(followPage, key: "enter_from")
-//
-//            })
-//            .disposed(by: disposeBag)
-//
-//
-//    }
     
     func reloadData() {
         tableView?.reloadData()

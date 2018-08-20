@@ -14,6 +14,8 @@ protocol QuickLoginVCDelegate {
 
 class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     
+    var acceptRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: true)
+
     var tracerParams = TracerParams.momoid()
 
     var loginDelegate: QuickLoginVCDelegate?
@@ -257,9 +259,9 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
         view.addSubview(acceptCheckBox)
         acceptCheckBox.snp.makeConstraints { maker in
-            maker.right.equalTo(agreementLabel.snp.left).offset(-5)
-            maker.height.width.equalTo(12)
-            maker.top.equalTo(agreementLabel.snp.top).offset(3)
+            maker.right.equalTo(agreementLabel.snp.left).offset(-3)
+            maker.height.width.equalTo(20)
+            maker.top.equalTo(agreementLabel.snp.top).offset(-0.5)
         }
 
         setAgreementContent()
@@ -278,6 +280,8 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                     .disposed(by: disposeBag)
 
             let mergeInputs = Observable.combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
+            
+
             confirmBtn.rx.tap
                     .do(onNext: { [unowned self] in
                         self.showLoading(title: "正在登录中")
@@ -308,12 +312,20 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             })
             .disposed(by: disposeBag)
 
+        
+        acceptCheckBox.rx.tap.subscribe { [weak self] event in
+            
+            self?.acceptCheckBox.isSelected = !(self?.acceptCheckBox.isSelected ?? false)
+            self?.acceptRelay.accept(self?.acceptCheckBox.isSelected ?? true)
+            }
+            .disposed(by: disposeBag)
+       
         Observable
-            .combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text)
+            .combineLatest(phoneInput.rx.text, varifyCodeInput.rx.text, acceptRelay.asObservable())
             .skip(1)
             .map { (e) -> Bool in
-                let (phone, code) = e
-                return phone?.count ?? 0 >= 11 && code?.count ?? 0 > 3
+                let (phone, code,isSelected) = e
+                return phone?.count ?? 0 >= 11 && code?.count ?? 0 > 3 && isSelected
             }
             .bind(onNext: { [unowned self] isEnabled in
                 self.enableConfirmBtn(button: self.confirmBtn, isEnabled: isEnabled)
@@ -393,7 +405,8 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     private func setAgreementContent() {
-        acceptCheckBox.isSelected = true
+        
+        self.acceptCheckBox.isSelected = true
         let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
         attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
         attrText.yy_setTextHighlight(
