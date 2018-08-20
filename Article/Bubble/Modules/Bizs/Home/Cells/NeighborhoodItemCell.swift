@@ -148,10 +148,18 @@ class NeighborhoodItemCell: BaseUITableViewCell {
 
 func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, navVC: UINavigationController?, disposeBag: DisposeBag) -> () -> TableSectionNode?  {
     return {
+        let theParams = TracerParams.momoid()
+
         let selectors = items?
                 .filter { $0.id != nil }
                 .map { Int64($0.id!) }
-                .map { openNeighborhoodDetailPage(neighborhoodId: $0!, disposeBag: disposeBag, navVC: navVC) }
+                .map {
+                    openNeighborhoodDetailPage(
+                            neighborhoodId: $0!,
+                            disposeBag: disposeBag,
+                            tracerParams: theParams,
+                            navVC: navVC)
+                }
         if let renders = items?.map(curry(fillNeighborhoodItemCell)), let selectors = selectors {
             return TableSectionNode(
                     items: renders,
@@ -166,10 +174,17 @@ func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, navVC: U
 }
 
 func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> [TableRowNode]  {
+    let theParams = TracerParams.momoid()
     let selectors = items?
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
-        .map { openNeighborhoodDetailPage(neighborhoodId: $0!, disposeBag: disposeBag, navVC: navVC) }
+        .map {
+            openNeighborhoodDetailPage(
+            neighborhoodId: $0!,
+            disposeBag: disposeBag,
+            tracerParams: theParams,
+            navVC: navVC)
+        }
 
     let params = TracerParams.momoid() <|>
         toTracerParams("neighborhood", key: "house_type") <|>

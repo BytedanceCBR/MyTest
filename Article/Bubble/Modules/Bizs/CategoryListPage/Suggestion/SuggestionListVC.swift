@@ -184,6 +184,10 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                     toTracerParams("{\"full_text\": \"\(text)\"}", key: "search") <|>
                     beNull(key: "filter")
             onSuggestSelect?("&full_text=\(text)", nil, text)
+
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("enter", key: "query_type")
+            recordEvent(key: "house_search", params: params)
             filterConditionResetter?()
             return true
         }
@@ -333,6 +337,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams("search", key: "element_type")
         recordEvent(key: "associate_word_click", params: params)
+
+        let theParams = EnvContext.shared.homePageParams <|>
+            toTracerParams(suggestions.value.count > 0 ? "associate" : "history", key: "query_type")
+        recordEvent(key: "house_search", params: theParams)
+
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
