@@ -36,6 +36,8 @@ class HomeListViewModel: DetailPageViewModel {
     weak var navVC: UINavigationController?
 
     var homePageCommonParams: TracerParams = TracerParams.momoid()
+    
+    var onError: ((Error) -> Void)?
 
     init(tableView: UITableView, navVC: UINavigationController?) {
         self.navVC = navVC
@@ -111,9 +113,10 @@ class HomeListViewModel: DetailPageViewModel {
                 self.tableView?.reloadData()
                 self.tableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
                 EnvContext.shared.toast.dismissToast()
-                }, onError: { error in
+                }, onError: { [unowned self] error in
                     print(error)
                 EnvContext.shared.toast.dismissToast()
+                    self.onError?(error)
             }, onCompleted: {
 
             })
