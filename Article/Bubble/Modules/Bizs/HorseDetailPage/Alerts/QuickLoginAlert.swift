@@ -40,13 +40,19 @@ class QuickLoginAlertViewModel {
                 .bind(to: re.sendSmsCodeBtn.rx.isEnabled)
                 .disposed(by: disposeBag)
 
+        re.acceptCheckBox.rx.tap.subscribe { [weak re] event in
+            re?.acceptCheckBox.isSelected = !(re?.acceptCheckBox.isSelected ?? false)
+            re?.acceptRelay.accept(re?.acceptCheckBox.isSelected ?? true)
+
+            }
+            .disposed(by: disposeBag)
         // 设置确认按钮状态
         Observable
-                .combineLatest(re.phoneTextField.rx.text, re.verifyCodeTextField.rx.text)
+                .combineLatest(re.phoneTextField.rx.text, re.verifyCodeTextField.rx.text, re.acceptRelay.asObservable())
                 .skip(1)
                 .map { (e) -> Bool in
-                    let (phone, code) = e
-                    return phone?.count ?? 0 >= 11 && code?.count ?? 0 > 3
+                    let (phone, code,isSelected) = e
+                    return phone?.count ?? 0 >= 11 && code?.count ?? 0 > 3 && isSelected
                 }
                 .bind(onNext: curry(self.enableConfirmBtn)(re.confirmBtn))
                 .disposed(by: disposeBag)
@@ -60,7 +66,7 @@ class QuickLoginAlertViewModel {
                 })
                 .withLatestFrom(re.phoneTextField.rx.text)
                 .bind(to: quickLoginVM.requestSMS).disposed(by: disposeBag)
-
+        
         let mergeInputs = Observable.combineLatest(re.phoneTextField.rx.text, re.verifyCodeTextField.rx.text)
         re.confirmBtn.rx.tap
                 .do(onNext: { [unowned self] in
@@ -122,6 +128,8 @@ class QuickLoginAlertViewModel {
 }
 
 fileprivate class QuickLoginPanel: UIView {
+    
+    var acceptRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: true)
 
     lazy var subTitleView: UILabel = {
         let re = UILabel()
@@ -254,8 +262,8 @@ fileprivate class QuickLoginPanel: UIView {
 
         acceptCheckBox.snp.makeConstraints { maker in
             maker.left.equalTo(20)
-            maker.height.width.equalTo(12)
-            maker.top.equalTo(disclaimer.snp.top).offset(7)
+            maker.height.width.equalTo(20)
+            maker.top.equalTo(disclaimer.snp.top).offset(4)
         }
         acceptCheckBox.isSelected = true
         

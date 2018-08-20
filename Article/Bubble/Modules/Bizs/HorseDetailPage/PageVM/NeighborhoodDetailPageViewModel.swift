@@ -204,9 +204,15 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 beNull(key: "card_type") <|>
                 toTracerParams("click", key: "enter_type")
 
+            self.logPB = data.logPB
 
+            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("neighborhood_detail", key: "page_type")
+            pictureParams = pictureParams <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
+            
             let dataParser = DetailDataParser.monoid()
-                <- parseCycleImageNode(data.neighborhoodImage, disposeBag: self.disposeBag)
+                <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data)
                 <- parseHeaderNode("小区概况") {

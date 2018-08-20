@@ -44,9 +44,9 @@ class BubbleAlertController: UIAlertController {
 
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapAction))
-//        tap.delegate = self
         contentView.addGestureRecognizer(tap)
         contentView.isUserInteractionEnabled = true
+        tap.cancelsTouchesInView = false
         
         if let theTracerParams = self.tracerParams {
 
@@ -150,41 +150,6 @@ extension BubbleAlertController {
 
 }
 
-//extension BubbleAlertController: UIGestureRecognizerDelegate {
-//
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//
-////        if ([touch.view isKindOfClass:[YYLabel class]]) {
-////            YYLabel *label = (YYLabel *)touch.view;
-////            NSRange highlightRange;
-////            YYTextHighlight *highlight = [label _getHighlightAtPoint:[touch locationInView:label] range:&highlightRange];
-////            if (highlight) {
-////                return NO;
-////            }
-////            return YES;
-////        }
-////        return YES;
-//
-//        if let label = touch.view as? YYLabel {
-//
-//            return true
-//        }
-//
-//        return false
-//    }
-//
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//
-////        if let target = gestureRecognizer.target as? YYLabel {
-////
-////            return true
-////        }
-//
-//        return false
-//
-//    }
-//
-//}
 
 class BubbleAlertTitleView: UIView {
 

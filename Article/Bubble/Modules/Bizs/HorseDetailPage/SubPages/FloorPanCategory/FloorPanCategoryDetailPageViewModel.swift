@@ -11,6 +11,9 @@ import RxCocoa
 import RxSwift
 class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 
+    var floorPanId: Int64 = -1
+    private var logPB: Any?
+
     weak var tableView: UITableView?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "house_model_list")
@@ -47,9 +50,12 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     }
 
     func request(floorPanId: Int64) {
+        
         requestFloorPlanInfo(floorPanId: "\(floorPanId)")
                 .subscribe(onNext: { [unowned self] response in
                     if let data = response?.data {
+                        
+                        self.logPB = data.logPB
                         self.datas.accept(self.dataParserByData(data: data).parser([]))
                     }
                 })
@@ -57,8 +63,14 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     }
 
     func dataParserByData(data: FloorPlanInfoData) -> DetailDataParser {
+        
+        var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("house_model_detail", key: "page_type")
+        pictureParams = pictureParams <|>
+            toTracerParams(self.floorPanId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? [:], key: "log_pb")
+        
         let dataParser = DetailDataParser.monoid()
-            <- parseCycleImageNode(data.images, disposeBag: disposeBag)
+            <- parseCycleImageNode(data.images, traceParams: pictureParams, disposeBag: disposeBag)
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode()

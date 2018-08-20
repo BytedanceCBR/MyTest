@@ -12,6 +12,8 @@ import RxCocoa
 
 protocol DetailPageViewModel: class {
 
+    var logPB: Any?  { get set }
+    
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
     var logPB: Any? { get set }
@@ -47,7 +49,6 @@ extension DetailPageViewModel {
     func bindFollowPage() {
     
         self.followPage
-            .skip(1)
             .subscribe(onNext: { [unowned self] followPage in
                 
                 self.followTraceParams = self.followTraceParams <|>
@@ -92,6 +93,19 @@ extension DetailPageViewModel {
                 
                 return
             }
+            
+            var tracerParams = EnvContext.shared.homePageParams
+            if let followTraceParams = self?.followTraceParams {
+                
+                let paramsMap = followTraceParams.paramsGetter([:])
+                tracerParams = tracerParams <|>
+                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
+            }
+            tracerParams = tracerParams <|>
+                toTracerParams(followId, key: "group_id") <|>
+                toTracerParams(self?.logPB ?? [:], key: "log_pb")
+            recordEvent(key: TraceEventName.click_follow, params: tracerParams)
+            
             requestFollow(
                 houseType: houseType,
                 followId: followId,
@@ -115,7 +129,7 @@ extension DetailPageViewModel {
             followId: String,
             disposeBag: DisposeBag) -> () -> Void {
             var loginDisposeBag = DisposeBag()
-        return {
+        return { [weak self] in
 
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
@@ -133,6 +147,19 @@ extension DetailPageViewModel {
                 
                 return
             }
+            
+            var tracerParams = EnvContext.shared.homePageParams
+            if let followTraceParams = self?.followTraceParams {
+                
+                let paramsMap = followTraceParams.paramsGetter([:])
+                tracerParams = tracerParams <|>
+                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
+            }
+            tracerParams = tracerParams <|>
+                toTracerParams(followId, key: "group_id") <|>
+                toTracerParams(self?.logPB ?? [:], key: "log_pb")
+            recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
+            
             requestCancelFollow(
                     houseType: houseType,
                     followId: followId,
@@ -140,7 +167,7 @@ extension DetailPageViewModel {
                     .subscribe(onNext: { response in
                         if response?.data?.followStatus ?? 1 == 0 {
                             EnvContext.shared.toast.dismissToast()
-                            self.followStatus.accept(.success(false))
+                            self?.followStatus.accept(.success(false))
                             EnvContext.shared.toast.showToast("取关成功")
                         }
                     }, onError: { error in

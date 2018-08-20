@@ -142,7 +142,7 @@ struct NeighborhoodDetailData: Mappable {
     var neighborhoodInfo: NeighborhoodDetailInfo?
     var totalSalesCount: Int?
     var abtestVersions: String?
-    var priceTrend: PriceTrend?
+    var priceTrend: [PriceTrend]?
     var totalSales: TotalSalesItem?
     var tags: [TagItem]?
     var neighbordhoodStatus: NeighborhoodUsertatus?

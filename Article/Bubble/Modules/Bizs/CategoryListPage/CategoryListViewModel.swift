@@ -13,7 +13,7 @@ import RxCocoa
 class CategoryListViewModel: DetailPageViewModel {
     
     var logPB: Any?
-    
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
     
     var traceParams = TracerParams.momoid()

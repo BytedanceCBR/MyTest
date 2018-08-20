@@ -144,6 +144,9 @@
         if ([self.avatarView valueForKey:@"needDrawAvatarImage"]) {
             self.avatarView.defaultHeadImg = [self.avatarView valueForKey:@"needDrawAvatarImage"];
         }
+//        else {
+//            self.avatarView.defaultHeadImg = [UIImage imageNamed:@"default-avatar-icons"];
+//        }
         [self.avatarView showAvatarByURL:item.imageURLName];
     }
     if (!item.editEnabled) {

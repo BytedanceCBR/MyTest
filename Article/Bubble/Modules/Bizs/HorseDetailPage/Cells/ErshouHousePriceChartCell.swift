@@ -315,7 +315,7 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData, navVC: U
         let render = curry(fillErshouHousePriceChartCell)(ershouHouseData.priceTrend)
         let params = TracerParams.momoid() <|>
                 toTracerParams("price_trend", key: "element_type") <|>
-                toTracerParams(ershouHouseData.logPB, key: "log_pb")
+            toTracerParams(ershouHouseData.logPB ?? [:], key: "log_pb")
         return TableSectionNode(
                 items: [render],
                 selectors: nil,
@@ -328,11 +328,41 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData, navVC: U
 
 }
 
+func parseNeighboorhoodPriceChartNode(_ neighborhoodData: NeighborhoodDetailData, navVC: UINavigationController?) -> () -> TableSectionNode {
+
+    return {
+
+        let render = curry(fillErshouHousePriceChartCell)(neighborhoodData.priceTrend)
+        let params = TracerParams.momoid() <|>
+            toTracerParams("price_trend", key: "element_type") <|>
+            toTracerParams(neighborhoodData.logPB ?? [:], key: "log_pb")
+        return TableSectionNode(
+            items: [render],
+            selectors: nil,
+            tracer: [elementShowOnceRecord(params: params)],
+            label: "",
+            type: .node(identifier: ErshouHousePriceChartCell.identifier))
+    }
+
+
+
+}
+
+
 func fillErshouHousePriceChartCell(_ data: [PriceTrend]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHousePriceChartCell,let theData = data,theData.count > 0 {
 
         theCell.priceTrends = theData
 
+        
+    }
+}
+
+func fillNeighboorhoodPriceChartCell(_ neighboorData: [PriceTrend]?, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? ErshouHousePriceChartCell,let theData = neighboorData,theData.count > 0 {
+        
+        theCell.priceTrends = theData
+        
         
     }
 }

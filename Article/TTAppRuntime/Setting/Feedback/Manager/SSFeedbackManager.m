@@ -21,6 +21,7 @@
 //#import "TTFantasyLogManager.h"
 #import "SSFetchSettingsManager.h"
 #import "TTPostDataHttpRequestSerializer.h"
+#import "TTIndicatorView.h"
 
 #define kNewestServerTypeFeedbackItemPubDateKey @"kNewestServerTypeFeedbackItemPubDateKey"//记录最新一条反馈的时间user default key
 #define kNewestFeedbackItemIDKey @"kNewestFeedbackItemIDKey" //类似kNewestFeedbackItemPubDateKey
@@ -258,7 +259,14 @@ static SSFeedbackManager *manager = nil;
 
 - (void)startFetchComments:(BOOL)isLoadMore contextID:(NSString *)cId
 {
-    if (!TTNetworkConnected() || [_feedbackKey length] == 0) {
+    if (!TTNetworkConnected()) {
+        
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"网络异常，请检查网络后重试", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
+    }
+    
+    if ([_feedbackKey length] == 0) {
+        
         return;
     }
     
