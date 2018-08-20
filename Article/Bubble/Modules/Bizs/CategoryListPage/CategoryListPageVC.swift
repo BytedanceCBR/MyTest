@@ -340,9 +340,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             condition: self.suggestionParams)
 
                     let tracerParams = EnvContext.shared.homePageParams <|>
-                        self.tracerParams <|>
                         beNull(key: "card_type")
-
+                    self.tracerParams = tracerParams
                     self.stayTimeParams = tracerParams <|> traceStayTime()
                     // 进入列表页埋点
                     recordEvent(key: TraceEventName.enter_category, params: tracerParams)

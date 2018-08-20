@@ -43,7 +43,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
                             self.onDataLoaded?(count >= 15, count)
                         }
                         if let data = response?.data {
-                            return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                            let params = TracerParams.momoid()
+                            return parseErshouHouseListRowItemNode(data.items, traceParams: params, disposeBag: self.disposeBag, navVC: self.navVC)
 //                            return parseNeighborhoodRowItemNode(data.items ?? [], disposeBag: self.disposeBag)
                         } else {
                             return []
@@ -73,7 +74,9 @@ class ErshouHouseListViewModel: BaseSubPageViewModel {
                         self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }
                     if let data = response?.data {
-                        return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                        let params = TracerParams.momoid()
+
+                        return parseErshouHouseListRowItemNode(data.items, traceParams: params, disposeBag: self.disposeBag, navVC: self.navVC)
                     } else {
                         return []
                     }

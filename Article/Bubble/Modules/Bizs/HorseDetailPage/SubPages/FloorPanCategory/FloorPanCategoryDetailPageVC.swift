@@ -40,10 +40,30 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController {
 
         viewModel?.request(floorPanId: floorPanId)
         self.viewModel?.request(floorPanId: floorPanId)
+
+        tracerParams = EnvContext.shared.homePageParams <|> tracerParams <|>
+            toTracerParams("house_model_detail", key: "page_type") <|>
+            toTracerParams("new_detail", key: "element_type") <|>
+            toTracerParams("slide", key: "card_type") <|>
+            toTracerParams("new_detail", key: "element_from")
+
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        recordEvent(key: "go_detail", params: self.tracerParams)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = self.stayTimeParams {
+            recordEvent(key: "stay_page", params: stayTimeParams)
+        }
+        self.stayTimeParams = nil
     }
 
 }

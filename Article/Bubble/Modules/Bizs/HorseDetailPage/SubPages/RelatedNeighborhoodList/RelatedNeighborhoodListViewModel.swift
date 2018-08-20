@@ -26,7 +26,13 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel {
                         self.onDataLoaded?(hasMore, response?.data?.items?.count ?? 0)
                     }
                     if let data = response?.data {
-                        return parseNeighborhoodRowItemNode(data.items ?? [], disposeBag: self.disposeBag, navVC: self.navVC)
+                        let params = TracerParams.momoid()
+
+                        return parseNeighborhoodRowItemNode(
+                            data.items ?? [],
+                            traceParams: params,
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC)
                     } else {
                         return []
                     }

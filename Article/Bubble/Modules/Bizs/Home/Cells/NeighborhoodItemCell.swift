@@ -173,22 +173,28 @@ func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, navVC: U
     }
 }
 
-func parseNeighborhoodRowItemNode(_ items: [NeighborhoodInnerItemEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> [TableRowNode]  {
-    let theParams = TracerParams.momoid()
+func parseNeighborhoodRowItemNode(
+    _ items: [NeighborhoodInnerItemEntity]?,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?) -> [TableRowNode]  {
+    let params = traceParams <|>
+        toTracerParams("neighborhood", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
+
     let selectors = items?
         .filter { $0.id != nil }
         .map { Int64($0.id!) }
+        .enumerated()
         .map {
             openNeighborhoodDetailPage(
-            neighborhoodId: $0!,
+            neighborhoodId: $1!,
             disposeBag: disposeBag,
-            tracerParams: theParams,
+            tracerParams: params <|> toTracerParams($0, key: "rank"),
             navVC: navVC)
         }
 
-    let params = TracerParams.momoid() <|>
-        toTracerParams("neighborhood", key: "house_type") <|>
-        toTracerParams("left_pic", key: "card_type")
+
 
     let records = items?
         .filter { $0.id != nil }

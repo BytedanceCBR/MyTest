@@ -214,12 +214,15 @@ class NeighborhoodItemView: UIView {
 
 }
 
-func parseRelateCourtNode(_ data: RelatedCourtResponse?, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseRelateCourtNode(
+    _ data: RelatedCourtResponse?,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         if let datas = data?.data?.items?.take(5), datas.count > 0 {
-            let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
             let params = TracerParams.momoid() <|>
-                    toTracerParams("related", key: "element_type")
+                toTracerParams("related", key: "element_type")
+            let render = curry(fillSearchInNeighborhoodCell)(datas)(params)(navVC)
+
             return TableSectionNode(
                     items: [render],
                     selectors: nil,
@@ -232,19 +235,27 @@ func parseRelateCourtNode(_ data: RelatedCourtResponse?, navVC: UINavigationCont
     }
 }
 
-func fillSearchInNeighborhoodCell(items: [CourtItemInnerEntity], navVC: UINavigationController?, cell: BaseUITableViewCell) -> Void {
+func fillSearchInNeighborhoodCell(
+    items: [CourtItemInnerEntity],
+    params: TracerParams,
+    navVC: UINavigationController?,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
         let views = items.map { item -> FloorPanItemView in
             let re = generateearchInNeighborhoodItemView(item)
-            let params = TracerParams.momoid() <|>
-                toTracerParams("slide", key: "card_type")
+            let theParams = params <|>
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams("new_detail", key: "element_from") <|>
+                toTracerParams("related", key: "element_type")
+
             re.tapGesture.rx.event
                     .subscribe(onNext: { [unowned re] recognizer in
                         if let id = item.id, let houseId = Int64(id) {
                             openNewHouseDetailPage(
                                 houseId: houseId,
                                 disposeBag: re.disposeBag,
-                                tracerParams: params,
+                                tracerParams: theParams <|> toTracerParams(item.logPB, key: "log_pb"),
                                 navVC: navVC)()
                         }
                     })
@@ -267,13 +278,18 @@ func fillSearchInNeighborhoodCell(items: [CourtItemInnerEntity], navVC: UINaviga
     }
 }
 
-func parseSearchInNeighborhoodNode(_ data: SameNeighborhoodHouseResponse.Data?, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseSearchInNeighborhoodNode(
+    _ data: SameNeighborhoodHouseResponse.Data?,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
-
         if let datas = data?.items.take(5), datas.count > 0 {
-            let render = curry(fillSearchInNeighborhoodCell)(datas)(navVC)
             let params = TracerParams.momoid() <|>
-                    toTracerParams("same_neighborhood", key: "element_type")
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams("old_detail", key: "enter_from") <|>
+                toTracerParams("old_detail", key: "element_from")
+
+            let render = curry(fillSearchInNeighborhoodCell)(datas)(params)(navVC)
             return TableSectionNode(
                     items: [render],
                     selectors: nil,
@@ -286,19 +302,24 @@ func parseSearchInNeighborhoodNode(_ data: SameNeighborhoodHouseResponse.Data?, 
     }
 }
 
-func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], navVC: UINavigationController?, cell: BaseUITableViewCell) -> Void {
+func fillSearchInNeighborhoodCell(
+    items: [HouseItemInnerEntity],
+    params: TracerParams,
+    navVC: UINavigationController?,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultiItemCell {
         let views = items.map { item -> FloorPanItemView in
             let re = generateearchInNeighborhoodItemView(item)
-            let params = TracerParams.momoid() <|>
-                toTracerParams("slide", key: "card_type")
+            let theParams = params <|>
+                toTracerParams("slide", key: "card_type") <|>
+                params
             re.tapGesture.rx.event
                 .subscribe(onNext: { [unowned re] recognizer in
                     if let id = item.id, let houseId = Int64(id) {
                         openErshouHouseDetailPage(
                             houseId: houseId,
                             disposeBag: re.disposeBag,
-                            tracerParams: params,
+                            tracerParams: theParams <|> toTracerParams(item.logPB, key: "log_pb"),
                             navVC: navVC)()
                     }
                 })
@@ -396,7 +417,7 @@ func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], navVC: UI
                         openNeighborhoodDetailPage(
                             neighborhoodId: houseId,
                             disposeBag: re.disposeBag,
-                            tracerParams: params,
+                            tracerParams: params <|> toTracerParams(item.logPB, key: "log_pb"),
                             navVC: navVC)()
                     }
                 })

@@ -57,6 +57,14 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
             .disposed(by: disposeBag)
         floorPanListViewModel?.onDataLoaded = self.onDataLoaded()
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
+        tracerParams = EnvContext.shared.homePageParams <|> tracerParams <|>
+            toTracerParams("house_history_detail", key: "page_type") <|>
+            toTracerParams("new_detail", key: "element_type") <|>
+            toTracerParams("new_detail", key: "element_from")
+
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        recordEvent(key: "go_detail", params: self.tracerParams)
     }
 
     func loadMore() {

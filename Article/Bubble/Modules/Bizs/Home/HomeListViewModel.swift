@@ -56,6 +56,7 @@ class HomeListViewModel: DetailPageViewModel {
                 let homeCommonParams = EnvContext.shared.homePageParams <|>
                     toTracerParams("list", key: "maintab_entrance") <|>
                     toTracerParams("left_pic", key: "card_type") <|>
+                    beNull(key: "card_type") <|>
                     toTracerParams("list", key: "element_from")
                 if let data = response?.data {
                     let dataParser = DetailDataParser.monoid()
@@ -168,7 +169,7 @@ func parseNewHouseListItemNode(
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
-    let params = TracerParams.momoid() <|>
+    let params = tracerParams <|>
         toTracerParams("maintab", key: "enter_from") <|>
         toTracerParams("list", key: "maintab_entrance") <|>
         toTracerParams("maintab_list", key: "element_from")
@@ -176,13 +177,14 @@ func parseNewHouseListItemNode(
     return {
         let selectors = data?.items?
                 .filter { $0.id != nil }
-                .map { Int64($0.id!) }
-                .map {
-                    openNewHouseDetailPage(
-                        houseId: $0!,
+                .enumerated()
+                .map { (e) -> () -> Void in
+                    let (offset, item) = e
+                    return openNewHouseDetailPage(
+                        houseId: Int64(item.id ?? "")!,
                         disposeBag:
                         disposeBag,
-                        tracerParams: params,
+                        tracerParams: params <|> toTracerParams(offset, key: "rank") <|> toTracerParams(item.logPB, key: "log_pb"),
                         navVC:navVC)
                 }
         let params = TracerParams.momoid() <|>
@@ -217,15 +219,20 @@ func paresNewHouseListRowItemNode(
         traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?) -> [TableRowNode] {
-    let theParams = TracerParams.momoid() <|>
+    let theParams = traceParams <|>
         toTracerParams("maintab", key: "enter_from") <|>
         toTracerParams("list", key: "maintab_entrance") <|>
         toTracerParams("maintab_list", key: "element_from")
 
     let selectors = data?
-            .filter { $0.id != nil }
-            .map { Int64($0.id!) }
-        .map { openNewHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: theParams, navVC: navVC) }
+            .enumerated()
+            .map { (e) -> () -> Void in
+                let (offset, item) = e
+                return openNewHouseDetailPage(
+                    houseId: Int64(item.id ?? "")!,
+                    disposeBag: disposeBag,
+                    tracerParams: theParams <|> toTracerParams(offset, key: "rank") <|> toTracerParams(item.logPB, key: "log_pb"),
+                    navVC: navVC) }
     let params = TracerParams.momoid() <|>
             toTracerParams("new", key: "house_type") <|>
             toTracerParams("left_pic", key: "card_type")
@@ -311,6 +318,7 @@ func openNewHouseDetailPage(
                 houseType: .newHouse,
                 isShowBottomBar: true)
         detailPage.traceParams = EnvContext.shared.homePageParams <|>
+            tracerParams <|>
             toTracerParams("left_pic", key: "card_type")
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
             tracerParams

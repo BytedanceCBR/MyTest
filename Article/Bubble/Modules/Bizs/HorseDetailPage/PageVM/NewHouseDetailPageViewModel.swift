@@ -277,11 +277,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                                toTracerParams("call_bottom", key: "element_type") <|>
                                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                                toTracerParams("price_compare_detail", key: "page_type")
-//                                    let params = EnvContext.shared.homePageParams <|>
-//                                        toTracerParams("price_compare_detail", key: "element_type") <|>
-//                                        toTracerParams(courtId, key: "group_id") <|>
-//                                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-//                                        toTracerParams("new_detail", key: "page_type")
                                     openGlobalPricingList(
                                         courtId: courtId,
                                         data: data,
@@ -297,11 +292,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                 toTracerParams("call_bottom", key: "element_type") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("price_compare_detail", key: "page_type")
-//                        let params = EnvContext.shared.homePageParams <|>
-//                            toTracerParams("price_compare_detail", key: "element_type") <|>
-//                            toTracerParams(courtId, key: "group_id") <|>
-//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-//                            toTracerParams("new_detail", key: "page_type")
+
                         openGlobalPricingList(
                             courtId: courtId,
                             data: data,
@@ -340,6 +331,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             toTracerParams("house_history_detail", key: "enter_from")
         
         let detailPage = FloorPanListVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
+        detailPage.tracerParams = followTraceParams
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     self.navVC?.popViewController(animated: true)
@@ -561,6 +553,7 @@ func openGlobalPricingList(
                 toTracerParams("new_detail", key: "page_type")
         recordEvent(key: "click_loadmore", params: params)
         let detailPage = GlobalPricingVC(courtId: courtId, bottomBarBinder: bottomBarBinder)
+        detailPage.tracerParams = TracerParams.momoid() <|> toTracerParams(data.logPB ?? "be_nul", key: "log_pb")
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
@@ -586,7 +579,7 @@ func openFloorPanInfoPage(
             floorPanId: floorPanId,
             newHouseData: newHouseData,
                 bottomBarBinder: bottomBarBinder)
-
+        detailPage.tracerParams = TracerParams.momoid() <|> toTracerParams(newHouseData.logPB ?? "be_nul", key: "log_pb")
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in
                     navVC?.popViewController(animated: true)

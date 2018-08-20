@@ -124,7 +124,8 @@ class CategoryListViewModel: DetailPageViewModel {
                         self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                         self.oneTimeToast?(response?.data?.refreshTip)
                         if let data = response?.data {
-                            return parseErshouHouseListRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                            let params = TracerParams.momoid()
+                            return parseErshouHouseListRowItemNode(data.items, traceParams: params, disposeBag: self.disposeBag, navVC: self.navVC)
                         } else {
                             return []
                         }
@@ -151,7 +152,8 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.onDataLoaded?(response?.data?.hasMore ?? false, response?.data?.items?.count ?? 0)
                     self.oneTimeToast?(response?.data?.refreshTip)
                     if let data = response?.data {
-                        return parseNeighborhoodRowItemNode(data.items, disposeBag: self.disposeBag, navVC: self.navVC)
+                        let params = TracerParams.momoid()
+                        return parseNeighborhoodRowItemNode(data.items, traceParams: params, disposeBag: self.disposeBag, navVC: self.navVC)
                     } else {
                         return []
                     }

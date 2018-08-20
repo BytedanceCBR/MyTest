@@ -57,6 +57,23 @@ class FloorPanInfoVC: BaseSubPageViewController {
             }
         })
             .disposed(by: disposeBag)
+        tracerParams = EnvContext.shared.homePageParams <|> tracerParams <|>
+            toTracerParams("house_info_detail", key: "page_type") <|>
+            toTracerParams("new_detail", key: "element_type") <|>
+            toTracerParams("new_detail", key: "element_from")
 
+        stayTimeParams = tracerParams <|> traceStayTime()
+
+        recordEvent(key: "go_detail", params: self.tracerParams)
     }
+
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let stayTimeParams = self.stayTimeParams {
+            recordEvent(key: "stay_page", params: stayTimeParams)
+        }
+        self.stayTimeParams = nil
+    }
+
 }

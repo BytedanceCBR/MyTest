@@ -415,12 +415,19 @@ func parseErshouHouseListItemNode(
     return {
         let params = tracerParams <|>
             toTracerParams("old", key: "house_type") <|>
-            toTracerParams("left_pic", key: "card_type")
+            toTracerParams("left_pic", key: "card_type") <|>
+            toTracerParams("old", key: "house_type")
+
 
         let selectors = data?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
-            .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: params, navVC: navVC) }
+            .enumerated()
+            .map { openErshouHouseDetailPage(
+                houseId: $1!,
+                disposeBag: disposeBag,
+                tracerParams: params <|> toTracerParams($0, key: "rank"),
+                navVC: navVC) }
 
 
 
@@ -458,7 +465,8 @@ func parseErshouHouseListItemNode(
     return {
         let params = tracerParams <|>
             toTracerParams("old", key: "house_type") <|>
-            toTracerParams("left_pic", key: "card_type")
+            toTracerParams("left_pic", key: "card_type") <|>
+            toTracerParams("old", key: "house_type")
         let selectors = data?.items?
             .filter { $0.id != nil }
             .map { Int64($0.id!) }
@@ -476,14 +484,25 @@ func parseErshouHouseListItemNode(
     }
 }
 
-func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag: DisposeBag, navVC: UINavigationController?) -> [TableRowNode] {
-    let params = TracerParams.momoid() <|>
+func parseErshouHouseListRowItemNode(
+    _ data: [HouseItemInnerEntity]?,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?) -> [TableRowNode] {
+    let params = traceParams <|>
         toTracerParams("old", key: "house_type") <|>
         toTracerParams("left_pic", key: "card_type")
     let selectors = data?
         .filter { $0.id != nil }
-        .map { Int64($0.id!) }
-        .map { openErshouHouseDetailPage(houseId: $0!, disposeBag: disposeBag, tracerParams: params, navVC: navVC) }
+        .enumerated()
+        .map { (e) -> () -> Void in
+            let (offset, item) = e
+            return openErshouHouseDetailPage(
+                houseId: Int64(item.id ?? "")!,
+                disposeBag: disposeBag,
+                tracerParams: params <|> toTracerParams(offset, key: "rank") <|> toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                navVC: navVC)
+    }
 
     let records = data?
         .filter { $0.id != nil }
@@ -493,7 +512,8 @@ func parseErshouHouseListRowItemNode(_ data: [HouseItemInnerEntity]?, disposeBag
             let theParams = params <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(item.id ?? "be_null", key: "group_id")
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                toTracerParams("old", key: "house_type")
             return onceRecord(key: "house_show", params: theParams)
     }
     if let renders = data?.map(curry(fillErshouHouseListitemCell)),

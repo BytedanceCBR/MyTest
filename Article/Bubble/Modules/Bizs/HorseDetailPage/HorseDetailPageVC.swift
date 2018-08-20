@@ -273,7 +273,8 @@ class HorseDetailPageVC: BaseViewController {
         }
         traceParams = traceParams <|>
             toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                toTracerParams("\(self.houseId)", key: "group_id")
+            toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "house_type") <|>
+            toTracerParams("\(self.houseId)", key: "group_id")
         stayPageParams = traceParams <|> traceStayTime()
 
         recordEvent(key: "go_detail", params: traceParams)
