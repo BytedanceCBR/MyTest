@@ -49,6 +49,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
 
+    var tracerParams = TracerParams.momoid()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -138,6 +140,9 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                     self.creatOptionMenu()
                 }
                 .disposed(by: disposeBag)
+        let params = self.tracerParams <|>
+                toTracerParams("map_detail", key: "page_type")
+        recordEvent(key: "enter_map", params: self.tracerParams)
     }
 
     override func viewWillAppear(_ animated: Bool) {

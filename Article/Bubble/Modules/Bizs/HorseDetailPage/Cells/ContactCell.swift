@@ -87,13 +87,13 @@ class ContactCell: BaseUITableViewCell {
     }
 }
 
-func parseNewHouseContactNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
+func parseNewHouseContactNode(_ newHouseData: NewHouseData, courtId: String) -> () -> TableSectionNode? {
     return {
         
         if let phone = newHouseData.contact?["phone"], phone.count > 0 {
             let params = TracerParams.momoid() <|>
                     toTracerParams("call_page", key: "element_type")
-            let cellRender = curry(fillNewHouseContactCell)(newHouseData)
+            let cellRender = curry(fillNewHouseContactCell)(newHouseData)(courtId)
             return TableSectionNode(
                     items: [cellRender],
                     selectors: nil,
@@ -107,7 +107,7 @@ func parseNewHouseContactNode(_ newHouseData: NewHouseData) -> () -> TableSectio
     }
 }
 
-func fillNewHouseContactCell(_ data: NewHouseData, cell: BaseUITableViewCell) -> Void {
+func fillNewHouseContactCell(_ data: NewHouseData, courtId: String, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ContactCell {
         theCell.phoneNumberLabel.text = data.contact?["phone"]
         theCell.descLabel.text = data.contact?["notice_desc"]
@@ -116,6 +116,12 @@ func fillNewHouseContactCell(_ data: NewHouseData, cell: BaseUITableViewCell) ->
                     if let phone = data.contact?["phone"] {
                         Utils.telecall(phoneNumber: phone)
                     }
+                    let params = EnvContext.shared.homePageParams <|>
+                            toTracerParams(data.logPB, key: "log_pb") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams("call_page", key: "element_type") <|>
+                            toTracerParams("new_detail", key: "page_type")
+                    recordEvent(key: "click_call", params: params)
                 })
                 .disposed(by: theCell.disposeBag)
     }

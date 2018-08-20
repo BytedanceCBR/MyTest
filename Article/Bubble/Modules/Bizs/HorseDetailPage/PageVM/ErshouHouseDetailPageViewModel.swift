@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+
+    var logPB: Any?
     
     var logPB: Any?
 
@@ -214,13 +216,17 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = ershouHouseData.value?.data {
             let openBeighBor = openFloorPanDetailPage(floorPanId: data.neighborhoodInfo?.id)
-            let theParams = TracerParams.momoid() <|>
-                EnvContext.shared.homePageParams <|>
-                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
-                toTracerParams("slide", key: "card_type") <|>
-                toTracerParams("click", key: "enter_type") <|>
-                toTracerParams("list", key: "maintab_entrance") <|>
-                toTracerParams("old_detail", key: "enter_from")
+
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("old_detail", key: "enter_from") <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("list", key: "maintab_entrance")
+            let theParams = self.traceParams <|>
+                    EnvContext.shared.homePageParams <|>
+                    toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+                    beNull(key: "card_type") <|>
+                    toTracerParams("slide", key: "card_type") <|>
+                    toTracerParams("click", key: "enter_type")
 
             self.logPB = data.logPB
             
@@ -248,7 +254,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         let loadMoreParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("same_neighborhood", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
-                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("new_detail", key: "page_type")
                         recordEvent(key: "click_loadmore", params: loadMoreParams)
 
@@ -264,7 +270,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             navVC: self.navVC,
                             searchSource: .oldDetail,
                             tracerParams: params,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: loadMoreParams))
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -277,7 +283,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         let loadMoreParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("same_neighborhood", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
-                                toTracerParams(data.logPB, key: "log_pb") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("new_detail", key: "page_type")
                         recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
 
@@ -291,7 +297,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             disposeBag: self.disposeBag,
                             tracerParams: params,
                             navVC: self.navVC,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: loadMoreParams))
                     }
                 }
                 <- parseHeaderNode("相关推荐", adjustBottomSpace: 0)

@@ -16,6 +16,8 @@ protocol DetailPageViewModel: class {
     
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
+    var logPB: Any? { get set }
+
     var disposeBag: DisposeBag { get }
 
     var traceParams: TracerParams { get set }
@@ -175,7 +177,7 @@ extension DetailPageViewModel {
         }
     }
 
-    func bindBottomView() -> FollowUpBottomBarBinder {
+    func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar) in
             bottomBar.favouriteBtn.rx.tap
                     .bind(onNext: self.followThisItem)
@@ -199,9 +201,15 @@ extension DetailPageViewModel {
                     .disposed(by: self.disposeBag)
 
             bottomBar.contactBtn.rx.tap
-                    .withLatestFrom(self.contactPhone)
-                    .bind(onNext: Utils.telecall)
-                    .disposed(by: self.disposeBag)
+                .withLatestFrom(self.contactPhone)
+                .bind(onNext: { (phone) in
+                    let theParams = EnvContext.shared.homePageParams <|>
+                        params <|>
+                        toTracerParams("call_bottom", key: "element_type")
+                    recordEvent(key: "click_call", params: theParams)
+                    Utils.telecall(phoneNumber: phone)
+                })
+                .disposed(by: self.disposeBag)
         }
     }
 

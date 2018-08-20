@@ -141,11 +141,22 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: Dispos
         theCell.nameLabel.text = data.name
         theCell.subNameLabel.text = data.neighborhoodInfo?.address
         theCell.priceLabel.text = data.neighborhoodInfo?.pricingPerSqm
+        let params = TracerParams.momoid() <|>
+            toTracerParams("neighborhood_detail", key: "enter_from") <|>
+            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(data.id ?? "be_null", key: "group_id") <|>
+            toTracerParams("address", key: "click_type")
+        let clickMapParams = EnvContext.shared.homePageParams <|>
+            params <|>
+            beNull(key: "map_tag")
+
         theCell.locationIcon.rx.tap
                 .bind { [unowned disposeBag] recognizer in
+
+                    recordEvent(key: "click_map", params: clickMapParams)
                     if let lat = data.neighborhoodInfo?.gaodeLat,
                             let lng = data.neighborhoodInfo?.gaodeLng {
-                        openMapPage(lat: lat, lng: lng, disposeBag: disposeBag)()
+                        openMapPage(lat: lat, lng: lng, traceParams: params, disposeBag: disposeBag)()
                     }
 
                 }
@@ -155,7 +166,8 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData, disposeBag: Dispos
                 .bind { [unowned disposeBag] recognizer in
                     if let lat = data.neighborhoodInfo?.gaodeLat,
                        let lng = data.neighborhoodInfo?.gaodeLng {
-                        openMapPage(lat: lat, lng: lng, disposeBag: disposeBag)()
+                        recordEvent(key: "click_map", params: clickMapParams)
+                        openMapPage(lat: lat, lng: lng, traceParams: params, disposeBag: disposeBag)()
                     }
 
                 }
