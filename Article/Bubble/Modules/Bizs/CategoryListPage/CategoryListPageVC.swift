@@ -109,6 +109,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     let associationalWord: String?
     
     var hasMore: Bool = true
+    
+    var hasNone: Bool = false
 
     var disposeable: Disposable?
 
@@ -246,7 +248,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         infoMaskView.tapGesture.rx.event
             .bind { (_) in
-                self.searchAndConditionFilterVM.sendSearchRequest()
+                 if !self.hasNone
+                 {
+                    self.searchAndConditionFilterVM.sendSearchRequest()
+                }
             }
             .disposed(by: disposeBag)
 
@@ -298,6 +303,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.infoMaskView.isHidden = false
             } else {
                 self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                self.hasNone = true
             }
         }
 
