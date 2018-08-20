@@ -153,13 +153,12 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                 self.lock.unlock()
             }
 
-            if let poiType = self.categorys[index] {
-                let params = self.tracerParams <|>
-                        toTracerParams(categoryTraceParams(poiType: poiType), key: "map_tag")
-                recordEvent(key: "click_map", params: params)
-                self.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
-                self.requestPOIInfoByType(poiType: poiType)
-            }
+            let poiType = self.categorys[index]
+            let params = self.tracerParams <|>
+                toTracerParams(categoryTraceParams(poiType: poiType), key: "map_tag")
+            recordEvent(key: "click_map", params: params)
+            self.emptyInfoLabel.text = "附近没有\(poiType.rawValue)信息"
+            self.requestPOIInfoByType(poiType: poiType)
         }
 
 //        poiData
@@ -295,13 +294,13 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
 func categoryTraceParams(poiType: POIType) -> String {
     switch poiType {
-    case subway:
+    case .subway:
         return "subway"
-    case mall:
+    case .mall:
         return "shopping"
-    case hospital:
+    case .hospital:
         return "hospital"
-    case education:
+    case .education:
         return "school"
     default:
         return "be_null"
