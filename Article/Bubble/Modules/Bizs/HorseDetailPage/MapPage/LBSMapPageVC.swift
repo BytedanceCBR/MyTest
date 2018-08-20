@@ -49,6 +49,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
 
+    var tracerParams = TracerParams.momoid()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -135,9 +137,14 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                 .disposed(by: disposeBag)
         navBar.rightBtn.rx.tap
                 .bind { [unowned self] void in
+                    let params = self.tracerParams <|>
+                            toTracerParams("navigation", key: "click_type")
                     self.creatOptionMenu()
                 }
                 .disposed(by: disposeBag)
+        self.tracerParams = self.tracerParams <|>
+                toTracerParams("map_detail", key: "page_type")
+        recordEvent(key: "enter_map", params: self.tracerParams)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -178,6 +185,15 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                      Item(name: "医院", icon: #imageLiteral(resourceName: "tab-hospital"), selectedIcon: #imageLiteral(resourceName: "tab-hospital-pressed")),
                      Item(name: "休闲", icon: #imageLiteral(resourceName: "tab-relaxation"), selectedIcon: #imageLiteral(resourceName: "tab-relaxation-pressed")),
                      Item(name: "购物", icon: #imageLiteral(resourceName: "tab-mall"), selectedIcon: #imageLiteral(resourceName: "tab-mall-pressed"))]
+        let categoryParams = [
+            "银行": "bank",
+            "公交": "bus",
+            "地铁": "subway",
+            "教育": "school",
+            "医院": "hospital",
+            "休闲": "entertainment",
+            "购物": "shopping"
+        ]
         let itemViews = items.map { item -> BottomBarItemView in
             let re = BottomBarItemView()
             re.label.text = item.name
@@ -185,6 +201,9 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
             re.iconButton.setImage(item.selectedIcon, for: .selected)
             re.tapGesture.rx.event
                 .bind { [weak re, unowned self] _ in
+                    let params = self.tracerParams <|>
+                            toTracerParams("map_tag", key: "click_type") <|>
+                            toTracerParams(categoryParams[item.name], key: "map_tag")
                     re?.isSelected = true
                     self.searchCategory.accept(item.name)
                 }

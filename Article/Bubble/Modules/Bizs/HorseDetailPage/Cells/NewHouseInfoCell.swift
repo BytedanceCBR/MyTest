@@ -303,7 +303,7 @@ func fillNewHouseCoreInfoCell(
                 let params = EnvContext.shared.homePageParams <|>
                         toTracerParams("house_info", key: "element_type") <|>
                         toTracerParams(floorPanId, key: "group_id") <|>
-                        toTracerParams(data.logPB, key: "log_pb") <|>
+                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "page_type")
                 recordEvent(key: "click_loadmore", params: params)
                 if let disposeBag = disposeBag {
@@ -343,12 +343,23 @@ func fillNewHouseCoreInfoCell(
             })
             .disposed(by: disposeBag)
         let theDisposeBag = DisposeBag()
+        let params = TracerParams.momoid() <|>
+            toTracerParams("new_detail", key: "enter_from") <|>
+            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(floorPanId, key: "group_id") <|>
+            toTracerParams("address", key: "click_type")
         theCell.openMapBtn.rx.tap
                 .bind { void in
+                    let clickMapParams = EnvContext.shared.homePageParams <|>
+                            params <|>
+                            beNull(key: "map_tag")
+                    recordEvent(key: "click_map", params: clickMapParams)
                     if let lat = data.coreInfo?.geodeLat, let lng = data.coreInfo?.geodeLng {
+
                         openMapPage(
                                 lat: lat,
                                 lng: lng,
+                                traceParams: params,
                                 disposeBag: theDisposeBag)()
                     }
                 }
