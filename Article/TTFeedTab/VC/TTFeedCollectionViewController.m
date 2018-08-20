@@ -383,7 +383,7 @@ TTFeedCollectionCellDelegate>
                 NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", userDrag ? @"flip" : @"click", self.lastCategoryID];
                 [dict setValue:enterFrom forKey:@"enter_from"];
             }
-            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+//            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
             
             // 统计 - 进入订阅列表
             if ([category.categoryID isEqualToString:kTTSubscribeCategoryID]) {

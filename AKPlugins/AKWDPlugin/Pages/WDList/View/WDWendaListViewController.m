@@ -201,7 +201,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:baseCondition];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
-        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
 
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontChanged) name:kSettingFontSizeChangedNotification object:nil];
@@ -811,7 +811,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         if ([[v3Dic tt_stringValueForKey:@"enter_from"] isEqualToString:@"click_apn"]) {
             [v3Dic setValue:@"click_news_notify" forKey:@"enter_from"];
         }
-        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
         
         NSString *groupId = self.viewModel.qID;
         NSString *ansId = [self.viewModel.gdExtJson objectForKey:@"ansid"];

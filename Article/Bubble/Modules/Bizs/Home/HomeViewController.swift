@@ -27,6 +27,8 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         let re = EmptyMaskView()
         return re
     }()
+    
+    private var errorVM : NHErrorViewModel!
 
     lazy var headerViewPanel: UIView = {
         UIView(frame: CGRect(
@@ -103,10 +105,15 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         self.hidesBottomBarWhenPushed = false
         self.detailPageViewModel = HomeListViewModel(tableView: tableView, navVC: self.navigationController)
         self.detailPageViewModel?.homePageCommonParams = homePageCommonParams
+        self.errorVM = NHErrorViewModel(errorMask:infoDisplay,reuestRetryText:"网络不给力，点击屏幕重试")
         self.setupPageableViewModel()
+        
+        self.detailPageViewModel?.onError = { [weak self] (error) in
+            self?.errorVM?.onRequestError(error: error)
+        }
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor.clear
-        setupErrorDisplay()
 
         view.addSubview(tableView)
         tableView.separatorStyle = .none
@@ -173,14 +180,26 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
                 })
                 .disposed(by: disposeBag)
         bindNetReachability()
+        
     }
 
     private func setupErrorDisplay() {
+        infoDisplay.isHidden = true
         view.addSubview(infoDisplay)
         infoDisplay.snp.makeConstraints { maker in
             maker.top.left.right.equalToSuperview()
             maker.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
         }
+        
+        infoDisplay.tapGesture.rx.event
+            .bind {  [unowned self] (_) in
+                self.errorVM.onRequestInvalidNetWork()
+                EnvContext.shared.client.fetchSearchConfig()
+                self.detailPageViewModel!.requestData(houseId: -1)
+            }
+            .disposed(by: disposeBag)
+        
+        self.errorVM.onRequestViewDidLoad()
     }
     
     private func setupPageableViewModel() {
@@ -244,6 +263,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
         super.viewDidLayoutSubviews()
         tableView.tableHeaderView = headerViewPanel
         setupHeaderSlidePanel(tableView: tableView)
+        setupErrorDisplay()
     }
 
     private func setupNormalNavBar() {
@@ -347,7 +367,7 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
             .combineLatest(Reachability.rx.isReachable, generalBizConfig.generalCacheSubject)
             .map { (e) -> Bool in
                 let (reach, generalconfig) = e
-                return reach == false && generalconfig == nil
+                return reach == false || generalconfig == nil
             }
             .bind(onNext: displayNetworkError())
             .disposed(by: disposeBag)
@@ -356,9 +376,9 @@ class HomeViewController: BaseViewController, UITableViewDelegate {
 
     private func displayNetworkError() -> (Bool) -> Void {
         return { [weak self] (isDisplay) in
-            self?.cycleImagePageableViewModel?.pageView.isHidden = isDisplay
-            self?.infoDisplay.isHidden = !isDisplay
-            self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
+//            self?.cycleImagePageableViewModel?.pageView.isHidden = isDisplay
+//            self?.infoDisplay.isHidden = !isDisplay
+//            self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
             self?.stateControl?.disable = isDisplay
             UIApplication.shared.statusBarStyle = .default
             self?.barStyle.accept(UIStatusBarStyle.default.rawValue)

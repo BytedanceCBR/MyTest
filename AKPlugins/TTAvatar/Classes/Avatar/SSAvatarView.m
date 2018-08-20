@@ -218,8 +218,8 @@ static NSOperationQueue * queue;
 - (void)showAvatarByURL:(NSString *)urlStr {
     
     // add by zjing for test
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"showAvatarByURL" message:urlStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-    [alert show];
+//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"showAvatarByURL" message:urlStr ? : @"be_null" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+//    [alert show];
     
     //FIX:XWTT-2885, user default avatar should not use originImage
     if ([urlStr rangeOfString:@"/origin/"].location != NSNotFound) {

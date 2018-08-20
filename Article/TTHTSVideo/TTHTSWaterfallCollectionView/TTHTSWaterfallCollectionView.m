@@ -1517,7 +1517,7 @@ TTAccountMulticastProtocol
         [params setValue:refreshType forKey:@"refresh_type"];
         [params setValue:self.listEntrance forKey:@"list_entrance"];
         [params setValue:@100380 forKey:@"demand_id"];
-        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
+//        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
     }
 
 }

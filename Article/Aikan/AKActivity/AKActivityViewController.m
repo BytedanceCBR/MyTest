@@ -154,7 +154,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:@(((long long)(duration))) forKey:@"stay_time"];
     [params setValue:@"tab_task" forKey:@"tab_name"];
-    [TTTrackerWrapper eventV3:@"stay_tab" params:params];
+//    [TTTrackerWrapper eventV3:@"stay_tab" params:params];
 }
 
 @end

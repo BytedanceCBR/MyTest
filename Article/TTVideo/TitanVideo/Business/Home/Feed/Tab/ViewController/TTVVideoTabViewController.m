@@ -459,7 +459,7 @@ extern BOOL ttsettings_showRefreshButton(void);
             [dict setValue:@"click" forKey:@"enter_type"];
             NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", @"click", category.categoryID];
             [dict setValue:enterFrom forKey:@"enter_from"];
-            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+//            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
             
         } else {
             //5.7 新增对于视频Tab刷新统计
@@ -533,7 +533,7 @@ extern BOOL ttsettings_showRefreshButton(void);
         [dict setValue:@"flip" forKey:@"enter_type"];
         NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", @"flip", currCategoryModel.categoryID];
         [dict setValue:enterFrom forKey:@"enter_from"];
-        [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
 
     }
 }

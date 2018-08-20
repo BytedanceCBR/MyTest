@@ -11,7 +11,7 @@ func requestHouseRecommend() -> Observable<HouseRecommendResponse1?> {
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
                     url: "\(EnvContext.networkConfig.host)/f100/api/recommend",
-                    params: ["city_id": "133"],
+                    params: nil,
                     method: "GET",
                     needCommonParams: true)
             .map({ (data) -> NSString? in

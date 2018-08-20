@@ -188,7 +188,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [v3Dic setValue:model.answerEntity.ansid forKey:@"ansid"];
         [v3Dic setValue:model.answerEntity.qid forKey:@"qid"];
         
-        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
         
         if (!isEmptyString(model.answerEntity.ansid)) {
             [TTFFantasyTracker sharedInstance].lastGid = model.answerEntity.ansid;
@@ -426,7 +426,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [v3Dic setValue:_detailModel.answerEntity.ansid forKey:@"group_id"];
     [v3Dic setValue:_detailModel.answerEntity.ansid forKey:@"ansid"];
     [v3Dic setValue:_detailModel.answerEntity.qid forKey:@"qid"];
-    [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
     
     self.isViewDisplaying = YES;
     
@@ -1350,7 +1350,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [v3Dic setValue:self.detailModel.answerEntity.qid forKey:@"qid"];
         [v3Dic setValue:@(duration) forKey:@"stay_time"];
         [v3Dic setValuesForKeysWithDictionary:commentDic];
-        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
         
         [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.detailModel.answerEntity.ansid itemID:self.detailModel.answerEntity.ansid enterFrom:[self enterFrom] categoryName:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"] stayTime:duration logPb:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"] answerID:self.detailModel.answerEntity.ansid questionID:self.detailModel.answerEntity.qid enterFromAnswerID:[self.detailModel.gdExtJsonDict objectForKey:@"enterfrom_answerid"] parentEnterFrom:[self.detailModel.gdExtJsonDict objectForKey:@"parent_enterfrom"]];
     }

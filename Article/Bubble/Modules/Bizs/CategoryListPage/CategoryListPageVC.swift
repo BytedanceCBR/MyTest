@@ -85,11 +85,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
-        if EnvContext.shared.client.reachability.connection == .none {
-            re.label.text = "网络不给力，点击屏幕重试"
-        } else {
-            re.label.text = "没有找到相关的信息，换个条件试试吧~"
-        }
         return re
     }()
 
@@ -104,6 +99,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     private var popupMenuView: PopupMenuView?
 
     private var categoryListViewModel: CategoryListViewModel?
+    
+    private var errorVM : NHErrorViewModel?
 
     private let isOpenConditionFilter: Bool
 
@@ -112,6 +109,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     let associationalWord: String?
     
     var hasMore: Bool = true
+    
+    var hasNone: Bool = false
 
     var disposeable: Disposable?
 
@@ -177,7 +176,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
-
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,reuestRetryText:"网络不给力，点击屏幕重试",requestNilDataText:"没有找到相关的信息，换个条件试试吧~")
+        
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
         view.addSubview(navBar)
@@ -248,8 +248,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         infoMaskView.tapGesture.rx.event
-            .bind { (_) in
-                self.searchAndConditionFilterVM.sendSearchRequest()
+            .bind { [unowned self] (_) in
+                 if !self.hasNone
+                 {
+                    self.searchAndConditionFilterVM.sendSearchRequest()
+                }
             }
             .disposed(by: disposeBag)
 
@@ -272,15 +275,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
 
-        Reachability.rx.isReachable
-                .bind { [unowned self] reachable in
-                    if !reachable {
-                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                    } else {
-
-                    }
-                }
-                .disposed(by: disposeBag)
+        self.errorVM?.onRequestViewDidLoad()
     }
 
     func bindLoadMore() {
@@ -309,6 +304,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.infoMaskView.isHidden = false
             } else {
                 self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                self.hasNone = true
             }
         }
 
