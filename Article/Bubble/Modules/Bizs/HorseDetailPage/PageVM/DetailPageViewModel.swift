@@ -16,8 +16,6 @@ protocol DetailPageViewModel: class {
     
     var followStatus: BehaviorRelay<Result<Bool>> { get }
 
-    var logPB: Any? { get set }
-
     var disposeBag: DisposeBag { get }
 
     var traceParams: TracerParams { get set }
