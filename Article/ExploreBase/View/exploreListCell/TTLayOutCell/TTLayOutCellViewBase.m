@@ -1111,7 +1111,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:self.extraDicForUFCell];
             [extraDic setValue:@(0) forKey:@"click_area"];
             [extraDic setValue:comment.aggrType forKey:@"aggr_type"];
-            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
         }
     }
 }
@@ -1504,7 +1504,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [self ad_trackWithTag:@"embeded_ad" label:@"comment_click" extra:nil];
                 NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:self.extraDicForUFCell];
                 [extraDic setValue:@(0) forKey:@"click_area"];
-                [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+//                [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
             }
         }
     }
@@ -2266,7 +2266,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:[TTLayOutCellDataHelper getLogExtraDictionaryWithOrderedData:self.orderedData]];
             [extraDic setValue:@(1) forKey:@"click_area"];
             //产品用的埋点 这里发两个埋点，没毛病
-            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
             [extraDic setValue:self.orderedData.itemID forKey:@"item_id"];
             [extraDic setValue:comment.aggrType forKey:@"aggr_type"];
         }

@@ -271,7 +271,9 @@ class HorseDetailPageVC: BaseViewController {
                 .bind(to: navBar.rightBtn.rx.isSelected)
                 .disposed(by: disposeBag)
         }
-
+        traceParams = traceParams <|>
+            toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                toTracerParams("\(self.houseId)", key: "group_id")
         stayPageParams = traceParams <|> traceStayTime()
 
         recordEvent(key: "go_detail", params: traceParams)

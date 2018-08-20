@@ -188,7 +188,7 @@ NSString * const klistEntranceKey = @"more_shortvideo";
         [params setValue:refreshTypeStr forKey:@"refresh_type"];
         [params setValue:klistEntranceKey forKey:@"list_entrance"];
         [params setValue:cardPosition forKey:@"card_position"];
-        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
+//        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
     }
     
     WeakSelf;

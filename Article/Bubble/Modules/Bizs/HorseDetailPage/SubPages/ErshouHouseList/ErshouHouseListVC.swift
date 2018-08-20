@@ -179,8 +179,14 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
         if self.ershouHouseListViewModel?.datas.value.count == 0 {
                         self.requestData()
-        }
-        
+                    }
+//                    self.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                }
+            }
+            .disposed(by: disposeBag)
+
+        tracerParams = tracerParams <|>
+            beNull(key: "card_type")
 //        self.searchAndConditionFilterVM.sendSearchRequest()
         stayTimeParams = tracerParams <|> traceStayTime()
 

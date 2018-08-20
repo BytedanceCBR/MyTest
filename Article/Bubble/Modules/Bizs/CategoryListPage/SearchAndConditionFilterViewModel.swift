@@ -24,6 +24,8 @@ class SearchAndConditionFilterViewModel {
 
     let disposeBag = DisposeBag()
 
+    var pageType: String?
+
     var queryConditionAggregator = ConditionAggregator.monoid() {
         didSet {
             queryCondition.accept(getConditions())
@@ -36,9 +38,12 @@ class SearchAndConditionFilterViewModel {
             .map { $0.reduce([:], mapCondition) }
             .map(jsonStringMapper)
             .debug("conditionTracer")
-            .bind { (condition) in
+            .bind { [weak self] (condition) in
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                     toTracerParams(condition, key: "filter")
+                let params = EnvContext.shared.homePageParams <|>
+                    toTracerParams(self?.pageType ?? "be_null", key: "page_type")
+                recordEvent(key: "house_filter", params: params)
             }.disposed(by: disposeBag)
 
 

@@ -808,7 +808,7 @@
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params setValue:@"click_novel_card" forKey:@"enter_from"];
             [params setValue:@"novel_channel" forKey:@"category_name"];
-            [TTTrackerWrapper eventV3:@"enter_category" params:[params copy] isDoubleSending:YES];
+//            [TTTrackerWrapper eventV3:@"enter_category" params:[params copy] isDoubleSending:YES];
         }
     } else {
         eventLabel = @"click_top";

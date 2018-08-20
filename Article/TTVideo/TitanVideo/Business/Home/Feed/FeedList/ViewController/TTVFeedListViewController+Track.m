@@ -58,11 +58,11 @@
     if (isEmptyString(categoryName)) {
         return;
     }
-    [TTTrackerWrapper eventV3:@"category_refresh"
-                       params:@{@"categoty_name" : categoryName,
-                                @"refresh_method": methodName,
-                               }
-              isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"category_refresh"
+//                       params:@{@"categoty_name" : categoryName,
+//                                @"refresh_method": methodName,
+//                               }
+//              isDoubleSending:YES];
 }
 
 

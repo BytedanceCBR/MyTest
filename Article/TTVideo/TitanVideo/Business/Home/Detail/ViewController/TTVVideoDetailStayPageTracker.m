@@ -170,7 +170,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [dict setValue:_article.adModel.log_extra ? _article.adModel.log_extra : _articleExtraInfo.logExtra forKey:@"log_extra"];
     [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
     if (self.viewIsAppear) {
-        [TTTrackerWrapper eventV3:@"stay_page" params:dict isDoubleSending:YES];
+//        [TTTrackerWrapper eventV3:@"stay_page" params:dict isDoubleSending:YES];
     }
 }
 
@@ -283,7 +283,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [event3Dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
     [event3Dic setValue:@"video" forKey:@"article_type"];
     
-    [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
 
 }
 
@@ -310,17 +310,17 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     if (![TTTrackerWrapper isOnlyV3SendingEnable]){
         if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat)
         {
-            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_headline", value, nil, dic);
+//            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_headline", value, nil, dic);
         }
         else if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloatRelated)
         {
             [self ttv_addFromGId:dic];
-            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_related", value, nil, dic);
+//            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_related", value, nil, dic);
         }
         else
         {
             [self ttv_addFromGId:dic];
-            wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
+//            wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
         }
     }
 }

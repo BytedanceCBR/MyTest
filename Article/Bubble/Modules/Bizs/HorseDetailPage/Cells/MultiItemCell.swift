@@ -236,10 +236,16 @@ func fillSearchInNeighborhoodCell(items: [CourtItemInnerEntity], navVC: UINaviga
     if let theCell = cell as? MultiItemCell {
         let views = items.map { item -> FloorPanItemView in
             let re = generateearchInNeighborhoodItemView(item)
+            let params = TracerParams.momoid() <|>
+                toTracerParams("slide", key: "card_type")
             re.tapGesture.rx.event
                     .subscribe(onNext: { [unowned re] recognizer in
                         if let id = item.id, let houseId = Int64(id) {
-                            openNewHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag, navVC: navVC)()
+                            openNewHouseDetailPage(
+                                houseId: houseId,
+                                disposeBag: re.disposeBag,
+                                tracerParams: params,
+                                navVC: navVC)()
                         }
                     })
                     .disposed(by: re.disposeBag)
@@ -284,10 +290,16 @@ func fillSearchInNeighborhoodCell(items: [HouseItemInnerEntity], navVC: UINaviga
     if let theCell = cell as? MultiItemCell {
         let views = items.map { item -> FloorPanItemView in
             let re = generateearchInNeighborhoodItemView(item)
+            let params = TracerParams.momoid() <|>
+                toTracerParams("slide", key: "card_type")
             re.tapGesture.rx.event
                 .subscribe(onNext: { [unowned re] recognizer in
                     if let id = item.id, let houseId = Int64(id) {
-                        openErshouHouseDetailPage(houseId: houseId, disposeBag: re.disposeBag, navVC: navVC)()
+                        openErshouHouseDetailPage(
+                            houseId: houseId,
+                            disposeBag: re.disposeBag,
+                            tracerParams: params,
+                            navVC: navVC)()
                     }
                 })
                 .disposed(by: re.disposeBag)
@@ -376,10 +388,16 @@ func fillRelatedNeighborhoodCell(datas: [NeighborhoodInnerItemEntity], navVC: UI
     if let theCell = cell as? MultiItemCell {
         let views = datas.take(5).map { item -> NeighborhoodItemView in
             let re = generateRelatedNeighborhoodView(item)
+            let params = TracerParams.momoid() <|>
+                toTracerParams("neighborhood_nearby", key: "element_type")
             re.tapGesture.rx.event
                 .subscribe(onNext: { [unowned re] recognizer in
                     if let id = item.id, let houseId = Int64(id) {
-                        openNeighborhoodDetailPage(neighborhoodId: houseId, disposeBag: re.disposeBag, navVC: navVC)()
+                        openNeighborhoodDetailPage(
+                            neighborhoodId: houseId,
+                            disposeBag: re.disposeBag,
+                            tracerParams: params,
+                            navVC: navVC)()
                     }
                 })
                 .disposed(by: re.disposeBag)

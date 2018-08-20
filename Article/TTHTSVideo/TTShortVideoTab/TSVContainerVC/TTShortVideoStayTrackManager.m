@@ -71,14 +71,14 @@ static TTShortVideoStayTrackManager * manager;
     @try {
 #endif
         NSString *stayTimeStr = [NSString stringWithFormat:@"%.0f", stayTime * 1000];
-        [TTTrackerWrapper eventV3:@"stay_category" params:@{
-                                                            @"enter_from": @"click_category",
-                                                            @"category_name": self.trackingCategory.categoryID,
-                                                            @"list_entrance": @"main_tab",
-                                                            @"enter_type": self.enterType,
-                                                            @"stay_time": stayTimeStr,
-                                                            @"demand_id": @100380,
-                                                            }];
+//        [TTTrackerWrapper eventV3:@"stay_category" params:@{
+//                                                            @"enter_from": @"click_category",
+//                                                            @"category_name": self.trackingCategory.categoryID,
+//                                                            @"list_entrance": @"main_tab",
+//                                                            @"enter_type": self.enterType,
+//                                                            @"stay_time": stayTimeStr,
+//                                                            @"demand_id": @100380,
+//                                                            }];
 #if !DEBUG
     } @catch (NSException *exception) {
         ;

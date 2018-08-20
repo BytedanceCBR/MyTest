@@ -110,7 +110,7 @@
     //u11
     if ([orderedData isU11Cell]) {
         NSDictionary *extraDic = [TTLayOutCellDataHelper getLogExtraDictionaryWithOrderedData:orderedData];
-        [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:orderedData.uniqueID source:nil extraDic:extraDic];
+//        [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:orderedData.uniqueID source:nil extraDic:extraDic];
     }
     
     Article *article = (Article *)orderedData.originalData;
