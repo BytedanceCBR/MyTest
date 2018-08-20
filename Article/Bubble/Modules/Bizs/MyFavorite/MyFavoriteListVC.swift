@@ -129,7 +129,8 @@ class MyFavoriteListVC: BaseViewController, PageableVC, UITableViewDelegate {
                 }
             })
             .disposed(by: disposeBag)
-
+        tracerParams = tracerParams <|>
+            beNull(key: "card_type")
         stayTimeParams = tracerParams <|> traceStayTime()
 
         recordEvent(key: TraceEventName.enter_category, params: tracerParams)

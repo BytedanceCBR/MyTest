@@ -140,8 +140,8 @@ func parseGridOpNode(
             let cellRender = curry(fillGridOpCell)(its)(traceParams)(disposeBag)
             let onceRecords = items.map { item -> ElementRecord in
                 let theTraceParams = traceParams <|>
-                        toTracerParams(item.logPb, key: "log_pb") <|>
-                        toTracerParams(item.title ?? "", key: "operation_name") <|>
+                        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+                        toTracerParams(item.title ?? "be_null", key: "operation_name") <|>
                         toTracerParams(item.id, key: "operation_id")
                 return operationShowonceRecord(params: theTraceParams)
             }
@@ -179,7 +179,9 @@ fileprivate func fillGridOpCell(
                     if let openUrl = items[index].openUrl {
                         let theTraceParams = traceParams <|>
                             toTracerParams(items[index].title ?? "be_null", key: "operation_name") <|>
-                            toTracerParams("maintab_operation", key: "element_from")
+                            toTracerParams("maintab_operation", key: "element_from") <|>
+                            toTracerParams("left_pic", key: "card_type") <|>
+                            toTracerParams("click", key: "enter_type")
                         let paramsMap = theTraceParams.paramsGetter([:])
                         let userInfo = TTRouteUserInfo(info: paramsMap)
                         TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
