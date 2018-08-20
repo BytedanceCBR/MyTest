@@ -178,7 +178,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
-        self.errorVM = NHErrorViewModel(errorMask:infoMaskView)
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,reuestRetryText:"xxxxxxx",reuestRetryImage:"empty_message")
         
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
@@ -274,16 +274,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
 
-        self.errorVM?.checkNetWorkForType(error: ErrorType.noneDataRetry)
-//        Reachability.rx.isReachable
-//                .bind { [unowned self] reachable in
-//                    if !reachable {
-//                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-//                    } else {
-//
-//                    }
-//                }
-//                .disposed(by: disposeBag)
+        self.errorVM?.onRequestViewDidLoad()
     }
 
     func bindLoadMore() {
