@@ -845,7 +845,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     else {
         [extraDic setValue:@"" forKey:@"log_extra"];
     }
-    [TTTrackerWrapper category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
+//    [TTTrackerWrapper category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
 }
 
 - (void)_sendTemailStayEvent {

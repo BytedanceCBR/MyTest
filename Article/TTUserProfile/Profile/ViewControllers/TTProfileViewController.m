@@ -710,7 +710,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
         if ([SSCommonLogic threeTopBarEnable]){
             [params setValue:_fromTab forKey:@"from_tab_name"];
         }
-        [TTTrackerWrapper eventV3:@"stay_tab" params:params];
+//        [TTTrackerWrapper eventV3:@"stay_tab" params:params];
 //    }
 }
 

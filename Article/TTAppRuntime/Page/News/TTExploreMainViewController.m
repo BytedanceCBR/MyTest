@@ -436,7 +436,7 @@
     [dict setValue:category.concernID forKey:@"concern_id"];
     [dict setValue:@(1) forKey:@"refer"];
     [dict setValue:label forKey:@"refresh_type"];
-    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
+//    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
