@@ -40,7 +40,7 @@ class AboutViewController: BaseViewController, TTRouteInitializeProtocol  {
                 navVC.popViewController(animated: true)
             }
         }.disposed(by: disposeBag)
-        versionLabel.text = Utils.appVersion
+        versionLabel.text = "版本号\(Utils.appVersion)"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,6 +50,7 @@ class AboutViewController: BaseViewController, TTRouteInitializeProtocol  {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navBar.title.text = "关于我们"
         navBar.removeGradientColor()
 
         view.addSubview(navBar)

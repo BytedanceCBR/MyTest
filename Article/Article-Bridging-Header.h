@@ -39,5 +39,6 @@
 #import <TTIndicatorView.h>
 #import "AKLoginTrafficViewController.h"
 #import <TTTracker.h>
+#import "UIView+TTFFrame.h"
 
 #endif /* Article_Bridging_Header_h */

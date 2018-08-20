@@ -208,7 +208,10 @@
 {
 //    UIFont *font = isBold ? [UIFont boldSystemFontOfSize:fontSize] : [UIFont systemFontOfSize:fontSize];
     //f项目统一修改成平方
-    UIFont *font = isBold ? [UIFont fontWithName:@"PingFangSC-Semibold" size:fontSize] : [UIFont fontWithName:@"PingFangSC-Regular" size:fontSize];
+    UIFont *boldFont = [UIFont fontWithName:@"PingFangSC-Semibold" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
+    UIFont *regularFont = [UIFont fontWithName:@"PingFangSC-Regular" size:fontSize] ? : [UIFont systemFontOfSize:fontSize];
+
+    UIFont *font = isBold ? boldFont : regularFont;
 
     CGFloat lineHeightMultiple = lineHeight / font.lineHeight;
     

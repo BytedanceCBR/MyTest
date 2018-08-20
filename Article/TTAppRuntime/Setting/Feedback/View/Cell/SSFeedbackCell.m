@@ -80,7 +80,7 @@
         if ([SSCommonLogic isZoneVersion]) {
             self.avatarView.frame = CGRectMake(0, 0, 25, 25);
             _avatarView.avatarStyle = SSAvatarViewStyleRectangle;
-            _avatarView.defaultHeadImgName = @"big_defaulthead_head.png";
+            _avatarView.defaultHeadImgName = @"default-avatar-icons";
             _avatarView.avatarStyle = SSAvatarViewStyleRectangle;
             _avatarView.rectangleAvatarImgRadius = 2;
             _avatarView.avatarImgPadding = 0;

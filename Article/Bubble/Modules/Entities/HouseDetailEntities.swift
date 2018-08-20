@@ -452,6 +452,7 @@ struct FloorPlanInfoData: Mappable {
     var images: [ImageItem] = []
     var recommend: [Recommend] = []
     var status: Int = 0
+    var logPB: [String: Any]?
 
     init?(map: Map) {
 
@@ -467,6 +468,8 @@ struct FloorPlanInfoData: Mappable {
         images <- map["images"]
         recommend <- map["recommend"]
         status <- map["status"]
+        logPB <- map["log_pb"]
+
     }
 
     struct Recommend: Mappable {

@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     
+    var logPB: Any?
+
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "neighborhood_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -192,16 +194,25 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("list", key: "maintab_entrance")
             let theParams = self.traceParams <|>
                 EnvContext.shared.homePageParams <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                 beNull(key: "card_type") <|>
-                toTracerParams("click", key: "enter_type") <|>
-                toTracerParams("neighborhood_detail", key: "enter_from")
+                toTracerParams("click", key: "enter_type")
 
+            self.logPB = data.logPB
 
+            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("neighborhood_detail", key: "page_type")
+            pictureParams = pictureParams <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(data.logPB ?? [:], key: "log_pb")
+            
             let dataParser = DetailDataParser.monoid()
-                <- parseCycleImageNode(data.neighborhoodImage, disposeBag: self.disposeBag)
+                <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data)
                 <- parseHeaderNode("小区概况") {
@@ -211,13 +222,21 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseHeaderNode("周边配套") {
                     data.neighborhoodInfo != nil
                 }
-                <- parseNeighorhoodNearByNode(data, disposeBag: self.disposeBag)
+                <- parseNeighorhoodNearByNode(data, houseId: "\(self.houseId)", disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
                     data.totalSalesCount ?? 0 > 0
                 }
                 <- parseTransactionRecordNode(data.totalSales?.list)
                 <- parseOpenAllNode((data.totalSalesCount ?? 0 > 3)) { [unowned self] in
                     if let id = data.id {
+
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_trade", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+
                         let transactionTrace = theParams <|>
                             toTracerParams("neighborhood_trade_list", key: "category_name") <|>
                             toTracerParams("neighborhood_trade_loadmore", key: "element_from")
@@ -225,7 +244,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         self.openTransactionHistoryPage(
                             neighborhoodId: id,
                             traceParams: transactionTrace,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
                 <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
@@ -236,6 +255,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     if let id = data.id ,
                         let title = data.name {
 
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("same_neighborhood", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             theParams <|>
                             toTracerParams("slide", key: "card_type") <|>
@@ -243,14 +269,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             toTracerParams("same_neighborhood_loadmore", key: "element_from")
 
                         openErshouHouseList(
-//                                title: "\(data.name ?? "")(\(self.houseInSameNeighborhood.value?.data?.total ?? 0)",
                                 title: title,
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .neighborhoodDetail,
                                 tracerParams: params,
-                                bottomBarBinder: self.bindBottomView())
+                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
@@ -259,7 +284,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseRelatedNeighborhoodNode(relateNeighborhoodData.value?.data?.items, navVC: navVC)
                 <- parseOpenAllNode((relateNeighborhoodData.value?.data?.total ?? 0 > 5)) { [unowned self] in
                     if let id = data.neighborhoodInfo?.id {
-
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
                             theParams <|>
                             toTracerParams("slide", key: "card_type") <|>
@@ -271,7 +301,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             disposeBag: self.disposeBag,
                             tracerParams: params,
                             navVC: self.navVC,
-                            bottomBarBinder: self.bindBottomView())
+                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
             return dataParser.parser

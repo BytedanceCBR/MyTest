@@ -98,6 +98,8 @@ class CycleImageCell: BaseUITableViewCell {
 
     private var pageableViewModel: PageableViewModel?
     
+    var traceParams: TracerParams?
+    
     private lazy var indexIndicator: UIView = {
         let re = UIView()
         re.backgroundColor = color(0, 0, 0, 0.3)
@@ -144,6 +146,36 @@ class CycleImageCell: BaseUITableViewCell {
                             }
                         })
                         .disposed(by: pictureDisposeBag!)
+
+                let tracer = self.imageTracerGen(images: self.headerImages, traceParams: self.traceParams)
+                pageableViewModel.currentPage
+                    .subscribe(onNext: { [unowned self] (index) in
+                        if self.headerImages.count != 0 && index >= 0{
+                            tracer(index)
+                        }
+                        })
+                    .disposed(by: pictureDisposeBag!)
+
+            }
+        }
+    }
+    
+    fileprivate func imageTracerGen(images: [ImageModel], traceParams: TracerParams?) -> (Int) -> Void {
+        
+        var array: [Int] = []
+        return { index in
+            
+            if var theTracerParams = traceParams {
+                
+                let offset = index % images.count
+                let imageModel = images[offset]
+                if !array.contains(offset) {
+                    
+                    theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id") <|>
+                        toTracerParams("small", key: "show_type")
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    array.append(offset)
+                }
             }
         }
     }
@@ -152,7 +184,8 @@ class CycleImageCell: BaseUITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.setupPageableViewModel { [weak self] i in
-            return self?.selectHeaderView(index: i) ?? ""
+            let url = self?.selectHeaderView(index: i)
+            return url ?? ""
         }
 
         contentView.addSubview(indexIndicator)
@@ -192,7 +225,7 @@ class CycleImageCell: BaseUITableViewCell {
     }
 
     private func setupPageableViewModel(cycleImageSelector: @escaping ((Int) -> String)) {
-        pageableViewModel = PageableViewModel(cacheViewCount: 5) {
+        pageableViewModel = PageableViewModel(cacheViewCount: 5) { [weak self] in
             let re = BDImageViewProvider(imageSelector: cycleImageSelector)
             return re
         }
@@ -250,6 +283,7 @@ fileprivate func convertToPictureSection(_ models: [ImageModel]) -> [PictureCate
 
 fileprivate func openNewHousePictureBrowser(dataSource: PictureBrowserDataSource,
                                             pictures: [PictureCategorySection],
+                                            traceParams: TracerParams?,
                                             disposeBag: DisposeBag,
                                             navVC: UINavigationController?,
                                             selectedIndex: Int) {
@@ -299,6 +333,14 @@ fileprivate func openNewHousePictureBrowser(dataSource: PictureBrowserDataSource
         let topVC = TopMostViewControllerGetter.topMost(of: navVC)
         topVC?.present(vc, animated: true, completion: nil)
         
+        if var theTraceParams = traceParams {
+            
+            let key = dataSource.pictures[selectedIndex]
+            theTraceParams = theTraceParams <|> toTracerParams(key, key: "picture_id") <|>
+                toTracerParams("large", key: "show_type")
+            recordEvent(key: TraceEventName.picture_gallery, params: theTraceParams)
+        }
+        
     }
     // 指定打开图片组中的哪张
     browser.originPageIndex = selectedIndex
@@ -339,11 +381,12 @@ fileprivate struct ImageModel {
 
 func parseNewHouseCycleImageNode(
     _ newHouseData: NewHouseData,
+    traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
 
-        let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup)(disposeBag)(navVC)
+        let cellRender = curry(fillCycleImageCell)(newHouseData.imageGroup)(traceParams)(disposeBag)(navVC)
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -353,7 +396,10 @@ func parseNewHouseCycleImageNode(
     }
 }
 
-func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData, disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseErshouHouseCycleImageNode(
+    _ ershouHouseData: ErshouHouseData,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let imageItems = ershouHouseData.houseImage?.map({ (image) -> ImageModel in
             if let url = image.url {
@@ -362,7 +408,7 @@ func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData, disposeB
                 return ImageModel(url: "", category: "")
             }
         })
-        let cellRender = curry(fillErshouHouseCycleImageCell)(imageItems ?? [])(disposeBag)
+        let cellRender = curry(fillErshouHouseCycleImageCell)(imageItems ?? [])(traceParams)(disposeBag)
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -372,7 +418,9 @@ func parseErshouHouseCycleImageNode(_ ershouHouseData: ErshouHouseData, disposeB
     }
 }
 
-func parseCycleImageNode(_ images: [ImageItem]?, disposeBag: DisposeBag) -> () -> TableSectionNode? {
+func parseCycleImageNode(_ images: [ImageItem]?,
+                         traceParams: TracerParams,
+                         disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         let imageItems = images?.map { (item) -> ImageModel in
             if let url = item.url {
@@ -381,7 +429,7 @@ func parseCycleImageNode(_ images: [ImageItem]?, disposeBag: DisposeBag) -> () -
                 return ImageModel(url: "", category: "")
             }
          }
-        let cellRender = curry(fillErshouHouseCycleImageCell)(imageItems ?? [])(disposeBag)
+        let cellRender = curry(fillErshouHouseCycleImageCell)(imageItems ?? [])(traceParams)(disposeBag)
         return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -391,13 +439,18 @@ func parseCycleImageNode(_ images: [ImageItem]?, disposeBag: DisposeBag) -> () -
     }
 }
 
-fileprivate func fillErshouHouseCycleImageCell(_ images: [ImageModel], disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
+fileprivate func fillErshouHouseCycleImageCell(
+    _ images: [ImageModel],
+    traceParams: TracerParams,
+    disposeBag: DisposeBag,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? CycleImageCell {
         theCell.headerImages = images
         theCell.count = images.count
+        theCell.traceParams = traceParams
         var dataSource: PictureBrowserDataSource?
         theCell.openPictureBrowser = { (index, view) in
-            let theDataSource = PictureBrowserDataSource(pictures: images.map { $0.url }, target: view)
+            let theDataSource = PictureBrowserDataSource(pictures: images.map { $0.url }, target: view, traceParams: traceParams)
             dataSource = theDataSource
             openPictureBrowser(dataSource: theDataSource, disposeBag: disposeBag, selectedIndex: index)
         }
@@ -405,12 +458,14 @@ fileprivate func fillErshouHouseCycleImageCell(_ images: [ImageModel], disposeBa
 }
 
 fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
+                                    traceParams: TracerParams?,
                                     disposeBag: DisposeBag,
                                     navVC: UINavigationController?,
                                     cell: BaseUITableViewCell) -> Void {
     
     if let theCell = cell as? CycleImageCell {
         
+        theCell.traceParams = traceParams
         let imageItems = imageGroups?.map({ (group) -> [ImageModel] in
             
             if let name = group.name, let images = group.images {
@@ -437,11 +492,12 @@ fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
         }
         
         theCell.openPictureBrowser = { [unowned theCell] (index, view) in
-            let theDataSource = PictureBrowserDataSource(pictures: theCell.headerImages.map { $0.url }, target: view)
+            let theDataSource = PictureBrowserDataSource(pictures: theCell.headerImages.map { $0.url }, target: view, traceParams: traceParams)
             dataSource = theDataSource
             openNewHousePictureBrowser(
                 dataSource: theDataSource,
                 pictures: pictures ?? [],
+                traceParams: traceParams,
                 disposeBag: disposeBag,
                 navVC: navVC,
                 selectedIndex: index)
@@ -456,10 +512,14 @@ fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
     let pictures: [String]
 
     let target: UIView
+    
+    var traceParams: TracerParams?
 
-    init(pictures: [String], target: UIView) {
+
+    init(pictures: [String], target: UIView, traceParams: TracerParams?) {
         self.pictures = pictures
         self.target = target
+        self.traceParams = traceParams
     }
 
     /// 共有多少张图片
@@ -483,6 +543,15 @@ fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
     func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser, localImageForIndex index: Int) -> UIImage? {
         let url = URL(string: pictures[index])
         let key = BDWebImageManager.shared().requestKey(with: url)
+        
+        if var tracerParams = self.traceParams {
+            
+            tracerParams = tracerParams <|> toTracerParams(key ?? "be_null", key: "picture_id") <|>
+                toTracerParams("large", key: "show_type")
+            recordEvent(key: TraceEventName.picture_show, params: tracerParams)
+            
+        }
+        
         return BDImageCache.shared().image(forKey: key)
     }
 
@@ -492,6 +561,13 @@ fileprivate class PictureBrowserDataSource: NSObject, PhotoBrowserDelegate {
 
     func photoBrowser(_ photoBrowser: PhotoBrowser, didLongPressForIndex index: Int, image: UIImage) {
         
+        if var tracerParams = self.traceParams {
+            
+            let key = pictures[index]
+            tracerParams = tracerParams <|> toTracerParams(key, key: "picture_id") <|>
+                toTracerParams("large", key: "show_type")
+            recordEvent(key: TraceEventName.picture_save, params: tracerParams)
+        }
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
         
     }
