@@ -166,16 +166,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, navVC: UINavigationController?) -> () -> TableSectionNode {
     let disposeBag = DisposeBag()
     return {
+        let params = TracerParams.momoid() <|>
+            toTracerParams("neighborhood_detail", key: "element_type") <|>
+            toTracerParams(ershouHouseData.logPB ?? "be_null", key: "log_pb")
         let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)
         let selector = {
             if let lat = ershouHouseData.neighborhoodInfo?.gaodeLat,
                 let lng = ershouHouseData.neighborhoodInfo?.gaodeLng {
-                openMapPage(lat: lat, lng: lng, disposeBag: disposeBag)()
+                let theParams = params <|>
+                    toTracerParams("map_list", key: "click_type") <|>
+                        toTracerParams("old_detail", key: "enter_from")
+
+                let clickParams = theParams <|>
+                    toTracerParams("map", key: "click_type")
+                recordEvent(key: "click_map", params: clickParams)
+                openMapPage(lat: lat, lng: lng, traceParams: theParams, disposeBag: disposeBag)()
             }
         }
-        let params = TracerParams.momoid() <|>
-                toTracerParams("neighborhood_detail", key: "element_type") <|>
-                toTracerParams(ershouHouseData.logPB, key: "log_pb")
+
         return TableSectionNode(
                 items: [render],
                 selectors: [selector],
