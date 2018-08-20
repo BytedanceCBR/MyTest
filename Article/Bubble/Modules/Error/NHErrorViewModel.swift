@@ -93,6 +93,9 @@ class NHErrorViewModel: NSObject {
         if self.invalidNetwork()
         {
             self.resetState()
+        }else
+        {
+            self.errorMask.isHidden = true
         }
     }
     //请求错误，包括404，500，timeout等
