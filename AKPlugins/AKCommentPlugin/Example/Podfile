@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AKCommentPlugin_Example' do
+  pod 'AKCommentPlugin', :path => '../'
+
+  target 'AKCommentPlugin_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

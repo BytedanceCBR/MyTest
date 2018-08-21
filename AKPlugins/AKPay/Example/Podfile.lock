@@ -1,0 +1,21 @@
+PODS:
+  - TTPay (0.4.2):
+    - TTThirdPartySDKs/AlipaySDK
+    - TTThirdPartySDKs/WeChatSDK
+  - TTThirdPartySDKs/AlipaySDK (0.0.4)
+  - TTThirdPartySDKs/WeChatSDK (0.0.4)
+
+DEPENDENCIES:
+  - TTPay (from `../`)
+
+EXTERNAL SOURCES:
+  TTPay:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  TTPay: 86c44617deb5a29d9879e1d87ace9b5beb8ab530
+  TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
+
+PODFILE CHECKSUM: 2b61067e585caf7ab738f14ca8033420bf095d51
+
+COCOAPODS: 1.2.1

@@ -1,0 +1,13 @@
+
+message ugc_comment_author_action_v2_delete_request{ //可以删除 帖子下面的评论，或者评论下面的回复。所以有 comment_id + thread_id 和 comment_id + reply_id两种组合
+		required int64 comment_id = 1; 
+		optional int64 thread_id = 2;
+		optional int64 reply_id = 3;
+		required int64 action_type = 4; //1是删帖子下面的评论 2是删评论下面的回复
+		required int64 group_id = 5; //问答使用的group_id
+}
+
+message ugc_comment_author_action_v2_delete_response{
+		required int32 err_no = 1;
+        optional string err_tips = 2;
+}

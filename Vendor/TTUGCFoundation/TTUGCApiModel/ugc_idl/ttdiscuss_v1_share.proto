@@ -1,0 +1,16 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_share_request{
+    required string forward_to = 1;
+    required string forward_type = 2;
+    required string forward_id = 3;
+    required string forward_content = 4;
+}
+
+message ttdiscuss_v1_share_response{
+    required int32 err_no = 1;
+    optional string err_tips = 2;
+    optional string expired_platform = 3;
+}

@@ -1,0 +1,1104 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 12,
+      "symbol": "TTSplitScreenMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 12,
+      "symbol": "TTSplitScreenMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 13,
+      "symbol": "TTSplitScreenMode.TTSplitScreenFullMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 14,
+      "symbol": "TTSplitScreenMode.TTSplitScreenBigMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 15,
+      "symbol": "TTSplitScreenMode.TTSplitScreenMiddleMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 16,
+      "symbol": "TTSplitScreenMode.TTSplitScreenSmallMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 20,
+      "symbol": "TTDeviceMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 20,
+      "symbol": "TTDeviceMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 22,
+      "symbol": "TTDeviceMode.TTDeviceModePad",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 24,
+      "symbol": "TTDeviceMode.TTDeviceMode736",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 26,
+      "symbol": "TTDeviceMode.TTDeviceMode667",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 28,
+      "symbol": "TTDeviceMode.TTDeviceMode568",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 30,
+      "symbol": "TTDeviceMode.TTDeviceMode480",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 33,
+      "symbol": "TTDeviceHelper",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 172,
+      "symbol": "TTDeviceHelper(TTDiskSpace)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 175,
+      "symbol": "TTDeviceHelper.+getTotalDiskSpace",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceHelper.h",
+      "line": 178,
+      "symbol": "TTDeviceHelper.+getFreeDiskSpace",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTBaseLib/TTDeviceUIUtils.h",
+      "line": 12,
+      "symbol": "TTDeviceUIUtils",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAlbumModel.h",
+      "line": 14,
+      "symbol": "TTAlbumModel",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAlbumModel.h",
+      "line": 18,
+      "symbol": "TTAlbumModel.models",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 9,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 9,
+      "symbol": "TTAssetModelMediaType",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 9,
+      "symbol": "TTAssetModelMediaType.",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 10,
+      "symbol": ".TTAssetModelMediaTypePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 10,
+      "symbol": "TTAssetModelMediaType..TTAssetModelMediaTypePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 11,
+      "symbol": ".TTAssetModelMediaTypeLivePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 11,
+      "symbol": "TTAssetModelMediaType..TTAssetModelMediaTypeLivePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 12,
+      "symbol": ".TTAssetModelMediaTypePhotoGif",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 12,
+      "symbol": "TTAssetModelMediaType..TTAssetModelMediaTypePhotoGif",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 13,
+      "symbol": ".TTAssetModelMediaTypeVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 13,
+      "symbol": "TTAssetModelMediaType..TTAssetModelMediaTypeVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 14,
+      "symbol": ".TTAssetModelMediaTypeAudio",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 14,
+      "symbol": "TTAssetModelMediaType..TTAssetModelMediaTypeAudio",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 17,
+      "symbol": "TTAssetModel",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 20,
+      "symbol": "TTAssetModel.assetID",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 23,
+      "symbol": "TTAssetModel.timeLength",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 26,
+      "symbol": "TTAssetModel.cacheImage",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 28,
+      "symbol": "TTAssetModel.thumbImage",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 32,
+      "symbol": "TTAssetModel.+modelWithAsset:type:timeLength:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 33,
+      "symbol": "TTAssetModel.+modelWithImage:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTAssetModel.h",
+      "line": 36,
+      "symbol": "TTAssetModel.+getNewTimeFromDurationSecond:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerCacheManager.h",
+      "line": 11,
+      "symbol": "TTImagePickerCacheManager",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerCacheManager.h",
+      "line": 28,
+      "symbol": "TTImagePickerCacheManager.-removeAllImages",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerController.h",
+      "line": 51,
+      "symbol": "TTImagePickerControllerDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 39,
+      "symbol": "TTImagePickerSelctedCountDidChange",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 42,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 42,
+      "symbol": "TTImagePickerMode",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 42,
+      "symbol": "TTImagePickerMode.",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 43,
+      "symbol": ".TTImagePickerModePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 43,
+      "symbol": "TTImagePickerMode..TTImagePickerModePhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 44,
+      "symbol": ".TTImagePickerModeVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 44,
+      "symbol": "TTImagePickerMode..TTImagePickerModeVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 45,
+      "symbol": ".TTImagePickerModeAll",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 45,
+      "symbol": "TTImagePickerMode..TTImagePickerModeAll",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 50,
+      "symbol": "TTImagePickerNavDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 68,
+      "symbol": "TTImagePickerNavProtocol.delegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerDefineHead.h",
+      "line": 70,
+      "symbol": "TTImagePickerNavProtocol.enableSelcect",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerIcloudDownloader.h",
+      "line": 12,
+      "symbol": "IcloudCompletion",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerIcloudDownloader.h",
+      "line": 13,
+      "symbol": "IcloudProgressHandler",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerIcloudDownloader.h",
+      "line": 16,
+      "symbol": "TTImagePickerIcloudDownloader",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerLoadingView.h",
+      "line": 11,
+      "symbol": "RetryBlock",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerLoadingView.h",
+      "line": 13,
+      "symbol": "TTImagePickerLoadingView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 18,
+      "symbol": "TTImagePickerResult",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 19,
+      "symbol": "TTImagePickerResult.assetModel",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 20,
+      "symbol": "TTImagePickerResult.image",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 21,
+      "symbol": "TTImagePickerResult.data",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 24,
+      "symbol": "TTImagePickerManager",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 133,
+      "symbol": "TTImagePickerManager.-getVideoWithAsset:completion:progressHandler:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 141,
+      "symbol": "TTImagePickerManager.-getVideoAVURLAsset:completion:progressHandler:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerManager.h",
+      "line": 164,
+      "symbol": "TTImagePickerManager.-assetModelWithAsset:allowPickingVideo:allowPickingImage:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 14,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 14,
+      "symbol": "TTImagePickerTrackKey",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 14,
+      "symbol": "TTImagePickerTrackKey.",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 16,
+      "symbol": ".TTImagePickerTrackKeyDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 16,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 17,
+      "symbol": ".TTImagePickerTrackKeyDidEnterNone",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 17,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyDidEnterNone",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 18,
+      "symbol": ".TTImagePickerTrackKeyShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 18,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 19,
+      "symbol": ".TTImagePickerTrackKeyCancelShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 19,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyCancelShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 20,
+      "symbol": ".TTImagePickerTrackKeyConfirmShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 20,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyConfirmShoot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 21,
+      "symbol": ".TTImagePickerTrackKeyClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 21,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 22,
+      "symbol": ".TTImagePickerTrackKeyAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 22,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 23,
+      "symbol": ".TTImagePickerTrackKeyAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 23,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 24,
+      "symbol": ".TTImagePickerTrackKeyListFinished",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 24,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyListFinished",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 25,
+      "symbol": ".TTImagePickerTrackKeyPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 25,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 26,
+      "symbol": ".TTImagePickerTrackKeyPreviewPhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 26,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreviewPhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 27,
+      "symbol": ".TTImagePickerTrackKeyPreviewFlip",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 27,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreviewFlip",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 28,
+      "symbol": ".TTImagePickerTrackKeyPreviewFinished",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 28,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreviewFinished",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 30,
+      "symbol": ".TTImagePickerTrackKeyPreviewPostEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 30,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreviewPostEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 31,
+      "symbol": ".TTImagePickerTrackKeyPreviewPostDelete",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 31,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPreviewPostDelete",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 34,
+      "symbol": ".TTImagePickerTrackKeyVideoDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 34,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 35,
+      "symbol": ".TTImagePickerTrackKeyVideoClickClose",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 35,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoClickClose",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 36,
+      "symbol": ".TTImagePickerTrackKeyVideoGestureClose",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 36,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoGestureClose",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 37,
+      "symbol": ".TTImagePickerTrackKeyVideoClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 37,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 38,
+      "symbol": ".TTImagePickerTrackKeyVideoAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 38,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 39,
+      "symbol": ".TTImagePickerTrackKeyVideoAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 39,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 40,
+      "symbol": ".TTImagePickerTrackKeyVideoPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 40,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 41,
+      "symbol": ".TTImagePickerTrackKeyVideoPreviewPlay",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 41,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoPreviewPlay",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 42,
+      "symbol": ".TTImagePickerTrackKeyVideoPreviewPause",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 42,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoPreviewPause",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 43,
+      "symbol": ".TTImagePickerTrackKeyVideoPreviewFinish",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 43,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyVideoPreviewFinish",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 47,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 47,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoDidEnter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 48,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoPreviewPhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 48,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoPreviewPhoto",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 49,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoPreviewVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 49,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoPreviewVideo",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 50,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 50,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoPreview",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 52,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 52,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoClickAlbumList",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 53,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 53,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoAlbumChanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 54,
+      "symbol": ".TTImagePickerTrackKeyPhotoVideoAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 54,
+      "symbol": "TTImagePickerTrackKey..TTImagePickerTrackKeyPhotoVideoAlbumUnchanged",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 60,
+      "symbol": "TTImagePickerTrack",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 62,
+      "symbol": "TTImagePickTrackDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 64,
+      "symbol": "TTImagePickTrackDelegate.-ttImagePickOnTrackType:extra:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 67,
+      "symbol": "TTImagePickerTrackManager",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 68,
+      "symbol": "TTImagePickerTrackManager.+manager",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 70,
+      "symbol": "TTImagePickerTrackManager.-addTrackDelegate:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePickerTrackManager.h",
+      "line": 71,
+      "symbol": "TTImagePickerTrackManager.-removeTrackDelegate:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 14,
+      "symbol": "TTImagePreviewViewControllerDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 20,
+      "symbol": "TTImagePreviewViewControllerDelegate.-ttImagePreviewViewControllerSelectChange:index:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 29,
+      "symbol": "TTImagePreviewViewController",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 31,
+      "symbol": "TTImagePreviewViewController.allModels",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 32,
+      "symbol": "TTImagePreviewViewController.selectModels",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 33,
+      "symbol": "TTImagePreviewViewController.currentIndex",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 34,
+      "symbol": "TTImagePreviewViewController.delegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 36,
+      "symbol": "TTImagePreviewViewController.maxLimit",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTImagePicker/TTImagePreviewViewController.h",
+      "line": 38,
+      "symbol": "TTImagePreviewViewController.animatedImageView",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTThemed/UIColor+TTThemeExtension.h",
+      "line": 12,
+      "symbol": "UIColor(SSUIColorAdditions)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTThemed/UIColor+TTThemeExtension.h",
+      "line": 24,
+      "symbol": "UIColor(TTThemeExtensionx)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTThemed/UIColor+TTThemeExtension.h",
+      "line": 45,
+      "symbol": "UIColor(SSTheme)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tyh/Desktop/tt_pods_image_picker/Example/Pods/Headers/Private/TTThemed/UIImage+TTThemeExtension.h",
+      "line": 12,
+      "symbol": "UIImage(TTThemeExtension)",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/tyh/Desktop/tt_pods_image_picker/Example"
+}

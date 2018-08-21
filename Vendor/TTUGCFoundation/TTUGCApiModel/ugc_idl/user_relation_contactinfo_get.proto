@@ -1,0 +1,7 @@
+message user_relation_contactinfo_request {
+}
+
+message user_relation_contactinfo_response {
+    required string message     = 1;
+    required int32 is_collected = 2;
+}

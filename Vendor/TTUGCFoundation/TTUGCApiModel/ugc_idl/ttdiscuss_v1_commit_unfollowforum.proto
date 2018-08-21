@@ -1,0 +1,12 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_commit_unfollowforum_request{
+        required int64 forum_id            = 1;    //话题id
+}
+
+message ttdiscuss_v1_commit_unfollowforum_response{
+        required int32 err_no = 1;
+        optional string err_tips = 2;
+}

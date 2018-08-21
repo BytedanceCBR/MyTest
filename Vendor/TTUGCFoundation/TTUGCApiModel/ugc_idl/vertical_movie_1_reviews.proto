@@ -1,0 +1,25 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message vertical_movie_1_reviews_request{
+        required string concern_id      = 1;    //关心ID
+        required int32 count            = 2;    //请求数
+        required int64 review_cursor    = 3;    //使用上次返回的max_cursor
+        required int64 post_cursor      = 4;    //使用上次返回的max_cursor
+        optional int32 sort_type        = 5;    //排序类型
+}
+
+message vertical_movie_1_reviews_response{
+        required int64 post_min_cursor                  = 1;
+        required int64 post_max_cursor                  = 2;
+        required int64 review_min_cursor                = 3;
+        required int64 review_max_cursor                = 4;
+        required bool  post_has_more                    = 5;
+        required bool  review_has_more                  = 6;
+        repeated GroupInfoStruct reviews                = 7; //返回的长影评
+        repeated UgcDataStruct posts                    = 8; //返回的短影评
+        optional MovieReviewBasicInfoStruct review_info = 9; //评分数据
+        required int32 err_no                           = 10;
+        optional string err_tips                        = 11;
+}

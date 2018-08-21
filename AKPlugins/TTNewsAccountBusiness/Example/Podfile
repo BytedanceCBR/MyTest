@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TTNewsAccountBusiness_Example' do
+  pod 'TTNewsAccountBusiness', :path => '../'
+
+  target 'TTNewsAccountBusiness_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

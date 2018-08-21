@@ -1,0 +1,15 @@
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v2_ugc_video_upload_video_url_request{
+        optional string upload_id = 1;
+}
+
+message ttdiscuss_v2_ugc_video_upload_video_url_response{
+        required int32 err_no = 1;
+        required string upload_id = 2;
+        required string upload_url = 3;
+        required int64 chunk_size = 4;
+        required int64 bytes = 5;
+        optional string err_tips = 6;
+}

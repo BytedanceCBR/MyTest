@@ -1,0 +1,26 @@
+
+import "enum_type.proto";
+import "common.proto";
+message article_v1_tab_comments_request{
+	required string group_id				= 1;
+	required string item_id					= 2;
+	required string forum_id        		= 3;
+	required CommentsGroupType group_type	= 4;
+	required int32 count					= 5;
+	required int32 offset					= 6;
+	required int32 fold					    = 7;
+}
+
+message article_v1_tab_comments_response{
+	optional int32 total_number 			= 1;
+	optional int32 ban_comment				= 2;
+	optional int32 has_more				   	= 3;
+	optional int32 detail_no_comment        = 4;
+	optional int32 go_topic_detail          = 5;
+	optional int32 show_add_forum			= 6;
+	optional CommentTabInfoStruct tab_info 	= 7;
+	required string message					= 8;
+	repeated NewCommentDataStruct data 		= 9;
+	optional int32 fold_comment_count 		= 10;
+	optional int32 ban_face          		= 11;
+}

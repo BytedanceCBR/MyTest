@@ -1,0 +1,19 @@
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v2_commit_comment_request{
+        required int32 forward_talk            = 1;    //是否转发，0表示不转发，1表示转发
+        required int64 thread_id            = 2;    //动态/话题id
+        required string content       = 3;    //回复的内容
+        required int32 forward_weibo 	  = 4;		//是否转发到微博，0表示不转发，1表示转发
+        required int64 forum_id       = 5;    //话题id，0表示纯动态
+		required int64 reply_comment_id = 6;	//回复的评论的id
+		required int64 reply_user_id  = 7;		//回复的评论的用户id
+}
+
+message ttdiscuss_v2_commit_comment_response{
+        required int32 err_no = 1;
+        required int64 thread_id     = 2;   //帖子id
+        required int64 comment_id    = 3;	//评论id
+        required DiscussCommentStruct comment = 4;
+        optional string err_tips = 5;
+}

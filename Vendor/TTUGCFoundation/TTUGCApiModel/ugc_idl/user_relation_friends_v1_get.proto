@@ -1,0 +1,15 @@
+import "common.proto";
+
+message user_relation_friends_v1_request{
+        optional string tab = 1;        //tab栏
+        optional int32 offset = 2;
+        optional int32 count = 3;
+        optional string from_page = 4;
+        optional string profile_user_id = 5;
+}
+
+message user_relation_friends_v1_response{
+        required string message = 1;
+        required AddFriendsDataStruct data = 2;
+        optional string error_tips = 3;
+}

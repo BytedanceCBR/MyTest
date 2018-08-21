@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14105" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="F1L-3s-ear">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Delegate-->
+        <scene sceneID="vGM-xg-X08">
+            <objects>
+                <viewController storyboardIdentifier="Profile" id="F1L-3s-ear" customClass="TTProfileViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="W06-Tk-VtS"/>
+                        <viewControllerLayoutGuide type="bottom" id="0kh-R7-nfJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tYY-le-fUp">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="3gO-UB-8Gl" customClass="SSThemedTableView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="zhc-Lv-Aqi" customClass="AKProfileHeaderView">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="F1L-3s-ear" id="2Bf-L8-64r"/>
+                                        <outlet property="tableView" destination="3gO-UB-8Gl" id="oM1-7y-62a"/>
+                                    </connections>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TopFunctionCell" rowHeight="75" id="ecO-GD-n4g" customClass="TTProfileTopFunctionCell">
+                                        <rect key="frame" x="0.0" y="205.5" width="375" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ecO-GD-n4g" id="aiA-5Q-zgX">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="75"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nyr-cG-FXl" userLabel="Fav Btn" customClass="TTAlphaThemedButton">
+                                                    <rect key="frame" x="26" y="16.5" width="42" height="42"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <inset key="titleEdgeInsets" minX="-25" minY="28" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="9" minY="-20" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="收 藏" image="favoriteicon_profile">
+                                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleColorThemeKey" value="Text1"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="favBtnTouched:" destination="F1L-3s-ear" eventType="touchUpInside" id="VOG-H2-blD"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uHc-In-t8f" userLabel="History Btn" customClass="TTAlphaThemedButton">
+                                                    <rect key="frame" x="119.5" y="16.5" width="42" height="42"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <inset key="titleEdgeInsets" minX="-25" minY="28" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="9" minY="-20" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="历 史" image="history_profile">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <state key="highlighted" title="收藏"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleColorThemeKey" value="Text1"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="historyBtnTouched:" destination="F1L-3s-ear" eventType="touchUpInside" id="O9c-lW-tis"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Xz-Ic-vTz" userLabel="Night Switch Btn" customClass="TTAlphaThemedButton">
+                                                    <rect key="frame" x="213.5" y="16" width="42" height="42"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <inset key="titleEdgeInsets" minX="-25" minY="28" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="9" minY="-20" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="夜 间" image="nighticon_profile">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <state key="highlighted" title="设置"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleColorThemeKey" value="Text1"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="enterTouched:" destination="ecO-GD-n4g" eventType="touchUpInside" id="jeP-D8-sEO"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtTOP" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="separatorThemeInsetLeft">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background4"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtBottom" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="favBtn" destination="Nyr-cG-FXl" id="xDl-FY-viF"/>
+                                            <outlet property="historyBtn" destination="uHc-In-t8f" id="XO0-Qs-Tpg"/>
+                                            <outlet property="nightSwitchBtn" destination="7Xz-Ic-vTz" id="xMr-P7-d2q"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MomentCell" rowHeight="52" id="Atj-Do-wjh" customClass="TTMomentEnterCell">
+                                        <rect key="frame" x="0.0" y="280.5" width="375" height="52"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Atj-Do-wjh" id="YyC-5U-nxt">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hqi-dn-lQE" customClass="TTMomentEnterView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="53"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="好友动态" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uc5-pC-tLN" customClass="SSThemedLabel">
+                                                            <rect key="frame" x="30" y="15.5" width="64" height="19.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="textColorThemeKey" value="Text1"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="right_discover" translatesAutoresizingMaskIntoConstraints="NO" id="KIi-zH-SpM" customClass="SSThemedImageView">
+                                                            <rect key="frame" x="289" y="18" width="14" height="14"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="14" id="viR-UU-cXr"/>
+                                                                <constraint firstAttribute="height" constant="14" id="zAZ-W5-pGu"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="imageName" value="setting_rightarrow"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </imageView>
+                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHi-T2-XcU" customClass="TTImageView">
+                                                            <rect key="frame" x="247" y="10" width="30" height="30"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="30" id="GUt-i0-uZh"/>
+                                                                <constraint firstAttribute="width" constant="30" id="moN-5V-1sm"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="15"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" misplaced="YES" placeholderIntrinsicWidth="23" placeholderIntrinsicHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Rtz-6G-6WL" customClass="TTBadgeNumberView">
+                                                            <rect key="frame" x="99" y="16" width="23" height="18"/>
+                                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background7"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="badgeTextColorThemeKey" value="Text7"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" misplaced="YES" placeholderIntrinsicWidth="10" placeholderIntrinsicHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="NTH-zf-C81" customClass="TTBadgeNumberView">
+                                                            <rect key="frame" x="272" y="5" width="10" height="10"/>
+                                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background7"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="badgeTextColorThemeKey" value="Text7"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                        <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U8z-iA-eph" customClass="SSThemedImageView">
+                                                            <rect key="frame" x="30" y="11" width="28" height="28"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="28" id="q8H-e3-gez"/>
+                                                                <constraint firstAttribute="width" constant="28" id="vxE-lw-LFr"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="Rtz-6G-6WL" firstAttribute="leading" secondItem="uc5-pC-tLN" secondAttribute="trailing" constant="5" id="BzS-8j-4to"/>
+                                                        <constraint firstAttribute="centerY" secondItem="KIi-zH-SpM" secondAttribute="centerY" id="DYh-Wp-SLp"/>
+                                                        <constraint firstItem="U8z-iA-eph" firstAttribute="centerY" secondItem="Hqi-dn-lQE" secondAttribute="centerY" id="G48-VN-Xsp"/>
+                                                        <constraint firstItem="U8z-iA-eph" firstAttribute="leading" secondItem="Hqi-dn-lQE" secondAttribute="leading" constant="30" id="Svj-Ap-5PE"/>
+                                                        <constraint firstAttribute="centerY" secondItem="Rtz-6G-6WL" secondAttribute="centerY" id="Tfo-vp-KLU"/>
+                                                        <constraint firstAttribute="centerY" secondItem="oHi-T2-XcU" secondAttribute="centerY" id="Z6O-XK-jVN"/>
+                                                        <constraint firstItem="KIi-zH-SpM" firstAttribute="leading" secondItem="oHi-T2-XcU" secondAttribute="trailing" constant="12" id="aQG-Uz-YPa"/>
+                                                        <constraint firstItem="uc5-pC-tLN" firstAttribute="leading" secondItem="Hqi-dn-lQE" secondAttribute="leading" constant="30" id="bOc-TL-7bu"/>
+                                                        <constraint firstItem="oHi-T2-XcU" firstAttribute="centerX" secondItem="NTH-zf-C81" secondAttribute="centerX" constant="-15" id="jiV-if-8V0"/>
+                                                        <constraint firstAttribute="centerY" secondItem="uc5-pC-tLN" secondAttribute="centerY" id="m82-wo-Ujg"/>
+                                                        <constraint firstAttribute="trailing" secondItem="KIi-zH-SpM" secondAttribute="trailing" constant="17" id="rMv-xy-Acy"/>
+                                                        <constraint firstItem="oHi-T2-XcU" firstAttribute="centerY" secondItem="NTH-zf-C81" secondAttribute="centerY" constant="15" id="t0D-Xu-deM"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="borderColorThemeKey" value="Line1"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <outlet property="avatarImageView" destination="oHi-T2-XcU" id="YcS-bG-erS"/>
+                                                        <outlet property="cellImageView" destination="U8z-iA-eph" id="7LQ-vf-gdz"/>
+                                                        <outlet property="leftBadgeView" destination="Rtz-6G-6WL" id="dsS-Cm-p0l"/>
+                                                        <outlet property="rightBadgeView" destination="NTH-zf-C81" id="ug2-iR-zhn"/>
+                                                        <outlet property="titleLb" destination="uc5-pC-tLN" id="s0s-eV-7Pk"/>
+                                                        <outlet property="titleLeftMargin" destination="bOc-TL-7bu" id="BpH-Aw-5wK"/>
+                                                    </connections>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Hqi-dn-lQE" firstAttribute="top" secondItem="YyC-5U-nxt" secondAttribute="top" id="5B3-uq-a6k"/>
+                                                <constraint firstItem="Hqi-dn-lQE" firstAttribute="leading" secondItem="YyC-5U-nxt" secondAttribute="leading" id="ROf-wG-BIA"/>
+                                                <constraint firstAttribute="bottom" secondItem="Hqi-dn-lQE" secondAttribute="bottom" id="mRS-pX-RVw"/>
+                                                <constraint firstAttribute="trailing" secondItem="Hqi-dn-lQE" secondAttribute="trailing" id="pPc-sH-CNy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background4"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtTOP" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtBottom" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="needMargin" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="momentView" destination="Hqi-dn-lQE" id="1Gd-lE-cTl"/>
+                                            <outlet property="titleLeftMargin" destination="bOc-TL-7bu" id="y8i-Cd-VzI"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FunctionCell" rowHeight="54" id="cNM-2j-icG" customClass="TTProfileFunctionCell">
+                                        <rect key="frame" x="0.0" y="332.5" width="375" height="54"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cNM-2j-icG" id="FE9-Pf-ukz">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="54"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" placeholderIntrinsicWidth="30" placeholderIntrinsicHeight="27" translatesAutoresizingMaskIntoConstraints="NO" id="VQJ-tr-Ufj" customClass="TTBadgeNumberView">
+                                                    <rect key="frame" x="35" y="14" width="30" height="27"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background7"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="badgeTextColorThemeKey" value="Text7"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KS5-Vf-oVF" customClass="SSThemedLabel">
+                                                    <rect key="frame" x="30" y="27" width="0.0" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="textColorThemeKey" value="Text1"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q6U-Gn-eCu" customClass="SSThemedLabel">
+                                                    <rect key="frame" x="336" y="27" width="0.0" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="textColorThemeKey" value="Text3"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="right_discover" translatesAutoresizingMaskIntoConstraints="NO" id="dce-sr-c8o" customClass="SSThemedImageView">
+                                                    <rect key="frame" x="289" y="21" width="14" height="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="14" id="EaY-ZV-EOP"/>
+                                                        <constraint firstAttribute="height" constant="14" id="krE-x3-yZi"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="imageName" value="setting_rightarrow"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn1-zO-Rs3" customClass="SSThemedImageView">
+                                                    <rect key="frame" x="30" y="13" width="28" height="28"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="28" id="5QP-Ib-BTe"/>
+                                                        <constraint firstAttribute="height" constant="28" id="xQD-m7-OKK"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="VQJ-tr-Ufj" secondAttribute="centerY" id="1is-Ak-ref"/>
+                                                <constraint firstAttribute="centerY" secondItem="KS5-Vf-oVF" secondAttribute="centerY" id="8lc-hj-CPU"/>
+                                                <constraint firstItem="dce-sr-c8o" firstAttribute="leading" secondItem="Q6U-Gn-eCu" secondAttribute="trailing" constant="8" id="OJp-2S-WRz"/>
+                                                <constraint firstItem="gn1-zO-Rs3" firstAttribute="leading" secondItem="FE9-Pf-ukz" secondAttribute="leading" constant="30" id="Sjx-Xo-6l8"/>
+                                                <constraint firstAttribute="centerY" secondItem="dce-sr-c8o" secondAttribute="centerY" id="avb-WH-vMm"/>
+                                                <constraint firstItem="KS5-Vf-oVF" firstAttribute="leading" secondItem="FE9-Pf-ukz" secondAttribute="leading" constant="30" id="btx-8i-7ey"/>
+                                                <constraint firstItem="Q6U-Gn-eCu" firstAttribute="centerY" secondItem="KS5-Vf-oVF" secondAttribute="centerY" id="hKp-ch-mOa"/>
+                                                <constraint firstAttribute="trailing" secondItem="dce-sr-c8o" secondAttribute="trailing" constant="17" id="o8z-9F-8aI"/>
+                                                <constraint firstItem="gn1-zO-Rs3" firstAttribute="centerY" secondItem="FE9-Pf-ukz" secondAttribute="centerY" id="p1y-OF-626"/>
+                                                <constraint firstItem="VQJ-tr-Ufj" firstAttribute="leading" secondItem="KS5-Vf-oVF" secondAttribute="trailing" constant="5" id="vc3-Gc-f1T"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtTOP" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="separatorThemeInsetLeft">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background4"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="separatorColorThemeKey" value="Line7"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="separatorAtBottom" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="needMargin" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="accessoryLb" destination="Q6U-Gn-eCu" id="ubl-K3-c6S"/>
+                                            <outlet property="badgeView" destination="VQJ-tr-Ufj" id="o6A-0f-vCg"/>
+                                            <outlet property="cellImageView" destination="gn1-zO-Rs3" id="A4t-lU-33s"/>
+                                            <outlet property="rightImageView" destination="dce-sr-c8o" id="EJA-sH-pTK"/>
+                                            <outlet property="titleLb" destination="KS5-Vf-oVF" id="Bso-bR-CpS"/>
+                                            <outlet property="titleLeftMargin" destination="btx-8i-7ey" id="pN5-wq-77e"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorThemeKey" value="Background3"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="enableTTStyledSeparator" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="separatorColorThemeKey" value="Line1"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="separatorSecondColorThemeKey" value="Line1"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="separatorInsetLeft">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="dataSource" destination="F1L-3s-ear" id="CDe-4L-hsi"/>
+                                    <outlet property="delegate" destination="F1L-3s-ear" id="y3g-LF-CZH"/>
+                                </connections>
+                            </tableView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hjc-OX-zfC" customClass="TTAlphaThemedButton">
+                                <rect key="frame" x="10" y="30" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="ZeR-Q9-2Pj"/>
+                                    <constraint firstAttribute="height" constant="44" id="gFu-gZ-k88"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="imageName" value="leftbackbutton_video_detais"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="backBtnTouched" destination="F1L-3s-ear" eventType="touchUpInside" id="f5F-oC-Mem"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="3gO-UB-8Gl" firstAttribute="top" secondItem="tYY-le-fUp" secondAttribute="top" id="GK6-Yw-eiQ"/>
+                            <constraint firstItem="3gO-UB-8Gl" firstAttribute="leading" secondItem="tYY-le-fUp" secondAttribute="leading" id="LAe-64-Dcw"/>
+                            <constraint firstAttribute="bottom" secondItem="3gO-UB-8Gl" secondAttribute="bottom" id="Oqg-Ha-FX6"/>
+                            <constraint firstItem="hjc-OX-zfC" firstAttribute="top" secondItem="W06-Tk-VtS" secondAttribute="bottom" constant="10" id="eRl-ic-wSc"/>
+                            <constraint firstItem="hjc-OX-zfC" firstAttribute="leading" secondItem="tYY-le-fUp" secondAttribute="leading" constant="10" id="jq6-j0-oGl"/>
+                            <constraint firstAttribute="trailing" secondItem="3gO-UB-8Gl" secondAttribute="trailing" id="lZ1-pF-Zaw"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="bAd-un-P2g"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="ttHideNavigationBar" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="ttTrackStayEnable" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="padBackButton" destination="hjc-OX-zfC" id="I2N-Oo-BQO"/>
+                        <outlet property="tableHeaderView" destination="zhc-Lv-Aqi" id="Vgu-hI-EYT"/>
+                        <outlet property="tableView" destination="3gO-UB-8Gl" id="BkG-MU-y2l"/>
+                        <outlet property="tableViewBottom" destination="Oqg-Ha-FX6" id="H3L-jG-9y6"/>
+                        <outlet property="tableViewLeft" destination="LAe-64-Dcw" id="JSo-Fz-4pe"/>
+                        <outlet property="tableViewRight" destination="lZ1-pF-Zaw" id="8iy-SK-WXT"/>
+                        <outlet property="tableViewTop" destination="GK6-Yw-eiQ" id="UXg-0h-Jge"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0ge-3s-heX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="oxj-K8-YcY">
+                    <connections>
+                        <action selector="headerContainerTapped:" destination="F1L-3s-ear" id="q6p-KL-dej"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-486" y="124"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="favoriteicon_profile" width="24" height="24"/>
+        <image name="history_profile" width="24" height="24"/>
+        <image name="nighticon_profile" width="24" height="24"/>
+        <image name="right_discover" width="14" height="14"/>
+    </resources>
+</document>

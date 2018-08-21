@@ -1,0 +1,12 @@
+import "common.proto";
+
+message user_relation_user_recommend_v1_supplement_card_request {
+        required string source = 1;
+        required string follow_user_id = 2;
+}
+
+message user_relation_user_recommend_v1_supplement_card_response{
+        optional int32 err_no = 1;
+        optional string message = 2;
+        optional RecommendCardStruct data = 3;
+}

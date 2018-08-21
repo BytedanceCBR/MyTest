@@ -1,0 +1,16 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_forum_follow_request{
+		required int32 offset = 1;			//偏移量
+		required int32 count = 2;			//获取的数量
+		required int64 user_id = 3;			//用户id
+}
+
+message ttdiscuss_v1_forum_follow_response{
+        required int32 err_no = 1;
+		required HasMoreType has_more = 2;					//是否还有更多
+        repeated ForumItemStruct forum_list = 3;	//话题信息
+        optional string err_tips = 4;
+}

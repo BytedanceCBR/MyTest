@@ -1,0 +1,27 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_movie_list_request{
+        required int64 forum_id               = 1;    //话题id
+        required int64 movie_id               = 2;    //电影id
+        required int32 count                  = 3;    //评论数
+        required int64 movie_cursor           = 4;    //使用上次返回的max_cursor
+        required int64 ugc_cursor             = 5;    //使用上次返回的max_cursor
+        optional int32 sort_type              = 6;    //排序类型
+}
+
+message ttdiscuss_v1_movie_list_response{
+        required int64 ugc_min_cursor                               = 1;
+        required int64 ugc_max_cursor                               = 2;
+        required int64 movie_min_cursor                             = 3;
+        required int64 movie_max_cursor                             = 4;
+        required bool  ugc_has_more                                 = 5;
+        required bool  movie_has_more                               = 6;
+        repeated GroupInfoStruct group_list                         = 7; //返回的长影评
+        repeated UgcDataStruct thread_list                          = 8; //返回的短影评
+        optional MovieReviewBasicInfoStruct review_info             = 9; //评分数据
+        required int32 err_no                                       = 10;
+        optional string err_tips                                    = 11;
+}
+

@@ -1,0 +1,247 @@
+
+
+enum GroupItemType{
+	Joke = 3;		//段子
+	Article = 4;	//文章
+}
+
+enum GroupMediaType{
+	NormalArticle = 1;		//普通文章
+	ViedoArticle  = 2;		//含有视频的文章
+}
+
+enum UserFriendType{
+	Stranger = 0;		//陌生人
+	Friend   = 1;		//好友
+}
+
+enum UserFollowingType{
+	Unfollowing 	= 0;	//未关注对方
+	Following 		= 1;	//关注对方
+}
+
+enum UserFollowedType{
+	Unfollowed 	= 0;	//未被关注对方
+	Followed 		= 1;	//被对方关注
+}
+
+enum UserBlockedType{
+	NotBlocked = 0;	//没有被拉黑
+	Blocked 	= 1;	//被拉黑
+}
+
+enum UserBlockingType{
+	NotBlocking = 0;	//没有拉黑对方
+	Blocking 	 = 1;	//拉黑对方
+}
+
+enum UserVerifyType{
+	NotVerify	= 0;	//非认证用户
+	Verify 		= 1;	//认证用户
+}
+
+enum HasUserDigType{
+	NotDig 	= 0;	//用户没有点赞
+	Dig 		= 1;	//用户点赞
+}
+
+enum TabIdType{
+    ArticleTab 	= 1;    //新闻id
+    MomoTab        = 2;    //陌陌id
+}
+
+enum HasMoreType{
+	TrueMore	= 1;	//还有更多数据
+	FalseMore 	= 0;	//没有更多数据了
+}
+
+//
+enum RecommendReasonType{
+	Homepage 	= 1;	//个人主页
+	Likepage 	= 2;	//关注页面
+	Fanspage 	= 3;	//粉丝页面
+	Other 		= 9;	//其它
+}
+
+//
+enum UserGenderType{
+	Unknown 	= 0;	//未知
+	Male 		= 1;	//男
+	Female 		= 2;	//女
+}
+
+enum ThreadDelType{
+	Deleted 		= 0; 	//被删除
+	NotDeleted 	= 1;	//未被删除
+}
+
+enum CellType{
+	Dongtai 	= 1;	//动态
+	FriendCell 		= 2;	//好友
+	HotToday   = 3;	//今日热门
+}
+
+enum TalkType{
+	ArticleDongtai 		= 200;	//含文章的动态
+	OnlyDongtai 	= 201;	//用户发表的非话题动态
+	ForwardDongtai = 202;	//转发的动态
+	ForumDongtai 	= 300;	//话题动态
+}
+
+enum LoginStatusType{
+	NotLogin 	= 0;		//没有登录
+	Login 		= 1;		//完成登录
+}
+
+enum TabParamType{
+	NotNeedCommonParam = 0;      //不需要传通用参数
+	NeedCommonParam = 1;          //需要传通用参数
+}
+
+enum ImageType{
+	DefaultImage	= 0;	//默认类型
+	Jpeg			= 1;	//JPEG类型
+	Gif			= 2;	//GIF类型
+	Bmp			= 3;	//BMP类型
+	Png			= 4;	//PNG类型
+}
+
+enum UserPermType{
+   ThreadSetPass = 5;     // 通过
+   ThreadSetDelete = 6;   // 删除
+   ThreadSetOnly = 7;     // 仅可以可见
+   ThreadSetStar = 9;     // 加精
+   ThreadCancelStar = 10; // 取消加精
+   ThreadSetTop = 11;     // 置顶
+   ThreadCancelTop = 12;  // 取消置顶
+   ThreadSetRate = 13;    // 加热
+   ThreadCancelRate = 14; // 取消加热
+}
+
+enum RoleDisplayType{
+    Red = 1; // 红色
+    Yellow = 2; // 黄色
+    Blue = 3; // 蓝色
+    Black = 4; //黑色
+}
+
+enum FromWhereType{
+    APP_TOUTIAO_IOS = 1;
+    APP_TOUTIAO_ANDROID = 2;
+    APP_TOUTIAO = 3;  // 1 | 2 = 3
+
+    APP_DISCUSS_IOS = 5;
+    APP_DISCUSS_ANDROID = 6;
+    APP_DISCUSS = 7;  // 5 | 6 = 7
+
+    WEB_ADMIN = 11;
+    WEB_AUDIT_ADMIN = 12;
+    WEB_ASSISTANT = 21;
+
+    // special 我要爆料
+    APP_TOUTIAO_BAOLIAO = 1073741827;  // (1 << 30) | 3
+    DONGTAI_WORKER_STATUS_SYNC = 101;
+}
+
+enum InnerForumType{
+	Normal    = 0; //普通的话题
+	Movie     = 1; //电影垂直类话题
+	City      = 2; //城市类话题
+	Column    = 3; //专栏类话题
+	Game      = 4; //游戏类话题
+	Activity  = 5; //活动类话题
+	Car       = 6; //汽车类话题
+}
+
+//关心主页头部Tab类型
+enum ConcernTabIdType{
+    All             = 0; //全部
+    THREAD          = 1; //帖子
+    VIDEO           = 2; //视频(2016.07.01)
+    WEB             = 3; //H5页面,占用(2016.08.03)
+    FILM_REVIEW     = 4; //电影评论(2016.08.03)
+    WENDA           = 5; //问答(2016.08.18)
+}
+
+enum UgcVideoTitleType{
+    Exaggerate = 1; //标题涉嫌夸张
+    Pass = 2; //标题正常
+    EmptyString = 702; //标题为空
+    ErrorCharacterNumber = 703; //标题字符数不符
+    IllegalCharacter = 704; //标题含有非法字符
+}
+
+enum CommentsGroupType {
+	Article 	= 0;
+	Thread 		= 2;
+}
+
+enum HashTagType {
+	None       = 0; //不带井号
+	SingleHash = 1; //单井号
+	DoubleHash = 2; //双井号
+}
+
+enum PostBindCheckType {
+	PostBindCheckTypeNone   = 0; //不需要绑定手机号
+	PostBindCheckTypeNeed   = 1; //需要绑定手机号
+}
+
+
+// service_rpc/idl/toutiao/ugc/ugc_consts.thrift，枚举值和后端保持一致，0表示无效枚举
+// 帖子类型
+enum PostTypeCode {
+    THREAD_TYPE_NORMAL = 200;             // 普通帖子
+    // THREAD_TYPE_NORMAL_NEW = 201;       // 普通帖子 将会全部输出为 200 TODO
+    THREAD_TYPE_FORWARD_ARTICLE = 211;    // 转发文章
+    THREAD_TYPE_FORWARD_THREAD = 212;     // 转发帖子
+    THREAD_TYPE_FORWARD_UGC_VIDEO = 213;  // 转发小视频
+    THREAD_TYPE_FORWARD_ANSWER = 214;     // 转发回答
+}
+
+// 转发类型
+enum RepostTypeCode {
+    THREAD_TYPE_FORWARD_ARTICLE = 211;    // 转发文章
+    THREAD_TYPE_FORWARD_THREAD = 212;     // 转发帖子
+}
+
+// 评论类型
+enum CommentTypeCode {
+    ARTICLE = 211;    // 评论文章
+    THREAD = 212;     // 评论帖子
+}
+
+// UGC数据类型
+enum UGCTypeCode {
+    COMMENT = 1;     // 评论
+    THREAD  = 2;     // 帖子
+    REPLY = 3;       // 回复
+    ITEM = 4;        // 文章
+    GROUP = 5;       // 聚合
+    UGC_VIDEO = 6;   // 小视频
+
+    // 112 老的动态转发ID，废弃; 无需处理改类型
+
+    // 1025~2048 保留给问答业务使用
+    ANSWER = 1025;   // 答案
+    QUESTION= 1026;  // 问题
+}
+
+enum FooterRepostTypeCode {
+    THREAD = 1;    // 帖子
+    COMMNENT = 2;  // 评论
+}
+
+enum UGCStoryCoverType {
+     PICTURE_TEXT = 1;     //图片 + 文字类型（图文）
+     COVER_TEXT = 2;       //封面 + 文字类型（小视频）
+     PURE_TEXT = 3;        //纯文字类型（纯文字）
+     TITLE_TEXT = 4;       //标题 + 文字类型（问答图文）
+}
+
+enum UGCStoryCoverPictureIconType {
+     Video_icon = 1;               //视频角标
+     Photos_Icon = 2;             //图集角标
+     ArtielcePicture_Icon = 3;    //图文角标
+}
+

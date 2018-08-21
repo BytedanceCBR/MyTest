@@ -1,0 +1,13 @@
+//
+//  TTNetworkNotifyTask.h
+//  Article
+//
+//  Created by fengyadong on 17/1/18.
+//
+//
+
+#import "TTStartupTask.h"
+
+@interface TTNetworkNotifyTask : TTStartupTask
+
+@end

@@ -1,0 +1,44 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+
+# use_frameworks!
+
+inhibit_all_warnings!
+
+
+target 'Example' do
+
+  pod 'TTNetworkManager', '2.1.1'
+  
+  #-----头条日志库-----
+  pod 'TTTracker', '1.0.0'
+  
+  #-----账号的业务库----
+  pod 'TTNewsAccountBusiness', '0.1.14'
+  
+  #-----手机通讯录操作库---
+  pod 'TTAddressBookService', '0.1.2'
+  
+#  pod 'TTReachability', '0.1.2'
+
+  #-----头条基础库-----
+  pod 'TTBaseLib', '1.0.22’
+  
+  #-----平台化UIModel库-----
+  pod 'TTPlatformUIModel', '0.2.17’
+  
+  #-----头条主题库-----
+  pod 'TTThemed', '0.1.4'
+  
+  #-----头条图片/视频选择器-----
+  pod 'TTImagePicker', '1.0.3'
+  
+  pod 'YYImage', '1.0.3'
+  pod 'YYWebImage', '1.0.4'
+  
+  pod 'Fabric', '1.6.7'
+  pod 'Crashlytics', '3.7.2'
+  
+  pod 'TTPushAuthorizationManager', :path => '../'
+
+end

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TTImagePickerCacheManager Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Class/TTImagePickerCacheManager" class="dashAnchor"></a>
+    <a title="TTImagePickerCacheManager Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">TTImagePicker Docs</a> (44% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">TTImagePicker Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        TTImagePickerCacheManager Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Categories.html">Categories</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(SSTheme).html">UIColor(SSTheme)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(SSUIColorAdditions).html">UIColor(SSUIColorAdditions)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIColor(TTThemeExtensionx).html">UIColor(TTThemeExtensionx)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Categories/UIImage(TTThemeExtension).html">UIImage(TTThemeExtension)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/TTAlbumModel.html">TTAlbumModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTAssetModel.html">TTAssetModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTDeviceHelper.html">TTDeviceHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTDeviceUIUtils.html">TTDeviceUIUtils</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerCacheManager.html">TTImagePickerCacheManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerController.html">TTImagePickerController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerIcloudDownloader.html">TTImagePickerIcloudDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerLoadingView.html">TTImagePickerLoadingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerManager.html">TTImagePickerManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerResult.html">TTImagePickerResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePickerTrackManager.html">TTImagePickerTrackManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TTImagePreviewViewController.html">TTImagePreviewViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Constants.html">Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Constants.html#/c:TTImagePickerDefineHead.h@TTImagePickerSelctedCountDidChange">TTImagePickerSelctedCountDidChange</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/TTDeviceMode.html">TTDeviceMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TTSplitScreenMode.html">TTSplitScreenMode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickTrackDelegate.html">TTImagePickTrackDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerControllerDelegate.html">TTImagePickerControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerNavDelegate.html">TTImagePickerNavDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePickerNavProtocol.html">TTImagePickerNavProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TTImagePreviewViewControllerDelegate.html">TTImagePreviewViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Type Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerIcloudDownloader.h@T@IcloudCompletion">IcloudCompletion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerIcloudDownloader.h@T@IcloudProgressHandler">IcloudProgressHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions.html#/c:TTImagePickerLoadingView.h@T@RetryBlock">RetryBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTAssetModelMediaType.html">TTAssetModelMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTImagePickerMode.html">TTImagePickerMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Type Definitions/TTImagePickerTrackKey.html">TTImagePickerTrackKey</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/c:@F@TTImagePickerTrack#$@EA@TTImagePickerTrackKey#*$objc(cs)NSDictionary#">TTImagePickerTrack</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>TTImagePickerCacheManager</h1>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(py)memoryCapacity"></a>
+                    <a name="//apple_ref/objc/Property/memoryCapacity" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(py)memoryCapacity">memoryCapacity</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>最大缓存大小</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UInt64</span> <span class="n">memoryCapacity</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">memoryCapacity</span><span class="p">:</span> <span class="kt">UInt64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(py)preferredMemoryUsageAfterPurge"></a>
+                    <a name="//apple_ref/objc/Property/preferredMemoryUsageAfterPurge" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(py)preferredMemoryUsageAfterPurge">preferredMemoryUsageAfterPurge</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>内存溢出时保留大小</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UInt64</span> <span class="n">preferredMemoryUsageAfterPurge</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">preferredMemoryUsageAfterPurge</span><span class="p">:</span> <span class="kt">UInt64</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(py)memoryUsage"></a>
+                    <a name="//apple_ref/objc/Property/memoryUsage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(py)memoryUsage">memoryUsage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>已缓存大小</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UInt64</span> <span class="n">memoryUsage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">memoryUsage</span><span class="p">:</span> <span class="kt">UInt64</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(im)setImage:withAssetID:"></a>
+                    <a name="//apple_ref/objc/Method/-setImage:withAssetID:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(im)setImage:withAssetID:">-setImage:withAssetID:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>添加缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setImage</span><span class="p">:(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">image</span> <span class="nf">withAssetID</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">assetID</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">setImage</span><span class="p">(</span><span class="n">_</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="n">withAssetID</span> <span class="nv">assetID</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(im)getImageWithAssetID:"></a>
+                    <a name="//apple_ref/objc/Method/-getImageWithAssetID:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(im)getImageWithAssetID:">-getImageWithAssetID:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获得缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">getImageWithAssetID</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">assetID</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">getImageWithAssetID</span><span class="p">(</span><span class="n">_</span> <span class="nv">assetID</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(im)removeImageWithAssetID:"></a>
+                    <a name="//apple_ref/objc/Method/-removeImageWithAssetID:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(im)removeImageWithAssetID:">-removeImageWithAssetID:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>移除缓存</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">removeImageWithAssetID</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">assetID</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">removeImage</span><span class="p">(</span><span class="n">withAssetID</span> <span class="nv">assetID</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)TTImagePickerCacheManager(im)removeAllImages"></a>
+                    <a name="//apple_ref/objc/Method/-removeAllImages" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)TTImagePickerCacheManager(im)removeAllImages">-removeAllImages</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">tuyaohui</a>. All rights reserved. (Last updated: 2017-08-14)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

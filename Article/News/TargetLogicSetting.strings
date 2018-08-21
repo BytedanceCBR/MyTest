@@ -1,0 +1,24 @@
+/* 
+  TargetLogicSetting.strings
+  Article
+
+  Created by Zhang Leonardo on 13-1-8.
+
+*/
+"ssFeedbackAppKey" = "interesting-news-ios";
+"sinaAppScheme" = "sinaweibosso.com.ss.iphone.article.news://";
+"ADUmengUFPSlotID"="40729";
+
+// 爱看qq appid
+"qqOAuthAppID" = "101444782";//用于腾讯QQ SSO,分享,由于目前Sever只能支持一个App ID，所以SSO功能仅用于头条普通版本
+"qqOAuthSecret" = "ca45bbbac65c086751e5cd40667bda98";//用于腾讯QQ SSO， 分享
+"supportQQSSO" = 1;//是否支持SSO跳转,目前仅用于普通版本
+"supportQQShare" = 1;//是否支持QQ分享
+
+"zhifubaoAuthAppID" = "2015090200249164";
+
+"hotsoonOAuthAppID" = "bdefc41a8703eae8ce"; // 火山小视频AUTH登录
+"awemeOAuthAppID" = "bd3ffc36cf30e111d0"; // 抖音AUTH登录
+
+"hotsoonPlatformAppID" = "208"; // 火山小视频SSOCallbck平台APPID
+"awemePlatformAppID" = "210"; // 抖音SSOCallbck平台APPID

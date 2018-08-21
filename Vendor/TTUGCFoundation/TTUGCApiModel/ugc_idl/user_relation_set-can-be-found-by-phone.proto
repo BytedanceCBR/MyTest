@@ -1,0 +1,9 @@
+message user_relation_set_can_be_found_by_phone_request {
+		required int32 can_be_found_by_phone = 1;
+}
+
+message user_relation_set_can_be_found_by_phone_response
+{
+        required int32 err_no = 1;
+        optional string err_tips = 2;
+}

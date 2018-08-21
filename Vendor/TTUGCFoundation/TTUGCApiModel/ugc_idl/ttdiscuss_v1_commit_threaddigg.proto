@@ -1,0 +1,12 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_commit_threaddigg_request{
+        required string thread_id            = 1;    //帖子id
+}
+
+message ttdiscuss_v1_commit_threaddigg_response{
+        required int32 err_no = 1;
+        optional string err_tips = 2;
+}

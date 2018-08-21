@@ -1,0 +1,42 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+
+# use_frameworks!
+
+inhibit_all_warnings!
+
+
+platform :ios, '7.0'
+
+target 'TTAccountLoginDemo' do
+    
+    #    pod 'TTAccountSDK', git:'git@code.byted.org:TTIOS/tt_pods_account.git', :commit => '54679e2'
+    pod 'TTAccountSDK', :git => 'git@code.byted.org:TTIOS/tt_pods_account.git', :commit => '9961cc5', :subspecs => [
+    #    pod 'TTAccountSDK', '2.4.3', :subspecs => [
+    'Account',
+    'WeChatAccount',
+    'SinaWeiboAccount',
+    'TencentQQAccount',
+    'TencentWBAccount',
+    'RenRenAccount',
+    'TianYiAccount',
+    'TTAwemeAccount',
+    'TTHotsoonAccount'
+    ]
+    pod 'Bytedancebase', '0.2.3'
+    #    pod 'Bytedancebase', :git => 'git@code.byted.org:TTIOS/bytedancebase.git', :branch => 'master', :subspecs => ['BDOpenSDK']
+    
+    pod 'TTUIWidget', '0.8.48'
+    pod 'TTBaseLib', '1.0.29'
+#    pod 'TTBaseLib', :git => 'git@code.byted.org:TTIOS/tt_pods_base.git', :branch => 'develop'
+
+    #-----头条端监控库-----
+    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :branch => 'toutiao_integerate' , :commit => '14cdeed25096dccfea9133cf499d74edeb259ffa'
+    
+    pod 'TTAccountLogin', :path => '../'
+    pod 'FLEX', '~> 2.0'
+    pod 'Aspects', '1.4.1'
+    pod 'TTTracker', '1.1.1'
+    pod 'TTMonitor', '0.7.9.42'
+end
+

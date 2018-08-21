@@ -1,0 +1,157 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - Godzippa (1.1.0)
+  - KVOController (1.1.0)
+  - libwebp (0.6.0):
+    - libwebp/core (= 0.6.0)
+    - libwebp/dec (= 0.6.0)
+    - libwebp/demux (= 0.6.0)
+    - libwebp/dsp (= 0.6.0)
+    - libwebp/enc (= 0.6.0)
+    - libwebp/mux (= 0.6.0)
+    - libwebp/utils (= 0.6.0)
+    - libwebp/webp (= 0.6.0)
+  - libwebp/core (0.6.0):
+    - libwebp/webp
+  - libwebp/dec (0.6.0):
+    - libwebp/core
+  - libwebp/demux (0.6.0):
+    - libwebp/core
+  - libwebp/dsp (0.6.0):
+    - libwebp/core
+  - libwebp/enc (0.6.0):
+    - libwebp/core
+  - libwebp/mux (0.6.0):
+    - libwebp/core
+  - libwebp/utils (0.6.0):
+    - libwebp/core
+  - libwebp/webp (0.6.0)
+  - Masonry (1.0.1)
+  - SDWebImage (4.2.3):
+    - SDWebImage/Core (= 4.2.3)
+  - SDWebImage/Core (4.2.3)
+  - SDWebImage/WebP (4.2.3):
+    - libwebp
+    - SDWebImage/Core
+  - SSZipArchive (1.6.2)
+  - TTBaseLib (1.0.31):
+    - TTBaseLib/TTBaseTool (= 1.0.31)
+    - TTBaseLib/TTBusinessManager (= 1.0.31)
+    - TTBaseLib/TTCategory (= 1.0.31)
+    - TTBaseLib/TTDeviceHelper (= 1.0.31)
+    - TTBaseLib/TTNetworkHelper (= 1.0.31)
+    - TTBaseLib/TTRobust (= 1.0.31)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.31)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.31)
+  - TTBaseLib/TTBaseTool (1.0.31):
+    - TTServiceKit
+  - TTBaseLib/TTBusinessManager (1.0.31)
+  - TTBaseLib/TTCategory (1.0.31)
+  - TTBaseLib/TTDeviceHelper (1.0.31)
+  - TTBaseLib/TTNetworkHelper (1.0.31):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.31)
+  - TTBaseLib/TTSandBoxHelper (1.0.31)
+  - TTBaseLib/TTUIResponderHelper (1.0.31)
+  - TTDiggButton (0.1.0):
+    - TTBaseLib
+    - TTMultiDiggManager
+    - TTThemed
+    - TTUIWidget
+  - TTInstallService (1.1.2):
+    - TTNetworkManager (>= 2.1.0)
+  - TTMonitor (0.8.1):
+    - FMDB (= 2.6.2)
+    - TTNetworkManager
+    - TTReachability
+  - TTMultiDiggManager (0.0.10):
+    - KVOController
+    - TTMonitor
+    - TTPlatformBaseLib/TTTrackerWrapper
+    - TTTracker
+  - TTNetworkManager (2.2.8.11):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+  - TTPlatformBaseLib/TTTrackerWrapper (0.2.12):
+    - SSZipArchive (~> 1.6.2)
+    - TTTracker
+  - TTReachability (0.1.10)
+  - TTServiceKit (0.4.2)
+  - TTThemed (0.1.8):
+    - TTBaseLib
+  - TTTracker (1.1.1):
+    - FMDB (~> 2.6.2)
+    - TTInstallService (>= 1.1.1)
+    - TTNetworkManager (>= 2.1.0)
+  - TTUIWidget (0.8.9.8):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+
+DEPENDENCIES:
+  - SDWebImage
+  - SDWebImage/Core
+  - SDWebImage/WebP
+  - TTBaseLib
+  - TTDiggButton (from `../`)
+  - TTMultiDiggManager
+  - TTNetworkManager (= 2.2.8.11)
+  - TTThemed
+  - TTUIWidget
+
+EXTERNAL SOURCES:
+  TTDiggButton:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
+  SSZipArchive: 428eb1ac8d37dd133404d30f422b23958c1f9acc
+  TTBaseLib: a01406628c0e2c5f04f8635ac14a38c36bc63f24
+  TTDiggButton: b8cf29e5515aaf03746a5d44cb43a9e0549b9bb8
+  TTInstallService: f0efdaa6924c0f2d165881db887852c2586ffd05
+  TTMonitor: 81d9415841e0997fa1780af08f5bb1bd2bd10b50
+  TTMultiDiggManager: 5b46f7c8f3bf836f711444ac870fd37d07bb1c37
+  TTNetworkManager: 3d293b14eac03a74b912fd564018a52024f6d45c
+  TTPlatformBaseLib: ec86c9575a15567892bf949103ee7bc979ae455b
+  TTReachability: 56ed3fd585815fd34cbb613ad6fe28b762c42e80
+  TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
+  TTThemed: 4b4316dd108957d45ed6c2f3d4c89c969ebf48b2
+  TTTracker: 50dfda709636c94e9e5b9775b3ca9c0ed4852833
+  TTUIWidget: 615193b8225c5b5e1df528c604c9ea6c086e3b48
+
+PODFILE CHECKSUM: bd92e4d78806f3341a5c3312d52b92dace555156
+
+COCOAPODS: 1.2.1

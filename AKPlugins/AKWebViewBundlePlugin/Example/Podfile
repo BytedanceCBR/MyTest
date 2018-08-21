@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AKWebViewBundlePlugin_Example' do
+  pod 'AKWebViewBundlePlugin', :path => '../'
+
+  target 'AKWebViewBundlePlugin_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

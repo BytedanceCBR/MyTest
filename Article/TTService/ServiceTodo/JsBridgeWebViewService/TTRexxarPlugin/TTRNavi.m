@@ -1,0 +1,151 @@
+//
+//  TTRNavi.m
+//  Article
+//
+//  Created by muhuai on 2017/5/21.
+//
+//
+
+#import "TTRNavi.h"
+#import <TTAccountBusiness.h>
+#import <TTBaseLib/TTURLUtils.h>
+#import <TTRoute/TTRoute.h>
+#import <TTBaseLib/TTUIResponderHelper.h>
+
+@implementation TTRNavi
+
+TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
+
+- (void)closeWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+        UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
+    __block __strong __typeof(webview)strongWebview = webview;
+        if(topVC.navigationController) {
+            [topVC.navigationController popViewControllerAnimated:YES];
+            callback(TTRJSBMsgSuccess, @{@"code": @0});
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                strongWebview = nil;
+            });
+        } else {
+            [topVC dismissViewControllerAnimated:YES completion:^{
+                callback(TTRJSBMsgSuccess, @{@"code": @0});
+                strongWebview = nil;
+            }];
+        }
+    callback(TTRJSBMsgSuccess, @{@"code": @1});
+}
+
+- (void)openWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSMutableString * openURL = nil;
+    NSString * type = [param objectForKey:@"type"];
+    if ([type isEqualToString:@"detail"]) {
+        NSString * groupID = [[param objectForKey:@"args"] objectForKey:@"groupid"];
+        if ([groupID longLongValue] != 0) {
+            openURL = [NSMutableString stringWithFormat:@"sslocal://detail?groupid=%@", groupID];
+            NSString * gdLabel = [[param objectForKey:@"args"] objectForKey:@"gd_label"];
+            if (!isEmptyString(gdLabel)) {
+                [openURL appendFormat:@"&gd_label=%@", gdLabel];
+            }
+            id itemID = [[param objectForKey:@"args"] objectForKey:@"item_id"];
+            if (itemID) {
+                [openURL appendFormat:@"&item_id=%@", itemID];
+                id aggrType = [[param objectForKey:@"args"] objectForKey:@"aggr_type"];
+                if (aggrType) {
+                    [openURL appendFormat:@"&aggr_type=%@", aggrType];
+                }
+            }
+        }
+    }
+    else if([type isEqualToString:@"webview"]) {
+        NSString * urlStr = [[param objectForKey:@"args"] objectForKey:@"url"];
+        if (!isEmptyString(urlStr)) {
+            openURL = [NSMutableString stringWithFormat:@"sslocal://webview?url=%@", urlStr];
+            BOOL rotate = [[[param objectForKey:@"args"] objectForKey:@"rotate"] boolValue];
+            if (rotate) {
+                [openURL appendString:@"&supportRotate=1"];
+            }
+        }
+    }
+    else if([type isEqualToString:@"media_account"]) {
+        NSString * entryID = [[param objectForKey:@"args"] objectForKey:@"entry_id"];
+        if ([entryID longLongValue] != 0) {
+            openURL = [NSMutableString stringWithFormat:@"sslocal://media_account?mediaID=%@", entryID];
+        }
+    }
+    else if([type isEqualToString:@"profile"]) {
+        NSString * uid = [[param objectForKey:@"args"] objectForKey:@"uid"];
+        if ([uid longLongValue] != 0) {
+            openURL = [NSMutableString stringWithFormat:@"sslocal://profile?uid=%@", uid];
+        }
+    }
+    else if([type isEqualToString:@"feedback"] && ![TTDeviceHelper isPadDevice]) {
+        openURL = [NSMutableString stringWithString:@"sslocal://feedback"];;
+    }
+    else if([type isEqualToString:@"home/news"]) {
+        // 切到tab
+        NSString *tabKey = [[param objectForKey:@"args"] objectForKey:@"default_tab"];
+        if (isEmptyString(tabKey)) {
+            tabKey = @"tab_stream";
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag":tabKey}];
+    }
+    
+    if (!isEmptyString(openURL)) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
+        callback(TTRJSBMsgSuccess, @{@"code": @1});
+        return;
+    }
+    
+    callback(TTRJSBMsgParamError, @{@"code": @0});
+}
+
+- (void)openHotsoonWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSString *type = [param tt_stringValueForKey:@"type"];
+    NSString *schema = nil;
+    
+    // 打开直播间
+    if ([type isEqualToString:@"room"]) {
+        schema = @"sslocal://huoshan";
+    }
+    // 充值
+    else if ([type isEqualToString:@"charge"]) {
+        if ([TTAccountManager isLogin]) {
+            schema = @"sslocal://huoshancharge";
+        } else {
+            schema = @"sslocal://login";
+        }
+    }
+    
+    if (!isEmptyString(schema)) {
+        NSDictionary *args = [param tt_dictionaryValueForKey:@"args"];
+        NSURL *url = [TTURLUtils URLWithString:schema queryItems:args];
+        if ([[TTRoute sharedRoute] canOpenURL:url]) {
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            callback(TTRJSBMsgSuccess, @{@"code": @1});
+            return;
+        }
+    }
+    
+    callback(TTRJSBMsgFailed, @{@"code": @0});
+}
+
+- (void)openAppWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSString *urlStr = [param tt_stringValueForKey:@"url"];
+    if (isEmptyString(urlStr)) {
+        TTR_CALLBACK_WITH_MSG(TTRJSBMsgParamError, @"url为空")
+        return;
+    }
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if (!url) {
+        TTR_CALLBACK_WITH_MSG(TTRJSBMsgParamError, @"url不合法")
+        return;
+    }
+    BOOL success = [[UIApplication sharedApplication] openURL:url];
+    if (success) {
+        TTR_CALLBACK_SUCCESS
+        return;
+    } else {
+        TTR_CALLBACK_WITH_MSG(TTRJSBMsgFailed, @"请检查scheme是否正确, 或者找客户端开scheme白名单")
+        return;
+    }
+}
+@end

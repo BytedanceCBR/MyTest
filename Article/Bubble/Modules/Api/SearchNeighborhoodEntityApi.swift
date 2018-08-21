@@ -1,0 +1,53 @@
+//
+//  SearchNeighborhoodEntityApi.swift
+//  Bubble
+//
+//  Created by mawenlong on 2018/7/4.
+//  Copyright © 2018年 linlin. All rights reserved.
+//
+
+import Foundation
+import RxSwift
+import ObjectMapper
+
+func requestNeighborhoodSearch(offset: Int = 0, query: String = "", suggestionParams: String = "") -> Observable<SearchNeighborhoodResponse?> {
+    var url = "\(EnvContext.networkConfig.host)/f100/api/search_neighborhood?"
+    if !query.isEmpty {
+        url = "\(url)\(query)"
+    }
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: url,
+            params: ["offset": offset,
+                     "suggestion_params": suggestionParams],
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> SearchNeighborhoodResponse? in
+            if let payload = payload {
+                let response = SearchNeighborhoodResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}
+
+func pageRequestNeighborhoodSearch(
+    query: String = "",
+    suggestionParams: String = "") -> () -> Observable<SearchNeighborhoodResponse?> {
+    var offset: Int = 0
+    return {
+        return requestNeighborhoodSearch(
+            offset: offset,
+            query: query,
+            suggestionParams: suggestionParams)
+            .do(onNext: { (response) in
+                if let count = response?.data?.items?.count {
+                    offset = offset + count
+                }
+            })
+    }
+}

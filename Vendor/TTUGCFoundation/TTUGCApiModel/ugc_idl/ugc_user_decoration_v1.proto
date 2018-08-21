@@ -1,0 +1,11 @@
+import "enum_type.proto";
+import "common.proto";
+
+message ugc_user_decoration_v1_request {
+    required string user_ids = 1;
+}
+
+message ugc_user_decoration_v1_response {
+    required int32 err_no                               = 1;
+    repeated UserDecorationStruct user_decoration_list = 2;
+}
