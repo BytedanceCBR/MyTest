@@ -665,33 +665,40 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item, cell: BaseUITableView
         theCell.majorTitle.text = data.title
         theCell.extendTitle.text = data.description
 
-        let text = NSMutableAttributedString()
-        let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
-            createTagAttrString(
-                    item.content,
-                    textColor: hexStringToUIColor(hex: item.textColor),
-                    backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
-        })
+        if data.houseType == HouseType.neighborhood.rawValue {
+            let text = NSMutableAttributedString(string: data.saleInfo ?? "")
+            theCell.areaLabel.attributedText = text
+        } else {
+            let text = NSMutableAttributedString()
+            let attrTexts = data.tags?.map({ (item) -> NSAttributedString in
+                createTagAttrString(
+                        item.content,
+                        textColor: hexStringToUIColor(hex: item.textColor),
+                        backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+            })
 
-        var height: CGFloat = 0
-        attrTexts?.enumerated().forEach({ (e) in
-            let (offset, tag) = e
-            
-            text.append(tag)
-            
-            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 159, height: CGFloat.greatestFiniteMagnitude), text: text)
-            let lineHeight = tagLayout?.textBoundingSize.height ?? 0
-            if lineHeight > height {
-                if offset != 0 {
-                    text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
-                }
-                if offset == 0 {
-                    height = lineHeight
-                }
-            }
-        })
+            var height: CGFloat = 0
+            attrTexts?.enumerated().forEach({ (e) in
+                let (offset, tag) = e
 
-        theCell.areaLabel.attributedText = text
+                text.append(tag)
+
+                let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 159, height: CGFloat.greatestFiniteMagnitude), text: text)
+                let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+                if lineHeight > height {
+                    if offset != 0 {
+                        text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                    }
+                    if offset == 0 {
+                        height = lineHeight
+                    }
+                }
+            })
+
+            theCell.areaLabel.attributedText = text
+        }
+
+
         theCell.priceLabel.text = data.pricePerSqm
 
         if let img = data.images.first , let url = img.url {
