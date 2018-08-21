@@ -67,6 +67,8 @@ class HorseDetailPageVC: BaseViewController {
 
     var stayPageParams: TracerParams? = TracerParams.momoid()
 
+    private var netStateInfoVM : NHErrorViewModel?
+
     lazy var infoMaskView: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
@@ -89,9 +91,14 @@ class HorseDetailPageVC: BaseViewController {
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
         self.pageViewModelProvider = provider
+
+
         super.init(nibName: nil, bundle: nil)
+
+        self.netStateInfoVM = NHErrorViewModel(errorMask: infoMaskView)
         self.automaticallyAdjustsScrollViewInsets = false
         self.isShowFollowNavBtn = isShowFollowNavBtn
+
         navBar.rightBtn.isHidden = !isShowFollowNavBtn
         barStyle
                 .bind { [unowned self] i in
@@ -100,6 +107,11 @@ class HorseDetailPageVC: BaseViewController {
                 }
                 .disposed(by: disposeBag)
 
+        self.netStateInfoVM?.netState
+                .debug()
+                .bind { [unowned self] hasError in
+                    self.bottomBar.isHidden = hasError
+                }.disposed(by: disposeBag)
     }
 
 
@@ -109,7 +121,15 @@ class HorseDetailPageVC: BaseViewController {
         self.houseId = houseId
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
+
         super.init(nibName: nil, bundle: nil)
+
+        self.netStateInfoVM = NHErrorViewModel(errorMask: infoMaskView)
+
+        self.netStateInfoVM?.netState
+                .bind { [unowned self] hasError in
+                    self.bottomBar.isHidden = hasError
+                }.disposed(by: disposeBag)
         self.automaticallyAdjustsScrollViewInsets = false
     }
 
@@ -117,15 +137,24 @@ class HorseDetailPageVC: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+
+    fileprivate func bindNetStatusViewModel() {
+        self.detailPageViewModel?.onNetworkError = { [weak self] (error) in
+            self?.netStateInfoVM?.onRequestError(error: error)
+        }
+
+        self.detailPageViewModel?.onDataArrived = { [weak self] in
+            self?.netStateInfoVM?.onRequestNormalData()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        pageFrameObv = bottomBar.observe(\.frame, options: [.new, .old]) { (view, value) in
-            print("\(view) - \(value)")
-        }
         view.backgroundColor = UIColor.white
         
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController)
         detailPageViewModel?.traceParams = traceParams
+        self.bindNetStatusViewModel()
         setupNavBar()
 
         if isShowBottomBar {
@@ -161,15 +190,17 @@ class HorseDetailPageVC: BaseViewController {
         }
 
         // 绑定网络状态监控
-        Reachability.rx.isReachable
-                .bind { [unowned self] reachable in
-                    if !reachable {
-                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
-                    }
-                }
-                .disposed(by: disposeBag)
-
-        detailPageViewModel?.requestData(houseId: houseId)
+//        Reachability.rx.isReachable
+//                .bind { [unowned self] reachable in
+//                    if !reachable {
+//                        self.infoMaskView.label.text = "网络不给力，点击屏幕重试"
+//                    }
+//                }
+//                .disposed(by: disposeBag)
+        netStateInfoVM?.onRequestRefreshData()
+        if EnvContext.shared.client.reachability.connection != .none {
+            detailPageViewModel?.requestData(houseId: houseId)
+        }
 
         // 绑定点击重试
         infoMaskView.tapGesture.rx.event

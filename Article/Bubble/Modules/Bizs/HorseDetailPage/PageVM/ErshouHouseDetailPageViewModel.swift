@@ -11,6 +11,12 @@ import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var onDataArrived: (() -> Void)?
+
+    var onNetworkError: ((Error) -> Void)?
+
+    var onEmptyData: (() -> Void)?
+
     var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "old_detail")
@@ -141,18 +147,14 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     func requestData(houseId: Int64) {
         self.houseId = houseId
-        if EnvContext.shared.client.reachability.connection == .none {
-            infoMaskView?.isHidden = false
-        } else {
-            infoMaskView?.isHidden = true
-        }
+
         requestErshouHouseDetail(houseId: houseId)
                 .subscribe(onNext: { [unowned self] (response) in
                     if let response = response {
                         self.titleValue.accept(response.data?.title)
                         self.ershouHouseData.accept(response)
                         self.requestReletedData()
-                        self.infoMaskView?.isHidden = true
+                        self.onDataArrived?()
                     }
 
                     if let status = response?.data?.userStatus {
@@ -160,6 +162,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                 }, onError: { (error) in
                     print(error)
+                    self.onNetworkError?(error)
                 })
                 .disposed(by: disposeBag)
 

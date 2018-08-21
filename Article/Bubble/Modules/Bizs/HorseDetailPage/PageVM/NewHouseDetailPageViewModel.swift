@@ -7,6 +7,12 @@ import Foundation
 import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+
+    var onDataArrived: (() -> Void)?
+
+    var onNetworkError: ((Error) -> Void)?
+
+    var onEmptyData: (() -> Void)?
     
     var logPB: Any?
 
@@ -94,6 +100,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
                         self.newHouseDetail.accept(response)
                         self.infoMaskView?.isHidden = true
+                        self.onDataArrived?()
                     }
 
                     if let contact = response?.data?.contact?["phone"] {
@@ -103,8 +110,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     if let status = response?.data?.userStatus {
                         self.followStatus.accept(.success(status.courtSubStatus == 1))
                     }
-                }, onError: { (error) in
+                }, onError: { [unowned self] (error) in
                     print(error)
+                    self.onNetworkError?(error)
                 })
                 .disposed(by: disposeBag)
 

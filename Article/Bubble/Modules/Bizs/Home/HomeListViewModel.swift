@@ -8,6 +8,12 @@ import RxSwift
 import RxCocoa
 
 class HomeListViewModel: DetailPageViewModel {
+
+    var onDataArrived: (() -> Void)?
+
+    var onNetworkError: ((Error) -> Void)?
+
+    var onEmptyData: (() -> Void)?
     
     var logPB: Any?
 

@@ -34,6 +34,12 @@ protocol DetailPageViewModel: class {
 
     var titleValue: BehaviorRelay<String?> { get }
 
+    var onDataArrived: (() -> Void)? { get set }
+
+    var onNetworkError: ((Error) -> Void)? { get set }
+
+    var onEmptyData: (() -> Void)? { get set }
+
     func requestData(houseId: Int64)
 
     func followThisItem()

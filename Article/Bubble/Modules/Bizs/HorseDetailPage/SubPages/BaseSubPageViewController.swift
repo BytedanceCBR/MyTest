@@ -63,26 +63,6 @@ class BaseSubPageViewController: BaseViewController {
         self.bottomBarBinder = bottomBarBinder
         super.init(nibName: nil, bundle: nil)
         bottomBarBinder(bottomBar)
-//        followStatus
-//                .filter { (result) -> Bool in
-//                    if case .success(_) = result {
-//                        return true
-//                    } else {
-//                        return false
-//                    }
-//                }
-//                .map { (result) -> Bool in
-//                    if case let .success(status) = result {
-//                        return status
-//                    } else {
-//                        return false
-//                    }
-//                }
-//                .bind(to: bottomBar.favouriteBtn.rx.isSelected)
-//                .disposed(by: disposeBag)
-//        bottomBar.favouriteBtn.rx.tap
-//                .bind(onNext: self.followThisItem)
-//                .disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -145,6 +125,12 @@ class BaseSubPageViewController: BaseViewController {
                     }
                 }
                 .disposed(by: disposeBag)
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            self.bottomBar.isHidden = true
+        } else {
+            self.bottomBar.isHidden = false
+        }
 
         bottomBar.favouriteBtn.rx.tap
             .bind(onNext: self.followIt(

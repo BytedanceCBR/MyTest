@@ -8,6 +8,13 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    
+    var onDataArrived: (() -> Void)?
+
+    var onNetworkError: ((Error) -> Void)?
+
+    var onEmptyData: (() -> Void)?
+
 
     var logPB: Any?
 
@@ -166,8 +173,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     self.neighborhoodDetailResponse.accept(response)
                     self.requestReletedData()
                     self.infoMaskView?.isHidden = true
-                }, onError: { (error) in
+                    self.onDataArrived?()
+                }, onError: { [unowned self] (error) in
                     EnvContext.shared.toast.showToast("数据加载失败")
+                    self.onNetworkError?(error)
                 })
                 .disposed(by: disposeBag)
     }

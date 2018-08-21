@@ -12,6 +12,12 @@ import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
     
+    var onDataArrived: (() -> Void)?
+
+    var onNetworkError: ((Error) -> Void)?
+
+    var onEmptyData: (() -> Void)?
+
     var logPB: Any?
 
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")

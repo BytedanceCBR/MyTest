@@ -37,6 +37,8 @@ class NHErrorViewModel: NSObject {
     var toastErrorText : String!    //弹出toast文本
 
     let disposeBag = DisposeBag()
+
+    let netState = BehaviorRelay<Bool>(value: true)
     
     
     /**
@@ -67,6 +69,13 @@ class NHErrorViewModel: NSObject {
         self.requestErrorText = requestErrorText
         self.requestErrorImage = requestErrorImage
         self.toastErrorText = toastErrorText
+
+        super.init()
+        Reachability.rx.isReachable.bind { [unowned self] isReachable in
+                    self.netState.accept(!isReachable)
+                }
+                .disposed(by: disposeBag)
+
     }
     //网络状态判断
     private func invalidNetwork() -> Bool
@@ -77,6 +86,7 @@ class NHErrorViewModel: NSObject {
     private func resetState()
     {
         self.errorMask.isHidden = false
+        self.netState.accept(true)
         self.errorMask.label.text = self.reuestRetryText
         self.errorMask.icon.image = UIImage(named:self.reuestRetryImage)
     }
@@ -96,6 +106,7 @@ class NHErrorViewModel: NSObject {
         }else
         {
             self.errorMask.isHidden = true
+            self.netState.accept(false)
         }
     }
     //请求错误，包括404，500，timeout等
@@ -104,6 +115,7 @@ class NHErrorViewModel: NSObject {
         if self.invalidNetwork()
         {
             self.errorMask.isHidden = false
+            self.netState.accept(true)
             self.errorMask.label.text = self.requestErrorText
             self.errorMask.icon.image = UIImage(named:self.requestErrorImage)
         }
@@ -114,12 +126,15 @@ class NHErrorViewModel: NSObject {
         self.isHaveData = false
         self.errorMask.label.text = self.requestNilDataText
         self.errorMask.icon.image = UIImage(named:self.requestNilDataImage)
+        self.errorMask.isHidden = false
+        self.netState.accept(false)
     }
     //请求刷新，下拉，分类重选等操作
     func onRequestRefreshData(){
         if(self.isHaveData)
         {
             self.errorMask.isHidden = true
+            self.netState.accept(false)
             EnvContext.shared.toast.showToast(self.toastErrorText)
         }else
         {
@@ -130,6 +145,8 @@ class NHErrorViewModel: NSObject {
     func onRequestNormalData() {
         self.isHaveData = true
         self.errorMask.isHidden = true
+        self.netState.accept(false)
+
     }
     
 }
