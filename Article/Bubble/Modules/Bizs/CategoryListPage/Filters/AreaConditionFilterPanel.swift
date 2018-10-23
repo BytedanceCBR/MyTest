@@ -664,6 +664,7 @@ fileprivate class AreaConditionCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(14)
         result.textColor = hexStringToUIColor(hex: "#081f33")
+        result.numberOfLines = 2
         return result
     }()
 
@@ -681,20 +682,21 @@ fileprivate class AreaConditionCell: UITableViewCell {
         backgroundColor = UIColor.clear
 
         contentView.addSubview(checkboxBtn)
+        contentView.addSubview(label)
+
         checkboxBtn.snp.makeConstraints { maker in
             maker.right.equalTo(-23)
-            maker.centerY.equalToSuperview()
+            maker.top.equalTo(label).offset(3)
             maker.width.height.equalTo(14)
         }
 
-        contentView.addSubview(label)
         let bgView = UIView()
         bgView.backgroundColor = UIColor.clear
         selectedBackgroundView = bgView
         label.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.top.equalTo(12)
-            maker.height.equalTo(21)
+            maker.top.equalTo(10)
+            maker.bottom.equalTo(-10)
             maker.right.equalTo(checkboxBtn.snp.left).offset(-5)            
         }
 
