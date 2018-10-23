@@ -186,6 +186,12 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                             let comparedCondition = "\(key)=\(stringValueOfAny(filterCondition))"
                             if conditionStrArray.contains(comparedCondition) {
                                 dataSources[0].selectedIndexPaths = [IndexPath(row: firstOffset, section: 0)]
+                                //切换中间列表的数据源
+                                if dataSources[0].nodes.count > firstOffset {
+                                    dataSources[1].nodes = dataSources[0].nodes[firstOffset].children
+                                } else {
+                                    assertionFailure()
+                                }
                                 dataSources[1].selectedIndexPaths = [IndexPath(row: offset, section: 0)]
                                 self.choiceLastSectionSelection(
                                     conditions: conditions,
@@ -553,7 +559,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         if datasource.selectedIndexPaths.count > 0,
             let itemPath = datasource.selectedIndexPaths.first,
             itemPath.row < datasource.nodes.count {
-            tableView.scrollToRow(at: itemPath, at: .middle, animated: false)
+            tableView.scrollToRow(at: itemPath, at: .top, animated: false)
         } else {
             tableView.scrollRectToVisible(tableView.bounds, animated: false)
         }
