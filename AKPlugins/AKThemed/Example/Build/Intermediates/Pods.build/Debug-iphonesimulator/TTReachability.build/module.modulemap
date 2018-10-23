@@ -1,6 +1,0 @@
-framework module TTReachability {
-  umbrella header "TTReachability-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -1,9 +1,0 @@
-
-message user_relation_user_recommend_v1_dislike_user_request{
-		required int64 dislike_user_id = 1;
-}
-
-message user_relation_user_recommend_v1_dislike_user_response{
-		required int32 err_no = 1;
-        optional string err_tips = 2;
-}

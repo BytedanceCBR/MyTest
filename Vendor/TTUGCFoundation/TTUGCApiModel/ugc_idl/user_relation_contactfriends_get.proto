@@ -1,8 +1,0 @@
-message user_relation_contactfriends_request {
-    required int32 auto_follow = 1;
-}
-
-message user_relation_contactfriends_response {
-    required string message                            = 1;
-    required UserRelationContactFriendsDataStruct data = 2;
-}

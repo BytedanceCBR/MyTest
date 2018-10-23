@@ -1,4 +1,0 @@
-SSImageLoading TTImageLoading
-SSPhotoScroll TTPhotoScroll
-SSShowImageView TTShowImageView
-UIShortTapGestureRecognizer TTUIShortTapGestureRecognizer

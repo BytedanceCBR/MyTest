@@ -1,9 +1,0 @@
-read me:
-目录结构:
-	Common：源代码级别的引用
-	Framework:Libaray引用
-	phone:	ViewController用来存放公共的view controller，
-		View等目录雷同。
-		Funny:每一个target分别在对应的文件夹中，e.g.：Funny文件夹。资源文件夹分别属于每一个target目录。
-	pad:...
-       swithBranch.sh：切换到git的某个分支

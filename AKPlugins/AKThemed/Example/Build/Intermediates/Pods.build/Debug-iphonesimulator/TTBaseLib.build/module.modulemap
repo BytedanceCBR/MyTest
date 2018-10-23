@@ -1,6 +1,0 @@
-framework module TTBaseLib {
-  umbrella header "TTBaseLib-umbrella.h"
-
-  export *
-  module * { export * }
-}

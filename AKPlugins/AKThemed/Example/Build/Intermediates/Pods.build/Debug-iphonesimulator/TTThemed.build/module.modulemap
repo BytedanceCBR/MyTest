@@ -1,6 +1,0 @@
-framework module TTThemed {
-  umbrella header "TTThemed-umbrella.h"
-
-  export *
-  module * { export * }
-}
