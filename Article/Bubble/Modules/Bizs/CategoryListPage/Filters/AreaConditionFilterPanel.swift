@@ -30,7 +30,6 @@ func constructAreaConditionPanelWithContainer(
         let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
         for node in nodes {
             if node.parentLabel == "附近" && status != .authorizedWhenInUse && status != .authorizedAlways {
-                
                 showLocationGuideAlert()
                 return
             }
@@ -236,6 +235,12 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 //        if needShowThirdList {
             self.displayExtendValue()
 //        }
+        let thirdTable = self.tableViews[2]
+        let thirdDs = self.dataSources[2]
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 2)) { [weak self] in
+            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+        }
+
     }
 
     fileprivate func getEncodingString(_ string: String) -> String {
