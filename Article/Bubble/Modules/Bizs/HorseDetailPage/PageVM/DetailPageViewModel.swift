@@ -140,30 +140,30 @@ extension DetailPageViewModel {
             }
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
-            if userInfo.value == nil {
-                userInfo
-                    .skip(1)
-                    .filter { $0 != nil }
-                    .subscribe(onNext: { [weak self] _ in
-                        self?.followThisItem(isNeedRecord: false)
-                        loginDisposeBag = DisposeBag()
-                    })
-                    .disposed(by: loginDisposeBag)
-                
-                var userInfoParams = TTRouteUserInfo()
-                if var followTraceParams = self?.followTraceParams {
-                    
-                    followTraceParams = followTraceParams <|>
-                        toTracerParams("follow", key: "enter_type")
-                    let paramsMap = followTraceParams.paramsGetter([:])
-                    userInfoParams = TTRouteUserInfo(info: paramsMap)
-                    
-                }
-                
-                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfoParams)
-                
-                return
-            }
+//            if userInfo.value == nil {
+//                userInfo
+//                    .skip(1)
+//                    .filter { $0 != nil }
+//                    .subscribe(onNext: { [weak self] _ in
+//                        self?.followThisItem(isNeedRecord: false)
+//                        loginDisposeBag = DisposeBag()
+//                    })
+//                    .disposed(by: loginDisposeBag)
+//                
+//                var userInfoParams = TTRouteUserInfo()
+//                if var followTraceParams = self?.followTraceParams {
+//                    
+//                    followTraceParams = followTraceParams <|>
+//                        toTracerParams("follow", key: "enter_type")
+//                    let paramsMap = followTraceParams.paramsGetter([:])
+//                    userInfoParams = TTRouteUserInfo(info: paramsMap)
+//                    
+//                }
+//                
+//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfoParams)
+//                
+//                return
+//            }
             
             requestFollow(
                 houseType: houseType,
@@ -203,20 +203,20 @@ extension DetailPageViewModel {
             }
             let userInfo = EnvContext.shared.client.accountConfig.userInfo
 
-            if userInfo.value == nil {
-                userInfo
-                    .skip(1)
-                    .filter { $0 != nil }
-                    .subscribe(onNext: { [weak self] _ in
-                        self?.followThisItem(isNeedRecord: false)
-                        loginDisposeBag = DisposeBag()
-                    })
-                    .disposed(by: loginDisposeBag)
-
-                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
-                
-                return
-            }
+//            if userInfo.value == nil {
+//                userInfo
+//                    .skip(1)
+//                    .filter { $0 != nil }
+//                    .subscribe(onNext: { [weak self] _ in
+//                        self?.followThisItem(isNeedRecord: false)
+//                        loginDisposeBag = DisposeBag()
+//                    })
+//                    .disposed(by: loginDisposeBag)
+//
+//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
+//
+//                return
+//            }
             
             var tracerParams = TracerParams.momoid()
             if let followTraceParams = self?.followTraceParams {

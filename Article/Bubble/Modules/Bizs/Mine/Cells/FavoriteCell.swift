@@ -144,8 +144,8 @@ func parseFavoriteNode(
 
     let selectors = [HouseType.secondHandHouse,
                      HouseType.newHouse,
-                     HouseType.neighborhood].map { (houseType) in
-                        return confirmUserAuth(navVC: navVC) { [weak navVC] in
+                     HouseType.neighborhood].map { [weak navVC] (houseType) in
+                        return  { [weak navVC] in
         
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams(originFromNameByHouseType(houseType: houseType), key: "origin_from")
