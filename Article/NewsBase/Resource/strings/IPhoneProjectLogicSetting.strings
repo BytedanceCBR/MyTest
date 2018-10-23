@@ -1,0 +1,76 @@
+/* 
+  IPhoneProjectLogicSetting.strings
+  Article
+
+  Created by Zhang Leonardo on 13-1-8.
+
+*/
+
+// f100
+"house_list"            = "_TtC6Bubble18CategoryListPageVC";
+"flogin"                = "_TtC6Bubble12QuickLoginVC";
+"aboutUs"               = "_TtC6Bubble19AboutViewController";
+"old_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
+"neighborhood_detail"   = "_TtC6Bubble17HorseDetailPageVC";
+"new_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
+"floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
+"message_detail_list"   = "_TtC6Bubble13MessageListVC";
+"message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
+
+// SSAppPageController
+"home"                  = "SSAppPageManagerNotificationHome";
+"profile"               = "ArticleMomentProfileViewController";
+"invite_friend"         = "ArticleInviteFriendViewController";
+"address_list"          = "TTAddressListFriendViewController";
+///...
+"detail"                = "TTDetailContainerViewController";
+"comments"              = "TTDetailContainerViewController";
+
+"new_detail"            = "TTDetailContainerViewController";
+"webview"               = "SSWebViewController";
+"rctview"               = "TTRNViewController";
+"essay_detail"          = "EssayDetailViewController";
+"relation"              = "TTRelationshipViewController";
+"account_manager"       = "SSEditUserProfileViewController";
+"authority_manager"     = "ArticleLoginViewController";
+"more"                  = "SettingViewController";
+"feedback"              = "SSFeedbackViewController";
+"add_friend"            = "TTAddFriendViewController";
+"favorite"              = "TTFavoriteHistoryViewController"; // 参数?stay_id=favorite/read_history/push_history,默认为favorite
+"history"               = "TTFavoriteHistoryViewController";
+"subscribe_category"    = "SSAppPageManagerNotificationSubscribeCategory";
+//"subscribe_category"  ="CategorySubscribeViewController";
+"category_feed"         = "ExploreChannelListViewController";   //SSAppPageManagerNotificationCategoryFeed
+"feed"                  = "ExploreChannelListViewController";
+"add_entry"             = "ExploreAddEntryListViewController";
+"search"                = "ExploreSearchViewController";
+"talk"                  = "ArticleMomentDetailViewController";
+"forum"                 = "FRForumListViewController";
+"thread_detail"         = "FRThreadSmartDetailViewController";
+"thread_smart_detail"   = "FRThreadSmartDetailViewController";
+"gossip"                = "FRForumGossipViewController";
+"send_thread"           = "TTPostThreadViewController";
+"choose_city"           = "ArticleCityViewController";
+"all_category"          = "ArticleCategoryWAPViewController";
+"concern_guide"         = "FRConcernGuideViewController";
+"concern"               = "FRConcernHomepageViewController";
+"blocklist"             = "BlockUsersListViewController";
+
+"login"                 = "open";
+"forum_guide"           = "FRForumAllForumViewController";
+"forum_guide"           = "FRForumAllForumViewController";
+
+"livechat"              = "TTLiveMainViewController";
+
+"moment_list"           = "ArticleTabBarStyleMomentViewController";
+/** 消息通知 */
+//"message"               = "TTMessageNotificationViewController";
+/** 私信列表页 */
+"private_letter_list"   = "TTIMChatCenterViewController";
+/** 私信详情页 */
+"private_letter"        = "TTIMChatViewController";
+"realname_auth"         = "TTRealnameAuthViewController";
+"interest"              = "TTInterestViewController";
+"apply_user_auth_info"  = "TTCertificationRootViewController";
+
+"ad_full_screen_video"  = "TTAdFullScreenVideoViewController";

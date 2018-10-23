@@ -1,0 +1,36 @@
+PODS:
+  - TTBaseLib (1.0.2):
+    - TTBaseLib/TTBaseTool (= 1.0.2)
+    - TTBaseLib/TTCategory (= 1.0.2)
+    - TTBaseLib/TTDeviceHelper (= 1.0.2)
+    - TTBaseLib/TTNetworkHelper (= 1.0.2)
+    - TTBaseLib/TTRobust (= 1.0.2)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.2)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.2)
+  - TTBaseLib/TTBaseTool (1.0.2)
+  - TTBaseLib/TTCategory (1.0.2)
+  - TTBaseLib/TTDeviceHelper (1.0.2)
+  - TTBaseLib/TTNetworkHelper (1.0.2):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.2)
+  - TTBaseLib/TTSandBoxHelper (1.0.2)
+  - TTBaseLib/TTUIResponderHelper (1.0.2)
+  - TTReachability (0.1.1)
+  - TTThemed (0.1.4):
+    - TTBaseLib
+
+DEPENDENCIES:
+  - TTThemed (from `../`)
+
+EXTERNAL SOURCES:
+  TTThemed:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TTBaseLib: aaba50729f4e190a69ab9b77babb5f2dee8d9098
+  TTReachability: 3ee3ec5754d644a1a511e54fa891bcbcd1ebe2b1
+  TTThemed: c7f987e104cd2d072cb0ed5075264858c325b7ef
+
+PODFILE CHECKSUM: 78e7d77c5f74cd3c9a5c71e16de550a23a4a4784
+
+COCOAPODS: 1.2.1

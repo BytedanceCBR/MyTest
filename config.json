@@ -1,0 +1,91 @@
+{
+	"message": "success",
+	"data": {
+		"control": [{
+			"type": 0
+		}, {
+			"type": 1
+		}],
+		"words": [{
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497726554016258,
+				"type": "category"
+			},
+			"name": "\u4f53\u80b2",
+			"word_id": "1635"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497899594222081,
+				"type": "category"
+			},
+			"name": "\u79d1\u6280",
+			"word_id": "1649"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497899027991042,
+				"type": "category"
+			},
+			"name": "\u6e38\u620f",
+			"word_id": "1653"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497897518041601,
+				"type": "category"
+			},
+			"name": "\u6570\u7801",
+			"word_id": "1661"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497900357585410,
+				"type": "category"
+			},
+			"name": "\u8d22\u7ecf",
+			"word_id": "1632"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497898671475202,
+				"type": "category"
+			},
+			"name": "\u6c7d\u8f66",
+			"word_id": "1651"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497895454444033,
+				"type": "category"
+			},
+			"name": "\u519b\u4e8b",
+			"word_id": "1648"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497901590710786,
+				"type": "category"
+			},
+			"name": "\u5386\u53f2",
+			"word_id": "1655"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497895852902913,
+				"type": "category"
+			},
+			"name": "\u52a8\u6f2b",
+			"word_id": "1668"
+		}, {
+			"has_more": 1,
+			"extra": {
+				"concern_id": 6215497897710979586,
+				"type": "category"
+			},
+			"name": "\u6587\u5316",
+			"word_id": "1640"
+		}]
+	}
+}

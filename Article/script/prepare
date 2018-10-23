@@ -1,0 +1,9 @@
+#!/bin/sh
+
+root_dir=`pwd`
+source_dir=$root_dir/prepare-commit-msg
+cd ..
+cd ..
+root_dir=`pwd`
+targe_dir=$root_dir/.git/hooks/
+cp $source_dir $targe_dir

@@ -1,0 +1,8 @@
+github "ReactiveX/RxSwift" ~> 4.0
+github "SnapKit/SnapKit" ~> 4.0.0
+github "Hearst-DD/ObjectMapper" ~> 3.3
+github "danielgindi/Charts" == 3.1.1
+#github "inamiy/RxAutomaton" ~> 0.2.1
+github "ashleymills/Reachability.swift"
+github "onevcat/Kingfisher" == 4.9.0
+github "JiongXing/PhotoBrowser" == 1.4.0

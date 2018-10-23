@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AKShareServicePlugin_Example' do
+  pod 'AKShareServicePlugin', :path => '../'
+
+  target 'AKShareServicePlugin_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

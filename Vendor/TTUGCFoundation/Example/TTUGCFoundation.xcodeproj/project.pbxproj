@@ -1,0 +1,410 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C6197EFE705F21748A0F2934 /* libPods-TTUGCFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEFC6D15200C80789F12AB3D /* libPods-TTUGCFoundation.a */; };
+		E495D94E1F9067A00058E405 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E495D94D1F9067A00058E405 /* AppDelegate.m */; };
+		E495D9511F9067A00058E405 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E495D9501F9067A00058E405 /* ViewController.m */; };
+		E495D9541F9067A00058E405 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E495D9521F9067A00058E405 /* Main.storyboard */; };
+		E495D9561F9067A00058E405 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E495D9551F9067A00058E405 /* Assets.xcassets */; };
+		E495D9591F9067A00058E405 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E495D9571F9067A00058E405 /* LaunchScreen.storyboard */; };
+		E495D95C1F9067A00058E405 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E495D95B1F9067A00058E405 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4F8D926BF0A235F5BCDBDA3C /* Pods-TTUGCFoundation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTUGCFoundation.release.xcconfig"; path = "Pods/Target Support Files/Pods-TTUGCFoundation/Pods-TTUGCFoundation.release.xcconfig"; sourceTree = "<group>"; };
+		9854099127BB3E844D741F61 /* Pods-TTUGCFoundation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTUGCFoundation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TTUGCFoundation/Pods-TTUGCFoundation.debug.xcconfig"; sourceTree = "<group>"; };
+		AEFC6D15200C80789F12AB3D /* libPods-TTUGCFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TTUGCFoundation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E495D9491F9067A00058E405 /* TTUGCFoundation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TTUGCFoundation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E495D94C1F9067A00058E405 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E495D94D1F9067A00058E405 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E495D94F1F9067A00058E405 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		E495D9501F9067A00058E405 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		E495D9531F9067A00058E405 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E495D9551F9067A00058E405 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E495D9581F9067A00058E405 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E495D95A1F9067A00058E405 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E495D95B1F9067A00058E405 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E495D9461F9067A00058E405 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6197EFE705F21748A0F2934 /* libPods-TTUGCFoundation.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6BFCABF82B98CB42E60EF3E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AEFC6D15200C80789F12AB3D /* libPods-TTUGCFoundation.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BFBD839026B539A99FF2B29D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9854099127BB3E844D741F61 /* Pods-TTUGCFoundation.debug.xcconfig */,
+				4F8D926BF0A235F5BCDBDA3C /* Pods-TTUGCFoundation.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		E495D9401F9067A00058E405 = {
+			isa = PBXGroup;
+			children = (
+				E495D94B1F9067A00058E405 /* TTUGCFoundation */,
+				E495D94A1F9067A00058E405 /* Products */,
+				BFBD839026B539A99FF2B29D /* Pods */,
+				6BFCABF82B98CB42E60EF3E0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E495D94A1F9067A00058E405 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E495D9491F9067A00058E405 /* TTUGCFoundation.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E495D94B1F9067A00058E405 /* TTUGCFoundation */ = {
+			isa = PBXGroup;
+			children = (
+				E495D94C1F9067A00058E405 /* AppDelegate.h */,
+				E495D94D1F9067A00058E405 /* AppDelegate.m */,
+				E495D94F1F9067A00058E405 /* ViewController.h */,
+				E495D9501F9067A00058E405 /* ViewController.m */,
+				E495D9521F9067A00058E405 /* Main.storyboard */,
+				E495D9551F9067A00058E405 /* Assets.xcassets */,
+				E495D9571F9067A00058E405 /* LaunchScreen.storyboard */,
+				E495D95A1F9067A00058E405 /* Info.plist */,
+				E495D95B1F9067A00058E405 /* main.m */,
+			);
+			path = TTUGCFoundation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E495D9481F9067A00058E405 /* TTUGCFoundation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E495D95F1F9067A00058E405 /* Build configuration list for PBXNativeTarget "TTUGCFoundation" */;
+			buildPhases = (
+				28A0774A64057323E560BB4C /* [CP] Check Pods Manifest.lock */,
+				E495D9451F9067A00058E405 /* Sources */,
+				E495D9461F9067A00058E405 /* Frameworks */,
+				E495D9471F9067A00058E405 /* Resources */,
+				C045F239B43428CD9F79AF56 /* [CP] Embed Pods Frameworks */,
+				C4D1B4EEF5C74D976C551F5F /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TTUGCFoundation;
+			productName = TTUGCFoundation;
+			productReference = E495D9491F9067A00058E405 /* TTUGCFoundation.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E495D9411F9067A00058E405 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = toutiao;
+				TargetAttributes = {
+					E495D9481F9067A00058E405 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E495D9441F9067A00058E405 /* Build configuration list for PBXProject "TTUGCFoundation" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E495D9401F9067A00058E405;
+			productRefGroup = E495D94A1F9067A00058E405 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E495D9481F9067A00058E405 /* TTUGCFoundation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E495D9471F9067A00058E405 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E495D9591F9067A00058E405 /* LaunchScreen.storyboard in Resources */,
+				E495D9561F9067A00058E405 /* Assets.xcassets in Resources */,
+				E495D9541F9067A00058E405 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28A0774A64057323E560BB4C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TTUGCFoundation-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C045F239B43428CD9F79AF56 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TTUGCFoundation/Pods-TTUGCFoundation-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C4D1B4EEF5C74D976C551F5F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-TTUGCFoundation/Pods-TTUGCFoundation-resources.sh",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TTUGCFoundation/Pods-TTUGCFoundation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E495D9451F9067A00058E405 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E495D9511F9067A00058E405 /* ViewController.m in Sources */,
+				E495D95C1F9067A00058E405 /* main.m in Sources */,
+				E495D94E1F9067A00058E405 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E495D9521F9067A00058E405 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E495D9531F9067A00058E405 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E495D9571F9067A00058E405 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E495D9581F9067A00058E405 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E495D95D1F9067A00058E405 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		E495D95E1F9067A00058E405 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E495D9601F9067A00058E405 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9854099127BB3E844D741F61 /* Pods-TTUGCFoundation.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TTUGCFoundation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.toutiao.TTUGCFoundation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E495D9611F9067A00058E405 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F8D926BF0A235F5BCDBDA3C /* Pods-TTUGCFoundation.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TTUGCFoundation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.toutiao.TTUGCFoundation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E495D9441F9067A00058E405 /* Build configuration list for PBXProject "TTUGCFoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E495D95D1F9067A00058E405 /* Debug */,
+				E495D95E1F9067A00058E405 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E495D95F1F9067A00058E405 /* Build configuration list for PBXNativeTarget "TTUGCFoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E495D9601F9067A00058E405 /* Debug */,
+				E495D9611F9067A00058E405 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E495D9411F9067A00058E405 /* Project object */;
+}

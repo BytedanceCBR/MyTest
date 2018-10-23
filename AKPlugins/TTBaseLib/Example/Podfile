@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TTBaseLib_Example' do
+  pod 'TTBaseLib', :path => '../'
+
+  target 'TTBaseLib_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

@@ -1,0 +1,23 @@
+#--------------------------pod私有源--------------------------------------
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+platform :ios, '7.0'
+inhibit_all_warnings!
+
+def appPods
+    pod 'TTPlatformUIModel',:path => '../'
+    
+    pod 'TTNetworkManager', '2.1.1'
+    
+    #-----头条日志库-----
+    pod 'TTTracker', '0.9.2.2'
+    #-----账号的业务库----
+    pod 'TTNewsAccountBusiness', '0.1.12'
+end
+
+target 'TTPlatformUIModel' do
+    appPods
+end
+

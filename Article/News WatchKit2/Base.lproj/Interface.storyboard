@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14105" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="MXK-Lg-MQS">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14031"/>
+    </dependencies>
+    <scenes>
+        <!--爱看-->
+        <scene sceneID="Py7-bZ-JQR">
+            <objects>
+                <controller title="爱看" id="MXK-Lg-MQS" customClass="InitInterfaceController"/>
+            </objects>
+            <point key="canvasLocation" x="-195" y="343"/>
+        </scene>
+        <!--爱看-->
+        <scene sceneID="Xqj-27-1FI">
+            <objects>
+                <controller identifier="RootInterfaceController" title="爱看" id="ceT-zf-QSP" customClass="RootInterfaceController">
+                    <items>
+                        <label alignment="center" verticalAlignment="center" text="努力加载中..." id="cy5-jq-MUo"/>
+                        <button width="106" height="33" alignment="center" verticalAlignment="center" title="重试" id="jrl-aa-sk2">
+                            <connections>
+                                <action selector="retry:" destination="ceT-zf-QSP" id="FKm-C5-RlB"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="retryBtn" destination="jrl-aa-sk2" id="DJC-qS-yuw"/>
+                        <outlet property="statusLb" destination="cy5-jq-MUo" id="lgn-d6-wx6"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="68" y="343"/>
+        </scene>
+        <!--爱看-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller identifier="InterfaceController" title="爱看" id="AgC-eL-Hgc" customClass="InterfaceController">
+                    <items>
+                        <group width="1" height="0.59999999999999998" alignment="left" spacing="0.0" id="Z4D-8R-xrt">
+                            <items>
+                                <group width="1" alignment="left" verticalAlignment="bottom" backgroundImage="banner" id="N81-GV-I3Q">
+                                    <items>
+                                        <label width="1" height="40" alignment="left" verticalAlignment="bottom" numberOfLines="2" id="Hxh-CL-QAf">
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                        </label>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="iis-Lv-ePj">
+                            <items>
+                                <label alignment="left" id="gkR-Lj-5hi">
+                                    <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
+                                <label alignment="left" text=" 时间:" id="NKL-r9-gLj">
+                                    <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                </label>
+                                <timer alignment="left" format="abbreviated" previewedSeconds="0" id="nRG-37-Bt6">
+                                    <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                    <calendarUnit key="units" minute="YES" second="YES"/>
+                                </timer>
+                            </items>
+                        </group>
+                        <label width="1" alignment="left" numberOfLines="0" id="4XC-zg-nft">
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                        </label>
+                        <button width="1" height="40" alignment="center" title="在iPhone中查看更多内容" id="n2n-Ol-hoU">
+                            <fontDescription key="font" type="system" pointSize="13"/>
+                            <connections>
+                                <action selector="openParentApp:" destination="AgC-eL-Hgc" id="lBn-jk-Rr5"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="articleImage" destination="Z4D-8R-xrt" id="XaQ-8l-LXL"/>
+                        <outlet property="commentLb" destination="gkR-Lj-5hi" id="c10-Zm-ORn"/>
+                        <outlet property="contentLb" destination="4XC-zg-nft" id="0eM-aP-9H3"/>
+                        <outlet property="textBgImage" destination="N81-GV-I3Q" id="qnv-sF-zLX"/>
+                        <outlet property="timerLb" destination="nRG-37-Bt6" id="Lnd-Ef-6Dn"/>
+                        <outlet property="titleLb" destination="Hxh-CL-QAf" id="CHR-L5-aYF"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="254" y="343.25"/>
+        </scene>
+        <!--AlertInterfaceController-->
+        <scene sceneID="6SY-5Q-YvL">
+            <objects>
+                <controller identifier="AlertInterfaceController" id="Rox-Hx-c34" customClass="AlertInterfaceController">
+                    <items>
+                        <group width="50" height="50" alignment="center" backgroundImage="alertIcon" id="ABt-S8-n9Z"/>
+                        <label width="1" height="42.5" alignment="left" text="已在iPhone中打开,请启动「爱看」查看" textAlignment="center" numberOfLines="3" id="zbR-OO-QEp">
+                            <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                        </label>
+                        <button width="1" height="40" alignment="center" title="确定" id="Nnu-6c-e4S">
+                            <fontDescription key="font" type="system" pointSize="13"/>
+                            <connections>
+                                <action selector="closeAlert:" destination="Rox-Hx-c34" id="MsN-SL-GIg"/>
+                            </connections>
+                        </button>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="462" y="295"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label alignment="left" text="Alert Label" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="220" y="687"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="687"/>
+        </scene>
+        <!--爱看-->
+        <scene sceneID="MQ5-NL-z1r">
+            <objects>
+                <controller identifier="LoadMoreInterfaceController" title="爱看" id="2up-YC-Mdp" customClass="LoadMoreInterfaceController">
+                    <items>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="rrK-Gq-O3t">
+                            <items>
+                                <button width="39" height="39" alignment="center" backgroundImage="ic_refresh" id="Ef5-EM-QAT">
+                                    <connections>
+                                        <action selector="loadMore" destination="2up-YC-Mdp" id="HUW-Ft-NN0"/>
+                                    </connections>
+                                </button>
+                                <button width="1" alignment="center" title="换一换" id="sSd-tK-bo2">
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                                    <connections>
+                                        <action selector="loadMore" destination="2up-YC-Mdp" id="gGa-YB-oTd"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="715" y="295"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+</document>

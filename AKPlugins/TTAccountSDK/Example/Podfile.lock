@@ -1,0 +1,16 @@
+PODS:
+  - TTAccountSDK (0.1.0)
+
+DEPENDENCIES:
+  - TTAccountSDK (from `../`)
+
+EXTERNAL SOURCES:
+  TTAccountSDK:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TTAccountSDK: 663d959e9d8e7d563d20429f69c2020dadc21cab
+
+PODFILE CHECKSUM: 91a7ebc927b3bc0f19728be229484a7d154b8400
+
+COCOAPODS: 1.4.0

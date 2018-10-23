@@ -1,0 +1,11 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_forum_introapplypage_request{
+}
+
+message ttdiscuss_v1_forum_introapplypage_response{
+        required int32 err_no = 1;
+        required int64 user_id = 2;
+}

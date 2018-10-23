@@ -1,0 +1,24 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v2_commit_publish_request{
+        required string content   = 1;    //回复的内容
+        required int64 forum_id   = 2;    //话题id
+        optional string image_uris = 3;     //图片uri
+        optional float longitude = 4;     //4 5 6 7表示地理经纬度 城市 详细位置
+        optional float latitude = 5;
+        optional string city = 6;
+        optional string detail_pos = 7;
+        optional int32 is_forward = 8;
+        optional string phone = 9;
+        optional string title = 10;
+        optional FromWhereType from_where = 11; //这个表示从哪里来的请求
+        optional float rate = 12;              //评分
+}
+
+message ttdiscuss_v2_commit_publish_response{
+        required int32 err_no = 1;
+        required UgcDataStruct thread = 2;   //帖子数据
+        optional string err_tips = 3;
+}

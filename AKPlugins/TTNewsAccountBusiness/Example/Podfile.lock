@@ -1,0 +1,16 @@
+PODS:
+  - TTNewsAccountBusiness (0.1.0)
+
+DEPENDENCIES:
+  - TTNewsAccountBusiness (from `../`)
+
+EXTERNAL SOURCES:
+  TTNewsAccountBusiness:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TTNewsAccountBusiness: 2aec99af146b2e8495b9727270a14b2eb9cc18b4
+
+PODFILE CHECKSUM: c41a3781cd29d7ed8c8e43cccdb7f5c283dc681f
+
+COCOAPODS: 1.4.0

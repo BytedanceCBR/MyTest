@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="Qvz-Bd-N8N">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Article Tab Bar Controller-->
+        <scene sceneID="3E2-ks-oWB">
+            <objects>
+                <tabBarController id="Qvz-Bd-N8N" customClass="TTArticleTabBarController" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Idk-hr-xsQ"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" backgroundImage="clear" id="wOb-v6-qd2" customClass="TTTabbar">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    </tabBar>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="tabbarHeight">
+                            <integer key="value" value="49"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="ttTabBarStyle" value="White"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="ttHideNavigationBar" value="NO"/>
+                    </userDefinedRuntimeAttributes>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dgx-6c-GLj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-252.58666666666667" y="19.586206896551726"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="clear" width="1" height="1"/>
+    </resources>
+</document>

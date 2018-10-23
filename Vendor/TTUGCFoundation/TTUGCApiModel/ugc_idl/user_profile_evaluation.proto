@@ -1,0 +1,19 @@
+message user_profile_evaluation_request{
+		required bool log_action = 1;   //是否添加计数
+		required bool disable = 2;   //是否不再显示
+
+}
+
+message user_profile_evaluation_response{
+   	 	required int32 err_no = 1;
+        optional string err_tips = 2;
+        required int32 score = 3;    //分数
+        required int32 beat_pct = 4; //击败比例
+        required bool show = 5;     //是否展示补全
+        optional string name = 6;
+        optional string avatar_url = 7;
+        required bool is_name_valid = 8;     //用户名是否完备
+        required bool is_avatar_valid = 9;     //头像是否完备
+        optional string apply_auth_url = 10;   //认证schema
+
+}

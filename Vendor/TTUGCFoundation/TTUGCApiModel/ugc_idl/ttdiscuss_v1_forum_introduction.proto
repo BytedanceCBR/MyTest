@@ -1,0 +1,21 @@
+
+
+import "enum_type.proto";
+import "common.proto";
+message ttdiscuss_v1_forum_introduction_request{
+        required int64 forum_id = 1;
+}
+
+message ttdiscuss_v1_forum_introduction_response{
+        required int32 err_no = 1;
+        repeated RoleMemberStruct role_members = 2;
+        required string qr_code_uri = 3;
+        required ForumStruct forum = 4;
+        repeated string notice_list = 5;
+        optional string err_tips = 6;
+        required int64 user_id = 7;
+        required string req_params = 8;
+        optional UserApplyRoleInfoStruct user_apply_info = 9;
+        optional ForumRoleInfoStruct forum_role_info = 10;
+        repeated ForumStatDataStruct forum_stat_data_list = 11;
+}

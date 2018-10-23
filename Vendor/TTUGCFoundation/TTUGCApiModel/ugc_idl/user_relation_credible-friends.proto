@@ -1,0 +1,16 @@
+
+import "enum_type.proto";
+import "common.proto";
+
+message user_relation_credible_friends_request {
+    required string user_ids   = 1; //关注用户ids
+    required string redpack_id = 2; //红包id
+    required string token      = 3; //token
+    optional int32  rel_type   = 4; //推人类型，1表示真实关系，2表示明星；默认为1
+}
+
+message user_relation_credible_friends_response {
+    required string message = 1; //错误码
+    optional RecommendRedpacketResultStruct data = 2; //红包数据
+    optional string error_tips = 3; //错误提示
+}
