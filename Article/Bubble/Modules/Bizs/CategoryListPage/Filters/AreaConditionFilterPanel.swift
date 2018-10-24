@@ -163,6 +163,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         let secondTable = self.tableViews[1]
         let secondDs = self.dataSources[1]
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
+        let thirdTable = self.tableViews[2]
+        let thirdDs = self.dataSources[2]
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 1)) { [weak self] in
+            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+        }
     }
 
     fileprivate func choiceFirstAndSecondSelection(_ conditions: [String : Any]) {
@@ -235,11 +240,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 //        if needShowThirdList {
             self.displayExtendValue()
 //        }
-        let thirdTable = self.tableViews[2]
-        let thirdDs = self.dataSources[2]
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 2)) { [weak self] in
-            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        }
+//        let thirdTable = self.tableViews[2]
+//        let thirdDs = self.dataSources[2]
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 2)) { [weak self] in
+//            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        }
 
     }
 
@@ -280,13 +285,14 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             }
         }
         //如果第三列没有任何选择项，则恢复成两列显示
-        if let dataSource = dataSources.last {
-            if dataSource.selectedIndexPaths.count == 0 {
+//        if let dataSource = dataSources.last {
+            if dataSources[1].selectedIndexPaths.count == 0 {
                 self.displayNormalCondition()
             } else {
                 self.displayExtendValue()
             }
-        }
+//        }
+        scrollVisibleCellInScreen()
     }
 
     func initPanelWithNativeDS() {
@@ -561,8 +567,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     }
 
     fileprivate func scrollToFirstVisibleItem(tableView: UITableView, datasource: ConditionTableViewDataSource) {
+        let sortedIndexPath = datasource.selectedIndexPaths.sorted()
         if datasource.selectedIndexPaths.count > 0,
-            let itemPath = datasource.selectedIndexPaths.first,
+            let itemPath = sortedIndexPath.first,
             itemPath.row < datasource.nodes.count {
             tableView.scrollToRow(at: itemPath, at: .top, animated: false)
         } else {
