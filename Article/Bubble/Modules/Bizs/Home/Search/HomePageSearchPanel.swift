@@ -16,7 +16,7 @@ class HomePageSearchPanel: UIView {
 
     lazy var countryLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
-        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.font = CommonUIStyle.Font.pingFangSemibold(14)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.numberOfLines = 1
         label.text = ""
