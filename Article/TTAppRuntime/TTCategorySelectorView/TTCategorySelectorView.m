@@ -63,6 +63,7 @@
 @property (nonatomic, weak)   NSObject<CategorySelectorButtonDelegate> *delegate;
 @property (nonatomic, strong) TTGlowLabel *titleLabel;
 @property (nonatomic, strong) TTGlowLabel *maskTitleLabel;
+@property (nonatomic, strong) SSThemedView *bottomSelectView;
 @property (nonatomic, strong) TTBadgeNumberView *badgeView;
 @property (nonatomic, assign) TTCategorySelectorViewStyle style;
 @property (nonatomic, assign) TTCategorySelectorViewTabType tabType;
@@ -105,6 +106,10 @@
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
         self.maskTitleLabel.backgroundColor = [UIColor clearColor];
         
+        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 2, 32, 2)];
+        self.bottomSelectView.backgroundColor = [UIColor clearColor];
+        self.bottomSelectView.alpha = 0;
+        
         _maskTitleLabel.alpha = 0;
         
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -115,7 +120,8 @@
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText13;
-            _maskTitleLabel.textColorThemeKey = kColorText1;
+            _maskTitleLabel.textColorThemeKey = kFHColorClearBlue;
+            self.bottomSelectView.backgroundColorThemeKey = kFHColorClearBlue;
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;
@@ -149,6 +155,7 @@
         _maskTitleLabel.font = [UIFont boldSystemFontOfSize:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
         [self addSubview:_maskTitleLabel];
+        [self addSubview:_bottomSelectView];
         
         if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
             [_maskTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -253,6 +260,21 @@
     self.frame = rect;
 }
 
+- (void)updateBottomSelectFrame
+{
+    CGRect rect = self.frame;
+    CGFloat bottomLeft = 0;
+    CGFloat bottomWidth = 32;
+    if (rect.size.width - 32 > 0) {
+        bottomLeft = (rect.size.width - 32)/2.0f;
+    }else
+    {
+        bottomLeft = 0;
+        bottomWidth = rect.size.width;
+    }
+    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 2, bottomWidth, 2);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -261,6 +283,8 @@
         _titleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
         _maskTitleLabel.bounds = self.bounds;
         _maskTitleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+        _bottomSelectView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+
     }
     [self updateBadgeViewFrame];
 }
@@ -608,8 +632,10 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         return 17.f;
     } else if ([TTDeviceHelper is736Screen]) {
         return 15.f;
-    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
+    } else if ([TTDeviceHelper is667Screen]) {
         return 15.f;
+    }else if ([TTDeviceHelper isIPhoneXDevice]) {
+        return 17.f;
     } else {
         return 13.f;
     }
@@ -620,7 +646,9 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         return 17.f;
     } else if ([TTDeviceHelper is736Screen]) {
         return 15.f;
-    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
+    }else if ([TTDeviceHelper isIPhoneXDevice]) {
+        return 17.f;
+    }else if ([TTDeviceHelper is667Screen]) {
         return 15.f;
     } else {
         return 13.f;
@@ -1080,7 +1108,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         categoryButton.frame = buttonFrame;
         
         categoryButton.left = offsetX;
-        
+        [categoryButton updateBottomSelectFrame];
         [self.scrollView addSubview:categoryButton];
         
         offsetX = categoryButton.right + 10;
@@ -1164,6 +1192,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         button.maskTitleLabel.alpha = 0;
         button.titleLabel.transform = CGAffineTransformIdentity;
         button.maskTitleLabel.transform = CGAffineTransformIdentity;
+        button.bottomSelectView.alpha = 0;
     }];
 }
 
@@ -1175,20 +1204,21 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         CGFloat scale = [[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType];
         button.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
         button.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+        button.bottomSelectView.alpha = 1;
     }];
 }
 
 - (void)refreshBorderIndicator
 {
     if (self.scrollView.contentOffset.x >= (self.scrollView.contentSize.width - self.scrollView.frame.size.width - 10)) {
-        //        if (!_rightBorderIndicatorView.hidden) {
-        //            _rightBorderIndicatorView.hidden = YES;
-        //        }
+//                if (!_rightBorderIndicatorView.hidden) {
+//                    _rightBorderIndicatorView.hidden = YES;
+//                }
     }
     else {
-        //        if (_rightBorderIndicatorView.hidden) {
-        //            _rightBorderIndicatorView.hidden = NO;
-        //        }
+//                if (_rightBorderIndicatorView.hidden) {
+//                    _rightBorderIndicatorView.hidden = NO;
+//                }
     }
 }
 
