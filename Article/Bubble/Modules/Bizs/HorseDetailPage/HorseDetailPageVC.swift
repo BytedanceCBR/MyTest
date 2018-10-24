@@ -427,10 +427,48 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     
                     if self?.houseType == .secondHandHouse {
                         
-                        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 130 : 0
+                        self?.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
+                        
+                        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 140 : 0
                         self?.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
-                        self?.bottomBar.nameLabel.text = contactPhone?.realtorName
-                        self?.bottomBar.agencyLabel.text = contactPhone?.agencyName
+                        
+                        if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
+                            if realtorName.count > 4 {
+                                realtorName = realtorName + "..."
+                            }
+                            self?.bottomBar.nameLabel.text = realtorName
+                        }else {
+                            self?.bottomBar.nameLabel.text = "经纪人"
+                        }
+
+                        if var agencyName = contactPhone?.agencyName, agencyName.count > 0 {
+                            if agencyName.count > 4 {
+                                agencyName = agencyName + "..."
+                            }
+                            self?.bottomBar.agencyLabel.text = agencyName
+                            self?.bottomBar.agencyLabel.isHidden = false
+                            if let avatarView = self?.bottomBar.avatarView {
+                                
+                                self?.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                                    maker.left.equalTo(avatarView.snp.right).offset(10)
+                                    maker.top.equalTo(avatarView).offset(2)
+                                    maker.right.equalToSuperview()
+                                })
+                            }
+                            
+                        }else {
+                            
+                            if let avatarView = self?.bottomBar.avatarView {
+                                
+                                self?.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                                    maker.left.equalTo(avatarView.snp.right).offset(10)
+                                    maker.centerY.equalTo(avatarView)
+                                    maker.right.equalToSuperview()
+                                })
+                            }
+                            self?.bottomBar.agencyLabel.isHidden = true
+
+                        }
 
                         self?.bottomBar.leftView.snp.updateConstraints({ (maker) in
                             

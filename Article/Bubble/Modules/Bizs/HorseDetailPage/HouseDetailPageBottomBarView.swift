@@ -74,7 +74,7 @@ class HouseDetailPageBottomBarView: UIView {
         }
         agencyLabel.snp.makeConstraints { (maker) in
             maker.left.equalTo(nameLabel)
-            maker.top.equalTo(nameLabel.snp.bottom).offset(2)
+            maker.top.equalTo(nameLabel.snp.bottom)
             maker.right.equalToSuperview()
         }
 
