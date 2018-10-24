@@ -57,7 +57,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     private var houseId: Int64 = -1
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 
@@ -88,9 +88,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
         cellFactory.register(tableView: tableView)
         tableView.register(MultitemCollectionNeighborhoodCell.self, forCellReuseIdentifier: "MultitemCollectionCell-neighborhood")
         ershouHouseData
-            .map { (response) -> String? in
-                let phone = response?.data?.contact["phone"] as? String
-                return phone
+            .map { (response) -> FHHouseDetailContact? in
+                return response?.data?.contact
             }
             .bind(to: contactPhone)
             .disposed(by: disposeBag)
@@ -162,7 +161,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                     if let response = response{
 
-                        self?.contactPhone.accept(response.data?.contact["phone"] as? String)
+                        self?.contactPhone.accept(response.data?.contact)
 
                         if response.status == 0{
                             if let idStr = response.data?.id

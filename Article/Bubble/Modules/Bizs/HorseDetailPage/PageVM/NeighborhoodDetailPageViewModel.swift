@@ -59,7 +59,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 
     private var houseId: Int64 = -1
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 
@@ -162,6 +162,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     if let status = response?.data?.neighbordhoodStatus {
                         self.followStatus.accept(Result.success(status.neighborhoodSubStatus ?? 0 == 1))
                     }
+                    self.contactPhone.accept(nil)
+
                     self.shareInfo = response?.data?.shareInfo
                     self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)

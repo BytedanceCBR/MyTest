@@ -195,7 +195,7 @@ struct NewHouseData: Mappable {
     var imageGroup: [ImageGroup]?
     var coreInfo: NewHouseCoreInfo?
     var tags: [TagItem]?
-    var contact: [String: String]?
+    var contact: FHHouseDetailContact?
     var timeLine: TimeLine?
     var floorPan: FloorPan?
     var comment: NewHouseComment?

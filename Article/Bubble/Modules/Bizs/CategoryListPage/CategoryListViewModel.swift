@@ -64,7 +64,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var onDataLoaded: ((Bool, Int) -> Void)?
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     var navVC: UINavigationController?
     

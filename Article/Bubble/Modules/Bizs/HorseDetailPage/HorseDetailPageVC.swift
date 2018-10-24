@@ -106,7 +106,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     init(houseId: Int64,
          houseType: HouseType,
-         isShowBottomBar: Bool = false,
+         isShowBottomBar: Bool = true,
          isShowFollowNavBtn: Bool = false,
          provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
@@ -140,7 +140,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let (houseId, houseType) = HorseDetailPageVC.getHouseId(paramObj?.queryParams)
         self.houseId = Int64(houseId) ?? 0
         self.houseType = houseType
-        self.isShowBottomBar = houseType == HouseType.neighborhood ? false : true
+        self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
 
@@ -218,7 +218,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     init(houseId: Int64,
          houseType: HouseType,
-         isShowBottomBar: Bool = false) {
+         isShowBottomBar: Bool = true) {
         self.houseId = houseId
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
@@ -420,34 +420,54 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .disposed(by: disposeBag)
 
             
-            detailPageViewModel.contactPhone.skip(1).subscribe(onNext: { [weak self] phone in
-                    if phone == "" || phone == nil
-                    {
-                        self?.bottomBar.contactBtn.isUserInteractionEnabled = false
-                        self?.bottomBar.contactBtn.isHidden = true
-                        self?.bottomBar.snp.makeConstraints{ maker in
-                            maker.bottom.equalTo(0)
-                            maker.height.equalTo(0)
-                        }
-                    }else
-                    {
-                        self?.bottomBar.contactBtn.isUserInteractionEnabled = true
-                        self?.bottomBar.contactBtn.setTitle("电话咨询", for: .normal)
+            detailPageViewModel.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
+                
+                var titleStr:String = "电话咨询"
+                if let phone = contactPhone?.phone, phone.count > 0 {
+                    
+                    if self?.houseType == .secondHandHouse {
+                        
+                        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 130 : 0
+                        self?.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+                        self?.bottomBar.nameLabel.text = contactPhone?.realtorName
+                        self?.bottomBar.agencyLabel.text = contactPhone?.agencyName
+
+                        self?.bottomBar.leftView.snp.updateConstraints({ (maker) in
+                            
+                            maker.width.equalTo(leftWidth)
+                        })
                     }
-                })
+                    
+                } else {
+
+                    titleStr = "询底价"
+                }
+                if self?.houseType == .neighborhood {
+                    titleStr = "咨询经纪人"
+                }
+                
+                self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
+                self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
+
+                
+            })
                 .disposed(by: disposeBag)
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
-                .bind(onNext: { [unowned self] (phone) in
+                .bind(onNext: { [unowned self] (contactPhone) in
                     let params = EnvContext.shared.homePageParams <|>
                         toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
                         toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams("\(self.houseId)", key: "group_id")
                     recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
-                    Utils.telecall(phoneNumber: phone)
+                    
+                    if let phone = contactPhone?.phone, phone.count > 0 {
+                        
+                        Utils.telecall(phoneNumber: phone)
+                    }
                 })
                 .disposed(by: disposeBag)
         }

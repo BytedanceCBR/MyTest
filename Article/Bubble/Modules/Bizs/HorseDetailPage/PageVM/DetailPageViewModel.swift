@@ -39,7 +39,7 @@ protocol DetailPageViewModel: class {
 //
 //    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
 
-    var contactPhone: BehaviorRelay<String?> { get }
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
 
     var tableView: UITableView? { get set }
 
@@ -278,32 +278,34 @@ extension DetailPageViewModel {
                     .disposed(by: self.disposeBag)
 
             
-            self.contactPhone.skip(1).subscribe(onNext: { [weak bottomBar] phone in
-                if phone == "" || phone == nil
-                {
-                    bottomBar?.contactBtn.isUserInteractionEnabled = false
-//                    bottomBar?.contactBtn.setTitle("暂无电话", for: .normal)
-                    bottomBar?.contactBtn.isHidden = true
-                    bottomBar?.snp.makeConstraints{ maker in
-                        maker.bottom.equalTo(0)
-                        maker.height.equalTo(0)
-                    }
-                }else
-                {
-                    bottomBar?.contactBtn.isUserInteractionEnabled = true
-                    bottomBar?.contactBtn.setTitle("电话咨询", for: .normal)
+            self.contactPhone.skip(1).subscribe(onNext: { [weak bottomBar] contactPhone in
+                
+                var titleStr:String = "电话咨询"
+                if let phone = contactPhone?.phone, phone.count > 0 {
+                    
+                    titleStr = "电话咨询"
+                } else {
+                    titleStr = "询底价"
                 }
+                
+                bottomBar?.contactBtn.setTitle(titleStr, for: .normal)
+                bottomBar?.contactBtn.setTitle(titleStr, for: .highlighted)
+                
             }).disposed(by: self.disposeBag)
         
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
-                .bind(onNext: {[weak self] (phone) in
+                .bind(onNext: {[weak self] (contactPhone) in
                     let theParams = EnvContext.shared.homePageParams <|>
                         params <|>
                         toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                     recordEvent(key: "click_call", params: theParams.exclude("search").exclude("filter"))
-                    Utils.telecall(phoneNumber: phone)
+                    
+                    if let phone = contactPhone?.phone, phone.count > 0 {
+
+                        Utils.telecall(phoneNumber: phone)
+                    }
                 })
                 .disposed(by: self.disposeBag)
         }

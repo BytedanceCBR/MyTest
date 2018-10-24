@@ -83,7 +83,7 @@ struct ErshouHouseData: Mappable {
     var coreInfo: [ErshouHouseCoreInfo]?
     var baseInfo: [ErshouHouseBaseInfo]?
     var neighborhoodInfo: NeighborhoodInfo?
-    var contact: [String: Any] = [:]
+
     var priceTrend: [PriceTrend]?
     var housePriceRange: HousePriceRange?
     var tags: [TagItem] = []
@@ -93,7 +93,7 @@ struct ErshouHouseData: Mappable {
     var shareInfo: ShareInfo?
     var pricingPerSqmValue: Int = 1
     
-//    var contact: FHHouseDetailContact?
+    var contact: FHHouseDetailContact?
 
     init?(map: Map) {
         
@@ -224,6 +224,8 @@ struct FHHouseDetailContact: Mappable {
     var agencyName: String? // 经纪人公司名称, 类型 string
     var showRealtorinfo: Int? // 是否显示经纪人信息(经纪人名称, 头像, 经纪人公司), 类型 int 1: 显示; int 0: 不显示
 
+    var noticeDesc: String? // 新房详情电话描述
+
     init?(map: Map) {
         
     }
@@ -236,6 +238,8 @@ struct FHHouseDetailContact: Mappable {
         realtorId <- map["realtor_id"]
         agencyName <- map["agency_name"]
         showRealtorinfo <- map["show_realtorinfo"]
+
+        noticeDesc <- map["notice_desc"]
 
     }
 }
