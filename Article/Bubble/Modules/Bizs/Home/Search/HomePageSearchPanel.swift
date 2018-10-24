@@ -43,10 +43,16 @@ class HomePageSearchPanel: UIView {
         view.backgroundColor = hexStringToUIColor(hex: "#dae0e6")
         return view
     }()
+    
+    lazy var searchIconBackView: UIView = {
+        let view = UIView()
+        view.backgroundColor = hexStringToUIColor(hex: kFHClearBlueColor)
+        return view
+    }()
 
     lazy var searchIcon: UIImageView = {
         let view = UIImageView()
-        view.image = #imageLiteral(resourceName: "icon-search-titlebar")
+        view.image = #imageLiteral(resourceName: "icon-home-search")
         return view
     }()
 
@@ -128,25 +134,36 @@ class HomePageSearchPanel: UIView {
     }
 
     private func setSearchArea() {
-        addSubview(searchIcon)
-        searchIcon.snp.makeConstraints { maker in
-            maker.left.equalTo(verticalLineView.snp.right).offset(10)
-            maker.centerY.equalToSuperview()
-            maker.width.height.equalTo(26)
-        }
 
-        addSubview(categoryLabel)
-        categoryLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(searchIcon.snp.right).offset(2)
-            maker.height.equalTo(20)
+        addSubview(searchIconBackView)
+        searchIconBackView.snp.makeConstraints { maker in
             maker.right.equalToSuperview()
             maker.centerY.equalToSuperview()
+            maker.width.equalTo(50 * CommonUIStyle.Screen.widthScale)
+            maker.height.equalToSuperview()
         }
+        
+        searchIconBackView.addSubview(searchIcon)
+        searchIcon.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.centerY.equalToSuperview()
+            maker.width.height.equalTo(16)
+        }
+        
+        addSubview(categoryLabel)
+        categoryLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(verticalLineView.snp.right).offset(10)
+            maker.height.equalTo(20)
+            maker.right.equalTo(searchIcon.snp.left).offset(-1)
+            maker.centerY.equalToSuperview()
+        }
+        
         addSubview(searchBtn)
         searchBtn.snp.makeConstraints { maker in
             maker.left.equalTo(verticalLineView.snp.right)
             maker.top.bottom.right.equalToSuperview()
         }
+        
     }
 }
 
