@@ -203,7 +203,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         make.height.mas_equalTo(44.0f);
     }];
    
-    [_pageSearchPanel setBackgroundColor:kSearchLabelBackColor];
+    [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
     [self remakeConstraintsForSearchLabel];
 }
 
