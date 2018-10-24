@@ -10152,6 +10152,7 @@
 			isa = PBXGroup;
 			children = (
 				B388CB152142652900653188 /* Article-Bridging-Header.h */,
+				3D3CCEC7218013C7008F0378 /* House */,
 				B388C9D82142652800653188 /* Bubble */,
 				A8323FEF1B81B94E00DD5533 /* README.md */,
 				7B036C321F9DC7D3009AA77A /* TTWendaAdapter */,
@@ -10487,6 +10488,45 @@
 				3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */,
 			);
 			path = SSLoadMoreCell;
+			sourceTree = "<group>";
+		};
+		3D3CCEC7218013C7008F0378 /* House */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCEC82180155A008F0378 /* MapSearch */,
+			);
+			path = House;
+			sourceTree = "<group>";
+		};
+		3D3CCEC82180155A008F0378 /* MapSearch */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCEC92180155A008F0378 /* ViewModel */,
+				3D3CCECA2180155A008F0378 /* Controller */,
+				3D3CCECB2180155A008F0378 /* View */,
+			);
+			path = MapSearch;
+			sourceTree = "<group>";
+		};
+		3D3CCEC92180155A008F0378 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		3D3CCECA2180155A008F0378 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3D3CCECB2180155A008F0378 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		3F4136C416C258FB005D79FB /* SSEditUserProfileView */ = {

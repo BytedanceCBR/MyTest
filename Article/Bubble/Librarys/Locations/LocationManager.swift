@@ -28,6 +28,7 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
     private override init() {
         AMapServices.shared().apiKey = LocationManager.apiKey
         AMapServices.shared().enableHTTPS = true
+        AMapServices.shared()?.crashReportEnabled = false 
         super.init()
         NotificationCenter.default.rx
             .notification(Notification.Name.UIApplicationDidBecomeActive)
