@@ -92,6 +92,9 @@ struct ErshouHouseData: Mappable {
     var logPB: [String: Any]?
     var shareInfo: ShareInfo?
     var pricingPerSqmValue: Int = 1
+    
+//    var contact: FHHouseDetailContact?
+
     init?(map: Map) {
         
     }
@@ -113,6 +116,7 @@ struct ErshouHouseData: Mappable {
         shareInfo <- map["share_info"]
         pricingPerSqmValue <- map["pricing_per_sqm_v"]
         logPB <- map["log_pb"]
+
     }
 }
 
@@ -210,4 +214,30 @@ struct TrendItem: Mappable {
         timestamp <- map["timestamp"]
     }
 }
+
+struct FHHouseDetailContact: Mappable {
+    var phone: String?
+    var style: Int? // 展现方式，类型 int 1：直接拨打 2：弹出信息登记表单
+    var realtorName: String? // 经纪人姓名, 类型 string
+    var avatarUrl: String? // 头像url, 类型 string
+    var realtorId: String? // 经纪人id, 类型 string
+    var agencyName: String? // 经纪人公司名称, 类型 string
+    var showRealtorinfo: Int? // 是否显示经纪人信息(经纪人名称, 头像, 经纪人公司), 类型 int 1: 显示; int 0: 不显示
+
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        phone <- map["phone"]
+        style <- map["style"]
+        realtorName <- map["realtor_name"]
+        avatarUrl <- map["avatar_url"]
+        realtorId <- map["realtor_id"]
+        agencyName <- map["agency_name"]
+        showRealtorinfo <- map["show_realtorinfo"]
+
+    }
+}
+
 
