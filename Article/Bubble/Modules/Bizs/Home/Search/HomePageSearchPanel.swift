@@ -41,9 +41,6 @@ class HomePageSearchPanel: UIView {
     lazy var verticalLineView: UIView = {
         let view = UIView()
         view.backgroundColor = hexStringToUIColor(hex: "#dae0e6")
-        self.layer.masksToBounds = true
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.borderWidth = 0.5
         return view
     }()
 
@@ -89,8 +86,8 @@ class HomePageSearchPanel: UIView {
         } else {
             self.backgroundColor = UIColor.white
         }
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
+        self.layer.borderWidth = 1
+        self.layer.borderColor = hexStringToUIColor(hex: kFHClearBlueColor).cgColor
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 4
     }
@@ -112,8 +109,6 @@ class HomePageSearchPanel: UIView {
             maker.centerY.equalToSuperview()
             maker.height.width.equalTo(9)
         }
-
-
     }
 
     private func setupVerticalLine() {
