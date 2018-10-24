@@ -30,7 +30,6 @@ func constructAreaConditionPanelWithContainer(
         let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
         for node in nodes {
             if node.parentLabel == "附近" && status != .authorizedWhenInUse && status != .authorizedAlways {
-                
                 showLocationGuideAlert()
                 return
             }
@@ -164,6 +163,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         let secondTable = self.tableViews[1]
         let secondDs = self.dataSources[1]
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
+        let thirdTable = self.tableViews[2]
+        let thirdDs = self.dataSources[2]
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 1)) { [weak self] in
+            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+        }
     }
 
     fileprivate func choiceFirstAndSecondSelection(_ conditions: [String : Any]) {
@@ -186,6 +190,12 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                             let comparedCondition = "\(key)=\(stringValueOfAny(filterCondition))"
                             if conditionStrArray.contains(comparedCondition) {
                                 dataSources[0].selectedIndexPaths = [IndexPath(row: firstOffset, section: 0)]
+                                //切换中间列表的数据源
+                                if dataSources[0].nodes.count > firstOffset {
+                                    dataSources[1].nodes = dataSources[0].nodes[firstOffset].children
+                                } else {
+                                    assertionFailure()
+                                }
                                 dataSources[1].selectedIndexPaths = [IndexPath(row: offset, section: 0)]
                                 self.choiceLastSectionSelection(
                                     conditions: conditions,
@@ -230,6 +240,12 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 //        if needShowThirdList {
             self.displayExtendValue()
 //        }
+//        let thirdTable = self.tableViews[2]
+//        let thirdDs = self.dataSources[2]
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 2)) { [weak self] in
+//            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        }
+
     }
 
     fileprivate func getEncodingString(_ string: String) -> String {
@@ -269,13 +285,14 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             }
         }
         //如果第三列没有任何选择项，则恢复成两列显示
-        if let dataSource = dataSources.last {
-            if dataSource.selectedIndexPaths.count == 0 {
+//        if let dataSource = dataSources.last {
+            if dataSources[1].selectedIndexPaths.count == 0 {
                 self.displayNormalCondition()
             } else {
                 self.displayExtendValue()
             }
-        }
+//        }
+        scrollVisibleCellInScreen()
     }
 
     func initPanelWithNativeDS() {
@@ -550,10 +567,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     }
 
     fileprivate func scrollToFirstVisibleItem(tableView: UITableView, datasource: ConditionTableViewDataSource) {
+        let sortedIndexPath = datasource.selectedIndexPaths.sorted()
         if datasource.selectedIndexPaths.count > 0,
-            let itemPath = datasource.selectedIndexPaths.first,
+            let itemPath = sortedIndexPath.first,
             itemPath.row < datasource.nodes.count {
-            tableView.scrollToRow(at: itemPath, at: .middle, animated: false)
+            tableView.scrollToRow(at: itemPath, at: .top, animated: false)
         } else {
             tableView.scrollRectToVisible(tableView.bounds, animated: false)
         }
@@ -664,6 +682,7 @@ fileprivate class AreaConditionCell: UITableViewCell {
         let result = UILabel()
         result.font = CommonUIStyle.Font.pingFangRegular(14)
         result.textColor = hexStringToUIColor(hex: "#081f33")
+        result.numberOfLines = 2
         return result
     }()
 
@@ -681,20 +700,21 @@ fileprivate class AreaConditionCell: UITableViewCell {
         backgroundColor = UIColor.clear
 
         contentView.addSubview(checkboxBtn)
+        contentView.addSubview(label)
+
         checkboxBtn.snp.makeConstraints { maker in
             maker.right.equalTo(-23)
-            maker.centerY.equalToSuperview()
+            maker.top.equalTo(label).offset(3)
             maker.width.height.equalTo(14)
         }
 
-        contentView.addSubview(label)
         let bgView = UIView()
         bgView.backgroundColor = UIColor.clear
         selectedBackgroundView = bgView
         label.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.top.equalTo(12)
-            maker.height.equalTo(21)
+            maker.top.equalTo(10)
+            maker.bottom.equalTo(-10)
             maker.right.equalTo(checkboxBtn.snp.left).offset(-5)            
         }
 

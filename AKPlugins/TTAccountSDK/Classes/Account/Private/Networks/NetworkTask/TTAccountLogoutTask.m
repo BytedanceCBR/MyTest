@@ -34,8 +34,8 @@
         }
         
         // 退出成功，清空用户信息
-//        [TTAccountCookie clearAccountCookie];
-        [TTAccountCookie clearAllCookies];
+        [TTAccountCookie clearAccountCookie];
+//        [TTAccountCookie clearAllCookies];
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
