@@ -146,7 +146,7 @@ static NSInteger const kTitleLabelNumberOfLines = 2;
     if (!_titleLabel) {
         _titleLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.numberOfLines = kTitleLabelNumberOfLines;
-        _titleLabel.font = [UIFont boldSystemFontOfSize:[TSVWaterfallCollectionViewCellHelper titleFontSize]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TSVWaterfallCollectionViewCellHelper titleFontSize]] ? : [UIFont boldSystemFontOfSize:[TSVWaterfallCollectionViewCellHelper titleFontSize]];
         _titleLabel.extendsLinkTouchArea = NO;
         _titleLabel.longPressGestureRecognizer.enabled = NO;
         _titleLabel.backgroundColor = [UIColor clearColor];
