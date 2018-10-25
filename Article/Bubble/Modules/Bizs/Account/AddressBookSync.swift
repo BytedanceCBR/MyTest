@@ -8,10 +8,22 @@
 import Foundation
 class AddressBookSync {
     class func trySyncAddressBook() {
-        TTAddressBookService.shared().loadAllContacts(start: {
+        DispatchQueue.global().async {
+            TTAddressBookService.shared().loadAllContacts(start: {
 
-        }) { (contacts, error) in
-
+            }) { (contacts, error) in
+                if error == nil {
+                    TTContactsNetworkManager.post(
+                        contacts,
+                        source: TTContactsUploadSourceSilent,
+                        userActive: false,
+                        completion: { (error, jsonObj) in
+                    print("通讯录同步完成\(error) - \(jsonObj)")
+                    })
+                } else {
+                    assertionFailure()
+                }
+            }
         }
     }
 }
