@@ -17,17 +17,16 @@ class ToastAlertCenter {
     }
 
     func showToast(_ message: String, duration: TimeInterval = 1) {
-        var style = ToastStyle()
+
         UIApplication.shared.keyWindow?.addSubview(toastAlert)
         toastAlert.snp.makeConstraints { maker in
             maker.top.bottom.left.right.equalToSuperview()
         }
-        style.messageColor = .white
         toastAlert.makeToast(
             message,
             duration: duration,
             position: .center,
-            style: style) { [weak self] didTap in
+            style: fhCommonToastStyle()) { [weak self] didTap in
                 
                 self?.dismissToast()
             }
@@ -85,4 +84,19 @@ class ToastAlertView: UIView {
         progressHud?.removeFromSuperview()
         progressHud = nil
     }
+}
+
+
+func fhCommonToastStyle() -> ToastStyle {
+    
+    var style = ToastStyle()
+    style.backgroundColor = hexStringToUIColor(hex: kFHDarkIndigoColor, alpha: 0.96)
+    style.cornerRadius = 4
+    style.messageFont = .systemFont(ofSize: 14.0)
+    style.messageAlignment = .center
+    style.verticalPadding = 15
+    style.horizontalPadding = 20
+    style.messageColor = .white
+
+    return style
 }

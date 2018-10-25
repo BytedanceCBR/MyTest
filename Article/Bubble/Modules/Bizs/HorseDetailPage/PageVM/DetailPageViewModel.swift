@@ -233,7 +233,9 @@ extension DetailPageViewModel {
                 .subscribe(onNext: { response in
                     if response?.status ?? 1 == 0 {
                         if response?.data?.followStatus ?? 0 == 0 {
-                            EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注", duration: 3)
+
+                            TTUIResponderHelper.topmostViewController()?.view.makeToast("已加入关注列表，点击可取消关注", duration: 3, position: .bottom, title: nil,style: fhCommonToastStyle(), completion: nil)
+                            
                         }
                         self?.followStatus.accept(.success(true))
                     }
