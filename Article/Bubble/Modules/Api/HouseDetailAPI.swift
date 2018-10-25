@@ -100,6 +100,36 @@ func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> O
         })
 }
 
+func requestSendPhoneNumber(houseId: Int64, phone: String, from: String = "detail") -> Observable<SendPhoneNumResponse?> {
+    let url = "\(EnvContext.networkConfig.host)/f100/api/call_report"
+    
+    let userName = ((TTAccount.shared().user()?.name) != nil) ? TTAccount.shared().user()?.name : EnvContext.shared.client.did //如果没有名字，则取did
+    
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: url,
+            params: [
+                "house_id": houseId,
+                "user_name": userName ?? "",
+                "from": from,
+                "user_phone": phone
+            ],
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> SendPhoneNumResponse? in
+            if let payload = payload {
+                let response = SendPhoneNumResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}
+
+
 func pageRequestNewHouseTimeLine(houseId: Int64, count: Int64 = 15) -> () ->  Observable<CourtTimelineResponse?> {
     var offset: Int64 = 0
     return {

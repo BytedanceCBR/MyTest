@@ -103,9 +103,36 @@ extension DetailPageViewModel {
         
     }
     
-    func requestSendPhoneNumber()
+    func processError() -> (Error?) -> Void {
+        return { [weak self] error in
+            self?.tableView?.mj_footer.endRefreshing()
+            if EnvContext.shared.client.reachability.connection != .none {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("请求失败")
+            } else {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("网络异常")
+            }
+        }
+    }
+    
+    func sendPhoneNumberRequest(houseId: Int64, phone: String, from: String = "detail")
     {
-        
+        requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
+            onNext: { [unowned self] (response) in
+                if let status = response?.status, status == 0 {
+                    EnvContext.shared.toast.showToast("提交成功")
+                }
+                else {
+                    if let message = response?.message
+                    {
+                        EnvContext.shared.toast.showToast("提交失败," + message)
+                    }
+                }
+                EnvContext.shared.toast.dismissToast()
+            },
+            onError: self.processError())
+            .disposed(by: self.disposeBag)
     }
     
     func followIt(
