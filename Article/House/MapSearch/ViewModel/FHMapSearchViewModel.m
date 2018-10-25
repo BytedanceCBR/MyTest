@@ -264,6 +264,10 @@
     [self showMapViewInfo];
 }
 
-
+#pragma mark - neighborhood houses
+-(void)requestNeighborhoodHouses
+{
+    
+}
 
 @end
