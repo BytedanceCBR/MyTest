@@ -859,7 +859,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
-                        
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                     }
                 }else

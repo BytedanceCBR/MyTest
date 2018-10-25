@@ -280,6 +280,10 @@ class NHSendPhoneNumberPanel: UIView {
         re.keyboardType = .phonePad
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.placeholder = "请输入手机号"
+        if let phonenum = EnvContext.shared.client.sendPhoneNumberCache?.object(forKey: "phonenumber") as? String
+        {
+            re.text = phonenum
+        }
         return re
     }()
     
