@@ -147,7 +147,16 @@ extension DetailPageViewModel {
             if isNeedRecord {
                 
                 var tracerParams = EnvContext.shared.homePageParams
+                if let params = self?.traceParams {
+                    tracerParams = tracerParams <|> params
+                        .exclude("house_type")
+                        .exclude("element_type")
+                        .exclude("maintab_search")
+                        .exclude("search")
+                        .exclude("filter")
+                }
                 tracerParams = tracerParams <|>
+                    EnvContext.shared.homePageParams <|>
                     toTracerParams(followId, key: "group_id") <|>
                     toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(pageTypeString(houseType), key: "page_type") <|>
