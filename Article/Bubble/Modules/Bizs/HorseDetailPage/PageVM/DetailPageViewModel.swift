@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+let kFHToastCountKey = "kFHToastCountKey"
+
 extension Notification.Name {
     static let followUpDidChange = Notification.Name("follow_up_did_changed")
 }
@@ -261,8 +263,13 @@ extension DetailPageViewModel {
                     if response?.status ?? 1 == 0 {
                         if response?.data?.followStatus ?? 0 == 0 {
 
-                            fhShowToast("已加入关注列表，点击可取消关注")
-                            
+                            var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 {
+                                fhShowToast("已加入关注列表，点击可取消关注")
+                                toastCount += 1
+                                UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
+                                UserDefaults.standard.synchronize()
+                            }
                         }
                         self?.followStatus.accept(.success(true))
                     }
