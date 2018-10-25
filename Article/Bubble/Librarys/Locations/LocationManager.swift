@@ -11,9 +11,9 @@ import RxSwift
 import RxCocoa
 class LocationManager: NSObject, AMapLocationManagerDelegate {
     // local test
-//        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
+        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
     // release
-    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
+//    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
 
     static let shared = LocationManager()
 
