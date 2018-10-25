@@ -153,6 +153,19 @@ struct CourtTimelineResponse: Mappable {
     }
 }
 
+struct SendPhoneNumResponse: Mappable {
+    var status: Int?
+    var message: String?
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+    }
+}
+
 struct CourtPriceResponse: Mappable {
     
     var status: Int?
@@ -195,7 +208,7 @@ struct NewHouseData: Mappable {
     var imageGroup: [ImageGroup]?
     var coreInfo: NewHouseCoreInfo?
     var tags: [TagItem]?
-    var contact: [String: String]?
+    var contact: FHHouseDetailContact?
     var timeLine: TimeLine?
     var floorPan: FloorPan?
     var comment: NewHouseComment?
@@ -504,5 +517,36 @@ struct FloorPlanInfoData: Mappable {
             fhSearchId <- map["fhSearchId"]
 
         }
+    }
+}
+
+
+struct FHVirtualNumResponse: Mappable {
+    var data: FHVirtualNumData?
+    var message: String?
+    var status: Int = 0
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        data <- map["data"]
+        message <- map["message"]
+        status <- map["status"]
+    }
+}
+
+struct FHVirtualNumData: Mappable {
+    var realtorId: String?
+    var virtualNumber: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        realtorId <- map["realtor_id"]
+        virtualNumber <- map["virtual_number"]
     }
 }

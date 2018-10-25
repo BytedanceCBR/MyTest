@@ -8,7 +8,7 @@
 #ifndef TTTopBarHeader_h
 #define TTTopBarHeader_h
 
-#define kTopSearchButtonHeight (![TTDeviceHelper isPadDevice] ? 44 : 0.f)
+#define kTopSearchButtonHeight (![TTDeviceHelper isPadDevice] ? ([TTDeviceHelper is667Screen] ? 40 : 44) : 0.f)
 #define kSelectorViewHeight (![TTDeviceHelper isPadDevice] ? 40 : 48)
 
 #define kMineIconLeft 10

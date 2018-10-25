@@ -12,7 +12,7 @@ import RxSwift
 class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var floorPanId: Int64 = -1
-    private var logPB: Any?
+    var logPB: Any?
 
     weak var tableView: UITableView?
 
@@ -89,14 +89,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             toTracerParams(self.floorPanId, key: "group_id") <|>
             toTracerParams(selectTraceParam(self.tracerParams, key: "search_id") ?? "be_null", key: "search_id") <|>
             toTracerParams(self.logPB ?? [:], key: "log_pb")
-        
-        // add by zjing 楼盘户型search_id
-//        let recommendsData = data.recommend.map { (recommend) -> Recommend in
-//
-//            var newItem = recommend
-////            newItem.fhSearchId = data?.searchId
-//            return newItem
-//        }
+
         let traceParamsDic = tracerParams.paramsGetter([:])
 
         let dataParser = DetailDataParser.monoid()

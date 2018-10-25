@@ -22,6 +22,10 @@ enum RequestSuccessType: Int {
 
 class HomeListViewModel: DetailPageViewModel {
     
+    var houseType: HouseType = .newHouse
+    var houseId: Int64 = -1
+    
+    
     var showMessageAlert: ((String) -> Void)?
 
     var dismissMessageAlert: (() -> Void)?
@@ -63,13 +67,11 @@ class HomeListViewModel: DetailPageViewModel {
     let disposeBag = DisposeBag()
 
     let disposeBagHouse = DisposeBag()
-
-    var houseId: Int64 = -1
     
     var originSearchId: String?
     var originFrom: String?
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 

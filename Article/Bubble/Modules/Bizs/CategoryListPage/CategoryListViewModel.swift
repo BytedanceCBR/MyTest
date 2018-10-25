@@ -11,6 +11,10 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    
+    var houseType: HouseType = .newHouse
+    var houseId: Int64 = -1
+    
     //TODO: 将已有的showalert回调调整成与详情页一致
     var showMessageAlert: ((String) -> Void)?
 
@@ -64,7 +68,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var onDataLoaded: ((Bool, Int) -> Void)?
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     var navVC: UINavigationController?
     

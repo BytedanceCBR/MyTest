@@ -354,6 +354,9 @@
 		3D49A1032181F13000597A21 /* FHMapSearchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1022181F13000597A21 /* FHMapSearchModel.m */; };
 		3D49A1042181F13000597A21 /* FHMapSearchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1022181F13000597A21 /* FHMapSearchModel.m */; };
 		3D49A1052181F13000597A21 /* FHMapSearchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1022181F13000597A21 /* FHMapSearchModel.m */; };
+		3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
+		3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
+		3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */; };
 		3F765B1D16DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
@@ -1116,6 +1119,9 @@
 		AFDE897618165D2A0090BAD9 /* EssayContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AFDE897518165D2A0090BAD9 /* EssayContentManager.m */; };
 		B119472D1CF7FF4700561B49 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
 		B1E346601DD33F51002B14C5 /* SSMoviePlayerTrackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E2BE261DCADA6D00AC62B6 /* SSMoviePlayerTrackManager.m */; };
+		B31102982181A0D800FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
+		B31102992181A0DD00FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
+		B311029A2181A0DE00FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
 		B31587B1216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
 		B31587B2216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
@@ -6147,6 +6153,8 @@
 		3D49A0FD2181E5D500597A21 /* UIColor+Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Theme.m"; sourceTree = "<group>"; };
 		3D49A1012181F13000597A21 /* FHMapSearchModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchModel.h; sourceTree = "<group>"; };
 		3D49A1022181F13000597A21 /* FHMapSearchModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMapSearchModel.m; sourceTree = "<group>"; };
+		3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHMDMonitorStartupTask.h; sourceTree = "<group>"; };
+		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3F765AC616DB563F0037C3E3 /* ArticleGetLocalDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleGetLocalDataOperation.h; sourceTree = "<group>"; };
 		3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleGetLocalDataOperation.m; sourceTree = "<group>"; };
@@ -7661,6 +7669,8 @@
 		AFDE897518165D2A0090BAD9 /* EssayContentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EssayContentManager.m; sourceTree = "<group>"; };
 		B119472C1CF7FF4700561B49 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
+		B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTContactsNetworkManager.m; sourceTree = "<group>"; };
+		B31102972181A0D700FD2A45 /* TTContactsNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTContactsNetworkManager.h; sourceTree = "<group>"; };
 		B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUpViewModel.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
@@ -10565,6 +10575,7 @@
 			children = (
 				3D49A0FB2181E5C000597A21 /* Utils */,
 				3D3CCED721805154008F0378 /* Common */,
+				B31102952181A0BC00FD2A45 /* TTContacts */,
 				3D3CCECC21801A32008F0378 /* Base */,
 				3D3CCEC82180155A008F0378 /* MapSearch */,
 			);
@@ -13373,6 +13384,8 @@
 				FEB9CB091F7516F5005EA557 /* TTFeedPreloadTask.m */,
 				F223E0D02002057600A03AC5 /* TTIESPlayerTask.h */,
 				F223E0D12002057600A03AC5 /* TTIESPlayerTask.m */,
+				3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */,
+				3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -14473,6 +14486,15 @@
 				ACECFAC81E84D4A10080679E /* TTDislikeViewController.m */,
 			);
 			path = TTDislikeView;
+			sourceTree = "<group>";
+		};
+		B31102952181A0BC00FD2A45 /* TTContacts */ = {
+			isa = PBXGroup;
+			children = (
+				B31102972181A0D700FD2A45 /* TTContactsNetworkManager.h */,
+				B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */,
+			);
+			path = TTContacts;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -19169,6 +19191,7 @@
 				A97DC4921F1333640002B455 /* TTPersonalHomeIconView.m in Sources */,
 				A97DBCA71F1332E50002B455 /* TTMonitorStartupTask.m in Sources */,
 				47870F071F5956FB00803326 /* TTDiggContentItem.m in Sources */,
+				B31102982181A0D800FD2A45 /* TTContactsNetworkManager.m in Sources */,
 				F87694941F31D0D500D59CA5 /* TTVFeedListItem.m in Sources */,
 				D5041F55205802A400BAEE7F /* AKPhotoCarouselCellView.m in Sources */,
 				ABBEA69D1F3340A4005DAD27 /* ExploreArticleStockCell.m in Sources */,
@@ -19806,6 +19829,7 @@
 				A97DC49A1F1333640002B455 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B388CB742142652A00653188 /* HeaderCell.swift in Sources */,
 				B388CCB02142652B00653188 /* TGBallScaleRipple.swift in Sources */,
+				3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				A97DC4B61F1333640002B455 /* TTPersonalHomeErrorView.m in Sources */,
 				ABBEA6DF1F334345005DAD27 /* TTLayOutPureTitleCell.m in Sources */,
 				2DB9A5A41F20B01D005E4A06 /* TTAdCanvasPreloader.m in Sources */,
@@ -20861,6 +20885,7 @@
 				B373C85B2174587A008F9905 /* TTPersonalHomeIconView.m in Sources */,
 				B373C85C2174587A008F9905 /* TTMonitorStartupTask.m in Sources */,
 				B373C85D2174587A008F9905 /* TTDiggContentItem.m in Sources */,
+				B31102992181A0DD00FD2A45 /* TTContactsNetworkManager.m in Sources */,
 				B373C85E2174587A008F9905 /* TTVFeedListItem.m in Sources */,
 				B373C85F2174587A008F9905 /* AKPhotoCarouselCellView.m in Sources */,
 				B373C8602174587A008F9905 /* ExploreArticleStockCell.m in Sources */,
@@ -21498,6 +21523,7 @@
 				B373CAD42174587A008F9905 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B373CAD52174587A008F9905 /* HeaderCell.swift in Sources */,
 				B373CAD62174587A008F9905 /* TGBallScaleRipple.swift in Sources */,
+				3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				B373CAD72174587A008F9905 /* TTPersonalHomeErrorView.m in Sources */,
 				B373CAD82174587A008F9905 /* TTLayOutPureTitleCell.m in Sources */,
 				B373CAD92174587A008F9905 /* TTAdCanvasPreloader.m in Sources */,
@@ -22555,6 +22581,7 @@
 				FEFA52C4205FB1A8001F50D8 /* TTPersonalHomeIconView.m in Sources */,
 				FEFA52C5205FB1A8001F50D8 /* TTMonitorStartupTask.m in Sources */,
 				FEFA52C6205FB1A8001F50D8 /* TTDiggContentItem.m in Sources */,
+				B311029A2181A0DE00FD2A45 /* TTContactsNetworkManager.m in Sources */,
 				FEFA52C8205FB1A8001F50D8 /* TTVFeedListItem.m in Sources */,
 				FEFA52C9205FB1A8001F50D8 /* AKPhotoCarouselCellView.m in Sources */,
 				FEFA52CA205FB1A8001F50D8 /* ExploreArticleStockCell.m in Sources */,
@@ -23192,6 +23219,7 @@
 				FEFA55A8205FB1A8001F50D8 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B388CB752142652A00653188 /* HeaderCell.swift in Sources */,
 				B388CCB12142652B00653188 /* TGBallScaleRipple.swift in Sources */,
+				3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				FEFA55A9205FB1A8001F50D8 /* TTPersonalHomeErrorView.m in Sources */,
 				FEFA55AA205FB1A8001F50D8 /* TTLayOutPureTitleCell.m in Sources */,
 				FEFA55AD205FB1A8001F50D8 /* TTAdCanvasPreloader.m in Sources */,

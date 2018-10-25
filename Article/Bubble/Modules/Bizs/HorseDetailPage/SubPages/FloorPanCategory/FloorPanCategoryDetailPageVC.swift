@@ -50,20 +50,28 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         if let houseId = paramObj?.queryParams["court_id"] as? String, let houseIdInt = Int(houseId) {
             self.houseId = houseIdInt
         }
-        
-        if let _ = paramObj?.queryParams["telephone"] as? String {
-            self.isHiddenBottomBar = true
-        } else {
-            self.isHiddenBottomBar = false
-        }
-        
+
+        self.isHiddenBottomBar = false
+
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: self.isHiddenBottomBar,
             bottomBarBinder: { (_,_) in
 
             })
-        bottomBar.isHidden = true
 
+        
+        var titleStr:String = "电话咨询"
+        if let phone = paramObj?.queryParams["telephone"] as? String, phone.count > 0 {
+            self.isHiddenBottomBar = false
+        } else {
+            self.isHiddenBottomBar = true
+            titleStr = "询底价"
+            
+        }
+        self.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
+        self.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
+        
+        
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
@@ -99,15 +107,115 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
 
         if let phone = paramObj?.queryParams["telephone"] as? String {
-            bottomBar.isHidden = false
+
             bottomBar.contactBtn.rx.tap
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
-                .bind { () in
-                    Utils.telecall(phoneNumber: phone)
+                .bind { [unowned self] () in
+
+                    if phone.count > 0 {
+                        
+                        var contactPhone = FHHouseDetailContact()
+                        contactPhone.phone = phone
+                        self.callRealtorPhone(contactPhone: contactPhone)
+                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                  followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            statusBehavior: self.follwUpStatus,
+                            isNeedRecord: true)()
+                        
+                        var traceParams = self.tracerParams <|> EnvContext.shared.homePageParams
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                        traceParams = traceParams <|>
+                            toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                            toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("be_null", key: "search_id") <|>
+                            toTracerParams("\(self.houseId)", key: "group_id")
+                        recordEvent(key: "click_call", params: traceParams)
+                        
+                    }else {
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                    }
+                    
                 }.disposed(by: disposeBag)
-        } else {
-            bottomBar.isHidden = true
         }
+    }
+    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+//        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+//        alert.sendPhoneView.confirmBtn.rx.tap
+//            .bind { [unowned self] void in
+//                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+//                {
+//                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+//                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+//                        alert.dismiss()
+//                    }
+//                }else
+//                {
+//                    alert.sendPhoneView.showErrorText()
+//                }
+//            }
+//            .disposed(by: disposeBag)
+//
+//        var enter_type: String?
+//        if title == "开盘通知" {
+//            enter_type = "openning_notice"
+//        }else if title == "变价通知" {
+//            enter_type = "price_notice"
+//        }
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+//
+//        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+//        {
+//            alert.showFrom(rootView)
+//        }
+    }
+    
+    // MARK: 电话转接以及拨打相关操作
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+        
+        guard let phone = contactPhone?.phone, phone.count > 0 else {
+            return
+        }
+        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
+            Utils.telecall(phoneNumber: phone)
+            return
+        }
+        
+        EnvContext.shared.toast.showToast("电话查询中")
+        requestVirtualNumber(realtorId: realtorId)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.toast.dismissToast()
+                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
+                    
+                    Utils.telecall(phoneNumber: virtualNumber)
+                }else {
+                    Utils.telecall(phoneNumber: phone)
+                }
+                
+            }, onError: {  (error) in
+                EnvContext.shared.toast.dismissToast()
+                Utils.telecall(phoneNumber: phone)
+            })
+            .disposed(by: self.disposeBag)
+        
     }
 
     override func viewDidLoad() {

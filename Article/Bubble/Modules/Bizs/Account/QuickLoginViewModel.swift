@@ -159,7 +159,7 @@ class QuickLoginViewModel {
                     self.loginResponse.accept(.successed)
                     EnvContext.shared.client.accountConfig.setUserPhone(phoneNumber: mobile)
                     EnvContext.shared.client.accountConfig.userInfo.accept(TTAccount.shared().user())
-//                    AddressBookSync.trySyncAddressBook()
+                    AddressBookSync.trySyncAddressBook()
                 }, onError: { [unowned self] error in
                     self.loginResponse.accept(.error(error))
                     if let theError = error as? NSError {

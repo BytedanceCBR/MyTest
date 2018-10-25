@@ -106,7 +106,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     init(houseId: Int64,
          houseType: HouseType,
-         isShowBottomBar: Bool = false,
+         isShowBottomBar: Bool = true,
          isShowFollowNavBtn: Bool = false,
          provider: @escaping DetailPageViewModelProvider) {
         self.houseId = houseId
@@ -140,7 +140,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let (houseId, houseType) = HorseDetailPageVC.getHouseId(paramObj?.queryParams)
         self.houseId = Int64(houseId) ?? 0
         self.houseType = houseType
-        self.isShowBottomBar = houseType == HouseType.neighborhood ? false : true
+        self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
 
@@ -218,7 +218,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     init(houseId: Int64,
          houseType: HouseType,
-         isShowBottomBar: Bool = false) {
+         isShowBottomBar: Bool = true) {
         self.houseId = houseId
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
@@ -420,34 +420,66 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .disposed(by: disposeBag)
 
             
-            detailPageViewModel.contactPhone.skip(1).subscribe(onNext: { [weak self] phone in
-                    if phone == "" || phone == nil
-                    {
-                        self?.bottomBar.contactBtn.isUserInteractionEnabled = false
-                        self?.bottomBar.contactBtn.isHidden = true
-                        self?.bottomBar.snp.makeConstraints{ maker in
-                            maker.bottom.equalTo(0)
-                            maker.height.equalTo(0)
-                        }
-                    }else
-                    {
-                        self?.bottomBar.contactBtn.isUserInteractionEnabled = true
-                        self?.bottomBar.contactBtn.setTitle("电话咨询", for: .normal)
+            detailPageViewModel.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
+                
+                var titleStr:String = "电话咨询"
+                if let phone = contactPhone?.phone, phone.count > 0 {
+                    
+                    if self?.houseType == .secondHandHouse {
+                        
+                        self?.refreshSecondHouseBottomBar(contactPhone: contactPhone)
                     }
-                })
+                    
+                } else {
+
+                    titleStr = "询底价"
+                }
+                if self?.houseType == .neighborhood {
+                    titleStr = "咨询经纪人"
+                }
+                
+                self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
+                self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
+
+                
+            })
                 .disposed(by: disposeBag)
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
-                .bind(onNext: { [unowned self] (phone) in
-                    let params = EnvContext.shared.homePageParams <|>
-                        toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                        toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams("\(self.houseId)", key: "group_id")
-                    recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
-                    Utils.telecall(phoneNumber: phone)
+                .bind(onNext: { [unowned self] (contactPhone) in
+                    self.followForSendPhone()
+
+                    if let phone = contactPhone?.phone, phone.count > 0 {
+                        
+                        self.callRealtorPhone(contactPhone: contactPhone)
+//                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+//                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+//                                                                  followId: "\(self.houseId)",
+//                                                                    disposeBag: self.disposeBag,
+//                                                                    isNeedRecord: true)()
+                        
+                        if self.houseType != .neighborhood {
+                            
+                            var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                            traceParams = traceParams <|>
+                                toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("\(self.houseId)", key: "group_id")
+                            recordEvent(key: "click_call", params: traceParams)
+                        }
+                        
+                    }else {
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                    }
+
                 })
                 .disposed(by: disposeBag)
         }
@@ -504,6 +536,84 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }.disposed(by: disposeBag)
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
+    }
+    // MARK: 设置二手房bottomBar
+    func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
+        
+        self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
+        
+        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 140 : 0
+        self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+        
+        if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
+            if realtorName.count > 4 {
+                realtorName = realtorName + "..."
+            }
+            self.bottomBar.nameLabel.text = realtorName
+        }else {
+            self.bottomBar.nameLabel.text = "经纪人"
+        }
+        
+        if var agencyName = contactPhone?.agencyName, agencyName.count > 0 {
+            if agencyName.count > 4 {
+                agencyName = agencyName + "..."
+            }
+            self.bottomBar.agencyLabel.text = agencyName
+            self.bottomBar.agencyLabel.isHidden = false
+            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
+                maker.right.equalToSuperview()
+            })
+            
+        }else {
+            
+            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+                maker.centerY.equalTo(self.bottomBar.avatarView)
+                maker.right.equalToSuperview()
+            })
+            self.bottomBar.agencyLabel.isHidden = true
+            
+        }
+        
+        self.bottomBar.leftView.snp.updateConstraints({ (maker) in
+            
+            maker.width.equalTo(leftWidth)
+        })
+        
+    }
+    
+    
+    
+    // MARK: 电话转接以及拨打相关操作
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+        
+        guard let phone = contactPhone?.phone, phone.count > 0 else {
+            return
+        }
+        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
+            Utils.telecall(phoneNumber: phone)
+            return
+        }
+
+        EnvContext.shared.toast.showToast("电话查询中")
+        requestVirtualNumber(realtorId: realtorId)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.toast.dismissToast()
+                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
+                    
+                    Utils.telecall(phoneNumber: virtualNumber)
+                }else {
+                    Utils.telecall(phoneNumber: phone)
+                }
+                
+            }, onError: {  (error) in
+                EnvContext.shared.toast.dismissToast()
+                Utils.telecall(phoneNumber: phone)
+            })
+            .disposed(by: self.disposeBag)
+        
     }
 
     fileprivate func bindShareAction() {
@@ -653,7 +763,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.recordStayPageSearch()
     }
     
-    fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+    func enterFromByHouseType(houseType: HouseType) -> String {
         switch houseType {
         case .newHouse:
             return "new_detail"
@@ -678,6 +788,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             return "be_null"
         }
     }
+    
+    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "app_court"
+        case .secondHandHouse:
+            return "app_oldhouse"
+        case .neighborhood:
+            return "app_neighbourhood"
+        default:
+            return "be_null"
+        }
+    }
+
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -692,7 +816,67 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     func showQuickLoginAlert(title: String, subTitle: String) {
         
-        let alert = NIHNoticeAlertView()
+//        let alert = NIHNoticeAlertView()
+        
+        
+        var enter_type: String?
+        var subTitleStr: String = subTitle
+        let confirmBtnTitle: String = "确认"
+        if title == "开盘通知" {
+            enter_type = "openning_notice"
+            subTitleStr = "订阅开盘通知，楼盘开盘信息会及时发送到您的手机"
+        }else if title == "变价通知" {
+            enter_type = "price_notice"
+            subTitleStr = "订阅变价通知，楼盘变价信息会及时发送到您的手机"
+        }
+        
+        self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
+        
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+//
+//        quickLoginVM = QuickLoginAlertViewModel(
+//                title: title,
+//                subTitle: subTitle,
+//                alert: alert)
+//        alert.showFrom(self.view)
+    }
+    
+    func followForSendPhone() {
+        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                  followId: "\(self.houseId)",
+            disposeBag: self.disposeBag,
+            isNeedRecord: true)()
+    }
+    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                {
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+                        alert.dismiss()
+                    }
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
         
         var enter_type: String?
         if title == "开盘通知" {
@@ -700,9 +884,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }else if title == "变价通知" {
             enter_type = "price_notice"
         }
-        
+
         if let enterType = enter_type {
-            
+
             var tracerParams = EnvContext.shared.homePageParams
             tracerParams = tracerParams <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
@@ -711,15 +895,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id")
             alert.tracerParams = tracerParams
-            
+
         }
-        quickLoginVM = QuickLoginAlertViewModel(
-                title: title,
-                subTitle: subTitle,
-                alert: alert)
+    
         alert.showFrom(self.view)
     }
-
+    
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
         
         let alert = BubbleAlertController(

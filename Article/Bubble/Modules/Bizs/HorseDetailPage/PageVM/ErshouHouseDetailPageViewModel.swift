@@ -10,6 +10,10 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    
+    var houseType: HouseType = .secondHandHouse
+    var houseId: Int64 = -1
+    
 
     var showMessageAlert: ((String) -> Void)?
 
@@ -55,9 +59,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
 
-    private var houseId: Int64 = -1
-
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 
@@ -88,9 +90,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
         cellFactory.register(tableView: tableView)
         tableView.register(MultitemCollectionNeighborhoodCell.self, forCellReuseIdentifier: "MultitemCollectionCell-neighborhood")
         ershouHouseData
-            .map { (response) -> String? in
-                let phone = response?.data?.contact["phone"] as? String
-                return phone
+            .map { (response) -> FHHouseDetailContact? in
+                return response?.data?.contact
             }
             .bind(to: contactPhone)
             .disposed(by: disposeBag)
@@ -162,7 +163,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                     if let response = response{
 
-                        self?.contactPhone.accept(response.data?.contact["phone"] as? String)
+                        self?.contactPhone.accept(response.data?.contact)
 
                         if response.status == 0{
                             if let idStr = response.data?.id
@@ -788,7 +789,16 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
         theCell.priceLabel.text = data.displayPrice
         theCell.roomSpaceLabel.text = data.displayPricePerSqm
         theCell.majorImageView.bd_setImage(with: URL(string: data.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+        if let houseImageTag = data.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            theCell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            theCell.imageTopLeftLabel.text = houseImageTag.text
+            theCell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            theCell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            theCell.imageTopLeftLabelBgView.isHidden = true
+        }
     }
 }
 

@@ -8,6 +8,10 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    
+    var houseType: HouseType = .neighborhood
+    var houseId: Int64 = -1
+    
 
     var showMessageAlert: ((String) -> Void)?
 
@@ -57,9 +61,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     //小区内相关
     private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
 
-    private var houseId: Int64 = -1
-
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 
@@ -162,6 +164,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     if let status = response?.data?.neighbordhoodStatus {
                         self.followStatus.accept(Result.success(status.neighborhoodSubStatus ?? 0 == 1))
                     }
+                    self.contactPhone.accept(nil)
+
                     self.shareInfo = response?.data?.shareInfo
                     self.titleValue.accept(response?.data?.name)
                     self.neighborhoodDetailResponse.accept(response)
@@ -184,14 +188,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if status {
                 cancelFollowIt(
                     houseType: .neighborhood,
-                    followAction: .beighborhood,
+                    followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag)()
 
             } else {
                 followIt(
                     houseType: .neighborhood,
-                    followAction: .beighborhood,
+                    followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag,
                     isNeedRecord: isNeedRecord)()
@@ -200,7 +204,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         case .failure(_): do {}
         }
     }
-
+    
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
 

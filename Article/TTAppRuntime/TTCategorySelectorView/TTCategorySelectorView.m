@@ -629,13 +629,13 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 + (CGFloat)channelFontSizeWithStyle:(TTCategorySelectorViewStyle)style tabType:(TTCategorySelectorViewTabType)tabType{
     if ([TTDeviceHelper isPadDevice]) {
-        return 17.f;
+        return 16.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 15.f;
+        return 16.f;
     } else if ([TTDeviceHelper is667Screen]) {
-        return 15.f;
+        return 16.f;
     }else if ([TTDeviceHelper isIPhoneXDevice]) {
-        return 17.f;
+        return 16.f;
     } else {
         return 13.f;
     }
@@ -643,13 +643,13 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 + (CGFloat)channelSelectedFontSizeWithStyle:(TTCategorySelectorViewStyle)style tabType:(TTCategorySelectorViewTabType)tabType{
     if ([TTDeviceHelper isPadDevice]) {
-        return 17.f;
+        return 15.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 15.f;
+        return 16.f;
     }else if ([TTDeviceHelper isIPhoneXDevice]) {
-        return 17.f;
+        return 16.f;
     }else if ([TTDeviceHelper is667Screen]) {
-        return 15.f;
+        return 16.f;
     } else {
         return 13.f;
     }

@@ -685,6 +685,8 @@ public struct ToastStyle {
      */
     public var activityBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.8)
 
+    public var verticalOffset: CGFloat = 200.0
+
 }
 
 // MARK: - Toast Manager
@@ -757,7 +759,7 @@ public enum ToastPosition {
         case .center:
             return CGPoint(x: superview.bounds.size.width / 2.0, y: superview.bounds.size.height / 2.0)
         case .bottom:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding)
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding - ToastManager.shared.style.verticalOffset)
         }
     }
 }

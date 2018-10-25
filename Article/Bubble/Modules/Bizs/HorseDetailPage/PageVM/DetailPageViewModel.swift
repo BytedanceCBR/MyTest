@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+let kFHToastCountKey = "kFHToastCountKey"
+
 extension Notification.Name {
     static let followUpDidChange = Notification.Name("follow_up_did_changed")
 }
@@ -35,11 +37,9 @@ protocol DetailPageViewModel: class {
 
     var groupId: String { get }
 
-//    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
-//
-//    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
-
-    var contactPhone: BehaviorRelay<String?> { get }
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
+    var houseType: HouseType { get set }
+    var houseId: Int64 { get set }
 
     var tableView: UITableView? { get set }
 
@@ -103,6 +103,37 @@ extension DetailPageViewModel {
         
     }
     
+    func processError() -> (Error?) -> Void {
+        return {  error in
+            if EnvContext.shared.client.reachability.connection != .none {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("请求失败")
+            } else {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("网络异常")
+            }
+        }
+    }
+    
+    func sendPhoneNumberRequest(houseId: Int64, phone: String, from: String = "detail", success: @escaping () -> Void)
+    {
+        requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
+            onNext: { [unowned self] (response) in
+                if let status = response?.status, status == 0 {
+                    EnvContext.shared.toast.showToast("提交成功")
+                    success()
+                }
+                else {
+                    if let message = response?.message
+                    {
+                        EnvContext.shared.toast.showToast("提交失败," + message)
+                    }
+                }
+            },
+            onError: self.processError())
+            .disposed(by: self.disposeBag)
+    }
+    
     func followIt(
         houseType: HouseType,
         followAction: FollowActionType,
@@ -115,7 +146,16 @@ extension DetailPageViewModel {
             if isNeedRecord {
                 
                 var tracerParams = EnvContext.shared.homePageParams
+                if let params = self?.traceParams {
+                    tracerParams = tracerParams <|> params
+                        .exclude("house_type")
+                        .exclude("element_type")
+                        .exclude("maintab_search")
+                        .exclude("search")
+                        .exclude("filter")
+                }
                 tracerParams = tracerParams <|>
+                    EnvContext.shared.homePageParams <|>
                     toTracerParams(followId, key: "group_id") <|>
                     toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(pageTypeString(houseType), key: "page_type") <|>
@@ -138,32 +178,6 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.showToast("网络异常")
                 return
             }
-            let userInfo = EnvContext.shared.client.accountConfig.userInfo
-
-//            if userInfo.value == nil {
-//                userInfo
-//                    .skip(1)
-//                    .filter { $0 != nil }
-//                    .subscribe(onNext: { [weak self] _ in
-//                        self?.followThisItem(isNeedRecord: false)
-//                        loginDisposeBag = DisposeBag()
-//                    })
-//                    .disposed(by: loginDisposeBag)
-//                
-//                var userInfoParams = TTRouteUserInfo()
-//                if var followTraceParams = self?.followTraceParams {
-//                    
-//                    followTraceParams = followTraceParams <|>
-//                        toTracerParams("follow", key: "enter_type")
-//                    let paramsMap = followTraceParams.paramsGetter([:])
-//                    userInfoParams = TTRouteUserInfo(info: paramsMap)
-//                    
-//                }
-//                
-//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfoParams)
-//                
-//                return
-//            }
             
             requestFollow(
                 houseType: houseType,
@@ -187,6 +201,7 @@ extension DetailPageViewModel {
                 .disposed(by: disposeBag)
         }
     }
+
     
 
     func cancelFollowIt(
@@ -201,22 +216,6 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.showToast("取消关注失败")
                 return
             }
-            let userInfo = EnvContext.shared.client.accountConfig.userInfo
-
-//            if userInfo.value == nil {
-//                userInfo
-//                    .skip(1)
-//                    .filter { $0 != nil }
-//                    .subscribe(onNext: { [weak self] _ in
-//                        self?.followThisItem(isNeedRecord: false)
-//                        loginDisposeBag = DisposeBag()
-//                    })
-//                    .disposed(by: loginDisposeBag)
-//
-//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
-//
-//                return
-//            }
             
             var tracerParams = TracerParams.momoid()
             if let followTraceParams = self?.followTraceParams {
@@ -250,6 +249,59 @@ extension DetailPageViewModel {
                     .disposed(by: disposeBag)
         }
     }
+    
+    // MARK: 静默关注房源
+    func followHouseItem(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
+        disposeBag: DisposeBag,
+        isNeedRecord: Bool = true) -> () -> Void {
+
+        return { [weak self] in
+
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
+            
+            requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .subscribe(onNext: { response in
+                    if response?.status ?? 1 == 0 {
+                        if response?.data?.followStatus ?? 0 == 0 {
+
+                            var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 {
+                                fhShowToast("已加入关注列表，点击可取消关注")
+                                toastCount += 1
+                                UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
+                                UserDefaults.standard.synchronize()
+                            }
+                        }
+                        self?.followStatus.accept(.success(true))
+                    }
+                }, onError: { error in
+
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+    
+    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "app_court"
+        case .secondHandHouse:
+            return "app_oldhouse"
+        case .neighborhood:
+            return "app_neighbourhood"
+        default:
+            return "be_null"
+        }
+    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton) in
@@ -278,35 +330,137 @@ extension DetailPageViewModel {
                     .disposed(by: self.disposeBag)
 
             
-            self.contactPhone.skip(1).subscribe(onNext: { [weak bottomBar] phone in
-                if phone == "" || phone == nil
-                {
-                    bottomBar?.contactBtn.isUserInteractionEnabled = false
-//                    bottomBar?.contactBtn.setTitle("暂无电话", for: .normal)
-                    bottomBar?.contactBtn.isHidden = true
-                    bottomBar?.snp.makeConstraints{ maker in
-                        maker.bottom.equalTo(0)
-                        maker.height.equalTo(0)
-                    }
-                }else
-                {
-                    bottomBar?.contactBtn.isUserInteractionEnabled = true
-                    bottomBar?.contactBtn.setTitle("电话咨询", for: .normal)
+            self.contactPhone.skip(1).subscribe(onNext: { [weak bottomBar] contactPhone in
+                
+                var titleStr:String = "电话咨询"
+                if let phone = contactPhone?.phone, phone.count > 0 {
+                    
+                    titleStr = "电话咨询"
+                } else {
+                    titleStr = "询底价"
                 }
+                
+                bottomBar?.contactBtn.setTitle(titleStr, for: .normal)
+                bottomBar?.contactBtn.setTitle(titleStr, for: .highlighted)
+                
             }).disposed(by: self.disposeBag)
         
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
-                .bind(onNext: {[weak self] (phone) in
-                    let theParams = EnvContext.shared.homePageParams <|>
-                        params <|>
-                        toTracerParams(self?.searchId ?? "be_null", key: "search_id")
-                    recordEvent(key: "click_call", params: theParams.exclude("search").exclude("filter"))
-                    Utils.telecall(phoneNumber: phone)
+                .bind(onNext: {[weak self] (contactPhone) in
+                    
+                    self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                          followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                          followId: "\(self?.houseId ?? -1)",
+                        disposeBag: self?.disposeBag ?? DisposeBag(),
+                        isNeedRecord: true)()
+                    
+                    if let phone = contactPhone?.phone, phone.count > 0 {
+                        
+                        self?.callRealtorPhone(contactPhone: contactPhone)
+
+                        
+                        
+                        if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+                            
+                            traceParams = traceParams <|> EnvContext.shared.homePageParams
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                            traceParams = traceParams <|>
+                                toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
+                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(self?.searchId ?? "be_null", key: "search_id")
+                            if let houseId = self?.houseId {
+                                traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
+                            }else {
+                                traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
+                            }
+                            recordEvent(key: "click_call", params: traceParams)
+                        }
+                        
+                    }else {
+                        self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                    }
                 })
                 .disposed(by: self.disposeBag)
         }
+    }
+    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                {
+                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+                        alert.dismiss()
+                    }
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        var enter_type: String?
+        if title == "开盘通知" {
+            enter_type = "openning_notice"
+        }else if title == "变价通知" {
+            enter_type = "price_notice"
+        }
+        
+        if let enterType = enter_type {
+            
+            var tracerParams = EnvContext.shared.homePageParams
+            tracerParams = tracerParams <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams(enterType, key: "enter_type") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+            alert.tracerParams = tracerParams
+            
+        }
+        
+        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        {
+            alert.showFrom(rootView)
+        }
+    }
+    
+    // MARK: 电话转接以及拨打相关操作
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+        
+        guard let phone = contactPhone?.phone, phone.count > 0 else {
+            return
+        }
+        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
+            Utils.telecall(phoneNumber: phone)
+            return
+        }
+        
+        EnvContext.shared.toast.showToast("电话查询中")
+        requestVirtualNumber(realtorId: realtorId)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.toast.dismissToast()
+                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
+                    
+                    Utils.telecall(phoneNumber: virtualNumber)
+                }else {
+                    Utils.telecall(phoneNumber: phone)
+                }
+                
+            }, onError: {  (error) in
+                EnvContext.shared.toast.dismissToast()
+                Utils.telecall(phoneNumber: phone)
+            })
+            .disposed(by: self.disposeBag)
+        
     }
 
 }
@@ -463,3 +617,17 @@ func pageTypeString(_ houseType: HouseType) -> String {
         return "be_null"
     }
 }
+
+func enterFromByHouseType(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "new_detail"
+    case .secondHandHouse:
+        return "old_detail"
+    case .neighborhood:
+        return "neighborhood_detail"
+    default:
+        return "be_null"
+    }
+}
+

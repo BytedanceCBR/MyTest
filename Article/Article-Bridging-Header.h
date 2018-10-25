@@ -47,6 +47,7 @@
 #import "MJRefresh.h"
 #import "NIHRefreshCustomFooter.h"
 #import "TTAddressBookService.h"
+#import "TTContactsNetworkManager.h"
 #import "TTDeviceHelper.h"
 #import "TTShareManager.h"
 #import "TTWechatContentItem.h"
@@ -78,6 +79,7 @@
 #import "ArticleURLSetting.h"
 
 #import "TTCategoryBadgeNumberManager.h"
+#import "AWEPostDataHttpRequestSerializer.h"
 
 #import "FHMapSearchViewController.h"
 

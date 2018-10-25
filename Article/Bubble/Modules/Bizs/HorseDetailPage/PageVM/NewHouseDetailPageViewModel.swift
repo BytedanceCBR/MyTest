@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var houseType: HouseType = .newHouse
+    var houseId: Int64 = -1
 
 
     var shareInfo: ShareInfo?
@@ -54,9 +56,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     private var cellFactory: UITableViewCellFactory
 
-    private var houseId: Int64 = -1
-
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
 
     var showQuickLoginAlert: ((String, String) -> Void)?
 
@@ -134,7 +134,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         self.onDataArrived?()
                     }
 
-                    self.contactPhone.accept(response?.data?.contact?["phone"] )
+                    self.contactPhone.accept(response?.data?.contact)
 
 
                     if let status = response?.data?.userStatus {
@@ -268,8 +268,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     navVC: self.navVC,
                     followPage: self.followPage,
                     bottomBarBinder: self.bindBottomView(params: coreInfoParams <|> toTracerParams("new_detail", key: "page_type")))
-                <- parseNewHouseContactNode(data, traceExt: traceExtension, courtId: "\(courtId)")
-                <- parseFlineNode(((data.contact?["phone"]?.count ?? 0) > 0) ? 6 : 0)
+                <- parseNewHouseContactNode(data, traceExt: traceExtension <|> self.traceParams, courtId: "\(courtId)")
+                <- parseFlineNode(((data.contact?.phone?.count ?? 0) > 0) ? 6 : 0)
                 <- parseFloorPanHeaderNode(data)
                 <- parseNewHouseFloorPanCollectionNode(
                     data,
@@ -296,7 +296,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     openFloorPanCategoryPage(
                         floorPanId: "\(courtId)",
                         logPBVC: logPbVC,
-                        isHiddenBottomBtn: (data.contact == nil || data.contact?["phone"]?.isEmpty ?? true),
+                        isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
                         traceParams: floorPanTraceParams,
                         disposeBag: self.disposeBag,
                         navVC: self.navVC,
@@ -323,7 +323,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                             toTracerParams("house_history_detail", key: "page_type") 
                                         self.openFloorPanList(
                                             courtId: courtId,
-                                            isHiddenBottomBtn: (data.contact == nil || data.contact?["phone"]?.isEmpty ?? true),
+                                            isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
                                             logPB: data.logPB,
                                             bottomBarBinder: self.bindBottomView(params: params <|> toTracerParams("new_detail", key: "page_type")))
                                         
@@ -343,7 +343,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         toTracerParams("house_history_detail", key: "page_type")
                     self.openFloorPanList(
                         courtId: courtId,
-                        isHiddenBottomBtn: (data.contact == nil || data.contact?["phone"]?.isEmpty ?? true),
+                        isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
                         logPB: data.logPB,
                         bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
                     let params = EnvContext.shared.homePageParams <|>
@@ -374,7 +374,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                                     toTracerParams("house_comment_detail", key: "page_type")
                                                 self.openCommentList(
                                                     courtId: courtId,
-                                                    isHiddenBottomBtn: (data.contact == nil || data.contact?["phone"]?.isEmpty ?? true),
+                                                    isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
                                                     logPB: data.logPB,
                                                     bottomBarBinder: self.bindBottomView(params: params <|> toTracerParams("new_detail", key: "page_type")))
                                                 
@@ -396,7 +396,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
                     self.openCommentList(
                         courtId: courtId,
-                        isHiddenBottomBtn: (data.contact == nil || data.contact?["phone"]?.isEmpty ?? true),
+                        isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
                         logPB: data.logPB,
                         bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
 
@@ -737,10 +737,10 @@ func openFloorPanInfoPage(
     return {
         
         let detailPage = FloorPanInfoVC(
-            isHiddenBottomBar: (newHouseData.contact == nil || newHouseData.contact?["phone"]?.isEmpty ?? true),
+            isHiddenBottomBar: newHouseData.contact?.phone?.count ?? 0 < 1,
             floorPanId: floorPanId,
             newHouseData: newHouseData,
-                bottomBarBinder: bottomBarBinder)
+            bottomBarBinder: bottomBarBinder)
         detailPage.tracerParams = TracerParams.momoid() <|> toTracerParams(newHouseData.logPB ?? "be_nul", key: "log_pb")
         
         navVC?.pushViewController(detailPage, animated: true)

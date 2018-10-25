@@ -16,7 +16,7 @@ class HomePageSearchPanel: UIView {
 
     lazy var countryLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
-        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.font = CommonUIStyle.Font.pingFangSemibold(14)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.numberOfLines = 1
         label.text = ""
@@ -41,15 +41,18 @@ class HomePageSearchPanel: UIView {
     lazy var verticalLineView: UIView = {
         let view = UIView()
         view.backgroundColor = hexStringToUIColor(hex: "#dae0e6")
-        self.layer.masksToBounds = true
-        self.layer.borderColor = UIColor.white.cgColor
-        self.layer.borderWidth = 0.5
+        return view
+    }()
+    
+    lazy var searchIconBackView: UIView = {
+        let view = UIView()
+        view.backgroundColor = hexStringToUIColor(hex: kFHClearBlueColor)
         return view
     }()
 
     lazy var searchIcon: UIImageView = {
         let view = UIImageView()
-        view.image = #imageLiteral(resourceName: "icon-search-titlebar")
+        view.image = #imageLiteral(resourceName: "icon-home-search")
         return view
     }()
 
@@ -89,8 +92,8 @@ class HomePageSearchPanel: UIView {
         } else {
             self.backgroundColor = UIColor.white
         }
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
+        self.layer.borderWidth = 1
+        self.layer.borderColor = hexStringToUIColor(hex: kFHClearBlueColor).cgColor
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 4
     }
@@ -112,8 +115,6 @@ class HomePageSearchPanel: UIView {
             maker.centerY.equalToSuperview()
             maker.height.width.equalTo(9)
         }
-
-
     }
 
     private func setupVerticalLine() {
@@ -133,25 +134,36 @@ class HomePageSearchPanel: UIView {
     }
 
     private func setSearchArea() {
-        addSubview(searchIcon)
-        searchIcon.snp.makeConstraints { maker in
-            maker.left.equalTo(verticalLineView.snp.right).offset(10)
-            maker.centerY.equalToSuperview()
-            maker.width.height.equalTo(26)
-        }
 
-        addSubview(categoryLabel)
-        categoryLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(searchIcon.snp.right).offset(2)
-            maker.height.equalTo(20)
+        addSubview(searchIconBackView)
+        searchIconBackView.snp.makeConstraints { maker in
             maker.right.equalToSuperview()
             maker.centerY.equalToSuperview()
+            maker.width.equalTo(50 * CommonUIStyle.Screen.widthScale)
+            maker.height.equalToSuperview()
         }
+        
+        searchIconBackView.addSubview(searchIcon)
+        searchIcon.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.centerY.equalToSuperview()
+            maker.width.height.equalTo(16)
+        }
+        
+        addSubview(categoryLabel)
+        categoryLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(verticalLineView.snp.right).offset(10)
+            maker.height.equalTo(20)
+            maker.right.equalTo(searchIcon.snp.left).offset(-1)
+            maker.centerY.equalToSuperview()
+        }
+        
         addSubview(searchBtn)
         searchBtn.snp.makeConstraints { maker in
             maker.left.equalTo(verticalLineView.snp.right)
             maker.top.bottom.right.equalToSuperview()
         }
+        
     }
 }
 
