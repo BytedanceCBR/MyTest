@@ -233,7 +233,7 @@ extension DetailPageViewModel {
                 .subscribe(onNext: { response in
                     if response?.status ?? 1 == 0 {
                         if response?.data?.followStatus ?? 0 == 0 {
-                            EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注", duration: 5)
+                            EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注", duration: 3)
                         }
                         self?.followStatus.accept(.success(true))
                     }

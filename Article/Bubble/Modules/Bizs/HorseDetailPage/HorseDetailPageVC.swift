@@ -505,8 +505,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self.callRealtorPhone(contactPhone: contactPhone)
-                        self.detailPageViewModel?.followHouseItem(houseType: .neighborhood,
-                                                                  followAction: .neighborhood,
+                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                                   followId: "\(self.houseId)",
                                                                     disposeBag: self.disposeBag,
                                                                     isNeedRecord: true)()
