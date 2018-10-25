@@ -495,12 +495,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
                 .bind(onNext: { [unowned self] (contactPhone) in
-                    let params = EnvContext.shared.homePageParams <|>
-                        toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                        toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams("\(self.houseId)", key: "group_id")
-                    recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
@@ -510,6 +504,22 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                                                   followId: "\(self.houseId)",
                                                                     disposeBag: self.disposeBag,
                                                                     isNeedRecord: true)()
+                        
+                        if self.houseType != .neighborhood {
+                            
+                            var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                            traceParams = traceParams <|>
+                                toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("\(self.houseId)", key: "group_id")
+                            recordEvent(key: "click_call", params: traceParams)
+                        }
                         
                     }else {
                         self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
@@ -848,7 +858,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType))
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        
+                        alert.dismiss()
+                    }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()

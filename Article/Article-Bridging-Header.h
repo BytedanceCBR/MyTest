@@ -79,5 +79,6 @@
 #import "ArticleURLSetting.h"
 
 #import "TTCategoryBadgeNumberManager.h"
+#import "AWEPostDataHttpRequestSerializer.h"
 
 #endif /* Article_Bridging_Header_h */

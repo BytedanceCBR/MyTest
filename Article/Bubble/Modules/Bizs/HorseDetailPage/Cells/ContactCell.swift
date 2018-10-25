@@ -122,12 +122,20 @@ func fillNewHouseContactCell(_ data: NewHouseData, traceParams: TracerParams, co
                     if let phone = data.contact?.phone {
                         Utils.telecall(phoneNumber: phone)
                     }
-                    let params = EnvContext.shared.homePageParams <|>
+                    
+                    var traceParams = traceParams <|> EnvContext.shared.homePageParams
+                        .exclude("house_type")
+                        .exclude("element_type")
+                        .exclude("maintab_search")
+                        .exclude("search")
+                        .exclude("filter")
+                    traceParams = traceParams <|>
+                        toTracerParams("new_detail", key: "page_type") <|>
                         toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                         toTracerParams(searchId ?? "be_null", key: "search_id") <|>
-                            toTracerParams(courtId, key: "group_id") <|>
-                            toTracerParams("new_detail", key: "page_type")
-                    recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
+                        toTracerParams(courtId, key: "group_id")
+
+                    recordEvent(key: "click_call", params: traceParams)
                 })
                 .disposed(by: theCell.disposeBag)
     }
