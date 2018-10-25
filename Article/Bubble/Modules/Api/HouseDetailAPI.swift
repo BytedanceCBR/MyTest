@@ -106,15 +106,15 @@ func requestSendPhoneNumber(houseId: Int64, phone: String, from: String = "detai
     let userName = ((TTAccount.shared().user()?.name) != nil) ? TTAccount.shared().user()?.name : EnvContext.shared.client.did //如果没有名字，则取did
     
     return TTNetworkManager.shareInstance().rx
-        .requestForBinary(
+        .requestForModel(
             url: url,
             params: [
-                "house_id": houseId,
-                "user_name": userName ?? "",
-                "from": from,
-                "user_phone": phone
+                "a": houseId,
+                "b": userName ?? "",
+                "d": from,
+                "c": phone
             ],
-            method: "GET",
+            method: "POST",
             needCommonParams: true)
         .map({ (data) -> NSString? in
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)

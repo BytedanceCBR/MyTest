@@ -100,8 +100,7 @@ extension DetailPageViewModel {
     }
     
     func processError() -> (Error?) -> Void {
-        return { [weak self] error in
-            self?.tableView?.mj_footer.endRefreshing()
+        return {  error in
             if EnvContext.shared.client.reachability.connection != .none {
                 EnvContext.shared.toast.dismissToast()
                 EnvContext.shared.toast.showToast("请求失败")
@@ -112,12 +111,13 @@ extension DetailPageViewModel {
         }
     }
     
-    func sendPhoneNumberRequest(houseId: Int64, phone: String, from: String = "detail")
+    func sendPhoneNumberRequest(houseId: Int64, phone: String, from: String = "detail", success: @escaping () -> Void)
     {
         requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
             onNext: { [unowned self] (response) in
                 if let status = response?.status, status == 0 {
                     EnvContext.shared.toast.showToast("提交成功")
+                    success()
                 }
                 else {
                     if let message = response?.message
@@ -125,7 +125,6 @@ extension DetailPageViewModel {
                         EnvContext.shared.toast.showToast("提交失败," + message)
                     }
                 }
-                EnvContext.shared.toast.dismissToast()
             },
             onError: self.processError())
             .disposed(by: self.disposeBag)

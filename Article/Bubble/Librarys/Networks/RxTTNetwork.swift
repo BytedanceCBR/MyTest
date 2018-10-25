@@ -45,6 +45,40 @@ extension Reactive where Base: TTNetworkManager {
             }
         })
     }
+    
+    func requestForModel(
+        url: String,
+        params: [String: Any]? = nil,
+        method: String = "post",
+        needCommonParams: Bool = false) -> Observable<Data> {
+        return Observable.create({ (observable) -> Disposable in
+            let task = TTNetworkManager.shareInstance()
+                .requestForBinary(
+                    withURL: url,
+                    params: params,
+                    method: method,
+                    needCommonParams: needCommonParams,
+                    requestSerializer: AWEPostDataHttpRequestSerializer.self,
+                    responseSerializer: TTNetworkManager.shareInstance().defaultBinaryResponseSerializerClass,
+                    autoResume: true,
+                    callback: { (error, response) in
+                        if let error = error {
+                            observable.onError(error)
+                        } else {
+                            if let response = response as? Data {
+                                observable.onNext(response)
+                                observable.onCompleted()
+                            } else {
+                                assertionFailure("网络数据读取失败")
+                                observable.onCompleted()
+                            }
+                        }
+                })
+            return Disposables.create {
+                task?.cancel()
+            }
+        })
+    }
 
     func requestForModel<R>(
         url: String,
@@ -66,7 +100,7 @@ extension Reactive where Base: TTNetworkManager {
                      params: [String: Any]? = nil,
                      method: String = "get",
                      needCommonParams: Bool = false,
-                     responseSerializer: @escaping (Data) -> R) -> Observable<R> {
+                     responseSerializer: @escaping  ((Data) -> R)) -> Observable<R> {
         return Observable.create({ (observable) -> Disposable in
             let task = TTNetworkManager.shareInstance()
                 .requestForBinary(
@@ -74,7 +108,7 @@ extension Reactive where Base: TTNetworkManager {
                     params: params,
                     method: method,
                     needCommonParams: needCommonParams,
-                    requestSerializer: TTNetworkManager.shareInstance().defaultJSONResponseSerializerClass as! TTHTTPRequestSerializerProtocol.Type,
+                    requestSerializer: AWEPostDataHttpRequestSerializer.self,
                     responseSerializer: TTNetworkManager.shareInstance().defaultBinaryResponseSerializerClass,
                     autoResume: true,
                     callback: { (error, response) in
