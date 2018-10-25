@@ -10,6 +10,10 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    
+    var houseType: HouseType = .secondHandHouse
+    var houseId: Int64 = -1
+    
 
     var showMessageAlert: ((String) -> Void)?
 
@@ -54,8 +58,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
     private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
 
     private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
-
-    private var houseId: Int64 = -1
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     

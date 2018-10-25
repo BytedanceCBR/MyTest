@@ -47,6 +47,7 @@
 #import "MJRefresh.h"
 #import "NIHRefreshCustomFooter.h"
 #import "TTAddressBookService.h"
+#import "TTContactsNetworkManager.h"
 #import "TTDeviceHelper.h"
 #import "TTShareManager.h"
 #import "TTWechatContentItem.h"

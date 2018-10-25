@@ -1117,6 +1117,7 @@ DEPENDENCIES:
   - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
   - TTAccountSDK/Account (from `../AKPlugins/TTAccountSDK`)
   - TTAccountSDK/WeChatAccount (from `../AKPlugins/TTAccountSDK`)
+  - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.1.0)
   - TTAudio (= 0.1.4)
@@ -1401,6 +1402,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: 76f74bb298e864602792509610534ebdbfa859e0
+PODFILE CHECKSUM: 3ce1f6fbade602b2475ee7eda9b29afffca2050c
 
 COCOAPODS: 1.4.0

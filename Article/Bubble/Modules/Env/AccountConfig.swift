@@ -6,6 +6,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
 class AccountConfig: NSObject {
 
     let userInfo: BehaviorRelay<TTAccountUserEntity?> = BehaviorRelay<TTAccountUserEntity?>(value: nil)

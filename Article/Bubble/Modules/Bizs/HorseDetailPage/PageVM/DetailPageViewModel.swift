@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+let kFHToastCountKey = "kFHToastCountKey"
+
 extension Notification.Name {
     static let followUpDidChange = Notification.Name("follow_up_did_changed")
 }
@@ -36,6 +38,8 @@ protocol DetailPageViewModel: class {
     var groupId: String { get }
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
+    var houseType: HouseType { get set }
+    var houseId: Int64 { get set }
 
     var tableView: UITableView? { get set }
 
@@ -142,7 +146,16 @@ extension DetailPageViewModel {
             if isNeedRecord {
                 
                 var tracerParams = EnvContext.shared.homePageParams
+                if let params = self?.traceParams {
+                    tracerParams = tracerParams <|> params
+                        .exclude("house_type")
+                        .exclude("element_type")
+                        .exclude("maintab_search")
+                        .exclude("search")
+                        .exclude("filter")
+                }
                 tracerParams = tracerParams <|>
+                    EnvContext.shared.homePageParams <|>
                     toTracerParams(followId, key: "group_id") <|>
                     toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(pageTypeString(houseType), key: "page_type") <|>
@@ -260,8 +273,13 @@ extension DetailPageViewModel {
                     if response?.status ?? 1 == 0 {
                         if response?.data?.followStatus ?? 0 == 0 {
 
-                            fhShowToast("已加入关注列表，点击可取消关注")
-                            
+                            var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 {
+                                fhShowToast("已加入关注列表，点击可取消关注")
+                                toastCount += 1
+                                UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
+                                UserDefaults.standard.synchronize()
+                            }
                         }
                         self?.followStatus.accept(.success(true))
                     }
@@ -319,18 +337,73 @@ extension DetailPageViewModel {
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
                 .bind(onNext: {[weak self] (contactPhone) in
-                    let theParams = EnvContext.shared.homePageParams <|>
-                        params <|>
-                        toTracerParams(self?.searchId ?? "be_null", key: "search_id")
-                    recordEvent(key: "click_call", params: theParams.exclude("search").exclude("filter"))
                     
                     if let phone = contactPhone?.phone, phone.count > 0 {
-
-                        Utils.telecall(phoneNumber: phone)
+                        
+                        self?.callRealtorPhone(contactPhone: contactPhone)
+                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                                                  followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                                                  followId: "\(self?.houseId ?? -1)",
+                            disposeBag: self?.disposeBag ?? DisposeBag(),
+                            isNeedRecord: true)()
+                        
+                        
+                        if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+                            
+                            traceParams = traceParams <|> EnvContext.shared.homePageParams
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                            traceParams = traceParams <|>
+                                toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
+                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(self?.searchId ?? "be_null", key: "search_id")
+                            if let houseId = self?.houseId {
+                                traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
+                            }else {
+                                traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
+                            }
+                            recordEvent(key: "click_call", params: traceParams)
+                        }
+                        
+                    }else {
+//                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
                 })
                 .disposed(by: self.disposeBag)
         }
+    }
+    
+    // MARK: 电话转接以及拨打相关操作
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+        
+        guard let phone = contactPhone?.phone, phone.count > 0 else {
+            return
+        }
+        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
+            Utils.telecall(phoneNumber: phone)
+            return
+        }
+        
+        EnvContext.shared.toast.showToast("电话查询中")
+        requestVirtualNumber(realtorId: realtorId)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.toast.dismissToast()
+                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
+                    
+                    Utils.telecall(phoneNumber: virtualNumber)
+                }else {
+                    Utils.telecall(phoneNumber: phone)
+                }
+                
+            }, onError: {  (error) in
+                EnvContext.shared.toast.dismissToast()
+                Utils.telecall(phoneNumber: phone)
+            })
+            .disposed(by: self.disposeBag)
+        
     }
 
 }
@@ -487,3 +560,17 @@ func pageTypeString(_ houseType: HouseType) -> String {
         return "be_null"
     }
 }
+
+fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "new_detail"
+    case .secondHandHouse:
+        return "old_detail"
+    case .neighborhood:
+        return "neighborhood_detail"
+    default:
+        return "be_null"
+    }
+}
+

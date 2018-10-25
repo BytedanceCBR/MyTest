@@ -98,9 +98,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                     recordEvent(key: TraceEventName.go_detail, params: ["page_type":"setting", "enter_from": "minetab"])
                     
             }
-//            <- parseContactUsNode(phoneNumber: "100-0937-3859") {
-//                Utils.telecall(phoneNumber: "100-0937-3859")
-//        }
+
         return dataParser.parser
     }
 
