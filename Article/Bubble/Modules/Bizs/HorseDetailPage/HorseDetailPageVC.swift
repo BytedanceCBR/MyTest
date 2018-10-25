@@ -789,19 +789,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
     }
     
-    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
-        switch houseType {
-        case .newHouse:
-            return "app_court"
-        case .secondHandHouse:
-            return "app_oldhouse"
-        case .neighborhood:
-            return "app_neighbourhood"
-        default:
-            return "be_null"
-        }
-    }
-
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -817,7 +804,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     func showQuickLoginAlert(title: String, subTitle: String) {
         
 //        let alert = NIHNoticeAlertView()
-        
         
         var enter_type: String?
         var subTitleStr: String = subTitle
@@ -867,7 +853,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                     }

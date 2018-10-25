@@ -290,18 +290,6 @@ extension DetailPageViewModel {
         }
     }
     
-    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
-        switch houseType {
-        case .newHouse:
-            return "app_court"
-        case .secondHandHouse:
-            return "app_oldhouse"
-        case .neighborhood:
-            return "app_neighbourhood"
-        default:
-            return "be_null"
-        }
-    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton) in
@@ -396,7 +384,7 @@ extension DetailPageViewModel {
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                     }
@@ -626,6 +614,19 @@ func enterFromByHouseType(houseType: HouseType) -> String {
         return "old_detail"
     case .neighborhood:
         return "neighborhood_detail"
+    default:
+        return "be_null"
+    }
+}
+
+func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "app_court"
+    case .secondHandHouse:
+        return "app_oldhouse"
+    case .neighborhood:
+        return "app_neighbourhood"
     default:
         return "be_null"
     }

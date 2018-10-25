@@ -26,6 +26,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     private var follwUpStatus: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     
     private var isHiddenBottomBar: Bool
+    
 
     init(isHiddenBottomBar: Bool,
          floorPanId: Int64,
@@ -52,6 +53,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
 
         self.isHiddenBottomBar = false
+        
 
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: self.isHiddenBottomBar,
@@ -146,46 +148,56 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
-//        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
-//        alert.sendPhoneView.confirmBtn.rx.tap
-//            .bind { [unowned self] void in
-//                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
-//                {
-//                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
-//                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
-//                        alert.dismiss()
-//                    }
-//                }else
-//                {
-//                    alert.sendPhoneView.showErrorText()
-//                }
-//            }
-//            .disposed(by: disposeBag)
-//
-//        var enter_type: String?
-//        if title == "开盘通知" {
-//            enter_type = "openning_notice"
-//        }else if title == "变价通知" {
-//            enter_type = "price_notice"
-//        }
-//
-//        if let enterType = enter_type {
-//
-//            var tracerParams = EnvContext.shared.homePageParams
-//            tracerParams = tracerParams <|>
-//                toTracerParams("new_detail", key: "enter_from") <|>
-//                toTracerParams(enterType, key: "enter_type") <|>
-//                toTracerParams(self.houseId, key: "group_id") <|>
-//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-//            alert.tracerParams = tracerParams
-//
-//        }
-//
-//        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
-//        {
-//            alert.showFrom(rootView)
-//        }
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                {
+                    
+                    self.sendPhoneNumberRequest(houseId: Int64(self.houseId), phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+                        alert.dismiss()
+                    }
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
+
+
+        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        {
+            alert.showFrom(rootView)
+        }
+    }
+    
+    func processError() -> (Error?) -> Void {
+        return { error in
+            if EnvContext.shared.client.reachability.connection != .none {
+                EnvContext.shared.toast.dismissToast()
+                EnvContext.shared.toast.showToast("加载失败")
+            }
+        }
+    }
+    
+    func sendPhoneNumberRequest(houseId: Int64, phone: String, from: String = "detail", success: @escaping () -> Void)
+    {
+        requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
+            onNext: { (response) in
+                if let status = response?.status, status == 0 {
+                    EnvContext.shared.toast.showToast("提交成功")
+                    success()
+                }
+                else {
+                    if let message = response?.message
+                    {
+                        EnvContext.shared.toast.showToast("提交失败," + message)
+                    }
+                }
+            },
+            onError: self.processError())
+            .disposed(by: self.disposeBag)
     }
     
     // MARK: 电话转接以及拨打相关操作
