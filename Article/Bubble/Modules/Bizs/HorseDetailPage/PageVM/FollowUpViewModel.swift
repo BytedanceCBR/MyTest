@@ -125,6 +125,48 @@ class FollowUpViewModel {
         }
 
     }
+    
+    // MARK: 静默关注房源
+    func followHouseItem(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
+        disposeBag: DisposeBag,
+        statusBehavior: BehaviorRelay<Bool>,
+        isNeedRecord: Bool = true) -> () -> Void {
+        
+        return {
+            
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
+            
+            requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .subscribe(onNext: { response in
+                    if response?.status ?? 1 == 0 {
+                        if response?.data?.followStatus ?? 0 == 0 {
+                            
+                            var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 {
+                                fhShowToast("已加入关注列表，点击可取消关注")
+                                toastCount += 1
+                                UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
+                                UserDefaults.standard.synchronize()
+                            }
+                        }
+                        NotificationCenter.default.post(name: .followUpDidChange, object: nil)
+                        statusBehavior.accept(true)
+                    }
+                }, onError: { error in
+                    
+                })
+                .disposed(by: disposeBag)
+        }
+    }
 
 }
 

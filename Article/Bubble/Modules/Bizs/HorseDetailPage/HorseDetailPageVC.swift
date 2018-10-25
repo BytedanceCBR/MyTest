@@ -427,53 +427,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     
                     if self?.houseType == .secondHandHouse {
                         
-                        self?.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
-                        
-                        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 140 : 0
-                        self?.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
-                        
-                        if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
-                            if realtorName.count > 4 {
-                                realtorName = realtorName + "..."
-                            }
-                            self?.bottomBar.nameLabel.text = realtorName
-                        }else {
-                            self?.bottomBar.nameLabel.text = "经纪人"
-                        }
-
-                        if var agencyName = contactPhone?.agencyName, agencyName.count > 0 {
-                            if agencyName.count > 4 {
-                                agencyName = agencyName + "..."
-                            }
-                            self?.bottomBar.agencyLabel.text = agencyName
-                            self?.bottomBar.agencyLabel.isHidden = false
-                            if let avatarView = self?.bottomBar.avatarView {
-                                
-                                self?.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                                    maker.left.equalTo(avatarView.snp.right).offset(10)
-                                    maker.top.equalTo(avatarView).offset(2)
-                                    maker.right.equalToSuperview()
-                                })
-                            }
-                            
-                        }else {
-                            
-                            if let avatarView = self?.bottomBar.avatarView {
-                                
-                                self?.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                                    maker.left.equalTo(avatarView.snp.right).offset(10)
-                                    maker.centerY.equalTo(avatarView)
-                                    maker.right.equalToSuperview()
-                                })
-                            }
-                            self?.bottomBar.agencyLabel.isHidden = true
-
-                        }
-
-                        self?.bottomBar.leftView.snp.updateConstraints({ (maker) in
-                            
-                            maker.width.equalTo(leftWidth)
-                        })
+                        self?.refreshSecondHouseBottomBar(contactPhone: contactPhone)
                     }
                     
                 } else {
@@ -583,6 +537,53 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
+    // MARK: 设置二手房bottomBar
+    func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
+        
+        self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
+        
+        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 140 : 0
+        self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+        
+        if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
+            if realtorName.count > 4 {
+                realtorName = realtorName + "..."
+            }
+            self.bottomBar.nameLabel.text = realtorName
+        }else {
+            self.bottomBar.nameLabel.text = "经纪人"
+        }
+        
+        if var agencyName = contactPhone?.agencyName, agencyName.count > 0 {
+            if agencyName.count > 4 {
+                agencyName = agencyName + "..."
+            }
+            self.bottomBar.agencyLabel.text = agencyName
+            self.bottomBar.agencyLabel.isHidden = false
+            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
+                maker.right.equalToSuperview()
+            })
+            
+        }else {
+            
+            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+                maker.centerY.equalTo(self.bottomBar.avatarView)
+                maker.right.equalToSuperview()
+            })
+            self.bottomBar.agencyLabel.isHidden = true
+            
+        }
+        
+        self.bottomBar.leftView.snp.updateConstraints({ (maker) in
+            
+            maker.width.equalTo(leftWidth)
+        })
+        
+    }
+    
     
     
     // MARK: 电话转接以及拨打相关操作
@@ -762,7 +763,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.recordStayPageSearch()
     }
     
-    fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+    func enterFromByHouseType(houseType: HouseType) -> String {
         switch houseType {
         case .newHouse:
             return "new_detail"

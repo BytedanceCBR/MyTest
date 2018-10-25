@@ -242,6 +242,10 @@ struct FHHouseDetailContact: Mappable {
         noticeDesc <- map["notice_desc"]
 
     }
+    
+    init() {
+        
+    }
 }
 
 

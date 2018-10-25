@@ -91,7 +91,7 @@ class BaseSubPageViewController: BaseViewController {
             }
         }
 
-        var titleStr:String = !self.isHiddenBottomBar ? "电话咨询" : "询底价"
+        let titleStr:String = !self.isHiddenBottomBar ? "电话咨询" : "询底价"
         bottomBar.contactBtn.setTitle(titleStr, for: .normal)
         bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
         

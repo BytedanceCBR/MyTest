@@ -618,7 +618,7 @@ func pageTypeString(_ houseType: HouseType) -> String {
     }
 }
 
-fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+func enterFromByHouseType(houseType: HouseType) -> String {
     switch houseType {
     case .newHouse:
         return "new_detail"

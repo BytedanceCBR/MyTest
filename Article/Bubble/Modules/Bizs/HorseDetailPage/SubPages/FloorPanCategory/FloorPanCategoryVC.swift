@@ -67,7 +67,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
 
     var logPB: Any?
     
-    var isHiddenBottom: Bool = true
+    var isHiddenBottom: Bool = false
 
     init(isHiddenBottomBar: Bool,
          floorPanId: String,
@@ -133,19 +133,11 @@ class FloorPanCategoryVC: BaseSubPageViewController {
             maker.top.equalTo(bottomLine.snp.bottom)
             maker.left.equalToSuperview()
         }
-        
-
 
         tableView.snp.remakeConstraints { maker in
             maker.top.equalTo(segmentedControl.snp.bottom)
             maker.left.equalTo(leftFilterView.snp.right)
-            if !isHiddenBottom
-            {
-                maker.bottom.equalTo(bottomBar.snp.top)
-            } else
-            {
-                maker.bottom.equalToSuperview()
-            }
+            maker.bottom.equalTo(bottomBar.snp.top)
             maker.right.equalToSuperview()
         }
         
