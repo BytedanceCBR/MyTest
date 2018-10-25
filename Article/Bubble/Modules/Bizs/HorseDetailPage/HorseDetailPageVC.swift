@@ -467,6 +467,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         Utils.telecall(phoneNumber: phone)
+                    }else
+                    {
+                       self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态")
                     }
                 })
                 .disposed(by: disposeBag)
@@ -739,6 +742,46 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 alert: alert)
         alert.showFrom(self.view)
     }
+    
+    func showSendPhoneAlert(title: String, subTitle: String) {
+        
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if alert.sendPhoneView.phoneTextField.text?.count == 11
+                {
+                    self.detailPageViewModel?.requestSendPhoneNumber()
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
+        
+//        var enter_type: String?
+//        if title == "开盘通知" {
+//            enter_type = "openning_notice"
+//        }else if title == "变价通知" {
+//            enter_type = "price_notice"
+//        }
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+    
+        alert.showFrom(self.view)
+    }
+    
+    
 
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
         

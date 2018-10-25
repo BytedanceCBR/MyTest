@@ -103,6 +103,11 @@ extension DetailPageViewModel {
         
     }
     
+    func requestSendPhoneNumber()
+    {
+        
+    }
+    
     func followIt(
         houseType: HouseType,
         followAction: FollowActionType,
@@ -187,6 +192,7 @@ extension DetailPageViewModel {
                 .disposed(by: disposeBag)
         }
     }
+
     
 
     func cancelFollowIt(
