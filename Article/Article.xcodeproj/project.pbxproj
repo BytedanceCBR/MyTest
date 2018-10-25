@@ -3382,6 +3382,7 @@
 		B388CD142142677500653188 /* libMJRefresh.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD132142677500653188 /* libMJRefresh.a */; };
 		B388CD162142678500653188 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD152142678500653188 /* RxSwift.framework */; };
 		B388CD182142678800653188 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD172142678800653188 /* RxCocoa.framework */; };
+		B389ECBC2181C3B6003481D5 /* MapFindHouseFilterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */; };
 		B3A73587214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A73588214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A7358D214FAC4D001A3953 /* HouseFindVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */; };
@@ -7865,6 +7866,7 @@
 		B388CD132142677500653188 /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B388CD152142678500653188 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		B388CD172142678800653188 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
+		B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFindHouseFilterFactory.swift; sourceTree = "<group>"; };
 		B3A73586214F612F001A3953 /* SystemMessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageListVC.swift; sourceTree = "<group>"; };
 		B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindVC.swift; sourceTree = "<group>"; };
 		B3A7358F2150AA52001A3953 /* TTLaunchTracer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLaunchTracer.h; sourceTree = "<group>"; };
@@ -14791,6 +14793,7 @@
 				B388CA812142652900653188 /* ConditionFilterViewModel.swift */,
 				B388CA822142652900653188 /* BubbleSelectCollectionView.swift */,
 				B388CA832142652900653188 /* MultiColumnTableSelectorPanel.swift */,
+				B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -18981,6 +18984,7 @@
 				F87695141F31D0D600D59CA5 /* TTVDislikeAction.m in Sources */,
 				1E28147B200F4D6000CFDD06 /* TTCategory+ConfigDisplayName.m in Sources */,
 				FE03624D1EC9C13500BC6240 /* SSBaseModel.m in Sources */,
+				B389ECBC2181C3B6003481D5 /* MapFindHouseFilterFactory.swift in Sources */,
 				A97DC4561F1333630002B455 /* TTProfileViewController+VisitorFunction.m in Sources */,
 				A97DC4161F1333630002B455 /* TTSocialBaseViewController.m in Sources */,
 				FECED7A01C7456F1001D11F6 /* TTCollectionListPageCell.m in Sources */,
