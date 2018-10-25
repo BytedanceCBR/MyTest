@@ -40,13 +40,11 @@ class NIHNoticeAlertView: UIView {
     
     var subTitleStr: String
     
-    init(alertType: NIHNoticeAlertType = .alertTypeNormal,title: String = "询底价", subTitle: String = "随时获取房源最新动态") {
+    init(alertType: NIHNoticeAlertType = .alertTypeNormal,title: String = "询底价", subTitle: String = "随时获取房源最新动态",confirmBtnTitle: String = "提交") {
         self.titleStr = title
         subTitleStr = subTitle
-        
         super.init(frame: UIScreen.main.bounds)
         
-        sendPhoneView.subTitleView.text = subTitle
 
         if alertType == .alertTypeSendPhone
         {
@@ -55,6 +53,14 @@ class NIHNoticeAlertView: UIView {
         {
             setupUI()
         }
+        
+        sendPhoneView.subTitleView.text = subTitle
+        
+        let attriStr = NSAttributedString(
+            string: confirmBtnTitle,
+            attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                         NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#ffffff")])
+        sendPhoneView.confirmBtn.setAttributedTitle(attriStr, for: .normal)
     }
     
     private func setupUIForSendPhone()

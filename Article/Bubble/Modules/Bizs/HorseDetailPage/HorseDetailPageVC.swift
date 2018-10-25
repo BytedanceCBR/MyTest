@@ -506,7 +506,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                        self.callRealtorPhone(contactPhone: contactPhone)
                     }else
                     {
-                       self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态")
+                       self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
 //                    EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注")
 //                    self.detailPageViewModel?.followThisItem(isNeedRecord: true)
@@ -813,9 +813,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         alert.showFrom(self.view)
     }
     
-    func showSendPhoneAlert(title: String, subTitle: String) {
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         
-        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone)
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
                 if alert.sendPhoneView.phoneTextField.text?.count == 11
