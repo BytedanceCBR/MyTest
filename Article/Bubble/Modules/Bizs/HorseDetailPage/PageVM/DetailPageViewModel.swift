@@ -38,6 +38,8 @@ protocol DetailPageViewModel: class {
     var groupId: String { get }
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
+    var houseType: HouseType { get set }
+    var houseId: Int64 { get set }
 
     var tableView: UITableView? { get set }
 
@@ -333,12 +335,50 @@ extension DetailPageViewModel {
                     recordEvent(key: "click_call", params: theParams.exclude("search").exclude("filter"))
                     
                     if let phone = contactPhone?.phone, phone.count > 0 {
-
-                        Utils.telecall(phoneNumber: phone)
+                        
+                        self?.callRealtorPhone(contactPhone: contactPhone)
+                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                                                  followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                                                  followId: "\(self?.houseId ?? -1)",
+                            disposeBag: self?.disposeBag ?? DisposeBag(),
+                            isNeedRecord: true)()
+                        
+                    }else {
+//                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
                 })
                 .disposed(by: self.disposeBag)
         }
+    }
+    
+    // MARK: 电话转接以及拨打相关操作
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+        
+        guard let phone = contactPhone?.phone, phone.count > 0 else {
+            return
+        }
+        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
+            Utils.telecall(phoneNumber: phone)
+            return
+        }
+        
+        EnvContext.shared.toast.showToast("电话查询中")
+        requestVirtualNumber(realtorId: realtorId)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.toast.dismissToast()
+                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
+                    
+                    Utils.telecall(phoneNumber: virtualNumber)
+                }else {
+                    Utils.telecall(phoneNumber: phone)
+                }
+                
+            }, onError: {  (error) in
+                EnvContext.shared.toast.dismissToast()
+                Utils.telecall(phoneNumber: phone)
+            })
+            .disposed(by: self.disposeBag)
+        
     }
 
 }

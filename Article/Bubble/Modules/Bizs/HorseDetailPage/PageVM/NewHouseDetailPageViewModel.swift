@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var houseType: HouseType = .newHouse
+    var houseId: Int64 = -1
 
 
     var shareInfo: ShareInfo?
@@ -53,8 +55,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     let disposeBag = DisposeBag()
 
     private var cellFactory: UITableViewCellFactory
-
-    private var houseId: Int64 = -1
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
 

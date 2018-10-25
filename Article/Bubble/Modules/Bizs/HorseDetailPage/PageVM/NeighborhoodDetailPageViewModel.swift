@@ -8,6 +8,10 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    
+    var houseType: HouseType = .neighborhood
+    var houseId: Int64 = -1
+    
 
     var showMessageAlert: ((String) -> Void)?
 
@@ -56,8 +60,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
     //小区内相关
     private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
-
-    private var houseId: Int64 = -1
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     

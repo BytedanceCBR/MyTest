@@ -11,6 +11,10 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    
+    var houseType: HouseType = .newHouse
+    var houseId: Int64 = -1
+    
     //TODO: 将已有的showalert回调调整成与详情页一致
     var showMessageAlert: ((String) -> Void)?
 
