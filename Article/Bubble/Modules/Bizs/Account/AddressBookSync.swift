@@ -18,7 +18,6 @@ class AddressBookSync {
                         source: TTContactsUploadSourceSilent,
                         userActive: false,
                         completion: { (error, jsonObj) in
-                    print("通讯录同步完成\(error) - \(jsonObj)")
                     })
                 } else {
                     assertionFailure()
