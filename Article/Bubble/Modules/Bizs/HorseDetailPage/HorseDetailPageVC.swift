@@ -846,9 +846,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text?, phoneNum.count == 11
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: houseType))
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType))
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
