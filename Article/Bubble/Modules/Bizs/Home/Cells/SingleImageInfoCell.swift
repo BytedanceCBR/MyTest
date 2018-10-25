@@ -6,6 +6,32 @@
 import UIKit
 import SnapKit
 import CoreGraphics
+
+class CornerView: UIView {
+
+    init() {
+        super.init(frame: CGRect.zero)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let maskPath = UIBezierPath(
+            roundedRect: self.bounds,
+            byRoundingCorners: [UIRectCorner.bottomLeft,
+                                UIRectCorner.bottomRight],
+            cornerRadii: CGSize(width: 5, height: 5))
+        let layer = CAShapeLayer()
+        layer.frame = self.bounds
+        layer.path = maskPath.cgPath
+        self.layer.mask = layer
+    }
+
+}
+
 class SingleImageInfoCell: BaseUITableViewCell {
 
     override open class var identifier: String {
@@ -29,7 +55,7 @@ class SingleImageInfoCell: BaseUITableViewCell {
     lazy var majorImageView: UIImageView = {
         let re = UIImageView()
         re.contentMode = .scaleAspectFill
-//        re.layer.cornerRadius = 4
+        re.layer.cornerRadius = 4
         re.layer.masksToBounds = true
         re.layer.borderWidth = 0.5
         re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
@@ -81,6 +107,21 @@ class SingleImageInfoCell: BaseUITableViewCell {
     lazy var bottomView: UIView = {
         let view = UIView()
         return view
+    }()
+
+    lazy var imageTopLeftLabel: UILabel = {
+        let re = UILabel()
+        re.text = "新上"
+        re.textColor = UIColor.white
+        re.font = CommonUIStyle.Font.pingFangRegular(10)
+        return re
+    }()
+
+    lazy var imageTopLeftLabelBgView: CornerView = {
+        let re = CornerView()
+        re.backgroundColor = hexStringToUIColor(hex: "#ff5b4c")
+        re.isHidden = true
+        return re
     }()
     
     required init?(coder aDecoder: NSCoder) {
@@ -164,10 +205,26 @@ class SingleImageInfoCell: BaseUITableViewCell {
 
         }
 
+        contentView.addSubview(imageTopLeftLabelBgView)
+        imageTopLeftLabelBgView.snp.makeConstraints { (maker) in
+            maker.left.equalTo(majorImageView.snp.left).offset(6)
+            maker.top.equalTo(majorImageView.snp.top)
+        }
+
+        imageTopLeftLabelBgView.addSubview(imageTopLeftLabel)
+        imageTopLeftLabel.snp.makeConstraints { (maker) in
+            maker.left.equalTo(4)
+            maker.right.equalTo(-4)
+            maker.top.equalTo(3)
+            maker.bottom.equalTo(-3)
+        }
+
 
     }
     
-    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    override func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }
@@ -215,6 +272,9 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell,
 
     cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
     cell.majorImageView.bd_setImage(with: URL(string: item.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+
+
+    //新上/降价
 
 }
 
