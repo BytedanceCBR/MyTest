@@ -17,7 +17,7 @@ extension Notification.Name {
 }
 
 
-class Client: NSObject {
+@objc class Client: NSObject {
 
     static let appId = "1370"
 

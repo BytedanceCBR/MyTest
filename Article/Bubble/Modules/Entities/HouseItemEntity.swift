@@ -5,11 +5,11 @@
 
 import ObjectMapper
 
-enum HouseType: Int {
+@objc enum HouseType: Int {
     case newHouse = 1
     case secondHandHouse = 2
     case rentHouse = 3
-    case neighborhood = 4
+    case neighborhood = 4    
 
     func traceTypeValue() -> String {
         switch self {

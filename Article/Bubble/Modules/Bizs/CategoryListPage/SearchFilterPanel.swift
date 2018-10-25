@@ -18,7 +18,7 @@ enum ConditionItemType {
     case expand(String)
 }
 
-class SearchFilterPanel: UIView {
+@objc class SearchFilterPanel: UIView {
 
     var itemViews: [SearchConditionItemView] = []
 
@@ -159,7 +159,7 @@ func setFilterConditionItemBy(item: SearchConditionItem, reload: @escaping () ->
     reload()
 }
 
-class SearchConditionItemView: UIView {
+@objc class SearchConditionItemView: UIView {
 
     lazy var conditionLabel: UILabel = {
         let result = UILabel()

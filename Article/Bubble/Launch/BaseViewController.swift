@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseViewController: UIViewController {
+@objc class BaseViewController: UIViewController {
 
     private var progressHud: MBProgressHUD?
 

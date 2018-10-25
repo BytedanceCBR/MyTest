@@ -79,4 +79,6 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 
+#import "FHMapSearchViewController.h"
+
 #endif /* Article_Bridging_Header_h */

@@ -229,6 +229,32 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    private func checkMapJump(){
+
+        let rect = CGRect(x:10,y:100,width:50,height:50)
+        let button = UIButton(frame:rect)
+        button.addTarget(self, action: #selector(CategoryListPageVC.jumpMapAction), for: .touchUpInside)
+        button.backgroundColor = UIColor.red
+        self.view.addSubview(button)
+    }
+    
+    @objc func jumpMapAction(){
+        
+        let configModel = FHMapSearchConfigModel()
+
+        guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
+            return
+        }
+        configModel.centerLongitude = mapSearch.centerLongitude ?? ""
+        configModel.centerLatitude = mapSearch.centerLatitude ?? ""
+        configModel.resizeLevel = mapSearch.resizeLevel ?? 11
+        configModel.houseType = self.houseType.value.rawValue
+        let controller = FHMapSearchViewController(configModel: configModel)
+//        controller.houseType = self.houseType.value.rawValue
+        self.navigationController?.pushViewController(controller, animated: true)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -410,6 +436,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
         self.errorVM?.onRequestViewDidLoad()
+        
+        self.checkMapJump()
     }
 
     func bindLoadMore() {

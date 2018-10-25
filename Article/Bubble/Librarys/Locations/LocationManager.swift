@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class LocationManager: NSObject, AMapLocationManagerDelegate {
+@objc class LocationManager: NSObject, AMapLocationManagerDelegate {
     // local test
 //        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
     // release
@@ -24,7 +24,8 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
     let currentCity = BehaviorRelay<AMapLocationReGeocode?>(value: nil)
 
     let disposeBag = DisposeBag()
-
+    
+    
     private override init() {
         AMapServices.shared().apiKey = LocationManager.apiKey
         AMapServices.shared().enableHTTPS = true

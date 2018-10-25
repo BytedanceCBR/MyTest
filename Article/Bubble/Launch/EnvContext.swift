@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EnvContext: NSObject {
+@objc class EnvContext: NSObject {
     @objc static let shared = EnvContext()
 
     @objc static let networkConfig: NetworkConfig = {
