@@ -14,7 +14,7 @@ enum FollowActionType: Int {
     case newHouse = 1
     case ershouHouse = 2
     case rentHouse = 3
-    case beighborhood = 4
+    case neighborhood = 4
     case newHousePriceChanged = 5
     case openFloorPan = 6
 

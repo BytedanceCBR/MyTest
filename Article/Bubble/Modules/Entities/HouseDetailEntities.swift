@@ -153,6 +153,19 @@ struct CourtTimelineResponse: Mappable {
     }
 }
 
+struct SendPhoneNumResponse: Mappable {
+    var status: Int?
+    var message: String?
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        status <- map["status"]
+        message <- map["message"]
+    }
+}
+
 struct CourtPriceResponse: Mappable {
     
     var status: Int?

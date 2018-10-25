@@ -501,11 +501,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams("\(self.houseId)", key: "group_id")
                     recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
-                    
-//                    EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注")
-//                    self.detailPageViewModel?.followThisItem(isNeedRecord: true)
 
-                    self.callRealtorPhone(contactPhone: contactPhone)
+                    if let phone = contactPhone?.phone, phone.count > 0 {
+                        
+                        self.callRealtorPhone(contactPhone: contactPhone)
+                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                  followId: "\(self.houseId)",
+                                                                    disposeBag: self.disposeBag,
+                                                                    isNeedRecord: true)()
+                        
+                    }else {
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                    }
+
                 })
                 .disposed(by: disposeBag)
         }
@@ -563,6 +572,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
+    
     
     // MARK: 电话转接以及拨打相关操作
     func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
@@ -766,6 +776,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             return "be_null"
         }
     }
+    
+    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "app_court"
+        case .secondHandHouse:
+            return "app_oldhouse"
+        case .neighborhood:
+            return "app_neighbourhood"
+        default:
+            return "be_null"
+        }
+    }
+
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -780,33 +804,82 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     func showQuickLoginAlert(title: String, subTitle: String) {
         
-        let alert = NIHNoticeAlertView()
+//        let alert = NIHNoticeAlertView()
+        
         
         var enter_type: String?
+        var subTitleStr: String = subTitle
+        let confirmBtnTitle: String = "确认"
         if title == "开盘通知" {
             enter_type = "openning_notice"
+            subTitleStr = "订阅开盘通知，楼盘开盘信息会及时发送到您的手机"
         }else if title == "变价通知" {
             enter_type = "price_notice"
+            subTitleStr = "订阅变价通知，楼盘变价信息会及时发送到您的手机"
         }
         
-        if let enterType = enter_type {
-            
-            var tracerParams = EnvContext.shared.homePageParams
-            tracerParams = tracerParams <|>
-                toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(enterType, key: "enter_type") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-            alert.tracerParams = tracerParams
-            
-        }
-        quickLoginVM = QuickLoginAlertViewModel(
-                title: title,
-                subTitle: subTitle,
-                alert: alert)
+        self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
+        
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+//
+//        quickLoginVM = QuickLoginAlertViewModel(
+//                title: title,
+//                subTitle: subTitle,
+//                alert: alert)
+//        alert.showFrom(self.view)
+    }
+    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+        
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                {
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType))
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
+        
+//        var enter_type: String?
+//        if title == "开盘通知" {
+//            enter_type = "openning_notice"
+//        }else if title == "变价通知" {
+//            enter_type = "price_notice"
+//        }
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+    
         alert.showFrom(self.view)
     }
+    
+    
 
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
         
