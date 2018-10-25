@@ -787,7 +787,16 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
         theCell.priceLabel.text = data.displayPrice
         theCell.roomSpaceLabel.text = data.displayPricePerSqm
         theCell.majorImageView.bd_setImage(with: URL(string: data.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+        if let houseImageTag = data.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            theCell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            theCell.imageTopLeftLabel.text = houseImageTag.text
+            theCell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            theCell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            theCell.imageTopLeftLabelBgView.isHidden = true
+        }
     }
 }
 
