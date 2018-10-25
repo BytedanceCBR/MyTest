@@ -390,6 +390,9 @@ class NHSendPhoneNumberPanel: UIView {
             maker.height.equalTo(24)
             maker.width.equalTo(80)
         }
+        
+       errorLineView.isHidden = false
+       errorTextLabel.isHidden = false
        
     }
     

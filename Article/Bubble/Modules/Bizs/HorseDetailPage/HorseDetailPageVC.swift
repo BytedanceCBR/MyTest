@@ -776,6 +776,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             return "be_null"
         }
     }
+    
+    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "app_court"
+        case .secondHandHouse:
+            return "app_oldhouse"
+        case .neighborhood:
+            return "app_neighbourhood"
+        default:
+            return "be_null"
+        }
+    }
+
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -790,32 +804,41 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     func showQuickLoginAlert(title: String, subTitle: String) {
         
-        let alert = NIHNoticeAlertView()
+//        let alert = NIHNoticeAlertView()
+        
         
         var enter_type: String?
+        var subTitleStr: String = subTitle
+        let confirmBtnTitle: String = "确认"
         if title == "开盘通知" {
             enter_type = "openning_notice"
+            subTitleStr = "订阅开盘通知，楼盘开盘信息会及时发送到您的手机"
         }else if title == "变价通知" {
             enter_type = "price_notice"
+            subTitleStr = "订阅变价通知，楼盘变价信息会及时发送到您的手机"
         }
         
-        if let enterType = enter_type {
-            
-            var tracerParams = EnvContext.shared.homePageParams
-            tracerParams = tracerParams <|>
-                toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(enterType, key: "enter_type") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-            alert.tracerParams = tracerParams
-            
-        }
-        quickLoginVM = QuickLoginAlertViewModel(
-                title: title,
-                subTitle: subTitle,
-                alert: alert)
-        alert.showFrom(self.view)
+        self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
+        
+//
+//        if let enterType = enter_type {
+//
+//            var tracerParams = EnvContext.shared.homePageParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams("new_detail", key: "enter_from") <|>
+//                toTracerParams(enterType, key: "enter_type") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
+//
+//        }
+//
+//        quickLoginVM = QuickLoginAlertViewModel(
+//                title: title,
+//                subTitle: subTitle,
+//                alert: alert)
+//        alert.showFrom(self.view)
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
@@ -823,9 +846,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if alert.sendPhoneView.phoneTextField.text?.count == 11
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text?, phoneNum.count == 11
                 {
-                    self.detailPageViewModel?.requestSendPhoneNumber()
+                    self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: houseType))
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
