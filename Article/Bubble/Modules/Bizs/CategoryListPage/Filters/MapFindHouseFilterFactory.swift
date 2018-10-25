@@ -7,22 +7,22 @@
 
 import Foundation
 
-class MapFindHouseFilterFactory: NSObject {
-    func createFilterPanel() -> HouseFilterViewModel {
+@objc class MapFindHouseFilterFactory: NSObject {
+    @objc func createFilterPanelViewModel() -> HouseFilterViewModel {
         return HouseFilterViewModel()
     }
 }
 
-protocol HouseFilterViewModelDelegate: NSObjectProtocol {
+@objc protocol HouseFilterViewModelDelegate: NSObjectProtocol {
     func onConditionChanged(condition: String)
 }
 
-class HouseFilterViewModel: NSObject {
+@objc class HouseFilterViewModel: NSObject {
 
     weak var delegate: HouseFilterViewModelDelegate?
 
     // 搜索过滤器展现面版
-    lazy var filterPanelView: UIView = {
+    @objc lazy var filterPanelView: UIView = {
         let re = UIView()
         re.backgroundColor = UIColor.blue
         return re
@@ -30,8 +30,8 @@ class HouseFilterViewModel: NSObject {
 
 
     /// 用户设置条件的面版
-    lazy var filterConditionPanel: UIView = {
-        let re = UIView()
+    @objc lazy var filterConditionPanel: UIControl = {
+        let re = UIControl()
         re.backgroundColor = UIColor.blue
         re.isHidden = true
         return re

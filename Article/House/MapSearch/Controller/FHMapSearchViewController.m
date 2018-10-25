@@ -26,8 +26,9 @@
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchViewModel *viewModel;
-@property(nonatomic , strong) SearchFilterPanel *filterPanel;
+@property(nonatomic , strong) UIView *filterPanel;
 @property(nonatomic , strong) UIControl *filterBgControl;
+@property(nonatomic , strong) HouseFilterViewModel* houseFilterViewModel;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 
 @end
@@ -68,14 +69,6 @@
         [_mapView updateUserLocationRepresentation:representation];
     }
     return _mapView;
-}
-
--(SearchFilterPanel *)filterPanel
-{
-    if (!_filterPanel) {
-        _filterPanel = [[SearchFilterPanel alloc] init];
-    }
-    return _filterPanel;
 }
 
 -(FHMapSearchTipView *)tipView
@@ -129,8 +122,11 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.viewModel = [[FHMapSearchViewModel alloc]init];
-    
+    MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
+    self.houseFilterViewModel = [factory createFilterPanelViewModel];
     self.filterBgControl = [[UIControl alloc] init];
+    self.filterPanel = self.houseFilterViewModel.filterPanelView;
+    self.filterBgControl = self.houseFilterViewModel.filterConditionPanel;
     [self.view addSubview:self.mapView];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
@@ -154,7 +150,9 @@
         make.top.left.bottom.right.mas_equalTo(self.view);
     }];
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(100);
+        make.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(51);
     }];
 }
 
