@@ -135,6 +135,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     var allParams: [String: Any]?
 
+    var searchSortBtn: UIButton = {
+        let re = UIButton()
+        re.setImage(UIImage(named: "sort"), for: .normal)
+        re.setImage(UIImage(named: "sort_selected"), for: .selected)
+        return re
+    }()
+
     init(isOpenConditionFilter: Bool, associationalWord: String? = nil) {
         self.isOpenConditionFilter = isOpenConditionFilter
         self.associationalWord = associationalWord
@@ -364,10 +371,19 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 })
                 .disposed(by: disposeBag)
 
+        view.addSubview(searchSortBtn)
         view.addSubview(searchFilterPanel)
+
+        searchSortBtn.snp.makeConstraints { (maker) in
+            maker.height.width.equalTo(20)
+            maker.right.equalTo(-15)
+            maker.bottom.equalTo(searchFilterPanel.snp.bottom).offset(-10)
+        }
+
         searchFilterPanel.snp.makeConstraints { maker in
             maker.top.equalTo(navBar.snp.bottom)
-            maker.left.right.equalToSuperview()
+            maker.left.equalToSuperview()
+            maker.right.equalTo(searchSortBtn.snp.left)
             maker.height.equalTo(44)
         }
 
