@@ -33,6 +33,7 @@ class HouseFilterViewModel: NSObject {
     lazy var filterConditionPanel: UIView = {
         let re = UIView()
         re.backgroundColor = UIColor.blue
+        re.isHidden = true
         return re
     }()
 
