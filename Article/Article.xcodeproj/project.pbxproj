@@ -321,6 +321,9 @@
 		3D3CCED421801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
 		3D3CCED521801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
 		3D3CCED621801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
+		3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
+		3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
+		3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */; };
 		3F765B1D16DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
@@ -6091,6 +6094,8 @@
 		3D3CCECE21801A40008F0378 /* FHBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHBaseViewController.m; sourceTree = "<group>"; };
 		3D3CCED221801A66008F0378 /* FHMapSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchViewController.h; sourceTree = "<group>"; };
 		3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMapSearchViewController.m; sourceTree = "<group>"; };
+		3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHMDMonitorStartupTask.h; sourceTree = "<group>"; };
+		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3F765AC616DB563F0037C3E3 /* ArticleGetLocalDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleGetLocalDataOperation.h; sourceTree = "<group>"; };
 		3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleGetLocalDataOperation.m; sourceTree = "<group>"; };
@@ -13272,6 +13277,8 @@
 				FEB9CB091F7516F5005EA557 /* TTFeedPreloadTask.m */,
 				F223E0D02002057600A03AC5 /* TTIESPlayerTask.h */,
 				F223E0D12002057600A03AC5 /* TTIESPlayerTask.m */,
+				3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */,
+				3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -19709,6 +19716,7 @@
 				A97DC49A1F1333640002B455 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B388CB742142652A00653188 /* HeaderCell.swift in Sources */,
 				B388CCB02142652B00653188 /* TGBallScaleRipple.swift in Sources */,
+				3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				A97DC4B61F1333640002B455 /* TTPersonalHomeErrorView.m in Sources */,
 				ABBEA6DF1F334345005DAD27 /* TTLayOutPureTitleCell.m in Sources */,
 				2DB9A5A41F20B01D005E4A06 /* TTAdCanvasPreloader.m in Sources */,
@@ -21392,6 +21400,7 @@
 				B373CAD42174587A008F9905 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B373CAD52174587A008F9905 /* HeaderCell.swift in Sources */,
 				B373CAD62174587A008F9905 /* TGBallScaleRipple.swift in Sources */,
+				3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				B373CAD72174587A008F9905 /* TTPersonalHomeErrorView.m in Sources */,
 				B373CAD82174587A008F9905 /* TTLayOutPureTitleCell.m in Sources */,
 				B373CAD92174587A008F9905 /* TTAdCanvasPreloader.m in Sources */,
@@ -23075,6 +23084,7 @@
 				FEFA55A8205FB1A8001F50D8 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
 				B388CB752142652A00653188 /* HeaderCell.swift in Sources */,
 				B388CCB12142652B00653188 /* TGBallScaleRipple.swift in Sources */,
+				3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				FEFA55A9205FB1A8001F50D8 /* TTPersonalHomeErrorView.m in Sources */,
 				FEFA55AA205FB1A8001F50D8 /* TTLayOutPureTitleCell.m in Sources */,
 				FEFA55AD205FB1A8001F50D8 /* TTAdCanvasPreloader.m in Sources */,

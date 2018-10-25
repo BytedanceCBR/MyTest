@@ -255,6 +255,56 @@ PODS:
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
   - Godzippa (1.1.0)
+  - Heimdallr (0.4.10):
+    - Heimdallr/Core (= 0.4.10)
+    - Heimdallr/TTMonitor (= 0.4.10)
+    - Heimdallr/WCDB (= 0.4.10)
+  - Heimdallr/Core (0.4.10):
+    - Heimdallr/CrashDetector
+    - Heimdallr/DeviceInfo
+    - Heimdallr/HMDANR
+    - Heimdallr/HMDConfig
+    - Heimdallr/HMDOOM
+    - Heimdallr/HMDSession
+    - Heimdallr/HMDStart
+    - Heimdallr/HMDStore
+    - Heimdallr/Log
+    - Heimdallr/Mach
+    - Heimdallr/MemorySnapshot
+    - Heimdallr/UITracker
+    - Heimdallr/Upload
+    - Heimdallr/Utility
+    - TTReachability
+  - Heimdallr/CrashDetector (0.4.10):
+    - Heimdallr/Mach
+  - Heimdallr/DeviceInfo (0.4.10):
+    - Heimdallr/Utility
+  - Heimdallr/HMDANR (0.4.10)
+  - Heimdallr/HMDConfig (0.4.10):
+    - Heimdallr/Upload
+  - Heimdallr/HMDOOM (0.4.10):
+    - Heimdallr/DeviceInfo
+    - Heimdallr/Log
+    - Heimdallr/Utility
+  - Heimdallr/HMDSession (0.4.10)
+  - Heimdallr/HMDStart (0.4.10)
+  - Heimdallr/HMDStore (0.4.10)
+  - Heimdallr/Log (0.4.10):
+    - Heimdallr/DeviceInfo
+    - Heimdallr/Mach
+    - Heimdallr/Utility
+  - Heimdallr/Mach (0.4.10)
+  - Heimdallr/MemorySnapshot (0.4.10):
+    - Heimdallr/Utility
+  - Heimdallr/TTMonitor (0.4.10)
+  - Heimdallr/UITracker (0.4.10):
+    - Heimdallr/Utility
+  - Heimdallr/Upload (0.4.10):
+    - TTReachability
+  - Heimdallr/Utility (0.4.10)
+  - Heimdallr/WCDB (0.4.10):
+    - Heimdallr/Core
+    - WCDB (= 1.0.6)
   - HTSVideoPlay (0.3.9):
     - AKShareServicePlugin
     - HTSVideoPlay/Yoga (= 0.3.9)
@@ -1049,6 +1099,9 @@ PODS:
   - TTVTLIndexPathTools (0.4.4)
   - UITableView+FDTemplateLayoutCell (1.6)
   - UMengAnalytics (4.1.4)
+  - WCDB (1.0.6):
+    - WCDB/sqlcipher (= 1.0.6)
+  - WCDB/sqlcipher (1.0.6)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -1090,6 +1143,7 @@ DEPENDENCIES:
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
   - FLEX (= 2.1.1)
+  - Heimdallr (= 0.4.10)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESSafeGuard (= 0.6.5)
   - IESVideoPlayer (= 0.1.16)
@@ -1309,6 +1363,7 @@ SPEC CHECKSUMS:
   FLEX: 27b768fcae23a313a1eb115076d429180ca9b472
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  Heimdallr: 3a44027a0e13f85edef918634b9da700468fea63
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESSafeGuard: 16f342dc14823ccde841b74e985024ff14d4c714
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
@@ -1396,12 +1451,13 @@ SPEC CHECKSUMS:
   TTVTLIndexPathTools: 997b28f180f2847b2da6b1bd340b87623f1429d3
   UITableView+FDTemplateLayoutCell: 5c949b4a5059c404b442926c0e80f81d10a2d66f
   UMengAnalytics: 0bde5737767dfc18afb03a4cd6ba9d57bb2ad10d
+  WCDB: 4d2926bf695b2e00d785b50afd32c2dcc8cbbd98
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: 3ce1f6fbade602b2475ee7eda9b29afffca2050c
+PODFILE CHECKSUM: 0b5a1d1143cce886df0f6f2eb56a7831fd9b889e
 
 COCOAPODS: 1.4.0

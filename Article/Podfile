@@ -194,6 +194,7 @@ def appPods
     #-----头条端监控库-----
 #    pod 'TTMonitor', '0.7.9.42'
     pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+    pod 'Heimdallr', '0.4.10'
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
