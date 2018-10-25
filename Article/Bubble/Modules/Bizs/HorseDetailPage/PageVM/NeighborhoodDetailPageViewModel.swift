@@ -186,14 +186,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if status {
                 cancelFollowIt(
                     houseType: .neighborhood,
-                    followAction: .beighborhood,
+                    followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag)()
 
             } else {
                 followIt(
                     houseType: .neighborhood,
-                    followAction: .beighborhood,
+                    followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag,
                     isNeedRecord: isNeedRecord)()
@@ -202,7 +202,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         case .failure(_): do {}
         }
     }
-
+    
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
 

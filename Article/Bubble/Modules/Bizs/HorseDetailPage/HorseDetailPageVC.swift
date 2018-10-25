@@ -502,8 +502,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         toTracerParams("\(self.houseId)", key: "group_id")
                     recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
                     
-//                    EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注")
-//                    self.detailPageViewModel?.followThisItem(isNeedRecord: true)
+                    self.detailPageViewModel?.followHouseItem(houseType: .neighborhood,
+                                                                     followAction: .neighborhood,
+                                                                     followId: "\(self.houseId)",
+                                                                    disposeBag: self.disposeBag,
+                                                                    isNeedRecord: true)()
 
                     self.callRealtorPhone(contactPhone: contactPhone)
                 })
@@ -563,6 +566,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
+    
     
     // MARK: 电话转接以及拨打相关操作
     func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
