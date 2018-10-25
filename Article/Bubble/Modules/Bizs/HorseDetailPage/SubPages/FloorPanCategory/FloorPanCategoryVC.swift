@@ -184,6 +184,8 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         emptyMaskView.snp.remakeConstraints { maker in
             maker.top.bottom.right.left.equalTo(view)
         }
+        
+        view.bringSubview(toFront: bottomBar)
     }
     
 

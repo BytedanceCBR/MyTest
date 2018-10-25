@@ -62,7 +62,6 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
             bottomBarBinder: { (_,_) in
 
             })
-        bottomBar.isHidden = true
 
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
@@ -105,8 +104,6 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                 .bind { () in
                     Utils.telecall(phoneNumber: phone)
                 }.disposed(by: disposeBag)
-        } else {
-            bottomBar.isHidden = true
         }
     }
 

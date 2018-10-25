@@ -495,6 +495,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
                 .bind(onNext: { [unowned self] (contactPhone) in
+                    self.followForSendPhone()
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
@@ -504,7 +505,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 //                                                                  followId: "\(self.houseId)",
 //                                                                    disposeBag: self.disposeBag,
 //                                                                    isNeedRecord: true)()
-                        self.followForSendPhone()
                         
                         if self.houseType != .neighborhood {
                             
@@ -861,15 +861,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
-        
-        self.followForSendPhone()
-
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
@@ -881,31 +877,29 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             .disposed(by: disposeBag)
         
-//        var enter_type: String?
-//        if title == "开盘通知" {
-//            enter_type = "openning_notice"
-//        }else if title == "变价通知" {
-//            enter_type = "price_notice"
-//        }
-//
-//        if let enterType = enter_type {
-//
-//            var tracerParams = EnvContext.shared.homePageParams
-//            tracerParams = tracerParams <|>
-//                toTracerParams("new_detail", key: "enter_from") <|>
-//                toTracerParams(enterType, key: "enter_type") <|>
-//                toTracerParams(self.houseId, key: "group_id") <|>
-//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-//            alert.tracerParams = tracerParams
-//
-//        }
+        var enter_type: String?
+        if title == "开盘通知" {
+            enter_type = "openning_notice"
+        }else if title == "变价通知" {
+            enter_type = "price_notice"
+        }
+
+        if let enterType = enter_type {
+
+            var tracerParams = EnvContext.shared.homePageParams
+            tracerParams = tracerParams <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams(enterType, key: "enter_type") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+            alert.tracerParams = tracerParams
+
+        }
     
         alert.showFrom(self.view)
     }
     
-    
-
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {
         
         let alert = BubbleAlertController(

@@ -290,6 +290,18 @@ extension DetailPageViewModel {
         }
     }
     
+    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "app_court"
+        case .secondHandHouse:
+            return "app_oldhouse"
+        case .neighborhood:
+            return "app_neighbourhood"
+        default:
+            return "be_null"
+        }
+    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton) in
@@ -338,14 +350,16 @@ extension DetailPageViewModel {
                 .withLatestFrom(self.contactPhone)
                 .bind(onNext: {[weak self] (contactPhone) in
                     
+                    self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                          followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                          followId: "\(self?.houseId ?? -1)",
+                        disposeBag: self?.disposeBag ?? DisposeBag(),
+                        isNeedRecord: true)()
+                    
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self?.callRealtorPhone(contactPhone: contactPhone)
-                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
-                                                                  followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
-                                                                  followId: "\(self?.houseId ?? -1)",
-                            disposeBag: self?.disposeBag ?? DisposeBag(),
-                            isNeedRecord: true)()
+
                         
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
@@ -369,10 +383,53 @@ extension DetailPageViewModel {
                         }
                         
                     }else {
-//                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
                 })
                 .disposed(by: self.disposeBag)
+        }
+    }
+    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                {
+                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+                        alert.dismiss()
+                    }
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        var enter_type: String?
+        if title == "开盘通知" {
+            enter_type = "openning_notice"
+        }else if title == "变价通知" {
+            enter_type = "price_notice"
+        }
+        
+        if let enterType = enter_type {
+            
+            var tracerParams = EnvContext.shared.homePageParams
+            tracerParams = tracerParams <|>
+                toTracerParams("new_detail", key: "enter_from") <|>
+                toTracerParams(enterType, key: "enter_type") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(self.searchId ?? "be_null", key: "search_id")
+            alert.tracerParams = tracerParams
+            
+        }
+        
+        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        {
+            alert.showFrom(rootView)
         }
     }
     
