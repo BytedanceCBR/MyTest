@@ -84,7 +84,8 @@ struct HouseItemInnerEntity: Mappable {
     var cellstyle: Int?
     var logPB: [String: Any]?
     var images: [ImageItem]?
-    
+    var houseImageTag: HouseImageTag?
+    var recommendReasons: [ResommendReason]?
     var fhSearchId: String?
 
     init?(map: Map) {
@@ -118,10 +119,65 @@ struct HouseItemInnerEntity: Mappable {
         cellstyle <- map["cell_style"]
         images <- map["images"]
         tags <- map["tags"]
+        houseImageTag <- map["house_image_tag"]
+        recommendReasons <- map["recommend_reasons"]
         logPB <- map["log_pb"]
+    }
+
+    struct HouseImageTag: Mappable {
+
+        var id: String?
+        var text: String?
+        var backgroundColor: String?
+        var textColor: String?
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            text <- map["text"]
+            backgroundColor <- map["background_color"]
+            textColor <- map["text_color"]
+        }
+    }
+
+    struct ResommendReason: Mappable {
+
+        var id: String?
+        var text: String?
+        var textColor: String?
+        var textAlpha: Int?
+        var backgroundColor: String?
+        var backgroundAlpha: Int?
+        var iconText: String?
+        var iconTextColor: String?
+        var iconTextAlpha: String?
+        var iconBackgroundColor: String?
+        var iconBackgroundAlpha: String?
+        
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            text <- map["text"]
+            textColor <- map["text_color"]
+            textAlpha <- map["text_alpha"]
+            backgroundColor <- map["background_color"]
+            backgroundAlpha <- map["background_alpha"]
+            iconText <- map["icon_text"]
+            iconTextColor <- map["icon_text_color"]
+            iconTextAlpha <- map["icon_text_alpha"]
+            iconBackgroundColor <- map["icon_background_color"]
+            iconBackgroundAlpha <- map["icon_background_alpha"]
+        }
     }
     
 }
+
 
 struct HouseItemAttribute: Mappable {
     var attr: String?
