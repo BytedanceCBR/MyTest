@@ -91,29 +91,32 @@ class BaseSubPageViewController: BaseViewController {
             }
         }
 
-        if !self.isHiddenBottomBar {
-            self.view.addSubview(bottomBar)
-            bottomBar.snp.makeConstraints { maker in
-                if #available(iOS 11, *) {
-                    maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-                } else {
-                    maker.bottom.equalToSuperview()
-                }
-                maker.left.right.equalToSuperview()
-
+        var titleStr:String = !self.isHiddenBottomBar ? "电话咨询" : "询底价"
+        bottomBar.contactBtn.setTitle(titleStr, for: .normal)
+        bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
+        
+        self.view.addSubview(bottomBar)
+        bottomBar.snp.makeConstraints { maker in
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                maker.bottom.equalToSuperview()
             }
+            maker.left.right.equalToSuperview()
+            
         }
-
 
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.equalToSuperview()
-            if !self.isHiddenBottomBar {
-                maker.bottom.equalTo(bottomBar.snp.top)
-            } else {
-                maker.bottom.equalToSuperview()
-            }
+            maker.bottom.equalTo(bottomBar.snp.top)
+
+//            if !self.isHiddenBottomBar {
+//                maker.bottom.equalTo(bottomBar.snp.top)
+//            } else {
+//                maker.bottom.equalToSuperview()
+//            }
 
         }
 
@@ -136,12 +139,6 @@ class BaseSubPageViewController: BaseViewController {
             self.bottomBar.isHidden = false
         }
 
-//        bottomBar.favouriteBtn.rx.tap
-//            .bind(onNext: self.followIt(
-//                houseType: houseType,
-//                followAction: followActionType,
-//                followId: identifier))
-//            .disposed(by: disposeBag)
     }
 
     override func didReceiveMemoryWarning() {

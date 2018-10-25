@@ -596,7 +596,7 @@ func parseNewHouseFloorPanCollectionNode(
         bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
     return {
         if newHouseData.floorPan?.list?.count ?? 0 > 0 {
-            let cellRender = oneTimeRender(curry(fillGuessLikeFloorPanCell)(newHouseData.floorPan?.list ?? [])(newHouseData.logPB)(newHouseData.contact == nil || newHouseData.contact?["phone"]?.isEmpty ?? true)(logPb)(navVC)(followPage)(bottomBarBinder))
+            let cellRender = oneTimeRender(curry(fillGuessLikeFloorPanCell)(newHouseData.floorPan?.list ?? [])(newHouseData.logPB)(newHouseData.contact?.phone?.count ?? 0 < 1)(logPb)(navVC)(followPage)(bottomBarBinder))
             let params = TracerParams.momoid() <|>
                 toTracerParams("house_model", key: "element_type") <|>
                 toTracerParams("new_detail", key: "enter_from") <|>

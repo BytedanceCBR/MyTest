@@ -163,11 +163,14 @@
     CGFloat bottomPadding = 0;
     CGFloat topPadding = 0;
     
-    topPadding = 16 + kTopSearchButtonHeight + kSelectorViewHeight + 16;//好多房设计稿整体topbar高度120
+    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//好多房设计稿整体topbar高度120
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){
-        topPadding = 44.f + kTopSearchButtonHeight + kSelectorViewHeight;
+        topPadding = 50 + kTopSearchButtonHeight + kSelectorViewHeight ;
+    }else if ([TTDeviceHelper is667Screen])
+    {
+        topPadding = 36 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     
     self.topInset = topPadding;

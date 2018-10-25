@@ -315,6 +315,12 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D3CCECF21801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
+		3D3CCED021801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
+		3D3CCED121801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
+		3D3CCED421801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
+		3D3CCED521801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
+		3D3CCED621801A66008F0378 /* FHMapSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */; };
 		3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */; };
 		3F765B1D16DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
@@ -6078,6 +6084,10 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D3CCECD21801A40008F0378 /* FHBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHBaseViewController.h; sourceTree = "<group>"; };
+		3D3CCECE21801A40008F0378 /* FHBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHBaseViewController.m; sourceTree = "<group>"; };
+		3D3CCED221801A66008F0378 /* FHMapSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchViewController.h; sourceTree = "<group>"; };
+		3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMapSearchViewController.m; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3F765AC616DB563F0037C3E3 /* ArticleGetLocalDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleGetLocalDataOperation.h; sourceTree = "<group>"; };
 		3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleGetLocalDataOperation.m; sourceTree = "<group>"; };
@@ -10152,6 +10162,7 @@
 			isa = PBXGroup;
 			children = (
 				B388CB152142652900653188 /* Article-Bridging-Header.h */,
+				3D3CCEC7218013C7008F0378 /* House */,
 				B388C9D82142652800653188 /* Bubble */,
 				A8323FEF1B81B94E00DD5533 /* README.md */,
 				7B036C321F9DC7D3009AA77A /* TTWendaAdapter */,
@@ -10487,6 +10498,57 @@
 				3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */,
 			);
 			path = SSLoadMoreCell;
+			sourceTree = "<group>";
+		};
+		3D3CCEC7218013C7008F0378 /* House */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCECC21801A32008F0378 /* Base */,
+				3D3CCEC82180155A008F0378 /* MapSearch */,
+			);
+			path = House;
+			sourceTree = "<group>";
+		};
+		3D3CCEC82180155A008F0378 /* MapSearch */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCEC92180155A008F0378 /* ViewModel */,
+				3D3CCECA2180155A008F0378 /* Controller */,
+				3D3CCECB2180155A008F0378 /* View */,
+			);
+			path = MapSearch;
+			sourceTree = "<group>";
+		};
+		3D3CCEC92180155A008F0378 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		3D3CCECA2180155A008F0378 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCED221801A66008F0378 /* FHMapSearchViewController.h */,
+				3D3CCED321801A66008F0378 /* FHMapSearchViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3D3CCECB2180155A008F0378 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3D3CCECC21801A32008F0378 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				3D3CCECD21801A40008F0378 /* FHBaseViewController.h */,
+				3D3CCECE21801A40008F0378 /* FHBaseViewController.m */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 		3F4136C416C258FB005D79FB /* SSEditUserProfileView */ = {
@@ -19094,6 +19156,7 @@
 				6B2845F51DF5402200170DE7 /* WapData.m in Sources */,
 				F87693C81F31D0D400D59CA5 /* TTVDetailRelatedVideoItem.m in Sources */,
 				2D2557C31E8271CE00FF96A7 /* ExploreMovieManager.m in Sources */,
+				3D3CCECF21801A40008F0378 /* FHBaseViewController.m in Sources */,
 				88EDBF721F2E05E100911931 /* TTArticleDetailViewController+Share.m in Sources */,
 				D50439DA2079B92C00DA4953 /* ArticleMomentHelper.m in Sources */,
 				A97DB91B1F1332DD0002B455 /* TTEditAccountNameView.m in Sources */,
@@ -20493,6 +20556,7 @@
 				ACECFAD31E84D4A10080679E /* TTDislikeView.m in Sources */,
 				2DB9A5BC1F20B01D005E4A06 /* TTAdManagerProtocol_IMP.m in Sources */,
 				B388CCE82142652C00653188 /* FlattenStrategy.swift in Sources */,
+				3D3CCED421801A66008F0378 /* FHMapSearchViewController.m in Sources */,
 				F87695D41F31D0D800D59CA5 /* TTVCellGroupStyle.m in Sources */,
 				2DDA76611F72165C00209EEF /* NSString+TextValidation.m in Sources */,
 				2DDA764C1F72164F00209EEF /* TTAccountBindingMobileViewController.m in Sources */,
@@ -20774,6 +20838,7 @@
 				B373C8B72174587A008F9905 /* WapData.m in Sources */,
 				B373C8B82174587A008F9905 /* TTVDetailRelatedVideoItem.m in Sources */,
 				B373C8B92174587A008F9905 /* ExploreMovieManager.m in Sources */,
+				3D3CCED121801A40008F0378 /* FHBaseViewController.m in Sources */,
 				B373C8BA2174587A008F9905 /* TTArticleDetailViewController+Share.m in Sources */,
 				B373C8BB2174587A008F9905 /* ArticleMomentHelper.m in Sources */,
 				B373C8BC2174587A008F9905 /* TTEditAccountNameView.m in Sources */,
@@ -22173,6 +22238,7 @@
 				B373CE2E2174587A008F9905 /* TTDislikeView.m in Sources */,
 				B373CE2F2174587A008F9905 /* TTAdManagerProtocol_IMP.m in Sources */,
 				B373CE302174587A008F9905 /* FlattenStrategy.swift in Sources */,
+				3D3CCED621801A66008F0378 /* FHMapSearchViewController.m in Sources */,
 				B373CE312174587A008F9905 /* TTVCellGroupStyle.m in Sources */,
 				B373CE322174587A008F9905 /* NSString+TextValidation.m in Sources */,
 				B373CE332174587A008F9905 /* TTAccountBindingMobileViewController.m in Sources */,
@@ -22454,6 +22520,7 @@
 				FEFA533A205FB1A8001F50D8 /* WapData.m in Sources */,
 				FEFA533B205FB1A8001F50D8 /* TTVDetailRelatedVideoItem.m in Sources */,
 				FEFA533D205FB1A8001F50D8 /* ExploreMovieManager.m in Sources */,
+				3D3CCED021801A40008F0378 /* FHBaseViewController.m in Sources */,
 				FEFA533E205FB1A8001F50D8 /* TTArticleDetailViewController+Share.m in Sources */,
 				D50439DB2079B92C00DA4953 /* ArticleMomentHelper.m in Sources */,
 				FEFA533F205FB1A8001F50D8 /* TTEditAccountNameView.m in Sources */,
@@ -23853,6 +23920,7 @@
 				FEFA5964205FB1A8001F50D8 /* TTDislikeView.m in Sources */,
 				FEFA5965205FB1A8001F50D8 /* TTAdManagerProtocol_IMP.m in Sources */,
 				B388CCE92142652C00653188 /* FlattenStrategy.swift in Sources */,
+				3D3CCED521801A66008F0378 /* FHMapSearchViewController.m in Sources */,
 				FEFA5966205FB1A8001F50D8 /* TTVCellGroupStyle.m in Sources */,
 				FEFA5969205FB1A8001F50D8 /* NSString+TextValidation.m in Sources */,
 				FEFA596A205FB1A8001F50D8 /* TTAccountBindingMobileViewController.m in Sources */,

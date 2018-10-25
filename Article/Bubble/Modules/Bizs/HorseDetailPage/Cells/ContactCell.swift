@@ -90,7 +90,7 @@ class ContactCell: BaseUITableViewCell {
 func parseNewHouseContactNode(_ newHouseData: NewHouseData,traceExt: TracerParams = TracerParams.momoid(), courtId: String) -> () -> TableSectionNode? {
     return {
         
-        if let phone = newHouseData.contact?["phone"], phone.count > 0 {
+        if let phone = newHouseData.contact?.phone, phone.count > 0 {
             
             let params = TracerParams.momoid() <|>
                     toTracerParams("call_page", key: "element_type") <|>
@@ -115,11 +115,11 @@ func fillNewHouseContactCell(_ data: NewHouseData, traceParams: TracerParams, co
         let traceParamsDic = traceParams.paramsGetter([:])
         let searchId = traceParamsDic["search_id"]
 
-        theCell.phoneNumberLabel.text = data.contact?["phone"]
-        theCell.descLabel.text = data.contact?["notice_desc"]
+        theCell.phoneNumberLabel.text = data.contact?.phone
+        theCell.descLabel.text = data.contact?.noticeDesc
         theCell.phoneCallBtn.rx.tap
                 .subscribe(onNext: {void in
-                    if let phone = data.contact?["phone"] {
+                    if let phone = data.contact?.phone {
                         Utils.telecall(phoneNumber: phone)
                     }
                     let params = EnvContext.shared.homePageParams <|>

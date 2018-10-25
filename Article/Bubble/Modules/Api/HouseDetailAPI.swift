@@ -218,3 +218,28 @@ func requestFloorPlanInfo(floorPanId: String) -> Observable<FloorPlanInfoRespons
                 }
             })
 }
+
+// MARK: 中介转接电话API
+func requestVirtualNumber(realtorId: String) -> Observable<FHVirtualNumResponse?> {
+    let url = "\(EnvContext.networkConfig.host)/f100/api/virtual_number"
+    
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: url,
+            params: [
+                "realtor_id": realtorId,
+                ],
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> FHVirtualNumResponse? in
+            if let payload = payload {
+                let response = FHVirtualNumResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}

@@ -69,7 +69,7 @@ class HomeListViewModel: DetailPageViewModel {
     var originSearchId: String?
     var originFrom: String?
 
-    var contactPhone: BehaviorRelay<String?> = BehaviorRelay<String?>(value: nil)
+    var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
 
