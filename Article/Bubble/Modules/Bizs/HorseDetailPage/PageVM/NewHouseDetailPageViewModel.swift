@@ -268,7 +268,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     navVC: self.navVC,
                     followPage: self.followPage,
                     bottomBarBinder: self.bindBottomView(params: coreInfoParams <|> toTracerParams("new_detail", key: "page_type")))
-                <- parseNewHouseContactNode(data, traceExt: traceExtension, courtId: "\(courtId)")
+                <- parseNewHouseContactNode(data, traceExt: traceExtension <|> self.traceParams, courtId: "\(courtId)")
                 <- parseFlineNode(((data.contact?.phone?.count ?? 0) > 0) ? 6 : 0)
                 <- parseFloorPanHeaderNode(data)
                 <- parseNewHouseFloorPanCollectionNode(

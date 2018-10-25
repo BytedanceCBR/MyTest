@@ -329,10 +329,6 @@ extension DetailPageViewModel {
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
                 .bind(onNext: {[weak self] (contactPhone) in
-                    let theParams = EnvContext.shared.homePageParams <|>
-                        params <|>
-                        toTracerParams(self?.searchId ?? "be_null", key: "search_id")
-                    recordEvent(key: "click_call", params: theParams.exclude("search").exclude("filter"))
                     
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
@@ -342,6 +338,27 @@ extension DetailPageViewModel {
                                                                   followId: "\(self?.houseId ?? -1)",
                             disposeBag: self?.disposeBag ?? DisposeBag(),
                             isNeedRecord: true)()
+                        
+                        
+                        if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+                            
+                            traceParams = traceParams <|> EnvContext.shared.homePageParams
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                            traceParams = traceParams <|>
+                                toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
+                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(self?.searchId ?? "be_null", key: "search_id")
+                            if let houseId = self?.houseId {
+                                traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
+                            }else {
+                                traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
+                            }
+                            recordEvent(key: "click_call", params: traceParams)
+                        }
                         
                     }else {
 //                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
@@ -535,3 +552,17 @@ func pageTypeString(_ houseType: HouseType) -> String {
         return "be_null"
     }
 }
+
+fileprivate func enterFromByHouseType(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "new_detail"
+    case .secondHandHouse:
+        return "old_detail"
+    case .neighborhood:
+        return "neighborhood_detail"
+    default:
+        return "be_null"
+    }
+}
+
