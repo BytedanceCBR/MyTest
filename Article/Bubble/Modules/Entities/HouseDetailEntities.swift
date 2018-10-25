@@ -506,3 +506,34 @@ struct FloorPlanInfoData: Mappable {
         }
     }
 }
+
+
+struct FHVirtualNumResponse: Mappable {
+    var data: FHVirtualNumData?
+    var message: String?
+    var status: Int = 0
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        data <- map["data"]
+        message <- map["message"]
+        status <- map["status"]
+    }
+}
+
+struct FHVirtualNumData: Mappable {
+    var realtorId: String?
+    var virtualNumber: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        realtorId <- map["realtor_id"]
+        virtualNumber <- map["virtual_number"]
+    }
+}
