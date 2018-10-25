@@ -35,10 +35,6 @@ protocol DetailPageViewModel: class {
 
     var groupId: String { get }
 
-//    var priceChangeFollowStatus: BehaviorRelay<Result<Bool>> { get }
-//
-//    var openCourtFollowStatus: BehaviorRelay<Result<Bool>> { get }
-
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
 
     var tableView: UITableView? { get set }
@@ -170,32 +166,6 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.showToast("网络异常")
                 return
             }
-            let userInfo = EnvContext.shared.client.accountConfig.userInfo
-
-//            if userInfo.value == nil {
-//                userInfo
-//                    .skip(1)
-//                    .filter { $0 != nil }
-//                    .subscribe(onNext: { [weak self] _ in
-//                        self?.followThisItem(isNeedRecord: false)
-//                        loginDisposeBag = DisposeBag()
-//                    })
-//                    .disposed(by: loginDisposeBag)
-//                
-//                var userInfoParams = TTRouteUserInfo()
-//                if var followTraceParams = self?.followTraceParams {
-//                    
-//                    followTraceParams = followTraceParams <|>
-//                        toTracerParams("follow", key: "enter_type")
-//                    let paramsMap = followTraceParams.paramsGetter([:])
-//                    userInfoParams = TTRouteUserInfo(info: paramsMap)
-//                    
-//                }
-//                
-//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfoParams)
-//                
-//                return
-//            }
             
             requestFollow(
                 houseType: houseType,
@@ -234,22 +204,6 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.showToast("取消关注失败")
                 return
             }
-            let userInfo = EnvContext.shared.client.accountConfig.userInfo
-
-//            if userInfo.value == nil {
-//                userInfo
-//                    .skip(1)
-//                    .filter { $0 != nil }
-//                    .subscribe(onNext: { [weak self] _ in
-//                        self?.followThisItem(isNeedRecord: false)
-//                        loginDisposeBag = DisposeBag()
-//                    })
-//                    .disposed(by: loginDisposeBag)
-//
-//                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: TTRouteUserInfo())
-//
-//                return
-//            }
             
             var tracerParams = TracerParams.momoid()
             if let followTraceParams = self?.followTraceParams {
@@ -283,6 +237,40 @@ extension DetailPageViewModel {
                     .disposed(by: disposeBag)
         }
     }
+    
+    // MARK: 静默关注房源
+    func followHouseItem(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
+        disposeBag: DisposeBag,
+        isNeedRecord: Bool = true) -> () -> Void {
+
+        return { [weak self] in
+
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
+            
+            requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .subscribe(onNext: { response in
+                    if response?.status ?? 1 == 0 {
+                        if response?.data?.followStatus ?? 0 == 0 {
+                            EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注", duration: 3)
+                        }
+                        self?.followStatus.accept(.success(true))
+                    }
+                }, onError: { error in
+
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+    
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton) in

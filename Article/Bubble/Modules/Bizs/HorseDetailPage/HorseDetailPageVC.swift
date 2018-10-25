@@ -501,15 +501,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams("\(self.houseId)", key: "group_id")
                     recordEvent(key: "click_call", params: params.exclude("search").exclude("filter"))
-                    
+
                     if let phone = contactPhone?.phone, phone.count > 0 {
-                       self.callRealtorPhone(contactPhone: contactPhone)
-                    }else
-                    {
-                       self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        
+                        self.callRealtorPhone(contactPhone: contactPhone)
+                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                  followId: "\(self.houseId)",
+                                                                    disposeBag: self.disposeBag,
+                                                                    isNeedRecord: true)()
+                        
+                    }else {
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
-//                    EnvContext.shared.toast.showToast("已加入关注列表，点击可取消关注")
-//                    self.detailPageViewModel?.followThisItem(isNeedRecord: true)
 
                 })
                 .disposed(by: disposeBag)
@@ -568,6 +572,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
+    
     
     // MARK: 电话转接以及拨打相关操作
     func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
