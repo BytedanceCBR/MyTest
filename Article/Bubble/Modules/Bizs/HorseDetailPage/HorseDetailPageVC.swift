@@ -499,11 +499,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self.callRealtorPhone(contactPhone: contactPhone)
-                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
-                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                                  followId: "\(self.houseId)",
-                                                                    disposeBag: self.disposeBag,
-                                                                    isNeedRecord: true)()
+//                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+//                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+//                                                                  followId: "\(self.houseId)",
+//                                                                    disposeBag: self.disposeBag,
+//                                                                    isNeedRecord: true)()
+                        self.followForSendPhone()
                         
                         if self.houseType != .neighborhood {
                             
@@ -851,13 +852,24 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 //        alert.showFrom(self.view)
     }
     
+    func followForSendPhone() {
+        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
+                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                  followId: "\(self.houseId)",
+            disposeBag: self.disposeBag,
+            isNeedRecord: true)()
+    }
+    
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         
+        self.followForSendPhone()
+
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
+
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
