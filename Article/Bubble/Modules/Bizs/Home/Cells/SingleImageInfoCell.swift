@@ -23,7 +23,7 @@ class CornerView: UIView {
             roundedRect: self.bounds,
             byRoundingCorners: [UIRectCorner.bottomLeft,
                                 UIRectCorner.bottomRight],
-            cornerRadii: CGSize(width: 5, height: 5))
+            cornerRadii: CGSize(width: 2, height: 2))
         let layer = CAShapeLayer()
         layer.frame = self.bounds
         layer.path = maskPath.cgPath
