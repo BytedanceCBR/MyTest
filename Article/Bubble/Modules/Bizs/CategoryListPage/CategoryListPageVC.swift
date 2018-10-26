@@ -139,6 +139,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         let re = UIButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
         re.setImage(UIImage(named: "sort_selected"), for: .selected)
+        re.setImage(UIImage(named: "sort_selected"), for: .highlighted)
         return re
     }()
 
@@ -216,28 +217,46 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         searchView.isHidden = true
         self.conditionPanelView.addSubview(searchView)
         searchView.snp.makeConstraints { (maker) in
-            maker.edges.equalToSuperview()
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(433)
         }
         self.conditionFilterViewModel?.sortPanelView = searchView
-        if let sortConditions = EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder,
-            let options = sortConditions.first?.options {
-
-            let nodes: [Node] = transferSearchConfigOptionToNode(
-                            options: options,
-                            rate: 1,
-                            isSupportMulti: false)
-            if let orderConditions = nodes.first {
-                searchView.setSortConditions(nodes: orderConditions.children)
-            } else {
-                assertionFailure()
-            }
-        }
+        self.conditionFilterViewModel?.searchSortBtn = searchSortBtn
         self.searchSortBtn.rx.tap
             .subscribe(onNext: { [unowned self] void in
                 self.conditionFilterViewModel?.openOrCloseSortPanel()
             })
             .disposed(by: disposeBag)
 
+        self.houseType
+            .bind { [unowned self] (type) in
+                if let options = self.filterSortCondition(by: type)?.first?.options {
+                    let nodes: [Node] = transferSearchConfigOptionToNode(
+                        options: options,
+                        rate: 1,
+                        isSupportMulti: false)
+                    if let orderConditions = nodes.first {
+                        searchView.setSortConditions(nodes: orderConditions.children)
+                    } else {
+                        assertionFailure()
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+        if let queryParams = self.queryParams {
+            searchView.setSelectedConditions(conditions: queryParams)
+        }
+    }
+
+    fileprivate func filterSortCondition(by houseType: HouseType) -> [SearchConfigFilterItem]? {
+        switch houseType {
+        case .neighborhood:
+            return EnvContext.shared.client.configCacheSubject.value?.neighborhoodFilterOrder
+        case .newHouse:
+            return EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder
+        default:
+            return EnvContext.shared.client.configCacheSubject.value?.filterOrder
+        }
     }
 
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {

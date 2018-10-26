@@ -26,6 +26,12 @@ class SearchAndConditionFilterViewModel {
 
     var pageType: String?
 
+    var searchSortCondition: Node? {
+        didSet {
+            queryCondition.accept(getConditions())
+        }
+    }
+
     var queryConditionAggregator = ConditionAggregator.monoid() {
         didSet {
             queryCondition.accept(getConditions())
@@ -60,11 +66,15 @@ class SearchAndConditionFilterViewModel {
     }
 
     func getConditions() -> String {
+        var initQuery = ""
+        if let searchSortCondition = searchSortCondition {
+            initQuery = "&\(searchSortCondition.externalConfig)"
+        }
         return (conditions
             .reduce(ConditionAggregator.monoid()) { (result, e) -> ConditionAggregator in
                 let (_, aggregator) = e
                 return result <|> ConditionAggregator(aggregator: aggregator)
-            } <|> queryConditionAggregator).aggregator("")
+            } <|> queryConditionAggregator).aggregator(initQuery)
     }
 
     func sendSearchRequest() {

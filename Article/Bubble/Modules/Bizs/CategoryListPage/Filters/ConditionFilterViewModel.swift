@@ -64,6 +64,8 @@ class ConditionFilterViewModel {
 
     weak var searchFilterPanel: SearchFilterPanel?
 
+    weak var searchSortBtn: UIButton?
+
     let conditionPanelState = ConditionPanelState()
 
     let searchAndConditionFilterVM: SearchAndConditionFilterViewModel
@@ -76,7 +78,19 @@ class ConditionFilterViewModel {
 
     let disposeBag = DisposeBag()
 
-    weak var sortPanelView: SortConditionPanel?
+    weak var sortPanelView: SortConditionPanel? {
+        didSet {
+            sortPanelView?.didSelect = { [weak self] node in
+                self?.searchAndConditionFilterVM.searchSortCondition = node
+                if let node = node {
+                    self?.searchSortBtn?.isSelected = true
+                } else {
+                    self?.searchSortBtn?.isSelected = false
+                }
+                self?.openOrCloseSortPanel()
+            }
+        }
+    }
 
     init(conditionPanelView: UIControl,
          searchFilterPanel: SearchFilterPanel,
