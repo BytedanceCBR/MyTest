@@ -171,6 +171,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             conditionPanelView: conditionPanelView,
             searchFilterPanel: searchFilterPanel,
             searchAndConditionFilterVM: searchAndConditionFilterVM)
+
     }
 
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
@@ -208,6 +209,35 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
+    }
+
+    func setupSortCondition() {
+        let searchView = SortConditionPanel()
+        searchView.isHidden = true
+        self.conditionPanelView.addSubview(searchView)
+        searchView.snp.makeConstraints { (maker) in
+            maker.edges.equalToSuperview()
+        }
+        self.conditionFilterViewModel?.sortPanelView = searchView
+        if let sortConditions = EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder,
+            let options = sortConditions.first?.options {
+
+            let nodes: [Node] = transferSearchConfigOptionToNode(
+                            options: options,
+                            rate: 1,
+                            isSupportMulti: false)
+            if let orderConditions = nodes.first {
+                searchView.setSortConditions(nodes: orderConditions.children)
+            } else {
+                assertionFailure()
+            }
+        }
+        self.searchSortBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.conditionFilterViewModel?.openOrCloseSortPanel()
+            })
+            .disposed(by: disposeBag)
+
     }
 
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
@@ -406,10 +436,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.edges.equalTo(tableView.snp.edges)
         }
 
+        setupSortCondition()
 
         bindLoadMore()
 
         bindSearchRequest()
+
 
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in

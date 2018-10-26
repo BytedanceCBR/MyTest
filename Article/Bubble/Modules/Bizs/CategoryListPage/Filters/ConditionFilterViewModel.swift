@@ -76,6 +76,8 @@ class ConditionFilterViewModel {
 
     let disposeBag = DisposeBag()
 
+    weak var sortPanelView: SortConditionPanel?
+
     init(conditionPanelView: UIControl,
          searchFilterPanel: SearchFilterPanel,
          searchAndConditionFilterVM: SearchAndConditionFilterViewModel) {
@@ -104,6 +106,18 @@ class ConditionFilterViewModel {
 
     func setSelectedItem(items: [String: Any]) {
         conditionItemViews.forEach { $0.setSelectedConditions(conditions: items) }
+    }
+
+    func openOrCloseSortPanel() {
+        print("openOrCloseSortPanel")
+        self.closeConditionFilterPanel(index: -1)
+        if sortPanelView?.isHidden == true {
+            self.conditionPanelView?.isHidden = false
+            self.sortPanelView?.isHidden = false
+        } else {
+            self.conditionPanelView?.isHidden = true
+            self.sortPanelView?.isHidden = true
+        }
     }
 
     func generatePanelProviderByItem(reload: @escaping () -> Void,
@@ -241,6 +255,7 @@ class ConditionFilterViewModel {
             item.isExpand = false
             item.isHighlighted = false || item.isSeted
         })
+        self.sortPanelView?.isHidden = true
     }
 
     func onConditionSelected(
