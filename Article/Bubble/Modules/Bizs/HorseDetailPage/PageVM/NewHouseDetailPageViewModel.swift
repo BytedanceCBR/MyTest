@@ -545,9 +545,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     .disposed(by: self.disposeBag)
 
             }
-
-            recordEvent(key: TraceEventName.inform_show,
-                        params: informParams)
+//
+//            recordEvent(key: TraceEventName.inform_show,
+//                        params: informParams)
 
         }
     }
@@ -612,8 +612,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     .disposed(by: self.disposeBag)
             }
 
-            recordEvent(key: TraceEventName.inform_show,
-                        params: informParams)
+//            recordEvent(key: TraceEventName.inform_show,
+//                        params: informParams)
 
         }
     }
