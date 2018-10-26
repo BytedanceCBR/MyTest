@@ -168,6 +168,16 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
+            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+            tracerParams = tracerParams <|>
+                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
+            
+            
+            recordEvent(key: TraceEventName.inform_show,
+                        params: tracerParams)
+            
             alert.showFrom(rootView)
         }
     }

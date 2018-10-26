@@ -433,6 +433,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 } else {
 
                     titleStr = "询底价"
+                    
                 }
                 if self?.houseType == .neighborhood {
                     titleStr = "咨询经纪人"
@@ -477,7 +478,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         }
                         
                     }else {
-                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        var titleStr:String = "询底价"
+                        if self.houseType == .neighborhood {
+                            titleStr = "咨询经纪人"
+                        }
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
                     }
 
                 })
@@ -805,38 +810,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
 //        let alert = NIHNoticeAlertView()
         
-        var enter_type: String?
         var subTitleStr: String = subTitle
         let confirmBtnTitle: String = "确认"
         if title == "开盘通知" {
-            enter_type = "openning_notice"
             subTitleStr = "订阅开盘通知，楼盘开盘信息会及时发送到您的手机"
         }else if title == "变价通知" {
-            enter_type = "price_notice"
             subTitleStr = "订阅变价通知，楼盘变价信息会及时发送到您的手机"
         }
         
         self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
-        
-//
-//        if let enterType = enter_type {
-//
-//            var tracerParams = EnvContext.shared.homePageParams
-//            tracerParams = tracerParams <|>
-//                toTracerParams("new_detail", key: "enter_from") <|>
-//                toTracerParams(enterType, key: "enter_type") <|>
-//                toTracerParams(self.houseId, key: "group_id") <|>
-//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-//            alert.tracerParams = tracerParams
-//
-//        }
-//
-//        quickLoginVM = QuickLoginAlertViewModel(
-//                title: title,
-//                subTitle: subTitle,
-//                alert: alert)
-//        alert.showFrom(self.view)
     }
     
     func followForSendPhone() {
@@ -856,6 +838,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfirmTrace()
                     }
                 }else
                 {
@@ -864,27 +847,33 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             .disposed(by: disposeBag)
         
-        var enter_type: String?
-        if title == "开盘通知" {
-            enter_type = "openning_notice"
-        }else if title == "变价通知" {
-            enter_type = "price_notice"
-        }
 
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
-            toTracerParams("new_detail", key: "enter_from") <|>
-//            toTracerParams(enterType, key: "enter_type") <|>
+//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
-//            alert.tracerParams = tracerParams
 
         
        recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams)
     
         alert.showFrom(self.view)
+    }
+    
+    func sendClickConfirmTrace()
+    {
+        var tracerParams = EnvContext.shared.homePageParams <|> traceParams
+        tracerParams = tracerParams <|>
+//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.searchId ?? "be_null", key: "search_id")
+        
+        
+        recordEvent(key: TraceEventName.click_confirm,
+                    params: tracerParams)
     }
     
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {

@@ -387,6 +387,7 @@ extension DetailPageViewModel {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfimTrace()
                     }
                 }else
                 {
@@ -395,30 +396,36 @@ extension DetailPageViewModel {
             }
             .disposed(by: disposeBag)
         
-        var enter_type: String?
-        if title == "开盘通知" {
-            enter_type = "openning_notice"
-        }else if title == "变价通知" {
-            enter_type = "price_notice"
-        }
-        
-        if let enterType = enter_type {
-            
-            var tracerParams = EnvContext.shared.homePageParams
-            tracerParams = tracerParams <|>
-                toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(enterType, key: "enter_type") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-            alert.tracerParams = tracerParams
-            
-        }
-        
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
+            var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+            tracerParamsInform = tracerParamsInform <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+            
+            
+            recordEvent(key: TraceEventName.inform_show,
+                        params: tracerParamsInform.exclude("house_type"))
+            
             alert.showFrom(rootView)
         }
+    }
+    
+    func sendClickConfimTrace()
+    {
+        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+        tracerParamsInform = tracerParamsInform <|>
+//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+        
+        
+        recordEvent(key: TraceEventName.click_confirm,
+                    params: tracerParamsInform.exclude("house_type"))
+        
     }
     
     // MARK: 电话转接以及拨打相关操作
