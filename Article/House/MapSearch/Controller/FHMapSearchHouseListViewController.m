@@ -7,11 +7,13 @@
 
 #import "FHMapSearchHouseListViewController.h"
 #import <Masonry/Masonry.h>
+#import "FHMapSearchModel.h"
+#import "FHHouseAreaHeaderView.h"
 
 @interface FHMapSearchHouseListViewController ()
 
 @property(nonatomic , strong) UITableView *tableView;
-
+@property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
 @end
 
 @implementation FHMapSearchHouseListViewController
@@ -20,14 +22,31 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
-    _tableView.delegate = _viewModel;
-    _tableView.dataSource = _viewModel;
+    _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 88)];
     
     [self.view addSubview:_tableView];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.bottom.right.mas_equalTo(self.view);
     }];
+    
+    self.viewModel = [[FHMapSearchHouseListViewModel alloc] init];
+    [self.viewModel registerCells:self.tableView];
+    self.viewModel.headerView = _headerView;
+    
+}
+
+-(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
+{
+    self.view.top = self.view.height;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.top = self.view.height/3;
+    }];
+    
+    [self.parentViewController.view addSubview:self.view];
+    [self.viewModel updateWithInitHouseData:data neighbor:neighbor];
+    
 }
 
 /*

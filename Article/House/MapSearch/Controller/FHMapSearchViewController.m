@@ -121,7 +121,7 @@
     [self initNavbar];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.viewModel = [[FHMapSearchViewModel alloc]init];
+    
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
     self.houseFilterViewModel = [factory createFilterPanelViewModel];
     self.filterBgControl = [[UIControl alloc] init];
@@ -135,9 +135,11 @@
     [self initConstraints];
     
     self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel];
+    self.viewModel.viewController = self;
     _viewModel.mapView = _mapView;
     _viewModel.tipView = self.tipView;
-    _mapView.delegate = _viewModel;
+    _mapView.delegate = _viewModel;    
+    self.houseFilterViewModel.delegate = _viewModel;
     
 }
 

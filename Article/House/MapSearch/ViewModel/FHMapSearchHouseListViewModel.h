@@ -9,10 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapSearchHouseListViewController;
+@class FHSearchHouseDataModel;
+@class FHHouseAreaHeaderView;
+@class FHMapSearchDataListModel;
+
 @interface FHMapSearchHouseListViewModel : NSObject<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , weak) FHMapSearchHouseListViewController *listController;
+@property(nonatomic , strong) UITableView *tableView;
+@property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
+
+-(void)registerCells:(UITableView *)tableView;
+-(void)updateWithInitHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
 
 @end
 

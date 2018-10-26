@@ -11,11 +11,13 @@
 #import "FHMapSearchTipView.h"
 
 @class FHMapSearchViewController;
+@protocol HouseFilterViewModelDelegate;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate>
+@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate,HouseFilterViewModelDelegate>
 
-@property(nonatomic , weak)   FHMapSearchViewController *viewController;
+@property(nonatomic , weak) FHMapSearchViewController *viewController;
 @property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 

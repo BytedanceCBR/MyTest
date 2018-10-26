@@ -15,12 +15,18 @@
 #import "FHHouseAnnotation.h"
 #import "FHMapSearchViewModel.h"
 #import "FHMapSearchViewController.h"
+#import "FHMapSearchHouseListViewController.h"
+#import "FHHouseSearcher.h"
 
 @interface FHMapSearchViewModel ()
 
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , assign) NSInteger requestMapLevel;
 @property(nonatomic , weak)  TTHttpTask *requestHouseTask;
+@property(nonatomic , strong) FHMapSearchHouseListViewController *houseListViewController;
+@property(nonatomic , copy)  NSString *suggestionParams;
+@property(nonatomic , strong) NSString *searchId;
+
 @end
 
 @implementation FHMapSearchViewModel
@@ -34,6 +40,22 @@
     return self;
 }
 
+-(void)dealloc
+{
+    [_requestHouseTask cancel];
+    
+}
+
+-(FHMapSearchHouseListViewController *)houseListViewController
+{
+    if (!_houseListViewController) {
+        _houseListViewController = [[FHMapSearchHouseListViewController alloc]init];
+        [self.viewController addChildViewController:_houseListViewController];
+    }
+    return _houseListViewController;
+}
+
+
 -(void)requestHouses
 {
     if (_requestHouseTask.state == TTHttpTaskStateRunning) {
@@ -46,39 +68,32 @@
     CGFloat minLat = maxLat - region.span.latitudeDelta;
     CGFloat maxLong = region.center.longitude + region.span.longitudeDelta/2;
     CGFloat minLong = maxLong - region.span.longitudeDelta;
-    NSDictionary *param = @{@"house_type":@(self.configModel.houseType),
-                            @"max_latitude":@(maxLat),
-                            @"min_latitude":@(minLat),
-                            @"max_longitude":@(maxLong),
-                            @"min_longitude":@(minLong),
-                            @"resize_level":@(_mapView.zoomLevel)
-                            };
+    
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [[TTNetworkManager shareInstance] requestForJSONWithURL:host params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId  maxLatitude:maxLat minLatitude:minLat maxLongitude:maxLong minLongitude:minLong resizeLevel:_mapView.zoomLevel suggestionParams:nil callback:^(NSError * _Nonnull error, FHMapSearchDataModel *  _Nonnull model) {
         if (!wself) {
             return ;
         }
-        if ([jsonObj isKindOfClass:[NSData class]]) {
-            jsonObj = [[NSString alloc] initWithData:jsonObj encoding:NSUTF8StringEncoding];
+        if (error) {
+            //show toast
+            return;
         }
-        
-        NSDictionary *dict = jsonObj[@"data"];
-        NSString *tip = dict[@"tips"];
+        NSString *tip = model.tips;
         if (tip) {
-            CGFloat topY = 44;//self.navigationController.navigationBar.bottom;
+            CGFloat topY = 44;
             if (@available(iOS 11.0 , *)) {
-                topY += self.viewController.view.safeAreaInsets.top;
+                topY += wself.viewController.view.safeAreaInsets.top;
             }else{
                 topY += 20;
             }
             [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:2];
         }
-        
-        NSArray *list = dict[@"list"];
-        [wself addAnnotations:list];
+        wself.searchId = model.searchId;
+        [wself addAnnotations:model.list];
     }];
     _requestMapLevel = _mapView.zoomLevel;
     _requestHouseTask = task;
+
 }
 
 -(void)addAnnotations:(NSArray *)list
@@ -86,31 +101,27 @@
     if (list.count > 0) {
         
         NSMutableArray *annotations = [NSMutableArray arrayWithArray:self.mapView.annotations];
-        
         for (NSInteger i = 0 ; i < annotations.count ;  i++) {
             id <MAAnnotation> annotation = annotations[i];
             if (![annotation isKindOfClass:[FHHouseAnnotation class]]) {
                 [annotations removeObjectAtIndex:i];
             }
         }
-        
         [self.mapView removeAnnotations: annotations];
-        
-        for (NSDictionary *info in list) {
+        for (FHMapSearchDataListModel *info in list) {
             
-            CGFloat lat = [info[@"center_latitude"] floatValue];
-            CGFloat lon = [info[@"center_longitude"] floatValue];
+            CGFloat lat = [info.centerLatitude floatValue];
+            CGFloat lon = [info.centerLongitude floatValue];
             
             FHHouseAnnotation *houseAnnotation = [[FHHouseAnnotation alloc] init];
             houseAnnotation.coordinate = CLLocationCoordinate2DMake(lat, lon);
-            houseAnnotation.title = info[@"name"];
-            houseAnnotation.subtitle = info[@"desc"];
+            houseAnnotation.title = info.name;
+            houseAnnotation.subtitle = info.desc;
             houseAnnotation.houseData = info;
-            houseAnnotation.searchType = [info[@"type"] integerValue];
+            houseAnnotation.searchType = [info.type integerValue];
             
             [self.mapView addAnnotation:houseAnnotation];
         }
-        
     }
     
 }
@@ -133,7 +144,7 @@
         
     }else{
         //show house list
-        
+        [self requestNeighborhoodHouses:houseAnnotation.houseData];
     }
 }
 
@@ -217,17 +228,17 @@
     [self showMapViewInfo];
 }
 
-/**
- * @brief 当选中一个annotation view时，调用此接口. 注意如果已经是选中状态，再次点击不会触发此回调。取消选中需调用-(void)deselectAnnotation:animated:
- * @param mapView 地图View
- * @param view 选中的annotation view
- */
-- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
-{
-    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-    [self showMapViewInfo];
-    [self handleSelect:view];
-}
+///**
+// * @brief 当选中一个annotation view时，调用此接口. 注意如果已经是选中状态，再次点击不会触发此回调。取消选中需调用-(void)deselectAnnotation:animated:
+// * @param mapView 地图View
+// * @param view 选中的annotation view
+// */
+//- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
+//{
+//    NSLog(@"---%@---",NSStringFromSelector(_cmd));
+//    [self showMapViewInfo];
+//    [self handleSelect:view];
+//}
 
 /**
  * @brief 当取消选中一个annotation view时，调用此接口
@@ -250,6 +261,7 @@
 {
     NSLog(@"---%@---",NSStringFromSelector(_cmd));
     [self showMapViewInfo];
+    [self handleSelect:view];
 }
 
 
@@ -265,9 +277,40 @@
 }
 
 #pragma mark - neighborhood houses
--(void)requestNeighborhoodHouses
+-(void)requestNeighborhoodHouses:(FHMapSearchDataListModel *)model
 {
+    /*
+     "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" +
+     */
     
+    //TODO: add loading ...
+    
+    NSString *searchId = @"";
+    NSString *query = [NSString stringWithFormat:@""];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    if (model.nid) {
+        param[NEIGHBORHOOD_ID_KEY] = model.nid;
+    }
+    param[HOUSE_TYPE_KEY] = @(self.configModel.houseType);
+    
+    __weak typeof(self) wself = self;
+    [FHHouseSearcher houseSearchWithQuery:query param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+        if (!wself) {
+            return ;
+        }
+        if (!error && model) {
+            [wself.houseListViewController showWithHouseData:houseModel neighbor:model];
+        }else{
+            //TODO: show error toast
+        }
+
+    }];
+}
+
+#pragma mark - filter delegate
+-(void)onConditionChangedWithCondition:(NSString *)condition
+{
+    self.suggestionParams = condition;
 }
 
 @end

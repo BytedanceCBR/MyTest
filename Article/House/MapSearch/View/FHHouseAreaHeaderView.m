@@ -8,6 +8,8 @@
 #import "FHHouseAreaHeaderView.h"
 #import "UIColor+Theme.h"
 #import <Masonry/Masonry.h>
+#import "FHMapSearchModel.h"
+
 @interface FHHouseAreaHeaderView ()
 
 @property(nonatomic , strong) UIView *topTipView;
@@ -15,6 +17,7 @@
 @property(nonatomic , strong) UILabel *locationLabel;
 @property(nonatomic , strong) UILabel *priceLabel;
 @property(nonatomic , strong) UIImageView *indicatorImgView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @end
 
@@ -42,11 +45,15 @@
         UIImage *img = [UIImage imageNamed:@"indicator"];
         _indicatorImgView = [[UIImageView alloc] initWithImage:img];
         
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
+        
         [self addSubview:_topTipView];
         [self addSubview:_nameLabel];
         [self addSubview:_locationLabel];
         [self addSubview:_priceLabel];
         [self addSubview:_indicatorImgView];
+        [self addSubview:_bottomLine];
         
         [self initConstraints];
         
@@ -86,6 +93,19 @@
         make.top.mas_equalTo(_nameLabel.mas_bottom).offset(2);
         make.right.mas_lessThanOrEqualTo(_priceLabel).offset(-10);
     }];
+    
+    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(1);        
+    }];
+}
+
+-(void)updateWithMode:(FHMapSearchDataListModel *)model
+{
+    self.nameLabel.text = model.name;
+    self.locationLabel.text = model.location;
+    self.priceLabel.text = model.pricePerSqm;
+    
 }
 
 /*

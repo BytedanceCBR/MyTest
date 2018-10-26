@@ -19,7 +19,7 @@ import Foundation
 
 @objc class HouseFilterViewModel: NSObject {
 
-    weak var delegate: HouseFilterViewModelDelegate?
+    @objc weak var delegate: HouseFilterViewModelDelegate?
 
     // 搜索过滤器展现面版
     @objc lazy var filterPanelView: UIView = {

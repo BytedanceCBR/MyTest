@@ -8,8 +8,10 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class FHMapSearchDataListModel;
 @interface FHHouseAreaHeaderView : UIView
+
+-(void)updateWithMode:(FHMapSearchDataListModel *)model;
 
 @end
 

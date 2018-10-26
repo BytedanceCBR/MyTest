@@ -8,11 +8,16 @@
 #import "FHBaseViewController.h"
 #import "FHMapSearchHouseListViewModel.h"
 
+@class FHSearchHouseDataModel;
+
 NS_ASSUME_NONNULL_BEGIN
+
 
 @interface FHMapSearchHouseListViewController : FHBaseViewController
 
 @property(nonatomic , strong) FHMapSearchHouseListViewModel *viewModel;
+
+-(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
 
 @end
 
