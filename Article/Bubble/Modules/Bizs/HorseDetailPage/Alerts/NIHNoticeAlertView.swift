@@ -179,6 +179,8 @@ class NIHNoticeAlertView: UIView {
 
     @objc func dismiss() {
 
+        self.sendPhoneView.phoneTextField.resignFirstResponder()
+        
         UIView.animate(withDuration: 0.25, animations: {
             
             self.bgView.alpha = 0

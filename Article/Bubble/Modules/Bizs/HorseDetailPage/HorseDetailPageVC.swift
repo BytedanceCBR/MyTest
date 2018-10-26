@@ -871,18 +871,18 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             enter_type = "price_notice"
         }
 
-        if let enterType = enter_type {
+        var tracerParams = EnvContext.shared.homePageParams <|> traceParams
+        tracerParams = tracerParams <|>
+            toTracerParams("new_detail", key: "enter_from") <|>
+//            toTracerParams(enterType, key: "enter_type") <|>
+            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.searchId ?? "be_null", key: "search_id")
+//            alert.tracerParams = tracerParams
 
-            var tracerParams = EnvContext.shared.homePageParams
-            tracerParams = tracerParams <|>
-                toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(enterType, key: "enter_type") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-            alert.tracerParams = tracerParams
-
-        }
+        
+       recordEvent(key: TraceEventName.inform_show,
+                        params: tracerParams)
     
         alert.showFrom(self.view)
     }
