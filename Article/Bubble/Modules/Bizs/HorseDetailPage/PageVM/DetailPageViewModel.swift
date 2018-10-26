@@ -387,6 +387,7 @@ extension DetailPageViewModel {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfimTrace()
                     }
                 }else
                 {
@@ -399,7 +400,7 @@ extension DetailPageViewModel {
         {
             var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
             tracerParamsInform = tracerParamsInform <|>
-                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
                 toTracerParams(self.houseId, key: "group_id") <|>
                 toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
@@ -416,13 +417,13 @@ extension DetailPageViewModel {
     {
         var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
         tracerParamsInform = tracerParamsInform <|>
-            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
         
         
-        recordEvent(key: TraceEventName.inform_show,
+        recordEvent(key: TraceEventName.click_confirm,
                     params: tracerParamsInform.exclude("house_type"))
         
     }
