@@ -82,7 +82,7 @@ class ConditionFilterViewModel {
         didSet {
             sortPanelView?.didSelect = { [weak self] node in
                 self?.searchAndConditionFilterVM.searchSortCondition = node
-                if let node = node {
+                if let node = node, node.rankType != "default" {
                     self?.searchSortBtn?.isSelected = true
                 } else {
                     self?.searchSortBtn?.isSelected = false
@@ -124,12 +124,29 @@ class ConditionFilterViewModel {
 
     func openOrCloseSortPanel() {
         self.closeConditionFilterPanel(index: -1)
+        setSortBtnSelected()
+
         if sortPanelView?.isHidden == true {
             self.conditionPanelView?.isHidden = false
             self.sortPanelView?.isHidden = false
         } else {
             self.conditionPanelView?.isHidden = true
             self.sortPanelView?.isHidden = true
+        }
+    }
+
+    fileprivate func setSortBtnSelected() {
+        let isHidden = self.sortPanelView?.isHidden ?? true
+        //当前视图在关闭状态
+        if isHidden == true {
+            self.searchSortBtn?.isSelected = true
+        } else { //当前视图在打开状态
+            if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
+                sortCondition.rankType != "default" {
+                self.searchSortBtn?.isSelected = true
+            } else {
+                self.searchSortBtn?.isSelected = false
+            }
         }
     }
 

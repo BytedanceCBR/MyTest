@@ -146,6 +146,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         re.setImage(UIImage(named: "sort"), for: .normal)
         re.setImage(UIImage(named: "sort_selected"), for: .selected)
         re.setImage(UIImage(named: "sort_selected"), for: .highlighted)
+        re.adjustsImageWhenHighlighted = false
         return re
     }()
 
