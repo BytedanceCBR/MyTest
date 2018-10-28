@@ -18,6 +18,10 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 
+#define kTipDuration 2
+
+
+
 @interface FHMapSearchViewModel ()
 
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
@@ -26,16 +30,36 @@
 @property(nonatomic , strong) FHMapSearchHouseListViewController *houseListViewController;
 @property(nonatomic , copy)  NSString *suggestionParams;
 @property(nonatomic , strong) NSString *searchId;
+@property(nonatomic , strong) NSString *houseTypeName;
+@property(nonatomic , assign) FHMapSearchShowMode showMode;
+@property(nonatomic , strong) FHMapSearchDataListModel *currentSelectNeighbor;
 
 @end
 
 @implementation FHMapSearchViewModel
 
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configMode
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel
 {
     self = [super init];
     if (self) {
-        self.configModel = configMode;
+        self.configModel = configModel;
+        
+        NSString *title = @"二手房";
+        switch (configModel.houseType) {
+            case HouseTypeNewHouse:{
+                title = @"新房";
+                break;
+            }
+            case HouseTypeRentHouse:{
+                title = @"小区";
+                break;
+            }
+                
+            default:
+                break;
+        }
+        self.houseTypeName = title;
+        _showMode = FHMapSearchShowModeMap;
     }
     return self;
 }
@@ -46,15 +70,54 @@
     
 }
 
+-(void)changeNavbarAppear:(BOOL)show
+{
+    [self.viewController showNavTopViews:show];
+}
+
 -(FHMapSearchHouseListViewController *)houseListViewController
 {
     if (!_houseListViewController) {
         _houseListViewController = [[FHMapSearchHouseListViewController alloc]init];
         [self.viewController addChildViewController:_houseListViewController];
+        _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
+        __weak typeof(self) wself = self;
+        _houseListViewController.willSwipDownDismiss = ^(CGFloat duration) {
+            if (wself) {
+                [wself changeNavbarAppear:YES];
+                wself.showMode = FHMapSearchShowModeMap;
+                [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
+            }
+        };
+        _houseListViewController.didSwipDownDismiss = ^{
+            
+        };
+        _houseListViewController.moveToTop = ^{
+            [wself changeNavbarAppear:YES];
+            wself.showMode = FHMapSearchShowModeHouseList;
+            [wself.viewController switchNavbarMode:FHMapSearchShowModeHouseList];
+        };
+        _houseListViewController.moveDock = ^{
+            wself.showMode = FHMapSearchShowModeHalfHouseList;
+            [wself changeNavbarAppear:NO];
+        };
     }
     return _houseListViewController;
 }
 
+-(NSString *)navTitle
+{
+    if (_showMode == FHMapSearchShowModeHouseList) {
+        return _currentSelectNeighbor.name;
+    }
+    return _houseTypeName;
+}
+
+-(void)showMap
+{
+    [self.houseListViewController dismiss];
+    
+}
 
 -(void)requestHouses
 {
@@ -78,15 +141,12 @@
             //show toast
             return;
         }
-        NSString *tip = model.tips;
-        if (tip) {
-            CGFloat topY = 44;
-            if (@available(iOS 11.0 , *)) {
-                topY += wself.viewController.view.safeAreaInsets.top;
-            }else{
-                topY += 20;
+        if (wself.showMode == FHMapSearchShowModeMap) {
+            NSString *tip = model.tips;
+            if (tip) {
+                CGFloat topY = [wself.viewController topBarBottom];
+                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration];
             }
-            [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:2];
         }
         wself.searchId = model.searchId;
         [wself addAnnotations:model.list];
@@ -144,6 +204,7 @@
         
     }else{
         //show house list
+        self.currentSelectNeighbor = houseAnnotation.houseData;
         [self requestNeighborhoodHouses:houseAnnotation.houseData];
     }
 }
@@ -217,17 +278,6 @@
     return nil;
 }
 
-/**
- * @brief 当mapView新添加annotation views时，调用此接口
- * @param mapView 地图View
- * @param views 新添加的annotation views
- */
-- (void)mapView:(MAMapView *)mapView didAddAnnotationViews:(NSArray *)views
-{
-    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-    [self showMapViewInfo];
-}
-
 ///**
 // * @brief 当选中一个annotation view时，调用此接口. 注意如果已经是选中状态，再次点击不会触发此回调。取消选中需调用-(void)deselectAnnotation:animated:
 // * @param mapView 地图View
@@ -299,12 +349,27 @@
             return ;
         }
         if (!error && model) {
-            [wself.houseListViewController showWithHouseData:houseModel neighbor:model];
+            [wself showHouseList:houseModel searchModel:model];
         }else{
             //TODO: show error toast
         }
 
     }];
+}
+
+-(void)showHouseList:(FHSearchHouseDataModel *)houseDataModel searchModel:(FHMapSearchDataListModel *)model
+{
+    [self changeNavbarAppear:NO];
+    self.showMode = FHMapSearchShowModeHalfHouseList;
+    
+    //move annotationview to center
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
+    CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
+    annotationViewPoint.y += self.mapView.height/3;
+    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:annotationViewPoint toCoordinateFromView:self.mapView];
+    [self.mapView setCenterCoordinate:destCenter animated:YES];
+    [self.houseListViewController showWithHouseData:houseDataModel neighbor:model];
+    
 }
 
 #pragma mark - filter delegate

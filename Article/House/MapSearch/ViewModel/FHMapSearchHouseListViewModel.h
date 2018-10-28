@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)registerCells:(UITableView *)tableView;
 -(void)updateWithInitHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
+-(void)dismiss;
 
 @end
 

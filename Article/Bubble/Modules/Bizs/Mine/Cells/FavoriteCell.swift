@@ -121,7 +121,7 @@ func parseFavoriteNode(
     userFavoriteCounts: [UserFollowListResponse?],
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     var items: [FavoriteItemView] = []
-    if userFavoriteCounts.count == 3 && EnvContext.shared.client.accountConfig.userInfo.value != nil {
+    if userFavoriteCounts.count == 3 {
         items = [
             FavoriteItemView(
                 image: #imageLiteral(resourceName: "icon-ershoufang"),
@@ -133,13 +133,6 @@ func parseFavoriteNode(
                 image: #imageLiteral(resourceName: "icon-ershoufang"),
                 title: getFavoriteCategoryLabel(title: "小区", userFollowListResponse: userFavoriteCounts[2])),
             ]
-    } else {
-        items = [
-            FavoriteItemView(image: #imageLiteral(resourceName: "icon-ershoufang"), title: "二手房"),
-            FavoriteItemView(image: #imageLiteral(resourceName: "icon-xinfang"), title: "新房"),
-            //        FavoriteItemView(image: #imageLiteral(resourceName: "icon-zufang"), title: "租房"),
-            FavoriteItemView(image: #imageLiteral(resourceName: "icon-xiaoqu"), title: "小区"),
-        ]
     }
 
     let selectors = [HouseType.secondHandHouse,

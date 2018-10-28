@@ -20,11 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) FHMapSearchViewController *viewController;
 @property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
+@property(nonatomic , copy , readonly) NSString *navTitle;
 
-
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configMode;
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel;
 
 -(void)requestHouses;
+
+-(void)showMap;
 
 @end
 

@@ -275,7 +275,10 @@ extension DetailPageViewModel {
 
                             var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 {
-                                fhShowToast("已加入关注列表，点击可取消关注")
+
+                                var style = fhCommonToastStyle()
+                                style.verticalOffset = 20
+                                fhShowToast("已加入关注列表，点击可取消关注", position: .top, style: style)
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
@@ -290,18 +293,6 @@ extension DetailPageViewModel {
         }
     }
     
-    fileprivate func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
-        switch houseType {
-        case .newHouse:
-            return "app_court"
-        case .secondHandHouse:
-            return "app_oldhouse"
-        case .neighborhood:
-            return "app_neighbourhood"
-        default:
-            return "be_null"
-        }
-    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton) in
@@ -396,9 +387,10 @@ extension DetailPageViewModel {
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
                 {
-                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: self.gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                    self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfimTrace()
                     }
                 }else
                 {
@@ -407,30 +399,36 @@ extension DetailPageViewModel {
             }
             .disposed(by: disposeBag)
         
-        var enter_type: String?
-        if title == "开盘通知" {
-            enter_type = "openning_notice"
-        }else if title == "变价通知" {
-            enter_type = "price_notice"
-        }
-        
-        if let enterType = enter_type {
-            
-            var tracerParams = EnvContext.shared.homePageParams
-            tracerParams = tracerParams <|>
-                toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(enterType, key: "enter_type") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(self.searchId ?? "be_null", key: "search_id")
-            alert.tracerParams = tracerParams
-            
-        }
-        
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
+            var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+            tracerParamsInform = tracerParamsInform <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+                toTracerParams(self.houseId, key: "group_id") <|>
+                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+            
+            
+            recordEvent(key: TraceEventName.inform_show,
+                        params: tracerParamsInform.exclude("house_type"))
+            
             alert.showFrom(rootView)
         }
+    }
+    
+    func sendClickConfimTrace()
+    {
+        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+        tracerParamsInform = tracerParamsInform <|>
+//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+        
+        
+        recordEvent(key: TraceEventName.click_confirm,
+                    params: tracerParamsInform.exclude("house_type"))
+        
     }
     
     // MARK: 电话转接以及拨打相关操作
@@ -626,6 +624,19 @@ func enterFromByHouseType(houseType: HouseType) -> String {
         return "old_detail"
     case .neighborhood:
         return "neighborhood_detail"
+    default:
+        return "be_null"
+    }
+}
+
+func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
+    switch houseType {
+    case .newHouse:
+        return "app_court"
+    case .secondHandHouse:
+        return "app_oldhouse"
+    case .neighborhood:
+        return "app_neighbourhood"
     default:
         return "be_null"
     }

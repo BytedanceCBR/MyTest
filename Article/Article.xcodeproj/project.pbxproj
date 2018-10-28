@@ -3430,6 +3430,9 @@
 		B389ECBC2181C3B6003481D5 /* MapFindHouseFilterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */; };
 		B389ECBD2181E9FF003481D5 /* MapFindHouseFilterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */; };
 		B389ECBE2181EA00003481D5 /* MapFindHouseFilterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */; };
+		B389ECC02182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
+		B389ECC12182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
+		B389ECC22182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
 		B3A73587214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A73588214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A7358D214FAC4D001A3953 /* HouseFindVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */; };
@@ -7945,6 +7948,7 @@
 		B388CD152142678500653188 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		B388CD172142678800653188 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
 		B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFindHouseFilterFactory.swift; sourceTree = "<group>"; };
+		B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortConditionPanel.swift; sourceTree = "<group>"; };
 		B3A73586214F612F001A3953 /* SystemMessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageListVC.swift; sourceTree = "<group>"; };
 		B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindVC.swift; sourceTree = "<group>"; };
 		B3A7358F2150AA52001A3953 /* TTLaunchTracer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLaunchTracer.h; sourceTree = "<group>"; };
@@ -14951,6 +14955,7 @@
 				B388CA822142652900653188 /* BubbleSelectCollectionView.swift */,
 				B388CA832142652900653188 /* MultiColumnTableSelectorPanel.swift */,
 				B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */,
+				B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -17953,7 +17958,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -20789,6 +20794,7 @@
 				C305DE411E6FB9E8001F4967 /* TTVideoDetailLargeUnifyADView.m in Sources */,
 				2D3317451F305308009D2936 /* ArticleMobileSettingViewController.m in Sources */,
 				A97DC4F11F134BB30002B455 /* TTArticleSearchCell.m in Sources */,
+				B389ECC02182BFE2003481D5 /* SortConditionPanel.swift in Sources */,
 				F87693B01F31D0D400D59CA5 /* TTVRelatedVideoADPic+TTVComputedProperties.m in Sources */,
 				B388CB242142652A00653188 /* Client.swift in Sources */,
 				F87695F01F31D0D800D59CA5 /* TTFooterView.m in Sources */,
@@ -22487,6 +22493,7 @@
 				B373CE6B2174587A008F9905 /* TTVideoDetailLargeUnifyADView.m in Sources */,
 				B373CE6C2174587A008F9905 /* ArticleMobileSettingViewController.m in Sources */,
 				B373CE6D2174587A008F9905 /* TTArticleSearchCell.m in Sources */,
+				B389ECC22182BFE2003481D5 /* SortConditionPanel.swift in Sources */,
 				B373CE6E2174587A008F9905 /* TTVRelatedVideoADPic+TTVComputedProperties.m in Sources */,
 				B373CE6F2174587A008F9905 /* Client.swift in Sources */,
 				B373CE702174587A008F9905 /* TTFooterView.m in Sources */,
@@ -24185,6 +24192,7 @@
 				FEFA599E205FB1A8001F50D8 /* TTVideoDetailLargeUnifyADView.m in Sources */,
 				FEFA599F205FB1A8001F50D8 /* ArticleMobileSettingViewController.m in Sources */,
 				FEFA59A0205FB1A8001F50D8 /* TTArticleSearchCell.m in Sources */,
+				B389ECC12182BFE2003481D5 /* SortConditionPanel.swift in Sources */,
 				FEFA59A1205FB1A8001F50D8 /* TTVRelatedVideoADPic+TTVComputedProperties.m in Sources */,
 				B388CB252142652A00653188 /* Client.swift in Sources */,
 				FEFA59A2205FB1A8001F50D8 /* TTFooterView.m in Sources */,
@@ -24772,7 +24780,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24843,7 +24851,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -24876,7 +24884,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -24955,7 +24963,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

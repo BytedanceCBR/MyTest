@@ -136,9 +136,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     var allParams: [String: Any]?
 
     var searchSortBtn: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
         re.setImage(UIImage(named: "sort_selected"), for: .selected)
+        re.setImage(UIImage(named: "sort_selected"), for: .highlighted)
         return re
     }()
 
@@ -171,6 +172,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             conditionPanelView: conditionPanelView,
             searchFilterPanel: searchFilterPanel,
             searchAndConditionFilterVM: searchAndConditionFilterVM)
+
     }
 
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
@@ -208,6 +210,65 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
+    }
+
+    func setupSortCondition() {
+        let searchView = SortConditionPanel()
+        searchView.isHidden = true
+        self.conditionPanelView.addSubview(searchView)
+        searchView.snp.makeConstraints { (maker) in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(433)
+        }
+        self.conditionFilterViewModel?.sortPanelView = searchView
+        self.conditionFilterViewModel?.searchSortBtn = searchSortBtn
+        self.searchSortBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.conditionFilterViewModel?.openOrCloseSortPanel()
+            })
+            .disposed(by: disposeBag)
+
+        self.houseType
+            .bind { [unowned self, weak searchView] (type) in
+                searchView?.snp.updateConstraints({ (maker) in
+                    maker.height.equalTo(self.categulateSortPanelHeight(by: self.houseType.value))
+                })
+                if let options = self.filterSortCondition(by: type)?.first?.options {
+                    let nodes: [Node] = transferSearchConfigOptionToNode(
+                        options: options,
+                        rate: 1,
+                        isSupportMulti: false)
+                    if let orderConditions = nodes.first {
+                        searchView?.setSortConditions(nodes: orderConditions.children)
+                    } else {
+                        assertionFailure()
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+        if let queryParams = self.queryParams {
+            searchView.setSelectedConditions(conditions: queryParams)
+        }
+    }
+
+
+    fileprivate func categulateSortPanelHeight(by houseType: HouseType) -> CGFloat {
+        if let condition = filterSortCondition(by: houseType)?.first?.options?.first?.options {
+            return CGFloat(54 * condition.count)
+        } else {
+            return 433
+        }
+    }
+
+    fileprivate func filterSortCondition(by houseType: HouseType) -> [SearchConfigFilterItem]? {
+        switch houseType {
+        case .neighborhood:
+            return EnvContext.shared.client.configCacheSubject.value?.neighborhoodFilterOrder
+        case .newHouse:
+            return EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder
+        default:
+            return EnvContext.shared.client.configCacheSubject.value?.filterOrder
+        }
     }
 
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
@@ -349,7 +410,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     self.recordClickHouseSearch()
 
                     self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
-
                     let vc = SuggestionListVC(isFromHome: EnterSuggestionType.enterSuggestionTypeList)
                     let params = TracerParams.momoid() <|>
                             toTracerParams(categoryEnterNameByHouseType(houseType: self.houseType.value), key: "enter_from") <|>
@@ -372,10 +432,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                     vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
 //                        self.isNeedEncode = true
+                        self.conditionFilterViewModel?.cleanSortCondition()
                         self.suggestionParams = nil
                         self.resetFilterCondition(routeParamObj: params)
                         self.houseType.accept(vc.houseType.value)
-                            self.resetConditionData()
+                        self.resetConditionData()
 //                        }
                         if let queryParams = self.queryParams {
                             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
@@ -432,10 +493,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.edges.equalTo(tableView.snp.edges)
         }
 
+        setupSortCondition()
 
         bindLoadMore()
 
         bindSearchRequest()
+
 
         view.addSubview(conditionPanelView)
         conditionPanelView.snp.makeConstraints { maker in
@@ -493,6 +556,16 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
+            var rankType = "default"
+            if let node = self?.searchAndConditionFilterVM.searchSortCondition,
+                let theRankType = node.rankType {
+                rankType = theRankType
+            }
+            self?.traceHouseRank(
+                searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
+                rankType: rankType)
+
+            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
         }
 
     }
@@ -761,6 +834,26 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    fileprivate func traceHouseRank(searchId: String, rankType: String) {
+        let params = EnvContext.shared.homePageParams <|>
+            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(pageTypeString(), key: "page_type") <|>
+            toTracerParams(rankType, key: "rank_type")
+        recordEvent(key: "house_rank", params: params)
+    }
+
+    fileprivate func traceHouseFilter(searchId: String) {
+        let json = self.searchAndConditionFilterVM.conditionTracer.value
+            .map { $0.value }
+            .reduce([:], mapCondition)
+
+        let params = EnvContext.shared.homePageParams <|>
+            toTracerParams(self.houseType.value.traceTypeValue(), key: "house_type") <|>
+            toTracerParams(jsonStringMapper(json), key: "filter") <|>
+            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(pageTypeString(), key: "page_type")
+        recordEvent(key: "house_filter", params: params)
+    }
 
 }
 
@@ -794,4 +887,25 @@ func convertKeyValueToCondition(key: String, value: Any) -> [String] {
             return ["\(key)=\(value)"]
         }
     }
+}
+
+
+fileprivate func mapCondition(result: [String: [Any]], nodes: [Node]) -> [String: [Any]] {
+    var result = result
+    nodes.forEach { node in
+        var values = valueWithDefault(map: result, key: node.key, defaultValue: [Node]())
+        if let filterCondition = node.filterCondition {
+            values.append(filterCondition)
+        }
+        result[node.key] = values
+    }
+    return result
+}
+
+fileprivate func jsonStringMapper(_ value:  [String: [Any]]) -> String {
+    if let data = try? JSONSerialization.data(withJSONObject: value, options: []) as Data,
+        let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+        return json as String
+    }
+    return ""
 }

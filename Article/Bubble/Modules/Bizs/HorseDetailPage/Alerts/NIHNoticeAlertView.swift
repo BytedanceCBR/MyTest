@@ -98,6 +98,32 @@ class NIHNoticeAlertView: UIView {
             maker.bottom.equalToSuperview()
         }
         
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+            .subscribe(onNext: { [unowned self] notification in
+                let userInfo = notification.userInfo!
+                let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+                
+                let animations:(() -> Void) = { [unowned self] in
+                    
+                    let offsetY = keyBoardBounds.height - (UIScreen.main.bounds.height - self.contentView.bottom)
+                    if offsetY > 0
+                    {
+                        self.contentView.top -= offsetY
+                    }
+                    
+                }
+                
+                if duration > 0 {
+                    let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+                    UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+                }else{
+                    animations()
+                }
+            })
+            .disposed(by: disposeBag)
+        
     }
 
     private func setupUI() {
@@ -179,6 +205,8 @@ class NIHNoticeAlertView: UIView {
 
     @objc func dismiss() {
 
+        self.sendPhoneView.phoneTextField.resignFirstResponder()
+        
         UIView.animate(withDuration: 0.25, animations: {
             
             self.bgView.alpha = 0

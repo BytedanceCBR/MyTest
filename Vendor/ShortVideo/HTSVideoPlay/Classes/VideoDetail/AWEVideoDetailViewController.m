@@ -541,11 +541,11 @@ static const CGFloat kFloatingViewOriginY = 230;
     fakeTextBackgroundView.borderColorThemeKey = kColorLine1;
     [fakeInputBar addSubview:fakeTextBackgroundView];
 
-    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
-    inputIcon.imageName = @"hts_vp_write_new";
-    [fakeTextBackgroundView addSubview:inputIcon];
+//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
+//    inputIcon.imageName = @"hts_vp_write_new";
+//    [fakeTextBackgroundView addSubview:inputIcon];
 
-    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(inputIcon.frame) + 4, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - (CGRectGetMaxX(inputIcon.frame) + 4 + 4) , 20)];
+    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(9, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 9 , 20)];
     inputLabel.text = @"写评论...";
     inputLabel.font = [UIFont systemFontOfSize:14.0];
     inputLabel.textColorThemeKey = kColorText1;

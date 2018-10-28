@@ -64,6 +64,8 @@ class ConditionFilterViewModel {
 
     weak var searchFilterPanel: SearchFilterPanel?
 
+    weak var searchSortBtn: UIButton?
+
     let conditionPanelState = ConditionPanelState()
 
     let searchAndConditionFilterVM: SearchAndConditionFilterViewModel
@@ -75,6 +77,20 @@ class ConditionFilterViewModel {
     var conditionItemViews: [BaseConditionPanelView] = []
 
     let disposeBag = DisposeBag()
+
+    weak var sortPanelView: SortConditionPanel? {
+        didSet {
+            sortPanelView?.didSelect = { [weak self] node in
+                self?.searchAndConditionFilterVM.searchSortCondition = node
+                if let node = node {
+                    self?.searchSortBtn?.isSelected = true
+                } else {
+                    self?.searchSortBtn?.isSelected = false
+                }
+                self?.openOrCloseSortPanel()
+            }
+        }
+    }
 
     init(conditionPanelView: UIControl,
          searchFilterPanel: SearchFilterPanel,
@@ -104,6 +120,25 @@ class ConditionFilterViewModel {
 
     func setSelectedItem(items: [String: Any]) {
         conditionItemViews.forEach { $0.setSelectedConditions(conditions: items) }
+    }
+
+    func openOrCloseSortPanel() {
+        self.closeConditionFilterPanel(index: -1)
+        if sortPanelView?.isHidden == true {
+            self.conditionPanelView?.isHidden = false
+            self.sortPanelView?.isHidden = false
+        } else {
+            self.conditionPanelView?.isHidden = true
+            self.sortPanelView?.isHidden = true
+        }
+    }
+
+    func cleanSortCondition() {
+        self.searchSortBtn?.isSelected = false
+        self.sortPanelView?.removeSelected()
+        if sortPanelView?.isHidden == false {
+            sortPanelView?.isHidden = true
+        }
     }
 
     func generatePanelProviderByItem(reload: @escaping () -> Void,
@@ -241,6 +276,7 @@ class ConditionFilterViewModel {
             item.isExpand = false
             item.isHighlighted = false || item.isSeted
         })
+        self.sortPanelView?.isHidden = true
     }
 
     func onConditionSelected(
@@ -278,6 +314,7 @@ class ConditionFilterViewModel {
         } else {
             self.setSearchFilterPanelState(index: index, isExpand: false)
         }
+
     }
 
 //    private func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {
