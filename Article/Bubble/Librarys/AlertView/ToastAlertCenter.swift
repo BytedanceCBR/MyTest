@@ -103,7 +103,7 @@ func fhCommonToastStyle() -> ToastStyle {
 
 func fhShowToast(_ message: String, duration: TimeInterval = 2, position: ToastPosition = ToastManager.shared.position, style: ToastStyle = fhCommonToastStyle()) {
     
-    TTUIResponderHelper.topmostViewController()?.view.makeToast(message, position: position, title: nil,style: style, completion: nil)
+    TTUIResponderHelper.topmostViewController()?.view.makeToast(message, duration: duration, position: position, title: nil,style: style, completion: nil)
 
 }
 
