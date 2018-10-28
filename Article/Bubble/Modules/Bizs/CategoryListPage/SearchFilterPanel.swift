@@ -270,6 +270,7 @@ func transferSearchConfigOptionToNode(
             isNoLimit: option.isNoLimit,
             parentLabel: parentLabel,
             rate: rate,
+            rankType: option.rankType,
             children: transferSearchConfigOptionToNode(
                 options: option.options ?? [],
                 rate: rate,

@@ -82,6 +82,10 @@ class SortConditionPanel: BaseConditionPanelView, UITableViewDelegate {
         let encodingString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         return encodingString == nil ? string : encodingString!
     }
+
+    func removeSelected() {
+        dataSource.selectedIndexPaths.accept([])
+    }
 }
 
 fileprivate class DataSource: NSObject, UITableViewDataSource {

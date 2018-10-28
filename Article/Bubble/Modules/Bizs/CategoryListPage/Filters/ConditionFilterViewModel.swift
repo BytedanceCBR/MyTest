@@ -134,6 +134,14 @@ class ConditionFilterViewModel {
         }
     }
 
+    func cleanSortCondition() {
+        self.searchSortBtn?.isSelected = false
+        self.sortPanelView?.removeSelected()
+        if sortPanelView?.isHidden == false {
+            sortPanelView?.isHidden = true
+        }
+    }
+
     func generatePanelProviderByItem(reload: @escaping () -> Void,
                                      index: Int,
                                      item: SearchConditionItem,
@@ -307,6 +315,7 @@ class ConditionFilterViewModel {
         } else {
             self.setSearchFilterPanelState(index: index, isExpand: false)
         }
+
     }
 
 //    private func closeConditionPanel(_ apply: @escaping ConditionSelectAction) -> ConditionSelectAction {

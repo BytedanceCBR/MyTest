@@ -372,7 +372,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     self.recordClickHouseSearch()
 
                     self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
-
                     let vc = SuggestionListVC(isFromHome: EnterSuggestionType.enterSuggestionTypeList)
                     let params = TracerParams.momoid() <|>
                             toTracerParams(categoryEnterNameByHouseType(houseType: self.houseType.value), key: "enter_from") <|>
@@ -395,10 +394,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                     vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
 //                        self.isNeedEncode = true
+                        self.conditionFilterViewModel?.cleanSortCondition()
                         self.suggestionParams = nil
                         self.resetFilterCondition(routeParamObj: params)
                         self.houseType.accept(vc.houseType.value)
-                            self.resetConditionData()
+                        self.resetConditionData()
 //                        }
                         if let queryParams = self.queryParams {
                             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
@@ -516,6 +516,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
+            var rankType = "default"
+            if let node = self?.searchAndConditionFilterVM.searchSortCondition,
+                let theRankType = node.rankType {
+                rankType = theRankType
+            }
+            self?.traceHouseRank(
+                searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
+                rankType: rankType)
         }
 
     }
@@ -784,8 +792,39 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    fileprivate func traceHouseRank(searchId: String, rankType: String) {
+        let params = EnvContext.shared.homePageParams <|>
+            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(pageTypeString(), key: "page_type") <|>
+            toTracerParams(rankType, key: "rank_type")
+        recordEvent(key: "house_rank", params: params)
+    }
 
 }
+
+//func sortRankType(by houseType: HouseType, by value: Int) -> String {
+//    //都这么干不行呀，不行呀
+//    switch (houseType, value) {
+//    case (HouseType.secondHandHouse, 0) :
+//        return "default"
+//    case (HouseType.secondHandHouse, 1) :
+//        return "latest"
+//    case (HouseType.secondHandHouse, 2) :
+//        return "sum_lowest"
+//    case (HouseType.secondHandHouse, 3) :
+//        return "sum_highest"
+//    case (HouseType.secondHandHouse, 4) :
+//        return "default"
+//    case (HouseType.secondHandHouse, 5) :
+//        return "default"
+//    case (HouseType.secondHandHouse, 6) :
+//        return "default"
+//    case (HouseType.secondHandHouse, 7) :
+//        return "default"
+//    default:
+//        return "be_null"
+//    }
+//}
 
 func houseTypeString(_ houseType: HouseType) -> String {
     switch houseType {
