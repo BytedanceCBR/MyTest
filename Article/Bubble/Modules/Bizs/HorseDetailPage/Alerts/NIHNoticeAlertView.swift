@@ -99,7 +99,7 @@ class NIHNoticeAlertView: UIView {
         }
         
         NotificationCenter.default.rx
-            .notification(NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
+            .notification(NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
             .subscribe(onNext: { [unowned self] notification in
                 let userInfo = notification.userInfo!
                 let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
@@ -108,7 +108,10 @@ class NIHNoticeAlertView: UIView {
                 let animations:(() -> Void) = { [unowned self] in
                     
                     let offsetY = keyBoardBounds.height - (UIScreen.main.bounds.height - self.contentView.bottom)
-                    self.contentView.top -= offsetY
+                    if offsetY > 0
+                    {
+                        self.contentView.top -= offsetY
+                    }
                     
                 }
                 
