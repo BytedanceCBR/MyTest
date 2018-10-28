@@ -108,7 +108,7 @@
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.subviewWidth, 16)];
     // label
     UILabel *musicLabel = [UILabel new];
-    musicLabel.textColor = [UIColor colorWithHexString:@"ffffffe6"];
+    musicLabel.textColor = [UIColor colorWithHexString:@"#ffffff"];
     musicLabel.font = [UIFont systemFontOfSize:14];
     musicLabel.lineBreakMode = NSLineBreakByWordWrapping;
     musicLabel.numberOfLines = 0;
