@@ -11,7 +11,7 @@
 @interface TSVWriteCommentButton ()
 
 @property (nonatomic, strong) UILabel *label;
-@property (nonatomic, strong) UIImageView *iconImageView;
+//@property (nonatomic, strong) UIImageView *iconImageView;
 
 @end
 
@@ -32,8 +32,8 @@
         });
         [self addSubview:self.label];
 
-        self.iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hts_vp_write_new_white"]];
-        [self addSubview:self.iconImageView];
+//        self.iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hts_vp_write_new_white"]];
+//        [self addSubview:self.iconImageView];
     }
 
     return self;
@@ -44,11 +44,15 @@
     [super layoutSubviews];
 
     [UIView performWithoutAnimation:^{
-        self.iconImageView.bounds = CGRectMake(0, 0, 24, 24);
-        self.iconImageView.center = CGPointMake(20, CGRectGetHeight(self.frame) / 2);
+//        self.iconImageView.bounds = CGRectMake(0, 0, 24, 24);
+//        self.iconImageView.center = CGPointMake(20, CGRectGetHeight(self.frame) / 2);
 
-        self.label.frame = CGRectMake(CGRectGetMaxX(self.iconImageView.frame) + 4, 0,
-                                      CGRectGetWidth(self.frame) - 4 - CGRectGetMaxX(self.iconImageView.frame),
+//        self.label.frame = CGRectMake(CGRectGetMaxX(self.iconImageView.frame) + 4, 0,
+//                                      CGRectGetWidth(self.frame) - 4 - CGRectGetMaxX(self.iconImageView.frame),
+//                                      CGRectGetHeight(self.frame));
+        
+        self.label.frame = CGRectMake(20, 0,
+                                      CGRectGetWidth(self.frame) - 20,
                                       CGRectGetHeight(self.frame));
     }];
 }

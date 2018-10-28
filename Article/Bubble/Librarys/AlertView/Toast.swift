@@ -108,7 +108,7 @@ public extension UIView {
     public func makeToast(_ message: String?, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, title: String? = nil, image: UIImage? = nil, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil) {
         do {
             let toast = try toastViewForMessage(message, title: title, image: image, style: style)
-            showToast(toast, duration: duration, position: position, completion: completion)
+            showToast(toast, duration: duration, position: position, style: style, completion: completion)
         } catch ToastError.missingParameters {
             print("Error: message, title, and image are all nil")
         } catch {}
@@ -148,8 +148,8 @@ public extension UIView {
      @param completion The completion block, executed after the toast view disappears.
      didTap will be `true` if the toast view was dismissed from a tap.
      */
-    public func showToast(_ toast: UIView, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, completion: ((_ didTap: Bool) -> Void)? = nil) {
-        let point = position.centerPoint(forToast: toast, inSuperview: self)
+    public func showToast(_ toast: UIView, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil) {
+        let point = position.centerPoint(forToast: toast, inSuperview: self, style: style)
         showToast(toast, duration: duration, point: point, completion: completion)
     }
 
@@ -164,7 +164,7 @@ public extension UIView {
      @param completion The completion block, executed after the toast view disappears.
      didTap will be `true` if the toast view was dismissed from a tap.
      */
-    public func showToast(_ toast: UIView, duration: TimeInterval = ToastManager.shared.duration, point: CGPoint, completion: ((_ didTap: Bool) -> Void)? = nil) {
+    public func showToast(_ toast: UIView, duration: TimeInterval = ToastManager.shared.duration, point: CGPoint, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil) {
         objc_setAssociatedObject(toast, &ToastKeys.completion, ToastCompletionWrapper(completion), .OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
         if ToastManager.shared.isQueueEnabled, activeToasts.count > 0 {
@@ -749,17 +749,17 @@ public enum ToastPosition {
     case center
     case bottom
 
-    fileprivate func centerPoint(forToast toast: UIView, inSuperview superview: UIView) -> CGPoint {
-        let topPadding: CGFloat = ToastManager.shared.style.verticalPadding + superview.csSafeAreaInsets.top
-        let bottomPadding: CGFloat = ToastManager.shared.style.verticalPadding + superview.csSafeAreaInsets.bottom
+    fileprivate func centerPoint(forToast toast: UIView, inSuperview superview: UIView, style: ToastStyle = ToastManager.shared.style) -> CGPoint {
+        let topPadding: CGFloat = style.verticalPadding + superview.csSafeAreaInsets.top
+        let bottomPadding: CGFloat = style.verticalPadding + superview.csSafeAreaInsets.bottom
 
         switch self {
         case .top:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding)
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding + style.verticalOffset)
         case .center:
             return CGPoint(x: superview.bounds.size.width / 2.0, y: superview.bounds.size.height / 2.0)
         case .bottom:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding - ToastManager.shared.style.verticalOffset)
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding - style.verticalOffset)
         }
     }
 }

@@ -1,0 +1,18 @@
+{
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "1.4.0",
+  "iOS" : [
+    {
+      "name" : "JXPhotoBrowser",
+      "hash" : "81e10e1a3a28cc419ffc1a20eb244bbf320e5eed675591931298af6c0bf43a44"
+    }
+  ]
+}

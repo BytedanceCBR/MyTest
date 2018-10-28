@@ -756,6 +756,7 @@ struct Node {
     let isNoLimit: Int
     let parentLabel: String?
     let rate: Int
+    let rankType: String?
     let children: [Node]
 
     init(id: String,
@@ -768,6 +769,7 @@ struct Node {
          isNoLimit: Int,
          parentLabel: String? = nil,
          rate: Int,
+         rankType: String? = nil,
          children: [Node]) {
         self.id = id
         self.label = label
@@ -779,6 +781,7 @@ struct Node {
         self.isNoLimit = isNoLimit
         self.parentLabel = parentLabel
         self.rate = rate
+        self.rankType = rankType
         self.children = children
     }
 
@@ -798,6 +801,7 @@ struct Node {
         self.isSupportMulti = false
         self.parentLabel = nil
         self.rate = 1
+        self.rankType = "unknowned"
         self.children = []
     }
 }

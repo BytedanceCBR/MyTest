@@ -97,6 +97,7 @@ struct SearchConfigOption: Mappable {
     var value: Any = 0
     var isEmpty: Int = 0
     var isNoLimit: Int = 0
+    var rankType: String?
     init?(map: Map) {
 
     }
@@ -108,6 +109,7 @@ struct SearchConfigOption: Mappable {
         value <- map["value"]
         text <- map["text"]
         isEmpty <- map["is_empty"]
+        rankType <- map["rank_type"]
         isNoLimit <- map["is_no_limit"]
     }
 }
