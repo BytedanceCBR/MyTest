@@ -26,6 +26,8 @@ class SearchAndConditionFilterViewModel {
 
     var pageType: String?
 
+    var houseType: String?
+
     var searchSortCondition: Node? {
         didSet {
             queryCondition.accept(getConditions())
@@ -39,19 +41,6 @@ class SearchAndConditionFilterViewModel {
     }
 
     init() {
-        conditionTracer
-            .map { $0.values }
-            .map { $0.reduce([:], mapCondition) }
-            .map(jsonStringMapper)
-//            .debug("conditionTracer")
-            .skip(1)
-            .bind { [weak self] (condition) in
-
-                let params = EnvContext.shared.homePageParams <|>
-                    toTracerParams(self?.pageType ?? "be_null", key: "page_type")
-                recordEvent(key: "house_filter", params: params)
-            }.disposed(by: disposeBag)
-
 
     }
 

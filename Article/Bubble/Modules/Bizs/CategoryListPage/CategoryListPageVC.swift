@@ -136,7 +136,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     var allParams: [String: Any]?
 
     var searchSortBtn: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
         re.setImage(UIImage(named: "sort_selected"), for: .selected)
         re.setImage(UIImage(named: "sort_selected"), for: .highlighted)
@@ -536,6 +536,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.traceHouseRank(
                 searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
                 rankType: rankType)
+
+            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
         }
 
     }
@@ -812,31 +814,20 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         recordEvent(key: "house_rank", params: params)
     }
 
-}
+    fileprivate func traceHouseFilter(searchId: String) {
+        let json = self.searchAndConditionFilterVM.conditionTracer.value
+            .map { $0.value }
+            .reduce([:], mapCondition)
 
-//func sortRankType(by houseType: HouseType, by value: Int) -> String {
-//    //都这么干不行呀，不行呀
-//    switch (houseType, value) {
-//    case (HouseType.secondHandHouse, 0) :
-//        return "default"
-//    case (HouseType.secondHandHouse, 1) :
-//        return "latest"
-//    case (HouseType.secondHandHouse, 2) :
-//        return "sum_lowest"
-//    case (HouseType.secondHandHouse, 3) :
-//        return "sum_highest"
-//    case (HouseType.secondHandHouse, 4) :
-//        return "default"
-//    case (HouseType.secondHandHouse, 5) :
-//        return "default"
-//    case (HouseType.secondHandHouse, 6) :
-//        return "default"
-//    case (HouseType.secondHandHouse, 7) :
-//        return "default"
-//    default:
-//        return "be_null"
-//    }
-//}
+        let params = EnvContext.shared.homePageParams <|>
+            toTracerParams(self.houseType.value.traceTypeValue(), key: "house_type") <|>
+            toTracerParams(jsonStringMapper(json), key: "filter") <|>
+            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(pageTypeString(), key: "page_type")
+        recordEvent(key: "house_filter", params: params)
+    }
+
+}
 
 func houseTypeString(_ houseType: HouseType) -> String {
     switch houseType {
@@ -868,4 +859,25 @@ func convertKeyValueToCondition(key: String, value: Any) -> [String] {
             return ["\(key)=\(value)"]
         }
     }
+}
+
+
+fileprivate func mapCondition(result: [String: [Any]], nodes: [Node]) -> [String: [Any]] {
+    var result = result
+    nodes.forEach { node in
+        var values = valueWithDefault(map: result, key: node.key, defaultValue: [Node]())
+        if let filterCondition = node.filterCondition {
+            values.append(filterCondition)
+        }
+        result[node.key] = values
+    }
+    return result
+}
+
+fileprivate func jsonStringMapper(_ value:  [String: [Any]]) -> String {
+    if let data = try? JSONSerialization.data(withJSONObject: value, options: []) as Data,
+        let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+        return json as String
+    }
+    return ""
 }

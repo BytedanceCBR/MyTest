@@ -123,7 +123,6 @@ class ConditionFilterViewModel {
     }
 
     func openOrCloseSortPanel() {
-        print("openOrCloseSortPanel")
         self.closeConditionFilterPanel(index: -1)
         if sortPanelView?.isHidden == true {
             self.conditionPanelView?.isHidden = false
