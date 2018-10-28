@@ -275,7 +275,10 @@ extension DetailPageViewModel {
 
                             var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 {
-                                fhShowToast("已加入关注列表，点击可取消关注")
+
+                                var style = fhCommonToastStyle()
+                                style.verticalOffset = 20
+                                fhShowToast("已加入关注列表，点击可取消关注", position: .top, style: style)
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
