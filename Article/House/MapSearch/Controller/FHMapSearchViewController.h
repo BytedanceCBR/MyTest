@@ -9,6 +9,12 @@
 #import "FHMapSearchConfigModel.h"
 
 
+typedef NS_ENUM(NSInteger , FHMapSearchShowMode) {
+    FHMapSearchShowModeMap = 0 ,
+    FHMapSearchShowModeHouseList = 1 ,
+    FHMapSearchShowModeHalfHouseList = 2,
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class SearchConfigFilterItem;
@@ -20,6 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 //TODO: add other enter configs
 
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel ;//NS_DESIGNATED_INITIALIZER
+
+-(CGFloat)contentViewHeight;
+
+-(CGFloat)topBarBottom;
+
+-(void)switchNavbarMode:(FHMapSearchShowMode)mode;
+
+-(void)showNavTopViews:(BOOL)show;
 
 @end
 

@@ -14,6 +14,7 @@
 
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
+
 @end
 
 @implementation FHMapSearchHouseListViewController
@@ -21,7 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    _tableView.showsVerticalScrollIndicator = NO;
     _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 88)];
     
     [self.view addSubview:_tableView];
@@ -33,8 +36,10 @@
     self.viewModel = [[FHMapSearchHouseListViewModel alloc] init];
     [self.viewModel registerCells:self.tableView];
     self.viewModel.headerView = _headerView;
+    self.viewModel.listController = self;
     
 }
+
 
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
@@ -47,6 +52,34 @@
     [self.parentViewController.view addSubview:self.view];
     [self.viewModel updateWithInitHouseData:data neighbor:neighbor];
     
+}
+
+-(CGFloat)minTop
+{
+    return self.view.superview.height - self.view.height;
+}
+
+-(BOOL)canMoveup
+{
+    return self.view.top - 0.01 > [self minTop];
+}
+
+-(void)moveTop:(CGFloat)top
+{
+    CGFloat minTop = [self minTop];
+    top = MAX(minTop, top);
+    if (top + 0.1 < self.view.top && top == minTop ) {
+        //move to topest
+        if (self.moveToTop) {
+            self.moveToTop();
+        }
+    }
+    self.view.top = top;
+}
+
+-(void)dismiss
+{
+    [self.viewModel dismiss];
 }
 
 /*

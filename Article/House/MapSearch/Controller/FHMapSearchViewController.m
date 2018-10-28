@@ -20,6 +20,7 @@
 #import "FHMapSearchTipView.h"
 
 #define kTapDistrictZoomLevel  16
+#define kFilterBarHeight 51
 
 @interface FHMapSearchViewController ()
 
@@ -30,6 +31,8 @@
 @property(nonatomic , strong) UIControl *filterBgControl;
 @property(nonatomic , strong) HouseFilterViewModel* houseFilterViewModel;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
+@property(nonatomic , strong) UIBarButtonItem *showHouseListBarItem;
+@property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
 
 @end
 
@@ -63,6 +66,10 @@
         }else{
             _mapView.zoomLevel = 11;
         }
+        
+        //FIXME: remove debug code
+        _mapView.zoomLevel = 16;
+        
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
         representation.showsAccuracyRing = YES;
@@ -79,6 +86,24 @@
     return _tipView;
 }
 
+-(UIBarButtonItem *)showHouseListBarItem
+{
+    if (!_showHouseListBarItem) {
+        UIImage *img = [UIImage imageNamed:@"mapsearch_nav_list"];
+        _showHouseListBarItem= [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
+    }
+    return _showHouseListBarItem;
+}
+
+-(UIBarButtonItem *)showMapBarItem
+{
+    if (!_showMapBarItem) {
+        UIImage *img =[UIImage imageNamed:@"navbar_showmap"];
+        _showMapBarItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showMap)];
+    }
+    return _showMapBarItem;
+}
+
 -(void)backAction
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -89,38 +114,27 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)showMap
+{
+    [self switchNavbarMode:FHMapSearchShowModeMap];
+    [self.viewModel showMap];
+    
+}
+
 -(void)initNavbar
 {
     UIImage *img = [UIImage imageNamed:@"icon-return"];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     self.navigationItem.leftBarButtonItem = backItem;
     
-    img = [UIImage imageNamed:@"mapsearch_nav_list"];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(showHouseList)];
-    self.navigationItem.rightBarButtonItem = rightItem;
+    self.navigationItem.rightBarButtonItem = self.showHouseListBarItem;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSString *title = @"二手房";
-    switch (self.configModel.houseType) {
-            case HouseTypeNewHouse:{
-                title = @"新房";
-                break;
-            }
-            case HouseTypeRentHouse:{
-                title = @"小区";
-                break;
-            }
-            
-        default:
-            break;
-    }
-    self.title = title;
     [self initNavbar];
     self.view.backgroundColor = [UIColor whiteColor];
-    
     
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
     self.houseFilterViewModel = [factory createFilterPanelViewModel];
@@ -131,6 +145,7 @@
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
     self.filterBgControl.hidden = YES;
+//    self.filterPanel.hidden = YES;
     
     [self initConstraints];
     
@@ -140,6 +155,8 @@
     _viewModel.tipView = self.tipView;
     _mapView.delegate = _viewModel;    
     self.houseFilterViewModel.delegate = _viewModel;
+    
+    self.title = _viewModel.navTitle;
     
 }
 
@@ -151,12 +168,51 @@
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.bottom.right.mas_equalTo(self.view);
     }];
+    
+    CGFloat navHeight = 44;
+    if (@available(iOS 11.0 , *)) {
+        navHeight += [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    }else{
+        navHeight += [UIApplication sharedApplication].statusBarFrame.size.height;
+    }
+    
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(100);
+        make.top.mas_equalTo(navHeight);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(51);
+        make.height.mas_equalTo(kFilterBarHeight);
     }];
 }
 
+-(CGFloat)contentViewHeight
+{
+    return self.view.height - self.filterPanel.bottom;
+}
+
+-(CGFloat)topBarBottom
+{
+    return self.filterPanel.bottom;
+}
+
+-(void)switchNavbarMode:(FHMapSearchShowMode)mode
+{
+    UIBarButtonItem *rightItem = nil;
+    if (mode == FHMapSearchShowModeMap) {
+        rightItem = self.showHouseListBarItem;
+    }else{
+        rightItem = self.showMapBarItem;
+    }
+    
+    if(self.navigationItem.rightBarButtonItem != rightItem){
+        self.navigationItem.rightBarButtonItem = rightItem;
+    }
+    
+    self.title = self.viewModel.navTitle;
+}
+
+-(void)showNavTopViews:(BOOL)show
+{
+    [self.navigationController setNavigationBarHidden:!show animated:YES];
+    self.filterPanel.hidden = !show;
+}
 
 @end

@@ -9,6 +9,8 @@
 #import "Bubble-Swift.h"
 #import "FHSearchHouseModel.h"
 #import "FHHouseAreaHeaderView.h"
+#import "FHMapSearchHouseListViewController.h"
+
 #define kCellId @"singleCellId"
 
 @interface FHMapSearchHouseListViewModel ()
@@ -68,9 +70,49 @@
 //    return 105;
 }
 
+-(void)dismiss
+{
+    [self handleDismiss];
+}
+
+-(void)handleDismiss
+{
+    self.tableView.userInteractionEnabled = false;
+    CGFloat duration = 0.1;
+    if (self.listController.willSwipDownDismiss) {
+        self.listController.willSwipDownDismiss(duration);
+    }
+    [UIView animateWithDuration:duration animations:^{
+        self.listController.view.top = self.listController.parentViewController.view.height;
+    } completion:^(BOOL finished) {
+        if (self.listController.didSwipDownDismiss) {
+            self.listController.didSwipDownDismiss();
+        }
+        self.tableView.userInteractionEnabled = true;
+    }];
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    
+    CGFloat minTop =  [self.listController minTop];
+    if ([self.listController canMoveup]) {
+        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
+        scrollView.contentOffset = CGPointZero;
+        
+    }else if (scrollView.contentOffset.y < 0){
+        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
+        scrollView.contentOffset = CGPointZero;
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.listController.view.top > self.listController.view.height*0.6) {
+        [self handleDismiss];
+    }else if([self.listController canMoveup]){
+        //当前停留在中间
+        self.listController.moveDock();
+    }
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
