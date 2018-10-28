@@ -135,6 +135,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     var allParams: [String: Any]?
 
+    var searchSortBtnBG: UIView = {
+        let re = UIView()
+        re.lu.addBottomBorder()
+        return re
+    }()
+
     var searchSortBtn: UIButton = {
         let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
@@ -254,7 +260,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     fileprivate func categulateSortPanelHeight(by houseType: HouseType) -> CGFloat {
         if let condition = filterSortCondition(by: houseType)?.first?.options?.first?.options {
-            return CGFloat(54 * condition.count)
+            return CGFloat(45 * condition.count + 15)
         } else {
             return 433
         }
@@ -432,8 +438,16 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 })
                 .disposed(by: disposeBag)
 
-        view.addSubview(searchSortBtn)
+        view.addSubview(searchSortBtnBG)
+        searchSortBtnBG.addSubview(searchSortBtn)
         view.addSubview(searchFilterPanel)
+
+        searchSortBtnBG.snp.makeConstraints { (maker) in
+            maker.right.equalToSuperview()
+            maker.left.equalTo(searchFilterPanel.snp.right)
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.height.equalTo(44)
+        }
 
         searchSortBtn.snp.makeConstraints { (maker) in
             maker.height.width.equalTo(20)

@@ -192,7 +192,8 @@ class SearchConditionItemView: UIView {
         addSubview(conditionLabel)
         addSubview(triangle)
         conditionLabel.snp.makeConstraints { maker in
-            maker.center.equalToSuperview().offset(2)
+            maker.centerX.equalToSuperview().offset(-6)
+            maker.centerY.equalToSuperview().offset(2)
             maker.height.equalTo(15)
             maker.left.greaterThanOrEqualToSuperview().offset(3)
         }
