@@ -100,7 +100,14 @@ class ConditionFilterViewModel {
         self.searchFilterPanel = searchFilterPanel
         conditionPanelView.rx.controlEvent(.touchUpInside)
                 .bind { [unowned self] recognizer in
+                    self.setSortBtnSelectedWhenClosePanel()
+                    if self.sortPanelView?.isHidden ?? true {
+                        // do nothing
+                    } else {
+                        self.sortPanelView?.isHidden = true
+                    }
                     self.closeConditionFilterPanel(index: -1)
+
                 }
                 .disposed(by: disposeBag)
     }
@@ -141,12 +148,16 @@ class ConditionFilterViewModel {
         if isHidden == true {
             self.searchSortBtn?.isSelected = true
         } else { //当前视图在打开状态
-            if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
-                sortCondition.rankType != "default" {
-                self.searchSortBtn?.isSelected = true
-            } else {
-                self.searchSortBtn?.isSelected = false
-            }
+            setSortBtnSelectedWhenClosePanel()
+        }
+    }
+
+    fileprivate func setSortBtnSelectedWhenClosePanel() {
+        if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
+            sortCondition.rankType != "default" {
+            self.searchSortBtn?.isSelected = true
+        } else {
+            self.searchSortBtn?.isSelected = false
         }
     }
 
@@ -293,6 +304,7 @@ class ConditionFilterViewModel {
             item.isExpand = false
             item.isHighlighted = false || item.isSeted
         })
+        setSortBtnSelectedWhenClosePanel()
         self.sortPanelView?.isHidden = true
     }
 
