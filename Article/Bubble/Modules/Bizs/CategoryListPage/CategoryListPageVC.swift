@@ -229,14 +229,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
 
         self.houseType
-            .bind { [unowned self] (type) in
+            .bind { [unowned self, weak searchView] (type) in
+                searchView?.snp.updateConstraints({ (maker) in
+                    maker.height.equalTo(self.categulateSortPanelHeight(by: self.houseType.value))
+                })
                 if let options = self.filterSortCondition(by: type)?.first?.options {
                     let nodes: [Node] = transferSearchConfigOptionToNode(
                         options: options,
                         rate: 1,
                         isSupportMulti: false)
                     if let orderConditions = nodes.first {
-                        searchView.setSortConditions(nodes: orderConditions.children)
+                        searchView?.setSortConditions(nodes: orderConditions.children)
                     } else {
                         assertionFailure()
                     }
@@ -245,6 +248,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
             searchView.setSelectedConditions(conditions: queryParams)
+        }
+    }
+
+
+    fileprivate func categulateSortPanelHeight(by houseType: HouseType) -> CGFloat {
+        if let condition = filterSortCondition(by: houseType)?.first?.options?.first?.options {
+            return CGFloat(54 * condition.count)
+        } else {
+            return 433
         }
     }
 
