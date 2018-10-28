@@ -109,11 +109,13 @@ import RxCocoa
             }
             .map { items in //
                 //                assert(items?.count != 0)
-                let result: [SearchConditionItem] = items?
+                let filteredItems = items?.filter { $0.text != "区域" }
+
+                let result: [SearchConditionItem] = filteredItems?
                     // TODO: 暂时使用text过滤区域
                     .filter { $0.text != "区域" }
                     .map(transferSearchConfigFilterItemTo) ?? []
-                let panelData: [[Node]] = items?.map {
+                let panelData: [[Node]] = filteredItems?.map {
                     if let options = $0.options {
                         return transferSearchConfigOptionToNode(
                             options: options,
@@ -148,7 +150,7 @@ import RxCocoa
                     .forEach({ [unowned self] (e) in
                         let (offset, (item, nodes)) = e
                         item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(
-                            index: offset,
+                            index: offset + 1,
                             reload: reload,
                             item: item,
                             data: nodes)
