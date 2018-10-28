@@ -79,6 +79,8 @@ static const CGFloat KLabelInfoHeight = 20;
         
         self.picImageView = [[TTImageView alloc] init];
         self.picImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+        self.picImageView.layer.cornerRadius = 4;
+        self.picImageView.layer.masksToBounds = true;
         self.picImageView.hidden = NO;
         self.picImageView.userInteractionEnabled = NO;
         [self.picImageView addSubview:self.albumCover];
@@ -214,8 +216,8 @@ static const CGFloat KLabelInfoHeight = 20;
     if (item.tags.count > 0) {
         [self refreshTitleWithTags:item.tags];
     }
-    _fromLabel.textColor = [UIColor tt_themedColorForKey:kColorText3];
-    _commentCountLabel.textColor = [UIColor tt_themedColorForKey:kColorText3];
+    _fromLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey2];
+    _commentCountLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey2];
 }
 
 - (void)refreshTitleUI
@@ -251,7 +253,7 @@ static const CGFloat KLabelInfoHeight = 20;
     float titleLabelHeight = [self.class titleHeightForArticleTitle:item.article.title cellWidth:self.width];
     
     CGFloat fromLabelMaxLen = 120;
-//    self.fromLabel.text = item.article.source ?: item.article.mediaName;
+    self.fromLabel.text = item.article.source ?: item.article.mediaName;
     [self.fromLabel sizeToFit];
     
     self.albumCount.text = [item.article.commentCount stringValue];
@@ -264,7 +266,7 @@ static const CGFloat KLabelInfoHeight = 20;
     }
     countLabelText = [countLabelText stringByAppendingString:tailString];
     
-//    self.commentCountLabel.text = countLabelText;
+    self.commentCountLabel.text = countLabelText;
     [self.commentCountLabel sizeToFit];
     
     CGFloat imageWidth = [self.class videoDetailRelateVideoImageSizeWithWidth:self.width].width;
@@ -450,7 +452,7 @@ static const CGFloat KLabelInfoHeight = 20;
         for (NSString * tag in tags) {
             NSRange range = [title rangeOfString:tag];
             if (range.location != NSNotFound) {
-                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kColorText5) range:range];
+                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kFHColorDarkIndigo) range:range];
             }
         }
         return attrTitle;

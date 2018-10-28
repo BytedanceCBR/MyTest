@@ -710,7 +710,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 {
     [super themeChanged:notification];
     [self.viewModel updateAttributeTitle];
-    _watchCountLabel.textColor = SSGetThemedColorWithKey(kColorText3);
+    _watchCountLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey2);
     _directShareLabel.textColor = SSGetThemedColorWithKey(kColorText1);
     [self updateVideoInfo];
     _detailButton.imageName = [TTDeviceHelper isPadDevice] ? @"Triangle" : @"Triangle";
