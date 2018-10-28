@@ -162,6 +162,13 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                 {
                     alert.sendPhoneView.showErrorText()
                 }
+                self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                        followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                        followId: "\(self.houseId)",
+                    disposeBag: self.disposeBag,
+                    statusBehavior: self.follwUpStatus,
+                    isNeedRecord: false)()
+
             }
             .disposed(by: disposeBag)
 
@@ -196,7 +203,12 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
             onNext: { (response) in
                 if let status = response?.status, status == 0 {
-                    EnvContext.shared.toast.showToast("提交成功")
+                    
+                    var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                    if toastCount >= 3 {
+                        
+                        EnvContext.shared.toast.showToast("提交成功")
+                    }
                     success()
                 }
                 else {

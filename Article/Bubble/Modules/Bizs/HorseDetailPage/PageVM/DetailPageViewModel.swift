@@ -120,7 +120,11 @@ extension DetailPageViewModel {
         requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
             onNext: { [unowned self] (response) in
                 if let status = response?.status, status == 0 {
-                    EnvContext.shared.toast.showToast("提交成功")
+                    var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                    if toastCount >= 3 {
+                        
+                        EnvContext.shared.toast.showToast("提交成功")
+                    }
                     success()
                 }
                 else {
@@ -341,17 +345,14 @@ extension DetailPageViewModel {
                 .withLatestFrom(self.contactPhone)
                 .bind(onNext: {[weak self] (contactPhone) in
                     
-                    self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
-                                          followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
-                                          followId: "\(self?.houseId ?? -1)",
-                        disposeBag: self?.disposeBag ?? DisposeBag(),
-                        isNeedRecord: true)()
-                    
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self?.callRealtorPhone(contactPhone: contactPhone)
-
-                        
+                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                              followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                              followId: "\(self?.houseId ?? -1)",
+                            disposeBag: self?.disposeBag ?? DisposeBag(),
+                            isNeedRecord: false)()
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
                             
@@ -396,6 +397,12 @@ extension DetailPageViewModel {
                 {
                     alert.sendPhoneView.showErrorText()
                 }
+                self.followHouseItem(houseType: self.houseType,
+                                                          followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                          followId: "\(self.houseId)",
+                    disposeBag: self.disposeBag,
+                    isNeedRecord: false)()
+                
             }
             .disposed(by: disposeBag)
         
