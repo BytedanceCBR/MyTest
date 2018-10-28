@@ -62,7 +62,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _writeButton.backgroundColorThemeKey = kColorBackground3;
         _writeButton.layer.masksToBounds = YES;
         
-        [_writeButton setImageName:@"write_new"];
+//        [_writeButton setImageName:@"write_new"];
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         
         UIEdgeInsets toolBarButtonHitTestInsets = UIEdgeInsetsMake(-8.f, -12.f, -15.f, -12.f);
@@ -201,7 +201,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
     _nextButton.frame = nextFrame;
     
     BOOL _isIPad = [TTDeviceHelper isPadDevice];
-    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
+//    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
     
     [self relayoutItems];
 }
