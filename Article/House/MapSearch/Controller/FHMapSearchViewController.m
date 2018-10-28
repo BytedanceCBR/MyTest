@@ -123,7 +123,7 @@
     
     
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    self.houseFilterViewModel = [factory createFilterPanelViewModel];
+    self.houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType: HouseTypeSecondHandHouse];
     self.filterBgControl = [[UIControl alloc] init];
     self.filterPanel = self.houseFilterViewModel.filterPanelView;
     self.filterBgControl = self.houseFilterViewModel.filterConditionPanel;
@@ -149,7 +149,8 @@
         make.top.and.left.bottom.right.mas_equalTo(self.view);
     }];
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(self.view);
+        make.left.bottom.right.mas_equalTo(self.view);
+        make.top.equalTo(self.filterPanel.mas_bottom);
     }];
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(100);
