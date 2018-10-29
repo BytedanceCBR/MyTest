@@ -42,6 +42,8 @@
     imageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     imageView.imageContentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:imageView];
+    imageView.layer.masksToBounds = YES;
+    imageView.layer.cornerRadius = 4;
     return imageView;
 }
 
@@ -56,6 +58,8 @@
     imageView.backgroundColorThemeKey = kPicViewBackgroundColor();
     imageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     imageView.imageContentMode = UIViewContentModeScaleAspectFill;
+    imageView.layer.masksToBounds = YES;
+    imageView.layer.cornerRadius = 4;
     [self addSubview:imageView];
     return imageView;
 }

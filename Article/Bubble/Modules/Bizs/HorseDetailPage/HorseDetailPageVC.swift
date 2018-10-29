@@ -855,7 +855,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         
        recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams)
+                        params: tracerParams.exclude("element_type"))
     
         alert.showFrom(self.view)
     }

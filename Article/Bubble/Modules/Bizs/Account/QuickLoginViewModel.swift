@@ -158,6 +158,7 @@ class QuickLoginViewModel {
                     self.onResponse.accept(.successed)
                     self.loginResponse.accept(.successed)
                     EnvContext.shared.client.accountConfig.setUserPhone(phoneNumber: mobile)
+                    EnvContext.shared.client.sendPhoneNumberCache?.setObject(mobile as NSString, forKey: "phonenumber")
                     EnvContext.shared.client.accountConfig.userInfo.accept(TTAccount.shared().user())
                     AddressBookSync.trySyncAddressBook()
                 }, onError: { [unowned self] error in

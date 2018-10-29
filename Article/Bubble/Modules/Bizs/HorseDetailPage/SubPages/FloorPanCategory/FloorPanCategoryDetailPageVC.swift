@@ -133,7 +133,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             .exclude("search")
                             .exclude("filter")
                         traceParams = traceParams <|>
-                            toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                            toTracerParams("house_model_detail", key: "page_type") <|>
                             toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("be_null", key: "search_id") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
@@ -183,7 +183,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
             
             
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams)
+                        params: tracerParams.exclude("element_type"))
             
             alert.showFrom(rootView)
         }
