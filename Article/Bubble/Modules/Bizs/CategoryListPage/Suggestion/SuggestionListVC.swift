@@ -820,7 +820,7 @@ func createQueryCondition(_ info: Any?) -> String {
     } else {
         do {
             if let condition = String(
-                data: try JSONSerialization.data(withJSONObject: info),
+                data: try JSONSerialization.data(withJSONObject: info ?? []),
                 encoding: .utf8) {
                 queryCondition.append(condition)
             }

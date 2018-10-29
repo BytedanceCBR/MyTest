@@ -268,12 +268,6 @@ class PriceListFilterPanel: BaseConditionPanelView {
                 }
                 if datas.isEmpty {
                     self.processUserInputPrice()
-
-//                    } else{
-//                        self.dataSource.lowerInput = ""
-//                        self.dataSource.upperInput = ""
-//                        self.didSelect?([])
-//                    }
                 } else {
                     self.dataSource.lowerInput = ""
                     self.dataSource.upperInput = ""

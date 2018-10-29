@@ -212,11 +212,11 @@ class ConditionFilterViewModel {
                     item: item, conditionLabelParser: parseAreaConditionItemLabel,
                     conditionParser: parseAreaSearchCondition)
             }
-            let panel = constructPriceListConditionPanelWithContainer(
+            let panel = constructPriceBubbleSelectCollectionPanelWithContainer(
                     index: index,
                     nodes: configs,
                     container: containerView!,
-                    action: selectedAction)
+                    selectedAction)
             conditionItemViews.append(panel)
             return { [weak self] (index) in
                 self?.onOpenConditionPanel(panel: panel, index: index)
