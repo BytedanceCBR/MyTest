@@ -356,6 +356,18 @@ extension DetailPageViewModel {
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
                             
+                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String {
+                                
+                                if enter_from == "house_model_detail" {
+                                    traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
+                                }else {
+                                    traceParams = traceParams <|> toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
+                                }
+                            } else {
+                                traceParams = traceParams <|>
+                                    toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
+                            }
+                            
                             traceParams = traceParams <|> EnvContext.shared.homePageParams
                                 .exclude("house_type")
                                 .exclude("element_type")
@@ -363,7 +375,6 @@ extension DetailPageViewModel {
                                 .exclude("search")
                                 .exclude("filter")
                             traceParams = traceParams <|>
-                                toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
                                 toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                             if let houseId = self?.houseId {
