@@ -693,7 +693,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.infoLabel.hidden = cellLayOut.infoLabelHidden;
     if (!self.infoLabel.hidden) {
         self.infoLabel.frame = cellLayOut.infoLabelFrame;
-        self.infoLabel.frame = CGRectMake(cellLayOut.infoLabelFrame.origin.x, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
+        self.infoLabel.frame = CGRectMake(self.sourceLabel.origin.x + self.sourceLabel.size.width, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
         self.infoLabel.font = [UIFont systemFontOfSize:10];
         self.infoLabel.textColorThemeKey = cellLayOut.infoLabelTextColorThemeKey;
         self.infoLabel.text = self.orderedData.cellLayOut.infoLabelStr;
@@ -715,6 +715,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.typeLabel.hidden = cellLayOut.typeLabelHidden;
     if (!self.typeLabel.hidden) {
         self.typeLabel.frame = cellLayOut.typeLabelFrame;
+        self.typeLabel.frame = CGRectMake(cellLayOut.typeLabelFrame.origin.x, self.sourceLabel.frame.origin.y, cellLayOut.typeLabelFrame.size.width, cellLayOut.typeLabelFrame.size.height);
         NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
         self.typeLabel.text = typeString;
         if ([self.orderedData isPlainCell]){
