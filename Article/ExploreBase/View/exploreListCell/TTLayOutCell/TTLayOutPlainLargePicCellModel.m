@@ -40,7 +40,7 @@
             NSString *adSubtitleStr = [TTLayOutCellDataHelper getSubtitleStringWithOrderedData:self.orderedData];
             CGSize adSubtitleSize = [adSubtitleStr sizeWithAttributes:@{NSFontAttributeName : [UIFont tt_fontOfSize:14]}];
             adSubtitleSize = CGSizeMake(ceilf(adSubtitleSize.width), ceilf(adSubtitleSize.height));
-            CGRect adSourceFrame = CGRectMake(self.originX + 9, top + floor((ADActionSize.height - adSubtitleSize.height) / 2), ADActionSize.width - 115, adSubtitleSize.height);
+            CGRect adSourceFrame = CGRectMake(self.originX + 9, top + floor((ADActionSize.height - adSubtitleSize.height) / 2) - 4, ADActionSize.width - 115, adSubtitleSize.height);
 
             self.adSubtitleLabelFrame = adSourceFrame;
             self.adSubtitleLabelHidden = NO;

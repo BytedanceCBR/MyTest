@@ -17,7 +17,7 @@
     top += kCellGroupPicTopPadding;
     CGRect picFrame = CGRectZero;
     CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:self.orderedData adModel:nil picStyle:TTArticlePicViewStyleTriple width:self.containWidth];
-    picFrame = CGRectMake(self.originX, top, picSize.width, picSize.height);
+    picFrame = CGRectMake(self.originX, top + 3, picSize.width, picSize.height);
     self.picViewFrame = picFrame;
     self.picViewHidden = NO;
     self.picViewStyle = TTArticlePicViewStyleTriple;

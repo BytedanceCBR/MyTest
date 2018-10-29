@@ -199,7 +199,7 @@
         self.sourceLabelHidden = NO;
         self.sourceLabelStr = sourceStr;
         self.sourceLabelFontSize = kUFWenDaSourceLabelFontSize();
-        self.sourceLabelTextColorThemeKey = kColorText2;
+        self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
         self.sourceLabelUserInteractionEnabled = YES;
     }
 

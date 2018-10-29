@@ -75,7 +75,7 @@
 - (CGFloat)heightForArticleInfoRegionWithTop:(CGFloat)top containWidth:(CGFloat)containWidth
 {
     CGFloat left = self.originX;
-    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2);;
+    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2) + 4;
     CGFloat margin = 4;
     NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
     
@@ -141,7 +141,7 @@
         }
         
         self.sourceLabelFontSize = kCellInfoLabelFontSize;
-        self.sourceLabelTextColorThemeKey = kCellInfoLabelTextColor;
+        self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
         self.sourceLabelHidden = NO;
         left += self.sourceLabelFrame.size.width;
         infoMaxWidth -= self.sourceLabelFrame.size.width;
@@ -186,7 +186,7 @@
     }
     
     self.infoLabelFontSize = kCellInfoLabelFontSize;
-    self.infoLabelTextColorThemeKey = kCellInfoLabelTextColor;
+    self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
     self.infoLabelFrame = infoLabelFrame;
     self.infoLabelHidden = NO;
     

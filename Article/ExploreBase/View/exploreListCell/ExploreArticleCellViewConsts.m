@@ -244,9 +244,9 @@ inline CGFloat cellTitleLabelFontSize() {
         fontSize = 20.f;
         return [NewsUserSettingManager fontSizeFromNormalSize:fontSize isWidescreen:YES];
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 19.f;
+        fontSize = 16.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 19.f;
+        fontSize = 16.f;
     } else {
         fontSize = 17.f;
     }
