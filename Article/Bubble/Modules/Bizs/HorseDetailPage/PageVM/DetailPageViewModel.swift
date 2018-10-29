@@ -428,7 +428,7 @@ extension DetailPageViewModel {
             
             
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParamsInform.exclude("house_type"))
+                        params: tracerParamsInform.exclude("house_type").exclude("element_type"))
             
             alert.showFrom(rootView)
         }
