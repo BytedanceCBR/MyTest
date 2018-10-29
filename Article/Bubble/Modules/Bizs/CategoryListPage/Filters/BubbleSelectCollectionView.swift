@@ -877,8 +877,8 @@ fileprivate class PriceBottomInputView: UIView, UITextFieldDelegate {
         let re = UITextField()
         re.placeholder = "最低价格 (万)"
         re.textAlignment = .left
-        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
         re.layer.cornerRadius = 4
         re.keyboardType = .numberPad
         re.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
@@ -890,8 +890,8 @@ fileprivate class PriceBottomInputView: UIView, UITextFieldDelegate {
     lazy var upperPriceTextField: UITextField = {
         let re = UITextField()
         re.placeholder = "最高价格 (万)"
-        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
         re.textAlignment = .left
         re.layer.cornerRadius = 4
         re.keyboardType = .numberPad
