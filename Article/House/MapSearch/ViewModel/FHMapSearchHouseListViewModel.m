@@ -10,12 +10,18 @@
 #import "FHSearchHouseModel.h"
 #import "FHHouseAreaHeaderView.h"
 #import "FHMapSearchHouseListViewController.h"
+#import "FHMapSearchModel.h"
+#import "FHHouseSearcher.h"
+#import "FHMapSearchConfigModel.h"
 
 #define kCellId @"singleCellId"
 
 @interface FHMapSearchHouseListViewModel ()
 
 @property(nonatomic , strong) NSMutableArray *houseList;
+@property(nonatomic , strong) FHMapSearchDataListModel *neighbor;
+@property(nonatomic , strong) NSString *searchId;
+@property(nonatomic , assign) NSInteger offset;
 
 @end
 
@@ -26,6 +32,7 @@
     self = [super init];
     if (self) {
         _houseList = [NSMutableArray new];
+        _offset = 1;
     }
     return self;
 }
@@ -35,16 +42,24 @@
     self.tableView = tableView;
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    __weak typeof(self) wself = self;
+    NIHRefreshCustomFooter *footer = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+        [wself loadMoreData];
+    }];
+    self.tableView.mj_footer = footer;
     [tableView registerClass:SingleImageInfoCell.class forCellReuseIdentifier:kCellId];
 }
 
--(void)updateWithInitHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
+-(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
     [_houseList removeAllObjects];
     [_houseList addObjectsFromArray:data.items];
     [self.tableView reloadData];
     [_headerView updateWithMode:neighbor];
     _tableView.tableHeaderView = _headerView;
+    self.searchId = data.searchId;
+    self.neighbor = neighbor;
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -68,6 +83,15 @@
         return 125;
 //    }
 //    return 105;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -116,7 +140,11 @@
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if([self.listController canMoveup]){
+    }else if(self.listController.view.top - [self.listController minTop] < 30){
+        //吸附都顶部
+        [self.listController moveTop:0];
+    }
+    else if([self.listController canMoveup]){
         //当前停留在中间
         self.listController.moveDock();
     }
@@ -128,6 +156,48 @@
         //quickly swipe done
         [self handleDismiss:0.1];
     }
+}
+
+-(void)loadMoreData
+{
+    /*
+     "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" +
+     */
+    
+    //TODO: add loading ...
+    
+    NSString *query = [NSString stringWithFormat:@""];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    if (self.neighbor.nid) {
+        param[NEIGHBORHOOD_ID_KEY] = self.neighbor.nid;
+    }
+    param[HOUSE_TYPE_KEY] = @(self.configModel.houseType);
+    if (self.searchId) {
+        param[@"search_id"] = self.searchId;
+    }
+
+    
+    __weak typeof(self) wself = self;
+    [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+        if (!wself) {
+            return ;
+        }
+        if (!error && houseModel) {
+            [wself.houseList addObjectsFromArray:houseModel.items];
+            [wself.tableView reloadData];
+            if (houseModel.hasMore) {
+                [wself.tableView.mj_footer endEditing:YES];
+            }else{
+                [wself.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+            wself.offset++;
+        }else{
+            //TODO: show error toast
+        }
+        
+    }];
+    
 }
 
 @end

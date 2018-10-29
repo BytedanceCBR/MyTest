@@ -110,6 +110,8 @@
         _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model) {
             [wself showHoseDetailPage:model];
         };
+        
+        _houseListViewController.viewModel.configModel = self.configModel;
     }
     return _houseListViewController;
 }

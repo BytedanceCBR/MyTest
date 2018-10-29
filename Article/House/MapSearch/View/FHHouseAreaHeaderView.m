@@ -56,7 +56,7 @@
         [self addSubview:_bottomLine];
         
         [self initConstraints];
-        
+        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -79,19 +79,17 @@
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(_indicatorImgView.mas_left).offset(-10);
         make.width.mas_lessThanOrEqualTo(100);
-//        make.height.mas_equalTo(22);
     }];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(20);
-        make.right.mas_lessThanOrEqualTo(_priceLabel).offset(-10);
-//        make.height.mas_equalTo(28);
+        make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_nameLabel);
         make.top.mas_equalTo(_nameLabel.mas_bottom).offset(2);
-        make.right.mas_lessThanOrEqualTo(_priceLabel).offset(-10);
+        make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
