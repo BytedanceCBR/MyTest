@@ -157,7 +157,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let result = UIButton()
         result.backgroundColor = UIColor.white
 
-        result.setTitle("重置", for: .normal)
+        result.setTitle("不限条件", for: .normal)
         result.layer.cornerRadius = 20
         result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .normal)

@@ -815,18 +815,18 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
 func createQueryCondition(_ info: Any?) -> String {
     var queryCondition = ""
-    if let conditions = info as? [String: Any] {
+    if let conditions = info as? String {
+        queryCondition.append(conditions)
+    } else {
         do {
             if let condition = String(
-                data: try JSONSerialization.data(withJSONObject: conditions),
+                data: try JSONSerialization.data(withJSONObject: info),
                 encoding: .utf8) {
                 queryCondition.append(condition)
             }
         } catch {
 //            print(error)
         }
-    } else if let conditions = info as? String {
-        queryCondition.append(conditions)
     }
     return queryCondition
 }
