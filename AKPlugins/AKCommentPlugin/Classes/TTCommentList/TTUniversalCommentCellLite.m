@@ -313,7 +313,7 @@
 - (void)themeChanged:(NSNotification *)notification {
     [self refreshContent];
 
-    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
     self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
 }
 
@@ -494,7 +494,7 @@
         CGFloat maxWidth = self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding] - [TTUniversalCommentCellLiteHelper cellRightPadding] - 30.f - [TTUniversalCommentCellLiteHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTUniversalCommentCellLiteHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTUniversalCommentCellLiteHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTUniversalCommentCellLiteHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor colorWithHexString:@"8D8D8D"];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -544,7 +544,7 @@
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTUniversalCommentCellLiteHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -556,7 +556,7 @@
     if (!_contentLabel) {
         _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(self.nameView.left, self.timeLabel.bottom + [TTUniversalCommentCellLiteHelper contentLabelPadding], 0, 0)];
         _contentLabel.font = [TTCommentUIHelper tt_fontOfSize:[TTUniversalCommentCellLiteHelper contentLabelFont].pointSize]; // 采用苹方字体能正确居中对齐...
-        _contentLabel.textColor = SSGetThemedColorWithKey(kColorText1);
+        _contentLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
         _contentLabel.backgroundColor = [UIColor clearColor];
         _contentLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
         _contentLabel.attributedTruncationToken = [self attributedTruncationToken];

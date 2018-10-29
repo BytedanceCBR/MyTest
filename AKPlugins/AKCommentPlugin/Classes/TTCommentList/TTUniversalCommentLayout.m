@@ -87,7 +87,8 @@
 }
 
 + (UIFont *)contentLabelFont {
-    return [UIFont systemFontOfSize:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
+//    return [UIFont systemFontOfSize:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
+    return [UIFont fontWithName:@"PingFangSC-Regular" size:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
 }
 
 + (UIColor *)contentLabelTextColor {
@@ -270,8 +271,8 @@
     
     self.timeLayout = [[TTUniversalCommentTimeLayout alloc] init];
     NSString *timeText = [TTBusinessManager customtimeStringSince1970:[model.commentCreateTime doubleValue]];
-    self.timeLayout.text = [timeText stringByAppendingString:@" · "];
-
+//    self.timeLayout.text = [timeText stringByAppendingString:@" · "];
+    self.timeLayout.text = [timeText stringByAppendingString:@"   "];
     //如果userInfo和time超出指定长度，重新调整userinfo宽度
     CGFloat resetWidth = self.diggLayout.right - self.diggLayout.width - [TTUniversalCommentCellLiteHelper digButtonLeftPadding] - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding];
     if (self.userInfoLayout.width > resetWidth) {
