@@ -356,13 +356,8 @@ extension DetailPageViewModel {
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
                             
-                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String {
-                                
-                                if enter_from == "house_model_detail" {
-                                    traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
-                                }else {
-                                    traceParams = traceParams <|> toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
-                                }
+                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
+                                traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
                             } else {
                                 traceParams = traceParams <|>
                                     toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
