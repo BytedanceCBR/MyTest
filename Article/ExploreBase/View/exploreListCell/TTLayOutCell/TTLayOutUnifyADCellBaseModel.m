@@ -163,7 +163,7 @@
             CGFloat sourceLabelOriginY = ceilf(top + (regionHeight - sourceSize.height) / 2);
             self.sourceLabelFrame = CGRectMake(self.originX +left, sourceLabelOriginY, sourceSize.width, sourceSize.height);
             self.sourceLabelFontSize = kCellInfoLabelFontSize;
-            self.sourceLabelTextColorThemeKey = kCellInfoLabelTextColor;
+            self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
             self.sourceLabelStr = fixedSourceString;
             self.sourceLabelHidden = NO;
             left += sourceSize.width;
@@ -194,7 +194,7 @@
             CGRect infoLabelFrame = CGRectMake(self.originX + left, infolLabelOriginY, infoLabelSize.width, infoLabelSize.height);
             self.infoLabelFrame = infoLabelFrame;
             self.infoLabelFontSize = kCellInfoLabelFontSize;
-            self.infoLabelTextColorThemeKey = kCellInfoLabelTextColor;
+            self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
             self.infoLabelStr = infoStr;
             self.infoLabelHidden = NO;
             left += infoLabelSize.width + margin;

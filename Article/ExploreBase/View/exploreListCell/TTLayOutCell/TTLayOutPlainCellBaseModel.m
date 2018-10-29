@@ -58,7 +58,7 @@
         titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:self.containWidth forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellTitleLabelMaxLine];
         CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
         //上下剪去行高导致的留白
-        CGFloat titleY = top - titlePadding / 2 - 4;
+        CGFloat titleY = top - titlePadding / 2;
         height = titleSize.height - titlePadding;
         CGRect titleFrame = CGRectMake(self.originX, titleY, titleSize.width, titleSize.height);
         
@@ -141,7 +141,7 @@
         }
         
         self.sourceLabelFontSize = kCellInfoLabelFontSize;
-        self.sourceLabelTextColorThemeKey = kCellInfoLabelTextColor;
+        self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
         self.sourceLabelHidden = NO;
         left += self.sourceLabelFrame.size.width;
         infoMaxWidth -= self.sourceLabelFrame.size.width;
@@ -186,7 +186,7 @@
     }
     
     self.infoLabelFontSize = kCellInfoLabelFontSize;
-    self.infoLabelTextColorThemeKey = kCellInfoLabelTextColor;
+    self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
     self.infoLabelFrame = infoLabelFrame;
     self.infoLabelHidden = NO;
     
