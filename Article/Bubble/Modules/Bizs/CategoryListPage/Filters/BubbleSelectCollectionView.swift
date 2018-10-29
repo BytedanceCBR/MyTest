@@ -149,7 +149,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         flowLayout.minimumLineSpacing = 12
         flowLayout.minimumInteritemSpacing = 9
         flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 15, bottom: 10, right: 15)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
         return result
@@ -848,9 +848,8 @@ class PriceBubbleCollectionSectionHeader: UICollectionReusableView {
         addSubview(priceInputView)
         priceInputView.snp.makeConstraints { (maker) in
             maker.top.equalTo(20)
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
-//            maker.height.equalTo(36)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
         }
 
         addSubview(label)
@@ -937,7 +936,7 @@ fileprivate class PriceBottomInputView: UIView, UITextFieldDelegate {
         priceInputBoard.addSubview(lowerPriceTextField)
         lowerPriceTextField.snp.makeConstraints { maker in
             maker.left.top.bottom.equalToSuperview()
-            maker.height.equalTo(28)
+            maker.height.equalTo(36)
             maker.right.equalTo(priceInputBoard.snp.centerX).offset(-10)
         }
 
@@ -953,7 +952,7 @@ fileprivate class PriceBottomInputView: UIView, UITextFieldDelegate {
         upperPriceTextField.snp.makeConstraints { maker in
             maker.left.equalTo(seperaterLineView.snp.right).offset(5)
             maker.top.bottom.right.equalToSuperview()
-            maker.height.equalTo(28)
+            maker.height.equalTo(36)
             maker.width.greaterThanOrEqualTo(80)
         }
 
