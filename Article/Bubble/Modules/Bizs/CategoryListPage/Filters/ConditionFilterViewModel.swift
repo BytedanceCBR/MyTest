@@ -82,7 +82,7 @@ class ConditionFilterViewModel {
         didSet {
             sortPanelView?.didSelect = { [weak self] node in
                 self?.searchAndConditionFilterVM.searchSortCondition = node
-                if let node = node {
+                if let _ = node {
                     self?.searchSortBtn?.isSelected = true
                 } else {
                     self?.searchSortBtn?.isSelected = false

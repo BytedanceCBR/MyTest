@@ -7,13 +7,7 @@
 
 #import "FHBaseViewController.h"
 #import "FHMapSearchConfigModel.h"
-
-
-typedef NS_ENUM(NSInteger , FHMapSearchShowMode) {
-    FHMapSearchShowModeMap = 0 ,
-    FHMapSearchShowModeHouseList = 1 ,
-    FHMapSearchShowModeHalfHouseList = 2,
-};
+#import "FHMapSearchShowMode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

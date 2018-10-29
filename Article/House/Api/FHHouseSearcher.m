@@ -14,10 +14,7 @@
 +(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
 {
     NSString *host = [[[EnvContext networkConfig] host] stringByAppendingString:@"/f100/api/search"];
-    NSMutableDictionary *param = [NSMutableDictionary new];//@{@"offset":@(offset),
-//                            @"search_id":searchId,
-//                            @"suggestion_params":suggestionParams?:@""
-//                            };
+    NSMutableDictionary *param = [NSMutableDictionary new];
     param[@"offset"] = @(offset);
     [param addEntriesFromDictionary:queryParam];
     
@@ -41,7 +38,7 @@
     }];
 }
 
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId maxLatitude:(CGFloat)maxLatitude minLatitude:(CGFloat)minLatitude maxLongitude:(CGFloat)maxLongitude minLongitude:(CGFloat)minLongitude resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSDictionary *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId maxLatitude:(CGFloat)maxLatitude minLatitude:(CGFloat)minLatitude maxLongitude:(CGFloat)maxLongitude minLongitude:(CGFloat)minLongitude resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
 {
     NSString *host = [EnvContext.networkConfig.host stringByAppendingString:@"/f100/api/map_search"];
     NSMutableDictionary *param = [@{@"house_type":@(houseType),
@@ -53,6 +50,9 @@
                             } mutableCopy];
     if (searchId) {
         param[@"search_id"] = searchId;
+    }
+    if (suggestionParams.length > 0) {
+        host = [host stringByAppendingFormat:@"?%@",suggestionParams];
     }
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:host params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {

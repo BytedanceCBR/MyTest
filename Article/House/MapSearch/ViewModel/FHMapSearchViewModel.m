@@ -18,7 +18,7 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 
-#define kTipDuration 2
+#define kTipDuration 3
 
 
 
@@ -31,7 +31,7 @@
 @property(nonatomic , copy)  NSString *suggestionParams;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *houseTypeName;
-@property(nonatomic , assign) FHMapSearchShowMode showMode;
+//@property(nonatomic , assign , readwrite) FHMapSearchShowMode showMode;
 @property(nonatomic , strong) FHMapSearchDataListModel *currentSelectNeighbor;
 
 @end
@@ -119,6 +119,11 @@
     
 }
 
+-(void)dismissHouseListView
+{
+    [self.houseListViewController dismiss];
+}
+
 -(void)requestHouses
 {
     if (_requestHouseTask.state == TTHttpTaskStateRunning) {
@@ -133,7 +138,7 @@
     CGFloat minLong = maxLong - region.span.longitudeDelta;
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId  maxLatitude:maxLat minLatitude:minLat maxLongitude:maxLong minLongitude:minLong resizeLevel:_mapView.zoomLevel suggestionParams:nil callback:^(NSError * _Nonnull error, FHMapSearchDataModel *  _Nonnull model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId  maxLatitude:maxLat minLatitude:minLat maxLongitude:maxLong minLongitude:minLong resizeLevel:_mapView.zoomLevel suggestionParams:self.suggestionParams callback:^(NSError * _Nonnull error, FHMapSearchDataModel *  _Nonnull model) {
         if (!wself) {
             return ;
         }
@@ -278,18 +283,6 @@
     return nil;
 }
 
-///**
-// * @brief 当选中一个annotation view时，调用此接口. 注意如果已经是选中状态，再次点击不会触发此回调。取消选中需调用-(void)deselectAnnotation:animated:
-// * @param mapView 地图View
-// * @param view 选中的annotation view
-// */
-//- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
-//{
-//    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-//    [self showMapViewInfo];
-//    [self handleSelect:view];
-//}
-
 /**
  * @brief 当取消选中一个annotation view时，调用此接口
  * @param mapView 地图View
@@ -375,7 +368,11 @@
 #pragma mark - filter delegate
 -(void)onConditionChangedWithCondition:(NSString *)condition
 {
-    self.suggestionParams = condition;
+    if (![self.suggestionParams isEqualToString:condition]) {
+        self.suggestionParams = condition;
+        [self requestHouses];
+    }
+    
 }
 
 @end

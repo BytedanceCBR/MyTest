@@ -9,6 +9,7 @@
 #import <MAMapKit/MAMapKit.h>
 #import "FHMapSearchConfigModel.h"
 #import "FHMapSearchTipView.h"
+#import "FHMapSearchShowMode.h"
 
 @class FHMapSearchViewController;
 @protocol HouseFilterViewModelDelegate;
@@ -21,12 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 @property(nonatomic , copy , readonly) NSString *navTitle;
-
+@property(nonatomic , assign) FHMapSearchShowMode showMode;
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel;
 
 -(void)requestHouses;
 
 -(void)showMap;
+
+-(void)dismissHouseListView;
 
 @end
 

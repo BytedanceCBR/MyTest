@@ -61,6 +61,7 @@ import RxCocoa
             searchFilterPanel: self.filterPanelView as! SearchFilterPanel,
             searchAndConditionFilterVM: searchAndConditionFilterVM!)
         self.resetConditionData()
+        self.bindConditionChangeDelegate()
     }
 
     func bindConditionChangeDelegate() {
@@ -76,7 +77,7 @@ import RxCocoa
                 return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
             .debounce(0.1, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] query in
+            .subscribe(onNext: { [unowned self] query in    
                 self.delegate?.onConditionChanged(condition: query)
             })
             .disposed(by: disposeBag)

@@ -106,7 +106,12 @@
 
 -(void)backAction
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (self.viewModel.showMode == FHMapSearchShowModeMap) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [self.viewModel dismissHouseListView];
+    }
+    
 }
 
 -(void)showHouseList
@@ -118,13 +123,17 @@
 {
     [self switchNavbarMode:FHMapSearchShowModeMap];
     [self.viewModel showMap];
-    
 }
 
 -(void)initNavbar
 {
     UIImage *img = [UIImage imageNamed:@"icon-return"];
-    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:img style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setImage:img forState:UIControlStateNormal];
+    [backButton setImage:img forState:UIControlStateHighlighted];
+    backButton.frame = CGRectMake(0, 0, 30, 30);
+    [backButton addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backItem;
     
     self.navigationItem.rightBarButtonItem = self.showHouseListBarItem;
@@ -145,7 +154,6 @@
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
     self.filterBgControl.hidden = YES;
-//    self.filterPanel.hidden = YES;
     
     [self initConstraints];
     
