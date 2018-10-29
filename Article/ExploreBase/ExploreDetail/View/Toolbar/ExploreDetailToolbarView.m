@@ -519,7 +519,7 @@
         _collectButton.imageName = @"icon_details_collect";
         _shareButton.imageName = [self _photoShareIconName];
         
-        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
+        _writeButton.titleColorThemeKey = kColorText7;
 //        [_writeButton setImageName:@"write_new"];
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText12];
         _writeButton.backgroundColorThemeKey = nil;
