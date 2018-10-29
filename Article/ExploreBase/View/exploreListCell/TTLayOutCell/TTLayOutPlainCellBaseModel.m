@@ -58,7 +58,7 @@
         titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:self.containWidth forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellTitleLabelMaxLine];
         CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
         //上下剪去行高导致的留白
-        CGFloat titleY = top - titlePadding / 2;
+        CGFloat titleY = top - titlePadding / 2 - 4;
         height = titleSize.height - titlePadding;
         CGRect titleFrame = CGRectMake(self.originX, titleY, titleSize.width, titleSize.height);
         
@@ -75,7 +75,7 @@
 - (CGFloat)heightForArticleInfoRegionWithTop:(CGFloat)top containWidth:(CGFloat)containWidth
 {
     CGFloat left = self.originX;
-    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2);;
+    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2) + 4;
     CGFloat margin = 4;
     NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
     

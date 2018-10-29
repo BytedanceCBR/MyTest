@@ -66,7 +66,7 @@
         regionHeight = picSize.height;
     }
     
-    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY, titleSize.width, titleSize.height);
+    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY - 4, titleSize.width, titleSize.height);
     self.titleLabelFrame = titleFrame;
     self.titleLabelHidden = NO;
     self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;
@@ -121,7 +121,7 @@
         regionHeight = picSize.height;
     }
     
-    self.titleLabelFrame = CGRectMake(self.originX, titleY, titleSize.width, titleSize.height);
+    self.titleLabelFrame = CGRectMake(self.originX, titleY - 4, titleSize.width, titleSize.height);
     self.titleLabelHidden = NO;
     self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;
     
