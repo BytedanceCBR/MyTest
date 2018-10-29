@@ -32,8 +32,8 @@
     if (button) {
         button.imageName = @"digup_video";
         button.selectedImageName = @"digup_video_press";
-        button.selectedTitleColorThemeKey = @"ff0031";
-        button.titleColorThemeKey = @"222222";
+        button.selectedTitleColorThemeKey = kFHColorCoral;
+        button.titleColorThemeKey = kFHColorCoolGrey3;
         button.styleType = styleType;
         button.backgroundColor = [UIColor clearColor];
         [button setDiggCount:0];
@@ -54,14 +54,14 @@
         break;
         case TTDiggButtonStyleTypeBoth:{
             self.titleLabel.font = [UIFont systemFontOfSize:12];
-            self.tintColorThemeKey = @"222222";
-            self.selectedTintColorThemeKey = @"ff0031";
+            self.tintColorThemeKey = kFHColorCoolGrey3;
+            self.selectedTintColorThemeKey = kFHColorCoral;
         }
         break;
         case TTDiggButtonStyleTypeBothSmall:{
             self.imageName = @"comment_like_icon";
             self.selectedImageName = @"comment_like_icon_press";
-            self.titleColorThemeKey = kColorText13;
+            self.titleColorThemeKey = kFHColorCoolGrey3;
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
             //            self.titleEdgeInsets = UIEdgeInsetsMake(-0.5, 0, 0.5, 0);
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
@@ -105,7 +105,7 @@
             self.selectedImageName = @"digup_tabbar_press";
             self.highlightedImageName = @"digup_tabbar_press";
             self.titleLabel.font = [UIFont systemFontOfSize:14];
-            self.titleColorThemeKey = kColorText1;
+            self.titleColorThemeKey = kFHColorCoolGrey3;
             self.disabledTitleColorThemeKey = kColorText3;
         }
         break;
@@ -137,7 +137,7 @@
             self.imageName = @"like_grey_comment";
             self.selectedImageName = @"like_press";
             self.tintColorThemeKey = @"979FAC";
-            self.selectedTintColorThemeKey = @"ff0031";
+            self.selectedTintColorThemeKey = kFHColorCoral;
             self.titleColorThemeKey = @"979FAC";
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
