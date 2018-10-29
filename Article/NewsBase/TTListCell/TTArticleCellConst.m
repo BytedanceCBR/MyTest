@@ -347,7 +347,7 @@ inline NSInteger kAbstractViewLineNumber() {
 // MARK: - 图片(视频)控件
 /** 图片(视频)内部间距 */
 inline CGFloat kPicViewPaddingInner() {
-    return 1.f;
+    return 4.f;
 }
 
 inline CGFloat kSquareViewPaddingInner() {
