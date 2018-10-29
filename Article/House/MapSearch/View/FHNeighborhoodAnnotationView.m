@@ -6,7 +6,8 @@
 //
 
 #import "FHNeighborhoodAnnotationView.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+Theme.h"
+#import "FHHouseAnnotation.h"
 
 @interface FHNeighborhoodAnnotationView ()
 
@@ -31,7 +32,7 @@
         _arrowView = [[UIImageView alloc] initWithImage:arrowImage];
         
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.textColor = [UIColor colorWithHexString:@"0x081f33"];
+        _contentLabel.textColor = [UIColor themeBlack];
         _contentLabel.font = [UIFont systemFontOfSize:12];
         _contentLabel.textAlignment = NSTextAlignmentCenter;
         
@@ -55,6 +56,7 @@
     frame.size = CGSizeMake(maxWidth+30, 35);
     self.frame = frame;
     
+    [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
 }
 
 
@@ -62,6 +64,47 @@
 {
     [super setAnnotation:annotation];
     [self updateWithAnnotation:annotation];
+}
+
+-(void)changeSelectMode:(FHHouseAnnotationType)type
+{
+    if ([self.annotation isKindOfClass:[FHHouseAnnotation class]]) {
+        
+        FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)self.annotation;
+        houseAnnotation.type = type;
+        
+        NSString *bgImageName = nil;
+        NSString *arrowImageName = nil;
+        UIColor *textColor = nil;
+        
+        switch (houseAnnotation.type) {
+            case FHHouseAnnotationTypeSelected:
+            {
+                bgImageName = @"mapsearch_annotation_bg_blue";
+                arrowImageName = @"mapsearch_annotation_arrow_blue";
+                textColor = [UIColor whiteColor];
+            }
+                break;
+            case FHHouseAnnotationTypeOverSelected:
+            {
+                bgImageName = @"mapsearch_annotation_bg_grayblue";
+                arrowImageName = @"mapsearch_annotation_arrow_grayblue";
+                textColor = [UIColor whiteColor];
+            }
+                break;
+                
+            default:
+            {
+                bgImageName = @"mapsearch_annotation_bg";
+                arrowImageName = @"mapsearch_annotation_arrow";
+                textColor = [UIColor themeBlack];
+            }
+                break;
+        }
+        _backgroundView.image = [UIImage imageNamed:bgImageName];
+        _arrowView.image = [UIImage imageNamed:arrowImageName];
+        _contentLabel.textColor = textColor;
+    }
 }
 
 -(void)layoutSubviews

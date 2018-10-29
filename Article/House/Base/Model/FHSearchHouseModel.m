@@ -226,6 +226,7 @@
                            @"displaySameNeighborhoodTitle": @"display_same_neighborhood_title",
                            @"baseInfoMap": @"base_info_map",
                            @"coreInfo": @"core_info",
+                           @"hid":@"id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

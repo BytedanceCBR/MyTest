@@ -167,6 +167,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             EnvContext.shared.toast.dismissToast()
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
+        self.navBar.mapBtn.rx.tap.bind { [weak self] void in
+            self?.gotoMapSearch()
+        }.disposed(by: disposeBag)
 
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
@@ -244,6 +247,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                         assertionFailure()
                     }
                 }
+                self.navBar.showMapButton(show:(self.houseType.value == .secondHandHouse))
             }
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
@@ -296,17 +300,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.navBar.searchInput.text = nil
         }
     }
-
-    private func checkMapJump(){
-
-        let rect = CGRect(x:10,y:100,width:50,height:50)
-        let button = UIButton(frame:rect)
-        button.addTarget(self, action: #selector(CategoryListPageVC.jumpMapAction), for: .touchUpInside)
-        button.backgroundColor = UIColor.red
-        self.view.addSubview(button)
-    }
     
-    @objc func jumpMapAction(){
+    func gotoMapSearch(){
         
         let configModel = FHMapSearchConfigModel()
 
@@ -318,7 +313,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         configModel.resizeLevel = mapSearch.resizeLevel ?? 11
         configModel.houseType = self.houseType.value.rawValue
         let controller = FHMapSearchViewController(configModel: configModel)
-//        controller.houseType = self.houseType.value.rawValue
         self.navigationController?.pushViewController(controller, animated: true)
         
     }
@@ -515,8 +509,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
         self.errorVM?.onRequestViewDidLoad()
-        
-        self.checkMapJump()
     }
 
     func bindLoadMore() {

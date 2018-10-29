@@ -56,11 +56,8 @@
         _mapView.showsCompass = false;
         _mapView.showsIndoorMap = false;
         _mapView.showsIndoorMapControl = false;
+        _mapView.rotateCameraEnabled = false;
         
-        CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};
-        if (center.latitude > 0 && center.longitude > 0) {
-            [_mapView setCenterCoordinate:center];
-        }
         if(_configModel.resizeLevel > 0){
             _mapView.zoomLevel = _configModel.resizeLevel;
         }else{
@@ -165,6 +162,12 @@
     self.houseFilterViewModel.delegate = _viewModel;
     
     self.title = _viewModel.navTitle;
+    
+    CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};
+    
+    if (center.latitude > 0 && center.longitude > 0) {
+        [_mapView setCenterCoordinate:center animated:YES];
+    }
     
 }
 

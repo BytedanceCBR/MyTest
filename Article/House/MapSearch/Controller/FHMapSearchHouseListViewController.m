@@ -25,6 +25,13 @@
     
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _tableView.showsVerticalScrollIndicator = NO;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0, *)) {
+        self.tableView.estimatedRowHeight = 0;
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
+    }
+    
     _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 88)];
     
     [self.view addSubview:_tableView];

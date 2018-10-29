@@ -17,6 +17,7 @@
 #import "FHMapSearchViewController.h"
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
+#import <TTRoute/TTRoute.h>
 
 #define kTipDuration 3
 
@@ -31,8 +32,9 @@
 @property(nonatomic , copy)  NSString *suggestionParams;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *houseTypeName;
-//@property(nonatomic , assign , readwrite) FHMapSearchShowMode showMode;
-@property(nonatomic , strong) FHMapSearchDataListModel *currentSelectNeighbor;
+@property(nonatomic , strong) FHHouseAnnotation *currentSelectAnnotation;
+@property(nonatomic , strong) FHNeighborhoodAnnotationView *currentSelectAnnotationView;
+@property(nonatomic , strong) NSMutableDictionary<NSString * , FHMapSearchDataListModel *> *selectedAnnotations;
 
 @end
 
@@ -60,6 +62,7 @@
         }
         self.houseTypeName = title;
         _showMode = FHMapSearchShowModeMap;
+        _selectedAnnotations = [NSMutableDictionary new];
     }
     return self;
 }
@@ -82,14 +85,16 @@
         [self.viewController addChildViewController:_houseListViewController];
         _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
         __weak typeof(self) wself = self;
-        _houseListViewController.willSwipDownDismiss = ^(CGFloat duration) {
+        _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration) {
             if (wself) {
                 [wself changeNavbarAppear:YES];
                 wself.showMode = FHMapSearchShowModeMap;
                 [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
+                [wself.mapView deselectAnnotation:wself.currentSelectAnnotation animated:YES];
+                wself.currentSelectAnnotation = nil;
             }
         };
-        _houseListViewController.didSwipDownDismiss = ^{
+        _houseListViewController.didSwipeDownDismiss = ^{
             
         };
         _houseListViewController.moveToTop = ^{
@@ -101,6 +106,10 @@
             wself.showMode = FHMapSearchShowModeHalfHouseList;
             [wself changeNavbarAppear:NO];
         };
+        
+        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model) {
+            [wself showHoseDetailPage:model];
+        };
     }
     return _houseListViewController;
 }
@@ -108,7 +117,7 @@
 -(NSString *)navTitle
 {
     if (_showMode == FHMapSearchShowModeHouseList) {
-        return _currentSelectNeighbor.name;
+        return _currentSelectAnnotation.houseData.name;
     }
     return _houseTypeName;
 }
@@ -164,31 +173,56 @@
 -(void)addAnnotations:(NSArray *)list
 {
     if (list.count > 0) {
-        
-        NSMutableArray *annotations = [NSMutableArray arrayWithArray:self.mapView.annotations];
-        for (NSInteger i = 0 ; i < annotations.count ;  i++) {
-            id <MAAnnotation> annotation = annotations[i];
-            if (![annotation isKindOfClass:[FHHouseAnnotation class]]) {
-                [annotations removeObjectAtIndex:i];
+        NSArray *cAnnotations = self.mapView.annotations;
+        NSMutableDictionary *removeAnnotationDict = [[NSMutableDictionary alloc] initWithCapacity:cAnnotations.count];
+        for (NSInteger i = 0 ; i < cAnnotations.count ;  i++) {
+            id <MAAnnotation> annotation = cAnnotations[i];
+            if ([annotation isKindOfClass:[FHHouseAnnotation class]]) {
+                FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
+                removeAnnotationDict[houseAnnotation.houseData.nid] = annotation;
             }
         }
-        [self.mapView removeAnnotations: annotations];
+
+        NSMutableArray *annotations = [NSMutableArray new];
+
         for (FHMapSearchDataListModel *info in list) {
+            FHHouseAnnotation *houseAnnotation = removeAnnotationDict[info.nid];
             
+            if (houseAnnotation) {
+                if ([info.nid isEqualToString:self.currentSelectAnnotation.houseData.nid]) {
+                    houseAnnotation.type = FHHouseAnnotationTypeSelected;
+                }else if(_selectedAnnotations[info.nid]){
+                    houseAnnotation.type = FHHouseAnnotationTypeOverSelected;
+                }else{
+                    houseAnnotation.type = FHHouseAnnotationTypeNormal;
+                }
+                [removeAnnotationDict removeObjectForKey:info.nid];
+                continue;
+            }
+
             CGFloat lat = [info.centerLatitude floatValue];
             CGFloat lon = [info.centerLongitude floatValue];
-            
-            FHHouseAnnotation *houseAnnotation = [[FHHouseAnnotation alloc] init];
+
+            houseAnnotation = [[FHHouseAnnotation alloc] init];
             houseAnnotation.coordinate = CLLocationCoordinate2DMake(lat, lon);
             houseAnnotation.title = info.name;
             houseAnnotation.subtitle = info.desc;
             houseAnnotation.houseData = info;
             houseAnnotation.searchType = [info.type integerValue];
-            
-            [self.mapView addAnnotation:houseAnnotation];
+            if ([info.nid isEqualToString:self.currentSelectAnnotation.houseData.nid]) {
+                houseAnnotation.type = FHHouseAnnotationTypeSelected;
+            }else if(_selectedAnnotations[info.nid]){
+                houseAnnotation.type = FHHouseAnnotationTypeOverSelected;
+            }else{
+                houseAnnotation.type = FHHouseAnnotationTypeNormal;
+            }
+            [annotations addObject:houseAnnotation];
         }
+        NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
+        [self.mapView removeAnnotations:needRemoveAnnotations];
+        [self.mapView addAnnotations:annotations];
     }
-    
+
 }
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
@@ -200,23 +234,41 @@
     if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
         //show district zoom map
         CGFloat zoomLevel = self.mapView.zoomLevel ;
-        if (zoomLevel < 14) {
-            zoomLevel += 2;
+        /*
+         *  zoomlevel 与显示对应关系
+         *  区域 7 - 13
+         *  商圈 13 - 16
+         *  小区 16 - 20
+         */
+        if (zoomLevel < 13) {
+            zoomLevel = 13;
+        }else if (zoomLevel < 16){
+            zoomLevel = 16;
         }else{
             zoomLevel += 1;
         }
+        if (zoomLevel > 20) {
+            zoomLevel = 20;
+        }
+        
         [self.mapView setZoomLevel:zoomLevel atPivot:annotationView.center animated:YES];
         
     }else{
         //show house list
-        self.currentSelectNeighbor = houseAnnotation.houseData;
+        if (self.currentSelectAnnotation.houseData) {
+            _selectedAnnotations[self.currentSelectAnnotation.houseData.nid] = self.currentSelectAnnotation.houseData;
+        }
+        
+//        if (self.currentSelectAnnotationView) {
+//            self.currentSelectAnnotation.type = FHHouseAnnotationTypeOverSelected;
+//            self.currentSelectAnnotationView.annotation = self.currentSelectAnnotation;
+//        }
+//        self.currentSelectAnnotationView = (FHNeighborhoodAnnotationView *)annotationView;
+//        [self.currentSelectAnnotationView changeSelectMode:FHHouseAnnotationTypeSelected];
+        
+        self.currentSelectAnnotation = houseAnnotation;
         [self requestNeighborhoodHouses:houseAnnotation.houseData];
     }
-}
-
--(void)showMapViewInfo
-{
-    NSLog(@"map level is: %lf ",self.mapView.zoomLevel);
 }
 
 /**
@@ -257,6 +309,8 @@
             {
                 annotationView = [[FHDistrictAreaAnnotationView alloc] initWithAnnotation:annotation
                                                                           reuseIdentifier:reuseIndetifier];
+            }else{
+                annotationView.annotation = houseAnnotation;
             }
             
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
@@ -271,11 +325,24 @@
             {
                 annotationView = [[FHNeighborhoodAnnotationView alloc] initWithAnnotation:annotation
                                                                           reuseIdentifier:reuseIndetifier];
+            }else{
+                annotationView.annotation = houseAnnotation;
             }
             
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
             annotationView.centerOffset = CGPointMake(0, -18);
             annotationView.canShowCallout = NO;
+            switch (houseAnnotation.type) {
+                case FHHouseAnnotationTypeSelected:
+                    annotationView.zIndex = 100;
+                    break;
+                case FHHouseAnnotationTypeOverSelected:
+                    annotationView.zIndex = 10;
+                    break;
+                default:
+                    annotationView.zIndex = 0;
+                    break;
+            }
             return annotationView;
         }
     }
@@ -290,8 +357,18 @@
  */
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view
 {
-    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-    [self showMapViewInfo];
+    if ([view isKindOfClass:[FHNeighborhoodAnnotationView class]]) {
+        FHNeighborhoodAnnotationView *neighborView = (FHNeighborhoodAnnotationView *)view;
+        [neighborView changeSelectMode:FHHouseAnnotationTypeOverSelected];
+    }
+}
+
+-(void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
+{
+    if ([view isKindOfClass:[FHNeighborhoodAnnotationView class]]) {
+        FHNeighborhoodAnnotationView *neighborView = (FHNeighborhoodAnnotationView *)view;
+        [neighborView changeSelectMode:FHHouseAnnotationTypeSelected];
+    }
 }
 
 
@@ -302,21 +379,20 @@
  */
 - (void)mapView:(MAMapView *)mapView didAnnotationViewTapped:(MAAnnotationView *)view
 {
-    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-    [self showMapViewInfo];
     [self handleSelect:view];
 }
 
-
 /**
- * @brief 长按地图，返回经纬度
+ * @brief 单击地图回调，返回经纬度
  * @param mapView 地图View
  * @param coordinate 经纬度
  */
-- (void)mapView:(MAMapView *)mapView didLongPressedAtCoordinate:(CLLocationCoordinate2D)coordinate
+- (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    NSLog(@"---%@---",NSStringFromSelector(_cmd));
-    [self showMapViewInfo];
+    if (_showMode == FHMapSearchShowModeHalfHouseList) {
+        //点击空白退出房源列表
+        [self dismissHouseListView];
+    }
 }
 
 #pragma mark - neighborhood houses
@@ -374,5 +450,14 @@
     }
     
 }
+
+-(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model
+{
+    //fschema://old_house_detail?house_id=xxx
+    NSString *strUrl = [NSString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
+    NSURL *url =[NSURL URLWithString:strUrl];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+}
+
 
 @end

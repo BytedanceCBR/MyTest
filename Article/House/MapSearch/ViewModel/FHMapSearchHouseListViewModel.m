@@ -70,23 +70,30 @@
 //    return 105;
 }
 
--(void)dismiss
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self handleDismiss];
+    FHSearchHouseDataItemsModel *model = _houseList[indexPath.row];
+    if (self.listController.showHouseDetailBlock) {
+        self.listController.showHouseDetailBlock(model);
+    }
 }
 
--(void)handleDismiss
+-(void)dismiss
+{
+    [self handleDismiss:0.3];
+}
+
+-(void)handleDismiss:(CGFloat)duration
 {
     self.tableView.userInteractionEnabled = false;
-    CGFloat duration = 0.1;
-    if (self.listController.willSwipDownDismiss) {
-        self.listController.willSwipDownDismiss(duration);
+    if (self.listController.willSwipeDownDismiss) {
+        self.listController.willSwipeDownDismiss(duration);
     }
     [UIView animateWithDuration:duration animations:^{
         self.listController.view.top = self.listController.parentViewController.view.height;
     } completion:^(BOOL finished) {
-        if (self.listController.didSwipDownDismiss) {
-            self.listController.didSwipDownDismiss();
+        if (self.listController.didSwipeDownDismiss) {
+            self.listController.didSwipeDownDismiss();
         }
         self.tableView.userInteractionEnabled = true;
     }];
@@ -108,16 +115,19 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
-        [self handleDismiss];
+        [self handleDismiss:0.3];
     }else if([self.listController canMoveup]){
         //当前停留在中间
         self.listController.moveDock();
     }
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    
+    if (velocity.y < -2.5) {
+        //quickly swipe done
+        [self handleDismiss:0.1];
+    }
 }
 
 @end
