@@ -573,7 +573,7 @@ func constructPriceBubbleSelectCollectionPanelWithContainer(
         action(index, nodes)
     }
     if let layout = thePanel.collectionView.collectionViewLayout as? UICollectionViewFlowLayout{
-        layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 100)
+        layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 114)
     }
     return thePanel
 }
@@ -603,8 +603,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
         if let ds = self.priceDataSource() {
             //这里必须调用一下，是的inputHeaderView不为空
             let rate = self.dataSource.nodes.first?.rate ?? 1
-            ds.inputHeaderView?.priceInputView.lowerPriceTextField.placeholder = "最低价格 (\(self.getRateTextByRateValue(rate)))"
-            ds.inputHeaderView?.priceInputView.upperPriceTextField.placeholder = "最高价格 (\(self.getRateTextByRateValue(rate)))"
+            ds.inputHeaderView?.priceInputView.lowerPriceTextField.placeholder = "最低价格 (\(getRateTextByRateValue(rate)))"
+            ds.inputHeaderView?.priceInputView.upperPriceTextField.placeholder = "最高价格 (\(getRateTextByRateValue(rate)))"
 
             ds.selectedIndexPaths
                 .skip(1)
@@ -788,14 +788,16 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
 
     }
 
-    func getRateTextByRateValue(_ rate: Int) -> String {
-        if rate == 10000 {
-            return "万"
-        } else {
-            return "元"
-        }
-    }
 
+
+}
+
+fileprivate func getRateTextByRateValue(_ rate: Int) -> String {
+    if rate == 10000 {
+        return "万"
+    } else {
+        return "元"
+    }
 }
 
 class PriceBubbleSelectDataSource: BubbleSelectDataSource {
@@ -816,8 +818,10 @@ class PriceBubbleSelectDataSource: BubbleSelectDataSource {
         at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
         if let theHeaderView = headerView as? PriceBubbleCollectionSectionHeader {
+//            let rate = self.nodes.first?.rate ?? 1
+
             inputHeaderView = theHeaderView
-            theHeaderView.label.text = nodes[indexPath.section].label
+            theHeaderView.label.text = "\(nodes[indexPath.section].label)"
             onHeaderViewInit?()
             onHeaderViewInit = nil
         }
@@ -854,7 +858,7 @@ class PriceBubbleCollectionSectionHeader: UICollectionReusableView {
 
         addSubview(label)
         label.snp.makeConstraints { maker in
-            maker.top.equalTo(priceInputView.snp.bottom).offset(10)
+            maker.top.equalTo(priceInputView.snp.bottom).offset(20)
             maker.bottom.equalToSuperview().offset(-14)
             maker.right.equalTo(-20)
             maker.left.equalTo(20)
