@@ -230,6 +230,7 @@
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.backgroundView = nil;
+    self.tableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 10)];
     [self.view addSubview:self.tableView];
     self.view.ttvNestedScrollView = self.tableView;
 }
