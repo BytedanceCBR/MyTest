@@ -150,6 +150,10 @@
     [self.digButton setDiggCount:[self.commentModel.digCount integerValue]];
     self.digButton.selected = self.commentModel.userDigged;
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.nameView.centerY - [TTDeviceHelper ssOnePixel];
     self.digButton.right = self.width - [TTVCommentListCellHelper cellRightPadding];
 }
@@ -283,6 +287,10 @@
         self.commentModel.digCount = @([self.commentModel.digCount intValue] + 1);
         [_digButton setDiggCount:[self.commentModel.digCount intValue]];
         [self.digButton sizeToFit];
+        // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+        CGSize size = self.digButton.frame.size;
+        size.width += 6;
+        self.digButton.size = size;
         self.digButton.right = self.width - [TTVCommentListCellHelper cellRightPadding];
         TTDetailActionReuestContext *requestContext = [[TTDetailActionReuestContext alloc] init];
         requestContext.itemCommentID = [self.commentModel.commentIDNum stringValue];
@@ -510,7 +518,9 @@
     if (!_digButton) {
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
         _digButton.frame = CGRectMake(self.nameView.right, [TTVCommentListCellHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:80], [TTDeviceUIUtils tt_newPadding:15]);
-        _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+        _digButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 2, 0);
+        [_digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+
         _digButton.hitTestEdgeInsets = kTTCommentCellDigButtonHitTestInsets;
         WeakSelf;
         [_digButton setClickedBlock:^(TTDiggButtonClickType type) {
