@@ -79,7 +79,7 @@
     NSMutableAttributedString *appendToken = [[NSMutableAttributedString alloc] initWithString:@"全文"
                                                                               attributes:@{
                                                                                            NSFontAttributeName : [UIFont systemFontOfSize:fontSize],
-                                                                                           NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5]}
+                                                                                           NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorClearBlue]}
                                         ];
     [token appendAttributedString:appendToken];
     return token;

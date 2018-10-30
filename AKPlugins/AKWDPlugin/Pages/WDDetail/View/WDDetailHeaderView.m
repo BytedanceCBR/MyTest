@@ -138,8 +138,8 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
 }
 
 - (void)updateQuestionTitleContent {
-    CGFloat fontSize = WDFontSize(19);
-    CGFloat lineHeight = ceil(26.0 / 19.0 * WDFontSize(19));
+    CGFloat fontSize = WDFontSize(24);
+    CGFloat lineHeight = ceil(26.0 / 24.0 * WDFontSize(24));
     NSString *questionTitle = [NSString stringWithFormat:@"%@",self.detailModel.answerEntity.questionTitle];
     NSMutableAttributedString * attributedString = [WDLayoutHelper attributedStringWithString:questionTitle fontSize:fontSize isBoldFont:YES lineHeight:lineHeight];
     [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor tt_themedColorForKey:kColorText1] range:NSMakeRange(0, [attributedString.string length])];
@@ -262,10 +262,10 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
         CGFloat naviHeight = 0;
         _questionContentLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         _questionContentLabel.top = naviHeight;
-        _questionContentLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _questionContentLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
         _questionContentLabel.backgroundColor = [UIColor clearColor];
         _questionContentLabel.numberOfLines = 0;
-        _questionContentLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(19)];
+        _questionContentLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(24)];
         _questionContentLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _questionContentLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
@@ -286,7 +286,7 @@ NSString * const kWDDetailHeaderViewAnswerText = @"回答";
         _checkAnswerButton = [[TTAlphaThemedButton alloc] init];
         _checkAnswerButton.frame = CGRectMake(0, SSMaxY(self.questionContentLabel) + WDPadding(10), 0, 20); // 71, 59
         _checkAnswerButton.titleLabel.font = [UIFont systemFontOfSize:WDFontSize(14)];
-        _checkAnswerButton.titleColorThemeKey = kColorText1;
+        _checkAnswerButton.titleColorThemeKey = kFHColorCoolGrey3;
         [_checkAnswerButton addTarget:self action:@selector(allAnswerButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _checkAnswerButton;
