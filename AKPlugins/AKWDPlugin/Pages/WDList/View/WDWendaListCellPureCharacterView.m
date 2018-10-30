@@ -40,7 +40,7 @@
     CGFloat lineHeight = [WDListCellLayoutModel lightAnswerAbstractContentLineHeight];
     CGFloat paraSpace = [WDListCellLayoutModel lightAnswerAbstractContentParaSpace];
     NSMutableAttributedString *attributedString = [WDLayoutHelper attributedStringWithString:text fontSize:fontSize lineHeight:lineHeight paragraphSpace:paraSpace];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor tt_themedColorForKey:kColorText1] range:NSMakeRange(0, [attributedString.string length])];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor tt_themedColorForKey:kFHColorDarkIndigo] range:NSMakeRange(0, [attributedString.string length])];
     self.abstContentLabel.numberOfLines = numberOfLines;
     self.abstContentLabel.attributedTruncationToken = [self tokenAttributeString];
     self.abstContentLabel.attributedText = attributedString;
