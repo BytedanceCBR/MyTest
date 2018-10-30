@@ -78,7 +78,7 @@ CGFloat const kHeaderTitleLabelPadding = 80.0f;
         return;
     }
 
-    CGFloat fontSize = WDFontSize(19.0f);
+    CGFloat fontSize = WDFontSize(24.0f);
     self.titleLabel.text = self.entity.title;
     self.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
     self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -103,8 +103,8 @@ CGFloat const kHeaderTitleLabelPadding = 80.0f;
 
 - (CGFloat)heightForTitleLabel
 {
-    CGFloat fontSize = WDFontSize(19.0f);
-    CGFloat lineHeight = WDFontSize(19.0f) * 1.4;
+    CGFloat fontSize = WDFontSize(24.0f);
+    CGFloat lineHeight = WDFontSize(24.0f) * 1.4;
     CGFloat height = [WDLayoutHelper heightOfText:self.entity.title
                                        fontSize:fontSize
                                      isBoldFont:YES
@@ -127,8 +127,8 @@ CGFloat const kHeaderTitleLabelPadding = 80.0f;
         _titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.backgroundColorThemeKey = kColorBackground4;
         _titleLabel.numberOfLines = 0;
-        _titleLabel.textColorThemeKey = kColorText1;
-        _titleLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(19.0f)];
+        _titleLabel.textColorThemeKey = kFHColorDarkIndigo;
+        _titleLabel.font = [UIFont boldSystemFontOfSize:WDFontSize(24.0f)];
         _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }

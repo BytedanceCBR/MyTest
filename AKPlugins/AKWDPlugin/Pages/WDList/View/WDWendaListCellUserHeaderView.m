@@ -232,7 +232,7 @@
     if (!_userNameButton) {
         _userNameButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _userNameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _userNameButton.titleColorThemeKey = kColorText1;
+        _userNameButton.titleColorThemeKey = kFHColorDarkIndigo;
         _userNameButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
         _userNameButton.titleLabel.font = [UIFont boldSystemFontOfSize:kUserNameLabelFontSize];
         _userNameButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
