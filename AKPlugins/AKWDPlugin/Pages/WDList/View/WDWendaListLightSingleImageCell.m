@@ -290,7 +290,7 @@
     [self.contentView addSubview:self.rewardLabel];
     [self.contentView addSubview:self.bottomLabel];
     [self.contentView addSubview:self.actionView];
-    //[self.contentView addSubview:self.footerView];
+    [self.contentView addSubview:self.footerView];
 }
 
 - (void)addObserveKVO {
