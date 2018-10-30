@@ -116,6 +116,10 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
     [self.digButton setDiggCount:self.commentModel.diggCount];
     self.digButton.selected = self.commentModel.userDigg;
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.nameView.centerY - 2.f;
     self.digButton.right = self.contentView.right - [TTCommentDetailCellHelper cellRightPadding];
 }
@@ -380,6 +384,8 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         _digButton.frame = CGRectMake(self.nameView.right, [TTCommentDetailCellHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:80], [TTDeviceUIUtils tt_newPadding:15]);
         _digButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+        _digButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+
         _digButton.hitTestEdgeInsets = kTTCommentCellDigButtonHitTestInsets;
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
             _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);

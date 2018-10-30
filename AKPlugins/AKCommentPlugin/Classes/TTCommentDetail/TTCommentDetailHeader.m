@@ -484,6 +484,10 @@
     self.likeView.left = self.contentLabel.left;
     
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.likeView.centerY;
     self.digButton.right = self.followButton.right;
     
@@ -625,6 +629,7 @@
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
         _digButton.frame = CGRectMake(0, 0, [TTDeviceUIUtils tt_newPadding:64], [TTDeviceUIUtils tt_newPadding:24]);
         _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+        _digButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
             _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);
         }

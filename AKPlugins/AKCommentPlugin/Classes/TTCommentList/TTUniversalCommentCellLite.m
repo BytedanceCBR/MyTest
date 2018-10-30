@@ -130,6 +130,10 @@
     [self.digButton setDiggCount:[self.commentModel.digCount integerValue]];
     self.digButton.selected = self.commentModel.userDigged;
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.nameView.centerY - [TTDeviceHelper ssOnePixel];
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 }
@@ -277,6 +281,9 @@
     
     [_digButton setDiggCount:[_commentModel.digCount intValue]];
     [self.digButton sizeToFit];
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 
     // TODO delegate 处理
@@ -509,11 +516,13 @@
 - (TTDiggButton *)digButton {
     if (!_digButton) {
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
-        _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:80], [TTDeviceUIUtils tt_newPadding:15]);
-        _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+
+        [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 2, 0)];
+        [_digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+         _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:90], [TTDeviceUIUtils tt_newPadding:16]);
         _digButton.hitTestEdgeInsets = kTTCommentCellDigButtonHitTestInsets;
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
-            _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);
+            [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, -1, 2, 6)];
         }
         WeakSelf;
         [_digButton setClickedBlock:^(TTDiggButtonClickType type) {

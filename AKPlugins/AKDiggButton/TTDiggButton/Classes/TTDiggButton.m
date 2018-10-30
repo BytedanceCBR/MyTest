@@ -140,6 +140,8 @@
             self.selectedTintColorThemeKey = kFHColorCoral;
             self.titleColorThemeKey = @"979FAC";
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
+//            [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 6, 0, 0)];
+
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
                 self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[self digButtonFontSize]];
             }
