@@ -116,7 +116,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                 let roomCategoryLabels = roomCategorys.map {
                     "\($0.roomCount)室(\($0.count))"
                 }
-                self.segmentedControl?.sectionTitleArray = ["全部"] + roomCategoryLabels
+                self.segmentedControl?.sectionTitleArray = ["全部(\(its.count))"] + roomCategoryLabels
                 
                 if its.filter(f).count < 1 {
 
