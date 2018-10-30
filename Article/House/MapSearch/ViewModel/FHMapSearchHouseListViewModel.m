@@ -22,6 +22,7 @@
 @property(nonatomic , strong) FHMapSearchDataListModel *neighbor;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , assign) NSInteger offset;
+@property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
 
 @end
 
@@ -43,23 +44,42 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     __weak typeof(self) wself = self;
-    NIHRefreshCustomFooter *footer = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+    self.refreshFooter = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMoreData];
     }];
-    self.tableView.mj_footer = footer;
+    self.tableView.mj_footer = _refreshFooter;
     [tableView registerClass:SingleImageInfoCell.class forCellReuseIdentifier:kCellId];
 }
 
--(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
+-(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
+{
+    _headerView = headerView;
+    [headerView addTarget:self action:@selector(showNeighborDetail) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)updateWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
     [_houseList removeAllObjects];
     [_houseList addObjectsFromArray:data.items];
     [self.tableView reloadData];
+    self.tableView.contentOffset = CGPointZero;
     [_headerView updateWithMode:neighbor];
     _tableView.tableHeaderView = _headerView;
     self.searchId = data.searchId;
     self.neighbor = neighbor;
+    if (data.hasMore) {
+        [self.tableView.mj_footer resetNoMoreData];
+    }else{
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
     
+}
+
+-(void)showNeighborDetail
+{
+    if (self.listController.showNeighborhoodDetailBlock) {
+        self.listController.showNeighborhoodDetailBlock(self.neighbor);
+    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -121,6 +141,7 @@
         }
         self.tableView.userInteractionEnabled = true;
     }];
+    [self.tableView.mj_footer resetNoMoreData];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -140,7 +161,7 @@
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if(self.listController.view.top - [self.listController minTop] < 30){
+    }else if(self.listController.view.top - [self.listController minTop] < 50){
         //吸附都顶部
         [self.listController moveTop:0];
     }
@@ -177,21 +198,22 @@
         param[@"search_id"] = self.searchId;
     }
 
+    self.offset = self.houseList.count;
     
     __weak typeof(self) wself = self;
     [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
+        
         if (!error && houseModel) {
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
-                [wself.tableView.mj_footer endEditing:YES];
+                [wself.tableView.mj_footer endRefreshing];
             }else{
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
-            wself.offset++;
         }else{
             //TODO: show error toast
         }

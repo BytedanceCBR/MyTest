@@ -111,6 +111,10 @@
             [wself showHoseDetailPage:model];
         };
         
+        _houseListViewController.showNeighborhoodDetailBlock = ^(FHMapSearchDataListModel * _Nonnull model) {
+            [wself showNeighborhoodDetailPage:model];;
+        };
+        
         _houseListViewController.viewModel.configModel = self.configModel;
     }
     return _houseListViewController;
@@ -461,5 +465,11 @@
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
 }
 
+-(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
+{
+    NSString *strUrl = [NSString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
+    NSURL *url =[NSURL URLWithString:strUrl];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+}
 
 @end

@@ -55,7 +55,7 @@
     }];
     
     [self.parentViewController.view addSubview:self.view];
-    [self.viewModel showWithHouseData:data neighbor:neighbor];
+    [self.viewModel updateWithHouseData:data neighbor:neighbor];
 }
 
 -(CGFloat)minTop

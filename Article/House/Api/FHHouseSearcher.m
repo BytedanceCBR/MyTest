@@ -16,6 +16,7 @@
     NSString *host = [[[EnvContext networkConfig] host] stringByAppendingString:@"/f100/api/search"];
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[@"offset"] = @(offset);
+    
     [param addEntriesFromDictionary:queryParam];
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:host params:param method:@"GET" needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
@@ -76,7 +77,7 @@
 
 @end
 
-NSString const * EXCLUDE_ID_KEY = @"";
+NSString const * EXCLUDE_ID_KEY = @"exclude_id";
 NSString const * NEIGHBORHOOD_ID_KEY = @"neighborhood_id";
 NSString const *HOUSE_TYPE_KEY = @"house_type";
 

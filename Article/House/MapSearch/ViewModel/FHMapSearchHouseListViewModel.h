@@ -22,8 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 
 -(void)registerCells:(UITableView *)tableView;
--(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
+-(void)updateWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
 -(void)dismiss;
+-(NSString *)searchId;
+
 
 @end
 

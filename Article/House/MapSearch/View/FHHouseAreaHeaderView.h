@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapSearchDataListModel;
-@interface FHHouseAreaHeaderView : UIView
+@interface FHHouseAreaHeaderView : UIControl
 
 -(void)updateWithMode:(FHMapSearchDataListModel *)model;
 

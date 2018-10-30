@@ -13,6 +13,7 @@
 {
     NSDictionary *dict = @{
                            @"pricingPerSqm": @"pricing_per_sqm",
+                           @"builtYear":@"built_year",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

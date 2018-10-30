@@ -98,6 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
+@property (nonatomic, copy , nullable) NSString *builtYear;
 
 @end
 

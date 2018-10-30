@@ -344,12 +344,22 @@ extension SingleImageInfoCell {
         cell.areaLabel.snp.updateConstraints { (maker) in
             maker.left.equalToSuperview().offset(-3)
         }
-        cell.priceLabel.text = item.baseInfoMap?.pricing
+        cell.priceLabel.text = item.displayPrice
         
-        cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
+        cell.roomSpaceLabel.text = item.displayPricePerSqm
         let houseImags  = item.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+        if let houseImageTag = item.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            cell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            cell.imageTopLeftLabel.text = houseImageTag.text
+            cell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            cell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            cell.imageTopLeftLabelBgView.isHidden = true
+        }
+        
     }
 }
 
