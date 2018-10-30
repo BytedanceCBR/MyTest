@@ -134,12 +134,12 @@
         }
         break;
         case TTDiggButtonStyleTypeCommentOnly: {
-            self.imageName = @"like_grey_comment";
-            self.selectedImageName = @"like_press";
+            self.imageName = @"comment_like_icon";
+            self.selectedImageName = @"comment_like_icon_press";
             self.tintColorThemeKey = @"979FAC";
             self.selectedTintColorThemeKey = kFHColorCoral;
             self.titleColorThemeKey = @"979FAC";
-            self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
+            self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
                 self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[self digButtonFontSize]];
             }
