@@ -599,7 +599,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (!self.titleLabel.hidden) {
         self.titleLabel.numberOfLines = cellLayOut.titleLabelNumberOfLines;
         self.titleLabel.attributedText = cellLayOut.titleAttributedStr;
-        self.titleLabel.frame = CGRectMake(cellLayOut.titleLabelFrame.origin.x, 10, cellLayOut.titleLabelFrame.size.width, cellLayOut.titleLabelFrame.size.height);
+        self.titleLabel.frame = cellLayOut.titleLabelFrame;
+//        self.titleLabel.frame = CGRectMake(cellLayOut.titleLabelFrame.origin.x, 10, cellLayOut.titleLabelFrame.size.width, cellLayOut.titleLabelFrame.size.height);
         self.titleLabel.textColorThemeKey = kFHColorDarkIndigo;
         // 增加@和hashtag功能
         [self.titleLabel removeAllLinkAttributes];
@@ -679,7 +680,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.sourceLabel.hidden = cellLayOut.sourceLabelHidden;
     if (!self.sourceLabel.hidden) {
         self.sourceLabel.frame = cellLayOut.sourceLabelFrame;
-        self.sourceLabel.frame = CGRectMake(cellLayOut.sourceLabelFrame.origin.x, cellLayOut.cellCacheHeight - cellLayOut.sourceLabelFrame.size.height - 10, cellLayOut.sourceLabelFrame.size.width, cellLayOut.sourceLabelFrame.size.height);
+//        self.sourceLabel.frame = CGRectMake(cellLayOut.sourceLabelFrame.origin.x, cellLayOut.cellCacheHeight - cellLayOut.sourceLabelFrame.size.height - 10, cellLayOut.sourceLabelFrame.size.width, cellLayOut.sourceLabelFrame.size.height);
         self.sourceLabel.textColorThemeKey = cellLayOut.sourceLabelTextColorThemeKey;
         self.sourceLabel.font = [UIFont tt_fontOfSize:10];
         self.sourceLabel.userInteractionEnabled = cellLayOut.sourceLabelUserInteractionEnabled;
@@ -693,7 +694,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.infoLabel.hidden = cellLayOut.infoLabelHidden;
     if (!self.infoLabel.hidden) {
         self.infoLabel.frame = cellLayOut.infoLabelFrame;
-        self.infoLabel.frame = CGRectMake(self.sourceLabel.origin.x + self.sourceLabel.size.width, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.infoLabel.frame = CGRectMake(self.sourceLabel.origin.x + self.sourceLabel.size.width, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
+//        }
         self.infoLabel.font = [UIFont systemFontOfSize:10];
         self.infoLabel.textColorThemeKey = cellLayOut.infoLabelTextColorThemeKey;
         self.infoLabel.text = self.orderedData.cellLayOut.infoLabelStr;
@@ -715,7 +719,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.typeLabel.hidden = cellLayOut.typeLabelHidden;
     if (!self.typeLabel.hidden) {
         self.typeLabel.frame = cellLayOut.typeLabelFrame;
-        self.typeLabel.frame = CGRectMake(cellLayOut.typeLabelFrame.origin.x, self.sourceLabel.frame.origin.y, cellLayOut.typeLabelFrame.size.width, cellLayOut.typeLabelFrame.size.height);
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.typeLabel.frame = CGRectMake(cellLayOut.typeLabelFrame.origin.x, self.sourceLabel.frame.origin.y, cellLayOut.typeLabelFrame.size.width, cellLayOut.typeLabelFrame.size.height);
+//        }
         NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
         self.typeLabel.text = typeString;
         if ([self.orderedData isPlainCell]){
@@ -806,7 +813,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.unInterestedButton.hidden = cellLayOut.unInterestedButtonHidden || ugcVideoBelongToUser;
     if (!self.unInterestedButton.hidden) {
         self.unInterestedButton.frame = cellLayOut.unInterestedButtonFrame; //外部透明大按钮mask
-        self.unInterestedButton.frame = CGRectMake(cellLayOut.unInterestedButtonFrame.origin.x, self.sourceLabel.frame.origin.y - self.sourceLabel.frame.size.height, cellLayOut.unInterestedButtonFrame.size.width, cellLayOut.unInterestedButtonFrame.size.height);
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.unInterestedButton.frame = CGRectMake(cellLayOut.unInterestedButtonFrame.origin.x, self.sourceLabel.frame.origin.y - self.sourceLabel.frame.size.height, cellLayOut.unInterestedButtonFrame.size.width, cellLayOut.unInterestedButtonFrame.size.height);
+//        }
     }
 }
 
