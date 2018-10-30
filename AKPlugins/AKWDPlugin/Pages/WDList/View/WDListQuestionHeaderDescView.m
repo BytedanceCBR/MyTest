@@ -72,7 +72,7 @@
     [super themeChanged:notification];
     
     if (!_hasAddSubviews) return;
-    self.contentLabel.textColor = [UIColor tt_themedColorForKey:kColorText14];
+    self.contentLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
     self.contentLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     [self updateContent];
 }
@@ -221,7 +221,7 @@
     NSMutableAttributedString *foldToken = [[NSMutableAttributedString alloc] initWithString:foldString
                                                                                   attributes:@{
                                                                                                NSFontAttributeName : [UIFont systemFontOfSize:fontSize],
-                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5]}
+                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorClearBlue]}
                                             ];
     NSString *arrowString = [NSString stringWithFormat:@" %@",ask_arrow_down];
     NSMutableAttributedString *tokenArrow = [[NSMutableAttributedString alloc] initWithString:arrowString
@@ -241,7 +241,7 @@
         _contentLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(kWDCellLeftPadding, WDLabelPadding(10.0f, fontSize), SSWidth(self) - kWDCellLeftPadding - kWDCellRightPadding, 0.0f)];
         _contentLabel.numberOfLines = [_viewModel defaultNumberOfLines];
         _contentLabel.font = [UIFont systemFontOfSize:fontSize];
-        _contentLabel.textColor = [UIColor tt_themedColorForKey:kColorText14];
+        _contentLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _contentLabel.userInteractionEnabled = YES;
         _contentLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
         if (_isNeedUnfold) {

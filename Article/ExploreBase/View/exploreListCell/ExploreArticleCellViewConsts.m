@@ -17,11 +17,11 @@ inline CGFloat cellTopPadding() {
     if ([TTDeviceHelper isPadDevice]) {
         return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 16.f;
+        return 10.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 16.f;
+        return 10.f;
     } else {
-        return 16.f;
+        return 10.f;
     }
 }
 

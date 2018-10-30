@@ -207,7 +207,7 @@
         CGFloat unInterestedBtnHeight = 44;
         unInterestedBtnX = ceil(self.originX + self.containWidth - kCellUninterestedButtonWidth / 2 - unInterestedBtnWidth / 2);
         unInterestedBtnY = ceilf(sourceLabelY + (sourceSize.height - unInterestedBtnHeight) / 2);
-        CGRect unInterestedBtnFrame = CGRectMake(unInterestedBtnX, unInterestedBtnY, unInterestedBtnWidth, unInterestedBtnHeight);
+        CGRect unInterestedBtnFrame = CGRectMake(unInterestedBtnX, unInterestedBtnY + 4, unInterestedBtnWidth, unInterestedBtnHeight);
         self.unInterestedButtonFrame = unInterestedBtnFrame;
         if (self.listType == ExploreOrderedDataListTypeFavorite ||
             self.listType == ExploreOrderedDataListTypePushHistory ||
@@ -469,7 +469,7 @@
     CGFloat unInterestedBtnHeight = 44;
     unInterestedBtnX = ceil(left + self.containWidth - kCellUninterestedButtonWidth / 2 - unInterestedBtnWidth / 2);
     unInterestedBtnY = ceilf(top + (kUFSourceViewImageSide() - unInterestedBtnHeight) / 2);
-    CGRect unInterestedBtnFrame = CGRectMake(unInterestedBtnX, unInterestedBtnY, unInterestedBtnWidth, unInterestedBtnHeight);
+    CGRect unInterestedBtnFrame = CGRectMake(unInterestedBtnX, unInterestedBtnY + 4, unInterestedBtnWidth, unInterestedBtnHeight);
     self.unInterestedButtonFrame = unInterestedBtnFrame;
     if (self.listType == ExploreOrderedDataListTypeFavorite ||
         self.listType == ExploreOrderedDataListTypeReadHistory ||

@@ -62,10 +62,6 @@ class UITableViewCellFactory {
         }
     }
 
-//    func dequeueReusableCell(tableView: UITableView, indexPath: IndexPath) -> BaseUITableViewCell {
-//        return BaseUITableViewCell()
-//    }
-
     func dequeueReusableCell<T: BaseUITableViewCell>(identifer: String, tableView: UITableView, indexPath: IndexPath) -> T {
         let cell: T = tableView.dequeueReusableCell(withIdentifier: identifer, for: indexPath) as! T
         return cell

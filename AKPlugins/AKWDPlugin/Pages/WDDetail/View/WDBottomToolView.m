@@ -48,8 +48,8 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         writeButton.height = [TTDeviceHelper isPadDevice] ? [TTDeviceUIUtils tt_newPadding:36] : [TTDeviceUIUtils tt_newPadding:32];
         writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 13)];
         writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, 0);
+        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 16.f, 0, 0);
+        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
         writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         [writeButton addTarget:self action:@selector(writeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:writeButton];
@@ -57,9 +57,9 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _writeButton.borderColors = nil;
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        _writeButton.titleColorThemeKey = kColorText1;
+        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = kColorBackground3;
+        _writeButton.backgroundColorThemeKey = kColorBackground4;
         _writeButton.layer.masksToBounds = YES;
         
 //        [_writeButton setImageName:@"write_new"];

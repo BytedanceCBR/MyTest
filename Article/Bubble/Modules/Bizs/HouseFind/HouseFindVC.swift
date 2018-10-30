@@ -164,13 +164,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             self?.requestHistory()
         }.disposed(by: disposeBag)
 
-//        EnvContext.shared.client.configCacheSubject
-//            .bind { [weak self] (_) in
-//                self?.resetCollectionDataSource()
-//                self?.requestHistory()
-//            }.disposed(by: disposeBag)
-
-//        self.processKeyboardDisplay()
         self.bindSearchAction()
 
         if EnvContext.shared.client.configCacheSubject.value != nil {
@@ -208,11 +201,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     fileprivate func setupViews() {
         segmentedNav.snp.makeConstraints { maker in
-//            if #available(iOS 11, *) {
-//                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(30)
-//            } else {
-//                maker.top.equalTo(40)
-//            }
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(88 * CommonUIStyle.Screen.widthScale)
             maker.right.equalTo(-88 * CommonUIStyle.Screen.widthScale)
