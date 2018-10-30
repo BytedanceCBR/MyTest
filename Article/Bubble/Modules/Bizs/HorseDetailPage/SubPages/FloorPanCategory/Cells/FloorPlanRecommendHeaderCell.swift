@@ -28,7 +28,7 @@ class FloorPlanRecommendHeaderCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        contentView.backgroundColor = hexStringToUIColor(hex: "#299cff")
         contentView.addSubview(bgView)
         bgView.snp.makeConstraints { maker in
             maker.top.equalTo(0)

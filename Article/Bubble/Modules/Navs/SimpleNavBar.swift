@@ -25,6 +25,7 @@ class SimpleNavBar: UIView {
     lazy var title: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return label
     }()
 

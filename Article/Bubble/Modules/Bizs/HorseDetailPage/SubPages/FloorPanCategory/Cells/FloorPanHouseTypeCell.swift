@@ -57,11 +57,11 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         return re
     }()
     
-    lazy var bottomLine: UIView = {
-        let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: "#f3f3f3")
-        return re
-    }()
+//    lazy var bottomLine: UIView = {
+//        let re = UIView()
+//        re.backgroundColor = hexStringToUIColor(hex: "#f3f3f3")
+//        return re
+//    }()
 
     private var request: BDWebImageRequest?
 
@@ -116,13 +116,13 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
             maker.width.equalTo(20)
         }
         
-        contentView.addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { maker in
-            maker.left.equalTo(iconView)
-            maker.height.equalTo(0.5)
-            maker.right.equalTo(statusBGView)
-
-        }
+//        contentView.addSubview(bottomLine)
+//        bottomLine.snp.makeConstraints { maker in
+//            maker.left.equalTo(iconView)
+//            maker.height.equalTo(0.5)
+//            maker.right.equalTo(statusBGView)
+//
+//        }
 
     }
 

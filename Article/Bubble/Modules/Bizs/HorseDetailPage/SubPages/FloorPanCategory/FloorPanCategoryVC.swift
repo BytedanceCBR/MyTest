@@ -33,15 +33,15 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         re.sectionTitleArray = ["全部"]
         re.scSelectionIndicatorStyle = .fullWidthStripe
         re.scWidthStyle = .dynamic
-        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(15),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHDarkIndigoColor)]
 
         let selectedAttributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(15),
-                                  NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959")]
+                                  NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHClearBlueColor)]
         re.titleTextAttributes = attributes
         re.selectedTitleTextAttributes = selectedAttributes
-        re.selectionIndicatorColor = hexStringToUIColor(hex: "#f85959")
+        re.selectionIndicatorColor = hexStringToUIColor(hex: kFHClearBlueColor)
         return re
     }()
     
