@@ -124,11 +124,12 @@ TTCommentFooterCellDelegate>
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.commentTableView.showsVerticalScrollIndicator = ![TTDeviceHelper isPadDevice];
     self.commentTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+
     [self.commentTableView registerClass:[TTVCommentListCell class] forCellReuseIdentifier:kTTVCommentCellIdentifier];
     [self.commentTableView registerClass:[TTCommentFooterCell class] forCellReuseIdentifier:kTTCommentFooterCellReuseIdentifier];
     self.commentHeaderView = [self.commentViewModel.datasource commentHeaderView];
-    self.commentTableView.tableHeaderView = self.commentHeaderView? : [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 0.f, CGFLOAT_MIN)]; //Grouped Style下height必须大于0.f 否则顶部会出现留白 @zengruihuan
+    self.commentTableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 10)];
+
     [self.commentHeaderView addObserver:self
                              forKeyPath:@"frame"
                                 options:NSKeyValueObservingOptionNew
