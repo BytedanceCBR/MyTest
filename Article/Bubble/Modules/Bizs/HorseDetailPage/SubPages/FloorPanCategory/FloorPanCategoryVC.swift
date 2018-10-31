@@ -90,6 +90,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navBar.seperatorLine.isHidden = true
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         var traceParamsDict = tracerParams.paramsGetter([:])
         
@@ -105,8 +106,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.floorPanCategoryViewModel?.logPB = logPB
         self.view.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             maker.height.equalTo(40)
         }
@@ -166,7 +166,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常")
         
         self.errorVM?.onRequestViewDidLoad()
-        
+        self.errorVM?.onRequest()
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
     }
 

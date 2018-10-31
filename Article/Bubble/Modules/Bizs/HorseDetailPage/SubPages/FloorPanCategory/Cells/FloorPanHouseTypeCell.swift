@@ -19,6 +19,7 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
         re.layer.borderWidth = 0.5
         re.layer.cornerRadius = 4
+        re.layer.masksToBounds = true
         return re
     }()
 
