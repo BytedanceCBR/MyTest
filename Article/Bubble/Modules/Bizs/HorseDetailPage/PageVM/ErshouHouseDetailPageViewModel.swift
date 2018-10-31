@@ -348,7 +348,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     (data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? false : true
                 }
                 <- parsePriceRangeNode(data.housePriceRange, traceExtension: traceExtension)
-                <- parseFlineNode((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? 6 : 0)
+                <- parseFlineNode(((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) || self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0) ? 6 : 0)
                 <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
@@ -387,7 +387,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                     }
                 }
-                <- parseFlineNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 0 && houseInSameNeighborhood.value?.data?.total ?? 0 <= 5) ? 6 : 0)
+                <- parseFlineNode(((houseInSameNeighborhood.value?.data?.total ?? 0 > 0 && houseInSameNeighborhood.value?.data?.total ?? 0 <= 5) || self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0) ? 6 : 0)
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
