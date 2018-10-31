@@ -181,7 +181,7 @@
     self.tableView.dataSource = self;
     self.tableView.separatorColor = [UIColor clearColor];
     
-    [self.tableView setBackgroundColor:[UIColor colorWithDayColorName:@"f8f8f8" nightColorName:@"252525"]];
+    [self.tableView setBackgroundColor:[UIColor colorWithDayColorName:@"ffffff" nightColorName:@"252525"]];
     [self.tableView registerClass:[TTActionSheetTableCell class] forCellReuseIdentifier:TTActionSheetTableCellIdentifier];
     [self.tableView registerClass:[TTActionSheetWriteCommentCell class] forCellReuseIdentifier:TTActionSheetWriteCommentCellIdentifier];
     

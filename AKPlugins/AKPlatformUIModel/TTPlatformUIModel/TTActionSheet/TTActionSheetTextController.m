@@ -51,6 +51,7 @@
     }
     [self.view addSubview:self.titleView];
     
+    
     _keyboardListener = [TTKeyboardListener sharedInstance];
     _inputTextView = [[SSThemedTextView alloc] init];
     _finishedButton = [[SSThemedButton alloc] init];
