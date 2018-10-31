@@ -10,7 +10,7 @@
 #import "SSThemed.h"
 #import "WDListViewModel.h"
 
-#define kWDWendaListFooterViewHeight 88
+#define kWDWendaListFooterViewHeight 55
 #define kWDWendaListNoAnswerFooterViewHeight 200
 
 /*
