@@ -71,11 +71,10 @@ class NewHouseCommentCell: BaseUITableViewCell {
         contentView.addSubview(dateTiemLabel)
         dateTiemLabel.snp.makeConstraints { maker in
             maker.left.equalTo(titleLabel.snp.left)
-            maker.top.equalTo(titleLabel.snp.bottom).offset(2)
+            maker.top.equalTo(titleLabel.snp.bottom).offset(-2)
             maker.right.equalTo(-20)
             maker.width.equalTo(100)
         }
-
 
     }
 
