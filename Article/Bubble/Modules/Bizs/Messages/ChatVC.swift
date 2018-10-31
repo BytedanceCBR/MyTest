@@ -162,7 +162,7 @@ class ChatVC: BaseViewController {
         if isFirstEnter {
             EnvContext.shared.toast.showLoadingToast("正在加载")
         }
-
+        errorVM?.onRequest()
         requestUserUnread(query:"")
             .subscribe(onNext: { [unowned self] (responsed) in
                 EnvContext.shared.toast.dismissToast()

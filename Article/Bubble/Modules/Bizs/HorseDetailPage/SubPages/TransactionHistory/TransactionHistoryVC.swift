@@ -43,6 +43,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             infoMaskView.label.text = "网络异常"
             infoMaskView.isUserInteractionEnabled = false
         } else {
+            errorVM?.onRequest()
             self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
         }
         
@@ -109,6 +110,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
         let refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+        errorVM?.onRequest()
         transactionHistoryVM?.pageableLoader?()
     }
     

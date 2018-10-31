@@ -497,7 +497,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         }
         conditionPanelView.isHidden = true
-
+        self.errorVM?.onRequest()
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
 //        stayTimeParams = tracerParams <|> traceStayTime() <|> EnvContext.shared.homePageParams
@@ -565,6 +565,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             
             
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+        errorVM?.onRequest()
         categoryListViewModel?.pageableLoader?()
     }
 
@@ -588,6 +589,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                         EnvContext.shared.toast.showToast("网络异常")
                         return
                     }
+                    self.errorVM?.onRequest()
                     self.categoryListViewModel?.requestData(
                             houseType: self.houseType.value,
                             query: query,

@@ -190,6 +190,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
                         EnvContext.shared.toast.showToast("网络异常")
                         return
                     }
+                    self.errorVM?.onRequest()
                     self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
                 }, onError: { error in
 //                    print(error)
@@ -230,6 +231,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     }
 
     fileprivate func requestData() {
+        errorVM?.onRequest()
         ershouHouseListViewModel?.requestErshouHouseList(
             query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
             condition: nil)
@@ -255,6 +257,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         let refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+        errorVM?.onRequest()
         ershouHouseListViewModel?.pageableLoader?()
     }
 

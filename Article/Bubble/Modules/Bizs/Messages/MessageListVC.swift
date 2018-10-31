@@ -152,6 +152,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         self.cleanData()
         
         pageableLoader = { [unowned self] in
+            self.errorVM?.onRequest()
             loader()
                 .subscribe(onNext: { [unowned self] (responsed) in
                     self.dismissLoadingAlert()

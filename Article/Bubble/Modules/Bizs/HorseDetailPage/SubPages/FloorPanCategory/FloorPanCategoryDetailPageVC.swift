@@ -279,6 +279,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常")
         
         self.errorVM?.onRequestViewDidLoad()
+        self.errorVM?.onRequest()
         self.viewModel?.request(floorPanId: self.floorPanId)
     }
 

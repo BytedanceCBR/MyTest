@@ -161,6 +161,7 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
                 recordEvent(key: "category_refresh", params: self.tracerParams <|>
                         toTracerParams("pre_load_more", key: "refresh_type"))
             }
+            errorVM?.onRequest()
             requestSystemNotification(listId: listId, maxCoursor: minCoursor)
                 .subscribe(onNext: { [weak self] response in
                     let models: [ItemModel]? = response?.data?.items?.map {

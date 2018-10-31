@@ -109,6 +109,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
+    var listDataRequestDisposeBag = DisposeBag()
+
     init(tableView: UITableView, navVC: UINavigationController?) {
         
         self.navVC = navVC
@@ -405,6 +407,7 @@ class HomeListViewModel: DetailPageViewModel {
     
     //第一次请求，继承协议方法
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
+        listDataRequestDisposeBag = DisposeBag()
 
         self.houseId = houseId
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
@@ -502,21 +505,21 @@ class HomeListViewModel: DetailPageViewModel {
                     self.isFirstEnterCategory = false
                     self.isFirstEnterCategorySwitch = false
                     }, onError: { [unowned self] error in
-//                        print(error)
+                        //                        print(error)
                         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                         self.onError?(error)
 
-                    self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullUp(withSuccess: true)
                     }, onCompleted: {
-                    
+
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: listDataRequestDisposeBag)
         }
 
     }
 
     func requestHomeRecommendData(pullType: PullTriggerType, reloadFromType: TTReloadType?) {
-        
+        listDataRequestDisposeBag = DisposeBag()
         oneTimeToast = createOneTimeToast()
 
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
@@ -614,18 +617,20 @@ class HomeListViewModel: DetailPageViewModel {
                     }
                     return [] //条件不符合返回空数组
                 }
-                .subscribe(onNext: { [unowned self] response in
-                    if let dataSource = self.dataSource {
-                        dataSource.datas = response
-                        dataSource.recordIndexCache = []
-                        self.tableView?.reloadData()
-                    }
-                    //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
-                    pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
-                    
-                    self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
-                    }, onError: { [unowned self] error in
-//                        print(error)
+                .subscribe(
+                    onNext: { [unowned self] response in
+                        if let dataSource = self.dataSource {
+                            dataSource.datas = response
+                            dataSource.recordIndexCache = []
+                            self.tableView?.reloadData()
+                        }
+                        //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
+                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
+
+                        self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
+                    },
+                    onError: { [unowned self] error in
+                        //                        print(error)
                         if EnvContext.shared.client.reachability.connection == .none
                         {
                             EnvContext.shared.toast.showToast("网络异常")
@@ -635,10 +640,14 @@ class HomeListViewModel: DetailPageViewModel {
                         }
                         //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
                         pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
-                    }, onCompleted: {
-                        
+                    },
+                    onCompleted: {
+
+                },
+                    onDisposed: {
+
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: listDataRequestDisposeBag)
         }
         
     }

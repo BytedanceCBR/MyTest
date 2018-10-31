@@ -335,6 +335,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         if EnvContext.shared.client.reachability.connection != .none {
             infoMaskView.isHidden = true
+            netStateInfoVM?.onRequest()
             detailPageViewModel?.requestData(houseId: houseId, logPB: logPB, showLoading: true)
         }
 
@@ -646,6 +647,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             EnvContext.shared.client.accountConfig.userInfo
                 .subscribe(onNext: { [weak self] (userInfo) in
                     if userInfo != nil {
+                        self?.netStateInfoVM?.onRequest()
                         self?.detailPageViewModel?.requestData(houseId: self?.houseId ?? 0, logPB: self?.logPB, showLoading: false)
                     }
                 })

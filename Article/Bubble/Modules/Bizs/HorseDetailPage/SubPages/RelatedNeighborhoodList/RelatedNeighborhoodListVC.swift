@@ -54,6 +54,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
 
         if EnvContext.shared.client.reachability.connection != .none {
+            self.errorVM?.onRequest()
             self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
         } else {
             infoMaskView.isHidden = false
@@ -63,6 +64,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             [weak self] in
             if let neighborhoodId = self?.neighborhoodId{
                 if self?.relatedNeighborhoodListViewModel?.datas.value.count == 0 {
+                    self?.errorVM?.onRequest()
                     self?.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
                 }
             }
@@ -112,6 +114,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         let refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+        errorVM?.onRequest()
         relatedNeighborhoodListViewModel?.pageableLoader?()
     }
 }
