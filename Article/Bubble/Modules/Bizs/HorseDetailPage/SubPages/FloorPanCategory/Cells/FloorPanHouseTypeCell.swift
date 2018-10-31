@@ -18,6 +18,7 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         re.image = #imageLiteral(resourceName: "default_image")
         re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
         re.layer.borderWidth = 0.5
+        re.layer.cornerRadius = 4
         return re
     }()
 
@@ -69,9 +70,9 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(iconView)
         iconView.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.top.equalTo(16)
-            maker.bottom.equalTo(-15)
+            maker.left.equalTo(20)
+            maker.top.equalTo(10)
+            maker.bottom.equalTo(-10)
             maker.width.equalTo(100)
             maker.height.equalTo(75)
          }
@@ -79,7 +80,7 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
         contentView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
             maker.left.equalTo(iconView.snp.right).offset(12)
-            maker.top.equalTo(19)
+            maker.top.equalTo(10)
             maker.height.equalTo(22)
             maker.right.equalTo(-15)
         }
@@ -89,15 +90,15 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
             maker.left.equalTo(iconView.snp.right).offset(12)
             maker.top.equalTo(nameLabel.snp.bottom)
             maker.right.equalTo(-15)
-            maker.height.equalTo(17)
+            maker.height.equalTo(16)
         }
 
         contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(iconView.snp.right).offset(12)
             maker.height.equalTo(20)
-            maker.top.equalTo(roomSpaceLabel.snp.bottom).offset(10)
-            maker.bottom.equalTo(-18)
+            maker.top.equalTo(roomSpaceLabel.snp.bottom).offset(12)
+            maker.bottom.equalTo(-10)
         }
 
         contentView.addSubview(statusBGView)

@@ -31,7 +31,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
                 frame: CGRect.zero)
         re.selectionIndicatorHeight = 1
         re.sectionTitleArray = ["全部"]
-        re.scSelectionIndicatorStyle = .fullWidthStripe
+        re.scSelectionIndicatorStyle = .contentWidthStripe
         re.scWidthStyle = .dynamic
         re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(15),
@@ -90,6 +90,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         var traceParamsDict = tracerParams.paramsGetter([:])
         
         self.floorPanCategoryViewModel = FloorPanCategoryViewModel(
@@ -105,7 +106,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.view.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.right.equalTo(-15)
+            maker.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             maker.height.equalTo(40)
         }
