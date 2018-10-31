@@ -308,10 +308,53 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
+        
+        //点击切换埋点
+        let catName = pageTypeString()
+        var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
+        let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
+        let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
+        var enterFrom = selectTraceParam(self.tracerParams, key: "enter_from")
+        if enterFrom == nil {
+            if originFrom != "be_null" {
+                enterFrom = originFrom.split(separator: "_")[0]
+            }else{
+                enterFrom = "be_null"
+            }
+        }
+        if elementName == "be_null" && originFrom != "be_null" {
+            elementName = originFrom
+        }
+        
+        let params = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("map", key: "click_type") <|>
+            toTracerParams(catName, key: "category_name") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(elementName, key: "element_from") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        
+        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
+        
+        //进入地图找房页埋点
+        let enterParams = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        recordEvent(key: TraceEventName.enter_map, params: enterParams)
+            
+        
         configModel.centerLongitude = mapSearch.centerLongitude ?? ""
         configModel.centerLatitude = mapSearch.centerLatitude ?? ""
         configModel.resizeLevel = mapSearch.resizeLevel ?? 11
         configModel.houseType = self.houseType.value.rawValue
+        configModel.originFrom = originFrom
+        configModel.originSearchId = originSearchId
+        configModel.elementFrom = elementName
+        
         let controller = FHMapSearchViewController(configModel: configModel)
         self.navigationController?.pushViewController(controller, animated: true)
         

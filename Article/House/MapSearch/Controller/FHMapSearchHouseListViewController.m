@@ -86,6 +86,18 @@
     [self.viewModel dismiss];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear:animated];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear:animated];
+}
+
 /*
 #pragma mark - Navigation
 

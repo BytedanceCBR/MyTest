@@ -21,8 +21,8 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHMapSearchDataListModel *neighbor;
 @property(nonatomic , strong) NSString *searchId;
-@property(nonatomic , assign) NSInteger offset;
 @property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
+@property(nonatomic , assign) NSTimeInterval startTimestamp;
 
 @end
 
@@ -33,7 +33,6 @@
     self = [super init];
     if (self) {
         _houseList = [NSMutableArray new];
-        _offset = 1;
     }
     return self;
 }
@@ -73,11 +72,16 @@
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
     
+    self.startTimestamp = [[NSDate date] timeIntervalSince1970];
+    if (neighbor) {
+        [self addNeighborShowLog:self.neighbor];
+    }
 }
 
 -(void)showNeighborDetail
 {
     if (self.listController.showNeighborhoodDetailBlock) {
+        [self addShowNeighborDetailLog:self.neighbor];
         self.listController.showNeighborhoodDetailBlock(self.neighbor);
     }
 }
@@ -95,6 +99,11 @@
     [cell updateWithModel:item isLastCell:(indexPath.row == _houseList.count - 1)];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self addHouseShowLog:indexPath];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -119,6 +128,7 @@
     FHSearchHouseDataItemsModel *model = _houseList[indexPath.row];
     if (self.listController.showHouseDetailBlock) {
         self.listController.showHouseDetailBlock(model);
+        [self addHouseDetailShowLog:indexPath];
     }
 }
 
@@ -142,6 +152,8 @@
         self.tableView.userInteractionEnabled = true;
     }];
     [self.tableView.mj_footer resetNoMoreData];
+    
+    [self addHouseListDurationLog];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -150,7 +162,6 @@
     if ([self.listController canMoveup]) {
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
-        
     }else if (scrollView.contentOffset.y < 0){
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
@@ -164,8 +175,8 @@
     }else if(self.listController.view.top - [self.listController minTop] < 50){
         //吸附都顶部
         [self.listController moveTop:0];
-    }
-    else if([self.listController canMoveup]){
+        [self addEnterListPageLog];
+    }else if([self.listController canMoveup]){
         //当前停留在中间
         self.listController.moveDock();
     }
@@ -197,11 +208,9 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
-
-    self.offset = self.houseList.count;
     
     __weak typeof(self) wself = self;
-    [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
@@ -220,6 +229,153 @@
         
     }];
     
+    [self addHouseListLoadMoreLog];
+    
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    self.startTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self addHouseListDurationLog];
+}
+
+#pragma mark - log
+
+-(NSMutableDictionary *)logBaseParams
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"enter_from"] = @"mapfind";
+    param[@"category_name"] = @"same_neighborhood_list";
+    param[@"element_from"] = @"half_category";
+    param[@"search_id"] = self.searchId?:@"be_null";
+    param[@"origin_from"] = self.configModel.originFrom?:@"be_null";
+    param[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
+ 
+    return param;
+}
+
+-(void)addEnterListPageLog
+{
+    NSMutableDictionary *param = [self logBaseParams];
+    param[@"category_name"] = @"same_neighborhood_list";
+    param[@"enter_type"] = @"slide_up";
+    if (self.neighbor.logPb) {
+        param[@"log_pb"] = [self.neighbor.logPb toDictionary];
+    }
+    
+    [EnvContext.shared.tracer writeEvent:@"enter_category" params:param];
+}
+
+-(void)addHouseListDurationLog
+{
+    NSTimeInterval duration = [[NSDate date]timeIntervalSince1970] - _startTimestamp;
+    if (duration < 0.5 || duration > 60*60) {
+        //invalid log
+        return;
+    }
+    
+    NSMutableDictionary *param = [self logBaseParams];
+    param[@"stay_time"] = @(duration*1000);
+    if (self.neighbor.logPb) {
+        param[@"log_pb"] = [self.neighbor.logPb toDictionary];
+    }
+    param[@"enter_type"] = @"slide_up";
+
+    [EnvContext.shared.tracer writeEvent:@"stay_category" params:param];
+    _startTimestamp = 0;
+}
+
+-(void)addHouseListLoadMoreLog
+{
+   NSMutableDictionary *param = [self logBaseParams];
+    param[@"refresh_type"] = @"pre_load_more";
+    param[@"enter_type"] = @"slide_up";
+    [EnvContext.shared.tracer writeEvent:@"category_refresh" params:param];
+}
+
+-(void)addNeighborShowLog:(FHMapSearchDataListModel *)neighbor
+{
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"house_type"] = @"neighborhood";
+    param[@"page_type"] = @"mapfind";
+    param[@"card_type"] = @"no_pic";
+    param[@"element_type"] = @"half_category";
+    param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
+    param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
+    param[@"rank"] = @"0";
+    if (neighbor.logPb) {
+        param[@"log_pb"] = [neighbor.logPb toDictionary];
+    }
+    
+    [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
+}
+
+-(void)addShowNeighborDetailLog:(FHMapSearchDataListModel *)neighbor
+{
+    
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"house_type"] = @"old";
+    param[@"page_type"] = @"neighborhood_detail";
+    param[@"card_type"] = @"no_pic";
+    param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
+    param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
+    param[@"rank"] = @"0";
+    if (neighbor.logPb) {
+        param[@"log_pb"] = [neighbor.logPb toDictionary];
+    }
+    
+    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
+}
+
+
+
+-(void)addHouseShowLog:(NSIndexPath *)indexPath
+{
+    FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"house_type"] = @"old";
+    param[@"page_type"] = @"mapfind";
+    param[@"card_type"] = @"left_pic";
+    param[@"group_id"] = item.logPb.groupId ?: @"be_null";
+    param[@"impr_id"] = item.imprId ?: @"be_null";
+    param[@"rank"] = @(indexPath.row);
+    param[@"log_pb"] = [item.logPb toDictionary];
+    
+    if (item.logPb) {
+        param[@"log_pb"] = [item.logPb toDictionary];
+    }
+    
+    
+    [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
+}
+
+-(void)addHouseDetailShowLog:(NSIndexPath *)indexPath
+{
+    FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
+    
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"house_type"] = @"old";
+    param[@"page_type"] = @"old_detail";
+    param[@"card_type"] = @"left_pic";
+    param[@"group_id"] = item.logPb.groupId ?: @"be_null";
+    param[@"impr_id"] = item.imprId ?: @"be_null";
+    param[@"rank"] = @(indexPath.row);
+    
+    if (item.logPb) {
+        param[@"log_pb"] = [item.logPb toDictionary];
+    }
+    
+    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
+}
+
 
 @end

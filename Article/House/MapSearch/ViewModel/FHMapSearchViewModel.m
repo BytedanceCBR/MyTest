@@ -21,6 +21,17 @@
 
 #define kTipDuration 3
 
+typedef NS_ENUM(NSInteger , FHMapZoomTrigerType) {
+    FHMapZoomTrigerTypeZoomMap = 0,// 缩放地图
+    FHMapZoomTrigerTypeClickAnnotation , //点击气泡
+    FHMapZoomTrigerTypeDefault ,//进入时设置
+};
+
+typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
+    FHMapZoomViewLevelTypeArea = 0 , // 区域视野
+    FHMapZoomViewLevelTypeDistrict = 1 , // 商圈视野
+    FHMapZoomViewLevelTypeNeighborhood = 2 , // 小区视野
+};
 
 
 @interface FHMapSearchViewModel ()
@@ -35,6 +46,8 @@
 @property(nonatomic , strong) FHHouseAnnotation *currentSelectAnnotation;
 @property(nonatomic , strong) FHNeighborhoodAnnotationView *currentSelectAnnotationView;
 @property(nonatomic , strong) NSMutableDictionary<NSString * , FHMapSearchDataListModel *> *selectedAnnotations;
+@property(nonatomic , assign) NSTimeInterval startShowTimestamp;
+@property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
 
 @end
 
@@ -63,6 +76,7 @@
         self.houseTypeName = title;
         _showMode = FHMapSearchShowModeMap;
         _selectedAnnotations = [NSMutableDictionary new];
+        _lastRecordZoomLevel = configModel.resizeLevel;
     }
     return self;
 }
@@ -131,7 +145,6 @@
 -(void)showMap
 {
     [self.houseListViewController dismiss];
-    
 }
 
 -(void)dismissHouseListView
@@ -239,14 +252,16 @@
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
     if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
         //show district zoom map
-        CGFloat zoomLevel = self.mapView.zoomLevel ;
+        CGFloat zoomLevel = self.mapView.zoomLevel;
         /*
          *  zoomlevel 与显示对应关系
          *  区域 7 - 13
          *  商圈 13 - 16
          *  小区 16 - 20
          */
-        if (zoomLevel < 13) {
+        if (zoomLevel < 7) {
+            zoomLevel = 7;
+        }else if (zoomLevel < 13) {
             zoomLevel = 13;
         }else if (zoomLevel < 16){
             zoomLevel = 16;
@@ -257,6 +272,7 @@
             zoomLevel = 20;
         }
         
+        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeClickAnnotation currentLevel:zoomLevel];
         [self.mapView setZoomLevel:zoomLevel atPivot:annotationView.center animated:YES];
         
     }else{
@@ -275,6 +291,37 @@
         self.currentSelectAnnotation = houseAnnotation;
         [self requestNeighborhoodHouses:houseAnnotation.houseData];
     }
+    
+    [self addClickBubbleLog:houseAnnotation.searchType];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    self.startShowTimestamp = [[NSDate date] timeIntervalSince1970];
+//    if (self.showMode != FHMapSearchShowModeMap) {
+//        [_houseListViewController viewWillAppear:animated];
+//    }
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval duration = now - _startShowTimestamp;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"enter_from"] = @"old_list";
+    param[@"search_id"] = self.searchId?:@"be_null";
+    param[@"origin_from"] = self.configModel.originFrom?:@"be_null";
+    param[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
+    param[@"stay_time"] = @((NSInteger)(duration*1000));
+    
+    //TraceEventName
+    [EnvContext.shared.tracer writeEvent:@"stay_mapfind" params:param];
+    
+//    if (self.showMode != FHMapSearchShowModeMap) {
+//        [_houseListViewController viewWillDisappear:animated];
+//    }
 }
 
 /**
@@ -294,9 +341,14 @@
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
+    if (fabs(ceil(_requestMapLevel) - ceil(mapView.zoomLevel))> 1) {
+        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
+    }
+    
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.1) {
         [self requestHouses];
     }
+    
 }
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id <MAAnnotation>)annotation
@@ -409,9 +461,6 @@
      */
     
     //TODO: add loading ...
-    
-    NSString *searchId = @"";
-    NSString *query = [NSString stringWithFormat:@""];
     NSMutableDictionary *param = [NSMutableDictionary new];
     if (model.nid) {
         param[NEIGHBORHOOD_ID_KEY] = model.nid;
@@ -419,7 +468,7 @@
     param[HOUSE_TYPE_KEY] = @(self.configModel.houseType);
     
     __weak typeof(self) wself = self;
-    [FHHouseSearcher houseSearchWithQuery:query param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    [FHHouseSearcher houseSearchWithQuery:nil param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
@@ -436,6 +485,9 @@
 {
     [self changeNavbarAppear:NO];
     self.showMode = FHMapSearchShowModeHalfHouseList;
+    
+    //add log
+    [self addHouseListShowLog:model houseListModel:houseDataModel];
     
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
@@ -470,6 +522,134 @@
     NSString *strUrl = [NSString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+}
+
+-(FHMapZoomViewLevelType)mapZoomViewType:(CGFloat)zoomLevel
+{
+    /*
+     *  zoomlevel 与显示对应关系
+     *  区域 7 - 13
+     *  商圈 13 - 16
+     *  小区 16 - 20
+     */
+    if (zoomLevel < 13) {
+        return FHMapZoomViewLevelTypeArea;
+    }else if (zoomLevel < 16){
+        return FHMapZoomViewLevelTypeDistrict;
+    }
+    return FHMapZoomViewLevelTypeNeighborhood;
+}
+
+#pragma mark log
+-(NSMutableDictionary *)logBaseParams
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"enter_from"] = @"old_list";
+    param[@"search_id"] = self.searchId?:@"be_null";
+    param[@"origin_from"] = self.configModel.originFrom?:@"be_null";
+    param[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
+
+    return param;
+}
+
+-(void)addEnterMapLog
+{
+    FHMapZoomViewLevelType zoomLevelType = [self mapZoomViewType:self.configModel.resizeLevel];
+    [self addMapZoomLevelTrigerby:FHMapZoomTrigerTypeDefault viewTye:zoomLevelType];
+}
+
+-(void)tryAddMapZoomLevelTrigerby:(FHMapZoomTrigerType)trigerType currentLevel:(CGFloat)zoomLevel
+{
+    if (fabs(ceil(_lastRecordZoomLevel) - ceil(zoomLevel)) > 1) {
+        //添加视野埋点
+        FHMapZoomViewLevelType destType = [self mapZoomViewType:zoomLevel];
+        FHMapZoomViewLevelType lastType = [self mapZoomViewType:_lastRecordZoomLevel];
+        if (destType != lastType) {
+            [self addMapZoomLevelTrigerby:trigerType viewTye:destType];
+            _lastRecordZoomLevel = zoomLevel;
+        }
+    }
+}
+
+-(void)addMapZoomLevelTrigerby:(FHMapZoomTrigerType)trigerType viewTye:(FHMapZoomViewLevelType)viewType
+{
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    NSString *triger = nil;
+    switch (trigerType) {
+        case FHMapZoomTrigerTypeZoomMap:
+            triger = @"map";
+            break;
+        case FHMapZoomTrigerTypeClickAnnotation:
+            triger = @"click";
+            break;
+        default:
+            triger = @"default";
+            break;
+    }
+    
+    NSString *viewTypeStr = nil;
+    switch (viewType) {
+        case FHMapZoomViewLevelTypeArea:
+            viewTypeStr = @"area";
+            break;
+        case FHMapZoomViewLevelTypeDistrict:
+            viewTypeStr = @"district";
+            break;
+        default:
+            viewTypeStr = @"neighborhood";
+            break;
+    }
+    param[@"view_type"] = viewTypeStr;
+    param[@"trigger_type"] = triger;
+
+    [EnvContext.shared.tracer writeEvent:@"mapfind_view" params:param];
+    
+}
+
+
+-(void)addClickBubbleLog:(FHMapSearchType) bubbleType
+{
+    NSString *clickType = nil;
+    switch (bubbleType) {
+        case FHMapSearchTypeArea:
+            clickType = @"area";
+            break;
+        case FHMapSearchTypeDistrict:
+            clickType = @"district";
+            break;
+        case FHMapSearchTypeNeighborhood:
+            clickType = @"neighborhood";
+            break;
+        default:
+            return;
+    }
+
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"click_type"] = clickType;
+    
+    [EnvContext.shared.tracer writeEvent:@"mapfind_click_bubble" params:param];
+}
+
+-(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
+{
+    NSMutableDictionary *param = [self logBaseParams];
+
+    [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
+}
+
+-(void)addNavSwitchHouseListLog
+{
+    NSMutableDictionary *param = [self logBaseParams];
+    
+    param[@"enter_type"] = @"click";
+    param[@"click_type"] = @"list";
+    param[@"category_name"] = @"mapfind";
+    param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
+    
+    [EnvContext.shared.tracer writeEvent:@"click_switch_mapfind" params:param];
 }
 
 @end

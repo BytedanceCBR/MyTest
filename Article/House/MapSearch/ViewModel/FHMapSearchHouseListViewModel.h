@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)dismiss;
 -(NSString *)searchId;
 
+-(void)viewWillAppear:(BOOL)animated;
+-(void)viewWillDisappear:(BOOL)animated;
 
 @end
 

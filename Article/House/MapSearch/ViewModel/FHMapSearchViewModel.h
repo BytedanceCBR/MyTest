@@ -31,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)dismissHouseListView;
 
+-(void)viewWillAppear:(BOOL)animated;
+-(void)viewWillDisappear:(BOOL)animated;
+
+-(void)addEnterMapLog;
+-(void)addNavSwitchHouseListLog;
+
 @end
 
 NS_ASSUME_NONNULL_END

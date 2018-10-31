@@ -11,9 +11,12 @@
 
 @implementation FHHouseSearcher
 
-+(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
++(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
 {
     NSString *host = [[[EnvContext networkConfig] host] stringByAppendingString:@"/f100/api/search"];
+    if (query.length > 0) {
+        host = [host stringByAppendingFormat:@"?%@",query];
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[@"offset"] = @(offset);
     

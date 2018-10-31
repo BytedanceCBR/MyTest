@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) NSString *centerLongitude;
 @property(nonatomic , assign) NSInteger resizeLevel;
 @property(nonatomic , assign) NSInteger houseType;
+@property(nonatomic , copy) NSString *originSearchId;
+@property(nonatomic , copy) NSString *originFrom;
+@property(nonatomic , copy) NSString *elementFrom;
 
 @end
 

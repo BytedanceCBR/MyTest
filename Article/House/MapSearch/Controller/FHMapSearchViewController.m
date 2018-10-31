@@ -43,6 +43,13 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.configModel = configModel;
+        
+        if(_configModel.resizeLevel == 0){
+            _configModel.resizeLevel = 11;
+        }
+        
+        //FIXME: remove debug code
+        _configModel.resizeLevel = 16;
     }
     return self;
 }
@@ -58,15 +65,7 @@
         _mapView.showsIndoorMapControl = false;
         _mapView.rotateCameraEnabled = false;
         
-        if(_configModel.resizeLevel > 0){
-            _mapView.zoomLevel = _configModel.resizeLevel;
-        }else{
-            _mapView.zoomLevel = 11;
-        }
-        
-        //FIXME: remove debug code
-        _mapView.zoomLevel = 16;
-        
+        _mapView.zoomLevel = _configModel.resizeLevel;
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
         representation.showsAccuracyRing = YES;
@@ -113,6 +112,7 @@
 
 -(void)showHouseList
 {
+    [self.viewModel addNavSwitchHouseListLog];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -168,8 +168,21 @@
     if (center.latitude > 0 && center.longitude > 0) {
         [_mapView setCenterCoordinate:center animated:YES];
     }
+    [self.viewModel addEnterMapLog];
     
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear:animated];
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear:animated];
+}
+
 
 -(void)initConstraints
 {
