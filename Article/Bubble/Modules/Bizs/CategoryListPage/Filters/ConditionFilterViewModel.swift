@@ -82,7 +82,7 @@ class ConditionFilterViewModel {
         didSet {
             sortPanelView?.didSelect = { [weak self] node in
                 self?.searchAndConditionFilterVM.searchSortCondition = node
-                if let _ = node {
+                if let node = node, node.rankType != "default" {
                     self?.searchSortBtn?.isSelected = true
                 } else {
                     self?.searchSortBtn?.isSelected = false
@@ -100,7 +100,14 @@ class ConditionFilterViewModel {
         self.searchFilterPanel = searchFilterPanel
         conditionPanelView.rx.controlEvent(.touchUpInside)
                 .bind { [unowned self] recognizer in
+                    self.setSortBtnSelectedWhenClosePanel()
+                    if self.sortPanelView?.isHidden ?? true {
+                        // do nothing
+                    } else {
+                        self.sortPanelView?.isHidden = true
+                    }
                     self.closeConditionFilterPanel(index: -1)
+
                 }
                 .disposed(by: disposeBag)
     }
@@ -124,12 +131,33 @@ class ConditionFilterViewModel {
 
     func openOrCloseSortPanel() {
         self.closeConditionFilterPanel(index: -1)
+        setSortBtnSelected()
+
         if sortPanelView?.isHidden == true {
             self.conditionPanelView?.isHidden = false
             self.sortPanelView?.isHidden = false
         } else {
             self.conditionPanelView?.isHidden = true
             self.sortPanelView?.isHidden = true
+        }
+    }
+
+    fileprivate func setSortBtnSelected() {
+        let isHidden = self.sortPanelView?.isHidden ?? true
+        //当前视图在关闭状态
+        if isHidden == true {
+            self.searchSortBtn?.isSelected = true
+        } else { //当前视图在打开状态
+            setSortBtnSelectedWhenClosePanel()
+        }
+    }
+
+    fileprivate func setSortBtnSelectedWhenClosePanel() {
+        if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
+            sortCondition.rankType != "default" {
+            self.searchSortBtn?.isSelected = true
+        } else {
+            self.searchSortBtn?.isSelected = false
         }
     }
 
@@ -184,11 +212,11 @@ class ConditionFilterViewModel {
                     item: item, conditionLabelParser: parseAreaConditionItemLabel,
                     conditionParser: parseAreaSearchCondition)
             }
-            let panel = constructPriceListConditionPanelWithContainer(
+            let panel = constructPriceBubbleSelectCollectionPanelWithContainer(
                     index: index,
                     nodes: configs,
                     container: containerView!,
-                    action: selectedAction)
+                    selectedAction)
             conditionItemViews.append(panel)
             return { [weak self] (index) in
                 self?.onOpenConditionPanel(panel: panel, index: index)
@@ -276,6 +304,7 @@ class ConditionFilterViewModel {
             item.isExpand = false
             item.isHighlighted = false || item.isSeted
         })
+        setSortBtnSelectedWhenClosePanel()
         self.sortPanelView?.isHidden = true
     }
 

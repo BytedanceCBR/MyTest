@@ -450,17 +450,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
                 .bind(onNext: { [unowned self] (contactPhone) in
-                    self.followForSendPhone()
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self.callRealtorPhone(contactPhone: contactPhone)
-//                        self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
-//                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-//                                                                  followId: "\(self.houseId)",
-//                                                                    disposeBag: self.disposeBag,
-//                                                                    isNeedRecord: true)()
-                        
+                        self.followForSendPhone()
+
                         if self.houseType != .neighborhood {
                             
                             var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
@@ -482,7 +477,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         if self.houseType == .neighborhood {
                             titleStr = "咨询经纪人"
                         }
-                        self.showSendPhoneAlert(title: titleStr, subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "随时获取房源最新动态", confirmBtnTitle: "提交")
                     }
 
                 })
@@ -826,7 +821,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                   followId: "\(self.houseId)",
             disposeBag: self.disposeBag,
-            isNeedRecord: true)()
+            isNeedRecord: false)()
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
@@ -844,6 +839,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 {
                     alert.sendPhoneView.showErrorText()
                 }
+                
+                self.followForSendPhone()
+
             }
             .disposed(by: disposeBag)
         
@@ -857,7 +855,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         
        recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams)
+                        params: tracerParams.exclude("element_type"))
     
         alert.showFrom(self.view)
     }

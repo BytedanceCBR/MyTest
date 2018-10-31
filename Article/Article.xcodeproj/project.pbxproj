@@ -1130,6 +1130,7 @@
 		B311029A2181A0DE00FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
 		B31587B1216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
 		B31587B2216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
+		B31F42AF2189A62D00D9FE94 /* FHTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = B31F42AE2189A62D00D9FE94 /* FHTagView.m */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -7686,6 +7687,8 @@
 		B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTContactsNetworkManager.m; sourceTree = "<group>"; };
 		B31102972181A0D700FD2A45 /* TTContactsNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTContactsNetworkManager.h; sourceTree = "<group>"; };
 		B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUpViewModel.swift; sourceTree = "<group>"; };
+		B31F42AD2189A62D00D9FE94 /* FHTagView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHTagView.h; sourceTree = "<group>"; };
+		B31F42AE2189A62D00D9FE94 /* FHTagView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHTagView.m; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -10591,6 +10594,7 @@
 				3D40C26B2182F5650083F837 /* Api */,
 				3D49A0FB2181E5C000597A21 /* Utils */,
 				3D3CCED721805154008F0378 /* Common */,
+				B31F42AB2189A5E500D9FE94 /* UI */,
 				B31102952181A0BC00FD2A45 /* TTContacts */,
 				3D3CCECC21801A32008F0378 /* Base */,
 				3D3CCEC82180155A008F0378 /* MapSearch */,
@@ -14531,6 +14535,23 @@
 				B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */,
 			);
 			path = TTContacts;
+			sourceTree = "<group>";
+		};
+		B31F42AB2189A5E500D9FE94 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B31F42AC2189A5F600D9FE94 /* TagView */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		B31F42AC2189A5F600D9FE94 /* TagView */ = {
+			isa = PBXGroup;
+			children = (
+				B31F42AD2189A62D00D9FE94 /* FHTagView.h */,
+				B31F42AE2189A62D00D9FE94 /* FHTagView.m */,
+			);
+			path = TagView;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -20488,6 +20509,7 @@
 				438F9E171F94B8DD0050F83E /* TTVADPlayVideo.m in Sources */,
 				2DCAD07C1DDC27FC00EBF9CF /* ExploreDetailAppointLargePicADView.m in Sources */,
 				C33DCA0B1FE24F7D00C66B01 /* TSVShortVideoFeedFetchManager.m in Sources */,
+				B31F42AF2189A62D00D9FE94 /* FHTagView.m in Sources */,
 				6BD9024A1DB873970072138C /* TTRNBridge+Cell.m in Sources */,
 				2DB442A71F711844008E8951 /* ExploreVideoDetailAppointLeftPicADView.m in Sources */,
 				B388CC422142652B00653188 /* MinePageViewModel.swift in Sources */,

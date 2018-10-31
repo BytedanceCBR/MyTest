@@ -25,6 +25,7 @@ class SimpleNavBar: UIView {
     lazy var title: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return label
     }()
 
@@ -52,7 +53,6 @@ class SimpleNavBar: UIView {
         super.init(frame: CGRect.zero)
         backBtn.setBackgroundImage(backBtnImg, for: .normal)
         backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .highlighted)
-
         addSubview(bgView)
         bgView.snp.makeConstraints { maker in
             maker.left.right.top.bottom.equalToSuperview()
@@ -119,7 +119,7 @@ class SimpleNavBar: UIView {
 
     func removeGradientColor() {
         title.isHidden = false
-        seperatorLine.isHidden = true
+        seperatorLine.isHidden = false
         gradientlayer?.removeFromSuperlayer()
         gradientlayer = nil
         bgView.backgroundColor = UIColor.white

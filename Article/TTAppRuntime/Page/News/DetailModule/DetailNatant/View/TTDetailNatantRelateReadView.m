@@ -1584,9 +1584,9 @@
     if ([TTDeviceHelper isPadDevice]) {
         fontSize = 12.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 11.f;
+        fontSize = 10.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 11.f;
+        fontSize = 10.f;
     } else {
         fontSize = 10.f;
     }

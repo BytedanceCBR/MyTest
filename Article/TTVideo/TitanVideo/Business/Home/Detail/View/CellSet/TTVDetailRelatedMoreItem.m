@@ -32,8 +32,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _loadMoreButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        _loadMoreButton.titleColorThemeKey = kColorText1;
-        _loadMoreButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
+        _loadMoreButton.titleColorThemeKey = kFHColorDarkIndigo;
+        _loadMoreButton.highlightedTitleColorThemeKey = kFHColorDarkIndigo;
         _loadMoreButton.userInteractionEnabled = NO;
         
         NSString *title = @"查看更多";
@@ -66,7 +66,7 @@
     if ([TTDeviceHelper isPadDevice]) {
         return 18.f;
     }
-    return 14.f;
+    return 16.f;
 }
 
 @end

@@ -31,17 +31,17 @@ class FloorPanCategoryVC: BaseSubPageViewController {
                 frame: CGRect.zero)
         re.selectionIndicatorHeight = 1
         re.sectionTitleArray = ["全部"]
-        re.scSelectionIndicatorStyle = .fullWidthStripe
+        re.scSelectionIndicatorStyle = .contentWidthStripe
         re.scWidthStyle = .dynamic
-        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(15),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHDarkIndigoColor)]
 
         let selectedAttributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(15),
-                                  NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959")]
+                                  NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHClearBlueColor)]
         re.titleTextAttributes = attributes
         re.selectedTitleTextAttributes = selectedAttributes
-        re.selectionIndicatorColor = hexStringToUIColor(hex: "#f85959")
+        re.selectionIndicatorColor = hexStringToUIColor(hex: kFHClearBlueColor)
         return re
     }()
     
@@ -90,6 +90,8 @@ class FloorPanCategoryVC: BaseSubPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navBar.seperatorLine.isHidden = true
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         var traceParamsDict = tracerParams.paramsGetter([:])
         
         self.floorPanCategoryViewModel = FloorPanCategoryViewModel(
@@ -104,8 +106,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.floorPanCategoryViewModel?.logPB = logPB
         self.view.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             maker.height.equalTo(40)
         }
@@ -165,7 +166,8 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常")
         
         self.errorVM?.onRequestViewDidLoad()
-        
+        //FIXME: uncomment this
+//        self.errorVM?.onRequest()
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
     }
 

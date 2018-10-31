@@ -17,11 +17,11 @@ inline CGFloat cellTopPadding() {
     if ([TTDeviceHelper isPadDevice]) {
         return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 16.f;
+        return 10.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 16.f;
+        return 10.f;
     } else {
-        return 16.f;
+        return 10.f;
     }
 }
 
@@ -244,9 +244,9 @@ inline CGFloat cellTitleLabelFontSize() {
         fontSize = 20.f;
         return [NewsUserSettingManager fontSizeFromNormalSize:fontSize isWidescreen:YES];
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 19.f;
+        fontSize = 16.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 19.f;
+        fontSize = 16.f;
     } else {
         fontSize = 17.f;
     }

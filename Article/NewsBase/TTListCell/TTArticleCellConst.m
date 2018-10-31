@@ -191,17 +191,17 @@ inline NSString* kSourceViewImageBorderColor() {
 
 /** 来源字号 */
 inline CGFloat kSourceViewFontSize() {
-    return 12.f;
+    return 10.f;
 }
 
 /** u11来源字号 */
 inline CGFloat kUFSourceLabelFontSize() {
-    return 14.f;
+    return 10.f;
 }
 
 /** 来源字体颜色 */
 inline NSString* kSourceViewTextColor() {
-    return kColorText1;
+    return kFHColorCoolGrey2;
 }
 
 inline NSString* kVerifiedContentSeprateLineColor() {
@@ -347,7 +347,7 @@ inline NSInteger kAbstractViewLineNumber() {
 // MARK: - 图片(视频)控件
 /** 图片(视频)内部间距 */
 inline CGFloat kPicViewPaddingInner() {
-    return 1.f;
+    return 4.f;
 }
 
 inline CGFloat kSquareViewPaddingInner() {
@@ -1001,7 +1001,7 @@ inline CGFloat kUFWenDaButtonHeight(){
 }
 
 inline CGFloat kUFWenDaSourceLabelFontSize(){
-    return 14;
+    return 10;
 }
 
 inline CGFloat kUFWenDaSourceLabelLeftPadding(){

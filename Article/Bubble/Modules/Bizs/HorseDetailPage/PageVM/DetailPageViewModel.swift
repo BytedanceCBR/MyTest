@@ -120,7 +120,11 @@ extension DetailPageViewModel {
         requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
             onNext: { [unowned self] (response) in
                 if let status = response?.status, status == 0 {
-                    EnvContext.shared.toast.showToast("提交成功")
+                    var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                    if toastCount >= 3 {
+                        
+                        EnvContext.shared.toast.showToast("提交成功")
+                    }
                     success()
                 }
                 else {
@@ -341,19 +345,23 @@ extension DetailPageViewModel {
                 .withLatestFrom(self.contactPhone)
                 .bind(onNext: {[weak self] (contactPhone) in
                     
-                    self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
-                                          followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
-                                          followId: "\(self?.houseId ?? -1)",
-                        disposeBag: self?.disposeBag ?? DisposeBag(),
-                        isNeedRecord: true)()
-                    
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         self?.callRealtorPhone(contactPhone: contactPhone)
-
-                        
+                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
+                                              followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
+                                              followId: "\(self?.houseId ?? -1)",
+                            disposeBag: self?.disposeBag ?? DisposeBag(),
+                            isNeedRecord: false)()
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+                            
+                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
+                                traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
+                            } else {
+                                traceParams = traceParams <|>
+                                    toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
+                            }
                             
                             traceParams = traceParams <|> EnvContext.shared.homePageParams
                                 .exclude("house_type")
@@ -362,7 +370,6 @@ extension DetailPageViewModel {
                                 .exclude("search")
                                 .exclude("filter")
                             traceParams = traceParams <|>
-                                toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
                                 toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                             if let houseId = self?.houseId {
@@ -396,6 +403,12 @@ extension DetailPageViewModel {
                 {
                     alert.sendPhoneView.showErrorText()
                 }
+                self.followHouseItem(houseType: self.houseType,
+                                                          followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                          followId: "\(self.houseId)",
+                    disposeBag: self.disposeBag,
+                    isNeedRecord: false)()
+                
             }
             .disposed(by: disposeBag)
         
@@ -410,7 +423,7 @@ extension DetailPageViewModel {
             
             
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParamsInform.exclude("house_type"))
+                        params: tracerParamsInform.exclude("house_type").exclude("element_type"))
             
             alert.showFrom(rootView)
         }

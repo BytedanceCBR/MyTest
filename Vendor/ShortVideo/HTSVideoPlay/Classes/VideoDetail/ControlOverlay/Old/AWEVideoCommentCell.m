@@ -124,7 +124,7 @@
         [self.likeButton setTitle:@"赞" forState:UIControlStateNormal];
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 0);
+        self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
         [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like"] forState:UIControlStateNormal];
         [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like_h"] forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -163,6 +163,10 @@
     [super layoutSubviews];
     
     [self.likeButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.likeButton.frame.size;
+    size.width += 6;
+    self.likeButton.size = size;
     [self.userLabel sizeToFit];
     
     self.userLabel.top = self.thumbView.top;

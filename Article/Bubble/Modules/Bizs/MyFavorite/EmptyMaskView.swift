@@ -15,8 +15,8 @@ class EmptyMaskView: UIView {
 
     lazy var label: UILabel = {
         let re = UILabel()
-        re.textColor = hexStringToUIColor(hex: "#aaa1b3")
-        re.font = CommonUIStyle.Font.pingFangMedium(14)
+        re.textColor = hexStringToUIColor(hex: "#a1aab3")
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.text = "网络异常"
         return re
     }()

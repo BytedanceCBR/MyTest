@@ -66,7 +66,7 @@
         regionHeight = picSize.height;
     }
     
-    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY, titleSize.width, titleSize.height);
+    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY - 9, titleSize.width, titleSize.height);
     self.titleLabelFrame = titleFrame;
     self.titleLabelHidden = NO;
     self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;

@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+//MARK: 构造半屏幕collection搜索过滤器 （户型/楼龄）
 func constructBubbleSelectCollectionPanelWithContainer(
         index: Int,
         nodes: [Node],
@@ -84,6 +85,7 @@ func parseHorseTypeSearchCondition(nodePath: [Node]) -> (String) -> String {
     }
 }
 
+//MARK: 更多过滤器
 func constructMoreSelectCollectionPanelWithContainer(
         index: Int,
         nodes: [Node],
@@ -147,7 +149,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         flowLayout.minimumLineSpacing = 12
         flowLayout.minimumInteritemSpacing = 9
         flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 15, bottom: 10, right: 15)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
         return result
@@ -157,7 +159,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let result = UIButton()
         result.backgroundColor = UIColor.white
 
-        result.setTitle("重置", for: .normal)
+        result.setTitle("不限条件", for: .normal)
         result.layer.cornerRadius = 20
         result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .normal)
@@ -189,8 +191,32 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     let disposeBag = DisposeBag()
 
-    init(nodes: [Node]) {
+    var headerViewType: AnyClass
+
+    convenience init(nodes: [Node]) {
+        self.init(nodes: nodes, headerView: BubbleCollectionSectionHeader.self)
+    }
+
+    init(
+            dataSource: BubbleSelectDataSource,
+            delegate: UICollectionViewDelegate) {
+        self.dataSource = dataSource
+        self.headerViewType = BubbleCollectionSectionHeader.self
+        super.init(frame: CGRect.zero)
+        setupUI()
+        collectionView.delegate = delegate
+        collectionView.dataSource = dataSource
+    }
+
+    convenience init(nodes: [Node], headerView: AnyClass) {
         let dataSource = BubbleSelectDataSource(nodes: nodes)
+        self.init(nodes: nodes, headerView: headerView, dataSource: dataSource)
+        self.dataSource = dataSource
+    }
+
+    init(nodes: [Node], headerView: AnyClass, dataSource: BubbleSelectDataSource) {
+        self.headerViewType = headerView
+        let dataSource = dataSource
         self.dataSource = dataSource
         super.init(frame: CGRect.zero)
         setupUI()
@@ -198,19 +224,8 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         collectionView.delegate = dataSource
         collectionView.reloadData()
     }
-
-    init(
-            dataSource: BubbleSelectDataSource,
-            delegate: UICollectionViewDelegate) {
-        self.dataSource = dataSource
-        super.init(frame: CGRect.zero)
-        setupUI()
-        collectionView.delegate = delegate
-        collectionView.dataSource = dataSource
-    }
-
     override func setSelectedConditions(conditions: [String : Any]) {
-        dataSource.selectedIndexPaths = []
+        dataSource.selectedIndexPaths.accept([])
         collectionView.reloadData()
         let conditionStrArray = conditions
             .map { (e) -> [String] in
@@ -221,12 +236,14 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         dataSource.nodes
             .enumerated()
             .forEach { (offset, e) in
-                e.children
+                e.children.filter { $0.isEmpty == 0 }
                     .enumerated()
                     .forEach { (rowOffset, item) in
                         if let externalConfig = item.externalConfig.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                             conditionStrArray.contains(externalConfig) {
-                            dataSource.selectedIndexPaths.insert(IndexPath(row: rowOffset, section: offset))
+                            var indexs = dataSource.selectedIndexPaths.value
+                            indexs.insert(IndexPath(row: rowOffset, section: offset))
+                            dataSource.selectedIndexPaths.accept(indexs)
                         }
                 }
         }
@@ -275,24 +292,11 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                 BubbleCollectionCell.self,
                 forCellWithReuseIdentifier: "item")
         collectionView.register(
-                BubbleCollectionSectionHeader.self,
+                headerViewType,
                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
                 withReuseIdentifier: "header")
 
-        confirmBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    self.dataSource.storeSelectedState()
-                    self.didSelect?(self.dataSource.selectedNodes())
-                })
-                .disposed(by: disposeBag)
 
-        clearBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    self.dataSource.selectedIndexPaths = []
-//                    self.didSelect?([])
-                    self.collectionView.reloadData()
-                })
-                .disposed(by: disposeBag)
         
         
         collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
@@ -302,10 +306,36 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                 }
             })
             .disposed(by: disposeBag)
+
+        bindButtonActions()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func bindButtonActions() {
+        confirmBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.onConfirm()
+            })
+            .disposed(by: disposeBag)
+
+        clearBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.onClean()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func onConfirm() {
+        self.dataSource.storeSelectedState()
+        self.didSelect?(self.dataSource.selectedNodes())
+    }
+
+    func onClean() {
+        self.dataSource.selectedIndexPaths.accept([])
+        self.collectionView.reloadData()
     }
 
     override func viewDidDisplay() {
@@ -324,8 +354,9 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     var nodes: [Node] = []
 
     var originSelectIndexPaths: Set<IndexPath> = []
+    fileprivate var selectedIndexPaths = BehaviorRelay<Set<IndexPath>>(value: [])
 
-    fileprivate var selectedIndexPaths: Set<IndexPath> = []
+    var headerViewBinder: ((UICollectionReusableView) -> Void)?
 
     init(nodes: [Node]) {
         self.nodes = nodes
@@ -336,14 +367,14 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return nodes[section].children.count
+        return nodes[section].children.filter { $0.isEmpty == 0 }.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath)
         if let theCell = cell as? BubbleCollectionCell {
-            theCell.label.text = nodes[indexPath.section].children[indexPath.row].label
-            if selectedIndexPaths.contains(indexPath) {
+            theCell.label.text = nodes[indexPath.section].children.filter { $0.isEmpty == 0 }[indexPath.row].label
+            if selectedIndexPaths.value.contains(indexPath) {
                 theCell.isSelected = true
             } else {
                 theCell.isSelected = false
@@ -355,19 +386,26 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if nodes[indexPath.section].isSupportMulti != true {
-            if selectedIndexPaths.contains(indexPath) {
-                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
-            } else if selectedIndexPaths.contains(where: { $0.section == indexPath.section }) {
-                selectedIndexPaths = selectedIndexPaths.filter { $0.section != indexPath.section }
-                selectedIndexPaths.insert(indexPath)
+            if selectedIndexPaths.value.contains(indexPath) {
+                selectedIndexPaths.accept(selectedIndexPaths.value.filter { $0.section != indexPath.section })
+            } else if selectedIndexPaths.value.contains(where: { $0.section == indexPath.section }) {
+                var indexs = selectedIndexPaths.value.filter { $0.section != indexPath.section }
+                indexs.insert(indexPath)
+                selectedIndexPaths.accept(indexs)
             } else {
-                selectedIndexPaths.insert(indexPath)
+                var indexs = selectedIndexPaths.value
+                indexs.insert(indexPath)
+                selectedIndexPaths.accept(indexs)
             }
         } else {
-            if !selectedIndexPaths.contains(indexPath) {
-                selectedIndexPaths.insert(indexPath)
+            if !selectedIndexPaths.value.contains(indexPath) {
+                var indexs = selectedIndexPaths.value
+                indexs.insert(indexPath)
+                selectedIndexPaths.accept(indexs)
             } else {
-                selectedIndexPaths.remove(indexPath)
+                var indexs = selectedIndexPaths.value
+                indexs.remove(indexPath)
+                selectedIndexPaths.accept(indexs)
             }
         }
 
@@ -387,7 +425,7 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
     }
 
     func selectedNodes() -> [Node] {
-        let sortedSelecteds = selectedIndexPaths.sorted(by: { (left, right) -> Bool in
+        let sortedSelecteds = selectedIndexPaths.value.sorted(by: { (left, right) -> Bool in
             if left.section < right.section {
                 return true
             } else if left.section == right.section {
@@ -397,16 +435,16 @@ class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollection
             }
         })
         return sortedSelecteds.map {
-            nodes[$0.section].children[$0.row]
+            nodes[$0.section].children.filter { $0.isEmpty == 0 }[$0.row]
         }
     }
 
     func restoreSelectedState() {
-        selectedIndexPaths = originSelectIndexPaths
+        selectedIndexPaths.accept(originSelectIndexPaths)
     }
 
     func storeSelectedState() {
-        originSelectIndexPaths = selectedIndexPaths
+        originSelectIndexPaths = selectedIndexPaths.value
     }
 }
 
@@ -461,19 +499,6 @@ class BubbleCollectionCell: UICollectionViewCell {
         contentView.layer.borderColor = hexStringToUIColor(hex: "#f4f5f6").cgColor
     }
 
-//    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-//        //Exhibit A - We need to cache our calculation to prevent a crash.
-//        if !isHeightCalculated {
-//            setNeedsLayout()
-//            layoutIfNeeded()
-//            let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-//            var newFrame = layoutAttributes.frame
-//            newFrame.size.width = CGFloat(ceilf(Float(size.width)))
-//            layoutAttributes.frame = newFrame
-//            isHeightCalculated = true
-//        }
-//        return layoutAttributes
-//    }
 }
 
 class BubbleCollectionSectionHeader: UICollectionReusableView {
@@ -520,3 +545,460 @@ class BubbleCollectionSectionHeader: UICollectionReusableView {
     }
 }
 
+
+//MARK: 单选样式价格选择器
+
+func constructPriceBubbleSelectCollectionPanelWithContainer(
+    index: Int,
+    nodes: [Node],
+    container: UIView,
+    _ action: @escaping ConditionSelectAction) -> BaseConditionPanelView {
+    let thePanel = PriceBubbleSelectCollectionView(nodes: nodes, headerView: PriceBubbleCollectionSectionHeader.self)
+    thePanel.isHidden = true
+    container.addSubview(thePanel)
+    thePanel.queryKey = nodes.first?.key
+    thePanel.snp.makeConstraints { maker in
+        maker.left.right.top.equalToSuperview()
+        maker.height.equalTo(208)
+    }
+
+    thePanel.contentSizeDidChange = { [unowned thePanel] size in
+        let height = min(size.height , thePanel.superview!.height)
+        thePanel.snp.updateConstraints({ (maker) in
+            maker.height.equalTo(height)
+        })
+    }
+
+    thePanel.didSelect = { nodes in
+        action(index, nodes)
+    }
+    if let layout = thePanel.collectionView.collectionViewLayout as? UICollectionViewFlowLayout{
+        layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 114)
+    }
+    return thePanel
+}
+
+class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
+
+    var queryKey: String?
+
+    var fillPriceInput: (() -> Void)?
+
+    init(nodes: [Node], headerView: AnyClass) {
+        let dataSource = PriceBubbleSelectDataSource(nodes: nodes)
+        super.init(
+            nodes: nodes,
+            headerView: headerView,
+            dataSource: dataSource)
+
+        if let ds = self.priceDataSource() {
+            ds.onHeaderViewInit = { [weak self] in
+                self?.bindInputPanelObservable()
+            }
+        }
+    }
+
+    func bindInputPanelObservable() {
+
+        if let ds = self.priceDataSource() {
+            //这里必须调用一下，是的inputHeaderView不为空
+            let rate = self.dataSource.nodes.first?.rate ?? 1
+            ds.inputHeaderView?.priceInputView.lowerPriceTextField.placeholder = "最低价格 (\(getRateTextByRateValue(rate)))"
+            ds.inputHeaderView?.priceInputView.upperPriceTextField.placeholder = "最高价格 (\(getRateTextByRateValue(rate)))"
+
+            ds.selectedIndexPaths
+                .skip(1)
+                .filter { $0.count != 0 }
+                .bind { [unowned ds] set in
+                    ds.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
+                    ds.inputHeaderView?.priceInputView.upperPriceTextField.resignFirstResponder()
+                    ds.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+                    ds.inputHeaderView?.priceInputView.lowerPriceTextField.resignFirstResponder()
+                }.disposed(by: disposeBag)
+        }
+
+        if let ds = self.priceDataSource() {
+            ds.inputHeaderView?.priceInputView.upperPriceTextField.rx.text
+                .filter { $0?.isEmpty == false }
+                .subscribe(onNext: { [unowned self, unowned ds] s in
+                    if ds.selectedIndexPaths.value.count > 0 {
+                        ds.selectedIndexPaths.accept([])
+                        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+                        ds.inputHeaderView?.priceInputView.upperPriceTextField.becomeFirstResponder()
+                    }
+                })
+                .disposed(by: disposeBag)
+            ds.inputHeaderView?.priceInputView.lowerPriceTextField.rx.text
+                .filter { $0?.isEmpty == false }
+                .subscribe(onNext: { [unowned self, unowned ds] s in
+                    if ds.selectedIndexPaths.value.count > 0 {
+                        ds.selectedIndexPaths.accept([])
+                        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+                        ds.inputHeaderView?.priceInputView.lowerPriceTextField.becomeFirstResponder()
+                    }
+                })
+                .disposed(by: disposeBag)
+        }
+        fillPriceInput?()
+        fillPriceInput = nil
+    }
+
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func onConfirm() {
+        super.onConfirm()
+
+        let sortedSelecteds = self.dataSource.selectedIndexPaths.value.sorted(by: { (left, right) -> Bool in
+            if left.section < right.section {
+                return true
+            } else if left.section == right.section {
+                return left.row <= right.row
+            } else {
+                return false
+            }
+        })
+        let nodes = self.dataSource.nodes
+        let datas = sortedSelecteds.map { path -> Node in
+            nodes[path.section].children.filter { $0.isEmpty == 0 }[path.row]
+        }
+        if datas.isEmpty {
+            self.processUserInputPrice()
+        } else {
+            if let ds = priceDataSource() {
+                ds.lowerInput = ""
+                ds.upperInput = ""
+            }
+            self.didSelect?(datas)
+        }
+    }
+
+    override func onClean() {
+        super.onClean()
+        priceDataSource()?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
+        priceDataSource()?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+    }
+
+    override func viewDidDisplay() {
+        if let ds = self.priceDataSource() {
+            ds.inputHeaderView?.priceInputView.lowerPriceTextField.text = ds.lowerInput
+            ds.inputHeaderView?.priceInputView.upperPriceTextField.text = ds.upperInput
+        }
+    }
+
+    override func viewDidDismiss() {
+        super.viewDidDismiss()
+        if let ds = self.priceDataSource() {
+            ds.inputHeaderView?.priceInputView.lowerPriceTextField.resignFirstResponder()
+            ds.inputHeaderView?.priceInputView.upperPriceTextField.resignFirstResponder()
+        }
+    }
+
+    override func setSelectedConditions(conditions: [String : Any]) {
+        super.setSelectedConditions(conditions: conditions)
+
+        //如果没有匹配到列表页中的任何项，则将第一条数据填充到用户自定义输入中
+
+        if self.dataSource.selectedIndexPaths.value.count == 0 {
+            if let priceKey = (self.queryKey ?? "price").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                fillPriceInput = fillPriceByCondition(priceKey: priceKey, conditions: conditions)
+                if self.priceDataSource()?.inputHeaderView != nil {
+                    fillPriceInput?()
+                    fillPriceInput = nil
+                }
+            }
+        }
+    }
+
+    func fillPriceByCondition(priceKey: String, conditions: [String : Any]) -> () -> Void {
+        let rate = self.dataSource.nodes.first?.rate ?? 1
+        let ds = priceDataSource()
+        return { [weak ds, unowned self] in
+            if let dds = ds {
+                if let price = conditions[priceKey],
+                    let priceString = (price as? [String])?.first,
+                    let jsonData = priceString.data(using: .utf8),
+                    let datas = try? JSONSerialization.jsonObject(with: jsonData) as? [Int] ?? [] {
+                    if datas.count == 1 {
+                        dds.inputHeaderView?.priceInputView.lowerPriceTextField.text = "\((datas.first ?? 0) / rate)"
+                    } else if datas.count == 2 {
+                        dds.inputHeaderView?.priceInputView.lowerPriceTextField.text = "\(datas[0] / rate)"
+                        dds.inputHeaderView?.priceInputView.upperPriceTextField.text = "\(datas[1] / rate)"
+                    }
+                    if datas.count > 0 {
+                        self.processUserInputPrice()
+                    } else {
+                        self.didSelect?(self.dataSource.selectedNodes())
+                    }
+                }
+            }
+        }
+    }
+
+    func priceDataSource() -> PriceBubbleSelectDataSource? {
+        return self.dataSource as? PriceBubbleSelectDataSource
+    }
+
+    func processUserInputPrice() {
+        if let ds = priceDataSource() {
+            let rate = self.dataSource.nodes.first?.rate ?? 1
+            let whitespace = NSCharacterSet.whitespacesAndNewlines
+            let theQueryKey = self.queryKey ?? "price"
+            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+
+            if low == 0 && upper == 0 {
+                ds.lowerInput = ""
+                ds.upperInput = ""
+                self.didSelect?([])
+                return
+            } else if low == 0 {
+                ds.lowerInput = "\(low)"
+                ds.upperInput = "\(upper)"
+                self.didSelect?([Node(
+                    id: "",
+                    label: "\(low)-\(upper)\(getRateTextByRateValue(rate))",
+                    externalConfig: "\(theQueryKey)=[\(low * rate),\(upper * rate)]",
+                    filterCondition: "[\(low * rate),\(upper * rate)" as Any,
+                    key: "\(theQueryKey)")])
+            } else if upper == 0 {
+                ds.lowerInput = "\(low)"
+                ds.upperInput = ""
+                self.didSelect?([Node(
+                    id: "",
+                    label: "\(low)\(getRateTextByRateValue(rate))以上",
+                    externalConfig: "\(theQueryKey)=[\(low * rate)]",
+                    filterCondition: "[\(low * rate)]" as Any,
+                    key: "\(theQueryKey)")])
+            } else {
+                let theLow = low < upper ? low : upper
+                let theUpper = low < upper ? upper : low
+                ds.lowerInput = "\(theLow)"
+                ds.upperInput = "\(theUpper)"
+                self.didSelect?([Node(
+                    id: "",
+                    label: "\(theLow)-\(theUpper)\(getRateTextByRateValue(rate))",
+                    externalConfig: "\(theQueryKey)=[\(theLow * rate),\(theUpper * rate)]",
+                    filterCondition: "[\(theLow * rate),\(theUpper * rate)" as Any,
+                    key: "\(theQueryKey)")])
+            }
+        }
+
+    }
+
+
+
+}
+
+fileprivate func getRateTextByRateValue(_ rate: Int) -> String {
+    if rate == 10000 {
+        return "万"
+    } else {
+        return "元"
+    }
+}
+
+class PriceBubbleSelectDataSource: BubbleSelectDataSource {
+
+    var disposeBag = DisposeBag()
+
+    weak var inputHeaderView: PriceBubbleCollectionSectionHeader?
+
+    var lowerInput: String = ""
+
+    var upperInput: String = ""
+
+    var onHeaderViewInit: (() -> Void)?
+
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
+        if let theHeaderView = headerView as? PriceBubbleCollectionSectionHeader {
+//            let rate = self.nodes.first?.rate ?? 1
+
+            inputHeaderView = theHeaderView
+            theHeaderView.label.text = "\(nodes[indexPath.section].label)"
+            onHeaderViewInit?()
+            onHeaderViewInit = nil
+        }
+        return headerView
+    }
+
+}
+
+
+class PriceBubbleCollectionSectionHeader: UICollectionReusableView {
+
+    lazy var label: UILabel = {
+        let result = UILabel()
+        result.font = CommonUIStyle.Font.pingFangMedium(18)
+        result.textColor = hexStringToUIColor(hex: "#081f33")
+        return result
+    }()
+
+    fileprivate lazy var priceInputView: PriceBottomInputView = {
+        let re = PriceBottomInputView()
+        return re
+    }()
+    
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        addSubview(priceInputView)
+        priceInputView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(20)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
+        }
+
+        addSubview(label)
+        label.snp.makeConstraints { maker in
+            maker.top.equalTo(priceInputView.snp.bottom).offset(20)
+            maker.bottom.equalToSuperview().offset(-14)
+            maker.right.equalTo(-20)
+            maker.left.equalTo(20)
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+    }
+}
+
+
+fileprivate class PriceBottomInputView: UIView, UITextFieldDelegate {
+
+    lazy var lowerPriceTextField: UITextField = {
+        let re = UITextField()
+        re.placeholder = "最低价格 (万)"
+        re.textAlignment = .left
+        re.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.layer.cornerRadius = 4
+        re.keyboardType = .numberPad
+        re.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        re.leftViewMode = .always
+        re.delegate = self
+        return re
+    }()
+
+    lazy var upperPriceTextField: UITextField = {
+        let re = UITextField()
+        re.placeholder = "最高价格 (万)"
+        re.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.textAlignment = .left
+        re.layer.cornerRadius = 4
+        re.keyboardType = .numberPad
+        re.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        re.leftViewMode = .always
+        re.delegate = self
+
+        return re
+    }()
+
+    lazy var seperaterLineView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
+        return re
+    }()
+
+    lazy var topBorderLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
+        return re
+    }()
+
+    lazy var priceInputBoard: UIView = {
+        let re = UIView()
+        return re
+    }()
+
+    let disposeBag = DisposeBag()
+
+    init() {
+        super.init(frame: CGRect.zero)
+
+        self.backgroundColor = UIColor.white
+
+        addSubview(priceInputBoard)
+        priceInputBoard.snp.makeConstraints { maker in
+            maker.top.bottom.left.equalToSuperview()
+            maker.right.equalToSuperview()
+        }
+
+
+        priceInputBoard.addSubview(lowerPriceTextField)
+        lowerPriceTextField.snp.makeConstraints { maker in
+            maker.left.top.bottom.equalToSuperview()
+            maker.height.equalTo(36)
+            maker.right.equalTo(priceInputBoard.snp.centerX).offset(-10)
+        }
+
+        priceInputBoard.addSubview(seperaterLineView)
+        seperaterLineView.snp.makeConstraints { maker in
+            maker.left.equalTo(lowerPriceTextField.snp.right).offset(5)
+            maker.centerY.equalToSuperview()
+            maker.height.equalTo(1)
+            maker.width.equalTo(10)
+        }
+
+        priceInputBoard.addSubview(upperPriceTextField)
+        upperPriceTextField.snp.makeConstraints { maker in
+            maker.left.equalTo(seperaterLineView.snp.right).offset(5)
+            maker.top.bottom.right.equalToSuperview()
+            maker.height.equalTo(36)
+            maker.width.greaterThanOrEqualTo(80)
+        }
+
+
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UITextFieldTextDidChange, object: nil)
+            .subscribe(onNext: { [unowned self] notification in
+                if let text = self.lowerPriceTextField.text, text.count > 9 {
+                    let index = text.index(text.startIndex, offsetBy: 0)
+                    let endIndex = text.index(text.startIndex, offsetBy:9)
+
+                    self.lowerPriceTextField.text =  String(text[index..<endIndex])
+                }
+
+                if let text = self.upperPriceTextField.text, text.count > 9 {
+                    let index = text.index(text.startIndex, offsetBy: 0)
+                    let endIndex = text.index(text.startIndex, offsetBy:9)
+                    self.upperPriceTextField.text = String(text[index..<endIndex])
+
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    fileprivate func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String) -> Bool {
+
+        if (range.length == 1 && string.count == 0) {
+            return true
+        } else if (textField.text?.count ?? 0 >= 9) {
+            return false
+        } else if Int(string) == nil {
+            return false
+        } else if  (textField.text?.count ?? 0 + string.count >= 9) {
+            return false
+        }
+        return true
+    }
+}

@@ -130,6 +130,10 @@
     [self.digButton setDiggCount:[self.commentModel.digCount integerValue]];
     self.digButton.selected = self.commentModel.userDigged;
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.nameView.centerY - [TTDeviceHelper ssOnePixel];
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 }
@@ -277,6 +281,9 @@
     
     [_digButton setDiggCount:[_commentModel.digCount intValue]];
     [self.digButton sizeToFit];
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 
     // TODO delegate 处理
@@ -313,7 +320,7 @@
 - (void)themeChanged:(NSNotification *)notification {
     [self refreshContent];
 
-    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
     self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
 }
 
@@ -494,7 +501,7 @@
         CGFloat maxWidth = self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding] - [TTUniversalCommentCellLiteHelper cellRightPadding] - 30.f - [TTUniversalCommentCellLiteHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTUniversalCommentCellLiteHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTUniversalCommentCellLiteHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTUniversalCommentCellLiteHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor colorWithHexString:@"8D8D8D"];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -509,11 +516,13 @@
 - (TTDiggButton *)digButton {
     if (!_digButton) {
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
-        _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:80], [TTDeviceUIUtils tt_newPadding:15]);
-        _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+
+        [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 2, 0)];
+        [_digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+         _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:90], [TTDeviceUIUtils tt_newPadding:16]);
         _digButton.hitTestEdgeInsets = kTTCommentCellDigButtonHitTestInsets;
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
-            _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);
+            [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, -1, 2, 6)];
         }
         WeakSelf;
         [_digButton setClickedBlock:^(TTDiggButtonClickType type) {
@@ -544,7 +553,7 @@
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTUniversalCommentCellLiteHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -556,7 +565,7 @@
     if (!_contentLabel) {
         _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(self.nameView.left, self.timeLabel.bottom + [TTUniversalCommentCellLiteHelper contentLabelPadding], 0, 0)];
         _contentLabel.font = [TTCommentUIHelper tt_fontOfSize:[TTUniversalCommentCellLiteHelper contentLabelFont].pointSize]; // 采用苹方字体能正确居中对齐...
-        _contentLabel.textColor = SSGetThemedColorWithKey(kColorText1);
+        _contentLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
         _contentLabel.backgroundColor = [UIColor clearColor];
         _contentLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
         _contentLabel.attributedTruncationToken = [self attributedTruncationToken];

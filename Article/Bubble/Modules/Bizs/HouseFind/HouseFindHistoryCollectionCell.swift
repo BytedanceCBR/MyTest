@@ -111,13 +111,6 @@ class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDele
                 jumpUrl = jumpUrl + "&placeholder=\(placeholder)"
             }
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
-
-
-//            TTRoute.shared().openURL(
-//                byPushViewController: URL(string: "fschema://house_list?house_type=2&neighborhood_id%5B%5D=6581413373307519235"),
-//                userInfo: userInfo)
-
-//            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl))
         }
     }
 

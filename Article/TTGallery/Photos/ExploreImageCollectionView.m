@@ -193,7 +193,9 @@ NS_INLINE CGFloat MaxHeightOfLabel() {
         // Title Label
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectZero];
         _titleLbl.font = [UIFont systemFontOfSize:TextFontSize()];
-        _titleLbl.textColor = [UIColor tt_defaultColorForKey:[TTDeviceHelper isPadDevice] ? kColorText8 : kColorText9];
+        
+        _titleLbl.textColor = [UIColor tt_defaultColorForKey:[TTDeviceHelper isPadDevice] ? kColorText8 : kColorText7];
+
         _titleLbl.numberOfLines = 2;
         _titleLbl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:_titleLbl];
@@ -1416,7 +1418,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     }
     
     self.abstractView.contentOffset = CGPointZero;
-    _abstractView.textColor = [UIColor tt_defaultColorForKey:kColorLine1];
+    _abstractView.textColor = [UIColor tt_defaultColorForKey:kColorText7];
 }
 
 - (void)setNatantViewFrameWithFrame:(CGRect)frame Animation:(BOOL)animation{

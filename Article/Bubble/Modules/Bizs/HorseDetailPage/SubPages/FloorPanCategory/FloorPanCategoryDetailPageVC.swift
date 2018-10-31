@@ -133,7 +133,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             .exclude("search")
                             .exclude("filter")
                         traceParams = traceParams <|>
-                            toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                            toTracerParams("house_model_detail", key: "page_type") <|>
                             toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("be_null", key: "search_id") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
@@ -162,6 +162,13 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                 {
                     alert.sendPhoneView.showErrorText()
                 }
+                self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                        followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                        followId: "\(self.houseId)",
+                    disposeBag: self.disposeBag,
+                    statusBehavior: self.follwUpStatus,
+                    isNeedRecord: false)()
+
             }
             .disposed(by: disposeBag)
 
@@ -176,7 +183,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
             
             
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams)
+                        params: tracerParams.exclude("element_type"))
             
             alert.showFrom(rootView)
         }
@@ -196,7 +203,12 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         requestSendPhoneNumber(houseId: houseId, phone: phone, from: from).subscribe(
             onNext: { (response) in
                 if let status = response?.status, status == 0 {
-                    EnvContext.shared.toast.showToast("提交成功")
+                    
+                    var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                    if toastCount >= 3 {
+                        
+                        EnvContext.shared.toast.showToast("提交成功")
+                    }
                     success()
                 }
                 else {

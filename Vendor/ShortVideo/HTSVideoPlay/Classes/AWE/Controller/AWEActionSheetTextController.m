@@ -33,7 +33,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor colorWithDayColorName:@"f8f8f8" nightColorName:@"252525"]];
+    [self.view setBackgroundColor:[UIColor colorWithDayColorName:@"ffffff" nightColorName:@"252525"]];
     
     self.titleView = [[AWEActionSheetTitleView alloc] init];
     if([@"video_report" isEqualToString:self.type]){
@@ -66,13 +66,13 @@
     self.inputTextView.textAlignment = NSTextAlignmentLeft;
     self.inputTextView.placeHolderEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
     self.inputTextView.placeHolder = @"请具体说明问题，我们将尽快处理";
-    self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kColorText3];
+    self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
     self.inputTextView.placeHolderFont = [UIFont systemFontOfSize:16];
     self.inputTextView.textColor = [UIColor tt_themedColorForKey:kColorText1];
     self.inputTextView.layer.borderColor = [UIColor tt_themedColorForKey:kColorLine1].CGColor;
     self.inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     self.inputTextView.layer.cornerRadius = 4.f;
-    [self.inputTextView setBackgroundColor:[UIColor tt_themedColorForKey:kColorBackground4]];
+    [self.inputTextView setBackgroundColor:[UIColor tt_themedColorForKey:kFHColorPaleGrey]];
     [self.inputTextView setFont:[UIFont systemFontOfSize:16]];
     
     self.finishedButton.frame = CGRectMake(0, self.inputTextView.bottom + 8, 57, 28);
@@ -83,7 +83,7 @@
     [self.finishedButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [self.finishedButton setEnabled:YES];
     
-    [self.finishedButton setBackgroundImage:[AWEActionSheetTextController imageWithUIColor:[UIColor colorWithDayColorName:@"2a90d7" nightColorName:@"67778b"]] forState:UIControlStateNormal];
+    [self.finishedButton setBackgroundImage:[AWEActionSheetTextController imageWithUIColor:[UIColor colorWithDayColorName:@"299cff" nightColorName:@"67778b"]] forState:UIControlStateNormal];
     
     CGFloat bottomInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.navigationController.view.frame = CGRectMake(0, screenHeight - self.finishedButton.bottom - 10 - bottomInset, screenWidth, self.finishedButton.bottom + 10 + bottomInset);

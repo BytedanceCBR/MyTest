@@ -28,7 +28,7 @@ fileprivate func <*>(l: @escaping Filter, r: @escaping Filter) -> Filter {
 }
 
 fileprivate func filterContent(content: String?, item: FloorPan.Item) -> Bool {
-    return content == item.saleStatus?.content || content == "全部"
+    return content == item.saleStatus?.content || content == "不限"
 }
 
 fileprivate func filterByRoomCount(count: Int, item: FloorPan.Item)  -> Bool {
@@ -116,7 +116,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                 let roomCategoryLabels = roomCategorys.map {
                     "\($0.roomCount)室(\($0.count))"
                 }
-                self.segmentedControl?.sectionTitleArray = ["全部"] + roomCategoryLabels
+                self.segmentedControl?.sectionTitleArray = ["全部(\(its.count))"] + roomCategoryLabels
                 
                 if its.filter(f).count < 1 {
 
@@ -176,7 +176,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func setupLeftFilterPanel() {
-        let leftFilterConditions = ["全部",
+        let leftFilterConditions = ["不限",
                                     "在售",
                                     "待售",
                                     "售罄"]
@@ -239,7 +239,11 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return 10
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView()
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -250,8 +254,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        return 105
+        return 95
     }
 //    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return UITableViewAutomaticDimension
@@ -292,7 +295,7 @@ class LeftFilterView: UIView {
     lazy var label: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(15)
-        re.textColor = hexStringToUIColor(hex: "#f85959")
+        re.textColor = hexStringToUIColor(hex: kFHClearBlueColor)
         re.textAlignment = .center
         return re
     }()
@@ -315,7 +318,7 @@ class LeftFilterView: UIView {
 
     func setStyle(isSelected: Bool) {
         if isSelected {
-            label.textColor = hexStringToUIColor(hex: "#f85959")
+            label.textColor = hexStringToUIColor(hex: kFHClearBlueColor)
             self.backgroundColor = hexStringToUIColor(hex: "#ffffff")
         } else {
             label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)

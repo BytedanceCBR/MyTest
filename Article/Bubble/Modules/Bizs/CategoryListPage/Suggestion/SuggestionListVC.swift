@@ -692,6 +692,9 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if suggestions.value.count > 0 {
+            return nil
+        }
         return sectionHeaderView
     }
 
@@ -709,7 +712,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            return 34
+        if suggestions.value.count > 0 {
+            return 0
+        }
+        return 34
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -815,18 +821,18 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
 func createQueryCondition(_ info: Any?) -> String {
     var queryCondition = ""
-    if let conditions = info as? [String: Any] {
+    if let conditions = info as? String {
+        queryCondition.append(conditions)
+    } else {
         do {
             if let condition = String(
-                data: try JSONSerialization.data(withJSONObject: conditions),
+                data: try JSONSerialization.data(withJSONObject: info ?? []),
                 encoding: .utf8) {
                 queryCondition.append(condition)
             }
         } catch {
 //            print(error)
         }
-    } else if let conditions = info as? String {
-        queryCondition.append(conditions)
     }
     return queryCondition
 }

@@ -40,17 +40,17 @@
         writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 13)];
         writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, 0);
+        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
         writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         writeButton.borderColorThemeKey = kColorLine1;
         writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         writeButton.borderColors = nil;
-        writeButton.titleColorThemeKey = kColorText1;
+        writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         writeButton.layer.cornerRadius = writeButton.height / 2.f;
         writeButton.layer.masksToBounds = YES;
         writeButton.backgroundColorThemeKey = kColorBackground3;
         writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-        [writeButton setImageName:@"write_new"];
+//        [writeButton setImageName:@"write_new"];
         [writeButton setTitle:@"回复" forState:UIControlStateNormal];
         [self addSubview:writeButton];
 
@@ -124,7 +124,7 @@
     _diggButton.frame = digFrame;
 
     BOOL _isIPad = [TTDeviceHelper isPadDevice];
-    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
+    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, _emojiButton.width + 4);
 
 }
 
