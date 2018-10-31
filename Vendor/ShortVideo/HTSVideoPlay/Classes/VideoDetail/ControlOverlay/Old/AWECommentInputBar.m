@@ -43,19 +43,19 @@
         
         _textBgView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textBgView.borderColorThemeKey = kColorLine1;
-        _textBgView.backgroundColorThemeKey = kColorBackground3;
+        _textBgView.backgroundColorThemeKey = kFHColorPaleGrey;
         _textBgView.layer.cornerRadius = _textBgView.frame.size.height / 2;
         _textBgView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _textBgView.layer.masksToBounds = YES;
         [self addSubview:_textBgView];
         
-        CGRect textRect = CGRectMake(4, 0, CGRectGetWidth(_textBgView.bounds) - 5, CGRectGetHeight(_textBgView.bounds));
+        CGRect textRect = CGRectMake(10, 0, CGRectGetWidth(_textBgView.bounds) - 10, CGRectGetHeight(_textBgView.bounds));
         _textView = [[HTSVideoPlayGrowingTextView alloc] initWithFrame:textRect];
         _textView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         _textView.backgroundColor = [UIColor clearColor];
         _textView.textColor = [UIColor tt_themedColorForKey:kColorText1];
         _textView.placeholder = @"优质评论将会被优先展示";
-        _textView.placeholderColor = [UIColor tt_themedColorForKey:kColorText3];
+        _textView.placeholderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _textView.delegate = self;
         CGFloat verticalMargin = (self.textView.internalTextView.frame.size.height - [UIFont systemFontOfSize:16.0f].pointSize - 4.f) / 2.f;
         _textView.internalTextView.textContainerInset = UIEdgeInsetsMake(verticalMargin, self.textView.internalTextView.textContainerInset.left, verticalMargin, self.textView.internalTextView.textContainerInset.right);

@@ -534,21 +534,21 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.fakeInputBar = fakeInputBar;
     
     SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
-    fakeTextBackgroundView.backgroundColorThemeKey = kColorBackground3;
+    fakeTextBackgroundView.backgroundColorThemeKey = kFHColorPaleGrey;
     fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
     fakeTextBackgroundView.layer.masksToBounds = YES;
     fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-    fakeTextBackgroundView.borderColorThemeKey = kColorLine1;
+    fakeTextBackgroundView.borderColorThemeKey = kFHColorPaleGrey;
     [fakeInputBar addSubview:fakeTextBackgroundView];
 
 //    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
 //    inputIcon.imageName = @"hts_vp_write_new";
 //    [fakeTextBackgroundView addSubview:inputIcon];
 
-    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(9, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 9 , 20)];
+    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
     inputLabel.text = @"写评论...";
     inputLabel.font = [UIFont systemFontOfSize:14.0];
-    inputLabel.textColorThemeKey = kColorText1;
+    inputLabel.textColorThemeKey = kFHColorCoolGrey3;
     [fakeTextBackgroundView addSubview:inputLabel];
 
     [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
