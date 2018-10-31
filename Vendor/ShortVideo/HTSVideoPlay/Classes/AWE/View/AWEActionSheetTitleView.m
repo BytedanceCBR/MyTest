@@ -55,7 +55,7 @@
     CGFloat padding = [TTUIResponderHelper paddingForViewWidth:screenWidth];
     
     self.frame = CGRectMake(0, 0, screenWidth, AWEActionSheetNavigationBarHeight);
-    [self setBackgroundColor:[UIColor colorWithDayColorName:@"f8f8f8" nightColorName:@"252525"]];
+    [self setBackgroundColor:[UIColor colorWithDayColorName:@"ffffff" nightColorName:@"252525"]];
     
     self.titleLabel.frame = CGRectMake(0, 10, 200, AWEActionSheetTableCellHeight);
     self.titleLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];

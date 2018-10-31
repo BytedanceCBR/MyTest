@@ -162,7 +162,7 @@
     self.tableView.dataSource = self;
     self.tableView.separatorColor = [UIColor clearColor];
     
-    [self.tableView setBackgroundColor:[UIColor colorWithDayColorName:@"f8f8f8" nightColorName:@"252525"]];
+    [self.tableView setBackgroundColor:[UIColor colorWithDayColorName:@"ffffff" nightColorName:@"252525"]];
     [self.tableView registerClass:[AWEActionSheetTableCell class] forCellReuseIdentifier:AWEActionSheetTableCellIdentifier];
     [self.tableView registerClass:[AWEActionSheetWriteCommentCell class] forCellReuseIdentifier:AWEActionSheetWriteCommentCellIdentifier];
      
@@ -170,10 +170,10 @@
     CGFloat width = screenWidth - 2 * padding;
     
     self.finishedButton = [[SSThemedButton alloc] initWithFrame:CGRectMake(padding, self.tableView.bottom, width, AWEActionSheetFinishedButtonHeight)];
-    [self.finishedButton setTitle:@"完成" forState:UIControlStateNormal];
-    self.finishedButton.titleColorThemeKey = kColorText1;
+    [self.finishedButton setTitle:@"提交" forState:UIControlStateNormal];
+    self.finishedButton.titleColorThemeKey = kColorText10;
     self.finishedButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
-    self.finishedButton.backgroundColorThemeKey = kColorBackground4;
+    self.finishedButton.backgroundColorThemeKey = kFHColorClearBlue;
     self.finishedButton.highlightedBackgroundColorThemeKey = kColorBackground4Highlighted;
     self.finishedButton.titleLabel.font = [UIFont systemFontOfSize:17.0];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.finishedButton.frame.size.width, 0.5)];
