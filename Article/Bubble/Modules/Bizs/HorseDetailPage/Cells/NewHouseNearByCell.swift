@@ -83,7 +83,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         re.titleTextAttributes = attributes
         re.selectedTitleTextAttributes = selectedAttributes
         re.selectionIndicatorColor = hexStringToUIColor(hex: "#299cff")
-        re.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        re.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         return re
     }()
     
@@ -176,11 +176,10 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         contentView.addSubview(bottomLine)
         
         bottomLine.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
             maker.top.equalTo(segmentedControl.snp.bottom).offset(-0.5)
             maker.height.equalTo(0.5)
-            
         }
 
         contentView.addSubview(locationList)
@@ -444,7 +443,7 @@ fileprivate class LocationCell: UITableViewCell {
 
         contentView.addSubview(label2)
         label2.snp.makeConstraints { maker in
-            maker.right.equalToSuperview().offset(-15)
+            maker.right.equalToSuperview().offset(-20)
             maker.top.equalTo(15)
             maker.height.equalTo(22)
             maker.bottom.equalToSuperview().offset(-15)
@@ -452,7 +451,7 @@ fileprivate class LocationCell: UITableViewCell {
 
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
+            maker.left.equalTo(20)
             maker.top.equalTo(label2)
             maker.height.equalTo(22)
             maker.bottom.equalTo(label2)

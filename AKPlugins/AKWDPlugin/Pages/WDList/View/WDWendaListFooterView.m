@@ -37,7 +37,7 @@
         
         self.backgroundColorThemeKey = kColorBackground14;
         
-        CGRect tipFrame = CGRectMake(kWDCellLeftPadding, WDPadding(6), self.width - kWDCellLeftPadding - kWDCellRightPadding, 20);
+        CGRect tipFrame = CGRectMake(kWDCellLeftPadding, 20, self.width - kWDCellLeftPadding - kWDCellRightPadding, 20);
         self.tipLabel = [[SSThemedLabel alloc] initWithFrame:tipFrame];
         _tipLabel.frame = tipFrame;
         _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
@@ -75,7 +75,7 @@
 //                                            ];
 //
 //
-//        [attrTitle appendAttributedString:token];
+//  [attrTitle appendAttributedString:token];
         [_tipLabel setAttributedText:attrTitle];
     } else {
         [_tipLabel setText:title];
@@ -92,7 +92,7 @@
         padding = [_viewModel hasNiceAnswers] ? WDPadding(6) : WDPadding(12) ;
         _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
     }
-    _tipLabel.origin = CGPointMake(kWDCellLeftPadding, padding);
+    _tipLabel.origin = CGPointMake(kWDCellLeftPadding, 17.5);
     self.clickedBlock = block;
 }
 
