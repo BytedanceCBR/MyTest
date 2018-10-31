@@ -83,7 +83,7 @@ class TransactionRecordCell: BaseUITableViewCell {
             maker.bottom.equalToSuperview().offset(-13)
             maker.right.equalTo(pricePreSqmLabel.snp.left).offset(-5)
         }
-        
+        /*
         contentView.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { maker in
             maker.height.equalTo(0.5)
@@ -91,6 +91,7 @@ class TransactionRecordCell: BaseUITableViewCell {
             maker.left.equalToSuperview().offset(20)
             maker.right.equalToSuperview().offset(-20)
         }
+        */
     }
     
     override var isTail: Bool {
@@ -171,6 +172,14 @@ func fillTransactionRecordCell(_ item: TotalSalesInnerItem,
         theCell.totalPriceLabel.text = item.pricing
         theCell.pricePreSqmLabel.text = item.pricingPerSqm
         theCell.isTail = isLastCell
-        
+        if isLastCell
+        {
+            theCell.descLabel.snp.remakeConstraints { maker in
+                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
+                maker.left.equalTo(20)
+                maker.bottom.equalToSuperview().offset(-23)
+                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
+            }
+        }
     }
 }
