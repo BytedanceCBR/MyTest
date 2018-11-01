@@ -416,7 +416,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
         if let houseId = datas.value[indexPath.section].items?[indexPath.row].id {
             if let houseTypeId = datas.value[indexPath.section].items?[indexPath.row].houseType {
                 let logPb = datas.value[indexPath.section].items?[indexPath.row].logPb
-                let params = EnvContext.shared.homePageParams <|>
+                var params = EnvContext.shared.homePageParams <|>
                     toTracerParams(logPb ?? "be_null", key: "log_pb") <|>
                     toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams(rankByIndexPath(indexPath), key: "rank")
@@ -433,15 +433,26 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                             beNull(key: "element_from") <|>
                             toTracerParams(rankByIndexPath(indexPath), key: "rank"))
                 case .secondHandHouse:
+                    
                     let listType = selectTraceParam(self.traceParams, key: "category_name")
+                    var elementParams = TracerParams.momoid()
+                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
+                                        <|> beNull(key: "element_from")
+
+                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+                        
+                        params = params <|> toTracerParams("messagetab", key: "enter_from")
+                        elementParams = elementParams <|> toTracerParams("messagetab_recommend", key: "element_from")
+
+                    }else {
+                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
+                    }
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
                         logPB: logPb as? [String: Any],
                         disposeBag: disposeBag,
-                        tracerParams: params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from"),
-                        navVC: navVC)(TracerParams.momoid() <|>
-                            beNull(key: "element_from") <|>
-                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
+                        tracerParams: params,
+                        navVC: navVC)(elementParams)
                 default:
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
