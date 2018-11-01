@@ -13,7 +13,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
     private let floorPanId: Int64
 
-    private var houseId: Int = 0
+    private var houseId: Int64 = 0
 
     private var viewModel: FloorPanCategoryDetailPageViewModel?
 
@@ -48,7 +48,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         } else {
             self.floorPanId = 0
         }
-        if let houseId = paramObj?.queryParams["court_id"] as? String, let houseIdInt = Int(houseId) {
+        if let houseId = paramObj?.queryParams["court_id"] as? String, let houseIdInt = Int64(houseId) {
             self.houseId = houseIdInt
         }
 
@@ -118,7 +118,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                         
                         var contactPhone = FHHouseDetailContact()
                         contactPhone.phone = phone
-                        self.callRealtorPhone(contactPhone: contactPhone)
+                        self.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, disposeBag: self.disposeBag)
                         self.followUpViewModel?.followHouseItem(houseType: self.houseType,
                                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                                   followId: "\(self.houseId)",
@@ -223,8 +223,12 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     }
     
     // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
-        
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?,
+                          houseId: Int64,
+                          houseType: HouseType,
+                          disposeBag: DisposeBag) {
+
+
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
@@ -234,7 +238,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
+        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {

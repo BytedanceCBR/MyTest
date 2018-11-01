@@ -290,7 +290,7 @@ class UserMsgFooterOpenAllView: UIView {
     
     lazy var settingArrowImageView: UIImageView = {
         let re = UIImageView()
-        re.image = #imageLiteral(resourceName: "setting-arrow")
+        re.image = #imageLiteral(resourceName: "arrowicon-msseage")
         return re
     }()
         

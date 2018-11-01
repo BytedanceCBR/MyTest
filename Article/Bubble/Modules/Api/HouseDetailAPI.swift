@@ -250,7 +250,7 @@ func requestFloorPlanInfo(floorPanId: String) -> Observable<FloorPlanInfoRespons
 }
 
 // MARK: 中介转接电话API
-func requestVirtualNumber(realtorId: String) -> Observable<FHVirtualNumResponse?> {
+func requestVirtualNumber(realtorId: String, houseId: Int64, houseType: HouseType) -> Observable<FHVirtualNumResponse?> {
     let url = "\(EnvContext.networkConfig.host)/f100/api/virtual_number"
     
     return TTNetworkManager.shareInstance().rx
@@ -258,6 +258,9 @@ func requestVirtualNumber(realtorId: String) -> Observable<FHVirtualNumResponse?
             url: url,
             params: [
                 "realtor_id": realtorId,
+                "house_id": "\(houseId)",
+                "house_type": houseType.rawValue,
+
                 ],
             method: "GET",
             needCommonParams: true)

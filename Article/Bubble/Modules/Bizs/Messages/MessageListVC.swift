@@ -382,11 +382,19 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     //to do
 //                    let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
 //                                                          "houseSearch": houseSearchParams])
+                    
+                    recordEvent(key: "click_recommend_loadmore", params: TracerParams.momoid())
+                    
+
+                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                        toTracerParams("messagetab_recommend", key: "origin_from")
+                    
                     if let moreDetail = item.moreDetal
                     {
                         TTRoute.shared().openURL(byPushViewController: URL(string: moreDetail), userInfo: nil)
                     }
                 }
+                view.title.text = item.moreLabel
                 return view
             }
         }

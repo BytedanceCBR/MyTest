@@ -347,12 +347,14 @@ extension DetailPageViewModel {
                     
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
-                        self?.callRealtorPhone(contactPhone: contactPhone)
-                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
-                                              followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
-                                              followId: "\(self?.houseId ?? -1)",
-                            disposeBag: self?.disposeBag ?? DisposeBag(),
-                            isNeedRecord: false)()
+                        if let houseId = self?.houseId, let houseType = self?.houseType {
+                            self?.callRealtorPhone(contactPhone: contactPhone, houseId: houseId, houseType: houseType, disposeBag: self?.disposeBag ?? DisposeBag())
+                            self?.followHouseItem(houseType: houseType,
+                                                  followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
+                                                  followId: "\(houseId)",
+                                disposeBag: self?.disposeBag ?? DisposeBag(),
+                                isNeedRecord: false)()
+                        }
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
                             
@@ -445,7 +447,10 @@ extension DetailPageViewModel {
     }
     
     // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?,
+                          houseId: Int64,
+                          houseType: HouseType,
+                          disposeBag: DisposeBag) {
         
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
@@ -456,7 +461,7 @@ extension DetailPageViewModel {
         }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
+        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
@@ -470,7 +475,7 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.dismissToast()
                 Utils.telecall(phoneNumber: phone)
             })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
         
     }
 
