@@ -109,7 +109,7 @@ func requestSendPhoneNumber(houseId: Int64, phone: String, from: String = "detai
         .requestForModel(
             url: url,
             params: [
-                "a": houseId,
+                "a": String(houseId),
                 "b": userName ?? "",
                 "d": from,
                 "c": phone
