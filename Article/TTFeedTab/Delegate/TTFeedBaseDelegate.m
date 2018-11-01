@@ -19,7 +19,7 @@
 #import "ExploreCellViewBase.h"
 #import "Card+CoreDataClass.h"
 #import "ExploreArticleCardCellView.h"
-
+#import "TSVFeedFollowCell.h"
 
 @interface TTFeedBaseDelegate ()
 
@@ -154,7 +154,21 @@
     }
     else {
         ExploreCellBase *cell = [self cellForIndexPath:indexPath];
-        [cell didSelectAtIndexPath:indexPath viewModel:self.viewModel];
+        
+        if ([cell isKindOfClass:[TSVFeedFollowCell class]]) {
+            
+            TTFeedCellSelectContext *context = [TTFeedCellSelectContext new];
+            context.refer = self.viewModel.refer;
+            
+            ExploreOrderedData *orderedData = [self modelForIndexPath:indexPath];
+            context.orderedData = orderedData;
+//            context.categoryId = self.categoryID;
+            [(ExploreCellBase *)cell didSelectWithContext:context];
+            
+        }else {
+            
+            [cell didSelectAtIndexPath:indexPath viewModel:self.viewModel];
+        }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }

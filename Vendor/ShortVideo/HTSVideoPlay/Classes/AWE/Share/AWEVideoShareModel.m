@@ -153,8 +153,7 @@
             /// 顶部更多入口
             if (shareEnable.boolValue) {
                 
-                // add by zjing 去掉小视频收藏
-//                [secondArray addObject:[self favoriteContentItem]];
+                [secondArray addObject:[self favoriteContentItem]];
                 
                 if (![self.model isAuthorMyself]) {
                     //自己发的小视频不支持保存视频、举报、保存视频、分享链接
@@ -188,8 +187,8 @@
                 shareContentItemsArray = @[
                                            topArray,
                                            @[
-                                               // add by zjing 去掉小视频收藏
-//                                               [self favoriteContentItem],
+
+                                               [self favoriteContentItem],
                                              [self reportContentItem]
 //                                             [self saveVideoContentItem],
 //                                             [self copyContentItem]],
