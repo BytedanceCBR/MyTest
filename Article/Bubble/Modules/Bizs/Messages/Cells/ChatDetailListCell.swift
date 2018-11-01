@@ -272,13 +272,9 @@ class UserMsgFooterOpenAllView: UIView {
     
     lazy var title: UILabel = {
         let re = UILabel()
-        let attriStr = NSMutableAttributedString(
-            string: "查看全部",
-            attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14),
-                         NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHDarkIndigoColor)])
-        
         re.backgroundColor = UIColor.clear
-        re.attributedText = attriStr
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
     
