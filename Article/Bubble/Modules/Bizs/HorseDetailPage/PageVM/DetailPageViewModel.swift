@@ -462,13 +462,9 @@ extension DetailPageViewModel {
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
-        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
-            Utils.telecall(phoneNumber: phone)
-            return
-        }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
+        requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
