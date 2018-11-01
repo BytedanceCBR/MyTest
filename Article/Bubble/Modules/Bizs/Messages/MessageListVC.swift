@@ -477,13 +477,17 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             paths.forEach { path in
                 if !recordedIndexPath.contains(path) {
                     if let item = datas.value[path.section].items?[path.row] {
-                        let listType = selectTraceParam(self.traceParams, key: "category_name") as? String
-
+                        var listType = selectTraceParam(self.traceParams, key: "category_name") as? String
+                        var elementType = "be_null"
+                        if listType == "recommend_message_list" {
+                            listType = "messagetab"
+                            elementType = "messagetab_recommend"
+                        }
                         let params = EnvContext.shared.homePageParams <|>
                                 traceParams <|>
                                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(rankByIndexPath(path), key: "rank") <|>
-                                toTracerParams("be_null", key: "element_type") <|>
+                                toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
                                 toTracerParams(listType ?? "", key: "page_type")

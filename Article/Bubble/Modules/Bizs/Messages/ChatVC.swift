@@ -280,10 +280,10 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     //                                       "303": UIImage(named: "icon-msg-xiaoqu")!]
 
     
-    let listIdMap: [String: String] = ["301": "二手房",
-                                           "300": "新房",
-                                           "302": "租房",
-                                           "303": "小区"]
+//    let listIdMap: [String: String] = ["301": "二手房",
+//                                           "300": "新房",
+//                                           "302": "租房",
+//                                           "303": "小区"]
 //    let categoryNames = ["301":"old_message_list",
 //                         "300":"new_message_list",
 //                         "302":"be_null",
@@ -391,7 +391,9 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
                 toTracerParams(category_name, key: "category_name")
 
 
-        vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
+//        vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
+        vc.navBar.title.text = datas[indexPath.row].title
+
         vc.navBar.backBtn.rx.tap
             .subscribe(onNext: { [unowned self] void in
                 self.navVC?.popViewController(animated: true)
