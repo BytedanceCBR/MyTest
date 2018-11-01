@@ -360,12 +360,22 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
         return view
     }
     
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UserMsgFooterOpenAllView(){
+            //to do
+            
+            
+            
+        }
+        return view
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 122
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        return 40.5
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
