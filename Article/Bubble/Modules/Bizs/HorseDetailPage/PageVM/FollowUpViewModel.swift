@@ -84,7 +84,7 @@ class FollowUpViewModel {
 
     func followThisItem(
         isFollowUpOrCancel: Bool,
-        houseId: Int,
+        houseId: Int64,
         statusBehavior: BehaviorRelay<Bool>) {
         if EnvContext.shared.client.accountConfig.userInfo.value == nil {
             displayLogin(onLoginSuccess: { [unowned self] in

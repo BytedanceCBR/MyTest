@@ -454,7 +454,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
-                        self.callRealtorPhone(contactPhone: contactPhone)
+                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, disposeBag: self.disposeBag)
                         self.followForSendPhone()
 
                         if self.houseType != .neighborhood {
@@ -582,38 +582,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             
             maker.width.equalTo(leftWidth)
         })
-        
-    }
-    
-    
-    
-    // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
-        
-        guard let phone = contactPhone?.phone, phone.count > 0 else {
-            return
-        }
-        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
-            Utils.telecall(phoneNumber: phone)
-            return
-        }
-
-        EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
-            .subscribe(onNext: { (response) in
-                EnvContext.shared.toast.dismissToast()
-                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
-                    
-                    Utils.telecall(phoneNumber: virtualNumber)
-                }else {
-                    Utils.telecall(phoneNumber: phone)
-                }
-                
-            }, onError: {  (error) in
-                EnvContext.shared.toast.dismissToast()
-                Utils.telecall(phoneNumber: phone)
-            })
-            .disposed(by: self.disposeBag)
         
     }
 
