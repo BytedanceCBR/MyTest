@@ -118,7 +118,17 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                         
                         var contactPhone = FHHouseDetailContact()
                         contactPhone.phone = phone
-                        self.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, disposeBag: self.disposeBag)
+                        
+                        var theImprId: String?
+                        var theSearchId: String?
+
+                        if let logPB = self.viewModel?.logPB as? [String: Any], let imprId = logPB["impr_id"] as? String, let searchId = logPB["searchId"] as? String {
+                            theSearchId = searchId
+                            theImprId = imprId
+
+                        }
+                        self.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
+                        
                         self.followUpViewModel?.followHouseItem(houseType: self.houseType,
                                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                                   followId: "\(self.houseId)",
@@ -226,6 +236,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     func callRealtorPhone(contactPhone: FHHouseDetailContact?,
                           houseId: Int64,
                           houseType: HouseType,
+                          searchId: String,
+                          imprId: String,
                           disposeBag: DisposeBag) {
 
 
@@ -238,7 +250,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType)
+        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
