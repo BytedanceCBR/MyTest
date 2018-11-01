@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) FHMapSearchShowMode showMode;
 @property(nonatomic , copy)  NSString *filterConditionParams;
 
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel mapView:(MAMapView *)mapView;
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController;
 
 -(void)requestHouses;
 

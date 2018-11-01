@@ -26,7 +26,6 @@
 @interface FHMapSearchViewController ()<TTRouteInitializeProtocol>
 
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
-@property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchViewModel *viewModel;
 @property(nonatomic , strong) UIView *filterPanel;
 @property(nonatomic , strong) UIControl *filterBgControl;
@@ -72,26 +71,6 @@
         //定位城市和选择城市是同一城市时 进入小区视野
         _configModel.resizeLevel = 16;
     }
-}
-
--(MAMapView *)mapView
-{
-    if (!_mapView) {
-        _mapView = [[MAMapView alloc]initWithFrame:self.view.bounds];
-        _mapView.rotateEnabled = false;
-        _mapView.showsUserLocation = true;
-        _mapView.showsCompass = false;
-        _mapView.showsIndoorMap = false;
-        _mapView.showsIndoorMapControl = false;
-        _mapView.rotateCameraEnabled = false;
-        
-        _mapView.zoomLevel = _configModel.resizeLevel;
-        _mapView.userTrackingMode = MAUserTrackingModeFollow;
-        MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
-        representation.showsAccuracyRing = YES;
-        [_mapView updateUserLocationRepresentation:representation];
-    }
-    return _mapView;
 }
 
 -(FHMapSearchTipView *)tipView
@@ -171,31 +150,24 @@
         [self.houseFilterViewModel resetFilterConditionWithQueryParams:self.configModel.conditionParams];
     }
 
-    [self.view addSubview:self.mapView];
+    self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel viewController:self];
+    MAMapView *mapView = self.viewModel.mapView;
+    [self.view addSubview:mapView];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
     self.filterBgControl.hidden = YES;
     
     [self initConstraints];
     
-    self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel mapView:self.mapView];
-    self.viewModel.viewController = self;
     _viewModel.tipView = self.tipView;
-    self.houseFilterViewModel.delegate = _viewModel;
     if (self.configModel.conditionParams) {
         [self.houseFilterViewModel resetFilterConditionWithQueryParams:_configModel.conditionParams];
         _viewModel.filterConditionParams = [self.houseFilterViewModel getConditions];
     }
+    self.houseFilterViewModel.delegate = _viewModel;
     
     self.title = _viewModel.navTitle;
-    
-    CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};
-    
-    if (center.latitude > 0 && center.longitude > 0) {
-        [_mapView setCenterCoordinate:center animated:YES];
-    }
-    [self.viewModel addEnterMapLog];
-    
+       
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -212,7 +184,7 @@
 
 -(void)initConstraints
 {
-    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.viewModel.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.bottom.right.mas_equalTo(self.view);
     }];
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {

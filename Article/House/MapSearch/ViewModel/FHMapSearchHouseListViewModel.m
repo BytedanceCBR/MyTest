@@ -24,6 +24,7 @@
 @property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , assign) NSTimeInterval startTimestamp;
 @property(nonatomic , weak)   TTHttpTask * requestTask;
+@property(nonatomic , assign) BOOL enteredFullListPage;
 
 @end
 
@@ -177,13 +178,14 @@
 {
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if(self.listController.view.top - [self.listController minTop] < 50){
+    }else if(![self.listController canMoveup] && (self.listController.view.top - [self.listController minTop] < 50)){
         //吸附都顶部
         [self.listController moveTop:0];
         [self addEnterListPageLog];
     }else if([self.listController canMoveup]){
         //当前停留在中间
         self.listController.moveDock();
+        [self addHouseListDurationLog];
     }
 }
 
@@ -270,18 +272,24 @@
 
 -(void)addEnterListPageLog
 {
+    if (_enteredFullListPage) {
+        return;
+    }
+    _enteredFullListPage = YES;
     NSMutableDictionary *param = [self logBaseParams];
     param[@"category_name"] = @"same_neighborhood_list";
     param[@"enter_type"] = @"slide_up";
-    if (self.neighbor.logPb) {
-        param[@"log_pb"] = [self.neighbor.logPb toDictionary];
-    }
     
     [EnvContext.shared.tracer writeEvent:@"enter_category" params:param];
 }
 
 -(void)addHouseListDurationLog
 {
+    if (!_enteredFullListPage) {
+        return;
+    }
+    _enteredFullListPage = NO;
+    
     NSTimeInterval duration = [[NSDate date]timeIntervalSince1970] - _startTimestamp;
     if (duration < 0.5 || duration > 60*60) {
         //invalid log
@@ -290,9 +298,7 @@
     
     NSMutableDictionary *param = [self logBaseParams];
     param[@"stay_time"] = @(duration*1000);
-    if (self.neighbor.logPb) {
-        param[@"log_pb"] = [self.neighbor.logPb toDictionary];
-    }
+
     param[@"enter_type"] = @"slide_up";
 
     [EnvContext.shared.tracer writeEvent:@"stay_category" params:param];
@@ -317,6 +323,7 @@
     param[@"element_type"] = @"half_category";
     param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
     param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
+    param[@"search_id"] = neighbor.logPb.searchId ?: @"be_null";
     param[@"rank"] = @"0";
     if (neighbor.logPb) {
         param[@"log_pb"] = [neighbor.logPb toDictionary];
@@ -330,12 +337,14 @@
     
     NSMutableDictionary *param = [self logBaseParams];
     
-    param[@"house_type"] = @"old";
+    param[@"house_type"] = @"neighborhood";
     param[@"page_type"] = @"neighborhood_detail";
     param[@"card_type"] = @"no_pic";
     param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
     param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
+    param[@"search_id"] = neighbor.logPb.searchId ?: @"be_null";
     param[@"rank"] = @"0";
+    
     if (neighbor.logPb) {
         param[@"log_pb"] = [neighbor.logPb toDictionary];
     }
@@ -356,13 +365,16 @@
     param[@"group_id"] = item.logPb.groupId ?: @"be_null";
     param[@"impr_id"] = item.imprId ?: @"be_null";
     param[@"rank"] = @(indexPath.row);
-    param[@"log_pb"] = [item.logPb toDictionary];
+    if ([self.listController canMoveup]) {
+        param[@"element_type"] = @"half_category";
+    }else{
+        param[@"element_type"] = @"be_null";
+    }
     
     if (item.logPb) {
         param[@"log_pb"] = [item.logPb toDictionary];
     }
-    
-    
+        
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 

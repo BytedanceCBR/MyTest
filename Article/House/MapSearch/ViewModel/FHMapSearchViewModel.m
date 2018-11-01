@@ -48,12 +48,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSMutableDictionary<NSString * , FHMapSearchDataListModel *> *selectedAnnotations;
 @property(nonatomic , assign) NSTimeInterval startShowTimestamp;
 @property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
+@property(nonatomic , assign) BOOL firstEnterLogAdded;
 
 @end
 
 @implementation FHMapSearchViewModel
 
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel mapView:(MAMapView *)mapView
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController
 {
     self = [super init];
     if (self) {
@@ -74,8 +75,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 break;
         }
         self.houseTypeName = title;
-        self.mapView = mapView;
-        mapView.delegate = self;
+        self.viewController = viewController;
         _showMode = FHMapSearchShowModeMap;
         _selectedAnnotations = [NSMutableDictionary new];
         _lastRecordZoomLevel = configModel.resizeLevel;
@@ -87,6 +87,32 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     [_requestHouseTask cancel];
     
+}
+
+-(MAMapView *)mapView
+{
+    if (!_mapView) {
+        _mapView = [[MAMapView alloc]initWithFrame:CGRectZero];
+        _mapView.rotateEnabled = false;
+        _mapView.showsUserLocation = true;
+        _mapView.showsCompass = false;
+        _mapView.showsIndoorMap = false;
+        _mapView.showsIndoorMapControl = false;
+        _mapView.rotateCameraEnabled = false;
+        _mapView.delegate = self;
+        
+        _mapView.zoomLevel = _configModel.resizeLevel;
+        _mapView.userTrackingMode = MAUserTrackingModeFollow;
+        MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
+        representation.showsAccuracyRing = YES;
+        [_mapView updateUserLocationRepresentation:representation];
+        
+        CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};        
+        if (center.latitude > 0 && center.longitude > 0) {
+            [_mapView setCenterCoordinate:center animated:YES];
+        }
+    }
+    return _mapView;
 }
 
 -(void)changeNavbarAppear:(BOOL)show
@@ -164,10 +190,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.houseListViewController dismiss];
 }
 
--(void)requestHouses
+-(void)requestHouses:(BOOL)byUser
 {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
+        _firstEnterLogAdded = YES;
     }
     
     MACoordinateRegion region = _mapView.region;
@@ -195,6 +222,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         wself.searchId = model.searchId;
         [wself addAnnotations:model.list];
+        
+        //for enter default log
+        if (!wself.firstEnterLogAdded) {
+            if (!byUser) {
+                [wself addEnterMapLog];
+            }
+            wself.firstEnterLogAdded = YES;
+        }
     }];
     _requestMapLevel = _mapView.zoomLevel;
     _requestHouseTask = task;
@@ -227,6 +262,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 }else{
                     houseAnnotation.type = FHHouseAnnotationTypeNormal;
                 }
+                houseAnnotation.houseData = info;//update date
                 [removeAnnotationDict removeObjectForKey:info.nid];
                 continue;
             }
@@ -297,7 +333,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self requestNeighborhoodHouses:houseAnnotation.houseData];
     }
     
-    [self addClickBubbleLog:houseAnnotation.searchType];
+    [self addClickBubbleLog:houseAnnotation];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -336,7 +372,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction
 {
-    [self requestHouses];
+    [self requestHouses:wasUserAction];
 }
 
 /**
@@ -351,7 +387,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.1) {
-        [self requestHouses];
+        [self requestHouses:wasUserAction];
     }
     
 }
@@ -512,7 +548,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
-        [self requestHouses];
+        [self requestHouses:NO];
     }
     
 }
@@ -565,6 +601,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     FHMapZoomViewLevelType zoomLevelType = [self mapZoomViewType:self.configModel.resizeLevel];
     [self addMapZoomLevelTrigerby:FHMapZoomTrigerTypeDefault viewTye:zoomLevelType];
+    self.firstEnterLogAdded = YES;
 }
 
 -(void)tryAddMapZoomLevelTrigerby:(FHMapZoomTrigerType)trigerType currentLevel:(CGFloat)zoomLevel
@@ -617,8 +654,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 }
 
 
--(void)addClickBubbleLog:(FHMapSearchType) bubbleType
+-(void)addClickBubbleLog:(FHHouseAnnotation *) annotation
 {
+    FHMapSearchType bubbleType = annotation.searchType;
     NSString *clickType = nil;
     switch (bubbleType) {
         case FHMapSearchTypeArea:
@@ -637,6 +675,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"click_type"] = clickType;
+    if(annotation.houseData.logPb){
+        param[@"log_pb"] = [annotation.houseData.logPb toDictionary];
+    }
     
     [EnvContext.shared.tracer writeEvent:@"mapfind_click_bubble" params:param];
 }
@@ -644,7 +685,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
 {
     NSMutableDictionary *param = [self logBaseParams];
-
+    param[@"search_id"] = houseDataModel.searchId;
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
 
