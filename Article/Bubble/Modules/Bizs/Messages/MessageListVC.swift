@@ -391,7 +391,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     
                     var tracerParams = TracerParams.momoid()
                     tracerParams = tracerParams <|>
-                        toTracerParams("messagetab", key: "enter_from") <|>
+                        toTracerParams("recommend_message_list", key: "enter_from") <|>
                         toTracerParams("messagetab_recommend", key: "element_from") <|>
                         toTracerParams("click", key: "enter_type")
                     
@@ -441,8 +441,8 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
 
                     if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
                         
-                        params = params <|> toTracerParams("messagetab", key: "enter_from")
-                        elementParams = elementParams <|> toTracerParams("messagetab_recommend", key: "element_from")
+                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
+                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
 
                     }else {
                         params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
@@ -496,12 +496,8 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             paths.forEach { path in
                 if !recordedIndexPath.contains(path) {
                     if let item = datas.value[path.section].items?[path.row] {
-                        var listType = selectTraceParam(self.traceParams, key: "category_name") as? String
-                        var elementType = "be_null"
-                        if listType == "recommend_message_list" {
-                            listType = "messagetab"
-                            elementType = "messagetab_recommend"
-                        }
+                        let listType = selectTraceParam(self.traceParams, key: "category_name") as? String
+                        let elementType = "be_null"
                         let params = EnvContext.shared.homePageParams <|>
                                 traceParams <|>
                                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
