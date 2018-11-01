@@ -380,9 +380,12 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             if item.moreLabel?.isEmpty ?? true == false {
                 let view = UserMsgFooterOpenAllView(){
                     //to do
-                    
-                    
-                    
+//                    let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
+//                                                          "houseSearch": houseSearchParams])
+                    if let moreDetail = item.moreDetal
+                    {
+                        TTRoute.shared().openURL(byPushViewController: URL(string: moreDetail), userInfo: nil)
+                    }
                 }
                 return view
             }
