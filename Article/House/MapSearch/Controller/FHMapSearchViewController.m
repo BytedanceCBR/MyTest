@@ -18,11 +18,12 @@
 #import "FHMapSearchViewModel.h"
 #import <Masonry/Masonry.h>
 #import "FHMapSearchTipView.h"
+#import <TTRoute/TTRouteDefine.h>
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 51
 
-@interface FHMapSearchViewController ()
+@interface FHMapSearchViewController ()<TTRouteInitializeProtocol>
 
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) MAMapView *mapView;
@@ -43,15 +44,34 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.configModel = configModel;
-        
-        if(_configModel.resizeLevel == 0){
-            _configModel.resizeLevel = 11;
-        }
-        
-        //FIXME: remove debug code
-        _configModel.resizeLevel = 16;
+        [self setupConfigModel];
     }
     return self;
+}
+
+- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
+{
+    if (paramObj == nil) {
+        return nil;
+    }
+    self = [super init];
+    if (self) {
+        self.configModel = [[FHMapSearchConfigModel alloc] initWithDictionary:paramObj.allParams error:nil];
+        [self setupConfigModel];        
+    }
+    return self;
+}
+
+-(void)setupConfigModel
+{
+    if(_configModel.resizeLevel == 0){
+        _configModel.resizeLevel = 11;
+    }
+    
+    if([[[EnvContext shared] client] locationSameAsChooseCity]){
+        //定位城市和选择城市是同一城市时 进入小区视野
+        _configModel.resizeLevel = 16;
+    }
 }
 
 -(MAMapView *)mapView
@@ -147,6 +167,10 @@
     self.filterBgControl = [[UIControl alloc] init];
     self.filterPanel = self.houseFilterViewModel.filterPanelView;
     self.filterBgControl = self.houseFilterViewModel.filterConditionPanel;
+    if (_configModel.conditionParams) {
+        [self.houseFilterViewModel resetFilterConditionWithQueryParams:self.configModel.conditionParams];
+    }
+
     [self.view addSubview:self.mapView];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
@@ -154,12 +178,14 @@
     
     [self initConstraints];
     
-    self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel];
+    self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel mapView:self.mapView];
     self.viewModel.viewController = self;
-    _viewModel.mapView = _mapView;
     _viewModel.tipView = self.tipView;
-    _mapView.delegate = _viewModel;    
     self.houseFilterViewModel.delegate = _viewModel;
+    if (self.configModel.conditionParams) {
+        [self.houseFilterViewModel resetFilterConditionWithQueryParams:_configModel.conditionParams];
+        _viewModel.filterConditionParams = [self.houseFilterViewModel getConditions];
+    }
     
     self.title = _viewModel.navTitle;
     

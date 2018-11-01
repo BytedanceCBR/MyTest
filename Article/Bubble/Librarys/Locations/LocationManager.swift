@@ -15,7 +15,7 @@ import RxCocoa
     // release
     static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
 
-    static let shared = LocationManager()
+    @objc static let shared = LocationManager()
 
     private lazy var locationManager: AMapLocationManager = {
         AMapLocationManager()
@@ -115,6 +115,22 @@ import RxCocoa
             }
             return params
         }
+    }
+    
+    func isSameCity(cityName: String) -> Bool {
+        
+        guard let locationCity = self.currentCity.value?.city else {
+            return false
+        }
+        
+        if locationCity == cityName {
+            return true
+        }
+        if locationCity.hasPrefix(cityName) || cityName.hasPrefix(locationCity) {
+            return true
+        }
+        
+        return false
     }
 
 }

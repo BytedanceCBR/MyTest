@@ -18,7 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) NSString *originSearchId;
 @property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , copy) NSString *elementFrom;
-@property(nonatomic , strong) NSDictionary * queryParam;
+@property(nonatomic , strong) NSDictionary * conditionParams;
+@property(nonatomic , strong) NSString *suggestionParams;
+
+@property(nonatomic , copy) NSString *conditionQuery;//conditaionParams转换成的query
 
 @end
 

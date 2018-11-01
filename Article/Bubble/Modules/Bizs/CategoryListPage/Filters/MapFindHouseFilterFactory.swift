@@ -167,10 +167,16 @@ import RxCocoa
             .disposed(by: disposeBag)
     }
 
+    @objc
     func resetFilterCondition(queryParams paramObj: [AnyHashable: Any]) {
         if let params = paramObj as? [String: Any] {
             self.conditionFilterViewModel?.setSelectedItem(items: params)
         }
+    }
+    
+    @objc
+    func getConditions() -> String? {
+        return self.conditionFilterViewModel?.searchAndConditionFilterVM.queryCondition.value
     }
 
     fileprivate func allKeysFromNodes(nodes: [Node]) -> Set<String> {

@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) NSInteger requestMapLevel;
 @property(nonatomic , weak)  TTHttpTask *requestHouseTask;
 @property(nonatomic , strong) FHMapSearchHouseListViewController *houseListViewController;
-@property(nonatomic , copy)  NSString *suggestionParams;
+
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *houseTypeName;
 @property(nonatomic , strong) FHHouseAnnotation *currentSelectAnnotation;
@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 @implementation FHMapSearchViewModel
 
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel mapView:(MAMapView *)mapView
 {
     self = [super init];
     if (self) {
@@ -74,6 +74,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 break;
         }
         self.houseTypeName = title;
+        self.mapView = mapView;
+        mapView.delegate = self;
         _showMode = FHMapSearchShowModeMap;
         _selectedAnnotations = [NSMutableDictionary new];
         _lastRecordZoomLevel = configModel.resizeLevel;
@@ -90,6 +92,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)changeNavbarAppear:(BOOL)show
 {
     [self.viewController showNavTopViews:show];
+}
+
+-(void)setFilterConditionParams:(NSString *)filterConditionParams
+{
+    _configModel.conditionQuery = filterConditionParams;
+}
+
+-(NSString *)filterConditionParams
+{
+    return _configModel.conditionQuery;
 }
 
 -(FHMapSearchHouseListViewController *)houseListViewController
@@ -154,11 +166,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)requestHouses
 {
-    if (_requestHouseTask.state == TTHttpTaskStateRunning) {
+    if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
     }
     
-    NSString *host = [EnvContext.networkConfig.host stringByAppendingString:@"/f100/api/map_search"];
     MACoordinateRegion region = _mapView.region;
     CGFloat maxLat = region.center.latitude + region.span.latitudeDelta/2;
     CGFloat minLat = maxLat - region.span.latitudeDelta;
@@ -166,7 +177,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CGFloat minLong = maxLong - region.span.longitudeDelta;
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId  maxLatitude:maxLat minLatitude:minLat maxLongitude:maxLong minLongitude:minLong resizeLevel:_mapView.zoomLevel suggestionParams:self.suggestionParams callback:^(NSError * _Nonnull error, FHMapSearchDataModel *  _Nonnull model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId query:self.filterConditionParams maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel suggestionParams:self.configModel.suggestionParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+        
         if (!wself) {
             return ;
         }
@@ -280,13 +292,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (self.currentSelectAnnotation.houseData) {
             _selectedAnnotations[self.currentSelectAnnotation.houseData.nid] = self.currentSelectAnnotation.houseData;
         }
-        
-//        if (self.currentSelectAnnotationView) {
-//            self.currentSelectAnnotation.type = FHHouseAnnotationTypeOverSelected;
-//            self.currentSelectAnnotationView.annotation = self.currentSelectAnnotation;
-//        }
-//        self.currentSelectAnnotationView = (FHNeighborhoodAnnotationView *)annotationView;
-//        [self.currentSelectAnnotationView changeSelectMode:FHHouseAnnotationTypeSelected];
         
         self.currentSelectAnnotation = houseAnnotation;
         [self requestNeighborhoodHouses:houseAnnotation.houseData];
@@ -466,9 +471,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         param[NEIGHBORHOOD_ID_KEY] = model.nid;
     }
     param[HOUSE_TYPE_KEY] = @(self.configModel.houseType);
+    if (self.configModel.suggestionParams) {
+        param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
+    }
     
     __weak typeof(self) wself = self;
-    [FHHouseSearcher houseSearchWithQuery:nil param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    [FHHouseSearcher houseSearchWithQuery:self.filterConditionParams param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
@@ -502,8 +510,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - filter delegate
 -(void)onConditionChangedWithCondition:(NSString *)condition
 {
-    if (![self.suggestionParams isEqualToString:condition]) {
-        self.suggestionParams = condition;
+    if (![self.filterConditionParams isEqualToString:condition]) {
+        self.filterConditionParams = condition;
         [self requestHouses];
     }
     

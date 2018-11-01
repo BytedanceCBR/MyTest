@@ -23,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 @property(nonatomic , copy , readonly) NSString *navTitle;
 @property(nonatomic , assign) FHMapSearchShowMode showMode;
--(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel;
+@property(nonatomic , copy)  NSString *filterConditionParams;
+
+-(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel mapView:(MAMapView *)mapView;
 
 -(void)requestHouses;
 

@@ -310,8 +310,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     
     func gotoMapSearch(){
         
-        let configModel = FHMapSearchConfigModel()
-
+        
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
@@ -333,6 +332,29 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             elementName = originFrom
         }
         
+        var dict : [String : Any] = [
+            "house_type" : self.houseType.value.rawValue ,
+            "center_longitude" : mapSearch.centerLongitude ?? "" ,
+            "center_latitude" : mapSearch.centerLatitude ?? "" ,
+            "resize_level" : mapSearch.resizeLevel ?? 11 ,
+            "origin_from" : originFrom ,
+            "origin_search_id" : originSearchId ,
+            "element_from" : elementName ,
+            ]
+        let condition = self.searchAndConditionFilterVM.queryCondition.value
+        let url = URL(string: "http://a?\(condition)")
+        let obj = TTRoute.shared()?.routeParamObj(with: url)
+        if let query = obj?.queryParams {
+            dict["condition_params"] = query
+        }
+        if let suggestionParams = self.suggestionParams {
+            dict["suggestion_params"] = suggestionParams
+        }
+        
+        guard let configModel = try? FHMapSearchConfigModel(dictionary: dict) else {
+            return
+        }
+                
         let params = TracerParams.momoid() <|>
             toTracerParams(enterFrom!, key: "enter_from") <|>
             toTracerParams("click", key: "enter_type") <|>
@@ -352,16 +374,17 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originFrom, key: "origin_from") <|>
             toTracerParams(originSearchId, key: "origin_search_id")
         recordEvent(key: TraceEventName.enter_map, params: enterParams)
-            
         
-        configModel.centerLongitude = mapSearch.centerLongitude ?? ""
-        configModel.centerLatitude = mapSearch.centerLatitude ?? ""
-        configModel.resizeLevel = mapSearch.resizeLevel ?? 11
-        configModel.houseType = self.houseType.value.rawValue
-        configModel.originFrom = originFrom
-        configModel.originSearchId = originSearchId
-        configModel.elementFrom = elementName
+        
 
+//        configModel.centerLongitude = mapSearch.centerLongitude ?? ""
+//        configModel.centerLatitude = mapSearch.centerLatitude ?? ""
+//        configModel.resizeLevel = mapSearch.resizeLevel ?? 11
+//        configModel.houseType = self.houseType.value.rawValue
+//        configModel.originFrom = originFrom
+//        configModel.originSearchId = originSearchId
+//        configModel.elementFrom = elementName
+        
         let controller = FHMapSearchViewController(configModel: configModel)
         self.navigationController?.pushViewController(controller, animated: true)
         

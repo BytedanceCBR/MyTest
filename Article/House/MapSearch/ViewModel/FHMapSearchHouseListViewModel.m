@@ -23,6 +23,7 @@
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , assign) NSTimeInterval startTimestamp;
+@property(nonatomic , weak)   TTHttpTask * requestTask;
 
 @end
 
@@ -58,6 +59,10 @@
 
 -(void)updateWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
+    if (self.requestTask.state == TTHttpTaskStateRunning) {
+        [self.requestTask cancel];
+    }
+    
     [_houseList removeAllObjects];
     [_houseList addObjectsFromArray:data.items];
     [self.tableView reloadData];
@@ -195,10 +200,9 @@
     /*
      "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" +
      */
-    
-    //TODO: add loading ...
-    
-    NSString *query = [NSString stringWithFormat:@""];
+    if (self.requestTask.state == TTHttpTaskStateRunning) {
+        [self.requestTask cancel];
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     
     if (self.neighbor.nid) {
@@ -208,9 +212,12 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
+    if (self.configModel.suggestionParams) {
+        param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
+    }
     
     __weak typeof(self) wself = self;
-    [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:self.configModel.conditionQuery param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
@@ -228,6 +235,8 @@
         }
         
     }];
+    
+    self.requestTask = task;
     
     [self addHouseListLoadMoreLog];
     

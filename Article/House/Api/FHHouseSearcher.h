@@ -10,12 +10,14 @@
 #import <TTNetworkManager/TTHttpTask.h>
 #import "FHMapSearchTypes.h"
 #import "FHMapSearchModel.h"
+#import <CoreLocation/CoreLocation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString const * EXCLUDE_ID_KEY ;
 extern NSString const * NEIGHBORHOOD_ID_KEY;
 extern NSString const *HOUSE_TYPE_KEY ;
+extern NSString const *SUGGESTION_PARAMS_KEY;
 
 @interface FHHouseSearcher : NSObject
 
@@ -35,7 +37,7 @@ extern NSString const *HOUSE_TYPE_KEY ;
  * 地图找房 api
  
  */
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId maxLatitude:(CGFloat)maxLatitude minLatitude:(CGFloat)minLatitude maxLongitude:(CGFloat)maxLongitude minLongitude:(CGFloat)minLongitude resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
 
 @end
 

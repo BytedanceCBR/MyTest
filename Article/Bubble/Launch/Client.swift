@@ -210,6 +210,22 @@ extension Notification.Name {
         self.accountConfig.userInfo.accept(TTAccount.shared().user())
     }
 
+    // 定位城市和用户选择的是否是同一城市
+    @objc func  locationSameAsChooseCity() -> Bool {
+        
+        
+        guard let selectCityId = self.generalBizconfig.getCurrentSelectCityId() else {
+            return false
+        }
+        
+        guard let cityName = self.generalBizconfig.cityNameById()(selectCityId) else {
+            return false
+        }
+        
+        return LocationManager.shared.isSameCity(cityName: cityName)
+        
+    }
+    
     deinit {
         reachability.stopNotifier()
     }
