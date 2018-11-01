@@ -348,7 +348,12 @@ extension DetailPageViewModel {
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         if let houseId = self?.houseId, let houseType = self?.houseType {
-                            self?.callRealtorPhone(contactPhone: contactPhone, houseId: houseId, houseType: houseType, disposeBag: self?.disposeBag ?? DisposeBag())
+                            
+                            var theImprId: String?
+                            if let logPB = self?.logPB as? [String: Any],let imprId = logPB["impr_id"] as? String {
+                                theImprId = imprId
+                            }
+                            self?.callRealtorPhone(contactPhone: contactPhone, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
                             self?.followHouseItem(houseType: houseType,
                                                   followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
                                                   followId: "\(houseId)",
@@ -450,6 +455,8 @@ extension DetailPageViewModel {
     func callRealtorPhone(contactPhone: FHHouseDetailContact?,
                           houseId: Int64,
                           houseType: HouseType,
+                          searchId: String,
+                          imprId: String,
                           disposeBag: DisposeBag) {
         
         guard let phone = contactPhone?.phone, phone.count > 0 else {
@@ -461,7 +468,7 @@ extension DetailPageViewModel {
         }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType)
+        requestVirtualNumber(realtorId: realtorId, houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {

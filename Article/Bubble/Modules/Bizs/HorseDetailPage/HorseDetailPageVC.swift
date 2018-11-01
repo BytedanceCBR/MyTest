@@ -454,7 +454,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
-                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, disposeBag: self.disposeBag)
+                        var theImprId: String?
+                        var theSearchId: String?
+
+                        if let logPB = self.detailPageViewModel?.logPB as? [String: Any], let imprId = logPB["impr_id"] as? String, let searchId = self.detailPageViewModel?.searchId {
+                            theImprId = imprId
+                            theSearchId = searchId
+
+                        }
+                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
                         self.followForSendPhone()
 
                         if self.houseType != .neighborhood {
