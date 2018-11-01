@@ -138,7 +138,7 @@
 //#import "TTXiguaLiveHorizonCell.h"
 //#import "TTXiguaLiveRecommendCell.h"
 //#import "TTUGCU13Cell.h"
-//#import "TSVFeedFollowCell.h"
+#import "TSVFeedFollowCell.h"
 //#import "PopularHashtagData.h"
 //#import "TSVFeedStoryCell.h"
 
@@ -434,15 +434,17 @@ static NSMutableArray *s_reusableCardViews;
 //            return [TTRecommendUserCell class];
         case ExploreCellViewTypeShortVideoCell:
         {
-//            if ([data isKindOfClass:[ExploreOrderedData class]]) {
-//                ExploreOrderedData *orderedData = data;
-//                if (orderedData.cellCtrls && [orderedData.cellCtrls isKindOfClass:[NSDictionary class]]) {
-//                    NSInteger layoutStyle = [orderedData.cellCtrls tt_integerValueForKey:@"cell_layout_style"];
+
+            // add by zjing 收藏增加小视频
+            if ([data isKindOfClass:[ExploreOrderedData class]]) {
+                ExploreOrderedData *orderedData = data;
+                if (orderedData.cellCtrls && [orderedData.cellCtrls isKindOfClass:[NSDictionary class]]) {
+                    NSInteger layoutStyle = [orderedData.cellCtrls tt_integerValueForKey:@"cell_layout_style"];
 //                    if (layoutStyle == 100 || layoutStyle == 101) {
-//                        return [TSVFeedFollowCell class];
+                        return [TSVFeedFollowCell class];
 //                    }
-//                }
-//            }
+                }
+            }
             return [TTLayOutPureTitleCell class];
         }
         case ExploreCellViewTypeHorizontalCard:

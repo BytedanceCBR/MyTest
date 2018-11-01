@@ -360,23 +360,37 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
         return view
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = UserMsgFooterOpenAllView(){
-            //to do
-            
-            
-            
-        }
-        return view
-    }
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 122
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 40.5
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                return 50
+            }
+        }
+        return 0
     }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                let view = UserMsgFooterOpenAllView(){
+                    //to do
+                    
+                    
+                    
+                }
+                return view
+            }
+        }
+        return nil
+    }
+
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
