@@ -365,8 +365,28 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                return 50
+            }
+        }
+        return 0
     }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                let view = UIView()
+                view.backgroundColor = UIColor.blue
+                return view
+            }
+        }
+        return nil
+    }
+
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
