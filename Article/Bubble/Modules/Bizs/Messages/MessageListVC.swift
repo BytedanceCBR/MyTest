@@ -392,7 +392,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     var tracerParams = TracerParams.momoid()
                     tracerParams = tracerParams <|>
                         toTracerParams("messagetab", key: "enter_from") <|>
-                        toTracerParams("messagetab_recommend", key: "element_from") <|>
+                        toTracerParams("be_null", key: "element_from") <|>
                         toTracerParams("click", key: "enter_type")
                     
                     let paramsMap = tracerParams.paramsGetter([:])

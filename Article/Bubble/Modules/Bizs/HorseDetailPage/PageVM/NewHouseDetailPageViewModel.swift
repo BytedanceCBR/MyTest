@@ -487,6 +487,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
             
+            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            
+            /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")
                 <|> toTracerParams(self.houseId, key: "group_id")
@@ -545,6 +548,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     .disposed(by: self.disposeBag)
 
             }
+            
+            */
 //
 //            recordEvent(key: TraceEventName.inform_show,
 //                        params: informParams)
@@ -554,7 +559,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
-            
+            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")
                 <|> toTracerParams(self.houseId, key: "group_id")
@@ -568,13 +574,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         self.dismissMessageAlert?()
                         if let status = response?.status, status == 0 {
                             self.closeAlert?()
-                            DispatchQueue.main.async {
-                                if response?.data?.followStatus ?? 0 == 0 {
-                                    EnvContext.shared.toast.showToast("订阅成功")
-                                } else {
-                                    EnvContext.shared.toast.showToast("您已订阅")
-                                }
-                            }
+//                            DispatchQueue.main.async {
+//                                if response?.data?.followStatus ?? 0 == 0 {
+//                                    EnvContext.shared.toast.showToast("订阅成功")
+//                                } else {
+//                                    EnvContext.shared.toast.showToast("您已订阅")
+//                                }
+//                            }
                         }
                         }, onError: { error in
                             EnvContext.shared.toast.dismissToast()
@@ -611,6 +617,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     })
                     .disposed(by: self.disposeBag)
             }
+            */
 
 //            recordEvent(key: TraceEventName.inform_show,
 //                        params: informParams)
