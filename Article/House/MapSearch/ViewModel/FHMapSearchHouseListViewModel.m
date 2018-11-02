@@ -20,6 +20,7 @@
 
 @interface FHMapSearchHouseListViewModel ()
 
+@property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHMapSearchDataListModel *neighbor;
 @property(nonatomic , strong) NSString *searchId;
@@ -27,23 +28,27 @@
 @property(nonatomic , assign) NSTimeInterval startTimestamp;
 @property(nonatomic , weak)   TTHttpTask * requestTask;
 @property(nonatomic , assign) BOOL enteredFullListPage;
-
+@property(nonatomic , strong) NHErrorViewModel *erroViewModel;
 @end
 
 @implementation FHMapSearchHouseListViewModel
 
--(instancetype)init
+-(instancetype)initWithController:(FHMapSearchHouseListViewController *)viewController tableView:(UITableView *)tableView
 {
     self = [super init];
     if (self) {
         _houseList = [NSMutableArray new];
+        self.listController = viewController;
+        self.tableView = tableView;
+        
+        [self configTableView];
+        
     }
     return self;
 }
 
--(void)registerCells:(UITableView *)tableView
+-(void)configTableView
 {
-    self.tableView = tableView;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     __weak typeof(self) wself = self;
@@ -51,7 +56,7 @@
         [wself loadHouseData:NO];
     }];
     self.tableView.mj_footer = _refreshFooter;
-    [tableView registerClass:SingleImageInfoCell.class forCellReuseIdentifier:kCellId];
+    [_tableView registerClass:SingleImageInfoCell.class forCellReuseIdentifier:kCellId];
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -59,6 +64,17 @@
     _headerView = headerView;
     _tableView.tableHeaderView = _headerView;
     [headerView addTarget:self action:@selector(showNeighborDetail) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)setMaskView:(EmptyMaskView *)maskView
+{
+    _maskView = maskView;
+    maskView.hidden = YES;
+    __weak typeof(self) wself = self;
+    _erroViewModel = [[NHErrorViewModel alloc]init:_maskView retryAction:^{
+        [wself reloadingHouseData];
+    }];
+    [_erroViewModel onRequestViewDidLoad];
 }
 
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor
@@ -89,6 +105,8 @@
     if (neighbor) {
         [self addNeighborShowLog:self.neighbor];
     }
+    
+    _maskView.hidden = YES;
 }
 
 -(void)showNeighborDetail
@@ -248,6 +266,7 @@
         if (showLoading) {
             [wself.listController dismissLoadingAlert];
         }
+                
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
             if (showLoading) {
@@ -262,9 +281,14 @@
             }
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.userInteractionEnabled = YES;
+            
+            [wself.erroViewModel onRequestNormalData];
         }else{
-            //TODO: show error toast
-            [wself.listController showErrorView:@"请求失败"];
+            if (error) {
+                [wself.erroViewModel onRequestErrorWithError:error];
+            }else{
+                [wself.erroViewModel onRequestNilData];
+            }
         }
         
     }];

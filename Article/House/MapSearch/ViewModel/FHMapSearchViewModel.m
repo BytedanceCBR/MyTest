@@ -130,6 +130,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return _configModel.conditionQuery;
 }
 
+-(FHMapSearchConfigModel *)configModel
+{
+    return _configModel;
+}
+
 -(FHMapSearchHouseListViewController *)houseListViewController
 {
     if (!_houseListViewController) {
@@ -197,8 +202,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
-        _firstEnterLogAdded = YES;
     }
+    
+    _firstEnterLogAdded = YES;
     
     MACoordinateRegion region = _mapView.region;
     CGFloat maxLat = region.center.latitude + region.span.latitudeDelta/2;
@@ -214,13 +220,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         if (error) {
             //show toast
+            [[[EnvContext shared] toast] showToast:@"房源请求失败" duration:2];
             return;
         }
         if (wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
                 CGFloat topY = [wself.viewController topBarBottom];
-                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration];
+                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration above:self.mapView];
             }
         }
         wself.searchId = model.searchId;
@@ -518,7 +525,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
-        [self requestHouses:NO];
+        if (_firstEnterLogAdded) {
+            [self requestHouses:NO];
+        }
     }
     
 }

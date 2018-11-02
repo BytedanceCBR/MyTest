@@ -21,7 +21,7 @@ import UIKit
 
     @objc let client = Client()
 
-    lazy var toast: ToastAlertCenter = {
+    @objc lazy var toast: ToastAlertCenter = {
         ToastAlertCenter()
     }()
 

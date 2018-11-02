@@ -310,7 +310,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     
     func gotoMapSearch(){
         
-        
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
@@ -375,17 +374,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originSearchId, key: "origin_search_id")
         recordEvent(key: TraceEventName.enter_map, params: enterParams)
         
-        
-
-//        configModel.centerLongitude = mapSearch.centerLongitude ?? ""
-//        configModel.centerLatitude = mapSearch.centerLatitude ?? ""
-//        configModel.resizeLevel = mapSearch.resizeLevel ?? 11
-//        configModel.houseType = self.houseType.value.rawValue
-//        configModel.originFrom = originFrom
-//        configModel.originSearchId = originSearchId
-//        configModel.elementFrom = elementName
-        
         let controller = FHMapSearchViewController(configModel: configModel)
+        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
+            if let condition = conditions {
+                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
+            }
+            if let sug = suggestion {
+                self?.suggestionParams = sug
+            }
+        }
         self.navigationController?.pushViewController(controller, animated: true)
         
     }

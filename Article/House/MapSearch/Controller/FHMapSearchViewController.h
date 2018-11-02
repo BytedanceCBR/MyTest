@@ -15,9 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMapSearchViewController : FHBaseViewController
 
-//@property(nonatomic , assign) NSInteger houseType;
 @property(nonatomic , strong) NSArray<SearchConfigFilterItem *> *filterItems;
-//TODO: add other enter configs
+@property(nonatomic , copy)   void (^_Nullable choosedConditionFilter)(NSDictionary<NSString * , NSObject *> *_Nullable conditions , NSString *_Nullable suggestion);
 
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel ;//NS_DESIGNATED_INITIALIZER
 

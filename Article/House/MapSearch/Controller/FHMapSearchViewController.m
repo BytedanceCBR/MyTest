@@ -61,6 +61,11 @@
     return self;
 }
 
+-(void)dealloc
+{
+    [self tryCallbackFilterCondition];
+}
+
 -(void)setupConfigModel
 {
     if(_configModel.resizeLevel == 0){
@@ -103,6 +108,7 @@
 {
     if (self.viewModel.showMode == FHMapSearchShowModeMap) {
         [self.navigationController popViewControllerAnimated:YES];
+        [self tryCallbackFilterCondition];
     }else{
         [self.viewModel dismissHouseListView];
     }
@@ -236,6 +242,22 @@
 {
     [self.navigationController setNavigationBarHidden:!show animated:YES];
     self.filterPanel.hidden = !show;
+}
+
+-(void)tryCallbackFilterCondition
+{
+    if (self.choosedConditionFilter) {
+        NSString *conditions =  [self.viewModel filterConditionParams];
+        if (conditions) {
+            NSURL *url = [NSURL URLWithString:[@"https://a?" stringByAppendingString:conditions]];
+            TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+            NSString *suggestion =  [self.viewModel configModel].suggestionParams;
+            if(paramObj.queryParams || suggestion){
+                self.choosedConditionFilter(paramObj.queryParams,suggestion);
+            }
+        }
+        self.choosedConditionFilter = nil;
+    }
 }
 
 @end

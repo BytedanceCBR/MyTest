@@ -40,7 +40,7 @@
     [self removeFromSuperview];
 }
 
--(void)showIn:(UIView *)view at:(CGPoint)topLeft content:(NSString *)content duration:(NSTimeInterval)duration
+-(void)showIn:(UIView *)view at:(CGPoint)topLeft content:(NSString *)content duration:(NSTimeInterval)duration above:(UIView *)aboveView
 {
     if (view == self) {
         return;
@@ -54,7 +54,11 @@
     }
     _tipLabel.center = CGPointMake(self.width/2, kViewHeight/2);
     
-    [view addSubview:self];
+    if (aboveView) {
+        [view insertSubview:self aboveSubview:aboveView];
+    }else{
+        [view addSubview:self];
+    }
     [self performSelector:@selector(removeTip) withObject:nil afterDelay:duration];
 }
 

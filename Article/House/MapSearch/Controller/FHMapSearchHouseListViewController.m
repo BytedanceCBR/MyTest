@@ -15,6 +15,7 @@
 
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
+@property(nonatomic , strong) EmptyMaskView *maskView;
 
 @end
 
@@ -39,11 +40,16 @@
         make.top.left.bottom.right.mas_equalTo(self.view);
     }];
     
-    self.viewModel = [[FHMapSearchHouseListViewModel alloc] init];
-    [self.viewModel registerCells:self.tableView];
-    self.viewModel.headerView = _headerView;
-    self.viewModel.listController = self;
+    _maskView = [[EmptyMaskView alloc]init];
+    [self.view addSubview:_maskView];
+    [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo([[UIScreen mainScreen] bounds].size.height*2/3);
+    }];
     
+    self.viewModel = [[FHMapSearchHouseListViewModel alloc] initWithController:self tableView:self.tableView];
+    self.viewModel.headerView = _headerView;
+    self.viewModel.maskView = _maskView;
 }
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor
@@ -52,7 +58,7 @@
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top = floor(self.view.superview.height/3);
+        self.view.top =  floor(self.view.superview.height/3);
     }];
 
     [self.viewModel updateWithHouseData:nil neighbor:neighbor];
@@ -63,7 +69,7 @@
     self.view.top = self.view.height;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top = self.view.height/3;
+        self.view.top = floor(self.view.superview.height/3);
     }];
     
     [self.parentViewController.view addSubview:self.view];
@@ -108,11 +114,6 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
-}
-
--(void)showErrorView:(NSString *)errorMsg
-{
-    
 }
 
 /*
