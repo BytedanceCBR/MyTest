@@ -207,6 +207,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         UIApplication.shared.statusBarStyle = .default
         self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
         UIApplication.shared.setStatusBarHidden(false, with: .none)
+        self.stayTimeParams = traceParams <|> traceStayTime()
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
