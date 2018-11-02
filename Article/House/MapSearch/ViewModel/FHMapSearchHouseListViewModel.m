@@ -13,6 +13,8 @@
 #import "FHMapSearchModel.h"
 #import "FHHouseSearcher.h"
 #import "FHMapSearchConfigModel.h"
+#import "UIViewController+HUD.h"
+
 
 #define kCellId @"singleCellId"
 
@@ -46,7 +48,7 @@
     _tableView.dataSource = self;
     __weak typeof(self) wself = self;
     self.refreshFooter = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [wself loadMoreData];
+        [wself loadHouseData:NO];
     }];
     self.tableView.mj_footer = _refreshFooter;
     [tableView registerClass:SingleImageInfoCell.class forCellReuseIdentifier:kCellId];
@@ -55,28 +57,33 @@
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
 {
     _headerView = headerView;
+    _tableView.tableHeaderView = _headerView;
     [headerView addTarget:self action:@selector(showNeighborDetail) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(void)updateWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
+-(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
     if (self.requestTask.state == TTHttpTaskStateRunning) {
         [self.requestTask cancel];
     }
+    [_headerView updateWithMode:neighbor];
     
     [_houseList removeAllObjects];
-    [_houseList addObjectsFromArray:data.items];
+    self.neighbor = neighbor;
+    if (data) {
+        [_houseList addObjectsFromArray:data.items];
+        self.searchId = data.searchId;
+        if (data.hasMore) {
+            [self.tableView.mj_footer resetNoMoreData];
+        }else{
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        }
+    } else {
+        self.searchId = nil;
+        [self reloadingHouseData];
+    }
     [self.tableView reloadData];
     self.tableView.contentOffset = CGPointZero;
-    [_headerView updateWithMode:neighbor];
-    _tableView.tableHeaderView = _headerView;
-    self.searchId = data.searchId;
-    self.neighbor = neighbor;
-    if (data.hasMore) {
-        [self.tableView.mj_footer resetNoMoreData];
-    }else{
-        [self.tableView.mj_footer endRefreshingWithNoMoreData];
-    }
     
     self.startTimestamp = [[NSDate date] timeIntervalSince1970];
     if (neighbor) {
@@ -164,6 +171,12 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (!scrollView.isUserInteractionEnabled) {
+        //不是用户主动滑动
+        scrollView.contentOffset = CGPointZero;
+        return;
+    }
+
     CGFloat minTop =  [self.listController minTop];
     if ([self.listController canMoveup]) {
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
@@ -197,11 +210,16 @@
     }
 }
 
--(void)loadMoreData
+-(void)reloadingHouseData
 {
-    /*
-     "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" +
-     */
+    CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
+    [self.listController showLoadingAlert:nil offset:offset];
+    [self loadHouseData:YES];
+    self.tableView.mj_footer.hidden = YES;
+}
+
+-(void)loadHouseData:(BOOL)showLoading
+{
     if (self.requestTask.state == TTHttpTaskStateRunning) {
         [self.requestTask cancel];
     }
@@ -218,13 +236,23 @@
         param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
     }
     
+    if (showLoading) {
+        self.tableView.userInteractionEnabled = NO;
+    }
+    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:self.configModel.conditionQuery param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
-        
+        if (showLoading) {
+            [wself.listController dismissLoadingAlert];
+        }
         if (!error && houseModel) {
+            wself.searchId = houseModel.searchId;
+            if (showLoading) {
+                [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];
+            }
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
@@ -232,8 +260,11 @@
             }else{
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
+            wself.tableView.mj_footer.hidden = NO;
+            wself.tableView.userInteractionEnabled = YES;
         }else{
             //TODO: show error toast
+            [wself.listController showErrorView:@"请求失败"];
         }
         
     }];
@@ -398,5 +429,12 @@
     [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
 }
 
+
+-(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
+{
+    NSMutableDictionary *param = [self logBaseParams];
+    param[@"search_id"] = houseDataModel.searchId;
+    [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
+}
 
 @end

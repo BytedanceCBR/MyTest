@@ -315,6 +315,12 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D33D0EE218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
+		3D33D0EF218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
+		3D33D0F0218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
+		3D33D0F3218B1F1000B13F55 /* UIViewController+HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0F2218B1F1000B13F55 /* UIViewController+HUD.m */; };
+		3D33D0F4218B1F1000B13F55 /* UIViewController+HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0F2218B1F1000B13F55 /* UIViewController+HUD.m */; };
+		3D33D0F5218B1F1000B13F55 /* UIViewController+HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0F2218B1F1000B13F55 /* UIViewController+HUD.m */; };
 		3D3CCECF21801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
 		3D3CCED021801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
 		3D3CCED121801A40008F0378 /* FHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CCECE21801A40008F0378 /* FHBaseViewController.m */; };
@@ -6136,6 +6142,10 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D33D0EC218B110B00B13F55 /* UIFont+House.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+House.h"; sourceTree = "<group>"; };
+		3D33D0ED218B110B00B13F55 /* UIFont+House.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+House.m"; sourceTree = "<group>"; };
+		3D33D0F1218B1F1000B13F55 /* UIViewController+HUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+HUD.h"; sourceTree = "<group>"; };
+		3D33D0F2218B1F1000B13F55 /* UIViewController+HUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+HUD.m"; sourceTree = "<group>"; };
 		3D3CCECD21801A40008F0378 /* FHBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHBaseViewController.h; sourceTree = "<group>"; };
 		3D3CCECE21801A40008F0378 /* FHBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHBaseViewController.m; sourceTree = "<group>"; };
 		3D3CCED221801A66008F0378 /* FHMapSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchViewController.h; sourceTree = "<group>"; };
@@ -10656,6 +10666,8 @@
 				3D40C2762182F8880083F837 /* Model */,
 				3D3CCECD21801A40008F0378 /* FHBaseViewController.h */,
 				3D3CCECE21801A40008F0378 /* FHBaseViewController.m */,
+				3D33D0F1218B1F1000B13F55 /* UIViewController+HUD.h */,
+				3D33D0F2218B1F1000B13F55 /* UIViewController+HUD.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -10705,6 +10717,8 @@
 			children = (
 				3D49A0FC2181E5D500597A21 /* UIColor+Theme.h */,
 				3D49A0FD2181E5D500597A21 /* UIColor+Theme.m */,
+				3D33D0EC218B110B00B13F55 /* UIFont+House.h */,
+				3D33D0ED218B110B00B13F55 /* UIFont+House.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -20110,11 +20124,13 @@
 				70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */,
 				2DB9A6E71F29BB86005E4A06 /* TTADTrackEventLinkModel.m in Sources */,
 				B388CCA22142652B00653188 /* TGWindows.swift in Sources */,
+				3D33D0F3218B1F1000B13F55 /* UIViewController+HUD.m in Sources */,
 				AB0A29EE1F28925600F469C2 /* TTAdFeedModel.m in Sources */,
 				C3998D081FB85433001AFBA2 /* TTAdCanvasFormViewController.m in Sources */,
 				F87693641F31D0D300D59CA5 /* TTVCommentListReplyModel.m in Sources */,
 				2DB9A6C31F29BB85005E4A06 /* TTActivityPanelController+ShareAd.m in Sources */,
 				2D2557CB1E8271CE00FF96A7 /* ExploreMovieView.m in Sources */,
+				3D33D0EE218B110B00B13F55 /* UIFont+House.m in Sources */,
 				3FA90FDC16EF3EA500DA9411 /* MTLabel.m in Sources */,
 				A97DC49E1F1333640002B455 /* TTPersonalHomeBottomPopView.m in Sources */,
 				48B6B16F1F7252710049E974 /* TSVDataFetchManager.m in Sources */,
@@ -21153,6 +21169,7 @@
 				B373C9252174587A008F9905 /* TTVShareAction.m in Sources */,
 				B373C9262174587A008F9905 /* TTVideoShareMovie.m in Sources */,
 				B373C9272174587A008F9905 /* TTVideoCommon.m in Sources */,
+				3D33D0F0218B110B00B13F55 /* UIFont+House.m in Sources */,
 				B373C9282174587A008F9905 /* SSLoadMoreCell.m in Sources */,
 				B373C9292174587A008F9905 /* ArticleMobileChangeViewController.m in Sources */,
 				B373C92A2174587A008F9905 /* TTServerDateCalibrator.m in Sources */,
@@ -22219,6 +22236,7 @@
 				B373CD432174587A008F9905 /* ExploreLogicSetting.m in Sources */,
 				B373CD442174587A008F9905 /* TTFeedCollectionCellDefaultHelper.m in Sources */,
 				B373CD452174587A008F9905 /* TTProfileTopFunctionCell.m in Sources */,
+				3D33D0F5218B1F1000B13F55 /* UIViewController+HUD.m in Sources */,
 				B373CD462174587A008F9905 /* TTVFeedCellSelectContext.m in Sources */,
 				B373CD472174587A008F9905 /* ExploreVideoDetailMixedGroupPicADView.m in Sources */,
 				B373CD482174587A008F9905 /* TGBallClipRotateMultiple.swift in Sources */,
@@ -22852,6 +22870,7 @@
 				FEFA53B3205FB1A8001F50D8 /* TTVShareAction.m in Sources */,
 				FEFA53B5205FB1A8001F50D8 /* TTVideoShareMovie.m in Sources */,
 				FEFA53B6205FB1A8001F50D8 /* TTVideoCommon.m in Sources */,
+				3D33D0EF218B110B00B13F55 /* UIFont+House.m in Sources */,
 				FEFA53B7205FB1A8001F50D8 /* SSLoadMoreCell.m in Sources */,
 				FEFA53B8205FB1A8001F50D8 /* ArticleMobileChangeViewController.m in Sources */,
 				FEFA53B9205FB1A8001F50D8 /* TTServerDateCalibrator.m in Sources */,
@@ -23918,6 +23937,7 @@
 				FEFA5857205FB1A8001F50D8 /* ExploreLogicSetting.m in Sources */,
 				FEFA5858205FB1A8001F50D8 /* TTFeedCollectionCellDefaultHelper.m in Sources */,
 				FEFA585A205FB1A8001F50D8 /* TTProfileTopFunctionCell.m in Sources */,
+				3D33D0F4218B1F1000B13F55 /* UIViewController+HUD.m in Sources */,
 				FEFA585B205FB1A8001F50D8 /* TTVFeedCellSelectContext.m in Sources */,
 				FEFA585C205FB1A8001F50D8 /* ExploreVideoDetailMixedGroupPicADView.m in Sources */,
 				B388CCB52142652B00653188 /* TGBallClipRotateMultiple.swift in Sources */,

@@ -27,8 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController;
 
--(void)requestHouses;
-
 -(void)showMap;
 
 -(void)dismissHouseListView;

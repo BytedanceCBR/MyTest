@@ -46,6 +46,18 @@
     
 }
 
+-(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor
+{
+    self.view.top = self.view.superview.height;
+    self.view.hidden = NO;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.top = floor(self.view.superview.height/3);
+    }];
+
+    [self.viewModel updateWithHouseData:nil neighbor:neighbor];
+}
+
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
     self.view.top = self.view.height;
@@ -96,6 +108,11 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
+}
+
+-(void)showErrorView:(NSString *)errorMsg
+{
+    
 }
 
 /*

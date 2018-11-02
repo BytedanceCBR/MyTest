@@ -136,6 +136,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController = [[FHMapSearchHouseListViewController alloc]init];
         [self.viewController addChildViewController:_houseListViewController];
         _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
+        [self.viewController.view insertSubview:_houseListViewController.view aboveSubview:_mapView];
+        _houseListViewController.view.hidden = YES;
+        
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration) {
             if (wself) {
@@ -330,7 +333,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         
         self.currentSelectAnnotation = houseAnnotation;
-        [self requestNeighborhoodHouses:houseAnnotation.houseData];
+        [self showNeighborHouseList:houseAnnotation.houseData];
     }
     
     [self addClickBubbleLog:houseAnnotation];
@@ -495,43 +498,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 }
 
 #pragma mark - neighborhood houses
--(void)requestNeighborhoodHouses:(FHMapSearchDataListModel *)model
-{
-    /*
-     "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" +
-     */
-    
-    //TODO: add loading ...
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    if (model.nid) {
-        param[NEIGHBORHOOD_ID_KEY] = model.nid;
-    }
-    param[HOUSE_TYPE_KEY] = @(self.configModel.houseType);
-    if (self.configModel.suggestionParams) {
-        param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
-    }
-    
-    __weak typeof(self) wself = self;
-    [FHHouseSearcher houseSearchWithQuery:self.filterConditionParams param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
-        if (!wself) {
-            return ;
-        }
-        if (!error && model) {
-            [wself showHouseList:houseModel searchModel:model];
-        }else{
-            //TODO: show error toast
-        }
-
-    }];
-}
-
--(void)showHouseList:(FHSearchHouseDataModel *)houseDataModel searchModel:(FHMapSearchDataListModel *)model
+-(void)showNeighborHouseList:(FHMapSearchDataListModel *)model
 {
     [self changeNavbarAppear:NO];
     self.showMode = FHMapSearchShowModeHalfHouseList;
-    
-    //add log
-    [self addHouseListShowLog:model houseListModel:houseDataModel];
     
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
@@ -539,7 +509,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     annotationViewPoint.y += self.mapView.height/3;
     CLLocationCoordinate2D destCenter = [self.mapView convertPoint:annotationViewPoint toCoordinateFromView:self.mapView];
     [self.mapView setCenterCoordinate:destCenter animated:YES];
-    [self.houseListViewController showWithHouseData:houseDataModel neighbor:model];
+    [self.houseListViewController showNeighborHouses:model];
     
 }
 

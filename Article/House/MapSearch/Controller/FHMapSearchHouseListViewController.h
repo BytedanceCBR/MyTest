@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model);
 @property(nonatomic , copy)   void (^showNeighborhoodDetailBlock)(FHMapSearchDataListModel *model);
 
+-(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor;
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;
 
 -(CGFloat)minTop;
@@ -33,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)moveTop:(CGFloat)top;
 
 -(void)dismiss;
+
+-(void)showErrorView:(NSString *)errorMsg;
 
 @end
 
