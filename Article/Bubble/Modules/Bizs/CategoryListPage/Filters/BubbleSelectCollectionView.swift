@@ -235,15 +235,16 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         }
         dataSource.nodes
             .enumerated()
-            .forEach { (offset, e) in
+            .forEach { [weak dataSource] (offset, e) in
                 e.children.filter { $0.isEmpty == 0 }
                     .enumerated()
                     .forEach { (rowOffset, item) in
                         if let externalConfig = item.externalConfig.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                             conditionStrArray.contains(externalConfig) {
-                            var indexs = dataSource.selectedIndexPaths.value
-                            indexs.insert(IndexPath(row: rowOffset, section: offset))
-                            dataSource.selectedIndexPaths.accept(indexs)
+                            if var indexs = dataSource?.selectedIndexPaths.value {
+                                indexs.insert(IndexPath(row: rowOffset, section: offset))
+                                dataSource?.selectedIndexPaths.accept(indexs)
+                            }
                         }
                 }
         }
