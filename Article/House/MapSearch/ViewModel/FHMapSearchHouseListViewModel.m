@@ -188,7 +188,7 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!scrollView.isUserInteractionEnabled) {
+    if (!scrollView.isTracking) {
         //不是用户主动滑动
         scrollView.contentOffset = CGPointZero;
         return;
