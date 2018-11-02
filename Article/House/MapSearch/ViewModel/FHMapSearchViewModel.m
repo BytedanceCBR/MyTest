@@ -167,8 +167,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself changeNavbarAppear:NO];
         };
         
-        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model) {
-            [wself showHoseDetailPage:model];
+        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model , NSInteger rank) {
+            [wself showHoseDetailPage:model rank:rank];
         };
         
         _houseListViewController.showNeighborhoodDetailBlock = ^(FHMapSearchDataListModel * _Nonnull model) {
@@ -532,17 +532,58 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
 }
 
--(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model
+-(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model rank:(NSInteger)rank
 {
     //fschema://old_house_detail?house_id=xxx
-    NSString *strUrl = [NSString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.hid,rank];
+    if (model.logPb) {
+        NSString *groupId = model.logPb.groupId;
+        NSString *imprId = model.logPb.imprId;
+        NSString *searchId = model.logPb.searchId;
+        if (groupId) {
+            [strUrl appendFormat:@"&group_id=%@",groupId];
+        }
+        if (imprId) {
+            [strUrl appendFormat:@"&impr_id=%@",imprId];
+        }
+        if (searchId) {
+            [strUrl appendFormat:@"&search_id=%@",searchId];
+        }
+    }
+    if (self.configModel.originFrom) {
+        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
+    }
+    if (_configModel.originSearchId) {
+        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
+    }
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
 }
 
 -(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
 {
-    NSString *strUrl = [NSString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@&card_type=no_pic&enter_from=mapfind&element_from=half_category&rank=0",neighborModel.nid];
+    if (neighborModel.logPb) {
+        NSString *groupId = neighborModel.logPb.groupId;
+        NSString *imprId = neighborModel.logPb.imprId;
+        NSString *searchId = neighborModel.logPb.searchId;
+        if (groupId) {
+            [strUrl appendFormat:@"&group_id=%@",groupId];
+        }
+        if (imprId) {
+            [strUrl appendFormat:@"&impr_id=%@",imprId];
+        }
+        if (searchId) {
+            [strUrl appendFormat:@"&search_id=%@",searchId];
+        }
+    }
+    if (self.configModel.originFrom) {
+        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
+    }
+    if (_configModel.originSearchId) {
+        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
+    }
+
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
 }

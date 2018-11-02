@@ -112,7 +112,7 @@
 -(void)showNeighborDetail
 {
     if (self.listController.showNeighborhoodDetailBlock) {
-        [self addShowNeighborDetailLog:self.neighbor];
+//        [self addShowNeighborDetailLog:self.neighbor];
         self.listController.showNeighborhoodDetailBlock(self.neighbor);
     }
 }
@@ -158,8 +158,7 @@
 {
     FHSearchHouseDataItemsModel *model = _houseList[indexPath.row];
     if (self.listController.showHouseDetailBlock) {
-        self.listController.showHouseDetailBlock(model);
-        [self addHouseDetailShowLog:indexPath];
+        self.listController.showHouseDetailBlock(model,indexPath.row);
     }
 }
 
@@ -387,25 +386,25 @@
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 
--(void)addShowNeighborDetailLog:(FHMapSearchDataListModel *)neighbor
-{
-    
-    NSMutableDictionary *param = [self logBaseParams];
-    
-    param[@"house_type"] = @"neighborhood";
-    param[@"page_type"] = @"neighborhood_detail";
-    param[@"card_type"] = @"no_pic";
-    param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
-    param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
-    param[@"search_id"] = neighbor.logPb.searchId ?: @"be_null";
-    param[@"rank"] = @"0";
-    
-    if (neighbor.logPb) {
-        param[@"log_pb"] = [neighbor.logPb toDictionary];
-    }
-    
-    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
-}
+//-(void)addShowNeighborDetailLog:(FHMapSearchDataListModel *)neighbor
+//{
+//
+//    NSMutableDictionary *param = [self logBaseParams];
+//
+//    param[@"house_type"] = @"neighborhood";
+//    param[@"page_type"] = @"neighborhood_detail";
+//    param[@"card_type"] = @"no_pic";
+//    param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
+//    param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
+//    param[@"search_id"] = neighbor.logPb.searchId ?: @"be_null";
+//    param[@"rank"] = @"0";
+//
+//    if (neighbor.logPb) {
+//        param[@"log_pb"] = [neighbor.logPb toDictionary];
+//    }
+//
+//    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
+//}
 
 
 
@@ -433,25 +432,25 @@
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 
--(void)addHouseDetailShowLog:(NSIndexPath *)indexPath
-{
-    FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
-    
-    NSMutableDictionary *param = [self logBaseParams];
-    
-    param[@"house_type"] = @"old";
-    param[@"page_type"] = @"old_detail";
-    param[@"card_type"] = @"left_pic";
-    param[@"group_id"] = item.logPb.groupId ?: @"be_null";
-    param[@"impr_id"] = item.imprId ?: @"be_null";
-    param[@"rank"] = @(indexPath.row);
-    
-    if (item.logPb) {
-        param[@"log_pb"] = [item.logPb toDictionary];
-    }
-    
-    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
-}
+//-(void)addHouseDetailShowLog:(NSIndexPath *)indexPath
+//{
+//    FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
+//
+//    NSMutableDictionary *param = [self logBaseParams];
+//
+//    param[@"house_type"] = @"old";
+//    param[@"page_type"] = @"old_detail";
+//    param[@"card_type"] = @"left_pic";
+//    param[@"group_id"] = item.logPb.groupId ?: @"be_null";
+//    param[@"impr_id"] = item.imprId ?: @"be_null";
+//    param[@"rank"] = @(indexPath.row);
+//
+//    if (item.logPb) {
+//        param[@"log_pb"] = [item.logPb toDictionary];
+//    }
+//
+//    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
+//}
 
 
 -(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel

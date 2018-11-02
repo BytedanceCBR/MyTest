@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^didSwipeDownDismiss)();
 @property(nonatomic , copy)   void (^moveToTop)(); //滑动到顶部
 @property(nonatomic , copy)   void (^moveDock)(); //滑动到一半
-@property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model);
+@property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model , NSInteger rank);
 @property(nonatomic , copy)   void (^showNeighborhoodDetailBlock)(FHMapSearchDataListModel *model);
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor;
