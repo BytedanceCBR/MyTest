@@ -195,8 +195,10 @@ class ConditionFilterViewModel {
             let panel = constructAreaConditionPanelWithContainer(nodes: configs, container: containerView!, action: selectedAction)
             conditionItemViews.append(panel)
 
-            return { [weak self] (index) in
-                self?.onOpenConditionPanel(panel: panel, index: index)
+            return { [weak self, weak panel] (index) in
+                if let panel = panel {
+                    self?.onOpenConditionPanel(panel: panel, index: index)
+                }
             }
         case 2:
             let selectedAction: (Int, [Node]) -> Void = { [weak self] (index, selectedNode) in
@@ -218,8 +220,10 @@ class ConditionFilterViewModel {
                     container: containerView!,
                     selectedAction)
             conditionItemViews.append(panel)
-            return { [weak self] (index) in
-                self?.onOpenConditionPanel(panel: panel, index: index)
+            return { [weak self, weak panel] (index) in
+                if let panel = panel {
+                    self?.onOpenConditionPanel(panel: panel, index: index)
+                }
             }
         case 3:
             let selectedAction: (Int, [Node]) -> Void = { [weak self] (index, selectedNode) in
@@ -241,8 +245,10 @@ class ConditionFilterViewModel {
                     container: containerView!,
                     selectedAction)
             conditionItemViews.append(panel)
-            return { [weak self] (index) in
-                self?.onOpenConditionPanel(panel: panel, index: index)
+            return { [weak self, weak panel] (index) in
+                if let panel = panel {
+                    self?.onOpenConditionPanel(panel: panel, index: index)
+                }
             }
         default:
             let selectedAction: (Int, [Node]) -> Void = { [weak self] (index, selectedNode) in
@@ -264,8 +270,10 @@ class ConditionFilterViewModel {
                     container: containerView!,
                     selectedAction)
             conditionItemViews.append(panel)
-            return { [weak self] (index) in
-                self?.onOpenConditionPanel(panel: panel, index: index)
+            return { [weak self, weak panel] (index) in
+                if let panel = panel {
+                    self?.onOpenConditionPanel(panel: panel, index: index)
+                }
             }
         }
     }

@@ -277,27 +277,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     [self.infoLabel sizeToFit];
     self.infoLabel.left = kLeftPadding;
     self.infoLabel.top = self.contentView.bottom + 10;
-    
-//    self.bottomInfoView.hidden = NO;
-//    self.bottomInfoView.frame = CGRectMake(0, self.contentView.bottom, self.width, kBottomHeight);
-//
-//    [self.moreLabel sizeToFit];
-//    self.moreLabel.hidden = NO;
-//    self.moreLabel.left = kLeftPadding;
-//    self.moreLabel.centerY = self.bottomInfoView.height / 2;
-//
-//    if ([TTShortVideoHelper canOpenShortVideoTab]) {
-//        self.moreArrow.hidden = NO;
-//        self.moreArrow.left = self.moreLabel.right + kMoreArrowLeftGap;
-//        self.moreArrow.centerY = self.moreLabel.centerY;
-//
-//        self.moreButton.width = self.moreLabel.width + self.moreArrow.width + kMoreArrowLeftGap;
-//        self.moreButton.height = kBottomHeight;
-//        self.moreButton.centerY = self.moreLabel.centerY;
-//        self.moreButton.left = self.moreLabel.left;
-//    } else {
-//        self.bottomInfoView.hidden = YES;
-//    }
+
 }
 
 - (void)themeChanged:(NSNotification *)notification
