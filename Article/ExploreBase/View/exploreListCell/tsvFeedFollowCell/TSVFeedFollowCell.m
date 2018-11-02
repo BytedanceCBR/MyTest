@@ -96,7 +96,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 
 @property (nonatomic, strong) SSThemedLabel                 *moreLabel;
 @property (nonatomic, strong) SSThemedImageView             *moreArrow;
-@property (nonatomic, strong) TTAlphaThemedButton           *moreButton;
+//@property (nonatomic, strong) TTAlphaThemedButton           *moreButton;
 
 //  data
 @property (nonatomic, strong) ExploreOrderedData            *orderedData;
@@ -462,33 +462,6 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     return _moreLabel;
 }
 
-- (TTAlphaThemedButton *)moreButton
-{
-    if (!_moreButton) {
-        _moreButton = [[TTAlphaThemedButton alloc] initWithFrame:CGRectZero];
-        _moreButton.backgroundColor = [UIColor clearColor];
-        WeakSelf;
-        [_moreButton addTarget:self withActionBlock:^{
-            StrongSelf;
-            [self handleClickWithModel:self.model];
-            [self sendClickMoreEventWithData:self.orderedData];
-        } forControlEvent:UIControlEventTouchUpInside];
-        [self.bottomInfoView addSubview:_moreButton];
-    }
-    return _moreButton;
-}
-
-- (SSThemedImageView *)moreArrow
-{
-    if (!_moreArrow) {
-        _moreArrow = [[SSThemedImageView alloc] initWithFrame:CGRectMake(0, 0, kMoreArrowW, kMoreArrowH)];
-        _moreArrow.backgroundColor = [UIColor clearColor];
-        _moreArrow.imageName = @"horizontal_more_arrow";
-        [self.bottomInfoView addSubview:_moreArrow];
-    }
-    return _moreArrow;
-}
-
 -(TSVFeedFollowCellContentView *)contentView
 {
     if (!_contentView) {
@@ -587,7 +560,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     @weakify(self);
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIApplicationWillEnterForegroundNotification object:nil] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(NSNotification * _Nullable x) {
         @strongify(self);
-        if (_isDisplaying) {
+        if (self.isDisplaying) {
             [self sendEventWithEventName:@"huoshan_video_show" orderedData:self.orderedData];
         }
     }];

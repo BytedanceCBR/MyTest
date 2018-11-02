@@ -21,6 +21,25 @@ class FHFloatValueFormatter: IAxisValueFormatter {
 }
 
 
+class FHMonthValueFormatter: IAxisValueFormatter {
+    
+    var priceTrend:PriceTrend?
+    
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        
+        guard let priceTrend = self.priceTrend else{
+            
+            return ""
+        }
+        if priceTrend.values.count < 1 {
+            return ""
+        }
+        let timeStamp = priceTrend.values[min(max(Int(value), 0), priceTrend.values.count - 1)].timestamp
+        
+        return CommonUIStyle.DateTime.monthDataFormat.string(from: Date(timeIntervalSince1970: TimeInterval(timeStamp ?? 0)))
+        
+    }
+}
 
 
 class ErshouHousePriceChartCell: BaseUITableViewCell {
@@ -31,6 +50,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     
     var clickCallBack : (() -> Void)? = nil
 
+    var monthFormatter = FHMonthValueFormatter()
+    
     lazy var priceUpValueLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangSemibold(24)
@@ -135,6 +156,17 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
             self.maxValue = (Double(priceTrends.first?.values.first?.price ?? "") ?? 0.0) / 100.0 / 10000.0
             self.minValue = self.maxValue
+            
+            if var thePriceTrend = priceTrends.first {
+                
+                for priceTrend in priceTrends {
+                    
+                    if priceTrend.values.count >= thePriceTrend.values.count {
+                        thePriceTrend = priceTrend
+                    }
+                }
+                self.monthFormatter.priceTrend = thePriceTrend
+            }
             
             var trailing: CGFloat = 20
             
@@ -371,7 +403,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         xAxis.axisLineWidth = 0.5
         xAxis.drawAxisLineEnabled = false
         xAxis.yOffset = 10
-        xAxis.valueFormatter = self
+        xAxis.valueFormatter = self.monthFormatter
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
@@ -540,30 +572,6 @@ extension ErshouHousePriceChartCell:ChartViewDelegate {
 
 }
 
-extension ErshouHousePriceChartCell: IAxisValueFormatter {
-    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-
-        guard let _ = self.priceTrends.first else{
-            
-            return ""
-        }
-
-        var thePriceTrend = self.priceTrends.first!
-        for priceTrend in self.priceTrends {
-            
-            if priceTrend.values.count >= thePriceTrend.values.count {
-                thePriceTrend = priceTrend
-            }
-        }
-        if thePriceTrend.values.count < 1 {
-            return ""
-        }
-        let timeStamp = thePriceTrend.values[min(max(Int(value), 0), thePriceTrend.values.count - 1)].timestamp
-
-        return CommonUIStyle.DateTime.monthDataFormat.string(from: Date(timeIntervalSince1970: TimeInterval(timeStamp ?? 0)))
-
-    }
-}
 
 func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExtension: TracerParams = TracerParams.momoid(), navVC: UINavigationController?,
     callBack: @escaping () -> Void) -> () -> TableSectionNode? {
