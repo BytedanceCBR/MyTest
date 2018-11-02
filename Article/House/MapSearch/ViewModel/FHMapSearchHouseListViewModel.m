@@ -29,6 +29,7 @@
 @property(nonatomic , weak)   TTHttpTask * requestTask;
 @property(nonatomic , assign) BOOL enteredFullListPage;
 @property(nonatomic , strong) NHErrorViewModel *erroViewModel;
+@property(nonatomic , assign) CGPoint currentOffset;
 @end
 
 @implementation FHMapSearchHouseListViewModel
@@ -169,7 +170,7 @@
 
 -(void)handleDismiss:(CGFloat)duration
 {
-    self.tableView.userInteractionEnabled = false;
+    self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
         self.listController.willSwipeDownDismiss(duration);
     }
@@ -179,7 +180,7 @@
         if (self.listController.didSwipeDownDismiss) {
             self.listController.didSwipeDownDismiss();
         }
-        self.tableView.userInteractionEnabled = true;
+        self.tableView.scrollEnabled = true;
     }];
     [self.tableView.mj_footer resetNoMoreData];
     
@@ -188,12 +189,12 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!scrollView.isTracking) {
+    if (!scrollView.scrollEnabled) {
         //不是用户主动滑动
         scrollView.contentOffset = CGPointZero;
         return;
     }
-
+    
     CGFloat minTop =  [self.listController minTop];
     if ([self.listController canMoveup]) {
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
@@ -206,9 +207,19 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
+    [self checkScrollMoveEffect:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self checkScrollMoveEffect:scrollView];
+}
+
+-(void)checkScrollMoveEffect:(UIScrollView *)scrollview
+{
     if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
-    }else if(![self.listController canMoveup] && (self.listController.view.top - [self.listController minTop] < 50)){
+    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 100)){
         //吸附都顶部
         [self.listController moveTop:0];
         [self addEnterListPageLog];
@@ -254,7 +265,7 @@
     }
     
     if (showLoading) {
-        self.tableView.userInteractionEnabled = NO;
+        self.tableView.scrollEnabled = NO;
     }
     
     __weak typeof(self) wself = self;
@@ -279,7 +290,7 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.userInteractionEnabled = YES;
+            wself.tableView.scrollEnabled = YES;
             
             [wself.erroViewModel onRequestNormalData];
         }else{
@@ -289,7 +300,6 @@
                 [wself.erroViewModel onRequestNilData];
             }
         }
-        
     }];
     
     self.requestTask = task;
@@ -386,28 +396,6 @@
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 
-//-(void)addShowNeighborDetailLog:(FHMapSearchDataListModel *)neighbor
-//{
-//
-//    NSMutableDictionary *param = [self logBaseParams];
-//
-//    param[@"house_type"] = @"neighborhood";
-//    param[@"page_type"] = @"neighborhood_detail";
-//    param[@"card_type"] = @"no_pic";
-//    param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
-//    param[@"impr_id"] = neighbor.logPb.imprId ?: @"be_null";
-//    param[@"search_id"] = neighbor.logPb.searchId ?: @"be_null";
-//    param[@"rank"] = @"0";
-//
-//    if (neighbor.logPb) {
-//        param[@"log_pb"] = [neighbor.logPb toDictionary];
-//    }
-//
-//    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
-//}
-
-
-
 -(void)addHouseShowLog:(NSIndexPath *)indexPath
 {
     FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
@@ -432,32 +420,20 @@
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 
-//-(void)addHouseDetailShowLog:(NSIndexPath *)indexPath
-//{
-//    FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
-//
-//    NSMutableDictionary *param = [self logBaseParams];
-//
-//    param[@"house_type"] = @"old";
-//    param[@"page_type"] = @"old_detail";
-//    param[@"card_type"] = @"left_pic";
-//    param[@"group_id"] = item.logPb.groupId ?: @"be_null";
-//    param[@"impr_id"] = item.imprId ?: @"be_null";
-//    param[@"rank"] = @(indexPath.row);
-//
-//    if (item.logPb) {
-//        param[@"log_pb"] = [item.logPb toDictionary];
-//    }
-//
-//    [EnvContext.shared.tracer writeEvent:@"go_detail" params:param];
-//}
-
 
 -(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
+}
+
+-(BOOL)respondsToSelector:(SEL)aSelector
+{
+    if ([NSStringFromSelector(aSelector) containsString:@"scrollView"]) {
+        NSLog(@"scrollview %@",NSStringFromSelector(aSelector));
+    }
+    return [super respondsToSelector:aSelector];
 }
 
 @end

@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showIn:(UIView *)view at:(CGPoint)topLeft content:(NSString *)content duration:(NSTimeInterval)duration above:(UIView *)aboveView;
 
+-(void)removeTip;
+
 @end
 
 NS_ASSUME_NONNULL_END

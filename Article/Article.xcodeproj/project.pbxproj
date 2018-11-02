@@ -369,6 +369,9 @@
 		3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
+		3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
+		3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
+		3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */; };
 		3F765B1D16DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
@@ -6179,6 +6182,7 @@
 		3D49A0FD2181E5D500597A21 /* UIColor+Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Theme.m"; sourceTree = "<group>"; };
 		3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHMDMonitorStartupTask.h; sourceTree = "<group>"; };
 		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
+		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB236D32186B032009EB275 /* FHMapSearchShowMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchShowMode.h; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3F765AC616DB563F0037C3E3 /* ArticleGetLocalDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleGetLocalDataOperation.h; sourceTree = "<group>"; };
@@ -12514,6 +12518,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				3D721A9D218FE7FA006C1156 /* gaode_map_style.data */,
 				2E14CCE61FE007BD0093E05D /* sound1.caf */,
 				2E14CCE91FE007C00093E05D /* sound2.caf */,
 				2E14CCE71FE007BE0093E05D /* sound3.caf */,
@@ -18089,6 +18094,7 @@
 				FEF9CAC3206BAF3E00455765 /* README.md in Resources */,
 				6B4296231BA14541000B7F10 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				F876957C1F31D0D700D59CA5 /* TTVTab.storyboard in Resources */,
+				3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				6BDDD2741D479A0F006079E7 /* assets in Resources */,
 				D046AB9A1BB024EA0042210A /* recommend_cancel.png in Resources */,
 				7B4772771CFC438A00D3F8DC /* Stub_Article_Information.txt in Resources */,
@@ -18173,6 +18179,7 @@
 				B373CEB52174587A008F9905 /* README.md in Resources */,
 				B373CEB62174587A008F9905 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				B373CEB72174587A008F9905 /* TTVTab.storyboard in Resources */,
+				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				B373CEB82174587A008F9905 /* assets in Resources */,
 				B373CEB92174587A008F9905 /* recommend_cancel.png in Resources */,
 				B373CEBA2174587A008F9905 /* Stub_Article_Information.txt in Resources */,
@@ -18257,6 +18264,7 @@
 				FEF9CAC4206BAF3E00455765 /* README.md in Resources */,
 				FEFA5A09205FB1A8001F50D8 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A0B205FB1A8001F50D8 /* TTVTab.storyboard in Resources */,
+				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FEFA5A0C205FB1A8001F50D8 /* assets in Resources */,
 				FEFA5A0E205FB1A8001F50D8 /* recommend_cancel.png in Resources */,
 				FEFA5A11205FB1A8001F50D8 /* Stub_Article_Information.txt in Resources */,

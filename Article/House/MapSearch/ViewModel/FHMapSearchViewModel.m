@@ -111,6 +111,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (center.latitude > 0 && center.longitude > 0) {
             [_mapView setCenterCoordinate:center animated:YES];
         }
+        
+        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
+        NSData *styleData = [NSData dataWithContentsOfFile:stylePath];
+        if (styleData) {
+            _mapView.customMapStyleEnabled = YES;
+            [_mapView setCustomMapStyleWithWebData:styleData];
+        }
     }
     return _mapView;
 }
@@ -143,6 +150,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
         [self.viewController.view insertSubview:_houseListViewController.view aboveSubview:_mapView];
         _houseListViewController.view.hidden = YES;
+        /*
+         * TTNavigationcontroller 会设置view的subview中scrollview的 contentinset 和 offset
+         */
+        [_houseListViewController resetScrollViewInsetsAndOffsets];
         
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration) {
@@ -152,6 +163,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
                 [wself.mapView deselectAnnotation:wself.currentSelectAnnotation animated:YES];
                 wself.currentSelectAnnotation = nil;
+                [wself.mapView becomeFirstResponder];
             }
         };
         _houseListViewController.didSwipeDownDismiss = ^{
@@ -509,6 +521,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     [self changeNavbarAppear:NO];
     self.showMode = FHMapSearchShowModeHalfHouseList;
+    [self.tipView removeTip];
     
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);

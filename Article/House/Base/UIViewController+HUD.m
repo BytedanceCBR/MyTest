@@ -42,12 +42,7 @@ static void *hudKey = &hudKey;
     hud.label.text = message;
     hud.offset = offset;
     self.hud = hud;
-        
-    CycleIndicatorView *indicatorView = [[CycleIndicatorView alloc] init];
-    [indicatorView startAnimating];
-    self.hud.customView = indicatorView;
-    self.hud.mode = MBProgressHUDModeCustomView;
-    
+
 }
 
 -(void)dismissLoadingAlert

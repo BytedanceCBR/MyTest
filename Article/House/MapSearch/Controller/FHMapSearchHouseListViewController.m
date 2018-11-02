@@ -25,6 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.showsVerticalScrollIndicator = NO;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -50,6 +51,24 @@
     self.viewModel = [[FHMapSearchHouseListViewModel alloc] initWithController:self tableView:self.tableView];
     self.viewModel.headerView = _headerView;
     self.viewModel.maskView = _maskView;
+    
+    if (@available(iOS 11.0 , *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        UIEdgeInsets inset = UIEdgeInsetsZero;
+        inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
+        self.tableView.contentInset = inset;
+    }
+
+}
+
+-(void)resetScrollViewInsetsAndOffsets
+{
+    self.tableView.contentOffset = CGPointZero;
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    if (@available(iOS 11.0 , *)) {
+        inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
+    }
+    self.tableView.contentInset = inset;
 }
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor
@@ -83,14 +102,14 @@
 
 -(BOOL)canMoveup
 {
-    return self.view.top - 0.01 > [self minTop];
+    return (self.view.top - 0.01) > [self minTop];
 }
 
 -(void)moveTop:(CGFloat)top
 {
     CGFloat minTop = [self minTop];
     top = MAX(minTop, top);
-    if (top + 0.1 < self.view.top && top == minTop ) {
+    if (((top + 0.1) < self.view.top) && (top == minTop) ) {
         //move to topest
         if (self.moveToTop) {
             self.moveToTop();
