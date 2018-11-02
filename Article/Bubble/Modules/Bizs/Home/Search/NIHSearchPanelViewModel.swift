@@ -54,14 +54,14 @@ class NIHSearchPanelViewModel: NSObject {
     
     private func openCountryList() {
         let vc = CountryListVC()
-        vc.onClose = { _ in
-            self.baseVC.navigationController?.popViewController(animated: true)
+        vc.onClose = { [weak self] _ in
+            self?.baseVC.navigationController?.popViewController(animated: true)
         }
         vc.onItemSelect
-            .subscribe(onNext: { i in
+            .subscribe(onNext: { [weak self] i in
                 EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
                 EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
-                self.baseVC.navigationController?.popViewController(animated: true)
+                self?.baseVC.navigationController?.popViewController(animated: true)
             })
             .disposed(by: self.disposeBag)
         self.baseVC.navigationController?.pushViewController(vc, animated: true)
@@ -138,7 +138,7 @@ class NIHSearchPanelViewModel: NSObject {
         let nav = self.baseVC.navigationController
         nav?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
+            .subscribe(onNext: { [weak nav] void in
                 EnvContext.shared.toast.dismissToast()
                 nav?.popViewController(animated: true)
             })
