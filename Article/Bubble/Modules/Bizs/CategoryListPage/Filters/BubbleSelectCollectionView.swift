@@ -191,6 +191,8 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     let disposeBag = DisposeBag()
 
+    var contentDisposeBag : DisposeBag? = DisposeBag()
+    
     var headerViewType: AnyClass
 
     convenience init(nodes: [Node]) {
@@ -301,19 +303,23 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
         
         
-//        collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
-//            .subscribe(onNext: { [unowned self](size) in
-//                if let size = size {
-//                    self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
-//                }
-//            })
-//            .disposed(by: disposeBag)
+        collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
+            .subscribe(onNext: { [unowned self](size) in
+                if let size = size {
+                    self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
+                }
+            })
+            .disposed(by: contentDisposeBag!)
 
         bindButtonActions()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        contentDisposeBag = nil
     }
 
     func bindButtonActions() {
