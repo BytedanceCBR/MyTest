@@ -365,6 +365,16 @@ class NHSendPhoneNumberPanel: UIView {
             maker.height.equalTo(46)
         }
         
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UITextFieldTextDidChange, object: nil)
+            .subscribe(onNext: { [unowned self] notification in
+                
+                if let input = self.phoneTextField.text, input.count > 11 {
+                    self.phoneTextField.text = String(input.prefix(11))
+                }
+            
+            })
+            .disposed(by: disposeBag)
         
         phoneTextField.rx.text
             .filter { $0 != nil }
