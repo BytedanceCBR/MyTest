@@ -262,6 +262,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             if let nodes = dataSources.first?.nodes {
                 let selectedIndexPath = dataSources.first?.selectedIndexPaths.first ?? IndexPath(row: 0, section: 0)
                 if nodes.count > selectedIndexPath.row {
+                    dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
+
+                    let children = nodes[selectedIndexPath.row].children
+                    dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+                    
                     //根据第一列选择行设置第二列数据
                     dataSources[1].nodes = nodes[selectedIndexPath.row].children
                     if dataSources[1].nodes.count > dataSources[1].selectedIndexPaths.first?.row ?? 0 {
