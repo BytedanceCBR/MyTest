@@ -22,7 +22,7 @@
 #import "DebugUmengIndicator.h"
 #import <TTTracker/TTTrackerCleaner.h>
 #import "SSWebViewUtil.h"
-
+#import "Bubble-Swift.h"
 @implementation TTAppLogStartupTask
 
 + (void)load
@@ -94,6 +94,11 @@
         if ([SSCommonLogic isUAEnable]) {
             [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
         }
+        NSString* currentCityName = [[EnvContext shared].client currentCityName];
+        NSString* provinceName = [[EnvContext shared].client currentProvince];
+        customHeader[@"city_name"] = currentCityName;
+        customHeader[@"province_name"] = currentCityName;
+
         return [customHeader copy];
     }];
     
