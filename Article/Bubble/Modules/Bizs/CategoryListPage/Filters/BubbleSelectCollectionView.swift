@@ -101,7 +101,7 @@ func constructMoreSelectCollectionPanelWithContainer(
         action(index, nodes)
     }
     
-    thePanel.contentSizeDidChange = { size in
+    thePanel.contentSizeDidChange = { [unowned thePanel] size in
         let height = min(size.height , thePanel.superview!.height)
         let offset = height - thePanel.superview!.height
         thePanel.snp.updateConstraints({ (maker) in
