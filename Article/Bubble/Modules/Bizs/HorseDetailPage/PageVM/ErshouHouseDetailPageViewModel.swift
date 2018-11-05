@@ -317,7 +317,12 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
                 <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor)
-                <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
+                <- parseNeighborhoodInfoNode(
+                    data,
+                    searchId: self.searchId ?? "be_null",
+                    traceExtension: traceExtension,
+                    neighborhoodId: "\(self.houseId)",
+                    navVC: self.navVC)
                 <- parseHeaderNode("均价走势")
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id

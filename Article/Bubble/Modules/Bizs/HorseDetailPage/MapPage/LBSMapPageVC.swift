@@ -59,6 +59,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     var tracerParams = TracerParams.momoid()
 
+    var stayMapParams = TracerParams.momoid()
+
     var centerPointName: String
     
     init(centerPointName: String) {
@@ -165,11 +167,20 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                 .disposed(by: disposeBag)
         self.tracerParams = self.tracerParams <|>
                 toTracerParams("map_detail", key: "page_type")
+        self.stayMapParams = self.tracerParams <|>
+            traceStayTime()
         recordEvent(key: "enter_map", params: self.tracerParams)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.stayMapParams = self.tracerParams <|>
+            traceStayTime()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        recordEvent(key: "stay_map", params: self.stayMapParams)
     }
 
     fileprivate func cleanAllAnnotations() {

@@ -266,6 +266,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             
             if let searchId = allParams["search_id"] {
                 traceParams = traceParams <|> toTracerParams(searchId,key:"search_id")
+                self.searchId = searchId as? String
             }
             
             if let originFrom = allParams["origin_from"] {
@@ -308,7 +309,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             {
                 searchId = (dictTracePara["search_id"] as! String)
             }
-            self.searchId = searchId
+            if let searchId = searchId {
+                self.searchId = searchId
+            }
             self.traceParams = self.traceParams <|> toTracerParams(searchId ?? "be_null", key: "search_id")
         }
 
@@ -320,9 +323,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self?.dismissLoadingAlert()
         }
         detailPageViewModel?.traceParams = traceParams
+        detailPageViewModel?.searchId = self.searchId
         self.bindNetStatusViewModel()
         setupNavBar()
-
         //绑定二手房跳小区详情页followUp信号
         if let detailPageViewModel = detailPageViewModel as? ErshouHouseDetailPageViewModel {
             detailPageViewModel.sameNeighborhoodFollowUp.accept(self.sameNeighborhoodFollowUp.value)

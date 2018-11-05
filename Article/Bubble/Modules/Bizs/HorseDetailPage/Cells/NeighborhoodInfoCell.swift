@@ -53,7 +53,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 
     var data: NeighborhoodInfo?
     var logPB: [String: Any]?
-    var neighborhoodId:String?
+    var neighborhoodId: String?
+    var searchId: String?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -86,10 +87,11 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         let selector = { [unowned self] in
             if let lat = self.data?.gaodeLat,
                 let lng = self.data?.gaodeLng {
-                let theParams = TracerParams.momoid() <|>
+                let theParams = EnvContext.shared.homePageParams <|>
                     toTracerParams("map_list", key: "click_type") <|>
                     toTracerParams("old_detail", key: "enter_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
+                    toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(self.logPB ?? "be_null", key: "log_pb")
                 
                 let clickParams = theParams <|>
@@ -133,7 +135,12 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
     }
 }
 
-func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtension: TracerParams = TracerParams.momoid(), neighborhoodId: String, navVC: UINavigationController?) -> () -> TableSectionNode? {
+func parseNeighborhoodInfoNode(
+    _ ershouHouseData: ErshouHouseData,
+    searchId: String,
+    traceExtension: TracerParams = TracerParams.momoid(),
+    neighborhoodId: String,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         
         if ershouHouseData.neighborhoodInfo == nil {
@@ -156,7 +163,7 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
         
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)(searchId)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
 
         return TableSectionNode(
                 items: [render],
@@ -167,7 +174,14 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
     }
 }
 
-func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodInfoCell(
+    _ data: NeighborhoodInfo?,
+    searchId: String,
+    tracer: ElementRecord,
+    neighborhoodId: String,
+    navVC: UINavigationController?,
+    logPB: [String: Any]?,
+    cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
         theCell.nameValue.text = data?.name
@@ -175,7 +189,7 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, 
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
         theCell.data = data
-
+        theCell.searchId = searchId
         if let url = data?.gaodeImageUrl {
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }
