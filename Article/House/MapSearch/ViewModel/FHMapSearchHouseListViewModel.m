@@ -140,10 +140,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (indexPath.row == _houseList.count - 1) {
-        return 125;
-//    }
-//    return 105;
+    return 125;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -420,20 +417,11 @@
     [EnvContext.shared.tracer writeEvent:@"house_show" params:param];
 }
 
-
 -(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
-}
-
--(BOOL)respondsToSelector:(SEL)aSelector
-{
-    if ([NSStringFromSelector(aSelector) containsString:@"scrollView"]) {
-        NSLog(@"scrollview %@",NSStringFromSelector(aSelector));
-    }
-    return [super respondsToSelector:aSelector];
 }
 
 @end

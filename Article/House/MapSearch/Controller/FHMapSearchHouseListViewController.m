@@ -10,6 +10,7 @@
 #import "FHMapSearchModel.h"
 #import "FHHouseAreaHeaderView.h"
 #import "Bubble-Swift.h"
+#import "UIColor+Theme.h"
 
 @interface FHMapSearchHouseListViewController ()
 
@@ -29,12 +30,14 @@
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.showsVerticalScrollIndicator = NO;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    _tableView.separatorColor = RGB(0xe8, 0xea, 0xeb);
+    
     if (@available(iOS 11.0, *)) {
         self.tableView.estimatedRowHeight = 0;
         self.tableView.estimatedSectionHeaderHeight = 0;
         self.tableView.estimatedSectionFooterHeight = 0;
     }
-    _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 88)];
+    _headerView = [[FHHouseAreaHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 87)];
     [self.view addSubview:_tableView];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {

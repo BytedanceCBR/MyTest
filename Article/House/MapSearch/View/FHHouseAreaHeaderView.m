@@ -45,15 +45,15 @@
         UIImage *img = [UIImage imageNamed:@"indicator"];
         _indicatorImgView = [[UIImageView alloc] initWithImage:img];
         
-        _bottomLine = [[UIView alloc] init];
-        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
+//        _bottomLine = [[UIView alloc] init];
+//        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
         
         [self addSubview:_topTipView];
         [self addSubview:_nameLabel];
         [self addSubview:_locationLabel];
         [self addSubview:_priceLabel];
         [self addSubview:_indicatorImgView];
-        [self addSubview:_bottomLine];
+//        [self addSubview:_bottomLine];
         
         [self initConstraints];
         self.backgroundColor = [UIColor whiteColor];
@@ -92,10 +92,10 @@
         make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     
-    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self);
-        make.height.mas_equalTo(1);        
-    }];
+//    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.bottom.mas_equalTo(self);
+//        make.height.mas_equalTo(0.5);        
+//    }];
 }
 
 -(void)updateWithMode:(FHMapSearchDataListModel *)model
