@@ -212,6 +212,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let dataSource = BubbleSelectDataSource(nodes: nodes)
         self.init(nodes: nodes, headerView: headerView, dataSource: dataSource)
         self.dataSource = dataSource
+        setupUI()
     }
 
     init(nodes: [Node], headerView: AnyClass, dataSource: BubbleSelectDataSource) {
@@ -300,13 +301,13 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
         
         
-        collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
-            .subscribe(onNext: { [unowned self](size) in
-                if let size = size {
-                    self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
-                }
-            })
-            .disposed(by: disposeBag)
+//        collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
+//            .subscribe(onNext: { [unowned self](size) in
+//                if let size = size {
+//                    self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
+//                }
+//            })
+//            .disposed(by: disposeBag)
 
         bindButtonActions()
     }
@@ -348,6 +349,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         dataSource.restoreSelectedState()
         collectionView.reloadData()
     }
+
 }
 
 class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
