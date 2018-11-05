@@ -19,6 +19,7 @@
 #import <Masonry/Masonry.h>
 #import "FHMapSearchTipView.h"
 #import <TTRoute/TTRouteDefine.h>
+#import "UIFont+House.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 51
@@ -33,6 +34,7 @@
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 @property(nonatomic , strong) UIBarButtonItem *showHouseListBarItem;
 @property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
+@property(nonatomic , strong) UILabel *navTitleLabel;
 
 @end
 
@@ -139,6 +141,12 @@
     self.navigationItem.leftBarButtonItem = backItem;
     
     self.navigationItem.rightBarButtonItem = self.showHouseListBarItem;
+    
+    self.navTitleLabel = [[UILabel alloc] init];
+    _navTitleLabel.font = [UIFont themeFontMedium:16];
+    self.navigationItem.titleView = _navTitleLabel;
+    self.ttNeedHideBottomLine = YES;
+
 }
 
 - (void)viewDidLoad {
@@ -173,6 +181,8 @@
     self.houseFilterViewModel.delegate = _viewModel;
     
     self.title = _viewModel.navTitle;
+    _navTitleLabel.text = self.title;
+    [_navTitleLabel sizeToFit];
        
 }
 
@@ -199,8 +209,14 @@
     }];
     
     CGFloat navHeight = 44;
+    
     if (@available(iOS 11.0 , *)) {
-        navHeight += [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        CGFloat top  = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        if (top > 0) {
+            navHeight += top;
+        }else{
+            navHeight += [UIApplication sharedApplication].statusBarFrame.size.height;
+        }
     }else{
         navHeight += [UIApplication sharedApplication].statusBarFrame.size.height;
     }
@@ -234,8 +250,10 @@
     if(self.navigationItem.rightBarButtonItem != rightItem){
         self.navigationItem.rightBarButtonItem = rightItem;
     }
-    
+        
     self.title = self.viewModel.navTitle;
+    _navTitleLabel.text = self.title;
+    [_navTitleLabel sizeToFit];
 }
 
 -(void)showNavTopViews:(BOOL)show

@@ -115,6 +115,16 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         mapView.snp.makeConstraints { maker in
             maker.top.bottom.right.left.equalToSuperview()
         }
+        if let stylePath = Bundle.main.path(forResource: "gaode_map_style", ofType: "data"){
+            if let styleUrl = URL(string:stylePath){
+                if let styleData = try? Data(contentsOf: styleUrl) {
+                    mapView.customMapStyleEnabled = true
+                    mapView.setCustomMapStyleWithWebData(styleData)
+                }
+            }
+        }
+        
+        
         self.mapView = mapView
         setupBottomBar()
         

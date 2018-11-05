@@ -26,7 +26,7 @@
     if (self) {
         
         UIImage *bgImage = [UIImage imageNamed:@"mapsearch_annotation_bg"];
-        bgImage = [bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(15, 30, 19, 30)];
+        bgImage = [self resizeableImage:bgImage];
         UIImage *arrowImage = [UIImage imageNamed:@"mapsearch_annotation_arrow"];
         _backgroundView = [[UIImageView alloc] initWithImage:bgImage];
         _arrowView = [[UIImageView alloc] initWithImage:arrowImage];
@@ -35,7 +35,7 @@
         _contentLabel.textColor = [UIColor themeBlack];
         _contentLabel.font = [UIFont systemFontOfSize:12];
         _contentLabel.textAlignment = NSTextAlignmentCenter;
-        
+
         [self addSubview:_backgroundView];
         [self addSubview:_arrowView];
         [self addSubview:_contentLabel];
@@ -45,13 +45,18 @@
     return self;
 }
 
+-(UIImage *)resizeableImage:(UIImage *)img
+{
+    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 30, 19, 30)];
+}
+
 -(void)updateWithAnnotation:(id<MAAnnotation>) annotation
 {
     NSString *content = [NSString stringWithFormat:@"%@ %@",annotation.title,annotation.subtitle];
     _contentLabel.text = content;
     [_contentLabel sizeToFit];
     
-    CGFloat maxWidth = MIN(_contentLabel.width, 200);
+    CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
     frame.size = CGSizeMake(maxWidth+30, 35);
     self.frame = frame;
@@ -101,7 +106,9 @@
             }
                 break;
         }
-        _backgroundView.image = [UIImage imageNamed:bgImageName];
+        UIImage *img = [UIImage imageNamed:bgImageName];
+        img = [self resizeableImage:img];
+        _backgroundView.image = img;
         _arrowView.image = [UIImage imageNamed:arrowImageName];
         _contentLabel.textColor = textColor;
     }

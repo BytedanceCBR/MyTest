@@ -28,9 +28,10 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.showsVerticalScrollIndicator = NO;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    _tableView.separatorColor = RGB(0xe8, 0xea, 0xeb);
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//    _tableView.separatorColor = RGB(0xe8, 0xea, 0xeb);
     
     if (@available(iOS 11.0, *)) {
         self.tableView.estimatedRowHeight = 0;
@@ -61,7 +62,6 @@
         inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
         self.tableView.contentInset = inset;
     }
-
 }
 
 -(void)resetScrollViewInsetsAndOffsets
@@ -71,7 +71,11 @@
     if (@available(iOS 11.0 , *)) {
         inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
     }
+    if (self.tableView.mj_footer) {
+        inset.bottom += self.tableView.mj_footer.height;
+    }
     self.tableView.contentInset = inset;
+   
 }
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor

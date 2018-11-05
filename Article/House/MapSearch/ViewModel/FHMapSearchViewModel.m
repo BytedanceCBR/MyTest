@@ -162,6 +162,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 wself.showMode = FHMapSearchShowModeMap;
                 [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
                 [wself.mapView deselectAnnotation:wself.currentSelectAnnotation animated:YES];
+                [wself moveAnnotationToCenter:wself.currentSelectAnnotation];
                 wself.currentSelectAnnotation = nil;
                 [wself.mapView becomeFirstResponder];
             }
@@ -310,6 +311,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
         [self.mapView removeAnnotations:needRemoveAnnotations];
         [self.mapView addAnnotations:annotations];
+    }else{
+        [self.mapView removeAnnotations:self.mapView.annotations];
     }
 
 }
@@ -357,6 +360,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     [self addClickBubbleLog:houseAnnotation];
 }
+
+-(void)moveAnnotationToCenter:(FHHouseAnnotation *)annotation
+{
+    if (!annotation) {
+        return;
+    }
+    FHMapSearchDataListModel *model = annotation.houseData;
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
+    [self.mapView setCenterCoordinate:center animated:YES];
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {

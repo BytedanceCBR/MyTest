@@ -37,23 +37,24 @@
     if (self) {
         _topTipView = [[UIView alloc] init];
         _topTipView.backgroundColor = [UIColor themeGrayPale];
+        _topTipView.layer.cornerRadius = 1.5;
+        _topTipView.layer.masksToBounds = YES;
         
         _nameLabel = [self labelColor:[UIColor themeBlack] fontSize:20];
         _locationLabel = [self labelColor:[UIColor themeGray] fontSize:12 ];
         _priceLabel = [self labelColor:[UIColor themeRed] fontSize:16];
         
-        UIImage *img = [UIImage imageNamed:@"indicator"];
+        _nameLabel.adjustsFontSizeToFitWidth = YES;
+
+        UIImage *img = [UIImage imageNamed:@"mapsearch_indicator"];
         _indicatorImgView = [[UIImageView alloc] initWithImage:img];
-        
-//        _bottomLine = [[UIView alloc] init];
-//        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
         
         [self addSubview:_topTipView];
         [self addSubview:_nameLabel];
         [self addSubview:_locationLabel];
         [self addSubview:_priceLabel];
         [self addSubview:_indicatorImgView];
-//        [self addSubview:_bottomLine];
+        [self addSubview:_bottomLine];
         
         [self initConstraints];
         self.backgroundColor = [UIColor whiteColor];
@@ -64,7 +65,7 @@
 -(void)initConstraints
 {
     [_topTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(4);
+        make.top.mas_equalTo(3);
         make.centerX.mas_equalTo(self);
         make.size.mas_equalTo(CGSizeMake(24, 3));
     }];
@@ -78,7 +79,6 @@
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(_indicatorImgView.mas_left).offset(-10);
-        make.width.mas_lessThanOrEqualTo(100);
     }];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -92,10 +92,10 @@
         make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     
-//    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.bottom.mas_equalTo(self);
-//        make.height.mas_equalTo(0.5);        
-//    }];
+    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(0.5);
+    }];
 }
 
 -(void)updateWithMode:(FHMapSearchDataListModel *)model
@@ -103,6 +103,11 @@
     self.nameLabel.text = model.name;
     self.locationLabel.text = model.location;
     self.priceLabel.text = model.pricePerSqm;
+    [self.priceLabel sizeToFit];
+    CGFloat width = self.priceLabel.width;
+    [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+    }];
     
 }
 

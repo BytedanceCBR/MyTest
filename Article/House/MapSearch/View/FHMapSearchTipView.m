@@ -7,6 +7,7 @@
 
 #import "FHMapSearchTipView.h"
 #import <UIColor+TTThemeExtension.h>
+#import "UIColor+Theme.h"
 
 #define kHorPadding 10
 #define kViewHeight 40
@@ -23,10 +24,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+        frost.frame = self.bounds;
+        frost.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//        frost.alpha = 0.8;
+    
+        [self addSubview:frost];
+        
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont systemFontOfSize:12];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.textColor = [UIColor colorWithHexString:@"0x081f33"];
+        _tipLabel.textColor = RGBA(0x08, 0x1f, 0x33, 1);
         [self addSubview:_tipLabel];
         
         self.backgroundColor = [UIColor colorWithWhite:1 alpha:0.8];
