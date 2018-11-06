@@ -206,7 +206,7 @@ class SpringBroadCell: BaseUITableViewCell {
         headView.snp.makeConstraints { maker in
             maker.left.right.bottom.top.equalToSuperview()
             maker.width.equalTo(UIScreen.main.bounds.width)
-            maker.height.equalTo(130) //为了默认图cell的位置偏移
+            maker.height.equalTo(100) //为了默认图cell的位置偏移
         }
     }
 

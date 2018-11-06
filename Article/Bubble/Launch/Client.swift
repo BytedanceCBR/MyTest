@@ -154,6 +154,22 @@ class Client: NSObject {
 
     }
 
+    @objc
+    func currentCityName() -> String? {
+        if let city = locationManager.currentCity.value?.city {
+            return city
+        }
+        return "be_null"
+    }
+
+    @objc
+    func currentProvince() -> String? {
+        if let province = locationManager.currentCity.value?.province {
+            return province
+        }
+        return "be_null"
+    }
+
     func loadSearchCondition() {
         if let searchConfigCache = searchConfigCache,
             configCacheSubject.value == nil,
