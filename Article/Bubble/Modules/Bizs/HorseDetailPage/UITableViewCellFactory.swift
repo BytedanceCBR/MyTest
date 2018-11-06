@@ -100,7 +100,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: FavoriteCell.self)
             .addCellClass(cellType: SpringBroadCell.self)
             .addCellClass(cellType: ErshouHousePriceChartCell.self)
-            .addCellClass(cellType: NIHPriceRangeCell.self)
+            .addCellClass(cellType: FHDetailSuggestTipCell.self)
             .addCellClass(cellType: InformationCell.self)
             .addCellClass(cellType: MultitemCollectionCell.self)
             .addCellClass(cellType: FGrayLineCell.self)
