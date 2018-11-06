@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)resetScrollViewInsetsAndOffsets;
 
+-(CGFloat)initialTop;
+
 -(CGFloat)minTop;
 
 -(BOOL)canMoveup;

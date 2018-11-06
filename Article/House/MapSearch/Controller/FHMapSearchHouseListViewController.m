@@ -80,7 +80,9 @@
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor
 {
-    self.view.top = self.view.superview.height;
+    if (self.view.hidden) {
+        self.view.top = self.view.superview.height;
+    }
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -92,7 +94,10 @@
 
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
-    self.view.top = self.view.height;
+    if (self.view.hidden) {
+        self.view.top = self.view.superview.height;
+    }
+    self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
         self.view.top = floor(self.view.superview.height/3);
@@ -100,6 +105,11 @@
     
     [self.parentViewController.view addSubview:self.view];
     [self.viewModel updateWithHouseData:data neighbor:neighbor];
+}
+
+-(CGFloat)initialTop
+{
+    return floor(self.view.superview.height/3);
 }
 
 -(CGFloat)minTop

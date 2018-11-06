@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithMode:(FHMapSearchDataListModel *)model;
 
+-(void)hideTopTip:(BOOL)hide;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -30,6 +30,7 @@
 @property(nonatomic , assign) BOOL enteredFullListPage;
 @property(nonatomic , strong) NHErrorViewModel *erroViewModel;
 @property(nonatomic , assign) CGPoint currentOffset;
+@property(nonatomic , assign) BOOL dismissing;
 @end
 
 @implementation FHMapSearchHouseListViewModel
@@ -167,6 +168,10 @@
 
 -(void)handleDismiss:(CGFloat)duration
 {
+    if (_dismissing) {
+        return;
+    }
+    self.dismissing = YES;
     self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
         self.listController.willSwipeDownDismiss(duration);
@@ -178,6 +183,7 @@
             self.listController.didSwipeDownDismiss();
         }
         self.tableView.scrollEnabled = true;
+        self.dismissing = NO;
     }];
     [self.tableView.mj_footer resetNoMoreData];
     
@@ -214,14 +220,20 @@
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
-    if (self.listController.view.top > self.listController.view.height*0.6) {
+    if (self.listController.view.top > self.listController.view.height*0.5) {
         [self handleDismiss:0.3];
     }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 50)){
         //吸附都顶部
+        [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
         [self addEnterListPageLog];
+    }else if((self.listController.view.top > [self.listController minTop]) && self.listController.view.top < [self.listController initialTop]){
+        [self.headerView hideTopTip:NO];
+        [self.listController moveTop:[self.listController initialTop]];
+        self.listController.moveDock();
     }else if([self.listController canMoveup]){
         //当前停留在中间
+        [self.headerView hideTopTip:NO];
         self.listController.moveDock();
         [self addHouseListDurationLog];
     }
@@ -229,7 +241,7 @@
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    if (velocity.y < -2.5) {
+    if (self.listController.view.top > [self.listController minTop] && velocity.y < -2.5) {
         //quickly swipe done
         [self handleDismiss:0.1];
     }
@@ -257,9 +269,9 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
-    if (self.configModel.suggestionParams) {
-        param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
-    }
+//    if (self.configModel.suggestionParams) {
+//        param[SUGGESTION_PARAMS_KEY] = self.configModel.suggestionParams;
+//    }
     
     if (showLoading) {
         self.tableView.scrollEnabled = NO;

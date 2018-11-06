@@ -226,7 +226,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CGFloat minLong = maxLong - region.span.longitudeDelta;
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId query:self.filterConditionParams maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel suggestionParams:self.configModel.suggestionParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:self.configModel.houseType searchId:self.searchId query:self.filterConditionParams maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel suggestionParams:nil callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
         if (!wself) {
             return ;
