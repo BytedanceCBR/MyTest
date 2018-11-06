@@ -316,7 +316,9 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
-                <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor)
+                <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
                 <- parseHeaderNode("均价走势")
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
