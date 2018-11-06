@@ -405,16 +405,18 @@ extension DetailPageViewModel {
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfimTrace()
+                        
+                        self.followHouseItem(houseType: self.houseType,
+                                             followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                             followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            isNeedRecord: false)()
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
-                self.followHouseItem(houseType: self.houseType,
-                                                          followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                          followId: "\(self.houseId)",
-                    disposeBag: self.disposeBag,
-                    isNeedRecord: false)()
+
                 
             }
             .disposed(by: disposeBag)

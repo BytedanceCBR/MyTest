@@ -58,6 +58,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let re = HouseDetailPageBottomBarView()
         return re
     }()
+    
+    private lazy var bottomStatusBar: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.backgroundColor = hexStringToUIColor(hex: "#000000", alpha: 0.7)
+        label.text = "该房源已停售"
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = .white
+        return label
+    }()
+    
 
     let barStyle = BehaviorRelay<Int>(value: UIStatusBarStyle.lightContent.rawValue)
 
@@ -306,6 +317,18 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
         }
         
+        view.addSubview(bottomStatusBar)
+        bottomStatusBar.snp.makeConstraints { maker in
+            maker.right.left.equalToSuperview()
+            if isShowBottomBar {
+                maker.bottom.equalTo(bottomBar.snp.top)
+            } else {
+                
+                maker.bottom.equalToSuperview()
+            }
+            maker.height.equalTo(0)
+        }
+        bottomStatusBar.isHidden = true
         if  #available(iOS 11.0, *) {
             self.tableView.contentInsetAdjustmentBehavior = .never;//UIScrollView也适用
             self.tableView.estimatedRowHeight = 0;
@@ -315,14 +338,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            if isShowBottomBar {
-                maker.top.right.left.equalToSuperview()
-                maker.bottom.equalTo(bottomBar.snp.top)
-            } else {
-
-                maker.bottom.equalToSuperview()
-                maker.top.left.right.equalToSuperview()
-            }
+            maker.top.right.left.equalToSuperview()
+            maker.bottom.equalTo(bottomStatusBar.snp.top)
         }
 
         view.addSubview(infoMaskView)
@@ -447,6 +464,41 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             })
                 .disposed(by: disposeBag)
             
+            if let ershouVM = detailPageViewModel as? ErshouHouseDetailPageViewModel, self.houseType == .secondHandHouse {
+                
+                ershouVM.houseStatus.skip(1).subscribe(onNext: { [weak self] houseStatus in
+
+                    if let theHouseStatus = houseStatus, theHouseStatus == 1 {
+                        self?.bottomStatusBar.isHidden = false
+                        self?.navBar.rightBtn.isHidden = false
+                        self?.navBar.rightBtn2.isHidden = false
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(30)
+                        })
+
+                    }else if let theHouseStatus = houseStatus, theHouseStatus == -1 {
+                        self?.bottomStatusBar.isHidden = true
+                        self?.navBar.rightBtn.isHidden = true
+                        self?.navBar.rightBtn2.isHidden = true
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(0)
+                        })
+                    }else {
+                        self?.bottomStatusBar.isHidden = true
+                        self?.navBar.rightBtn.isHidden = false
+                        self?.navBar.rightBtn2.isHidden = false
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(0)
+                        })
+                    }
+                    
+                })
+                    .disposed(by: disposeBag)
+            }
+            
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
@@ -542,7 +594,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 if !self.isShowBottomBar {
                     self.navBar.rightBtn.isHidden = hasError
                 }
+                self.bottomStatusBar.isHidden = hasError
+
             }.disposed(by: disposeBag)
+        
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
@@ -812,13 +867,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfirmTrace()
+                        self.followForSendPhone()
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
                 
-                self.followForSendPhone()
 
             }
             .disposed(by: disposeBag)
