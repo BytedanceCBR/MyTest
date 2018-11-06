@@ -867,13 +867,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfirmTrace()
+                        self.followForSendPhone()
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
                 
-                self.followForSendPhone()
 
             }
             .disposed(by: disposeBag)

@@ -167,17 +167,20 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                     self.sendPhoneNumberRequest(houseId: Int64(self.houseId), phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        
+                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                                followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            statusBehavior: self.follwUpStatus,
+                            isNeedRecord: false)()
+                        
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
-                self.followUpViewModel?.followHouseItem(houseType: self.houseType,
-                                                        followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                        followId: "\(self.houseId)",
-                    disposeBag: self.disposeBag,
-                    statusBehavior: self.follwUpStatus,
-                    isNeedRecord: false)()
+
 
             }
             .disposed(by: disposeBag)
