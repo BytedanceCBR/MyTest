@@ -291,11 +291,19 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         }
         //如果第三列没有任何选择项，则恢复成两列显示
 //        if let dataSource = dataSources.last {
-            if dataSources[1].selectedIndexPaths.count == 0 {
-                self.displayNormalCondition()
-            } else {
-                self.displayExtendValue()
+        if dataSources[1].selectedIndexPaths.count == 0 {
+            self.displayNormalCondition()
+        } else {
+            if let row = dataSources[1].selectedIndexPaths.first?.row,
+                row < dataSources[1].nodes.count {
+                dataSources[2].nodes = dataSources[1].nodes[row].children
             }
+            if dataSources[2].nodes.count > 0 {
+                self.displayExtendValue()
+            } else {
+                self.displayNormalCondition()
+            }
+        }
 //        }
         scrollVisibleCellInScreen()
     }
