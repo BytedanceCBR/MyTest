@@ -36,7 +36,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _topTipView = [[UIView alloc] init];
-        _topTipView.backgroundColor = [UIColor themeGrayPale];
+        _topTipView.backgroundColor = [UIColor themeBlack];
         _topTipView.layer.cornerRadius = 1.5;
         _topTipView.layer.masksToBounds = YES;
         
@@ -48,6 +48,9 @@
 
         UIImage *img = [UIImage imageNamed:@"mapsearch_indicator"];
         _indicatorImgView = [[UIImageView alloc] initWithImage:img];
+        
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
         
         [self addSubview:_topTipView];
         [self addSubview:_nameLabel];

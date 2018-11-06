@@ -40,6 +40,7 @@ import RxCocoa
     @objc lazy var filterPanelView: UIView = {
         let re = SearchFilterPanel()
         re.backgroundColor = UIColor.white
+        re.bottomLine?.isHidden = true
         return re
     }()
 

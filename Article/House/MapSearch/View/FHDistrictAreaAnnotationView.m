@@ -59,6 +59,17 @@
     [super setAnnotation:annotation];
     _nameLabel.text = annotation.title;
     _descLabel.text = annotation.subtitle;
+    
+}
+
+-(void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (newSuperview) {
+        self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1);
+        [UIView animateWithDuration:0.25 animations:^{
+            self.transform = CGAffineTransformIdentity;
+        }];
+    }
 }
 
 /*

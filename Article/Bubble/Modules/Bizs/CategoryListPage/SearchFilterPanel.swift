@@ -26,10 +26,12 @@ enum ConditionItemType {
 
     var items: [SearchConditionItem] = []
 
+    var bottomLine : UIView? = nil
+    
     init() {
         super.init(frame: CGRect.zero)
         let color = hexStringToUIColor(hex: kFHSilver2Color)
-        self.lu.addBottomBorder(color: color)
+        bottomLine = self.lu.addBottomBorder(color: color)
     }
 
     required init?(coder aDecoder: NSCoder) {
