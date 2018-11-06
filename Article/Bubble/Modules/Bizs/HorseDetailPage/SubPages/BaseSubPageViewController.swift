@@ -110,13 +110,13 @@ class BaseSubPageViewController: BaseViewController {
         tableView.snp.makeConstraints { maker in
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(bottomBar.snp.top)
+//            maker.bottom.equalTo(bottomBar.snp.top)
 
-//            if !self.isHiddenBottomBar {
-//                maker.bottom.equalTo(bottomBar.snp.top)
-//            } else {
-//                maker.bottom.equalToSuperview()
-//            }
+            if !self.isHiddenBottomBar {
+                maker.bottom.equalTo(bottomBar.snp.top)
+            } else {
+                maker.bottom.equalToSuperview()
+            }
 
         }
 

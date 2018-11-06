@@ -19,7 +19,7 @@ class GlobalPricingVC: BaseSubPageViewController, PageableVC {
 
     init(courtId: Int64, bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)", bottomBarBinder: bottomBarBinder)
+        super.init(identifier: "\(courtId)", isHiddenBottomBar: false, bottomBarBinder: bottomBarBinder)
     }
 
     required init?(coder aDecoder: NSCoder) {

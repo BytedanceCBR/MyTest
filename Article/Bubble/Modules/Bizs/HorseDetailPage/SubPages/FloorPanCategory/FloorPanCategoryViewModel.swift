@@ -69,7 +69,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
     init(tableView: UITableView,
          navVC: UINavigationController?,
-         isHiddenBottomBar: Bool = true,
+         isHiddenBottomBar: Bool = false,
          logPBVC: Any? = "be_null",
          followPage: BehaviorRelay<String>,
          segmentedControl: FWSegmentedControl,
