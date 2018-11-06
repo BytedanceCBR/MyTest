@@ -61,6 +61,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
+    var houseStatus: BehaviorRelay<Int?> = BehaviorRelay<Int?>(value: nil)
+
     weak var navVC: UINavigationController?
 
     weak var infoMaskView: EmptyMaskView?
@@ -95,11 +97,28 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
             }
             .bind(to: contactPhone)
             .disposed(by: disposeBag)
+        ershouHouseData
+            .map { (response) -> Int? in
+                return response?.data?.status
+            }
+            .bind(to: houseStatus)
+            .disposed(by: disposeBag)
         super.init()
 
         Observable
             .combineLatest(ershouHouseData, relateNeighborhoodData, houseInSameNeighborhood, relateErshouHouseData)
             .bind { [unowned self] (_) in
+                
+                if self.ershouHouseData.value?.data?.status == -1 {
+                    
+                    self.infoMaskView?.isHidden = false
+                    self.infoMaskView?.label.text = "该房源已下架"
+                    self.infoMaskView?.retryBtn.isHidden = true
+                    self.infoMaskView?.isUserInteractionEnabled = false
+                    return
+                }
+                self.infoMaskView?.isHidden = true
+                
                 let result = self.processData()([])
                 self.dataSource.datas = result
                 self.tableView?.reloadData()
