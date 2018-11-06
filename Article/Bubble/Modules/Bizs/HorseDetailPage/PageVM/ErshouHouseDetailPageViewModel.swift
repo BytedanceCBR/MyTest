@@ -117,7 +117,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     self.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
-                self.infoMaskView?.isHidden = true
                 
                 let result = self.processData()([])
                 self.dataSource.datas = result
