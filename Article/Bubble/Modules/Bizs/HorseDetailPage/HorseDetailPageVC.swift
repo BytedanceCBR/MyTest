@@ -772,6 +772,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             }
         }
+        
+        if EnvContext.shared.client.reachability.connection == .none
+        {
+            navBar.rightBtn.isUserInteractionEnabled = false
+            navBar.rightBtn2.isUserInteractionEnabled = false
+        }
+        
 //        if houseType == .newHouse
 //        {
 //           self.detailPageViewModel?.onDataArrived
