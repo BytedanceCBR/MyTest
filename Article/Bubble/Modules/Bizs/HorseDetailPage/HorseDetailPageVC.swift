@@ -28,7 +28,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     var pageViewModelProvider: DetailPageViewModelProvider?
 
     var shareParams: TracerParams?
-
+    let stateControl = HomeHeaderStateControl()
+    
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
 //        re.rightBtn.isHidden = false
@@ -356,7 +357,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             detailPageViewModel?.requestData(houseId: houseId, logPB: logPB, showLoading: true)
         }
 
-        let stateControl = HomeHeaderStateControl()
+        
         stateControl.onStateChanged = { [weak self] (state) in
             switch state {
             case .suspend:
@@ -419,7 +420,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     
-                    if stateControl.state == .suspend
+                    if self?.stateControl.state == .suspend
                     {
                         self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-white"), for: .normal)
                     }else
@@ -561,7 +562,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     if case let .success(status) = result {
-                        if !status && stateControl.state != .suspend
+                        if !status && self?.stateControl.state != .suspend
                         {
                             self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
                         }
@@ -787,12 +788,24 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.barStyle.value == UIStatusBarStyle.lightContent.rawValue {
-            UIApplication.shared.statusBarStyle = .lightContent
-            self.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
-        } else {
-            UIApplication.shared.statusBarStyle = .default
-            self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [unowned self] in
+
+            if self.stateControl.state == .normal {
+                let alpha = (1 - (139 - self.tableView.contentOffset.y) / 139) * 2
+                self.navBar.alpha = alpha
+                self.barStyle.accept(UIStatusBarStyle.default.rawValue)
+                UIApplication.shared.statusBarStyle = .default
+                self.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
+
+            } else {
+                self.navBar.alpha = 1
+                self.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+                UIApplication.shared.statusBarStyle = .lightContent
+                self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+
+            }
+
         }
 
         self.recordGoDetailSearch()
