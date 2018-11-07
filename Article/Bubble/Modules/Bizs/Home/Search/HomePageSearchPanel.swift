@@ -60,7 +60,7 @@ class HomePageSearchPanel: UIView {
         let label = UILabel()
         label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = hexStringToUIColor(hex: "#8a9299")
-        label.text = UIScreen.main.bounds.width < 320 ? "输入小区/商圈/地铁" : "请输入小区/商圈/地铁"
+        label.text = UIScreen.main.bounds.width < 375 ? "输入小区/商圈/地铁" : "请输入小区/商圈/地铁"
         return label
     }()
 
