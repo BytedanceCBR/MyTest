@@ -334,6 +334,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
+                <- parseHouseOutlineHeaderNode("房源概况")
+                <- parseHouseOutlineListNode(data)
                 <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor) {
                     return data.neighborhoodInfo != nil ? true : false
                 }
