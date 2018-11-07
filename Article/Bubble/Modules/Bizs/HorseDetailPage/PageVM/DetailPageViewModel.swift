@@ -385,7 +385,6 @@ extension DetailPageViewModel {
                                 .exclude("search")
                                 .exclude("filter")
                             traceParams = traceParams <|>
-                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                             if let houseId = self?.houseId {
                                 traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")

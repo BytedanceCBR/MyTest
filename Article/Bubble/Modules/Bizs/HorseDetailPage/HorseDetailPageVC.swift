@@ -528,7 +528,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                 .exclude("filter")
                             traceParams = traceParams <|>
                                 toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("\(self.houseId)", key: "group_id")
                             recordEvent(key: "click_call", params: traceParams)
