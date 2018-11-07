@@ -51,7 +51,7 @@ class HeaderCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         self.adjustBottomSpace = -16
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+        contentView.addSubview(label)
         contentView.addSubview(arrowsImg)
         arrowsImg.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-20)
@@ -67,7 +67,6 @@ class HeaderCell: BaseUITableViewCell {
             maker.right.equalTo(arrowsImg.snp.left)
          }
         
-        contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.right.equalTo(loadMore.snp.left).offset(-10)
