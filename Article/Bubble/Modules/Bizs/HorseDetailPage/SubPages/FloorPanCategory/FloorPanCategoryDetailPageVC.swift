@@ -158,7 +158,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     }
     
     override func getBottomBarTraceParam() -> TracerParams {
-        return self.tracerParams
+        return self.tracerParams.exclude("house_type")
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
@@ -192,15 +192,15 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
-            tracerParams = tracerParams <|>
-                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
-            
-            
+//            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
+//
+//
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams.exclude("element_type"))
+                        params: self.tracerParams.exclude("house_type"))
             
             alert.showFrom(rootView)
         }
@@ -300,6 +300,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.errorVM?.onRequestViewDidLoad()
         self.errorVM?.onRequest()
         self.viewModel?.request(floorPanId: self.floorPanId)
+        
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
