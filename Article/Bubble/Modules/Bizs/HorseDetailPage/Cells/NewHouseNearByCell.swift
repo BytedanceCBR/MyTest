@@ -31,7 +31,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         re.showsScale = false
         re.isZoomEnabled = false
         re.isScrollEnabled = false
-        re.zoomLevel = 14
+        re.zoomLevel = 11
         return re
     }()
 
@@ -335,20 +335,62 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             if annotationView == nil {
                 annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
             }
-            if annotation.type.rawValue == "交通" {
-                annotationView?.image = #imageLiteral(resourceName: "icon-bus")
-            } else {
+//            if annotation.type.rawValue == "交通" {
+//                annotationView?.image = #imageLiteral(resourceName: "icon-bus")
+//            } else {
+//                annotationView?.image = getMapPoiIcon(category: annotation.type.rawValue)
+//            }
+            
+            if annotation.type.rawValue == "center"
+            {
                 annotationView?.image = getMapPoiIcon(category: annotation.type.rawValue)
+            }else
+            {
+                if annotation.title.count != 0
+                {
+                    let backImageView = UIImageView(image: UIImage(named: "mapcell_annotation_bg"))
+                    annotationView?.addSubview(backImageView)
+                    
+                    let titileLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 38))
+                    titileLabel.text = annotation.title
+                    let reactSize = annotation.title.boundingRect
+                    
+                    print("react size = \(reactSize)")
+                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14, height: 35)
+                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 20, height: 38)
+
+                    titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
+                    annotationView?.addSubview(titileLabel)
+                    titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)
+                    titileLabel.layer.masksToBounds = true
+                    titileLabel.layer.cornerRadius = 19
+                    titileLabel.numberOfLines = 1
+                    titileLabel.textAlignment = .center
+                    titileLabel.backgroundColor = UIColor.clear
+                    titileLabel.center = backImageView.center
+                    
+                    let bottomArrowView = UIImageView(image: UIImage(named: "mapcell_annotation_arrow"))
+                    backImageView.addSubview(bottomArrowView)
+                    bottomArrowView.backgroundColor = UIColor.clear
+                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 10.5, width: 10.5, height: 10.5)
+                }
             }
+            
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
             annotationView?.centerOffset = CGPoint(x: 0, y: -18)
+            
 
+            
+//            backImageView.frame = CGRect(x: 0, y: 0, width: titileLabel.frame.size.width, height: 38)
+            
             return annotationView ?? MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
         }
         
 
         return MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
     }
+    
+    
 
     /* POI 搜索回调. */
     func onPOISearchDone(_ request: AMapPOISearchBaseRequest!, response: AMapPOISearchResponse!) {

@@ -14,9 +14,14 @@ import RxCocoa
 
 class FHFloatValueFormatter: IAxisValueFormatter {
     
+    var unitPerSquare: Double = 100.0 * 10000.0
+    
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         
-        return String(format: "%.2f", value)
+        if unitPerSquare >= 100.0 * 10000.0 {
+            return String(format: "%.2f", value)
+        }
+        return String(format: "%d", Int(value))
     }
 }
 
@@ -149,24 +154,30 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     private var minValue: Double = 0
     private var maxValue: Double = 0
 
+    // 单位，万元/平或元/平
+    private var unitPerSquare: Double = 100.0 * 10000.0 {
+        
+        didSet {
+            
+            if unitPerSquare >= 100 * 10000 {
+                self.priceLabel.text = "万元/平"
+            }else {
+                self.priceLabel.text = "元/平"
+            }
+            let leftAxis = chartView.leftAxis
+            if let formatter = leftAxis.valueFormatter as? FHFloatValueFormatter {
+                formatter.unitPerSquare = unitPerSquare
+            }
+
+        }
+    }
 
     fileprivate var priceTrends:[PriceTrend] = [] {
 
         didSet {
 
-            self.maxValue = (Double(priceTrends.first?.values.first?.price ?? "") ?? 0.0) / 100.0 / 10000.0
+            self.maxValue = (Double(priceTrends.first?.values.first?.price ?? "") ?? 0.0)
             self.minValue = self.maxValue
-            
-            if var thePriceTrend = priceTrends.first {
-                
-                for priceTrend in priceTrends {
-                    
-                    if priceTrend.values.count >= thePriceTrend.values.count {
-                        thePriceTrend = priceTrend
-                    }
-                }
-                self.monthFormatter.priceTrend = thePriceTrend
-            }
             
             var trailing: CGFloat = 20
             
@@ -198,20 +209,44 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 label.centerY = icon.centerY
                 
                 trailing = label.right + 20
+                
+                priceTrend.values.enumerated().forEach({[weak self] (offset, item) in
+                    let price = Double(item.price ?? "") ?? 0
+                    if let maxValue = self?.maxValue, price > maxValue {
+                        self?.maxValue = price
+                    }
+                    if let minValue = self?.minValue, price < minValue {
+                        self?.minValue = price
+                    }
+                })
+                
             }
 
+            if self.maxValue >= 100 * 10000.0 {
+                self.unitPerSquare = 100.0 * 10000.0
+            }else {
+                self.unitPerSquare = 100.0
+
+            }
+            
+            if var thePriceTrend = priceTrends.first {
+                
+                for priceTrend in priceTrends {
+                    
+                    if priceTrend.values.count >= thePriceTrend.values.count {
+                        thePriceTrend = priceTrend
+                    }
+                }
+                self.monthFormatter.priceTrend = thePriceTrend
+            }
+            
             let dataSets = priceTrends.enumerated().map {[weak self] (index, priceTrend) -> LineChartDataSet in
 
                 let yVals1 = priceTrend.values.enumerated().map {[weak self] (index, item) -> ChartDataEntry in
 
-                    let valString = String(format: "%.2f", (Double(item.price ?? "") ?? 0.00) / 100 / 10000.00)
+                    let unitPerSquare = self?.unitPerSquare ?? (100 * 10000.00)
+                    let valString = String(format: "%.2f", (Double(item.price ?? "") ?? 0.00) / unitPerSquare)
                     let val = Double(valString) ?? 0
-                    if let max = self?.maxValue, val > max {
-                        self?.maxValue = val
-                    }
-                    if let min = self?.minValue, val < min {
-                        self?.minValue = val
-                    }
                     
                     let entry = ChartDataEntry(x: Double(index), y: val)
                     entry.data = index as AnyObject
@@ -240,7 +275,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 
             }
 
-            let (set, _) = dataSets.enumerated().map { (index,item) -> (LineChartDataSet, Double) in
+            let (_, _) = dataSets.enumerated().map { (index,item) -> (LineChartDataSet, Double) in
 
                 let count = item.values.reduce(0) { (result, entry) in
                     result + entry.y
@@ -248,28 +283,21 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 return (item, count)
             }.sorted(by: { $0.1 > $1.1 }).first ?? (nil,0)
 
+
             let data = LineChartData(dataSets: dataSets)
-            let setPadding = (self.maxValue - self.minValue)/3
-            self.maxValue = self.maxValue + setPadding
-            self.minValue = self.minValue - setPadding
-//            chartView.setVisibleYRange(minYRange: self.minValue - setPadding, maxYRange: self.maxValue + setPadding, axis: .left)
+            let setPadding = (self.maxValue - self.minValue) / self.unitPerSquare / 3
+            let maxValue = self.maxValue / unitPerSquare + setPadding
+            let minValue = self.minValue / unitPerSquare - setPadding
 
             chartView.data = data
-
-//            if let x = set?.values.last?.x,let y = set?.values.last?.y {
-//
-//                chartView.highlightValue(x: x, y: y, dataSetIndex: 0, callDelegate: true)
-//
-//            }
-  
 
             let leftAxis = chartView.leftAxis
             leftAxis.drawBottomYLabelEntryEnabled = true
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
             leftAxis.spaceBottom = 0.0
-            leftAxis.axisMaximum = self.maxValue
-            leftAxis.axisMinimum = self.minValue
+            leftAxis.axisMaximum = maxValue
+            leftAxis.axisMinimum = minValue
             leftAxis.setLabelCount(3, force: true)
             
 
@@ -386,12 +414,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.drawInside = true
         l.wordWrapEnabled = true
 
-        // 线条描述的间距
-//        l.xOffset = 20
-//        l.yOffset = 15
-//        l.formToTextSpace = 5
-//        l.xEntrySpace = 6
-
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
@@ -442,7 +464,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             
             guard self.priceTrends.count > 0 else {
                 
-                return []
+                return (self.unitPerSquare, [])
             }
             var items = [(String,TrendItem)]()
 
@@ -455,7 +477,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 
             }
 
-            return items
+            return (self.unitPerSquare, items)
         }
         marker.chartView = chartView
         chartView.marker = marker

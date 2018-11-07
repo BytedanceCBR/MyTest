@@ -521,6 +521,9 @@
 		61501BAF2148BC1100870420 /* UITableView+FHExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BA92148BC1100870420 /* UITableView+FHExts.swift */; };
 		61501BB32148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
 		61501BB42148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
+		616F787921916B0A009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
+		616F787A21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
+		616F787B21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
@@ -1921,7 +1924,6 @@
 		B373CB312174587A008F9905 /* TGSquarePulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAEE2142652900653188 /* TGSquarePulse.swift */; };
 		B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
 		B373CB332174587A008F9905 /* NSMutableDictionary+DMPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF81FA5AC0B00E7765A /* NSMutableDictionary+DMPExtensions.m */; };
-		B373CB342174587A008F9905 /* NIHPriceRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0D2142652900653188 /* NIHPriceRangeCell.swift */; };
 		B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691C81F31D0D200D59CA5 /* TTVFeedListVideoAdItem.m */; };
 		B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7E71F1332DB0002B455 /* TTBackgroundModeTask.m */; };
 		B373CB372174587A008F9905 /* TTCellBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB148A01C75CEBA0028DA64 /* TTCellBridge.m */; };
@@ -2964,8 +2966,6 @@
 		B388CB5D2142652A00653188 /* CycleImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0B2142652900653188 /* CycleImageCell.swift */; };
 		B388CB5E2142652A00653188 /* NeighborhoodNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0C2142652900653188 /* NeighborhoodNameCell.swift */; };
 		B388CB5F2142652A00653188 /* NeighborhoodNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0C2142652900653188 /* NeighborhoodNameCell.swift */; };
-		B388CB602142652A00653188 /* NIHPriceRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0D2142652900653188 /* NIHPriceRangeCell.swift */; };
-		B388CB612142652A00653188 /* NIHPriceRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0D2142652900653188 /* NIHPriceRangeCell.swift */; };
 		B388CB622142652A00653188 /* NeighborhoodPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0E2142652900653188 /* NeighborhoodPriceCell.swift */; };
 		B388CB632142652A00653188 /* NeighborhoodPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0E2142652900653188 /* NeighborhoodPriceCell.swift */; };
 		B388CB642142652A00653188 /* MultiItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA0F2142652900653188 /* MultiItemCell.swift */; };
@@ -6487,6 +6487,7 @@
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
+		616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHDetailSuggestTipCell.swift; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
@@ -7662,7 +7663,6 @@
 		B388CA0A2142652900653188 /* ErshouHousePriceChartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErshouHousePriceChartCell.swift; sourceTree = "<group>"; };
 		B388CA0B2142652900653188 /* CycleImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleImageCell.swift; sourceTree = "<group>"; };
 		B388CA0C2142652900653188 /* NeighborhoodNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodNameCell.swift; sourceTree = "<group>"; };
-		B388CA0D2142652900653188 /* NIHPriceRangeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NIHPriceRangeCell.swift; sourceTree = "<group>"; };
 		B388CA0E2142652900653188 /* NeighborhoodPriceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodPriceCell.swift; sourceTree = "<group>"; };
 		B388CA0F2142652900653188 /* MultiItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiItemCell.swift; sourceTree = "<group>"; };
 		B388CA102142652900653188 /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
@@ -14570,7 +14570,6 @@
 				B388CA0A2142652900653188 /* ErshouHousePriceChartCell.swift */,
 				B388CA0B2142652900653188 /* CycleImageCell.swift */,
 				B388CA0C2142652900653188 /* NeighborhoodNameCell.swift */,
-				B388CA0D2142652900653188 /* NIHPriceRangeCell.swift */,
 				B388CA0E2142652900653188 /* NeighborhoodPriceCell.swift */,
 				B388CA0F2142652900653188 /* MultiItemCell.swift */,
 				B388CA102142652900653188 /* ContactCell.swift */,
@@ -14591,6 +14590,7 @@
 				B388CA1F2142652900653188 /* PropertyListCell.swift */,
 				B388CA202142652900653188 /* MultitemCollectionCell.swift */,
 				B388CA212142652900653188 /* GlobalPricingCell.swift */,
+				616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -19836,7 +19836,6 @@
 				B388CCCE2142652C00653188 /* TGSquarePulse.swift in Sources */,
 				3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */,
 				0CFBAE071FA5AC5A00E7765A /* NSMutableDictionary+DMPExtensions.m in Sources */,
-				B388CB602142652A00653188 /* NIHPriceRangeCell.swift in Sources */,
 				F87694A01F31D0D500D59CA5 /* TTVFeedListVideoAdItem.m in Sources */,
 				A97DBC7F1F1332E50002B455 /* TTBackgroundModeTask.m in Sources */,
 				6BB148A11C75CEBA0028DA64 /* TTCellBridge.m in Sources */,
@@ -20297,6 +20296,7 @@
 				038D9AEF1F41A1C900E90F73 /* SSDebugViewControllerBase.m in Sources */,
 				6BD902521DB873970072138C /* TTRNView.m in Sources */,
 				06E69A4F1B0ADD7C00A3EDCA /* STLinkLabel.m in Sources */,
+				616F787921916B0A009C900F /* FHDetailSuggestTipCell.swift in Sources */,
 				A8B769371E1CF60900F22A0C /* TTLocalAssetMovieControlView.m in Sources */,
 				A97DC4721F1333640002B455 /* TTMomentEnterView.m in Sources */,
 				438F9EBB1F94B8DF0050F83E /* TTVPlayerTipShareCreater.m in Sources */,
@@ -21522,7 +21522,6 @@
 				B373CB312174587A008F9905 /* TGSquarePulse.swift in Sources */,
 				B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */,
 				B373CB332174587A008F9905 /* NSMutableDictionary+DMPExtensions.m in Sources */,
-				B373CB342174587A008F9905 /* NIHPriceRangeCell.swift in Sources */,
 				B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */,
 				B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */,
 				B373CB372174587A008F9905 /* TTCellBridge.m in Sources */,
@@ -21660,6 +21659,7 @@
 				B373CBBB2174587A008F9905 /* TTPhotoTabViewController.m in Sources */,
 				B373CBBC2174587A008F9905 /* TSVFeedPublishCollectionViewCellViewModel.m in Sources */,
 				B373CBBD2174587A008F9905 /* TTIMDateFormatter.m in Sources */,
+				616F787B21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */,
 				B373CBBE2174587A008F9905 /* TTVVideoDetailCommodityViewController.m in Sources */,
 				B373CBBF2174587A008F9905 /* TTMessageNotificationTipsManager.m in Sources */,
 				B373CBC02174587A008F9905 /* ExploreImageCollectionView.m in Sources */,
@@ -23207,7 +23207,6 @@
 				B388CCCF2142652C00653188 /* TGSquarePulse.swift in Sources */,
 				FEFA560A205FB1A8001F50D8 /* ArticleInsertDataOperation.m in Sources */,
 				FEFA560B205FB1A8001F50D8 /* NSMutableDictionary+DMPExtensions.m in Sources */,
-				B388CB612142652A00653188 /* NIHPriceRangeCell.swift in Sources */,
 				FEFA560C205FB1A8001F50D8 /* TTVFeedListVideoAdItem.m in Sources */,
 				FEFA560F205FB1A8001F50D8 /* TTBackgroundModeTask.m in Sources */,
 				FEFA5610205FB1A8001F50D8 /* TTCellBridge.m in Sources */,
@@ -23345,6 +23344,7 @@
 				FEFA569B205FB1A8001F50D8 /* TTPhotoTabViewController.m in Sources */,
 				FEFA569C205FB1A8001F50D8 /* TSVFeedPublishCollectionViewCellViewModel.m in Sources */,
 				FE7FFAA6206119D100D76B0A /* TTIMDateFormatter.m in Sources */,
+				616F787A21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */,
 				FEFA569D205FB1A8001F50D8 /* TTVVideoDetailCommodityViewController.m in Sources */,
 				D50168512089EC4B00B8F1C7 /* TTMessageNotificationTipsManager.m in Sources */,
 				FEFA569E205FB1A8001F50D8 /* ExploreImageCollectionView.m in Sources */,

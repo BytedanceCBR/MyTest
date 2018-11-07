@@ -80,5 +80,6 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+#import "UIImageAdditions.h"
 
 #endif /* Article_Bridging_Header_h */
