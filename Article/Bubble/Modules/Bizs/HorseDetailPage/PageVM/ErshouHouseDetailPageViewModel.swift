@@ -607,7 +607,7 @@ func parseErshouHouseListItemNode(
                 tracerParams: tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    toTracerParams("old_detail", key: "enter_from") <|>
+//                    toTracerParams("maintab", key: "enter_from") <|>
                     toTracerParams(elementFrom, key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
