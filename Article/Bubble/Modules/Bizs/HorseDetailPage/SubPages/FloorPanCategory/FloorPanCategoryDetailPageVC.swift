@@ -57,7 +57,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: self.isHiddenBottomBar,
-            bottomBarBinder: { (_,_) in
+            bottomBarBinder: { (_,_,_) in
 
             })
 
@@ -154,6 +154,10 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                     
                 }.disposed(by: disposeBag)
         }
+    }
+    
+    override func getBottomBarTraceParam() -> TracerParams {
+        return self.tracerParams
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {

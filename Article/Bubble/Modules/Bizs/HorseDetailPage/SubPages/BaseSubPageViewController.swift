@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import Reachability
-typealias FollowUpBottomBarBinder = (HouseDetailPageBottomBarView, UIButton) -> Void
+typealias FollowUpBottomBarBinder = (HouseDetailPageBottomBarView, UIButton, TracerParams) -> Void
 
 class BaseSubPageViewController: BaseViewController {
 
@@ -69,7 +69,11 @@ class BaseSubPageViewController: BaseViewController {
         self.isHiddenBottomBar = isHiddenBottomBar
         self.bottomBarBinder = bottomBarBinder
         super.init(nibName: nil, bundle: nil)
-        bottomBarBinder(bottomBar, navBar.rightBtn2)
+    }
+    
+    func getBottomBarTraceParam() -> TracerParams
+    {
+        return TracerParams.momoid()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -139,6 +143,11 @@ class BaseSubPageViewController: BaseViewController {
             self.bottomBar.isHidden = false
         }
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        bottomBarBinder(bottomBar, navBar.rightBtn2, getBottomBarTraceParam())
     }
 
     override func didReceiveMemoryWarning() {
