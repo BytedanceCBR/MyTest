@@ -548,7 +548,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel] in
-                    detailPageViewModel?.followThisItem(isNeedRecord: true)
+                    
+                    var tracerParams = EnvContext.shared.homePageParams
+                    if let params = detailPageViewModel?.goDetailTraceParam {
+                        tracerParams = tracerParams <|> params
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                    }
+                    tracerParams = tracerParams <|>
+                        toTracerParams(pageTypeString(detailPageViewModel?.houseType ?? .newHouse), key: "page_type")
+
+                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
                     })
                     .disposed(by: disposeBag)
             detailPageViewModel.followStatus

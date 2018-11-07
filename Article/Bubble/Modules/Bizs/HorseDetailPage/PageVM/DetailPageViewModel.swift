@@ -53,7 +53,7 @@ protocol DetailPageViewModel: class {
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool)
 
-    func followThisItem(isNeedRecord: Bool)
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams)
     
     func bindFollowPage()
 
@@ -64,10 +64,13 @@ protocol DetailPageViewModel: class {
     var dismissMessageAlert: (() -> Void)? { get set }
     
     var goDetailTraceParam: TracerParams? { get set }
+    
+
 }
 
 extension DetailPageViewModel {
     
+
     func getShareItem() -> ShareItem {
         var shareimage: UIImage? = nil
         if let shareImageUrl = shareInfo?.coverImage {
@@ -148,38 +151,7 @@ extension DetailPageViewModel {
         isNeedRecord: Bool = true) -> () -> Void {
         var loginDisposeBag = DisposeBag()
         return { [weak self] in
-            
-            if isNeedRecord {
-                
-                var tracerParams = EnvContext.shared.homePageParams
-                if let params = self?.traceParams {
-                    tracerParams = tracerParams <|> params
-                        .exclude("house_type")
-                        .exclude("element_type")
-                        .exclude("maintab_search")
-                        .exclude("search")
-                        .exclude("filter")
-                }
-                tracerParams = tracerParams <|>
-                    EnvContext.shared.homePageParams <|>
-                    toTracerParams(followId, key: "group_id") <|>
-                    toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(pageTypeString(houseType), key: "page_type") <|>
-                    toTracerParams(self?.logPB ?? [:], key: "log_pb")
-                
-                if let followTraceParams = self?.followTraceParams {
-                    // ugly code 为了埋点，0.2版本pageType只区分新房二手房小区和户型详情页
-                    let paramsMap = followTraceParams.paramsGetter([:])
-                    let enterFrom = paramsMap["enter_from"] as? String
-                    if let theEnterFrom = enterFrom,theEnterFrom == "house_model_detail" {
-                        
-                        tracerParams = tracerParams <|>
-                            toTracerParams(theEnterFrom, key: "page_type")
-                    }
-                }
-                recordEvent(key: TraceEventName.click_follow, params: tracerParams)
-                
-            }
+
             if EnvContext.shared.client.reachability.connection == .none {
                 EnvContext.shared.toast.showToast("网络异常")
                 return
@@ -303,6 +275,12 @@ extension DetailPageViewModel {
         }
     }
     
+    func recordFollowEvent(_ traceParam: TracerParams) {
+        
+        print("xxxxx=\(traceParam.paramsGetter([:]))")
+        recordEvent(key: TraceEventName.click_follow, params: traceParam)
+        
+    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
@@ -311,7 +289,40 @@ extension DetailPageViewModel {
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 
-                    self?.followThisItem(isNeedRecord: true)
+                    let paramsDict = traceParam.paramsGetter([:])
+                    if paramsDict.count > 0 {
+                        
+                        self?.followThisItem(isNeedRecord: true, traceParam: traceParam)
+                    }else {
+                        
+                        var tracerParams = EnvContext.shared.homePageParams
+
+                        if let params = self?.goDetailTraceParam {
+                            tracerParams = tracerParams <|> params
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                        }
+                        tracerParams = tracerParams <|>
+                            toTracerParams(self?.houseId ?? "be_null", key: "group_id") <|>
+                            toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(pageTypeString(self?.houseType ?? .newHouse), key: "page_type")
+                     
+                        if let followTraceParams = self?.followTraceParams {
+                            // ugly code 为了埋点，0.2版本pageType只区分新房二手房小区和户型详情页
+                            let paramsMap = followTraceParams.paramsGetter([:])
+                            let enterFrom = paramsMap["enter_from"] as? String
+                            if let theEnterFrom = enterFrom,theEnterFrom == "house_model_detail" {
+                                
+                                tracerParams = tracerParams <|>
+                                    toTracerParams(theEnterFrom, key: "page_type")
+                            }
+                        }
+
+                        self?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
+                    }
                 })
                     .disposed(by: self.disposeBag)
             self.followStatus
