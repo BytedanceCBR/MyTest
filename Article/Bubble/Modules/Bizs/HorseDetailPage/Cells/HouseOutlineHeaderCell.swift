@@ -21,6 +21,20 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
         return re
     }()
     
+    lazy var infoButton: UIButton = {
+        let re = UIButton()
+        re.setImage(UIImage(named: "info-outline-material"), for: .normal)
+        
+        re.setTitle("举报", for: .normal)
+        let attriStr = NSAttributedString(
+            string: "举报",
+            attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12) ,
+                         NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#299cff")])
+        re.setAttributedTitle(attriStr, for: .normal)
+        re.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5)
+        return re
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)
@@ -31,6 +45,13 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
             maker.top.equalTo(20)
             maker.height.equalTo(26)
             maker.bottom.equalToSuperview().offset(0)
+        }
+        
+        contentView.addSubview(infoButton)
+        
+        infoButton.snp.makeConstraints { (maker) in
+            maker.centerY.equalTo(label)
+            maker.right.equalTo(self).offset(-25)
         }
     }
     
