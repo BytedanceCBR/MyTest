@@ -26,10 +26,7 @@
     if (self) {
         
         UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
-        frost.frame = self.bounds;//[[UIScreen mainScreen]bounds];
-        frost.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        frost.alpha = 0.9;
-    
+        frost.frame = CGRectMake(0, 0,[[UIScreen mainScreen]bounds].size.width , kViewHeight);
         [self addSubview:frost];
         
         _tipLabel = [[UILabel alloc] init];
@@ -38,9 +35,8 @@
         _tipLabel.textColor = RGBA(0x08, 0x1f, 0x33, 1);
         [self addSubview:_tipLabel];
         
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = YES;
-        
     }
     return self;
 }
@@ -69,14 +65,10 @@
     }else{
         [view addSubview:self];
     }
-        
-    self.alpha = 0;
-    self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.5, 1);
+    
+    self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.4, 1);
     [UIView animateWithDuration:0.25 animations:^{
         self.transform = CGAffineTransformIdentity;
-        self.alpha = 1;
-    } completion:^(BOOL finished) {
-        
     }];
     [self performSelector:@selector(removeTip) withObject:nil afterDelay:duration];
 }

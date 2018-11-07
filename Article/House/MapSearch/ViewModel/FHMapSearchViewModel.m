@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSMutableDictionary<NSString * , FHMapSearchDataListModel *> *selectedAnnotations;
 @property(nonatomic , assign) NSTimeInterval startShowTimestamp;
 @property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
+@property(nonatomic , assign) CLLocationCoordinate2D lastRequestCenter;
 @property(nonatomic , assign) BOOL firstEnterLogAdded;
 
 @end
@@ -218,6 +219,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     _firstEnterLogAdded = YES;
+    _lastRequestCenter = _mapView.centerCoordinate;
     
     MACoordinateRegion region = _mapView.region;
     CGFloat maxLat = region.center.latitude + region.span.latitudeDelta/2;
@@ -408,7 +410,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction
 {
-    [self requestHouses:wasUserAction];
+    CLLocationCoordinate2D currentCenter = mapView.centerCoordinate;
+    CGFloat delta = 0.02/mapView.zoomLevel;
+    if (fabs(currentCenter.latitude - _lastRequestCenter.latitude) > delta || fabs(currentCenter.longitude - _lastRequestCenter.longitude) > delta) {
+        [self requestHouses:wasUserAction];
+    }
 }
 
 /**
