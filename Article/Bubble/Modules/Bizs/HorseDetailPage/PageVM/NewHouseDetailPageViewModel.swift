@@ -416,9 +416,24 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     recordEvent(key: TraceEventName.click_house_comment, params: infoParams)
                 }
                 <- parseFlineNode(data.comment?.hasMore ?? false == false && data.comment?.list?.count ?? 0 > 0 ? 6 : 0)
-                <- parseHeaderNode("周边配套")
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0)
                 //地图cell
-                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag)
+                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag){
+                    [weak self] in
+                    
+                    UIView.performWithoutAnimation { [weak self] in
+                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        {
+                            visibleCells.forEach({ [weak self] (indexPath) in
+                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
+                                {
+                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
+                                }
+                            })
+                            
+                        }
+                    }
+                }
                 <- parseHeaderNode("周边新盘") { [unowned self] in
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
@@ -804,6 +819,8 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
         super.init()
     }
     
+    var nearByCell : NewHouseNearByCell?
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return datas.count
     }
@@ -815,11 +832,19 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()

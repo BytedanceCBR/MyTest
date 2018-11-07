@@ -30,6 +30,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
     fileprivate var poiMapDatas : [String : [AMapPOI]]?
 
+    var titleDatas : [String : String]?
+    
     let mapView: MAMapView = {
         let screenWidth = UIScreen.main.bounds.width
         let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
@@ -92,6 +94,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         re.selectedTitleTextAttributes = selectedAttributes
         re.selectionIndicatorColor = hexStringToUIColor(hex: "#299cff")
         re.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        re.segmentEdgeInset = UIEdgeInsets(top: -10, left: 5, bottom: 0, right: 5)
         return re
     }()
     
@@ -194,6 +197,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         locationList.snp.makeConstraints { maker in
             maker.top.equalTo(mapImageView.snp.bottom)
             maker.left.right.equalToSuperview()
+//            maker.bottom.equalToSuperview()
             maker.height.equalTo(156)
         }
 
@@ -215,18 +219,18 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         locationList.dataSource = locationListViewModel
         locationList.delegate = locationListViewModel
         
-        
+
         segmentedControl.indexChangeBlock = { [unowned self] index in
             self.lock.lock()
             defer {
                 self.lock.unlock()
             }
+            self.changePoiData(index: index)
             
             let poiType = self.categorys[index]
             
             self.currentPoiType = poiType
             
-            self.changePoiData(index: index)
 
             EnvContext.shared.currentMapSelect = poiType.rawValue
             
@@ -240,6 +244,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         
         poiAnnotationDatas = [String : [MyMAAnnotation]]()
         poiMapDatas = [String : [AMapPOI]]()
+        titleDatas = [String : String]()
     }
     
     func resetMapData()
@@ -279,7 +284,23 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             requestIndex = segmentedControl.selectedSegmentIndex
         }
     }
-
+    
+    
+    func changeListLayout(poiCount: Int)
+    {
+        mapImageView.snp.remakeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(segmentedControl.bottom).offset(56.5)
+            maker.height.equalTo(200)
+        }
+        
+        locationList.snp.remakeConstraints { maker in
+            maker.top.equalTo(mapImageView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview()
+            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 52)
+        }
+    }
 
 
     fileprivate func resetAnnotations(_ annotations: [MyMAAnnotation]) {
@@ -390,14 +411,10 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
             annotationView?.centerOffset = CGPoint(x: 0, y: -18)
-            
-
-            
 //            backImageView.frame = CGRect(x: 0, y: 0, width: titileLabel.frame.size.width, height: 38)
             
             return annotationView ?? MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
         }
-        
 
         return MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
     }
@@ -426,13 +443,15 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     latitude: CLLocationDegrees(poi.location.latitude),
                     longitude: CLLocationDegrees(poi.location.longitude)))
                 let distance = MAMetersBetweenMapPoints(from, to)
-                return distance < 15000 //5 公里
-            }
+                return distance < 2000 //2 公里
+            }.take(10)
             
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
             {
                 poiMapDatas?[reuqestPoi.keywords] = poisMap
+                titleDatas?[reuqestPoi.keywords == "公交地铁" ? "交通": reuqestPoi.keywords] = "(\(poisMap.count))"
             }
+            
 //            locationListViewModel.datas = pois
 //            emptyInfoLabel.isHidden = locationListViewModel.datas.count != 0
 //            locationList.isUserInteractionEnabled = locationListViewModel.datas.count == 0
@@ -452,10 +471,15 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         {
             self.requestPOIInfoByType(poiType: self.categorys[requestIndex])
         }
+        
+        segmentedControl.sectionTitleArray = categorys.map { [weak self] in
+            $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "(3)")
+        }
     }
     
     func changePoiData(index : Int)
     {
+        
         poiData.value.forEach { annotation in
             mapView.removeAnnotation(annotation)
         }
@@ -473,8 +497,19 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             if centerPoint != nil {
                 if let poisData = poiMapDatas?[self.categorys[index] == POIType.traffic ? "公交地铁" : self.categorys[index].rawValue]
                 {
-                    locationListViewModel.datas = poisData
+                    if index == 1
+                    {
+                        locationListViewModel.datas = poisData.take(2)
+                    }else
+                    {
+                        locationListViewModel.datas = poisData
+                    }
                 }
+                
+                let count  = locationListViewModel.datas.count
+                
+                changeListLayout(poiCount: count)
+                
                 emptyInfoLabel.isHidden = locationListViewModel.datas.count != 0
                 locationList.isUserInteractionEnabled = locationListViewModel.datas.count == 0
                 locationList.reloadData()
@@ -579,7 +614,7 @@ class LocationListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.labelMask?.isHidden = (datas.count != 0)
-        return (datas.count>0) ? 3 : 0
+        return datas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -619,7 +654,8 @@ func parseNeighorhoodNearByNode(
     traceExtension: TracerParams = TracerParams.momoid(),
     houseId: String,
     navVC: UINavigationController?,
-    disposeBag: DisposeBag,callBack: @escaping () -> Void) -> () -> TableSectionNode? {
+    disposeBag: DisposeBag,
+    callBack: @escaping () -> Void) -> () -> TableSectionNode? {
     return {
         
         if data.neighborhoodInfo == nil {
@@ -703,7 +739,8 @@ func parseNewHouseNearByNode(
     traceExt: TracerParams = TracerParams.momoid(),
     houseId: String,
     navVC: UINavigationController?,
-    disposeBag: DisposeBag) -> () -> TableSectionNode {
+    disposeBag: DisposeBag,
+    callBack: @escaping () -> Void) -> () -> TableSectionNode {
     return {
         var selector: ((TracerParams) -> Void)?
         var mapSelector: ((TracerParams) -> Void)?
@@ -744,7 +781,7 @@ func parseNewHouseNearByNode(
                 traceParams: params,
                 disposeBag: disposeBag)
         }
-        let cellRender = curry(fillNewHouseNearByCell)(newHouseData)(disposeBag)(mapSelector)
+        let cellRender = curry(fillNewHouseNearByCell)(newHouseData)(disposeBag)(callBack)(mapSelector)
 
         return TableSectionNode(
             items: [oneTimeRender(cellRender)],
@@ -758,12 +795,14 @@ func parseNewHouseNearByNode(
 func fillNewHouseNearByCell(
     _ data: NewHouseData,
     disposeBag: DisposeBag,
+    callBack: @escaping () -> Void,
     selector: ((TracerParams) -> Void)?,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NewHouseNearByCell {
         if let lat = data.coreInfo?.geodeLat, let lng = data.coreInfo?.geodeLng {
             theCell.setLocation(lat: lat, lng: lng)
         }
+        theCell.callBackIndexChanged = callBack
         theCell.mapMaskBtn.rx.tap
             .bind { () in
                 selector?(TracerParams.momoid())

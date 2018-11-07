@@ -72,7 +72,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     var traceParams = TracerParams.momoid()
 
     var recordRowIndex: Set<IndexPath> = []
-
+    
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
@@ -257,7 +257,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     data.baseInfo?.count ?? 0 > 0
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension)
-                <- parseHeaderNode("周边配套") {
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }
                 <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag){
@@ -275,10 +275,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                            
                         }
                     }
-//                    self?.tableView?.indexPathsForVisibleRows?.forEach({  (indexPath) in
-//
-//                    })
-                 
                 }
                 <- parseHeaderNode("均价走势")
                 <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
@@ -447,6 +443,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
 
+    var nearByCell : NewHouseNearByCell?
+
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
         super.init()
@@ -463,11 +461,19 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()
