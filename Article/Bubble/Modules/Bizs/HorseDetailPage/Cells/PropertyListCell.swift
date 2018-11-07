@@ -115,6 +115,15 @@ fileprivate class RowView: UIView {
         }
 
         valueLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(keyLabel.snp.right).offset(10)
+            maker.right.equalTo(-25)
+            maker.top.equalTo(14)
+            maker.bottom.equalTo(keyLabel)
+        }
+    }
+    // 小区详情页布局
+    func remakeValueLabelConstraints() {
+        valueLabel.snp.remakeConstraints { maker in
             maker.left.equalTo(self).offset(96)
             maker.right.equalTo(-25)
             maker.top.equalTo(14)
@@ -199,6 +208,7 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
             let singleViews = groups.map { (info) -> UIView in
                 let re = RowView()
                 setRowValue(info, re)
+                re.remakeValueLabelConstraints()
                 return re
             }
             
