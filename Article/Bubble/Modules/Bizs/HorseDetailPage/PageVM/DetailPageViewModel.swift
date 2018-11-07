@@ -430,12 +430,12 @@ extension DetailPageViewModel {
         
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
-//            tracerParamsInform = tracerParamsInform <|>
-////                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            var tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
+            tracerParamsInform = tracerParamsInform <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
 //                toTracerParams(self.houseId, key: "group_id") <|>
 //                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+                toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
             
             recordEvent(key: TraceEventName.inform_show,
                         params: tracerParamsInform.exclude("house_type").exclude("element_type"))
@@ -446,16 +446,23 @@ extension DetailPageViewModel {
     
     func sendClickConfimTrace()
     {
-        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+        
+//        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+//        tracerParamsInform = tracerParamsInform <|>
+////            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//            toTracerParams(self.houseId, key: "group_id") <|>
+//            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//            toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+//
+        var tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
         tracerParamsInform = tracerParamsInform <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            //                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            //                toTracerParams(self.houseId, key: "group_id") <|>
+            //                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
         
-        
         recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParamsInform.exclude("house_type"))
+                    params: tracerParamsInform.exclude("house_type").exclude("element_type"))
         
     }
     
