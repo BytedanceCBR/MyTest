@@ -36,6 +36,20 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
         // Configure the view for the selected state
     }
 
+    fileprivate func setNeighborhoodItem(items: [ItemValueView]) {
+        for v in contentView.subviews where v is ItemValueView {
+            v.removeFromSuperview()
+        }
+        
+        items.forEach { view in
+            contentView.addSubview(view)
+        }
+        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 4, averageLayout: true, leadSpacing: 20, tailSpacing: 20)
+        items.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+        }
+    }
+
     fileprivate func setItem(items: [ItemView]) {
         for v in contentView.subviews where v is ItemView {
             v.removeFromSuperview()
@@ -50,6 +64,103 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
          }
     }
 
+}
+
+fileprivate class ItemButtonControl: UIControl {
+    
+    lazy var valueLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.textColor = hexStringToUIColor(hex: "#45494d")
+        return re
+    }()
+    
+    lazy var rightArrowImageView: UIImageView = {
+        let re = UIImageView()
+        re.image = UIImage(named: "setting-arrow-2")
+        return re
+    }()
+    
+    lazy var bottomLine: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#081f33")
+        return re
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        addSubview(valueLabel)
+        valueLabel.snp.makeConstraints { maker in
+            maker.left.top.equalTo(self)
+            maker.height.equalTo(22)
+            maker.bottom.equalTo(self).offset(-0.5)
+        }
+        addSubview(rightArrowImageView)
+        rightArrowImageView.snp.makeConstraints { maker in
+            maker.left.equalTo(valueLabel.snp.right).offset(7)
+            maker.right.equalTo(self)
+            maker.width.height.equalTo(10)
+            maker.centerY.equalTo(valueLabel)
+        }
+        addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { maker in
+            maker.left.right.equalTo(valueLabel)
+            maker.top.equalTo(valueLabel.snp.bottom)
+            maker.height.equalTo(0.5)
+        }
+    }
+    
+    override var isEnabled: Bool {
+        didSet {
+            bottomLine.isHidden = !isEnabled
+            rightArrowImageView.isHidden = !isEnabled
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// 小区头部成交房源套数
+fileprivate class ItemValueView: UIView {
+    
+    lazy var keyLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: "#8a9299")
+        return re
+    }()
+    
+    lazy var valueDataLabel: ItemButtonControl = {
+        let re = ItemButtonControl()
+        return re
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: CGRect.zero)
+        backgroundColor = hexStringToUIColor(hex: "#f7f8f9")
+        layer.cornerRadius = 4.0
+        addSubview(valueDataLabel)
+        valueDataLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(self).offset(16)
+            maker.top.equalTo(self).offset(11)
+        }
+        
+        addSubview(keyLabel)
+        keyLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(valueDataLabel.snp.left)
+            maker.top.equalTo(valueDataLabel.snp.bottom).offset(4.5)
+            maker.height.equalTo(17)
+            maker.right.equalToSuperview().offset(-20)
+            maker.bottom.equalToSuperview().offset(-11)
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 fileprivate class ItemView: UIView {
@@ -133,15 +244,24 @@ func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: T
 
 func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHouseCoreInfoCell, let statsInfo = data.statsInfo {
-        let infos = statsInfo.map { info -> ItemView in
-            let re = ItemView()
+        let infos = statsInfo.map { info -> ItemValueView in
+            let re = ItemValueView()
             re.keyLabel.text = info.attr
-            re.valueLabel.text = info.value
+            re.valueDataLabel.valueLabel.text = info.value
+            if info.value == "暂无" {
+                re.valueDataLabel.isEnabled = false
+            } else {
+                re.valueDataLabel.isEnabled = true
+//                re.valueDataLabel.rx.controlEvent(UIControlEvents.touchUpInside).
+//                    .bind { () in
+//
+//                    }
+//                    .disposed(by: theCell.disposeCell)
+            }
             return re
         }
-        infos.first?.verticalLine.isHidden = true
 
-        theCell.setItem(items: infos)
+        theCell.setNeighborhoodItem(items: infos)
     }
 }
 
