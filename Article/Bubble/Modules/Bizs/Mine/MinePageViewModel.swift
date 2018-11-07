@@ -21,7 +21,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
     
     weak var navVC: UINavigationController?
 
-    fileprivate var favoriteDisposeBag = DisposeBag()
+    var favoriteDisposeBag = DisposeBag()
 
     fileprivate var userFavoriteCounts: [UserFollowListResponse?] = []
 
@@ -108,12 +108,11 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
                     HouseType.neighborhood]
             .map { (type) -> Observable<UserFollowListResponse?> in
                 requestFollowUpList(houseType: type)
-        }
+            }
         let favoriteResult = Observable.zip(obvs)
         favoriteDisposeBag = DisposeBag()
         favoriteResult
             .subscribe(onNext: { [unowned self] (responses) in
-
                 self.userFavoriteCounts = responses
                 self.reload()
             }, onError: { (error) in

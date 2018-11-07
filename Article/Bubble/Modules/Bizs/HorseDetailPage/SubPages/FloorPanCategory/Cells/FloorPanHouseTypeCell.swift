@@ -151,7 +151,7 @@ class FloorPanHouseTypeCell: BaseUITableViewCell {
 func parseFloorPanItemsNode(
         data: [FloorPan.Item],
         logPBVC: Any?,
-        isHiddenBottomBar: Bool = true,
+        isHiddenBottomBar: Bool = false,
         navVC: UINavigationController?,
         followPage: BehaviorRelay<String>,
         disposeBag: DisposeBag,
@@ -166,7 +166,7 @@ func parseFloorPanItemsNode(
                     let (offset, item) = e
                     let myParams = params <|>
                         toTracerParams(offset, key: "rank")
-                    return curry(openDetailPage)(item.id)(logPBVC)(isHiddenBottomBar)(navVC)(followPage)(disposeBag)(bottomBarBinder)(myParams)
+                    return curry(openDetailPage)(item.id)(logPBVC)(false)(navVC)(followPage)(disposeBag)(bottomBarBinder)(myParams)
                 }
         
         let records = data

@@ -36,7 +36,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.followPage = followPage
         self.isHiddenBottomBar = isHiddenBottomBar
         super.init(identifier: "\(floorPanId)",
-            isHiddenBottomBar: isHiddenBottomBar,
+            isHiddenBottomBar: false,
                 bottomBarBinder: bottomBarBinder)
     }
 
@@ -64,9 +64,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         
         var titleStr:String = "电话咨询"
         if let phone = paramObj?.queryParams["telephone"] as? String, phone.count > 0 {
-            self.isHiddenBottomBar = false
+
         } else {
-            self.isHiddenBottomBar = true
             titleStr = "询底价"
             
         }
@@ -166,6 +165,14 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                     self.sendPhoneNumberRequest(houseId: Int64(self.houseId), phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        
+                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                                followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            statusBehavior: self.follwUpStatus,
+                            isNeedRecord: false)()
+                        
                     }
                     
                     self.followUpViewModel?.followHouseItem(houseType: self.houseType,

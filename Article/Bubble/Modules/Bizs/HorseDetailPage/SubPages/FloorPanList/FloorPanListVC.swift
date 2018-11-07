@@ -21,7 +21,7 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
          isHiddenBottomBar: Bool = false,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)", isHiddenBottomBar: isHiddenBottomBar, bottomBarBinder: bottomBarBinder)
+        super.init(identifier: "\(courtId)", isHiddenBottomBar: false, bottomBarBinder: bottomBarBinder)
     }
 
     required init?(coder aDecoder: NSCoder) {
