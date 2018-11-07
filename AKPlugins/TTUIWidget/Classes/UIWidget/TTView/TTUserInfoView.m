@@ -281,7 +281,7 @@
         _titleLabel.backgroundColor = [UIColor clearColor];
 //        _titleLabel.textColorThemeKey = _textColorThemedKey;
         _titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
         _titleLabel.numberOfLines = 1;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         

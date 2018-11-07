@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .neighborhood
     var houseId: Int64 = -1

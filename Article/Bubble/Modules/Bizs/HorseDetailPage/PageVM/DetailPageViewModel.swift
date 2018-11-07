@@ -62,6 +62,8 @@ protocol DetailPageViewModel: class {
     var showMessageAlert: ((String) -> Void)? { get set }
 
     var dismissMessageAlert: (() -> Void)? { get set }
+    
+    var goDetailTraceParam: TracerParams? { get set }
 }
 
 extension DetailPageViewModel {
@@ -303,7 +305,9 @@ extension DetailPageViewModel {
     
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
-        return { [unowned self] (bottomBar, followUpButton) in
+        return { [unowned self] (bottomBar, followUpButton, traceParam) in
+            print("xxxxx=\(traceParam.paramsGetter([:]))")
+
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 
@@ -381,14 +385,13 @@ extension DetailPageViewModel {
                                 .exclude("search")
                                 .exclude("filter")
                             traceParams = traceParams <|>
-                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                             if let houseId = self?.houseId {
                                 traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
                             }else {
                                 traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
                             }
-                            recordEvent(key: "click_call", params: traceParams)
+                            recordEvent(key: "click_call", params: traceParams <|> traceParam)
                         }
                         
                     }else {
@@ -426,13 +429,12 @@ extension DetailPageViewModel {
         
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+            var tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             tracerParamsInform = tracerParamsInform <|>
 //                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
-            
             
             recordEvent(key: TraceEventName.inform_show,
                         params: tracerParamsInform.exclude("house_type").exclude("element_type"))
@@ -443,16 +445,23 @@ extension DetailPageViewModel {
     
     func sendClickConfimTrace()
     {
-        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+        
+//        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
+//        tracerParamsInform = tracerParamsInform <|>
+////            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//            toTracerParams(self.houseId, key: "group_id") <|>
+//            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+//            toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
+//
+        var tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
         tracerParamsInform = tracerParamsInform <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            //                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            //                toTracerParams(self.houseId, key: "group_id") <|>
+            //                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
         
-        
         recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParamsInform.exclude("house_type"))
+                    params: tracerParamsInform.exclude("house_type").exclude("element_type"))
         
     }
     
