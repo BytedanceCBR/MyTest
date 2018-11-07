@@ -115,7 +115,7 @@ fileprivate class RowView: UIView {
         }
 
         valueLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(keyLabel.snp.right).offset(10)
+            maker.left.equalTo(self).offset(96)
             maker.right.equalTo(-25)
             maker.top.equalTo(14)
             maker.bottom.equalTo(keyLabel)
@@ -174,7 +174,7 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
             traceExtension
         
         if let count = data.baseInfo?.count, count > 0 {
-            let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)
+            let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)(data.neighborhoodBaseInfoFold)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -187,58 +187,27 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
     }
 }
 
-func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, infoFold:Bool, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
-        let groups: [[NeighborhoodItemAttribute]]? = infos?.reduce([[], []]) { (result, info) -> [[NeighborhoodItemAttribute]] in
-            if info.isSingle == false {
-                return [result[0] + [info], result[1]]
-            } else {
-                return [result[0], result[1] + [info]]
-            }
-        }
-
-        if let groups = groups {
-
+        cell.prepareForReuse()
+        if let groups = infos {
             func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
                 rowView.keyLabel.text = info.attr
                 rowView.valueLabel.text = info.value
             }
 
-            var twoValueView: [UIView] = []
-            groups[0].enumerated().forEach { (e) in
-                let (offset, info) = e
-                if (offset) % 2 == 0 {
-                    let twoRow = TwoRowView()
-                    let row = RowView()
-                    setRowValue(info, row)
-                    twoRow.addSubview(row)
-                    twoValueView.append(twoRow)
-                } else {
-                    let twoRow = twoValueView.last
-                    let row = RowView()
-                    setRowValue(info, row)
-                    twoRow?.addSubview(row)
-                }
-            }
-
-            twoValueView.forEach { view in
-                view.subviews.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-            }
-
-            twoValueView.forEach { view in
-                view.subviews.snp.makeConstraints { maker in
-                    maker.top.bottom.equalToSuperview()
-                    maker.height.equalTo(35)
-                }
-            }
-
-            let singleViews = groups[1].map { (info) -> UIView in
+            let singleViews = groups.map { (info) -> UIView in
                 let re = RowView()
                 setRowValue(info, re)
                 return re
             }
-
-            theCell.addRowView(rows: twoValueView + singleViews)
+            
+            if infoFold {
+                let rowVeiws = singleViews.take(4)
+                theCell.addRowView(rows: rowVeiws)
+            } else {
+                theCell.addRowView(rows: singleViews)
+            }
         }
     }
 }

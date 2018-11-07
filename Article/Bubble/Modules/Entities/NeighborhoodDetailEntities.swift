@@ -139,6 +139,7 @@ struct NeighborhoodDetailData: Mappable {
     var coreInfo: [NeighborhoodItemAttribute]?
     var statsInfo: [NeighborhoodItemAttribute]?
     var baseInfo: [NeighborhoodItemAttribute]?
+    var neighborhoodBaseInfoFold: Bool = true
     var neighborhoodInfo: NeighborhoodDetailInfo?
     var totalSalesCount: Int?
     var abtestVersions: String?
