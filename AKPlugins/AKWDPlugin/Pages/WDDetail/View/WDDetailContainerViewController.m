@@ -20,6 +20,7 @@
 #import "TTDeviceHelper.h"
 #import <TTInteractExitHelper.h>
 #import <KVOController/NSObject+FBKVOController.h>
+#import "ExploreOrderedData.h"
 
 @interface WDDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol, WDDetailModelDataSource>
 @property (nonatomic, assign) BOOL hasDidAppeared;
@@ -28,6 +29,8 @@
 @property (nonatomic, strong, nullable) SSViewControllerBase<TTDetailViewController> * detailViewController;
 
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
+
+@property (nonatomic, strong) ExploreOrderedData *orderedData;
 
 @end
 
@@ -52,6 +55,9 @@
         self.hidesBottomBarWhenPushed = YES;
         WDDetailContainerViewModel *viewModel = [[WDDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         self.viewModel = viewModel;
+        NSDictionary *extraParams = paramObj.userInfo.extra;
+        self.orderedData = extraParams[@"ordered_data"];
+
         if (self.viewModel.isNewVersion) {
             self.ttHideNavigationBar = YES;
             [self.navigationController setNavigationBarHidden:self.ttHideNavigationBar animated:NO];
@@ -186,6 +192,20 @@
     [self.KVOController observe:self.detailViewController keyPaths:@[@"navigationItem.leftBarButtonItem", @"navigationItem.leftBarButtonItems"] options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew action:@selector(detailLeftNavBarButtonDidChange:)];
     
     [self.KVOController observe:self.detailViewController keyPath:@"navigationItem.titleView" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew action:@selector(detailTitleViewDidChange:)];
+    
+    // 问答详情页收藏状态处理
+    WeakSelf;
+    [self.KVOController observe:self.viewModel.detailModel keyPath:@"answerEntity.userRepined" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        StrongSelf;
+        NSUInteger oldValue = [[change objectForKey:NSKeyValueChangeOldKey] unsignedIntegerValue];
+        NSUInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+        //收藏状态发送变化再更新视图
+        if (oldValue != newValue) {
+            //取消收藏
+            [self.orderedData setValue:@(newValue) forKeyPath:@"originalData.userRepined"];
+        }
+    }];
+    
 }
 
 - (void)detailRightNavBarButtonDidChange:(NSDictionary *)change {

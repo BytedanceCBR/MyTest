@@ -88,7 +88,7 @@
 
 + (UIFont *)contentLabelFont {
 //    return [UIFont systemFontOfSize:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
-    return [UIFont fontWithName:@"PingFangSC-Regular" size:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
+    return [UIFont fontWithName:@"PingFangSC-Regular" size:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]] ? : [UIFont systemFontOfSize:[TTCommentUIHelper tt_sizeWithFontSetting:[self fitSizeWithiPhone6:17.f iPhone5:16.f]]];
 }
 
 + (UIColor *)contentLabelTextColor {

@@ -64,7 +64,7 @@
     NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1)
     }];
     if (self.commentModel.diggCount) {
-        [attributedTitle appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:7.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1), NSBaselineOffsetAttributeName : @(2.f)}]];
+        [attributedTitle appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:7.f] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:7]], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1), NSBaselineOffsetAttributeName : @(2.f)}]];
     }
     
     [_arrowButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];

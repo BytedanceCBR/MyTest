@@ -154,21 +154,8 @@
     }
     else {
         ExploreCellBase *cell = [self cellForIndexPath:indexPath];
-        
-        if ([cell isKindOfClass:[TSVFeedFollowCell class]]) {
-            
-            TTFeedCellSelectContext *context = [TTFeedCellSelectContext new];
-            context.refer = self.viewModel.refer;
-            
-            ExploreOrderedData *orderedData = [self modelForIndexPath:indexPath];
-            context.orderedData = orderedData;
-//            context.categoryId = self.categoryID;
-            [(ExploreCellBase *)cell didSelectWithContext:context];
-            
-        }else {
-            
-            [cell didSelectAtIndexPath:indexPath viewModel:self.viewModel];
-        }
+        [cell didSelectAtIndexPath:indexPath viewModel:self.viewModel];
+
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }

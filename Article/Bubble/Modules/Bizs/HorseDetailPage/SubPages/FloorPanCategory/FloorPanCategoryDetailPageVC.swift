@@ -36,7 +36,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.followPage = followPage
         self.isHiddenBottomBar = isHiddenBottomBar
         super.init(identifier: "\(floorPanId)",
-            isHiddenBottomBar: false,
+            isHiddenBottomBar: isHiddenBottomBar,
                 bottomBarBinder: bottomBarBinder)
     }
 
@@ -57,15 +57,16 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: self.isHiddenBottomBar,
-            bottomBarBinder: { (_,_) in
+            bottomBarBinder: { (_,_,_) in
 
             })
 
         
         var titleStr:String = "电话咨询"
         if let phone = paramObj?.queryParams["telephone"] as? String, phone.count > 0 {
-
+            self.isHiddenBottomBar = false
         } else {
+            self.isHiddenBottomBar = true
             titleStr = "询底价"
             
         }
@@ -143,7 +144,6 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             .exclude("filter")
                         traceParams = traceParams <|>
                             toTracerParams("house_model_detail", key: "page_type") <|>
-                            toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("be_null", key: "search_id") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
                         recordEvent(key: "click_call", params: traceParams)
@@ -154,6 +154,10 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                     
                 }.disposed(by: disposeBag)
         }
+    }
+    
+    override func getBottomBarTraceParam() -> TracerParams {
+        return self.tracerParams.exclude("house_type")
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
@@ -194,15 +198,15 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
-            tracerParams = tracerParams <|>
-                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
-            
-            
+//            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
+//
+//
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams.exclude("element_type"))
+                        params: self.tracerParams.exclude("house_type"))
             
             alert.showFrom(rootView)
         }
@@ -302,6 +306,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.errorVM?.onRequestViewDidLoad()
         self.errorVM?.onRequest()
         self.viewModel?.request(floorPanId: self.floorPanId)
+        
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
