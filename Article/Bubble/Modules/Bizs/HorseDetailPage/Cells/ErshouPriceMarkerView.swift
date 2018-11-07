@@ -10,8 +10,10 @@ import Charts
 
 class ErshouPriceMarkerView: MarkerView {
 
-    var markerData: ((Int) -> ([(String,TrendItem)]))?
+    var markerData: ((Int) -> (Double, [(String,TrendItem)]))?
 
+    var unitPerSquare: Double = 100.0 * 10000.0
+    
     var selectIndex: Int = 0
     lazy var titleLabel: UILabel = {
         let re = UILabel()
@@ -122,7 +124,8 @@ class ErshouPriceMarkerView: MarkerView {
             
             guard let markerData = self.markerData else { return }
             selectIndex = index
-            let items = markerData(index)
+            let (unitPerSquare, items) = markerData(index)
+            self.unitPerSquare = unitPerSquare
             guard items.count > 0 else { return }
 
             if items.count > 0 {
@@ -134,8 +137,15 @@ class ErshouPriceMarkerView: MarkerView {
                 if name.count > 7 {
                     trendName = name.prefix(7) + "..."
                 }
-                let price:Double = (Double(item.price ?? "") ?? 0.00) / 1000000.00
-                firstLabel.text = "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平"
+                
+                let unitPerSquare = self.unitPerSquare != 0 ? self.unitPerSquare : 1000000.00
+                if unitPerSquare >= 1000000.00 {
+                    let price:Double = (Double(item.price ?? "") ?? 0.00) / unitPerSquare
+                    firstLabel.text = unitPerSquare >= 1000000.00 ? "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平" : "\(trendName ?? "")：\(price)元/平"
+                }else {
+                    let price:Int = (Int(item.price ?? "") ?? 0) / Int(unitPerSquare)
+                    firstLabel.text = "\(trendName ?? "")：\(price)元/平"
+                }
             }
             if items.count > 1 {
 
@@ -145,8 +155,14 @@ class ErshouPriceMarkerView: MarkerView {
                 if name.count > 7 {
                     trendName = name.prefix(7) + "..."
                 }
-                let price:Double = (Double(item.price ?? "") ?? 0.00) / 1000000.00
-                secondLabel.text = "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平"
+                let unitPerSquare = self.unitPerSquare != 0 ? self.unitPerSquare : 1000000.00
+                if unitPerSquare >= 1000000.00 {
+                    let price:Double = (Double(item.price ?? "") ?? 0.00) / unitPerSquare
+                    secondLabel.text = unitPerSquare >= 1000000.00 ? "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平" : "\(trendName ?? "")：\(price)元/平"
+                }else {
+                    let price:Int = (Int(item.price ?? "") ?? 0) / Int(unitPerSquare)
+                    secondLabel.text = "\(trendName ?? "")：\(price)元/平"
+                }
             }
             if items.count > 2 {
 
@@ -156,9 +172,15 @@ class ErshouPriceMarkerView: MarkerView {
                 if name.count > 7 {
                     trendName = name.prefix(7) + "..."
                 }
-                let price:Double = (Double(item.price ?? "") ?? 0.00) / 1000000.00
-                thirdLabel.text = "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平"
-                
+                let unitPerSquare = self.unitPerSquare != 0 ? self.unitPerSquare : 1000000.00
+                if unitPerSquare >= 1000000.00 {
+                    let price:Double = (Double(item.price ?? "") ?? 0.00) / unitPerSquare
+                    thirdLabel.text = unitPerSquare >= 1000000.00 ? "\(trendName ?? "")：\(String(format: "%.2f", price))万元/平" : "\(trendName ?? "")：\(price)元/平"
+                }else {
+                    let price:Int = (Int(item.price ?? "") ?? 0) / Int(unitPerSquare)
+                    thirdLabel.text = "\(trendName ?? "")：\(price)元/平"
+                }
+
             }
             
             setNeedsLayout()
