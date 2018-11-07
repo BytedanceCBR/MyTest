@@ -434,14 +434,14 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     func openCommentList(
         courtId: Int64,
-        isHiddenBottomBtn: Bool? = false,
+        isHiddenBottomBtn: Bool? = true,
         logPB: Any?,
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         
         self.followTraceParams = self.followTraceParams <|>
             toTracerParams("house_comment_detail", key: "enter_from")
         
-        let detailPage = HouseCommentVC(courtId: courtId, isHiddenBottomBar: isHiddenBottomBtn ?? false, bottomBarBinder: bottomBarBinder)
+        let detailPage = HouseCommentVC(courtId: courtId, isHiddenBottomBar: isHiddenBottomBtn ?? true, bottomBarBinder: bottomBarBinder)
 
         detailPage.tracerParams = TracerParams.momoid() <|>
             toTracerParams("new_detail", key: "enter_from") <|>
@@ -466,7 +466,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         
         let detailPage = FloorPanListVC(
             courtId: courtId,
-            isHiddenBottomBar: isHiddenBottomBtn ?? false ,
+            isHiddenBottomBar: isHiddenBottomBtn ?? true ,
             bottomBarBinder: bottomBarBinder)
 
         detailPage.tracerParams = followTraceParams <|>
@@ -762,7 +762,7 @@ func openFloorPanInfoPage(
 func openFloorPanCategoryPage(
     floorPanId: String,
     logPBVC: Any?,
-    isHiddenBottomBtn: Bool = false,
+    isHiddenBottomBtn: Bool = true,
     traceParams: TracerParams,
     disposeBag: DisposeBag,
     navVC: UINavigationController?,
