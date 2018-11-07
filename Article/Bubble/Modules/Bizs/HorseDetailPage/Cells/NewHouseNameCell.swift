@@ -221,7 +221,7 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
 func createTagAttributeTextNormal(content:String) -> NSMutableAttributedString {
     let attributeText = NSMutableAttributedString(string: content)
     attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(12)
-    attributeText.yy_color = hexStringToUIColor(hex: "#a1aab3")
+    attributeText.yy_color = hexStringToUIColor(hex: kFHCoolGrey2Color)
     attributeText.yy_lineSpacing = 2
     attributeText.yy_lineHeightMultiple = 0
     attributeText.yy_maximumLineHeight = 0
