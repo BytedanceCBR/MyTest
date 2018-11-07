@@ -194,6 +194,11 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     [self setNeedsLayout];
 }
 
+- (ExploreOrderedData *)cellData
+{
+    return self.orderedData;
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -332,10 +337,14 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             return [self selectedViewWithFetchManager:fetchManager];
         }];
         
-        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
         [info setValue:fetchManager forKey:HTSVideoListFetchManager];
         [info setValue:exitManager forKey:HTSVideoDetailExitManager];
-        
+        if (self.cellData) {
+            
+            [info setValue:self.cellData forKey:HTSVideoDetailOrderedData];
+        }
+
         //自定义push方式打开火山详情页
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(info) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
             if ([nav isKindOfClass:[TTNavigationController class]] &&
