@@ -97,7 +97,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode(isShow: data.recommend.count>0)
-            <- parseFloorPanCollectionNode(data.recommend,isHiddenBottomBar: isHiddenBottomBar,logPb: traceParamsDic["log_pb"],navVC: navVC,followPage: followPage, bottomBarBinder: bottomBarBinder ?? { (_, _) in })
+            <- parseFloorPanCollectionNode(data.recommend,isHiddenBottomBar: isHiddenBottomBar,logPb: traceParamsDic["log_pb"],navVC: navVC,followPage: followPage, bottomBarBinder: bottomBarBinder ?? { (_, _, _) in })
         return dataParser
     }
 

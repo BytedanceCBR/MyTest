@@ -7,6 +7,8 @@ import Foundation
 import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
 
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1

@@ -588,6 +588,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .exclude("element_type")
             .exclude("maintab_search"))
         
+        detailPageViewModel?.goDetailTraceParam = traceParams
+            .exclude("house_type")
+            .exclude("element_type")
+            .exclude("maintab_search")
+        
         self.netStateInfoVM?.netState
             .bind { [unowned self] hasError in
                 self.bottomBar.isHidden = hasError

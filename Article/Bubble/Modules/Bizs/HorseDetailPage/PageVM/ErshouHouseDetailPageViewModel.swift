@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .secondHandHouse
     var houseId: Int64 = -1
