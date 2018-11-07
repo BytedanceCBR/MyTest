@@ -411,8 +411,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction
 {
     CLLocationCoordinate2D currentCenter = mapView.centerCoordinate;
-    CGFloat delta = 0.02/mapView.zoomLevel;
-    if (fabs(currentCenter.latitude - _lastRequestCenter.latitude) > delta || fabs(currentCenter.longitude - _lastRequestCenter.longitude) > delta) {
+    CGPoint ccenter = [mapView convertCoordinate:currentCenter toPointToView:mapView];
+    CGPoint lcenter = [mapView convertCoordinate:_lastRequestCenter toPointToView:mapView];
+    CGFloat threshold = MIN(self.viewController.view.width/3, self.viewController.view.height/4);
+    if (fabs(ccenter.x - lcenter.x) > threshold || fabs(ccenter.y - lcenter.y) > threshold) {
         [self requestHouses:wasUserAction];
     }
 }
