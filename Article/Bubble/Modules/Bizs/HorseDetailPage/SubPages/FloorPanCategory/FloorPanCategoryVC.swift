@@ -79,7 +79,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.followPage = followPage
         self.isHiddenBottom = isHiddenBottomBar
         super.init(identifier: floorPanId,
-                   isHiddenBottomBar: false,
+                   isHiddenBottomBar: isHiddenBottomBar,
                 bottomBarBinder: bottomBarBinder)
         self.navBar.title.text = "楼盘户型"
     }

@@ -15,10 +15,10 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
     var houseCommentViewModel: HouseCommentViewModel?
 
 
-    init(courtId: Int64, isHiddenBottomBar: Bool = false,
-         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+    init(courtId: Int64, isHiddenBottomBar: Bool = true,
+ bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.courtId = courtId
-        super.init(identifier: "\(courtId)",isHiddenBottomBar: false, bottomBarBinder: bottomBarBinder)
+        super.init(identifier: "\(courtId)",isHiddenBottomBar: isHiddenBottomBar, bottomBarBinder: bottomBarBinder)
     }
 
     required init?(coder aDecoder: NSCoder) {

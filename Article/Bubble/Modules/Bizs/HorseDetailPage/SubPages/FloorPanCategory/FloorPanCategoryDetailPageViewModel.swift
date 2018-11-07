@@ -38,7 +38,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
     
     var isHiddenBottomBar: Bool
     
-    init(tableView: UITableView, isHiddenBottomBar: Bool = false,navVC: UINavigationController?, followPage: BehaviorRelay<String>) {
+    init(tableView: UITableView, isHiddenBottomBar: Bool = true,navVC: UINavigationController?, followPage: BehaviorRelay<String>) {
         self.navVC = navVC
         self.tableView = tableView
         self.cellFactory = getHouseDetailCellFactory()

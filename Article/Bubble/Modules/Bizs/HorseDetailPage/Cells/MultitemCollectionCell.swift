@@ -834,7 +834,7 @@ fileprivate func searchInNeighborhoodSelector(
 // 房型列表页 相关房型
 func parseFloorPanCollectionNode(
         _ items: [FloorPlanInfoData.Recommend],
-        isHiddenBottomBar: Bool = false,
+        isHiddenBottomBar: Bool = true,
         logPb: Any? = "be_null",
         navVC: UINavigationController?,
         followPage: BehaviorRelay<String>,
@@ -844,7 +844,7 @@ func parseFloorPanCollectionNode(
             let params = TracerParams.momoid() <|>
                     toTracerParams("house_model", key: "element_type")
 
-            let cellRender = oneTimeRender(curry(fillFloorPanCell)(items)(false)(logPb)(navVC)(followPage)(bottomBarBinder))
+            let cellRender = oneTimeRender(curry(fillFloorPanCell)(items)(isHiddenBottomBar)(logPb)(navVC)(followPage)(bottomBarBinder))
             return TableSectionNode(
                     items: [cellRender],
                     selectors: nil,
@@ -859,7 +859,7 @@ func parseFloorPanCollectionNode(
 
 fileprivate func fillFloorPanCell(
         _ data: [FloorPlanInfoData.Recommend],
-        isHiddenBottomBar: Bool = false,
+        isHiddenBottomBar: Bool = true,
         logPBVC: Any?,
         navVC: UINavigationController?,
         followPage: BehaviorRelay<String>,
@@ -871,7 +871,7 @@ fileprivate func fillFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(false)(logPBVC)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(isHiddenBottomBar)(logPBVC)(offset)(navVC)(followPage)(bottomBarBinder)
         }
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e

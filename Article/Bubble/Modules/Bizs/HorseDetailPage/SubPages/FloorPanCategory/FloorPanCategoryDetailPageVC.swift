@@ -36,7 +36,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.followPage = followPage
         self.isHiddenBottomBar = isHiddenBottomBar
         super.init(identifier: "\(floorPanId)",
-            isHiddenBottomBar: false,
+            isHiddenBottomBar: isHiddenBottomBar,
                 bottomBarBinder: bottomBarBinder)
     }
 
@@ -64,8 +64,9 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         
         var titleStr:String = "电话咨询"
         if let phone = paramObj?.queryParams["telephone"] as? String, phone.count > 0 {
-
+            self.isHiddenBottomBar = false
         } else {
+            self.isHiddenBottomBar = true
             titleStr = "询底价"
             
         }
