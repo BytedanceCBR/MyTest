@@ -789,20 +789,23 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [unowned self] in
-
-            if self.stateControl.state == .normal {
-                let alpha = (1 - (139 - self.tableView.contentOffset.y) / 139) * 2
-                self.navBar.alpha = alpha
-                self.barStyle.accept(UIStatusBarStyle.default.rawValue)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [weak self] in
+            
+            guard let state = self?.stateControl.state else {
+                return
+            }
+            if state == .normal {
+                let alpha = (1 - (139 - (self?.tableView.contentOffset.y ?? 0)) / 139) * 2
+                self?.navBar.alpha = alpha
+                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
                 UIApplication.shared.statusBarStyle = .default
-                self.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
+                self?.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
 
             } else {
-                self.navBar.alpha = 1
-                self.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+                self?.navBar.alpha = 1
+                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
                 UIApplication.shared.statusBarStyle = .lightContent
-                self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+                self?.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
 
             }
 
