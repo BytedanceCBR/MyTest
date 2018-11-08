@@ -427,7 +427,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CLLocationCoordinate2D currentCenter = mapView.centerCoordinate;
     CGPoint ccenter = [mapView convertCoordinate:currentCenter toPointToView:mapView];
     CGPoint lcenter = [mapView convertCoordinate:_lastRequestCenter toPointToView:mapView];
-    CGFloat threshold = MIN(self.viewController.view.width/3, self.viewController.view.height/4);
+    CGFloat threshold = MIN(self.viewController.view.width/2, self.viewController.view.height/3);
+    threshold *= (mapView.zoomLevel/8);
     if (fabs(ccenter.x - lcenter.x) > threshold || fabs(ccenter.y - lcenter.y) > threshold) {
         [self requestHouses:wasUserAction];
     }
@@ -444,7 +445,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
     }
     
-    if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.1) {
+    if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
         [self requestHouses:wasUserAction];
     }
     
@@ -562,8 +563,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     //move annotationview to center
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
     CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
-    annotationViewPoint.y += self.mapView.height/3;
-    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:annotationViewPoint toCoordinateFromView:self.mapView];
+    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/6);
+    CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
+    CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
+    toMovePoint.y -= 18;//annotationview height/2
+    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:toMovePoint toCoordinateFromView:self.mapView];
     [self.mapView setCenterCoordinate:destCenter animated:YES];
     [self.houseListViewController showNeighborHouses:model];
     

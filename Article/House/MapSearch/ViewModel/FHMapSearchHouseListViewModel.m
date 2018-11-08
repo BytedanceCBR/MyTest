@@ -205,6 +205,13 @@
     if ([self.listController canMoveup]) {
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
+        //PM 要求不能一下滑上去
+        if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
+            scrollView.scrollEnabled = NO;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                scrollView.scrollEnabled = YES;
+            });
+        }
     }else if (scrollView.contentOffset.y < 0){
         [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
         scrollView.contentOffset = CGPointZero;
@@ -223,30 +230,35 @@
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
-    if (self.listController.view.top > self.listController.view.height*0.5) {
+    if (self.listController.view.top > self.listController.view.height*0.7) {
         [self handleDismiss:0.3];
     }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 50)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
         [self addEnterListPageLog];
-    }else if((self.listController.view.top > [self.listController minTop]) && self.listController.view.top < [self.listController initialTop]){
+    }else if((self.listController.view.top > [self.listController minTop]) ){//&& (self.listController.view.top < self.listController.view.height*0.7)
         [self.headerView hideTopTip:NO];
         [self.listController moveTop:[self.listController initialTop]];
         self.listController.moveDock();
-    }else if([self.listController canMoveup]){
-        //当前停留在中间
-        [self.headerView hideTopTip:NO];
-        self.listController.moveDock();
         [self addHouseListDurationLog];
     }
+//    else if([self.listController canMoveup]){
+//        //当前停留在中间
+//        [self.headerView hideTopTip:NO];
+//        self.listController.moveDock();
+//        [self addHouseListDurationLog];
+//    }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    if (self.listController.view.top > [self.listController minTop] && velocity.y < -2.5) {
+    if (scrollView.contentOffset.y < 1 && (self.listController.view.top > [self.listController minTop]) && velocity.y < -2.5) {
         //quickly swipe done
         [self handleDismiss:0.1];
+    }
+    if (scrollView.contentOffset.y > 50 && velocity.y < -2) {
+        *targetContentOffset =  CGPointMake(0, 0.5);
     }
 }
 
