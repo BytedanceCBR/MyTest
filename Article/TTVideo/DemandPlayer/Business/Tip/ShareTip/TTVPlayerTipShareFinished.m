@@ -173,7 +173,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         UIImage *replayImg = [self imageByApplyingAlpha:0.8 image:img];
         [_replayButton setImage:replayImg forState:UIControlStateNormal];
         [_replayButton setTitle:NSLocalizedString(@"重播", nil) forState:UIControlStateNormal];
-        _replayButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.f];
+        _replayButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.f] ? : [UIFont systemFontOfSize:14];
         [_replayButton setTitleColor:[UIColor tt_defaultColorForKey:kColorText9] forState:UIControlStateNormal];
         [_replayButton setTitleColor:[UIColor tt_defaultColorForKey:kColorText9Highlighted] forState:UIControlStateHighlighted];
         [_replayButton layoutButtonWithEdgeInsetsStyle:TTButtonEdgeInsetsStyleImageLeft imageTitlespace:2.f];

@@ -528,7 +528,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                 .exclude("filter")
                             traceParams = traceParams <|>
                                 toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("\(self.houseId)", key: "group_id")
                             recordEvent(key: "click_call", params: traceParams)
@@ -549,7 +548,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel] in
-                    detailPageViewModel?.followThisItem(isNeedRecord: true)
+                    
+                    var tracerParams = EnvContext.shared.homePageParams
+                    if let params = detailPageViewModel?.goDetailTraceParam {
+                        tracerParams = tracerParams <|> params
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                    }
+                    tracerParams = tracerParams <|>
+                        toTracerParams(pageTypeString(detailPageViewModel?.houseType ?? .newHouse), key: "page_type")
+
+                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
                     })
                     .disposed(by: disposeBag)
             detailPageViewModel.followStatus
@@ -587,6 +599,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .exclude("house_type")
             .exclude("element_type")
             .exclude("maintab_search"))
+        
+        detailPageViewModel?.goDetailTraceParam = traceParams
+            .exclude("house_type")
+            .exclude("element_type")
+            .exclude("maintab_search")
         
         self.netStateInfoVM?.netState
             .bind { [unowned self] hasError in
@@ -910,7 +927,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
         
-       recordEvent(key: TraceEventName.inform_show,
+        recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))
     
         alert.showFrom(self.view)
@@ -920,14 +937,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     {
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
-        
         recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParams)
+                    params: tracerParams.exclude("element_type"))
     }
     
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {

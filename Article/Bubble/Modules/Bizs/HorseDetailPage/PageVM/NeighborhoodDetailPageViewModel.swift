@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .neighborhood
     var houseId: Int64 = -1
@@ -182,7 +184,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 .disposed(by: disposeBag)
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         switch followStatus.value {
         case let .success(status):
             if status {
@@ -199,6 +201,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     followId: "\(houseId)",
                     disposeBag: disposeBag,
                     isNeedRecord: isNeedRecord)()
+                self.recordFollowEvent(traceParam)
+
 
             }
         case .failure(_): do {}

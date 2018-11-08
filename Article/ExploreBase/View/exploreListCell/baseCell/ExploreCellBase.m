@@ -654,8 +654,15 @@ NSInteger const kCustomEditControlWidth = 53.f;
 //        }
 //    }
 else if ([((ExploreOrderedData *)self.cellData).originalData isKindOfClass:[TSVShortVideoOriginalData class]]) {
-        [self didSelectWithContext:nil];
-    }
+
+    TTFeedCellSelectContext *context = [TTFeedCellSelectContext new];
+    context.refer = viewModel.refer;
+    
+    ExploreOrderedData *orderedData = (ExploreOrderedData *)self.cellData;
+    context.orderedData = orderedData;
+    //            context.categoryId = self.categoryID;
+    [self didSelectWithContext:context];
+}
 }
 
 - (void)willDisplayAtIndexPath:(nonnull NSIndexPath *)indexPath viewModel:(nonnull TTFeedContainerViewModel *)viewModel{

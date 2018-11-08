@@ -882,7 +882,7 @@ static CGFloat toolbarHeight = 44.5f;
         self.carDetailLabel.attributedText = ({
             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:@"查看详情 " attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]],
                                                                                                                      NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8)}];
-            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:10.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8), NSBaselineOffsetAttributeName : @(2.f)}]];
+            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:10.f] ? : [UIFont systemFontOfSize:10.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8), NSBaselineOffsetAttributeName : @(2.f)}]];
             attr;
         });
         self.carDetailLabel.width = ceil([self.carDetailLabel.attributedText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:0 context:nil].size.width);

@@ -33,6 +33,11 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        bottomBar.snp.updateConstraints { (maker) in
+            
+            maker.height.equalTo(0)
+        }
         //隐藏关注按钮
         self.navBar.rightBtn2.isHidden = true
 

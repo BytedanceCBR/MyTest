@@ -21,6 +21,8 @@ enum RequestSuccessType: Int {
 
 
 class HomeListViewModel: DetailPageViewModel {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
@@ -666,13 +668,15 @@ class HomeListViewModel: DetailPageViewModel {
         }
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         followIt(
             houseType: .newHouse,
             followAction: .newHouse,
             followId: "\(houseId)",
             disposeBag: disposeBag,
             isNeedRecord: isNeedRecord)()
+        self.recordFollowEvent(traceParam)
+
     }
 
     private func openCategoryList(

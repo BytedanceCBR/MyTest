@@ -744,7 +744,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     _avatarLabel.height = KButtonsMinHeight - 4;
 
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
     }else{
         _avatarLabel.left = left;
@@ -822,7 +822,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     //名称
     _avatarLabel.height = KButtonsMinHeight - 4;
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
     }else{
         _avatarLabel.left = left;
@@ -899,7 +899,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     avatarLabelWidth = avatarLabelWidth < _avatarLabel.width ? avatarLabelWidth :_avatarLabel.width;
     _avatarLabel.width = avatarLabelWidth;
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
         if (avatarLabelWidth < [self.class avatarHeight]) {
             _avatarLabel.centerX = _avatarView.centerX;

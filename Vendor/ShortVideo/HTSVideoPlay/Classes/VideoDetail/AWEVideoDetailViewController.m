@@ -107,6 +107,8 @@
 #import "TSVPrefetchVideoManager.h"
 #import <TTAudioSessionManager.h>
 
+#import "ExploreOrderedData.h"
+
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -217,6 +219,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, copy) NSString *ruleID;   //推送gid对应的唯一标识
 @property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
 
+@property (nonatomic, strong) ExploreOrderedData            *orderedData;
+;
 
 @end
 
@@ -336,6 +340,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         }
         if (extraParams[TSVDetailPushFromProfileVC]) {
             self.pushFromProfileVC = [extraParams tt_boolValueForKey:TSVDetailPushFromProfileVC];
+        }
+        
+        if (extraParams[HTSVideoDetailOrderedData]) {
+            self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
     }
     return self;
@@ -1269,6 +1277,8 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.model.userRepin = !self.model.userRepin;
             [self.model save];
 
+            [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
+            
             contentItem.selected = self.model.userRepin;
             if(self.model.userRepin) {
                 TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
