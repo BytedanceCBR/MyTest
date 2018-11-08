@@ -185,6 +185,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
         self.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
         self.searchAndConditionFilterVM.conditions = [:]
+        self.searchAndConditionFilterVM.searchSortCondition = nil
+
         self.queryString = ""
         if let theHouseType = paramObj?.allParams["house_type"] as? String {
             houseType.accept(HouseType(rawValue: Int(theHouseType)!) ?? .secondHandHouse)
