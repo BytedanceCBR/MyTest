@@ -243,7 +243,7 @@ typedef NS_ENUM(NSInteger, TTPersonalHomeHeaderInfoItemType) {
 {
     SSThemedLabel *nameLabel = [[SSThemedLabel alloc] init];
     nameLabel.numberOfLines = 1;
-    nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:18]];
+    nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:18]] ? : [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:18]];
     nameLabel.textColorThemeKey = kColorText1;
     [self addSubview:nameLabel];
     self.nameLabel = nameLabel;

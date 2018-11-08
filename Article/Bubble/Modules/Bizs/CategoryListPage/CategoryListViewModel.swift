@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
@@ -147,7 +149,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         // do nothing
     }
 

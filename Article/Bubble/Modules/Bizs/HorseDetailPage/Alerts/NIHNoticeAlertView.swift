@@ -113,6 +113,14 @@ class NIHNoticeAlertView: UIView {
                         self.contentView.top -= offsetY
                     }
                     
+                    if UIScreen.main.bounds.width < 375
+                    {
+                        self.contentView.snp.remakeConstraints { maker in
+                            maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
+                            maker.centerX.equalToSuperview()
+                            maker.centerY.equalToSuperview().offset(-100)
+                        }
+                    }
                 }
                 
                 if duration > 0 {

@@ -28,7 +28,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     var pageViewModelProvider: DetailPageViewModelProvider?
 
     var shareParams: TracerParams?
-
+    let stateControl = HomeHeaderStateControl()
+    
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
 //        re.rightBtn.isHidden = false
@@ -356,7 +357,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             detailPageViewModel?.requestData(houseId: houseId, logPB: logPB, showLoading: true)
         }
 
-        let stateControl = HomeHeaderStateControl()
+        
         stateControl.onStateChanged = { [weak self] (state) in
             switch state {
             case .suspend:
@@ -419,7 +420,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     
-                    if stateControl.state == .suspend
+                    if self?.stateControl.state == .suspend
                     {
                         self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-white"), for: .normal)
                     }else
@@ -527,7 +528,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                 .exclude("filter")
                             traceParams = traceParams <|>
                                 toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("\(self.houseId)", key: "group_id")
                             recordEvent(key: "click_call", params: traceParams)
@@ -548,7 +548,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel] in
-                    detailPageViewModel?.followThisItem(isNeedRecord: true)
+                    
+                    var tracerParams = EnvContext.shared.homePageParams
+                    if let params = detailPageViewModel?.goDetailTraceParam {
+                        tracerParams = tracerParams <|> params
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                    }
+                    tracerParams = tracerParams <|>
+                        toTracerParams(pageTypeString(detailPageViewModel?.houseType ?? .newHouse), key: "page_type")
+
+                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
                     })
                     .disposed(by: disposeBag)
             detailPageViewModel.followStatus
@@ -561,7 +574,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     if case let .success(status) = result {
-                        if !status && stateControl.state != .suspend
+                        if !status && self?.stateControl.state != .suspend
                         {
                             self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
                         }
@@ -586,6 +599,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .exclude("house_type")
             .exclude("element_type")
             .exclude("maintab_search"))
+        
+        detailPageViewModel?.goDetailTraceParam = traceParams
+            .exclude("house_type")
+            .exclude("element_type")
+            .exclude("maintab_search")
         
         self.netStateInfoVM?.netState
             .bind { [unowned self] hasError in
@@ -772,6 +790,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             }
         }
+        
+        if EnvContext.shared.client.reachability.connection == .none
+        {
+            navBar.rightBtn.isUserInteractionEnabled = false
+            navBar.rightBtn2.isUserInteractionEnabled = false
+        }
+        
 //        if houseType == .newHouse
 //        {
 //           self.detailPageViewModel?.onDataArrived
@@ -780,12 +805,27 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.barStyle.value == UIStatusBarStyle.lightContent.rawValue {
-            UIApplication.shared.statusBarStyle = .lightContent
-            self.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
-        } else {
-            UIApplication.shared.statusBarStyle = .default
-            self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [weak self] in
+            
+            guard let state = self?.stateControl.state else {
+                return
+            }
+            if state == .normal {
+                let alpha = (1 - (139 - (self?.tableView.contentOffset.y ?? 0)) / 139) * 2
+                self?.navBar.alpha = alpha
+                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
+                UIApplication.shared.statusBarStyle = .default
+                self?.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
+
+            } else {
+                self?.navBar.alpha = 1
+                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+                UIApplication.shared.statusBarStyle = .lightContent
+                self?.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+
+            }
+
         }
 
         self.recordGoDetailSearch()
@@ -887,7 +927,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
         
-       recordEvent(key: TraceEventName.inform_show,
+        recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))
     
         alert.showFrom(self.view)
@@ -897,14 +937,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     {
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
-        
         recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParams)
+                    params: tracerParams.exclude("element_type"))
     }
     
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {

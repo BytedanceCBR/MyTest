@@ -57,7 +57,7 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         [_iconImageView addSubview:_playIcon];
         
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:[TTDeviceUIUtils tt_fontSize:12]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:[TTDeviceUIUtils tt_fontSize:12]] ? : [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:12]];
         _titleLabel.numberOfLines = 2;
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textColor = [UIColor whiteColor];
@@ -67,7 +67,7 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         
         self.button = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.button setBackgroundColor:[UIColor colorWithRed:248/255.0f green:89/255.0f blue:89/255.0f alpha:1]];
-        self.button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:11]];
+        self.button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:11]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:11]];
         self.button.layer.cornerRadius = 4.0f;
         self.button.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         self.button.layer.masksToBounds = YES;
@@ -140,7 +140,7 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         [self addSubview:_appIcon];
 
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:15]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:15]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:15]];
         _titleLabel.numberOfLines = 1;
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textColor = [UIColor whiteColor];
@@ -207,7 +207,7 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         [self addSubview:self.button];
         
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:13]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:13]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:13]];
         _titleLabel.numberOfLines = 1;
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textColor = [UIColor whiteColor];

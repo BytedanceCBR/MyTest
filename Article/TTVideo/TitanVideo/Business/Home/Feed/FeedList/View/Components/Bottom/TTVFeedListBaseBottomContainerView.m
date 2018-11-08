@@ -92,7 +92,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
         _avatarLabel = [[TTIconLabel alloc] init];
         _avatarLabel.backgroundColor = [UIColor clearColor];
         if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-            _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+            _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         }else{
             _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         }

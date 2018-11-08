@@ -376,12 +376,16 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_moreButton setImage:[UIImage imageNamed:@"hts_vp_white_more_titlebar"] forState:UIControlStateNormal];
     [_moreButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
     [_moreButton addTarget:self action:@selector(handleReportClick:) forControlEvents:UIControlEventTouchUpInside];
+    _moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
     [self.topBarView addSubview:_moreButton];
 
     _closeButton = [[UIButton alloc] init];
     [_closeButton setImage:[UIImage imageNamed:@"hts_vp_close"] forState:UIControlStateNormal];
     [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
     [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
     [_layoutContainerView addSubview:_closeButton];
     
     [_layoutContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
