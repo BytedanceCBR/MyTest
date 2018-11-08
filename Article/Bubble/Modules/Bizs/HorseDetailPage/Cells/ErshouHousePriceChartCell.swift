@@ -57,6 +57,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
     var monthFormatter = FHMonthValueFormatter()
     
+    lazy var bgView: UIImageView = {
+        let re = UIImageView(image: UIImage(named: "group-7"))
+        re.contentMode = .scaleAspectFill
+        return re
+    }()
+    
+    lazy var line: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHPaleGreyColor)
+        return re
+    }()
+    
     lazy var priceUpValueLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangSemibold(24)
@@ -80,8 +92,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     
     lazy var priceKeyLabel: UILabel = {
         let re = UILabel()
-        let fontSize : CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 14 : 12
-        re.font = CommonUIStyle.Font.pingFangRegular(fontSize)
+        // let fontSize : CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 14 : 12
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         re.text = "小区均价"
         return re
@@ -89,15 +101,15 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     
     lazy var priceValueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.font = CommonUIStyle.Font.pingFangMedium(24)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
     
     lazy var monthUpKeyLabel: UILabel = {
         let re = UILabel()
-        let fontSize : CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 14 : 12
-        re.font = CommonUIStyle.Font.pingFangRegular(fontSize)
+        // let fontSize : CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 14 : 12
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         re.text = "环比上月"
         return re
@@ -105,7 +117,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     
     lazy var monthUpValueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.font = CommonUIStyle.Font.pingFangMedium(18)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
@@ -180,6 +192,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             self.minValue = self.maxValue
             
             var trailing: CGFloat = UIScreen.main.bounds.width - 20 - 70
+            let fontSize : CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 14 : 12
             
             self.titleView.subviews.forEach { (subview) in
                 subview.removeFromSuperview()
@@ -200,7 +213,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 self?.titleView.addSubview(icon)
                 
                 let label = UILabel()
-                label.font = CommonUIStyle.Font.pingFangRegular(14)
+                label.font = CommonUIStyle.Font.pingFangRegular(fontSize)
                 label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
                 label.text = trendName
                 self?.titleView.addSubview(label)
@@ -320,60 +333,75 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             maker.height.equalTo(0)
         }
         
+        priceView.addSubview(bgView)
+        bgView.snp.makeConstraints { (maker) in
+            maker.edges.equalToSuperview()
+        }
+        // 小区均价
+        priceView.addSubview(priceKeyLabel)
+        priceKeyLabel.snp.makeConstraints { maker in
+            maker.top.equalToSuperview()
+            maker.left.equalTo(20)
+            maker.height.equalTo(20)
+        }
+        // 均价值
+        priceView.addSubview(priceValueLabel)
+        priceValueLabel.snp.makeConstraints { maker in
+            
+            maker.left.equalTo(priceKeyLabel)
+            maker.top.equalTo(priceKeyLabel.snp.bottom).offset(9)
+            maker.height.equalTo(22)
+        }
+        
+        // "本房源单价比小区均价"
+        priceView.addSubview(pricePerKeyLabel)
+        pricePerKeyLabel.snp.makeConstraints { maker in
+            maker.top.equalTo(priceValueLabel.snp.bottom).offset(20)
+            maker.height.equalTo(20)
+            maker.left.equalTo(priceValueLabel)
+        }
+        
+        // value
         priceView.addSubview(priceUpValueLabel)
         priceUpValueLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(20)
-            maker.top.equalTo(0)
-            maker.height.equalTo(30)
+            maker.left.equalTo(pricePerKeyLabel)
+            maker.top.equalTo(pricePerKeyLabel.snp.bottom).offset(11)
+            maker.height.equalTo(20)
         }
         
         priceView.addSubview(priceUpTrend)
         priceUpTrend.snp.makeConstraints { maker in
-            maker.left.equalTo(priceUpValueLabel.snp.right).offset(1)
-            maker.centerY.equalTo(priceUpValueLabel.snp.centerY)
+            maker.right.equalTo(pricePerKeyLabel.snp.right)
+            maker.centerY.equalTo(priceUpValueLabel)
             maker.width.height.equalTo(16)
         }
         
-        priceView.addSubview(pricePerKeyLabel)
-        pricePerKeyLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(priceUpValueLabel.snp.bottom).offset(4)
-            maker.height.equalTo(20)
-            maker.left.equalTo(priceUpValueLabel)
-        }
-        
-        priceView.addSubview(priceValueLabel)
-        priceValueLabel.snp.makeConstraints { maker in
-            
-            maker.right.equalTo(-20)
-            maker.centerY.equalTo(priceUpValueLabel)
-            maker.height.equalTo(20)
-        }
-        
-        priceView.addSubview(priceKeyLabel)
-        priceKeyLabel.snp.makeConstraints { maker in
-            maker.centerY.equalTo(priceValueLabel.snp.centerY)
-            maker.height.equalTo(20)
-            maker.right.equalTo(priceValueLabel.snp.left).offset(-10)
+        priceView.addSubview(line)
+        line.snp.makeConstraints { (maker) in
+            maker.centerX.equalToSuperview()
+            maker.top.equalTo(pricePerKeyLabel).offset(1)
+            maker.height.equalTo(30)
+            maker.width.equalTo(TTDeviceHelper.ssOnePixel())
         }
         
         priceView.addSubview(monthUpKeyLabel)
         monthUpKeyLabel.snp.makeConstraints { maker in
             maker.centerY.equalTo(pricePerKeyLabel.snp.centerY)
             maker.height.equalTo(20)
-            maker.left.equalTo(priceKeyLabel)
+            maker.left.equalTo(line.snp.right).offset(30)
         }
         
         priceView.addSubview(monthUpValueLabel)
         monthUpValueLabel.snp.makeConstraints { maker in
-            maker.centerY.equalTo(monthUpKeyLabel.snp.centerY)
-            maker.left.equalTo(monthUpKeyLabel.snp.right).offset(10)
+            maker.centerY.equalTo(priceUpValueLabel.snp.centerY)
+            maker.left.equalTo(monthUpKeyLabel)
             maker.height.equalTo(20)
         }
         
         priceView.addSubview(monthUpTrend)
         monthUpTrend.snp.makeConstraints { maker in
-            maker.left.equalTo(monthUpValueLabel.snp.right).offset(1)
-            maker.centerY.equalTo(monthUpKeyLabel)
+            maker.right.equalToSuperview().offset(-20)
+            maker.centerY.equalTo(monthUpValueLabel)
             maker.width.height.equalTo(16)
         }
         
@@ -677,7 +705,7 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
         }
 
         theCell.priceView.snp.updateConstraints { (maker) in
-            maker.height.equalTo(95)
+            maker.height.equalTo(130)
         }
         if let monthUp = data.neighborhoodInfo?.monthUp {
             let absValue = abs(monthUp) * 100
