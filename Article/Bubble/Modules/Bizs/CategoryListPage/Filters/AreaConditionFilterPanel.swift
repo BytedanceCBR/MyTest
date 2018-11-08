@@ -678,7 +678,10 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     }
 
     func selectedNodes() -> [Node] {
-        return selectedIndexPaths.map { path -> Node in
+        let sortedPaths = selectedIndexPaths.sorted(by: { (l, r) -> Bool in
+            l.row < r.row
+        })
+        return sortedPaths.map { path -> Node in
             nodes[path.row]
         }
     }
