@@ -42,7 +42,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.right.equalTo(self).offset(-60)
-            maker.top.equalTo(20)
+            maker.top.equalTo(10)
             maker.height.equalTo(26)
             maker.bottom.equalToSuperview().offset(0)
         }

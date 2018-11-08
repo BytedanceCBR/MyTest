@@ -22,7 +22,7 @@ class PropertyListCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        addBottomLine()
+        // addBottomLine()
 
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
@@ -78,8 +78,28 @@ class PropertyListCell: BaseUITableViewCell {
         for v in wrapperView.subviews {
             v.removeFromSuperview()
         }
+        resetListBottomView()
     }
-
+    
+    func removeListBottomView(heightOffset:CGFloat = -10) {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(2)
+            maker.bottom.equalToSuperview().offset(heightOffset)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = true
+        
+    }
+    
+    func resetListBottomView()
+    {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(2)
+            maker.bottom.equalToSuperview().offset(-35)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = false
+    }
 }
 
 fileprivate class RowView: UIView {
@@ -226,6 +246,8 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
 
 func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
+        theCell.prepareForReuse()
+        theCell.removeListBottomView()
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
                 return [result[0] + [info], result[1]]
