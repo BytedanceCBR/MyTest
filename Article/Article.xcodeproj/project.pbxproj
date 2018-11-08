@@ -1086,12 +1086,15 @@
 		AFDE897618165D2A0090BAD9 /* EssayContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AFDE897518165D2A0090BAD9 /* EssayContentManager.m */; };
 		B119472D1CF7FF4700561B49 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
 		B1E346601DD33F51002B14C5 /* SSMoviePlayerTrackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E2BE261DCADA6D00AC62B6 /* SSMoviePlayerTrackManager.m */; };
+		B302205A2192B7B500400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
+		B302205B2192B7B700400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B31102982181A0D800FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
 		B31102992181A0DD00FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
 		B311029A2181A0DE00FD2A45 /* TTContactsNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B31102962181A0D700FD2A45 /* TTContactsNetworkManager.m */; };
 		B31587B1216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
 		B31587B2216D957500BBDB9D /* FollowUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */; };
 		B31F42AF2189A62D00D9FE94 /* FHTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = B31F42AE2189A62D00D9FE94 /* FHTagView.m */; };
+		B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -7619,6 +7622,7 @@
 		B31587B0216D957500BBDB9D /* FollowUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUpViewModel.swift; sourceTree = "<group>"; };
 		B31F42AD2189A62D00D9FE94 /* FHTagView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHTagView.h; sourceTree = "<group>"; };
 		B31F42AE2189A62D00D9FE94 /* FHTagView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHTagView.m; sourceTree = "<group>"; };
+		B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCitySwitcher.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -14442,6 +14446,7 @@
 				B388C9E02142652800653188 /* TabViewController.swift */,
 				B388C9E12142652800653188 /* Client.swift */,
 				B388C9E22142652800653188 /* FTTNavigationController.h */,
+				B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -19371,6 +19376,7 @@
 				AC09CC7E1D6D8E7F00D3151A /* TTSegmentedControl.m in Sources */,
 				FE0572C7205B70E800427AE6 /* AKHTTPPostRequestSerializer.m in Sources */,
 				FE1FC31E206922D800664B00 /* ExploreMixedListBaseView+Monitor.m in Sources */,
+				B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */,
 				A97DBCC71F1332E50002B455 /* TTStartupTask.m in Sources */,
 				FEF53DC82068EE2400EEA647 /* FRImageInfoModel.m in Sources */,
 				A97DBC9F1F1332E50002B455 /* TTLocationStartupTask.m in Sources */,
@@ -22318,6 +22324,7 @@
 				B373CE4C2174587A008F9905 /* TSVRecUserCardModel.m in Sources */,
 				B373CE4D2174587A008F9905 /* TTAppSettingsStartupTask.m in Sources */,
 				B373CE4E2174587A008F9905 /* NewHouseCommentCell.swift in Sources */,
+				B302205B2192B7B700400F76 /* CurrentCitySwitcher.swift in Sources */,
 				B373CE4F2174587A008F9905 /* TTEditUGCProfileViewModel.m in Sources */,
 				B373CE502174587A008F9905 /* AKImageAlertModel.m in Sources */,
 				B373CE512174587A008F9905 /* AKProfileHeaderInfoView.m in Sources */,
@@ -24003,6 +24010,7 @@
 				FEFA5984205FB1A8001F50D8 /* TSVRecUserCardModel.m in Sources */,
 				FEFA5985205FB1A8001F50D8 /* TTAppSettingsStartupTask.m in Sources */,
 				B388CB7F2142652A00653188 /* NewHouseCommentCell.swift in Sources */,
+				B302205A2192B7B500400F76 /* CurrentCitySwitcher.swift in Sources */,
 				FEFA5986205FB1A8001F50D8 /* TTEditUGCProfileViewModel.m in Sources */,
 				FEFA5987205FB1A8001F50D8 /* AKImageAlertModel.m in Sources */,
 				FEFA5988205FB1A8001F50D8 /* AKProfileHeaderInfoView.m in Sources */,

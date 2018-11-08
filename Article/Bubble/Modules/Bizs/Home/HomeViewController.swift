@@ -353,10 +353,28 @@ extension HomeViewController {
             self.navigationController?.popViewController(animated: true)
         }
         vc.onItemSelect
-                .subscribe(onNext: { i in
-                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
-                    EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
+                .subscribe(onNext: { [unowned self] i in
+//                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
+//                    EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
                     self.navigationController?.popViewController(animated: true)
+                    EnvContext.shared.client.currentCitySwitcher
+                        .switchCity(cityId: i)
+//                        .filter({ (s) -> Bool in
+//                            s == CitySwitcherState.onFinishedRequestFilterConfig || s == CitySwitcherState.onError
+//                        })
+                        .subscribe(onNext: { (state) in
+                            switch state {
+                            case .onFinishedRequestFilterConfig:
+//                                self.navigationController?.popViewController(animated: true)
+                                return
+                            case .onError:
+//                                self.navigationController?.popViewController(animated: true)
+                                return
+                            default:
+                                return
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
                 })
                 .disposed(by: self.disposeBag)
         self.navigationController?.pushViewController(vc, animated: true)
