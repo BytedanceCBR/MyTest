@@ -439,8 +439,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                 <- parseHeaderNode("周边新盘") { [unowned self] in
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
-                <- parseRelateCourtCollectionNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
-                <- parseDisclaimerNode(data)
+//                <- parseRelateCourtCollectionNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
+                <- parseNearbyNewHouseListNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
+//                <- parseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser

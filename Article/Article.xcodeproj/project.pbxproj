@@ -646,6 +646,8 @@
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
 		76CE80522192F384005D199B /* HouseOutlineHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */; };
 		76CE80532192F5E9005D199B /* HouseOutlineHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */; };
+		76CE80552193E89A005D199B /* NearbyNewHouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80542193E899005D199B /* NearbyNewHouseCell.swift */; };
+		76CE80562193E89A005D199B /* NearbyNewHouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80542193E899005D199B /* NearbyNewHouseCell.swift */; };
 		7B036C351F9DC94D009AA77A /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
 		7B27B0C81FC41F4700679550 /* TTRWenda.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B27B0C61FC41F4200679550 /* TTRWenda.m */; };
 		7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B4772551CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m */; };
@@ -6720,6 +6722,7 @@
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
 		76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseOutlineHeaderCell.swift; sourceTree = "<group>"; };
+		76CE80542193E899005D199B /* NearbyNewHouseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyNewHouseCell.swift; sourceTree = "<group>"; };
 		7B036C331F9DC94D009AA77A /* TTWendaMethodDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWendaMethodDelegate.h; sourceTree = "<group>"; };
 		7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTWendaMethodDelegate.m; sourceTree = "<group>"; };
 		7B27B0C61FC41F4200679550 /* TTRWenda.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRWenda.m; sourceTree = "<group>"; };
@@ -14600,6 +14603,7 @@
 				B388CA212142652900653188 /* GlobalPricingCell.swift */,
 				616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */,
 				76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */,
+				76CE80542193E899005D199B /* NearbyNewHouseCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -20116,6 +20120,7 @@
 				A97DBBBB1F1332E30002B455 /* TTRouteSelectStartupTask.m in Sources */,
 				ABBEA78E1F3349E9005DAD27 /* SSFeedbackContainerView.m in Sources */,
 				D5041F46205802A400BAEE7F /* AKProfileHeaderBeneficialView.m in Sources */,
+				76CE80552193E89A005D199B /* NearbyNewHouseCell.swift in Sources */,
 				FECD50511C76C3FB00E22DBB /* ArticleTitleImageView.m in Sources */,
 				A97DC0F21F1333320002B455 /* SSWebViewControllerView.m in Sources */,
 				0CFBAE0F1FA5AC6800E7765A /* NSString+UnicharUtilities.m in Sources */,
@@ -23611,6 +23616,7 @@
 				FEFA57B6205FB1A8001F50D8 /* TTVPGCAction.m in Sources */,
 				FEFA57B8205FB1A8001F50D8 /* ExploreOrderedADModel+TTVSupport.m in Sources */,
 				FEFA57B9205FB1A8001F50D8 /* TTStartupGroup.m in Sources */,
+				76CE80562193E89A005D199B /* NearbyNewHouseCell.swift in Sources */,
 				D50168672089EC4B00B8F1C7 /* TTMessageNotificationBaseCell.m in Sources */,
 				FEFA57BA205FB1A8001F50D8 /* NewsLogicSetting.m in Sources */,
 				FEFA57BC205FB1A8001F50D8 /* TTArticleInfoView.m in Sources */,
