@@ -325,6 +325,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
                                                                       trackingCategoryID:kTTUGCVideoCategoryID
                                                                             listEntrance:@"more_shortvideo"];
                 fetchManager.shouldShowNoMoreVideoToast = NO;
+                fetchManager.hasMoreToLoad = NO;
 //            }
         }
         
