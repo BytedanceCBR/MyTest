@@ -39,6 +39,13 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             
             maker.height.equalTo(0)
         }
+        bottomBar.isHidden = true
+        tableView.snp.remakeConstraints { maker in
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview()
+        }
+        
         //隐藏关注按钮
         self.navBar.rightBtn2.isHidden = true
         navBar.title.text = "小区成交历史"

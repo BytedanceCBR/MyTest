@@ -87,7 +87,7 @@ class QuickLoginViewModel {
                         phoneNumber: String?) {
         if let phoneNumber = phoneNumber {
 
-            if !phoneNumber.hasPrefix("1") || phoneNumber.count > 11 {
+            if !phoneNumber.hasPrefix("1") || phoneNumber.count != 11 {
                 EnvContext.shared.toast.showToast("手机号错误")
                 return
             }

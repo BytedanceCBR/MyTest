@@ -34,6 +34,20 @@ class ToastAlertCenter {
     }
 
     func showLoadingToast(_ message: String) {
+        toastAlert.isUserInteractionEnabled = false
+        self.dismissToast()
+        if let window = UIApplication.shared.keyWindow {
+            window.addSubview(toastAlert)
+            toastAlert.snp.makeConstraints { maker in
+                maker.top.bottom.left.right.equalToSuperview()
+            }
+            toastAlert.hideProgressHud()
+            toastAlert.showProgressHud(message)
+        }
+    }
+
+    func showModeLoadingToast(_ message: String) {
+        toastAlert.isUserInteractionEnabled = true
         self.dismissToast()
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(toastAlert)

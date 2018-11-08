@@ -52,11 +52,13 @@ class GeneralBizConfig {
             .subscribe(onNext: { [unowned self] (cityId) in
                 if let item = self.cityItemById()(cityId) {
                     self.cityHistoryDataSource.addHistory(item: item, maxSaveCount: 10)
-                    if let generalConfig = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value {
-                        if let currentCityId = generalConfig.currentCityId, Int(currentCityId) != cityId {
-                            self.fetchConfiguration()
-                        }
-                    }
+                    //TODO leo
+//                    if let generalConfig = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value {
+//                        if let currentCityId = generalConfig.currentCityId, Int(currentCityId) != cityId {
+//                            self.fetchConfiguration()
+//                        }
+//                    }
+                    EnvContext.shared.client.currentCitySwitcher.onSetCurrentCityId(cityId: cityId)
                 }
             })
             .disposed(by: disposeBag)
@@ -141,12 +143,12 @@ class GeneralBizConfig {
                 if let payload = response?.data?.toJSONString(), !payload.isEmpty {
                     self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                 } else {
-                    assertionFailure("搜索配置请求异常")
+//                    assertionFailure("搜索配置请求异常")
                 }
 
                 }, onError: { error in
                     //                print(error)
-                    assertionFailure("搜索配置请求异常")
+//                    assertionFailure("搜索配置请求异常")
             })
             .disposed(by: disposeBag)
     }
