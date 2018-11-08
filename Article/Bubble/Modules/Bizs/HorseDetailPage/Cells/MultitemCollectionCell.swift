@@ -201,7 +201,99 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     }
 }
 
+class MultitemCollectionEvaluateCell: BaseUITableViewCell {
+    
+    var collectionViewCellRenders: [CollectionViewCellRender] = []
+    
+    var itemSelectors: [(DisposeBag) -> Void] = []
+    
+    var itemRecorders: [(TracerParams) -> Void] = []
+    
+    var hasShowOnScreen = false {
+        didSet {
+            traceShowElement()
+        }
+    }
+    
+    open override class var identifier: String {
+        return "MultitemCollectionNeighborhoodCell"
+    }
+    
+    var itemReuseIdentifier: String = "floorPan"
+    
+    var tracerParams = TracerParams.momoid()
+    
+    let disposeBag = DisposeBag()
+    
+    lazy var collectionContainer: UICollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        flowLayout.itemSize = CGSize(width: 156, height: 211)
+        flowLayout.minimumLineSpacing = 8
+        flowLayout.scrollDirection = .horizontal
+        let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        re.showsHorizontalScrollIndicator = false
+        re.backgroundColor = UIColor.white
+        return re
+    }()
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(collectionContainer)
+        collectionContainer.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview()
+            maker.height.equalTo(211)
+        }
+        collectionContainer.register(FloorPanItemCollectionCell.self, forCellWithReuseIdentifier: "floorPan")
+        collectionContainer.register(NeighborhoodItemCollectionCell.self, forCellWithReuseIdentifier: "neighborhood")
+        collectionContainer.delegate = self
+        collectionContainer.dataSource = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
+extension MultitemCollectionEvaluateCell: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collectionViewCellRenders.count
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemReuseIdentifier, for: indexPath)
+        if indexPath.row < collectionViewCellRenders.count {
+            collectionViewCellRenders[indexPath.row](cell)
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if itemRecorders.count > indexPath.row, hasShowOnScreen {
+            itemRecorders[indexPath.row](tracerParams)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row < itemSelectors.count {
+            itemSelectors[indexPath.row](disposeBag)
+        }
+    }
+    
+    // 系统控件会提前将每种类型的cell提前渲染出一个，目前仅能通过延时激活来避免提前上报埋点
+    func traceShowElement() {
+        collectionContainer.indexPathsForVisibleItems.forEach { (indexPath) in
+            if itemRecorders.count > indexPath.row, hasShowOnScreen {
+                itemRecorders[indexPath.row](tracerParams)
+            }
+        }
+    }
+}
 
 fileprivate class FloorPanItemCollectionCell: UICollectionViewCell {
 
@@ -242,6 +334,27 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
         }
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
+    lazy var neighborhoodItemView: NeighborhoodEvaluationItem = {
+        let re = NeighborhoodEvaluationItem()
+        return re
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.addSubview(neighborhoodItemView)
+        neighborhoodItemView.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalTo(-16)
+            maker.top.equalToSuperview()
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -453,19 +566,78 @@ fileprivate func relatedNeighborhoodItemSelector(
     
     if let id = data.id, let houseId = Int64(id) {
         openNeighborhoodDetailPage(
-                neighborhoodId: houseId,
-                logPB: data.logPB,
-                disposeBag: disposeBag,
-                tracerParams: itemTracerParams <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(data.fhSearchId ?? "be_null", key: "search_id") <|>
-//                        toTracerParams("old_detail", key: "enter_from") <|>
-                        toTracerParams(offset, key: "rank") <|>
-                        toTracerParams("slide", key: "card_type") <|>
-                        toTracerParams("neighborhood_nearby", key: "element_from"),
-                navVC: navVC)(TracerParams.momoid())
+            neighborhoodId: houseId,
+            logPB: data.logPB,
+            disposeBag: disposeBag,
+            tracerParams: itemTracerParams <|>
+                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(data.fhSearchId ?? "be_null", key: "search_id") <|>
+                //                        toTracerParams("old_detail", key: "enter_from") <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("neighborhood_nearby", key: "element_from"),
+            navVC: navVC)(TracerParams.momoid())
     }
 }
+
+fileprivate func fillEvaluationCell(
+    datas: [EvaluationIteminfo],
+    itemTracerParams: TracerParams,
+    navVC: UINavigationController?,
+    cell: BaseUITableViewCell) {
+    if let theCell = cell as? MultitemCollectionNeighborhoodCell {
+        theCell.itemReuseIdentifier = "neighborhood"
+        theCell.collectionViewCellRenders = datas.take(5).map { entity -> CollectionViewCellRender in
+            curry(fillEvaluationCollectionItemCell)(entity)(itemTracerParams)
+        }
+        
+        var traceParamsDict = itemTracerParams.paramsGetter([:])
+        let itemTracerParamsResult = TracerParams.momoid() <|>
+            toTracerParams(traceParamsDict["page_type"] ?? "be_null", key: "enter_from") //本页类型是下次进入小区详情页的enter_from
+        
+        theCell.itemSelectors = datas.take(5).enumerated().map { e -> (DisposeBag) -> Void in
+            let (offset, item) = e
+            return curry(EvaluationItemSelector)(offset)(item)(itemTracerParamsResult)(navVC)
+        }
+        theCell.itemRecorders = datas.take(5).enumerated().map { e -> (TracerParams) -> Void in
+            let (offset, item) = e
+            let params = EnvContext.shared.homePageParams <|>
+                itemTracerParams <|>
+                toTracerParams(offset, key: "rank") <|>
+//                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+//                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("neighborhood_nearby", key: "element_type")
+            return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
+        }
+    }
+}
+
+fileprivate func fillEvaluationCollectionItemCell(
+    data: EvaluationIteminfo,
+    itemTracerParams: TracerParams,
+    cell: UICollectionViewCell) {
+    if let theCell = cell as? EvaluationItemCollectionCell {
+        theCell.neighborhoodItemView.descLabel.text = data.content
+        theCell.neighborhoodItemView.nameLabel.text = data.scoreName
+        theCell.neighborhoodItemView.scoreLabel.text = String(data.scoreValue ?? 0)
+        theCell.neighborhoodItemView.levelLabel.text = String(data.scoreLevel ?? 0)
+    }
+}
+
+fileprivate func EvaluationItemSelector(
+    offset: Int,
+    data: EvaluationIteminfo,
+    itemTracerParams: TracerParams,
+    navVC: UINavigationController?,
+    disposeBag: DisposeBag) {
+    
+    
+     //to do jump
+}
+
+
 
 // MARK 新房 猜你喜欢
 func parseRelateCourtCollectionNode(
