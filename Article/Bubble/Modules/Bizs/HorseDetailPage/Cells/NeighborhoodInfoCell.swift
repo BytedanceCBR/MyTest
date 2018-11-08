@@ -142,12 +142,12 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
         }
         let params = TracerParams.momoid() <|>
             toTracerParams("neighborhood_detail", key: "element_type") <|>
-            traceExtension
-//            toTracerParams(ershouHouseData.logPB ?? "be_null", key: "log_pb")
+            traceExtension <|>
+            toTracerParams(ershouHouseData.logPB ?? "be_null", key: "log_pb")
 
         let houseShowParams = EnvContext.shared.homePageParams <|>
             traceExtension <|>
-            //            toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(ershouHouseData.logPB ?? "be_null", key: "log_pb") <|>
             //            toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams(ershouHouseData.neighborhoodInfo?.id ?? "be_null", key: "group_id") <|>
             toTracerParams("no_pic", key: "card_type") <|>

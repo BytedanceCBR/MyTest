@@ -311,7 +311,7 @@ struct FloorPan: Mappable {
         var pricingPerSqm: String?
         var squaremeter: String?
         var roomCount: Int = -1
-
+        var logPb: Any?
         
         init?(map: Map) {
             
@@ -324,6 +324,7 @@ struct FloorPan: Mappable {
             images <- map["images"]
             pricingPerSqm <- map["pricing_per_sqm"]
             squaremeter <- map["squaremeter"]
+            logPb <- map["log_pb"]
             roomCount <- map["room_count"]
         }
     }
