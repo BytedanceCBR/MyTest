@@ -160,7 +160,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if showLoading {
             self.showMessageAlert?("正在加载")
         }
-        requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)
+//        "\(houseId)"
+//        houseId =
+        requestNeighborhoodDetail(neighborhoodId: "\(6581417114710573326)", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {
@@ -260,6 +262,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     data.baseInfo?.count ?? 0 > 0
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension)
+                <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: nil) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
                 <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }

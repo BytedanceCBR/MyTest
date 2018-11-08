@@ -173,6 +173,34 @@ struct NeighborhoodDetailData: Mappable {
     }
 }
 
+struct NeighborhoodEvaluationinfo {
+    var totalScore: String?
+    var detailUrl: String?
+    var content: String?
+    var subScores: [EvaluationIteminfo]?
+    
+    mutating func mapping(map: Map) {
+        totalScore <- map["total_score"]
+        detailUrl <- map["detail_url"]
+        content <- map["content"]
+        subScores <- map["sub_scores"]
+
+    }
+}
+
+struct EvaluationIteminfo {
+    var scoreName: String?
+    var scoreValue: Int?
+    var scoreLevel: Int?
+    var content: String?
+    
+    mutating func mapping(map: Map) {
+        scoreName <- map["score_name"]
+        scoreValue <- map["score_value"]
+        scoreLevel <- map["score_level"]
+        content <- map["content"]
+    }
+}
 
 struct NeighborhoodUsertatus: Mappable {
     var neighborhoodSubStatus: Int?
