@@ -113,19 +113,31 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [_mapView setCenterCoordinate:center animated:YES];
         }
         
-        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
-        NSData *styleData = [NSData dataWithContentsOfFile:stylePath];
-        if (styleData) {
-            _mapView.customMapStyleEnabled = YES;
-            [_mapView setCustomMapStyleWithWebData:styleData];
-        }
+//        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
+//        NSData *styleData = [NSData dataWithContentsOfFile:stylePath];
+//        if (styleData) {
+//            _mapView.customMapStyleEnabled = YES;
+//            [_mapView setCustomMapStyleWithWebData:styleData];
+//        }
     }
     return _mapView;
 }
 
 -(void)changeNavbarAppear:(BOOL)show
 {
-    [self.viewController showNavTopViews:show];
+    [self.viewController showNavTopViews:show?1:0 animated:YES];
+}
+
+-(void)changeNavbarAlpha:(BOOL)animated
+{
+    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/100;
+    if (alpha < 0) {
+        alpha = 0;
+    }else if (alpha > 1){
+        alpha = 1;
+    }
+    [self.viewController showNavTopViews:alpha animated:animated];
+    
 }
 
 -(void)setFilterConditionParams:(NSString *)filterConditionParams
@@ -178,9 +190,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         };
         _houseListViewController.moveDock = ^{
             wself.showMode = FHMapSearchShowModeHalfHouseList;
-            [wself changeNavbarAppear:NO];
+            [wself changeNavbarAlpha:YES];
         };
-        
+        _houseListViewController.movingBlock = ^(CGFloat top) {
+            [wself changeNavbarAlpha:NO];
+        };
         _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model , NSInteger rank) {
             [wself showHoseDetailPage:model rank:rank];
         };

@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^moveDock)(); //滑动到一半
 @property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model , NSInteger rank);
 @property(nonatomic , copy)   void (^showNeighborhoodDetailBlock)(FHMapSearchDataListModel *model);
+@property(nonatomic , copy)   void (^movingBlock)(CGFloat top);
 
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor;
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor;

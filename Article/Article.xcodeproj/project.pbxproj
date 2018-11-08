@@ -372,6 +372,9 @@
 		3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
+		3DCF10E62193E13800842740 /* FHMapNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF10E52193E13800842740 /* FHMapNavigationBar.m */; };
+		3DCF10E72193E13800842740 /* FHMapNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF10E52193E13800842740 /* FHMapNavigationBar.m */; };
+		3DCF10E82193E13800842740 /* FHMapNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF10E52193E13800842740 /* FHMapNavigationBar.m */; };
 		3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */; };
 		3F765B1D16DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
@@ -6184,6 +6187,8 @@
 		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB236D32186B032009EB275 /* FHMapSearchShowMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapSearchShowMode.h; sourceTree = "<group>"; };
+		3DCF10E42193E13800842740 /* FHMapNavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMapNavigationBar.h; sourceTree = "<group>"; };
+		3DCF10E52193E13800842740 /* FHMapNavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMapNavigationBar.m; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3F765AC616DB563F0037C3E3 /* ArticleGetLocalDataOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleGetLocalDataOperation.h; sourceTree = "<group>"; };
 		3F765AC716DB563F0037C3E3 /* ArticleGetLocalDataOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleGetLocalDataOperation.m; sourceTree = "<group>"; };
@@ -10465,18 +10470,18 @@
 			children = (
 				0C5F16D41FCC127800766323 /* FeedOptimizeImageSizeHelper.h */,
 				0C5F16D31FCC127700766323 /* FeedOptimizeImageSizeHelper.m */,
-				0C5F16D21FCC127600766323 /* YYDispatchQueuePool.h */,
-				0C5F16D11FCC127500766323 /* YYDispatchQueuePool.m */,
 				06BBE3FC1B15CC4400C4562F /* Gaode */,
 				3FA90FD916EF3EA500DA9411 /* MTLabel */,
-				0CB003051EE7A4370040BA76 /* TTWebImageDownloaderOperation.h */,
-				0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */,
 				327AFBCB1F59480C00AD464B /* SDWebImageDownloaderOperationBugFix.h */,
 				327AFBCC1F59480C00AD464B /* SDWebImageDownloaderOperationBugFix.m */,
 				329F2C7F1F5F943C00F476ED /* SDWebImageManager+TTHook.h */,
 				329F2C801F5F943C00F476ED /* SDWebImageManager+TTHook.m */,
+				0CB003051EE7A4370040BA76 /* TTWebImageDownloaderOperation.h */,
+				0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */,
 				32EA49231F9309720027471E /* UIImage+GIFBugFix.h */,
 				32EA49241F9309720027471E /* UIImage+GIFBugFix.m */,
+				0C5F16D21FCC127600766323 /* YYDispatchQueuePool.h */,
+				0C5F16D11FCC127500766323 /* YYDispatchQueuePool.m */,
 			);
 			path = external;
 			sourceTree = "<group>";
@@ -10660,6 +10665,8 @@
 				3D49A0E82181A3A900597A21 /* FHMapSearchTipView.m */,
 				3D49A0F62181E4FD00597A21 /* FHHouseAreaHeaderView.h */,
 				3D49A0F72181E4FD00597A21 /* FHHouseAreaHeaderView.m */,
+				3DCF10E42193E13800842740 /* FHMapNavigationBar.h */,
+				3DCF10E52193E13800842740 /* FHMapNavigationBar.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -19844,6 +19851,7 @@
 				A97DC3E61F1333620002B455 /* TTVisitorModel.m in Sources */,
 				A97DC46A1F1333640002B455 /* TTProfileMessageFunctionCell.m in Sources */,
 				F87694601F31D0D500D59CA5 /* TTVVideoDetailAlbumViewModel.m in Sources */,
+				3DCF10E62193E13800842740 /* FHMapNavigationBar.m in Sources */,
 				E480BD671F56EE7D0026A1CD /* CommentInputViewController.m in Sources */,
 				F87695AC1F31D0D700D59CA5 /* TTBaseDataSource.m in Sources */,
 				F87696781F31D0D900D59CA5 /* TTVideoPGCBar.m in Sources */,
@@ -20890,6 +20898,7 @@
 				B373C80A2174587A008F9905 /* SSUserSettingManager.m in Sources */,
 				B373C80B2174587A008F9905 /* TTLoginDialogStrategyManager.m in Sources */,
 				B373C80C2174587A008F9905 /* AKWebContainerViewController.m in Sources */,
+				3DCF10E82193E13800842740 /* FHMapNavigationBar.m in Sources */,
 				B373C80D2174587A008F9905 /* TTVDislikeAction.m in Sources */,
 				B373C80E2174587A008F9905 /* TTCategory+ConfigDisplayName.m in Sources */,
 				B373C80F2174587A008F9905 /* SSBaseModel.m in Sources */,
@@ -22591,6 +22600,7 @@
 				FEFA5268205FB1A8001F50D8 /* SSUserSettingManager.m in Sources */,
 				FEFA5269205FB1A8001F50D8 /* TTLoginDialogStrategyManager.m in Sources */,
 				FEFA526A205FB1A8001F50D8 /* AKWebContainerViewController.m in Sources */,
+				3DCF10E72193E13800842740 /* FHMapNavigationBar.m in Sources */,
 				FEFA526C205FB1A8001F50D8 /* TTVDislikeAction.m in Sources */,
 				FEFA526D205FB1A8001F50D8 /* TTCategory+ConfigDisplayName.m in Sources */,
 				FEFA526E205FB1A8001F50D8 /* SSBaseModel.m in Sources */,

@@ -26,7 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)switchNavbarMode:(FHMapSearchShowMode)mode;
 
--(void)showNavTopViews:(BOOL)show;
+/*
+ * ratio 0 : hide
+ * ratio 1 : show
+ */
+-(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated;
 
 @end
 

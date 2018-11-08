@@ -133,6 +133,9 @@
         }
     }
     self.view.top = top;
+    if (self.movingBlock) {
+        self.movingBlock(top);
+    }
 }
 
 -(void)dismiss

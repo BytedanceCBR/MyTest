@@ -226,6 +226,14 @@ extension Notification.Name {
         
     }
     
+    @objc func currentLocation() -> CLLocationCoordinate2D {
+        
+        if let location = locationManager.currentLocation.value {
+            return location.coordinate
+        }
+        return CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    }
+    
     deinit {
         reachability.stopNotifier()
     }
