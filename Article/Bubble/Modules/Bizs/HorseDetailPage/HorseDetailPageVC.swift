@@ -18,6 +18,8 @@ typealias DetailPageViewModelProvider = (UITableView, EmptyMaskView, UINavigatio
 class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate {
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
+    private var isFromPush: Bool = false
+
     private let houseId: Int64
     private let houseType: HouseType
 
@@ -70,9 +72,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return label
     }()
     
-
-    let barStyle = BehaviorRelay<Int>(value: UIStatusBarStyle.lightContent.rawValue)
-
     var isShowBottomBar: Bool
 
     weak var quickLoginVM: QuickLoginAlertViewModel?
@@ -83,7 +82,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
-//    weak var alert: BubbleAlertController?
     
     var isShowFollowNavBtn = false
 
@@ -136,21 +134,18 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
-        barStyle
-                .bind { [unowned self] i in
-                    self.ttStatusBarStyle = i
-                    self.ttNeedChangeNavBar = true
-                }
-                .disposed(by: disposeBag)
+
     }
 
     public required init(routeParamObj paramObj: TTRouteParamObj?) {
         let (houseId, houseType) = HorseDetailPageVC.getHouseId(paramObj?.queryParams)
+        
         self.houseId = Int64(houseId) ?? 0
         self.houseType = houseType
         self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
+        self.isFromPush = true
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -164,12 +159,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
-        barStyle
-            .bind { [unowned self] i in
-                self.ttStatusBarStyle = i
-                self.ttNeedChangeNavBar = true
-            }
-            .disposed(by: disposeBag)
 
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
@@ -358,7 +347,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             switch state {
             case .suspend:
                     self?.navBar.setGradientColor()
-                    UIApplication.shared.statusBarStyle = .lightContent
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .highlighted)
 
@@ -372,7 +360,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             default:
                     self?.navBar.removeGradientColor()
-                    UIApplication.shared.statusBarStyle = .default
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .highlighted)
 
@@ -390,11 +377,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             if state == .normal {
                 let alpha = (1 - (139 - offset.y) / 139) * 2
                 self?.navBar.alpha = alpha
-                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
-                UIApplication.shared.statusBarStyle = .default
+
             } else {
                 self?.navBar.alpha = 1
-                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+            }
+            if offset.y > 0 {
+                UIApplication.shared.statusBarStyle = .default
+            }else {
                 UIApplication.shared.statusBarStyle = .lightContent
             }
         }
@@ -614,7 +603,26 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+
+        
     }
+    
+    func refreshStatusBar() {
+        
+        if self.tableView.contentOffset.y > 0 {
+            
+            UIApplication.shared.statusBarStyle = .default
+            
+        } else {
+            
+            UIApplication.shared.statusBarStyle = .lightContent
+            
+        }
+
+    }
+    
     // MARK: 设置二手房bottomBar
     func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
         
@@ -802,28 +810,16 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [weak self] in
-            
-            guard let state = self?.stateControl.state else {
-                return
-            }
-            if state == .normal {
-                let alpha = (1 - (139 - (self?.tableView.contentOffset.y ?? 0)) / 139) * 2
-                self?.navBar.alpha = alpha
-                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
-                UIApplication.shared.statusBarStyle = .default
-                self?.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
+        if isFromPush {
 
-            } else {
-                self?.navBar.alpha = 1
-                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
-                UIApplication.shared.statusBarStyle = .lightContent
-                self?.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
-
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(600)) { [weak self] in
+                self?.refreshStatusBar()
             }
+        }else {
+            refreshStatusBar()
 
         }
-
+        isFromPush = false
         self.recordGoDetailSearch()
     }
 
