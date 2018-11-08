@@ -186,9 +186,22 @@ class CountryListVC: BaseViewController {
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                     }
-       
+
+                    //TODO: 暂时的解决方案，需要也加入到switcher中去
+                    requestSearchFilterConfig()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
+                })
+                .disposed(by: self.requestDisposeBag)
+        }
+
+        func requestSearchFilterConfig() {
+            requestSearchConfig()
+                .timeout(5, scheduler: MainScheduler.instance)
+                .subscribe(onNext: { (response) in
+                    EnvContext.shared.client.configCacheSubject.accept(response?.data)
+                }, onError: { (error) in
+                    EnvContext.shared.toast.showToast("加载失败")
                 })
                 .disposed(by: self.requestDisposeBag)
         }
