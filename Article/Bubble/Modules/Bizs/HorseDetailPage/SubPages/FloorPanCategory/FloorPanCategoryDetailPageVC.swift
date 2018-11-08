@@ -347,7 +347,7 @@ func openFloorPanCategoryDetailPage(
         }
         
         detailPage.tracerParams = params <|>
-            toTracerParams(logPbVC as Any, key: "log_pb") <|>
+            toTracerParams(logPbVC ?? "be_null", key: "log_pb") <|>
             toTracerParams(searchId, key: "search_id")
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

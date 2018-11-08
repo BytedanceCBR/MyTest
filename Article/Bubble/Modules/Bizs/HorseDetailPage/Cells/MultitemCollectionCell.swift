@@ -602,6 +602,7 @@ func parseNewHouseFloorPanCollectionNode(
                 toTracerParams("new_detail", key: "enter_from") <|>
                 toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(newHouseData.id ?? "be_null", key: "group_id") <|>
+
                 traceExtension
             return TableSectionNode(
                 items: [cellRender],
@@ -615,7 +616,7 @@ func parseNewHouseFloorPanCollectionNode(
     }
 }
 
-// MARK: 猜你喜欢
+// MARK: 楼盘户型
 fileprivate func fillGuessLikeFloorPanCell(
         _ data: [FloorPan.Item],
         logPB: Any?,
@@ -631,7 +632,7 @@ fileprivate func fillGuessLikeFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(logPBVC)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(item.logPB)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
         }
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
@@ -645,7 +646,8 @@ fileprivate func fillGuessLikeFloorPanCell(
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
                     //实际上这个地方是空
-                    toTracerParams(item.logPb ?? "be_null", key: "log_pb")
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
