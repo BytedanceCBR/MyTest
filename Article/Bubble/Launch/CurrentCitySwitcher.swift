@@ -116,6 +116,9 @@ class CurrentCitySwitcher {
     fileprivate func finishedFilterConfigAction() {
         self.currentCityId = switchToCityId
         EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(self.currentCityId)
+        if let currentCityId = self.currentCityId {
+            EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: currentCityId)
+        }
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
 
