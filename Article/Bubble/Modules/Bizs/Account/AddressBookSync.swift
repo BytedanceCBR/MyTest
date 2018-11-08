@@ -20,7 +20,7 @@ class AddressBookSync {
                         completion: { (error, jsonObj) in
                     })
                 } else {
-                    assertionFailure()
+//                    assertionFailure()
                 }
             }
         }

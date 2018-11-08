@@ -38,6 +38,13 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             
             maker.height.equalTo(0)
         }
+        bottomBar.isHidden = true
+        tableView.snp.remakeConstraints { maker in
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview()
+        }
+        
         //隐藏关注按钮
         self.navBar.rightBtn2.isHidden = true
 

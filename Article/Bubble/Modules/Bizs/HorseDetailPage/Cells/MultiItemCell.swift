@@ -137,6 +137,103 @@ class FloorPanItemView: UIView {
     }
 }
 
+class NeighborhoodEvaluationItem: UIView
+{
+    lazy var backView: UIView = {
+        let re = UIView()
+        re.layer.cornerRadius = 4
+        re.layer.masksToBounds = true
+        re.layer.borderWidth = 0.5
+        re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
+        return re
+    }()
+    
+    lazy var descLabel: YYLabel = {
+        let re = YYLabel()
+        return re
+    }()
+    
+    lazy var nameLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.textColor = hexStringToUIColor(hex: "#f85959")
+        return re
+    }()
+    
+    lazy var scoreLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        return re
+    }()
+    
+    lazy var levelLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        return re
+    }()
+    
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+    
+    let disposeBag = DisposeBag()
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        addSubview(backView)
+        
+        backView.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.width.equalTo(156)
+            maker.height.equalTo(116)
+            maker.top.equalToSuperview()
+        }
+        
+        backView.addSubview(nameLabel)
+        nameLabel.snp.makeConstraints { maker in
+            maker.right.equalToSuperview()
+            maker.height.equalTo(22)
+            maker.bottom.equalToSuperview()
+        }
+        
+        scoreLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        scoreLabel.setContentHuggingPriority(.required, for: .horizontal)
+        backView.addSubview(scoreLabel)
+        scoreLabel.snp.makeConstraints { maker in
+            maker.left.equalToSuperview()
+            maker.height.equalTo(22)
+            maker.top.equalToSuperview().offset(3)
+        }
+        
+        backView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(scoreLabel.snp.right).offset(6)
+            maker.right.equalToSuperview()
+            maker.height.equalTo(22)
+            maker.centerY.equalTo(scoreLabel.snp.centerY)
+            maker.bottom.equalToSuperview()
+        }
+        
+        backView.addSubview(descLabel)
+        descLabel.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.height.equalTo(22)
+            maker.bottom.equalTo(backView.snp.bottom).offset(9)
+        }
+        
+        //        addGestureRecognizer(tapGesture)
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
 class NeighborhoodItemView: UIView {
     lazy var icon: UIImageView = {
         let re = UIImageView()
