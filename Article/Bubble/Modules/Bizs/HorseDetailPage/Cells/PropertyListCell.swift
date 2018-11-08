@@ -22,7 +22,7 @@ class PropertyListCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        addBottomLine()
+        // addBottomLine()
 
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
@@ -78,8 +78,28 @@ class PropertyListCell: BaseUITableViewCell {
         for v in wrapperView.subviews {
             v.removeFromSuperview()
         }
+        resetListBottomView()
     }
-
+    
+    func removeListBottomView(heightOffset:CGFloat = -10) {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(2)
+            maker.bottom.equalToSuperview().offset(heightOffset)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = true
+        
+    }
+    
+    func resetListBottomView()
+    {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(2)
+            maker.bottom.equalToSuperview().offset(-35)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = false
+    }
 }
 
 fileprivate class RowView: UIView {
@@ -115,6 +135,15 @@ fileprivate class RowView: UIView {
         }
 
         valueLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(keyLabel.snp.right).offset(10)
+            maker.right.equalTo(-25)
+            maker.top.equalTo(14)
+            maker.bottom.equalTo(keyLabel)
+        }
+    }
+    // 小区详情页布局
+    func remakeValueLabelConstraints() {
+        valueLabel.snp.remakeConstraints { maker in
             maker.left.equalTo(self).offset(96)
             maker.right.equalTo(-25)
             maker.top.equalTo(14)
@@ -199,6 +228,7 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
             let singleViews = groups.map { (info) -> UIView in
                 let re = RowView()
                 setRowValue(info, re)
+                re.remakeValueLabelConstraints()
                 return re
             }
             
@@ -216,6 +246,8 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
 
 func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
+        theCell.prepareForReuse()
+        theCell.removeListBottomView()
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
                 return [result[0] + [info], result[1]]
@@ -267,5 +299,106 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableView
 
             theCell.addRowView(rows: twoValueView + singleViews)
         }
+    }
+}
+
+// 房源概况-info
+fileprivate class HouseOutlineInfoView:UIView {
+    
+    lazy var iconImg: UIImageView = {
+        let re = UIImageView()
+        re.image = UIImage(named: "rectangle-11")
+        return re
+    }()
+    
+    lazy var keyLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#081f33")
+        return re
+    }()
+    
+    lazy var valueLabel: UILabel = {
+        let re = UILabel()
+        re.numberOfLines = 0
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#737a80")
+        re.textAlignment = .left
+        return re
+    }()
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        addSubview(iconImg)
+        addSubview(keyLabel)
+        addSubview(valueLabel)
+        
+        iconImg.snp.makeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.width.equalTo(10)
+            maker.height.equalTo(8)
+            maker.centerY.equalTo(keyLabel)
+        }
+        
+        keyLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(iconImg.snp.right).offset(4)
+            maker.top.equalTo(10)
+            maker.height.equalTo(26)
+            maker.right.equalTo(self).offset(-20)
+        }
+        
+        valueLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(iconImg)
+            maker.right.equalTo(-20)
+            maker.top.equalTo(keyLabel.snp.bottom).offset(2)
+            maker.bottom.equalTo(self)
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+
+func parseHouseOutlineListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
+    return {
+        
+        if let count = ershouHouseData.baseInfo?.count, count > 0 {
+            
+            let cellRender = curry(fillHouseOutlineListCell)(ershouHouseData.baseInfo)
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                tracer: nil,
+                label: "",
+                type: .node(identifier: PropertyListCell.identifier))
+        }else {
+            
+            return nil
+        }
+    }
+}
+
+
+func fillHouseOutlineListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? PropertyListCell {
+        theCell.prepareForReuse()
+        func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
+            infoView.keyLabel.text = keyText
+            infoView.valueLabel.text = valueText
+        }
+        
+        let re1 = HouseOutlineInfoView()
+        setInfoValue("核心卖点", "本放弃我瓦灰而韩国九二五我华为覅无恶哈哈我维护费IE文化馆一我了hi维护过来玩哈格uwihgeuihweiuhfkheiughewiu外观和UIhi额外一万飞胡歌一无花果我活过来了喝挂了韩国", re1)
+        
+        var listView:[HouseOutlineInfoView] = []
+        listView.append(re1)
+        
+        let re2 = HouseOutlineInfoView()
+        setInfoValue("小区配套", "本放弃我瓦灰而韩国九二五我华为覅无恶哈哈我维护费IE文化馆一我了hi维护过来玩哈格uwihgeuihweiuhfkheiughewiu外观和UIhi额外一万飞胡歌一无花果我活过来了喝挂了韩国", re2)
+         listView.append(re2)
+         theCell.addRowView(rows: listView)
     }
 }

@@ -59,7 +59,7 @@ class ErshouPriceMarkerView: MarkerView {
         self.addSubview(secondLabel)
         self.addSubview(thirdLabel)
         
-        self.backgroundColor = hexStringToUIColor(hex: "#000000",alpha: 0.8)
+        self.backgroundColor = hexStringToUIColor(hex: "#000000",alpha: 0.6)
         self.layer.cornerRadius = 4
         self.layer.masksToBounds = true
         
