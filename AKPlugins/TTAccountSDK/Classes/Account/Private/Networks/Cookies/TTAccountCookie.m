@@ -30,6 +30,7 @@
 + (void)clearAccountCookie
 {
     [self clearCookieForName:@"sessionid"];
+    [self clearCookieForName:@"sid_tt"];
 }
 
 + (void)clearAllCookies
