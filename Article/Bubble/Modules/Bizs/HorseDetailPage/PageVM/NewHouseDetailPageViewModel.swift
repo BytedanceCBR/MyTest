@@ -298,7 +298,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         toTracerParams("house_model_list", key: "page_type")
                     openFloorPanCategoryPage(
                         floorPanId: "\(courtId)",
-                        logPBVC: logPbVC,
+                        logPBVC: data.floorPan?.logPB ?? "be_null",
                         isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
                         traceParams: floorPanTraceParams,
                         disposeBag: self.disposeBag,

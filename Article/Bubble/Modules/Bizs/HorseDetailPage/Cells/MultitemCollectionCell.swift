@@ -631,7 +631,7 @@ fileprivate func fillGuessLikeFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(logPBVC)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(item.logPB)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
         }
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
