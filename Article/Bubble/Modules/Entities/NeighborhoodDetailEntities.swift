@@ -149,7 +149,7 @@ struct NeighborhoodDetailData: Mappable {
     var neighbordhoodStatus: NeighborhoodUsertatus?
     var shareInfo: ShareInfo?
     var logPB: Any?
-
+    var evaluationInfo: NeighborhoodEvaluationinfo?
     
     init?(map: Map) {
         
@@ -170,6 +170,7 @@ struct NeighborhoodDetailData: Mappable {
         neighbordhoodStatus <- map["neighbordhood_status"]
         shareInfo <- map["share_info"]
         logPB <- map["log_pb"]
+        evaluationInfo <- map["evaluation_info"]
     }
 }
 
@@ -193,7 +194,8 @@ struct EvaluationIteminfo {
     var scoreValue: Int?
     var scoreLevel: Int?
     var content: String?
-    
+    var fhSearchId: String?
+
     mutating func mapping(map: Map) {
         scoreName <- map["score_name"]
         scoreValue <- map["score_value"]

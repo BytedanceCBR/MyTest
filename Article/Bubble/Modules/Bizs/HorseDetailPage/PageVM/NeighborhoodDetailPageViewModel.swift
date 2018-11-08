@@ -265,6 +265,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: nil) {
                     return data.neighborhoodInfo != nil ? true : false
                 }
+                <- parseNeighborhoodEvaluationCollectionNode(
+                    data,
+                    traceExtension: traceExtension,
+                    followStatus: self.followStatus,
+                    navVC: self.navVC)
                 <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }
