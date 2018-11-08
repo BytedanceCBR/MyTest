@@ -149,7 +149,7 @@ class CategoryListViewModel: DetailPageViewModel {
     }
 
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         // do nothing
     }
 

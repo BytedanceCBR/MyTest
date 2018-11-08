@@ -642,7 +642,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         }
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         switch followStatus.value {
         case let .success(status):
             if status {
@@ -658,7 +658,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         followId: "\(houseId)",
                         disposeBag: disposeBag,
                         isNeedRecord: isNeedRecord)()
-
+                self.recordFollowEvent(traceParam)
             }
         case .failure(_): do {}
         }
