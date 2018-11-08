@@ -219,7 +219,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         return "MultitemCollectionEvaluateCell"
     }
     
-    var itemReuseIdentifier: String = "floorPan"
+    var itemReuseIdentifier: String = "evaluate"
     
     var tracerParams = TracerParams.momoid()
     
@@ -228,7 +228,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        flowLayout.itemSize = CGSize(width: 156, height: 211)
+        flowLayout.itemSize = CGSize(width: 156, height: 122)
         flowLayout.minimumLineSpacing = 8
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
@@ -237,17 +237,97 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         return re
     }()
     
+    lazy var starsContainer: UIView = {
+        let re = UIView()
+        return re
+    }()
+    
+    lazy var starsName: UILabel = {
+        let re = UILabel()
+        re.text = "3.0"
+        re.font = CommonUIStyle.Font.pingFangMedium(36)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        re.textAlignment = .left
+        return re
+    }()
+    
+    lazy var starsView: UIView = {
+        let re = UIView()
+        re.backgroundColor = UIColor.red
+        return re
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(starsContainer)
+        starsContainer.snp.makeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(50)
+        }
+        
+        starsContainer.addSubview(starsName)
+        starsName.snp.makeConstraints { maker in
+            maker.bottom.top.equalToSuperview()
+            maker.left.equalToSuperview().offset(20)
+            maker.height.equalTo(50)
+            maker.width.equalTo(70)
+        }
+        
+        starsContainer.addSubview(starsView)
+        starsView.snp.makeConstraints { maker in
+            maker.bottom.right.top.equalToSuperview()
+            maker.left.equalTo(starsName.snp.right)
+            maker.height.equalTo(50)
+        }
+        
         contentView.addSubview(collectionContainer)
         collectionContainer.snp.makeConstraints { maker in
-            maker.edges.equalToSuperview()
-            maker.height.equalTo(211)
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(starsContainer.snp.bottom).offset(8)
+            maker.bottom.equalToSuperview().offset(-20)
+            maker.height.equalTo(122)
         }
-        collectionContainer.register(FloorPanItemCollectionCell.self, forCellWithReuseIdentifier: "floorPan")
-        collectionContainer.register(NeighborhoodItemCollectionCell.self, forCellWithReuseIdentifier: "neighborhood")
+        collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self
         collectionContainer.dataSource = self
+    }
+    
+    
+    func updateStarsCount(scoreValue: Int)
+    {
+        
+//        starsView.su
+        
+        let startCount = scoreValue / 10
+        let isShowHalfStart = scoreValue > startCount * 10
+        
+        for index in 1...5 {
+            
+            if startCount == 0
+            {
+                if isShowHalfStart
+                {
+                    
+                }else
+                {
+                    
+                }
+                return
+            }
+            
+            if index < startCount
+            {
+                
+            }else if index == startCount,isShowHalfStart
+            {
+                
+            }else
+            {
+                
+            }
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -306,9 +386,7 @@ fileprivate class FloorPanItemCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(floorPanItemView)
         floorPanItemView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(-16)
-            maker.top.equalToSuperview()
+            maker.top.left.right.bottom.equalToSuperview()
         }
     }
 
@@ -585,8 +663,8 @@ fileprivate func fillEvaluationCell(
     itemTracerParams: TracerParams,
     navVC: UINavigationController?,
     cell: BaseUITableViewCell) {
-    if let theCell = cell as? MultitemCollectionNeighborhoodCell {
-        theCell.itemReuseIdentifier = "neighborhood"
+    if let theCell = cell as? MultitemCollectionEvaluateCell {
+        theCell.itemReuseIdentifier = "evaluate"
         if let datasScoresEntity = datas.subScores
         {
             theCell.collectionViewCellRenders = datasScoresEntity.take(5).map { entity -> CollectionViewCellRender in
@@ -936,7 +1014,7 @@ func parseNeighborhoodEvaluationCollectionNode(
     return {
         if let datas = data?.evaluationInfo?.subScores, datas.count > 0 {
             let params = TracerParams.momoid() <|>
-                toTracerParams("xxxxxxx", key: "element_type") <|>
+                toTracerParams("be_null", key: "element_type") <|>
             traceExtension
             
 //            let theDatas = datas.map({ (item) -> EvaluationIteminfo in
@@ -960,7 +1038,7 @@ func parseNeighborhoodEvaluationCollectionNode(
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
                     label: "小区房源",
-                    type: .node(identifier: MultitemCollectionCell.identifier))
+                    type: .node(identifier: MultitemCollectionEvaluateCell.identifier))
             }else
             {
                 return nil

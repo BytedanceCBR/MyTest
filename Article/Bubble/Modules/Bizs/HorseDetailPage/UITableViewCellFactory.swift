@@ -106,7 +106,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: InformationCell.self)
             .addCellClass(cellType: MultitemCollectionCell.self)
             .addCellClass(cellType: FGrayLineCell.self)
-            .addCellClass(cellType: MultitemCollectionNeighborhoodCell.self)
+            .addCellClass(cellType: MultitemCollectionEvaluateCell.self)
             .addCellClass(cellType: FHMultiImagesInfoCell.self)
             .addCellClass(cellType: FHPlaceholderCell.self)
 

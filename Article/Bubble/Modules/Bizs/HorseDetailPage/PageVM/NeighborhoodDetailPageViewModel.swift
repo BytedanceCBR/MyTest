@@ -253,6 +253,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams(self.houseId, key: "group_id") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
+            print("xxxxxx= \(String(describing: data)) ")
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
@@ -270,6 +271,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     traceExtension: traceExtension,
                     followStatus: self.followStatus,
                     navVC: self.navVC)
+                <- parseFlineNode(6)
                 <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }

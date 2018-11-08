@@ -150,7 +150,7 @@ struct NeighborhoodDetailData: Mappable {
     var shareInfo: ShareInfo?
     var logPB: Any?
     var evaluationInfo: NeighborhoodEvaluationinfo?
-    
+
     init?(map: Map) {
         
     }
@@ -174,7 +174,11 @@ struct NeighborhoodDetailData: Mappable {
     }
 }
 
-struct NeighborhoodEvaluationinfo {
+struct NeighborhoodEvaluationinfo: Mappable  {
+    init?(map: Map) {
+        
+    }
+    
     var totalScore: String?
     var detailUrl: String?
     var content: String?
@@ -189,7 +193,11 @@ struct NeighborhoodEvaluationinfo {
     }
 }
 
-struct EvaluationIteminfo {
+struct EvaluationIteminfo: Mappable  {
+    init?(map: Map) {
+        
+    }
+    
     var scoreName: String?
     var scoreValue: Int?
     var scoreLevel: Int?
