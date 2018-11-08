@@ -292,6 +292,7 @@ struct TagItem: Mappable {
 struct FloorPan: Mappable {
     var list: [Item]?
     var hasMore = false
+    var logPB: [String: Any]?
 
     init?(map: Map) {
         
@@ -300,6 +301,8 @@ struct FloorPan: Mappable {
     mutating func mapping(map: Map) {
         list <- map["list"]
         hasMore <- map["has_more"]
+        logPB <- map["log_pb"]
+
     }
     
     struct Item: Mappable {
@@ -312,7 +315,8 @@ struct FloorPan: Mappable {
         var squaremeter: String?
         var roomCount: Int = -1
 
-        
+        var logPB: [String: Any]?
+
         init?(map: Map) {
             
         }
@@ -325,6 +329,8 @@ struct FloorPan: Mappable {
             pricingPerSqm <- map["pricing_per_sqm"]
             squaremeter <- map["squaremeter"]
             roomCount <- map["room_count"]
+            logPB <- map["log_pb"]
+
         }
     }
 }

@@ -287,12 +287,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         toTracerParams("house_model_list", key: "category_name") <|>
                         toTracerParams("house_model", key: "element_from") <|>
                         toTracerParams("slide", key: "card_type") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                        // add by zjing 埋点问题
+                        toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "enter_from")
 
                     let phoneTracer = TracerParams.momoid() <|>
                         toTracerParams("call_bottom", key: "element_type") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(courtId, key: "group_id") <|>
                         toTracerParams("house_model_list", key: "page_type")
                     openFloorPanCategoryPage(

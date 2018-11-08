@@ -600,7 +600,7 @@ func parseNewHouseFloorPanCollectionNode(
             let params = TracerParams.momoid() <|>
                 toTracerParams("house_model", key: "element_type") <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(newHouseData.logPB, key: "log_pb") <|>
+//                toTracerParams(newHouseData.logPB, key: "log_pb") <|>
                 toTracerParams(newHouseData.id, key: "group_id") <|>
                 traceExtension
             return TableSectionNode(
@@ -615,7 +615,7 @@ func parseNewHouseFloorPanCollectionNode(
     }
 }
 
-// MARK: 猜你喜欢
+// MARK: 楼盘户型
 fileprivate func fillGuessLikeFloorPanCell(
         _ data: [FloorPan.Item],
         logPB: Any?,
@@ -644,7 +644,7 @@ fileprivate func fillGuessLikeFloorPanCell(
                     toTracerParams("house_model", key: "house_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
-                    toTracerParams(logPB, key: "log_pb")
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
