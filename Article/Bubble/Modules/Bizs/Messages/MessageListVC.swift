@@ -173,6 +173,11 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                         self.tableView.reloadData()
                         self.errorVM?.onRequestNormalData()
                         self.dataLoader?(self.hasMore, responseData.count)
+                        
+                        if !self.hasMore
+                        {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
 
                         if !self.hasRecordEnterCategory {
                             self.stayTimeParams = self.traceParams <|> traceStayTime()
@@ -181,7 +186,16 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                         }
 
                     } else {
-                        self.showEmptyMaskView()
+                        
+                        if self.tableListViewModel?.datas.value.count == 0
+                        {
+                            self.showEmptyMaskView()
+                        }else
+                        {
+                            self.hasMore = false
+                            self.dataLoader?(false, 0)
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
                     }
                     
                     }, onError: { [unowned self] (error) in
