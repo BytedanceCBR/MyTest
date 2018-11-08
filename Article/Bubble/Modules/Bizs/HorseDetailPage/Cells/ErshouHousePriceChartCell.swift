@@ -130,8 +130,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     lazy var priceLabel: UILabel = {
         
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(12)
-        label.textColor = hexStringToUIColor(hex: "#8a9299")
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         label.text = "(万元/平）"
         return label
     }()
@@ -179,19 +179,24 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             self.maxValue = (Double(priceTrends.first?.values.first?.price ?? "") ?? 0.0)
             self.minValue = self.maxValue
             
-            var trailing: CGFloat = 20
+            var trailing: CGFloat = UIScreen.main.bounds.width - 20 - 70
             
             self.titleView.subviews.forEach { (subview) in
                 subview.removeFromSuperview()
             }
             
-            priceTrends.enumerated().forEach {[weak self] (offset, priceTrend) in
+            priceTrends.enumerated().reversed().forEach {[weak self] (offset, priceTrend) in
                 
                 var trendName:String? = priceTrend.name
                 if let count = priceTrend.name?.count, count > 7 {
                     trendName = String(priceTrend.name?.prefix(7) ?? "") + "..."
                 }
-                let icon = UIImageView(image: UIImage(named: imgNameByIndex(offset)))
+                let icon = UIView()
+                icon.width = 8
+                icon.height = 8
+                icon.layer.cornerRadius = 4
+                icon.layer.masksToBounds = true
+                icon.backgroundColor = lineColorByIndex(offset)
                 self?.titleView.addSubview(icon)
                 
                 let label = UILabel()
@@ -200,16 +205,16 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 label.text = trendName
                 self?.titleView.addSubview(label)
 
-                icon.sizeToFit()
-                icon.x = trailing
-                icon.centerY = 13
-                
                 label.sizeToFit()
-                label.x = icon.right + 5
-                label.centerY = icon.centerY
+                label.x = trailing - label.width
+                label.height = 20
+                label.y = 0
+                trailing = label.left - 10
                 
-                trailing = label.right + 20
-                
+                icon.x = trailing - icon.width
+                icon.centerY = label.centerY
+                trailing = icon.left - 20
+
                 priceTrend.values.enumerated().forEach({[weak self] (offset, item) in
                     let price = Double(item.price ?? "") ?? 0
                     if let maxValue = self?.maxValue, price > maxValue {
@@ -285,7 +290,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
 
             let data = LineChartData(dataSets: dataSets)
-            let setPadding = (self.maxValue - self.minValue) / self.unitPerSquare / 3
+            let setPadding = (self.maxValue - self.minValue) / self.unitPerSquare / 4
             let maxValue = self.maxValue / unitPerSquare + setPadding
             let minValue = self.minValue / unitPerSquare - setPadding
 
@@ -298,7 +303,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
-            leftAxis.setLabelCount(3, force: true)
+            leftAxis.setLabelCount(4, force: true)
             
 
         }
@@ -373,23 +378,25 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         }
         
         contentView.addSubview(titleView)
+        contentView.addSubview(priceLabel)
+
         titleView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(priceView.snp.bottom)
-            maker.height.equalTo(26)
+            maker.right.equalToSuperview()
+            maker.left.equalTo(70)
+            maker.centerY.equalTo(priceLabel)
+            maker.height.equalTo(20)
         }
         
-        contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
-            maker.top.equalTo(titleView.snp.bottom).offset(15)
+            maker.top.equalTo(priceView.snp.bottom).offset(20)
         }
 
         contentView.addSubview(chartView)
         chartView.snp.makeConstraints { maker in
             maker.left.equalTo(0)
             maker.right.equalTo(0)
-            maker.top.equalTo(priceLabel.snp.bottom)
+            maker.top.equalTo(priceLabel.snp.bottom).offset(10)
             maker.height.equalTo(180)
             maker.bottom.equalToSuperview().offset(-20)
         }
@@ -421,18 +428,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         xAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         xAxis.granularity = 1 // 粒度
         xAxis.drawGridLinesEnabled = false
-        xAxis.axisLineColor = hexStringToUIColor(hex: kFHSilver2Color)
+        xAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         xAxis.axisLineWidth = 0.5
-        xAxis.drawAxisLineEnabled = false
+        xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
         xAxis.valueFormatter = self.monthFormatter
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-        leftAxis.axisLineColor = hexStringToUIColor(hex: kFHSilver2Color)
+        leftAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         leftAxis.xOffset = 20
-        leftAxis.labelCount = 3
-        leftAxis.drawAxisLineEnabled = false
+        leftAxis.labelCount = 4
+        leftAxis.drawAxisLineEnabled = true
         leftAxis.gridColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
