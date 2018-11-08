@@ -564,15 +564,12 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                        } else {
 
-                        tableView.beginUpdates()
                         theDatas.remove(at: indexPath.row)
                         self.datas.accept(theDatas)
-                        tableView.deleteRows(at: [indexPath], with: .automatic)
-                        if self.canCancelFollowUp
-                        {
-                            self.datasDeleteBehavior.accept(theDatas.count)
+                        UIView.performWithoutAnimation {
+                            tableView.reloadData()
                         }
-                        tableView.endUpdates()
+                        
                         
 //                        }
                         EnvContext.shared.toast.dismissToast()
@@ -623,16 +620,13 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                    } else {
 
-                    tableView.beginUpdates()
                     theDatas.remove(at: indexPath.row)
                     self.datas.accept(theDatas)
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
-                    if self.canCancelFollowUp
-                    {
-                        self.datasDeleteBehavior.accept(theDatas.count)
+                    
+                    UIView.performWithoutAnimation {
+                        tableView.reloadData()
                     }
-                    handler(true)
-                    tableView.endUpdates()
+                    
                     
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("已取消关注")

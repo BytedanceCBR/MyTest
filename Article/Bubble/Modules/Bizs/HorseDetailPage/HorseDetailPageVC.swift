@@ -133,10 +133,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             requestRetryText:"网络异常",
             isUserClickEnable:false)
 
-        if houseType == HouseType.neighborhood && CommonUIStyle.Screen.isIphoneX {
-            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 34, right: 0)
-
-        }
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
