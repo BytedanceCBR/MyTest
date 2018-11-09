@@ -670,7 +670,11 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
 
         if !selectedIndexPaths.contains(indexPath) {
-            selectedIndexPaths.insert(indexPath)
+            if selectedIndexPaths.count >= 20 {
+                fhShowToast("最多支持同时选中20个")
+            } else {
+                selectedIndexPaths.insert(indexPath)
+            }
         } else {
             selectedIndexPaths.remove(indexPath)
         }
