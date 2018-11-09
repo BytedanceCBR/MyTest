@@ -82,6 +82,7 @@ struct ErshouHouseData: Mappable {
     var houseImage: [ImageItem]?
     var coreInfo: [ErshouHouseCoreInfo]?
     var baseInfo: [ErshouHouseBaseInfo]?
+    var outLineOverreview:ErshouOutlineOverreview?
     var neighborhoodInfo: NeighborhoodInfo?
 
     var priceTrend: [PriceTrend]?
@@ -118,7 +119,7 @@ struct ErshouHouseData: Mappable {
         pricingPerSqmValue <- map["pricing_per_sqm_v"]
         logPB <- map["log_pb"]
         status <- map["status"]
-
+        outLineOverreview <- map["house_overreview"]
     }
 }
 
@@ -135,6 +136,35 @@ struct ErshouHouseBaseInfo: Mappable {
         attr <- map["attr"]
         value <- map["value"]
         isSingle <- map["is_single"]
+    }
+}
+
+struct ErshouOutlineInfo: Mappable {
+    var title: String?
+    var content: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        title <- map["title"]
+        content <- map["content"]
+    }
+}
+
+struct ErshouOutlineOverreview: Mappable {
+    
+    var list: [ErshouOutlineInfo]?
+    var reportUrl: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        list <- map["list"]
+        reportUrl <- map["report_url"]
     }
 }
 
