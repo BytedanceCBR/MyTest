@@ -320,6 +320,15 @@ fileprivate class SpringBroadItemView: UIView {
 
 func parseSpringboardNode(_ items: [OpData.Item],isNeedUpdateBoard: Bool, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> TableSectionNode? {
     
+    var nedUpdateBoard = true
+    if items.count == 0 {
+        nedUpdateBoard = false
+    }else
+    {
+        nedUpdateBoard = isNeedUpdateBoard
+    }
+    
+    
     let views = items.map { createFavoriteItemViewByEntryId(item: $0) }
 
     zip(items, views).forEach { e in
@@ -330,7 +339,7 @@ func parseSpringboardNode(_ items: [OpData.Item],isNeedUpdateBoard: Bool, dispos
             .disposed(by: disposeBag)
     }
     return {
-        let cellRender = curry(fillSpringboardCell)(views)(isNeedUpdateBoard)
+        let cellRender = curry(fillSpringboardCell)(views)(nedUpdateBoard)
         return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
     }
 }
