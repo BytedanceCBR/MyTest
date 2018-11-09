@@ -877,7 +877,7 @@ fileprivate func fillFloorPanCell(
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.logPB, key: "log_pb") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.id, key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
