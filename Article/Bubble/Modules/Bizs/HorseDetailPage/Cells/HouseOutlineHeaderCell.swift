@@ -60,7 +60,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
         }
         
         infoButton.rx.tap
-            .subscribe(onNext: { void in
+            .subscribe(onNext: { (void) in
                 let theUrl = URL(string: "fschema://feedback")
                 TTRoute.shared().openURL(byPushViewController: theUrl)
             }).disposed(by: disposeBag)
