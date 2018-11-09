@@ -259,6 +259,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
+                    // add by zyk 需要根据URL进行跳转
+                    print(info.openUrl)
                     if let name = info.attr {
                         if name == "在售房源" {
                             self?.openAllOnSaleListPage(data: data)

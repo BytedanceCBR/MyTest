@@ -145,6 +145,7 @@ fileprivate class ItemValueView: UIControl {
         backgroundColor = hexStringToUIColor(hex: "#f7f8f9")
         layer.cornerRadius = 4.0
         addSubview(valueDataLabel)
+        valueDataLabel.isUserInteractionEnabled = false
         valueDataLabel.snp.makeConstraints { maker in
             maker.left.equalTo(self).offset(16)
             maker.top.equalTo(self).offset(11)

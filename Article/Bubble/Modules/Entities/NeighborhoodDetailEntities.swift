@@ -45,6 +45,7 @@ struct NeighborhoodItemAttribute: Mappable {
     var attr: String?
     var value: String?
     var isSingle: Bool? = false
+    var openUrl: String?
     
     init?(map: Map) {
     }
@@ -53,6 +54,7 @@ struct NeighborhoodItemAttribute: Mappable {
         self.attr <- map["attr"]
         self.value <- map["value"]
         self.isSingle <- map["is_single"]
+        self.openUrl <- map["open_url"]
     }
 }
 
