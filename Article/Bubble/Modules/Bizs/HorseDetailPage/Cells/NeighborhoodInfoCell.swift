@@ -140,9 +140,6 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             
             return nil
         }
-        let params = TracerParams.momoid() <|>
-            toTracerParams("neighborhood_detail", key: "element_type") <|>
-            traceExtension
 
         let houseShowParams = EnvContext.shared.homePageParams <|>
             traceExtension <|>
