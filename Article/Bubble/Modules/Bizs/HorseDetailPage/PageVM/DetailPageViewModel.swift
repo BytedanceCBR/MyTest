@@ -277,15 +277,12 @@ extension DetailPageViewModel {
     
     func recordFollowEvent(_ traceParam: TracerParams) {
         
-        print("xxxxx=\(traceParam.paramsGetter([:]))")
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
         
     }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
-            print("xxxxx=\(traceParam.paramsGetter([:]))")
-
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 
