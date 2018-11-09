@@ -639,10 +639,15 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             if userInput.isEmpty {
                 userInput = "be_null"
             }
-            let houseSearchParams = ["page_type": self.pageTypeString(),
+            var houseSearchParams = ["page_type": self.pageTypeString(),
                                      "query_type": queryType,
                                      "enter_query": item.userOriginEnter ?? userInput,
                                      "search_query": item.text ?? "be_null"]
+
+            if suggestions.value.count == 0 {
+                //如果点击的是历史，就统一都报text
+                houseSearchParams["enter_query"] = item.text ?? "be_null"
+            }
             var infos: [String: Any] = [:]
             infos["houseSearch"] = houseSearchParams
             if let info = item.info {
