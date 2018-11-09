@@ -66,7 +66,7 @@ class NHErrorViewModel: NSObject {
      - retryAction:点击回调
      **/
     init(errorMask: EmptyMaskView,
-         requestRetryText:String? = "网络不给力",
+         requestRetryText:String? = "网络异常",
          requestRetryImage:String? = "group-4",
          requestNilDataText:String? = "数据走丢了",
          requestNilDataImage:String? = "group-8",
