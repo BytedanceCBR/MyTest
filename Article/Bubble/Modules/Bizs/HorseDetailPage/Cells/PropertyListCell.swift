@@ -390,6 +390,7 @@ func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell:
         func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
+            infoView.valueLabel.sizeToFit()
         }
         let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in
             let (_,outline) = e
@@ -397,6 +398,13 @@ func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell:
             setInfoValue(outline.title ?? "", outline.content ?? "", re)
             return re
         })
+        
         theCell.addRowView(rows: listView ?? [])
+        
+        if let count = listView?.count, count == 1 {
+            listView![0].snp.remakeConstraints { (maker) in
+                maker.edges.equalToSuperview()
+            }
+        }
     }
 }
