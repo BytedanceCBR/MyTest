@@ -208,6 +208,7 @@
         //PM 要求不能一下滑上去
         if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
             scrollView.scrollEnabled = NO;
+            [self.headerView hideTopTip:YES];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 scrollView.scrollEnabled = YES;
             });
@@ -230,18 +231,18 @@
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollview
 {
-    if (self.listController.view.top > self.listController.view.height*0.7) {
+    if (self.listController.view.top > self.listController.view.height*0.6) {
         [self handleDismiss:0.3];
     }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < 50)){
         //吸附都顶部
         [self.headerView hideTopTip:YES];
         [self.listController moveTop:0];
-        [self addEnterListPageLog];
+//        [self addEnterListPageLog];
     }else if((self.listController.view.top > [self.listController minTop]) ){//&& (self.listController.view.top < self.listController.view.height*0.7)
         [self.headerView hideTopTip:NO];
         [self.listController moveTop:[self.listController initialTop]];
         self.listController.moveDock();
-        [self addHouseListDurationLog];
+//        [self addHouseListDurationLog];
     }
 //    else if([self.listController canMoveup]){
 //        //当前停留在中间
@@ -448,6 +449,7 @@
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
+    param[@"enter_from"] = @"old_list";
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
 

@@ -132,7 +132,11 @@
             self.moveToTop();
         }
     }
-    self.view.top = top;
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        self.view.top = top;
+    }];
+    
     if (self.movingBlock) {
         self.movingBlock(top);
     }

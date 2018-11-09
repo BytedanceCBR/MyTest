@@ -36,7 +36,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _topTipView = [[UIView alloc] init];
-        _topTipView.backgroundColor = [UIColor themeBlack];
+        _topTipView.backgroundColor = RGB(0xe8, 0xea, 0xeb);
         _topTipView.layer.cornerRadius = 1.5;
         _topTipView.layer.masksToBounds = YES;
         
@@ -91,7 +91,7 @@
     }];
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_nameLabel);
-        make.top.mas_equalTo(_nameLabel.mas_bottom).offset(2);
+        make.bottom.mas_equalTo(self).offset(-20);
         make.right.mas_lessThanOrEqualTo(_priceLabel.mas_left).offset(-10);
     }];
     

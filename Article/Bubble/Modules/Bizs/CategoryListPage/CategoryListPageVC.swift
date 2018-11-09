@@ -372,7 +372,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams(originFrom, key: "origin_from") <|>
             toTracerParams(originSearchId, key: "origin_search_id")
-        recordEvent(key: TraceEventName.enter_map, params: enterParams)
+        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
         
         let controller = FHMapSearchViewController(configModel: configModel)
         controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in

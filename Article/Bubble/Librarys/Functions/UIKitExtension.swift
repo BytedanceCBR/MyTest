@@ -86,7 +86,7 @@ extension UIKitExtension where BaseType: UIView {
         self.base.addSubview(borderView)
         borderView.backgroundColor = color
         borderView.snp.makeConstraints { (make) in
-            make.bottom.equalToSuperview().offset(-(UIScreen.main.scale == 3 ? 0.34 : 0.5))
+            make.bottom.equalToSuperview() //.offset(-(UIScreen.main.scale == 3 ? 0.34 : 0.5))
             make.left.equalTo(leading)
             make.right.equalTo(trailing)
             make.height.equalTo(UIScreen.main.scale == 3 ? 0.34 : 0.5)

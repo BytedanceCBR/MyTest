@@ -232,6 +232,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [_requestHouseTask cancel];
     }
     
+    BOOL firstEnter = _firstEnterLogAdded;
     _firstEnterLogAdded = YES;
     _lastRequestCenter = _mapView.centerCoordinate;
     
@@ -263,11 +264,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [wself addAnnotations:model.list];
         
         //for enter default log
-        if (!wself.firstEnterLogAdded) {
-            if (!byUser) {
-                [wself addEnterMapLog];
-            }
-            wself.firstEnterLogAdded = YES;
+        if (!firstEnter) {
+            [wself addEnterMapLog];
         }
     }];
     _requestMapLevel = _mapView.zoomLevel;
@@ -719,7 +717,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             viewTypeStr = @"neighborhood";
             break;
     }
-    param[@"view_type"] = viewTypeStr;
+    param[@"view_level"] = viewTypeStr;
     param[@"trigger_type"] = triger;
 
     [EnvContext.shared.tracer writeEvent:@"mapfind_view" params:param];
@@ -733,10 +731,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSString *clickType = nil;
     switch (bubbleType) {
         case FHMapSearchTypeArea:
-            clickType = @"area";
+            clickType = @"district";            
             break;
         case FHMapSearchTypeDistrict:
-            clickType = @"district";
+            clickType = @"area";
             break;
         case FHMapSearchTypeNeighborhood:
             clickType = @"neighborhood";
