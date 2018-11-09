@@ -82,4 +82,8 @@
 #import "AWEPostDataHttpRequestSerializer.h"
 #import "UIImageAdditions.h"
 
+#import "FHMapSearchViewController.h"
+
+#import "FHSearchHouseModel.h"
+
 #endif /* Article_Bridging_Header_h */

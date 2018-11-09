@@ -174,6 +174,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             EnvContext.shared.toast.dismissToast()
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
+        self.navBar.mapBtn.rx.tap.bind { [weak self] void in
+            self?.gotoMapSearch()
+        }.disposed(by: disposeBag)
 
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
@@ -251,6 +254,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                         assertionFailure()
                     }
                 }
+                self.navBar.showMapButton(show:(self.houseType.value == .secondHandHouse))
             }
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
@@ -303,7 +307,86 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.navBar.searchInput.text = nil
         }
     }
-
+    
+    func gotoMapSearch(){
+        
+        guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
+            return
+        }
+        
+        //点击切换埋点
+        let catName = pageTypeString()
+        var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
+        let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
+        let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
+        var enterFrom = selectTraceParam(self.tracerParams, key: "enter_from")
+        if enterFrom == nil {
+            if originFrom != "be_null" {
+                enterFrom = originFrom.split(separator: "_")[0]
+            }else{
+                enterFrom = "be_null"
+            }
+        }
+        if elementName == "be_null" && originFrom != "be_null" {
+            elementName = originFrom
+        }
+        
+        var dict : [String : Any] = [
+            "house_type" : self.houseType.value.rawValue ,
+            "center_longitude" : mapSearch.centerLongitude ?? "" ,
+            "center_latitude" : mapSearch.centerLatitude ?? "" ,
+            "resize_level" : mapSearch.resizeLevel ?? 11 ,
+            "origin_from" : originFrom ,
+            "origin_search_id" : originSearchId ,
+            "element_from" : elementName ,
+            ]
+        let condition = self.searchAndConditionFilterVM.queryCondition.value
+        let url = URL(string: "http://a?\(condition)")
+        let obj = TTRoute.shared()?.routeParamObj(with: url)
+        if let query = obj?.queryParams {
+            dict["condition_params"] = query
+        }
+        if let suggestionParams = self.suggestionParams {
+            dict["suggestion_params"] = suggestionParams
+        }
+        
+        guard let configModel = try? FHMapSearchConfigModel(dictionary: dict) else {
+            return
+        }
+                
+        let params = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("map", key: "click_type") <|>
+            toTracerParams(catName, key: "category_name") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(elementName, key: "element_from") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        
+        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
+        
+        //进入地图找房页埋点
+        let enterParams = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
+        
+        let controller = FHMapSearchViewController(configModel: configModel)
+        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
+            if let condition = conditions {
+                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
+            }
+            if let sug = suggestion {
+                self?.suggestionParams = sug
+            }
+        }
+        self.navigationController?.pushViewController(controller, animated: true)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

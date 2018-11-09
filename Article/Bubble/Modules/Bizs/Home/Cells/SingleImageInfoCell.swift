@@ -32,7 +32,7 @@ class CornerView: UIView {
 
 }
 
-class SingleImageInfoCell: BaseUITableViewCell {
+@objc class SingleImageInfoCell: BaseUITableViewCell {
 
     override open class var identifier: String {
         return "BaseUITableViewCell"
@@ -302,4 +302,64 @@ func createTagAttrString(
     return attributeText
 }
 
+
+extension SingleImageInfoCell {
+    @objc func update(withModel item  : FHSearchHouseDataItemsModel , isLastCell: Bool) {
+        let cell = self
+        cell.majorTitle.text = item.displayTitle
+        cell.extendTitle.text = item.displaySubtitle
+        cell.isTail = isLastCell
+        
+        let text = NSMutableAttributedString()
+        if let tags = item.tags as? [FHSearchHouseDataItemsTagsModel] {
+           let  attrTexts = tags.enumerated().map ({ (arg) -> NSAttributedString  in
+                let (offset, element) = arg
+                return createTagAttrString(
+                    element.content ?? "",
+                    isFirst: offset == 0,
+                    textColor: hexStringToUIColor(hex: element.textColor),
+                    backgroundColor: hexStringToUIColor(hex: element.backgroundColor))
+            })
+            
+            var height: CGFloat = 0
+            attrTexts.enumerated().forEach({ (e) in
+                let (offset, tag) = e
+                
+                text.append(tag)
+                
+                let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 170, height: CGFloat.greatestFiniteMagnitude), text: text)
+                let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+                if lineHeight > height {
+                    if offset != 0 {
+                        text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                    }
+                    if offset == 0 {
+                        height = lineHeight
+                    }
+                }
+            })
+        }
+        
+        cell.areaLabel.attributedText = text
+        cell.areaLabel.snp.updateConstraints { (maker) in
+            maker.left.equalToSuperview().offset(-3)
+        }
+        cell.priceLabel.text = item.displayPrice
+        
+        cell.roomSpaceLabel.text = item.displayPricePerSqm
+        let houseImags  = item.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
+        cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+        if let houseImageTag = item.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            cell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            cell.imageTopLeftLabel.text = houseImageTag.text
+            cell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            cell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            cell.imageTopLeftLabelBgView.isHidden = true
+        }
+        
+    }
+}
 

@@ -17,7 +17,7 @@ extension Notification.Name {
 }
 
 
-class Client: NSObject {
+@objc class Client: NSObject {
 
     static let appId = "1370"
 
@@ -236,6 +236,30 @@ class Client: NSObject {
         self.accountConfig.userInfo.accept(TTAccount.shared().user())
     }
 
+    // 定位城市和用户选择的是否是同一城市
+    @objc func  locationSameAsChooseCity() -> Bool {
+        
+        
+        guard let selectCityId = self.generalBizconfig.getCurrentSelectCityId() else {
+            return false
+        }
+        
+        guard let cityName = self.generalBizconfig.cityNameById()(selectCityId) else {
+            return false
+        }
+        
+        return LocationManager.shared.isSameCity(cityName: cityName)
+        
+    }
+    
+    @objc func currentLocation() -> CLLocationCoordinate2D {
+        
+        if let location = locationManager.currentLocation.value {
+            return location.coordinate
+        }
+        return CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    }
+    
     deinit {
         reachability.stopNotifier()
     }

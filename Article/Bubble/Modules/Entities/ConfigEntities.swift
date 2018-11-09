@@ -32,6 +32,8 @@ struct GeneralConfigData: Mappable {
     var opData: OpData?
     var banners: [Banner]?
     var reviewInfo: ConfigReviewInfo?
+    var mapSearch : MapSearch?
+    
     init?(map: Map) {
 
     }
@@ -46,7 +48,7 @@ struct GeneralConfigData: Mappable {
         banners <- map["banners"]
         housetypelist <- map["house_type_list"]
         reviewInfo <- map["review_info"]
-
+        mapSearch <- map["map_search"]
     }
 }
 
@@ -174,5 +176,22 @@ struct Banner: Mappable {
         id <- map["id"]
         image <- map["image"]
         url <- map["url"]
+    }
+}
+
+struct MapSearch : Mappable {
+    
+    var centerLatitude : String?
+    var centerLongitude : String?
+    var resizeLevel : Int?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        centerLatitude <- map["center_latitude"]
+        centerLongitude <- map["center_longitude"]
+        resizeLevel <- map["resize_level"]
     }
 }
