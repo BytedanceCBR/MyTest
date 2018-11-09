@@ -349,14 +349,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
 
-        if let houseSearchParams = allParams?["houseSearch"] as? [String: Any] {
-            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
-                pageType: (houseSearchParams["page_type"] as? String) ?? "be_null",
-                houseSearchParams: TracerParams.momoid(),
-                searchParams: houseSearchParams)
-            self.categoryListViewModel?.houseSearch = houseSearchParams
-        }
-
+        bindHouseSearchParams()
+        
         view.addSubview(navBar)
 
         //loadingView
@@ -507,6 +501,16 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
         self.errorVM?.onRequestViewDidLoad()
     }
+    
+    func bindHouseSearchParams() {
+        if let houseSearchParams = allParams?["houseSearch"] as? [String: Any] {
+            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
+                pageType: (houseSearchParams["page_type"] as? String) ?? "be_null",
+                houseSearchParams: TracerParams.momoid(),
+                searchParams: houseSearchParams)
+            self.categoryListViewModel?.houseSearch = houseSearchParams
+        }
+    }
 
     func bindLoadMore() {
         
@@ -625,6 +629,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.searchAndConditionFilterVM.sendSearchRequest()
             })
         }
+        bindHouseSearchParams()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -633,6 +638,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             recordEvent(key: TraceEventName.stay_category, params: stayTimeParams <|> toTracerParams(self.categoryListViewModel?.originSearchId ?? "be_null", key: "search_id"))
         }
         stayTimeParams = nil
+        self.hasRecordEnterCategory = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
