@@ -7,12 +7,17 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class HouseOutlineHeaderCell: BaseUITableViewCell {
     
     open override class var identifier: String {
         return "HouseOutlineHeaderCell"
     }
+    
+    var tracerParams:TracerParams?
+    let disposeBag = DisposeBag()
     
     lazy var label: UILabel = {
         let re = UILabel()
@@ -53,6 +58,12 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
             maker.centerY.equalTo(label)
             maker.right.equalTo(self).offset(-25)
         }
+        
+        infoButton.rx.tap
+            .subscribe(onNext: { void in
+                let theUrl = URL(string: "fschema://feedback")
+                TTRoute.shared().openURL(byPushViewController: theUrl)
+            }).disposed(by: disposeBag)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,12 +88,13 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
 
 func parseHouseOutlineHeaderNode(
     _ title: String,
+    traceExtension: TracerParams = TracerParams.momoid(),
     filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHouseOutlineHeaderCell)(title)
+            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(traceExtension)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -93,7 +105,9 @@ func parseHouseOutlineHeaderNode(
     }
 }
 
-func fillHouseOutlineHeaderCell(_ title: String, cell: BaseUITableViewCell) -> Void {
+func fillHouseOutlineHeaderCell(_ title: String,
+                                traceExtension: TracerParams = TracerParams.momoid(),
+                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HouseOutlineHeaderCell {
         theCell.label.text = title
     }

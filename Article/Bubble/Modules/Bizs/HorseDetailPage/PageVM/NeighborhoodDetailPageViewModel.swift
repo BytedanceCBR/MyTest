@@ -258,7 +258,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
-                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension)
+                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
@@ -438,7 +438,28 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 .disposed(by: disposeBag)
         navVC?.pushViewController(vc, animated: true)
     }
-
+    
+    fileprivate func openAllHistoryPage(data: NeighborhoodDetailData) {
+        if let id = data.id {
+            
+//            let loadMoreParams = EnvContext.shared.homePageParams <|>
+//                toTracerParams("neighborhood_trade", key: "element_type") <|>
+//                toTracerParams(id, key: "group_id") <|>
+//                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams("neighborhood_detail", key: "page_type")
+//            recordEvent(key: "click_loadmore", params: loadMoreParams)
+//
+//            let transactionTrace = theParams <|>
+//                toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+//                toTracerParams("neighborhood_trade", key: "element_from") <|>
+//                toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+            
+            self.openTransactionHistoryPage(
+                neighborhoodId: id,
+                traceParams: TracerParams.momoid(),
+                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+        }
+    }
 }
 
 func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel {
