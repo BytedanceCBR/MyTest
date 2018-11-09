@@ -574,6 +574,11 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                             tableView.reloadData()
                         }
                         
+                        if self.canCancelFollowUp
+                        {
+                            self.datasDeleteBehavior.accept(theDatas.count)
+                        }
+                        
                         
 //                        }
                         EnvContext.shared.toast.dismissToast()
@@ -629,6 +634,11 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     
                     UIView.performWithoutAnimation {
                         tableView.reloadData()
+                    }
+                    
+                    if self.canCancelFollowUp
+                    {
+                        self.datasDeleteBehavior.accept(theDatas.count)
                     }
                     
                     
