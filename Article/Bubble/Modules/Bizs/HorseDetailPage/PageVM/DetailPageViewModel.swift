@@ -256,7 +256,7 @@ extension DetailPageViewModel {
 
                                 var style = fhCommonToastStyle()
                                 style.verticalOffset = 24
-                                style.titleFont = CommonUIStyle.Font.pingFangRegular(12)
+                                style.verticalOffset = 24 + (CommonUIStyle.Screen.isIphoneX ? 10 : 0)
                                 style.cornerRadius = 8
                                 style.verticalPadding = 8
                                 style.horizontalPadding = 10
