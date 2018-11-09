@@ -512,6 +512,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 houseSearchParams: TracerParams.momoid(),
                 searchParams: houseSearchParams)
             self.categoryListViewModel?.houseSearch = houseSearchParams
+        } else {
+            let houseSearchParams = ["eearch_query": "be_null",
+                                     "enter_query": "be_null"]
+            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
+                pageType: self.pageTypeString(),
+                houseSearchParams: TracerParams.momoid(),
+                searchParams: houseSearchParams)
+            self.categoryListViewModel?.houseSearch = houseSearchParams
         }
     }
 
@@ -560,8 +568,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.traceHouseRank(
                 searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
                 rankType: rankType)
-
-            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
+            self?.allParams?["houseSearch"] = nil
+            self?.bindHouseSearchParams()
+//            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
         }
 
     }
@@ -807,6 +816,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 toTracerParams(self?.houseType.value.traceTypeValue() ?? "be_null", key: "house_type") <|>
                 toTracerParams(pageType, key: "page_type")
             recordEvent(key: "house_search", params: params)
+            self?.allParams?["houseSearch"] = nil
         }
     }
 

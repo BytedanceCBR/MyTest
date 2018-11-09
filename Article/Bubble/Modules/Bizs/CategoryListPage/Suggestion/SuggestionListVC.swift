@@ -379,6 +379,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         let houseSearchParams = TracerParams.momoid() <|>
             toTracerParams(userInputText, key: "enter_query") <|>
             toTracerParams(userInputText, key: "search_query") <|>
+            toTracerParams(pageTypeString(self.houseType.value), key: "page_type") <|>
             toTracerParams("enter", key: "query_type")
 
         // 保存关键词搜索到历史记录
