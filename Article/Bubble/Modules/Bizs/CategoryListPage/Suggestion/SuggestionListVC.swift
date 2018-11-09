@@ -94,7 +94,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     var tableViewModel: SuggestionListTableViewModel
     var onSuggestSelect: ((String, String?, String?, TracerParams) -> Void)?
-    var onSuggestionSelected: ((TTRouteParamObj?) -> Void)? {
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)? {
         didSet {
             self.tableViewModel.onSuggestionSelected = onSuggestionSelected
         }
@@ -395,11 +395,14 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         let fullText = userInputText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         var jumpUrl = "fschema://house_list?house_type=\(self.houseType.value.rawValue)&full_text=\(fullText ??  userInputText)"
         jumpUrl = jumpUrl + "&placeholder=\(fullText ?? userInputText)"
-        let userInfo = TTRouteUserInfo(info: houseSearchParams.paramsGetter([:]))
+        var infos:[String: Any] = [:]
+        infos["houseSearch"] = houseSearchParams.paramsGetter([:])
+
+        let userInfo = TTRouteUserInfo(info: infos)
 
         if self.onSuggestionSelected != nil {
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
-            self.onSuggestionSelected?(routerObj?.paramObj)
+            self.onSuggestionSelected?(routerObj)
         } else {
             onSuggestSelect?("&full_text=\(userInputText)", nil, userInputText, houseSearchParams)
         }
@@ -494,7 +497,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var sendHistoryQueryBag = DisposeBag()
 
     var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
-    var onSuggestionSelected: ((TTRouteParamObj?) -> Void)?
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)?
 
     let houseType: BehaviorRelay<HouseType>
 
@@ -647,7 +650,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             let userInfo = TTRouteUserInfo(info: infos)
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
             if self.onSuggestionSelected != nil {
-                self.onSuggestionSelected?(routerObj?.paramObj)
+                self.onSuggestionSelected?(routerObj)
 
             } else {
                 TTRoute.shared()?.openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)

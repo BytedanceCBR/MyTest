@@ -407,21 +407,24 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             })
                             .disposed(by: self.disposeBag)
 
+                    // 关键词搜索
                     vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-//                        self.isNeedEncode = true
+                        //                        self.isNeedEncode = true
                         self.conditionFilterViewModel?.cleanSortCondition()
                         self.suggestionParams = nil
-                        self.resetFilterCondition(routeParamObj: params)
+                        self.hasRecordEnterCategory = false
+                        self.resetFilterCondition(routeParamObj: params?.paramObj)
                         self.houseType.accept(vc.houseType.value)
                         self.resetConditionData()
-//                        }
+                        //                        }
                         if let queryParams = self.queryParams {
                             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
                         }
                         nav?.popViewController(animated: true)
                         self.navBar.searchInput.text = nil
-//                        self.searchAndConditionFilterVM.sendSearchRequest()
-//                        self.navBar.searchInput.placeholder = associationalWord
+                        //                        self.searchAndConditionFilterVM.sendSearchRequest()
+                        //                        self.navBar.searchInput.placeholder = associationalWord
+                        self.allParams = params?.paramObj.allParams as? [String: Any]
                     }
                 })
                 .disposed(by: disposeBag)
@@ -793,13 +796,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         pageType: String,
         houseSearchParams: TracerParams,
         searchParams: [String: Any]? = nil) -> (String?) -> Void {
-        var hasRecord = false
         return { [weak self] (searchId) in
-
-            if hasRecord {
-                return
-            }
-            hasRecord = true
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(searchId ?? "be_null", key: "origin_search_id")
 
