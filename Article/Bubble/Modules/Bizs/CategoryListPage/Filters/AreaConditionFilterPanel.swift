@@ -625,7 +625,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
-        if let theCell = cell as? AreaConditionCell {
+        if let theCell = cell as? AreaConditionCell, nodes.count > indexPath.row {
             theCell.label.text = nodes[indexPath.row].label
             theCell.showCheckbox(isShowCheckBox && nodes[indexPath.row].isEmpty != 1)
             if selectedIndexPaths.contains(indexPath) {
