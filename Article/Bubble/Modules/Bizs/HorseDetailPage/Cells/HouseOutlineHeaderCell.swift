@@ -7,12 +7,18 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class HouseOutlineHeaderCell: BaseUITableViewCell {
     
     open override class var identifier: String {
         return "HouseOutlineHeaderCell"
     }
+    
+    var tracerParams:TracerParams?
+    let disposeBag = DisposeBag()
+    var reportUrl:String?
     
     lazy var label: UILabel = {
         let re = UILabel()
@@ -53,6 +59,15 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
             maker.centerY.equalTo(label)
             maker.right.equalTo(self).offset(-25)
         }
+        
+        infoButton.rx.tap
+            .subscribe(onNext: {[weak self] (void) in
+                if let urlStr = self?.reportUrl {
+                    if let theUrl = URL(string: urlStr) {
+                        TTRoute.shared().openURL(byPushViewController: theUrl)
+                    }
+                }
+            }).disposed(by: disposeBag)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,12 +92,14 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
 
 func parseHouseOutlineHeaderNode(
     _ title: String,
+    _ ershouHouseData: ErshouHouseData,
+    traceExtension: TracerParams = TracerParams.momoid(),
     filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHouseOutlineHeaderCell)(title)
+            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -93,8 +110,12 @@ func parseHouseOutlineHeaderNode(
     }
 }
 
-func fillHouseOutlineHeaderCell(_ title: String, cell: BaseUITableViewCell) -> Void {
+func fillHouseOutlineHeaderCell(_ title: String,
+                                _ openUrl:String?,
+                                traceExtension: TracerParams = TracerParams.momoid(),
+                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HouseOutlineHeaderCell {
         theCell.label.text = title
+        theCell.reportUrl = openUrl
     }
 }

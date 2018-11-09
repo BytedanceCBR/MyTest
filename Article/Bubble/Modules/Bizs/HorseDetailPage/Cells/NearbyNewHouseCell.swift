@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import CoreGraphics
+import RxSwift
+import RxCocoa
 
 class NearbyNewHouseCell: BaseUITableViewCell {
     
@@ -160,7 +162,8 @@ class NearbyNewHouseCell: BaseUITableViewCell {
 func parseNearbyNewHouseListNode(
     _ data: RelatedCourtResponse?,
     traceExtension: TracerParams = TracerParams.momoid(),
-    navVC: UINavigationController?) -> () -> TableSectionNode? {
+    navVC: UINavigationController?,
+    disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         if let datas = data?.data?.items?.take(5), datas.count > 0 {
             
@@ -173,12 +176,28 @@ func parseNearbyNewHouseListNode(
                 toTracerParams("related", key: "element_type") <|>
             traceExtension
             
+            // add by zyk:注意埋点
+            let selectors = theDatas
+                .filter { $0.id != nil }
+                .enumerated()
+                .map { (e) -> (TracerParams) -> Void in
+                    let (offset, item) = e
+                    let id = item.id
+                    let houseId = Int64(id ?? "0")
+                    return openNewHouseDetailPage(
+                        houseId: houseId ?? 0,
+                        logPB: item.logPB as? [String: Any],
+                        disposeBag: disposeBag,
+                        tracerParams: TracerParams.momoid(),
+                        navVC:navVC)
+            }
+            
             let renders = theDatas.enumerated().map({ (index, item) in
                 curry(fillNearbyNewHouseCell)(item)(params)(navVC)
             })
             return TableSectionNode(
                 items: renders,
-                selectors: nil,
+                selectors: selectors,
                 tracer: [elementShowOnceRecord(params:params)],
                 label: "",
                 type: .node(identifier: NearbyNewHouseCell.identifier))

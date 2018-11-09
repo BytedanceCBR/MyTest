@@ -258,7 +258,19 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
-                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension)
+                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
+                    // add by zyk 需要根据URL进行跳转
+                    print(info.openUrl)
+                    if let name = info.attr {
+                        if name == "在售房源" {
+                            self?.openAllOnSaleListPage(data: data)
+                        } else if name == "成交房源" {
+                            self?.openAllHistoryPage(data: data)
+                        } else if name == "在租房源" {
+                            
+                        }
+                    }
+                }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
@@ -438,7 +450,47 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 .disposed(by: disposeBag)
         navVC?.pushViewController(vc, animated: true)
     }
-
+    
+    fileprivate func openAllHistoryPage(data: NeighborhoodDetailData) {
+        if let id = data.id {
+            
+//            let loadMoreParams = EnvContext.shared.homePageParams <|>
+//                toTracerParams("neighborhood_trade", key: "element_type") <|>
+//                toTracerParams(id, key: "group_id") <|>
+//                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams("neighborhood_detail", key: "page_type")
+//            recordEvent(key: "click_loadmore", params: loadMoreParams)
+//
+//            let transactionTrace = theParams <|>
+//                toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+//                toTracerParams("neighborhood_trade", key: "element_from") <|>
+//                toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+            
+            
+            // add by zyk:bindBottomView 检查是否有问题
+            self.openTransactionHistoryPage(
+                neighborhoodId: id,
+                traceParams: TracerParams.momoid(),
+                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+        }
+    }
+    
+    // add by zyk:跳转在售房源，埋点？？
+    fileprivate func openAllOnSaleListPage(data: NeighborhoodDetailData) {
+        if let id = data.id ,
+            let title = data.name {
+            openErshouHouseList(
+                title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
+                neighborhoodId: id,
+                searchId: self.houseInSameNeighborhood.value?.data?.searchId,
+                disposeBag: self.disposeBag,
+                navVC: self.navVC,
+                searchSource: .neighborhoodDetail,
+                followStatus: self.followStatus,
+                tracerParams: TracerParams.momoid(),
+                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+        }
+    }
 }
 
 func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel {

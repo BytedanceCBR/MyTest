@@ -168,7 +168,7 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
         
         if let count = ershouHouseData.baseInfo?.count, count > 0 {
             
-            let cellRender = curry(fillPropertyListCell)(ershouHouseData.baseInfo)
+            let cellRender = curry(fillPropertyListCell)(ershouHouseData.baseInfo)(ershouHouseData.outLineOverreview != nil)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -184,7 +184,7 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
 
 func parseFloorPlanPropertyListNode(_ data: FloorPlanInfoData) -> () -> TableSectionNode? {
     return {
-        let cellRender = curry(fillPropertyListCell)(data.baseInfo)
+        let cellRender = curry(fillPropertyListCell)(data.baseInfo)(false)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
@@ -244,10 +244,12 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
 
 
 
-func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
+func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool = false, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
-        theCell.removeListBottomView()
+        if hasOutLineInfo {
+            theCell.removeListBottomView()
+        }
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
                 return [result[0] + [info], result[1]]
@@ -365,9 +367,9 @@ fileprivate class HouseOutlineInfoView:UIView {
 func parseHouseOutlineListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
     return {
         
-        if let count = ershouHouseData.baseInfo?.count, count > 0 {
+        if let outline = ershouHouseData.outLineOverreview {
             
-            let cellRender = curry(fillHouseOutlineListCell)(ershouHouseData.baseInfo)
+            let cellRender = curry(fillHouseOutlineListCell)(outline)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -382,23 +384,27 @@ func parseHouseOutlineListNode(_ ershouHouseData: ErshouHouseData) -> () -> Tabl
 }
 
 
-func fillHouseOutlineListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITableViewCell) -> Void {
+func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
+            infoView.valueLabel.sizeToFit()
         }
+        let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in
+            let (_,outline) = e
+            let re = HouseOutlineInfoView()
+            setInfoValue(outline.title ?? "", outline.content ?? "", re)
+            return re
+        })
         
-        let re1 = HouseOutlineInfoView()
-        setInfoValue("核心卖点", "本放弃我瓦灰而韩国九二五我华为覅无恶哈哈我维护费IE文化馆一我了hi维护过来玩哈格uwihgeuihweiuhfkheiughewiu外观和UIhi额外一万飞胡歌一无花果我活过来了喝挂了韩国", re1)
+        theCell.addRowView(rows: listView ?? [])
         
-        var listView:[HouseOutlineInfoView] = []
-        listView.append(re1)
-        
-        let re2 = HouseOutlineInfoView()
-        setInfoValue("小区配套", "本放弃我瓦灰而韩国九二五我华为覅无恶哈哈我维护费IE文化馆一我了hi维护过来玩哈格uwihgeuihweiuhfkheiughewiu外观和UIhi额外一万飞胡歌一无花果我活过来了喝挂了韩国", re2)
-         listView.append(re2)
-         theCell.addRowView(rows: listView)
+        if let count = listView?.count, count == 1 {
+            listView![0].snp.remakeConstraints { (maker) in
+                maker.edges.equalToSuperview()
+            }
+        }
     }
 }

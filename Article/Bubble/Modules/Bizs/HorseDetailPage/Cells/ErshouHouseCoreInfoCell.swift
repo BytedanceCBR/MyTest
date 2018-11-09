@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class ErshouHouseCoreInfoCell: BaseUITableViewCell {
 
@@ -124,7 +126,7 @@ fileprivate class ItemButtonControl: UIControl {
 }
 
 // 小区头部成交房源套数
-fileprivate class ItemValueView: UIView {
+fileprivate class ItemValueView: UIControl {
     
     lazy var keyLabel: UILabel = {
         let re = UILabel()
@@ -143,6 +145,7 @@ fileprivate class ItemValueView: UIView {
         backgroundColor = hexStringToUIColor(hex: "#f7f8f9")
         layer.cornerRadius = 4.0
         addSubview(valueDataLabel)
+        valueDataLabel.isUserInteractionEnabled = false
         valueDataLabel.snp.makeConstraints { maker in
             maker.left.equalTo(self).offset(16)
             maker.top.equalTo(self).offset(11)
@@ -218,7 +221,7 @@ fileprivate class ItemView: UIView {
     }
 }
 
-func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
+func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: TracerParams = TracerParams.momoid(),disposeBag: DisposeBag, callBack: @escaping (_ info:NeighborhoodItemAttribute) -> Void) -> () -> TableSectionNode? {
     return {
         
         let params = TracerParams.momoid() <|>
@@ -228,7 +231,7 @@ func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: T
 
         
         if let count = data.statsInfo?.count, count > 0 {
-            let cellRender = curry(fillNeighborhoodStatsInfoCell)(data)
+            let cellRender = curry(fillNeighborhoodStatsInfoCell)(data)(disposeBag)(callBack)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -242,21 +245,24 @@ func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: T
     }
 }
 
-func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, disposeBag: DisposeBag, callBack: @escaping (_ info:NeighborhoodItemAttribute) -> Void ,cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHouseCoreInfoCell, let statsInfo = data.statsInfo {
         let infos = statsInfo.map { info -> ItemValueView in
             let re = ItemValueView()
             re.keyLabel.text = info.attr
             re.valueDataLabel.valueLabel.text = info.value
-            if info.value == "暂无" {
+            re.rx.controlEvent(UIControlEvents.touchUpInside).subscribe({ (event) in
+                if !event.isCompleted {
+                    callBack(info)
+                }
+            }).disposed(by: disposeBag)
+            
+            if info.value == "暂无" || info.value == "0套" {
                 re.valueDataLabel.isEnabled = false
+                re.isEnabled = false
             } else {
                 re.valueDataLabel.isEnabled = true
-//                re.valueDataLabel.rx.controlEvent(UIControlEvents.touchUpInside).
-//                    .bind { () in
-//
-//                    }
-//                    .disposed(by: theCell.disposeCell)
+                re.isEnabled = true
             }
             return re
         }
