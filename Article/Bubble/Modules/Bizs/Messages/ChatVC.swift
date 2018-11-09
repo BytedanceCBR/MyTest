@@ -87,7 +87,13 @@ class ChatVC: BaseViewController {
             maker.top.bottom.right.left.equalTo(tableView)
         }
         
-        self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常",requestNilDataText:"啊哦～您还没收到相关消息",requestNilDataImage:"empty_message",requestErrorText:"网络不给力",isUserClickEnable:false)
+        self.errorVM = NHErrorViewModel(
+            errorMask:emptyMaskView,
+            requestRetryText: "网络异常",
+            requestNilDataText: "啊哦～您还没收到相关消息",
+            requestNilDataImage: "empty_message",
+            requestErrorText: "网络不给力",
+            isUserClickEnable: false)
     }
     
     func updateTableView()
@@ -162,7 +168,7 @@ class ChatVC: BaseViewController {
         if isFirstEnter {
             EnvContext.shared.toast.showLoadingToast("正在加载")
         }
-
+        errorVM?.onRequest()
         requestUserUnread(query:"")
             .subscribe(onNext: { [unowned self] (responsed) in
                 EnvContext.shared.toast.dismissToast()
@@ -274,15 +280,18 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     //                                       "303": UIImage(named: "icon-msg-xiaoqu")!]
 
     
-    let listIdMap: [String: String] = ["301": "二手房",
-                                           "300": "新房",
-                                           "302": "租房",
-                                           "303": "小区"]
-
-    let categoryNames = ["old_message_list",
-                         "new_message_list",
-                         "be_null",
-                         "neighborhood_message_list"]
+//    let listIdMap: [String: String] = ["301": "二手房",
+//                                           "300": "新房",
+//                                           "302": "租房",
+//                                           "303": "小区"]
+//    let categoryNames = ["301":"old_message_list",
+//                         "300":"new_message_list",
+//                         "302":"be_null",
+//                         "303":"neighborhood_message_list"]
+//    let categoryNames = ["old_message_list",
+//                         "new_message_list",
+//                         "be_null",
+//                         "neighborhood_message_list"]
     var datas: [UserUnreadInnerMsg] = []
     
     private let disposeBag = DisposeBag()
@@ -334,12 +343,8 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
         }
 
         let vc = MessageListVC()
-        let params = TracerParams.momoid() <|>
-                toTracerParams("click", key: "enter_type") <|>
-                beNull(key: "log_pb") <|>
-                toTracerParams(categoryNames[indexPath.row], key: "category_name")
 
-        vc.traceParams = params
+
         vc.messageId = datas[indexPath.row].id
 
         var category_name = "be_null"
@@ -361,11 +366,21 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             // "小区"
             category_name = "neighborhood_message_list"
             origin_from = "messagetab_neighborhood"
+        case "307":
+            // "小区"
+            category_name = "recommend_message_list"
+            origin_from = "messagetab_recommend"
 
         default:
             break
             
         }
+
+        let params = TracerParams.momoid() <|>
+            toTracerParams("click", key: "enter_type") <|>
+            beNull(key: "log_pb") <|>
+            toTracerParams(category_name, key: "category_name")
+        vc.traceParams = params
 
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(origin_from, key: "origin_from")
@@ -376,7 +391,9 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
                 toTracerParams(category_name, key: "category_name")
 
 
-        vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
+//        vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
+        vc.navBar.title.text = datas[indexPath.row].title
+
         vc.navBar.backBtn.rx.tap
             .subscribe(onNext: { [unowned self] void in
                 self.navVC?.popViewController(animated: true)

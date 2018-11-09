@@ -50,6 +50,8 @@ enum ErrorType: Int {
     let netState = BehaviorRelay<Bool>(value: true) //显示状态
     
     let errorState = BehaviorRelay<ErrorType>(value:.normal) //错误状态
+
+    var isInRequest = false
     
     @objc convenience init(_ errorMask : EmptyMaskView ,
                      retryAction:(() -> Void)? = nil )
@@ -119,6 +121,7 @@ enum ErrorType: Int {
                 }
             }
             .disposed(by: disposeBag)
+
     }
     //网络状态判断
     private func invalidNetwork() -> Bool
@@ -145,7 +148,9 @@ enum ErrorType: Int {
             errorState.accept(.normal)
             break
         case (false,false,false)://空数据 有网络，无数据，非第一次
-            errorState.accept(.errorNoData)
+            if isInRequest {
+                errorState.accept(.errorNoData)
+            }
             break
         case (false,false,true):
             errorState.accept(.normal)
@@ -230,9 +235,15 @@ enum ErrorType: Int {
         checkErrorState()
         isViewDidLoad = false
     }
+
+    func onRequest() {
+        isInRequest = true
+    }
+
     //无网络状态
     @objc func onRequestInvalidNetWork()
     {
+        isInRequest = false
         if self.invalidNetwork()
         {
             self.resetState()
@@ -244,6 +255,8 @@ enum ErrorType: Int {
     }
     //请求错误，包括404，500，timeout等
     @objc func onRequestError(error: Error?) {
+        isInRequest = false
+
         self.errorMask.label.text = self.requestErrorText
         self.errorMask.retryBtn.isHidden = true
         self.netState.accept(true)
@@ -258,6 +271,8 @@ enum ErrorType: Int {
     
     //网络正常，无数据状态
     @objc func onRequestNilData() {
+        isInRequest = false
+
         self.isHaveData = false
         self.errorMask.label.text = self.requestNilDataText
         if let requestNilDataImage = self.requestNilDataImage{
@@ -274,6 +289,7 @@ enum ErrorType: Int {
     }
     //数据正常
     @objc func onRequestNormalData() {
+        isInRequest = false
         self.isHaveData = true
         self.errorMask.isHidden = true
         self.netState.accept(false)

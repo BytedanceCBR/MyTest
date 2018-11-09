@@ -169,7 +169,8 @@
 #define kMaxLastReadLookupInterval      (24 * 60 * 60 * 1000)  //毫秒
 #define kShowOldLastReadMinThreshold    60      //超过60篇旧文章后才可能显示“以下为24小时前的文章”
 
-//const NSUInteger ExploreMixedListBaseViewSectionUploadingCells = 0;
+const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
+//const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
 //const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells = 1;
 const NSUInteger ExploreMixedListBaseViewSectionExploreCells = 0;
 
@@ -451,10 +452,12 @@ TTRefreshViewDelegate
         _listView.estimatedRowHeight = 0;
         _listView.estimatedSectionHeaderHeight = 0;
         _listView.estimatedSectionFooterHeight = 0;
+        
         if (@available(iOS 11.0, *)) {
             _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         } else {
         }
+        
         [ExploreCellHelper registerAllCellClassWithTableView:_listView];
         _listView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:_listView];
@@ -1085,7 +1088,6 @@ TTRefreshViewDelegate
                     ad_show_over(obj.ad_id);
                 }
             }
-
         }
     }
 }
@@ -1205,7 +1207,7 @@ TTRefreshViewDelegate
 //    }
 //    //uploading section + function area section + explore section
 //    return ExploreMixedListBaseViewSectionExploreCells + 1;
-    return 1;
+    return 2;
 }
 
 
@@ -1216,9 +1218,24 @@ TTRefreshViewDelegate
 //    if (section == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return 1;
 //    }else {
+//        NSUInteger count = [[_fetchListManager items] count];
+//        return count;
+//    }
+    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
+        if (isEmptyString(_categoryID))
+        {
+            return 0;
+        }
+        
+        if ([_categoryID isEqualToString:@"f_house_news"]) {
+            return 0;
+        }
+        return 0;
+    }else
+    {
         NSUInteger count = [[_fetchListManager items] count];
         return count;
-//    }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1228,21 +1245,29 @@ TTRefreshViewDelegate
 //    if ([indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return [self heightForFunctionAreaCell];
 //    }else {
-    if (indexPath.row < [self listViewMaxModelIndex]) {
-        id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
         
-        if ([obj isKindOfClass:[ExploreOrderedData class]]) {
-            if (!((ExploreOrderedData *)obj).managedObjectContext || ! ((ExploreOrderedData *)obj).originalData.managedObjectContext) {
-                return 0;//fault的item高度返回0
+        return 44;
+    }else
+    {
+        if (indexPath.row < [self listViewMaxModelIndex]) {
+            id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
+            
+            if ([obj isKindOfClass:[ExploreOrderedData class]]) {
+                if (!((ExploreOrderedData *)obj).managedObjectContext || ! ((ExploreOrderedData *)obj).originalData.managedObjectContext) {
+                    return 0;//fault的item高度返回0
+                }
             }
+            
+            CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:tableView].size.width;
+            
+            return [ExploreCellHelper heightForData:obj cellWidth:cellWidth listType:_listType];
         }
         
-        CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:tableView].size.width;
-        
-        return [ExploreCellHelper heightForData:obj cellWidth:cellWidth listType:_listType];
+        return 44;
     }
-    
-    return 44;
+        
 //    }
 }
 
@@ -1255,6 +1280,18 @@ TTRefreshViewDelegate
 //        return [self functionAreaCell];
 //    }
     
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+        UITableViewCell * tableCell = [[UITableViewCell alloc] init];
+        if (indexPath.row == 0) {
+            tableCell.backgroundColor = [UIColor redColor];
+        }else
+        {
+            tableCell.backgroundColor = [UIColor blueColor];
+        }
+        return tableCell;
+    }
+        
     UITableViewCell * tableCell = nil;
     ExploreCellBase *cell = nil;
     
@@ -1339,6 +1376,7 @@ TTRefreshViewDelegate
     }
     
     return cell;
+        
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1346,8 +1384,15 @@ TTRefreshViewDelegate
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 //    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
-//        return;
+//      return;
 //    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+        
+        
+        return;
+    }
     
     NSInteger modelRowIndex = indexPath.row;
     if (_delegate && [_delegate respondsToSelector:@selector(mixListView:didSelectRowAtIndex:)]) {
@@ -1406,6 +1451,13 @@ TTRefreshViewDelegate
 //    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return;
 //    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+        
+        
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
@@ -1683,6 +1735,13 @@ TTRefreshViewDelegate
 //    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return;
 //    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+        
+        
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];

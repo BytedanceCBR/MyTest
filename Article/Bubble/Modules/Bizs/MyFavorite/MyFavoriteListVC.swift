@@ -197,6 +197,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             isUserClickEnable:false,retryAction:{
             [weak self] in
             if let houseType = self?.houseType{
+                self?.errorVM?.onRequest()
                 self?.categoryListVM?.requestFavoriteData(houseType: houseType)
             }
         })

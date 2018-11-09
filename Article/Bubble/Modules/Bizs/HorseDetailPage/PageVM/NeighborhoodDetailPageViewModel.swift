@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .neighborhood
     var houseId: Int64 = -1
@@ -72,7 +74,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     var traceParams = TracerParams.momoid()
 
     var recordRowIndex: Set<IndexPath> = []
-
+    
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
@@ -158,7 +160,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if showLoading {
             self.showMessageAlert?("正在加载")
         }
-        requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)
+//        "\(houseId)"
+//        houseId =
+        requestNeighborhoodDetail(neighborhoodId: "\(6581417114710573326)", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {
@@ -182,7 +186,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 .disposed(by: disposeBag)
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         switch followStatus.value {
         case let .success(status):
             if status {
@@ -199,6 +203,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     followId: "\(houseId)",
                     disposeBag: disposeBag,
                     isNeedRecord: isNeedRecord)()
+                self.recordFollowEvent(traceParam)
+
 
             }
         case .failure(_): do {}
@@ -247,22 +253,46 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams(self.houseId, key: "group_id") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
+            print("xxxxxx= \(String(describing: data)) ")
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension)
-                <- parseFlineNode((data.baseInfo?.count ?? 0) > 0 ? 6 : 0)
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension)
-                <- parseHeaderNode("周边配套") {
+                <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: nil) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
+                <- parseNeighborhoodEvaluationCollectionNode(
+                    data,
+                    traceExtension: traceExtension,
+                    followStatus: self.followStatus,
+                    navVC: self.navVC)
+                <- parseFlineNode(6)
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }
-                <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag)
+                <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag){
+                    [weak self] in
+                    
+                    UIView.performWithoutAnimation { [weak self] in
+                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        {
+                            visibleCells.forEach({ [weak self] (indexPath) in
+                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
+                                {
+                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
+                                }
+                            })
+                           
+                        }
+                    }
+                }
                 <- parseHeaderNode("均价走势")
-                <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { [unowned self] in
+                <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
                     if let id = data.neighborhoodInfo?.id
                     {
                         var rankValue: String =  "be_null"
@@ -428,6 +458,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
 
+    var nearByCell : NewHouseNearByCell?
+
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
         super.init()
@@ -444,11 +476,19 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()

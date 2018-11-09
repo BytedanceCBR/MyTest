@@ -1266,6 +1266,8 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
         fromButton.maskTitleLabel.alpha = 1 - percent;
         toButton.maskTitleLabel.alpha = percent;
+        fromButton.bottomSelectView.alpha = 1 - percent;
+        toButton.bottomSelectView.alpha = percent;
     }
 }
 

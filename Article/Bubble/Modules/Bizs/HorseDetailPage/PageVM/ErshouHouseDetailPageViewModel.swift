@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
     
     var houseType: HouseType = .secondHandHouse
     var houseId: Int64 = -1
@@ -61,6 +63,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
+    var houseStatus: BehaviorRelay<Int?> = BehaviorRelay<Int?>(value: nil)
+
     weak var navVC: UINavigationController?
 
     weak var infoMaskView: EmptyMaskView?
@@ -95,11 +99,27 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
             }
             .bind(to: contactPhone)
             .disposed(by: disposeBag)
+        ershouHouseData
+            .map { (response) -> Int? in
+                return response?.data?.status
+            }
+            .bind(to: houseStatus)
+            .disposed(by: disposeBag)
         super.init()
 
         Observable
             .combineLatest(ershouHouseData, relateNeighborhoodData, houseInSameNeighborhood, relateErshouHouseData)
             .bind { [unowned self] (_) in
+                
+                if self.ershouHouseData.value?.data?.status == -1 {
+                    
+                    self.infoMaskView?.isHidden = false
+                    self.infoMaskView?.label.text = "该房源已下架"
+                    self.infoMaskView?.retryBtn.isHidden = true
+                    self.infoMaskView?.isUserInteractionEnabled = false
+                    return
+                }
+                
                 let result = self.processData()([])
                 self.dataSource.datas = result
                 self.tableView?.reloadData()
@@ -207,7 +227,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         switch followStatus.value {
         case let .success(status):
             if status {
@@ -222,6 +242,8 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         followAction: .ershouHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordFollowEvent(traceParam)
+
             }
         case .failure(_): do {}
         }
@@ -316,13 +338,12 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
-                <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor)
-                <- parseNeighborhoodInfoNode(
-                    data,
-                    searchId: self.searchId ?? "be_null",
-                    traceExtension: traceExtension,
-                    neighborhoodId: "\(self.houseId)",
-                    navVC: self.navVC)
+                <- parseHouseOutlineHeaderNode("房源概况")
+                <- parseHouseOutlineListNode(data)
+                <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
+                <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
                 <- parseHeaderNode("均价走势")
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id
@@ -440,7 +461,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-                <- parseErshouHouseDisclaimerNode(data)
+//                <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -594,7 +615,7 @@ func parseErshouHouseListItemNode(
                 tracerParams: tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    toTracerParams("old_detail", key: "enter_from") <|>
+//                    toTracerParams("maintab", key: "enter_from") <|>
                     toTracerParams(elementFrom, key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>

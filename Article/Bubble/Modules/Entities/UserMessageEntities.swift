@@ -147,6 +147,8 @@ struct UserListMsgItem: Mappable {
 
     var dateStr: String?
     var items:[UserListMsgInnerItem]?
+    var moreLabel: String?
+    var moreDetal: String?
 
     init?(map: Map) {
         
@@ -157,8 +159,9 @@ struct UserListMsgItem: Mappable {
         dateStr <- map["date_str"]
         items <- map["items"]
         id <- map["id"]
+        moreLabel <- map["more_label"]
+        moreDetal <- map["more_detail"]
         timestamp <- map["timestamp"]
-
 
     }
 }

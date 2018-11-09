@@ -34,6 +34,18 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        bottomBar.snp.updateConstraints { (maker) in
+            
+            maker.height.equalTo(0)
+        }
+        bottomBar.isHidden = true
+        tableView.snp.remakeConstraints { maker in
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview()
+        }
+        
         //隐藏关注按钮
         self.navBar.rightBtn2.isHidden = true
         navBar.title.text = "小区成交历史"
@@ -43,6 +55,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             infoMaskView.label.text = "网络异常"
             infoMaskView.isUserInteractionEnabled = false
         } else {
+            errorVM?.onRequest()
             self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
         }
         
@@ -109,6 +122,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
         let refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+        errorVM?.onRequest()
         transactionHistoryVM?.pageableLoader?()
     }
     

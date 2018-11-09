@@ -152,6 +152,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         self.cleanData()
         
         pageableLoader = { [unowned self] in
+            self.errorVM?.onRequest()
             loader()
                 .subscribe(onNext: { [unowned self] (responsed) in
                     self.dismissLoadingAlert()
@@ -172,6 +173,11 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                         self.tableView.reloadData()
                         self.errorVM?.onRequestNormalData()
                         self.dataLoader?(self.hasMore, responseData.count)
+                        
+                        if !self.hasMore
+                        {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
 
                         if !self.hasRecordEnterCategory {
                             self.stayTimeParams = self.traceParams <|> traceStayTime()
@@ -180,7 +186,16 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                         }
 
                     } else {
-                        self.showEmptyMaskView()
+                        
+                        if self.tableListViewModel?.datas.value.count == 0
+                        {
+                            self.showEmptyMaskView()
+                        }else
+                        {
+                            self.hasMore = false
+                            self.dataLoader?(false, 0)
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
                     }
                     
                     }, onError: { [unowned self] (error) in
@@ -206,6 +221,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         UIApplication.shared.statusBarStyle = .default
         self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
         UIApplication.shared.setStatusBarHidden(false, with: .none)
+        self.stayTimeParams = traceParams <|> traceStayTime()
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -364,15 +381,58 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                return 50
+            }
+        }
+        return 0
     }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if datas.value.count > section {
+            let item = datas.value[section]
+            if item.moreLabel?.isEmpty ?? true == false {
+                let view = UserMsgFooterOpenAllView(){
+                    //to do
+//                    let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
+//                                                          "houseSearch": houseSearchParams])
+                    
+                    recordEvent(key: "click_recommend_loadmore", params: TracerParams.momoid())
+                    
+
+                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                        toTracerParams("messagetab_recommend", key: "origin_from")
+                    
+                    var tracerParams = TracerParams.momoid()
+                    tracerParams = tracerParams <|>
+                        toTracerParams("be_null", key: "element_from") <|>
+                        toTracerParams("recommend_message_list", key: "enter_from") <|>
+                        toTracerParams("click", key: "enter_type")
+                    
+                    let paramsMap = tracerParams.paramsGetter([:])
+                    let userInfo = TTRouteUserInfo(info: ["tracer": paramsMap])
+                    if let moreDetail = item.moreDetal
+                    {
+                        TTRoute.shared().openURL(byPushViewController: URL(string: moreDetail), userInfo: userInfo)
+                    }
+                }
+                view.title.text = item.moreLabel
+                return view
+            }
+        }
+        return nil
+    }
+
+
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if let houseId = datas.value[indexPath.section].items?[indexPath.row].id {
             if let houseTypeId = datas.value[indexPath.section].items?[indexPath.row].houseType {
                 let logPb = datas.value[indexPath.section].items?[indexPath.row].logPb
-                let params = EnvContext.shared.homePageParams <|>
+                var params = EnvContext.shared.homePageParams <|>
                     toTracerParams(logPb ?? "be_null", key: "log_pb") <|>
                     toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams(rankByIndexPath(indexPath), key: "rank")
@@ -389,15 +449,26 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                             beNull(key: "element_from") <|>
                             toTracerParams(rankByIndexPath(indexPath), key: "rank"))
                 case .secondHandHouse:
+                    
                     let listType = selectTraceParam(self.traceParams, key: "category_name")
+                    var elementParams = TracerParams.momoid()
+                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
+                                        <|> beNull(key: "element_from")
+
+                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+                        
+                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
+                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
+
+                    }else {
+                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
+                    }
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
                         logPB: logPb as? [String: Any],
                         disposeBag: disposeBag,
-                        tracerParams: params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from"),
-                        navVC: navVC)(TracerParams.momoid() <|>
-                            beNull(key: "element_from") <|>
-                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
+                        tracerParams: params,
+                        navVC: navVC)(elementParams)
                 default:
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
@@ -442,12 +513,12 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                 if !recordedIndexPath.contains(path) {
                     if let item = datas.value[path.section].items?[path.row] {
                         let listType = selectTraceParam(self.traceParams, key: "category_name") as? String
-
+                        let elementType = "be_null"
                         let params = EnvContext.shared.homePageParams <|>
                                 traceParams <|>
                                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(rankByIndexPath(path), key: "rank") <|>
-                                toTracerParams("be_null", key: "element_type") <|>
+                                toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
                                 toTracerParams(listType ?? "", key: "page_type")

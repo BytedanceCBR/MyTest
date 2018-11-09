@@ -139,6 +139,7 @@ struct NeighborhoodDetailData: Mappable {
     var coreInfo: [NeighborhoodItemAttribute]?
     var statsInfo: [NeighborhoodItemAttribute]?
     var baseInfo: [NeighborhoodItemAttribute]?
+    var neighborhoodBaseInfoFold: Bool = true
     var neighborhoodInfo: NeighborhoodDetailInfo?
     var totalSalesCount: Int?
     var abtestVersions: String?
@@ -148,8 +149,8 @@ struct NeighborhoodDetailData: Mappable {
     var neighbordhoodStatus: NeighborhoodUsertatus?
     var shareInfo: ShareInfo?
     var logPB: Any?
+    var evaluationInfo: NeighborhoodEvaluationinfo?
 
-    
     init?(map: Map) {
         
     }
@@ -169,9 +170,47 @@ struct NeighborhoodDetailData: Mappable {
         neighbordhoodStatus <- map["neighbordhood_status"]
         shareInfo <- map["share_info"]
         logPB <- map["log_pb"]
+        evaluationInfo <- map["evaluation_info"]
     }
 }
 
+struct NeighborhoodEvaluationinfo: Mappable  {
+    init?(map: Map) {
+        
+    }
+    
+    var totalScore: String?
+    var detailUrl: String?
+    var content: String?
+    var subScores: [EvaluationIteminfo]?
+    
+    mutating func mapping(map: Map) {
+        totalScore <- map["total_score"]
+        detailUrl <- map["detail_url"]
+        content <- map["content"]
+        subScores <- map["sub_scores"]
+
+    }
+}
+
+struct EvaluationIteminfo: Mappable  {
+    init?(map: Map) {
+        
+    }
+    
+    var scoreName: String?
+    var scoreValue: Int?
+    var scoreLevel: Int?
+    var content: String?
+    var fhSearchId: String?
+
+    mutating func mapping(map: Map) {
+        scoreName <- map["score_name"]
+        scoreValue <- map["score_value"]
+        scoreLevel <- map["score_level"]
+        content <- map["content"]
+    }
+}
 
 struct NeighborhoodUsertatus: Mappable {
     var neighborhoodSubStatus: Int?

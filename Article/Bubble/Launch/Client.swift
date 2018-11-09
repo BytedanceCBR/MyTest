@@ -21,7 +21,7 @@ extension Notification.Name {
 
     static let appId = "1370"
 
-    lazy private var searchConfigCache: YYCache? = {
+    lazy var searchConfigCache: YYCache? = {
         YYCache(name: "config")
     }()
 
@@ -59,6 +59,8 @@ extension Notification.Name {
         return re
     }()
 
+    let currentCitySwitcher: CurrentCitySwitcher
+
 //    let anrEye = ANREye()
 
     var did: String?
@@ -69,6 +71,7 @@ extension Notification.Name {
     @objc var jumpToDiscovery: (() -> Void)?
 
     @objc override init() {
+        currentCitySwitcher = CurrentCitySwitcher(currentCityId: nil)
         super.init()
         setCommonNetwork()
         locationManager.currentLocation
@@ -99,11 +102,12 @@ extension Notification.Name {
         
         try? reachability.startNotifier()
 
+        //TODO leo
         generalBizconfig.currentSelectCityId
             .subscribe(onNext: { [weak self] (cityId) in
                 if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
-                    self?.generalBizconfig.fetchConfiguration()
-                    self?.fetchSearchConfig()
+//                    self?.generalBizconfig.fetchConfiguration()
+//                    self?.fetchSearchConfig()
                 }
                 self?.setCommonNetwork()
             })
@@ -154,6 +158,22 @@ extension Notification.Name {
 
     }
 
+    @objc
+    func currentCityName() -> String? {
+        if let city = locationManager.currentCity.value?.city {
+            return city
+        }
+        return "be_null"
+    }
+
+    @objc
+    func currentProvince() -> String? {
+        if let province = locationManager.currentCity.value?.province {
+            return province
+        }
+        return "be_null"
+    }
+
     func loadSearchCondition() {
         if let searchConfigCache = searchConfigCache,
             configCacheSubject.value == nil,
@@ -181,6 +201,14 @@ extension Notification.Name {
         }
     }
 
+    func saveSearchConfigToCache(response: SearchConfigResponse?) {
+        if let config = response?.data, response?.data?.filter != nil {
+            if let payload = config.toJSONString() {
+                self.searchConfigCache?.setObject(payload as NSString, forKey: "search_config")
+            }
+        }
+    }
+
     func fetchSearchConfig() {
         requestSearchConfig()
                 .observeOn(CurrentThreadScheduler.instance)
@@ -188,11 +216,9 @@ extension Notification.Name {
                 .retryOnConnect(timeout: 60)
                 .retry(10)
                 .subscribe(onNext: { [unowned self] response in
-                    if let config = response?.data, response?.data?.filter != nil {
+                    if response?.data?.filter != nil {
                         self.configCacheSubject.accept(response?.data)
-                        if let payload = config.toJSONString() {
-                            self.searchConfigCache?.setObject(payload as NSString, forKey: "search_config")
-                        }
+                        self.saveSearchConfigToCache(response: response)
                     }
                 }, onError: { error in
 //                    print(error)

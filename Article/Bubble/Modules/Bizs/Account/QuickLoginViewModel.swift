@@ -21,6 +21,8 @@ class QuickLoginViewModel {
     
     let pwdLoginResponse: BehaviorRelay<RequestPWDLoginResult?> = BehaviorRelay<RequestPWDLoginResult?>(value: nil)
 
+    var isRequestingSMS : Bool = false
+    
     private let disposeBag = DisposeBag()
 
     weak var sendSMSBtn: UIButton?
@@ -85,7 +87,7 @@ class QuickLoginViewModel {
                         phoneNumber: String?) {
         if let phoneNumber = phoneNumber {
 
-            if !phoneNumber.hasPrefix("1") || phoneNumber.count > 11 {
+            if !phoneNumber.hasPrefix("1") || phoneNumber.count != 11 {
                 EnvContext.shared.toast.showToast("手机号错误")
                 return
             }
@@ -96,6 +98,12 @@ class QuickLoginViewModel {
                 EnvContext.shared.toast.showToast("网络错误")
                 return
             }
+            
+            if isRequestingSMS
+            {
+                return
+            }
+            isRequestingSMS = true
             
             getSMSVerifyCodeCommand(
                 mobileString: phoneNumber,
@@ -123,6 +131,8 @@ class QuickLoginViewModel {
                         EnvContext.shared.toast.showToast("加载失败")
 
                     }
+                    
+                    self.isRequestingSMS = false
                 })
                 .disposed(by: disposeBag)
         } else {
@@ -225,7 +235,8 @@ class QuickLoginViewModel {
                 if count == 0 {
                     QuickLoginVC.setVerifyCodeBtn(content: "重新发送", btn: button)
                     button.isEnabled = true
-                    
+                    self.isRequestingSMS = false
+
 //                    print("isEnabled")
                     
                 } else {

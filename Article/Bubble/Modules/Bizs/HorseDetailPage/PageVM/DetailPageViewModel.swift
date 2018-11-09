@@ -53,7 +53,7 @@ protocol DetailPageViewModel: class {
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool)
 
-    func followThisItem(isNeedRecord: Bool)
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams)
     
     func bindFollowPage()
 
@@ -62,10 +62,15 @@ protocol DetailPageViewModel: class {
     var showMessageAlert: ((String) -> Void)? { get set }
 
     var dismissMessageAlert: (() -> Void)? { get set }
+    
+    var goDetailTraceParam: TracerParams? { get set }
+    
+
 }
 
 extension DetailPageViewModel {
     
+
     func getShareItem() -> ShareItem {
         var shareimage: UIImage? = nil
         if let shareImageUrl = shareInfo?.coverImage {
@@ -146,38 +151,7 @@ extension DetailPageViewModel {
         isNeedRecord: Bool = true) -> () -> Void {
         var loginDisposeBag = DisposeBag()
         return { [weak self] in
-            
-            if isNeedRecord {
-                
-                var tracerParams = EnvContext.shared.homePageParams
-                if let params = self?.traceParams {
-                    tracerParams = tracerParams <|> params
-                        .exclude("house_type")
-                        .exclude("element_type")
-                        .exclude("maintab_search")
-                        .exclude("search")
-                        .exclude("filter")
-                }
-                tracerParams = tracerParams <|>
-                    EnvContext.shared.homePageParams <|>
-                    toTracerParams(followId, key: "group_id") <|>
-                    toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(pageTypeString(houseType), key: "page_type") <|>
-                    toTracerParams(self?.logPB ?? [:], key: "log_pb")
-                
-                if let followTraceParams = self?.followTraceParams {
-                    // ugly code 为了埋点，0.2版本pageType只区分新房二手房小区和户型详情页
-                    let paramsMap = followTraceParams.paramsGetter([:])
-                    let enterFrom = paramsMap["enter_from"] as? String
-                    if let theEnterFrom = enterFrom,theEnterFrom == "house_model_detail" {
-                        
-                        tracerParams = tracerParams <|>
-                            toTracerParams(theEnterFrom, key: "page_type")
-                    }
-                }
-                recordEvent(key: TraceEventName.click_follow, params: tracerParams)
-                
-            }
+
             if EnvContext.shared.client.reachability.connection == .none {
                 EnvContext.shared.toast.showToast("网络异常")
                 return
@@ -281,7 +255,11 @@ extension DetailPageViewModel {
                             if toastCount < 3 {
 
                                 var style = fhCommonToastStyle()
-                                style.verticalOffset = 20
+                                style.verticalOffset = 24
+                                style.titleFont = CommonUIStyle.Font.pingFangRegular(12)
+                                style.cornerRadius = 8
+                                style.verticalPadding = 8
+                                style.horizontalPadding = 10
                                 fhShowToast("已加入关注列表，点击可取消关注", position: .top, style: style)
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
@@ -297,13 +275,54 @@ extension DetailPageViewModel {
         }
     }
     
+    func recordFollowEvent(_ traceParam: TracerParams) {
+        
+        print("xxxxx=\(traceParam.paramsGetter([:]))")
+        recordEvent(key: TraceEventName.click_follow, params: traceParam)
+        
+    }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
-        return { [unowned self] (bottomBar, followUpButton) in
+        return { [unowned self] (bottomBar, followUpButton, traceParam) in
+            print("xxxxx=\(traceParam.paramsGetter([:]))")
+
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 
-                    self?.followThisItem(isNeedRecord: true)
+                    let paramsDict = traceParam.paramsGetter([:])
+                    if paramsDict.count > 0 {
+                        
+                        self?.followThisItem(isNeedRecord: true, traceParam: traceParam)
+                    }else {
+                        
+                        var tracerParams = EnvContext.shared.homePageParams
+
+                        if let params = self?.goDetailTraceParam {
+                            tracerParams = tracerParams <|> params
+                                .exclude("house_type")
+                                .exclude("element_type")
+                                .exclude("maintab_search")
+                                .exclude("search")
+                                .exclude("filter")
+                        }
+                        tracerParams = tracerParams <|>
+                            toTracerParams(self?.houseId ?? "be_null", key: "group_id") <|>
+                            toTracerParams(self?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(pageTypeString(self?.houseType ?? .newHouse), key: "page_type")
+                     
+                        if let followTraceParams = self?.followTraceParams {
+                            // ugly code 为了埋点，0.2版本pageType只区分新房二手房小区和户型详情页
+                            let paramsMap = followTraceParams.paramsGetter([:])
+                            let enterFrom = paramsMap["enter_from"] as? String
+                            if let theEnterFrom = enterFrom,theEnterFrom == "house_model_detail" {
+                                
+                                tracerParams = tracerParams <|>
+                                    toTracerParams(theEnterFrom, key: "page_type")
+                            }
+                        }
+
+                        self?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
+                    }
                 })
                     .disposed(by: self.disposeBag)
             self.followStatus
@@ -347,12 +366,19 @@ extension DetailPageViewModel {
                     
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
-                        self?.callRealtorPhone(contactPhone: contactPhone)
-                        self?.followHouseItem(houseType: self?.houseType ?? .newHouse,
-                                              followAction: (FollowActionType(rawValue: self?.houseType.rawValue ?? 1) ?? .newHouse),
-                                              followId: "\(self?.houseId ?? -1)",
-                            disposeBag: self?.disposeBag ?? DisposeBag(),
-                            isNeedRecord: false)()
+                        if let houseId = self?.houseId, let houseType = self?.houseType {
+                            
+                            var theImprId: String?
+                            if let logPB = self?.logPB as? [String: Any],let imprId = logPB["impr_id"] as? String {
+                                theImprId = imprId
+                            }
+                            self?.callRealtorPhone(contactPhone: contactPhone, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
+                            self?.followHouseItem(houseType: houseType,
+                                                  followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
+                                                  followId: "\(houseId)",
+                                disposeBag: self?.disposeBag ?? DisposeBag(),
+                                isNeedRecord: false)()
+                        }
                         
                         if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
                             
@@ -370,93 +396,91 @@ extension DetailPageViewModel {
                                 .exclude("search")
                                 .exclude("filter")
                             traceParams = traceParams <|>
-                                toTracerParams(self?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self?.searchId ?? "be_null", key: "search_id")
                             if let houseId = self?.houseId {
                                 traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
                             }else {
                                 traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
                             }
-                            recordEvent(key: "click_call", params: traceParams)
+                            recordEvent(key: "click_call", params: traceParams <|> traceParam)
                         }
                         
                     }else {
-                        self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        if let pageType = traceParam.paramsGetter([:])["page_type"] as? String, pageType == "house_model_detail"
+                        {
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true)
+                        }else
+                        {
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        }
                     }
                 })
                 .disposed(by: self.disposeBag)
         }
     }
     
-    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String , traceParam: TracerParams = TracerParams.momoid(), isHouseModelDetail: Bool = false) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
                 {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
-                        self.sendClickConfimTrace()
+                        
+                        let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
+                        recordEvent(key: TraceEventName.inform_show,
+                                    params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        
+                        self.sendClickConfimTrace(traceConfirm: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        
+                        self.followHouseItem(houseType: self.houseType,
+                                             followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                             followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            isNeedRecord: false)()
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
-                self.followHouseItem(houseType: self.houseType,
-                                                          followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                          followId: "\(self.houseId)",
-                    disposeBag: self.disposeBag,
-                    isNeedRecord: false)()
+
                 
             }
             .disposed(by: disposeBag)
         
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
-            tracerParamsInform = tracerParamsInform <|>
-//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
-            
-            
+            let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
             
             alert.showFrom(rootView)
         }
     }
     
-    func sendClickConfimTrace()
+    func sendClickConfimTrace(traceConfirm: TracerParams)
     {
-        var tracerParamsInform = EnvContext.shared.homePageParams <|> self.traceParams <|> self.followTraceParams
-        tracerParamsInform = tracerParamsInform <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-            toTracerParams(houseType == .newHouse ? "house_model_detail" : "be_null", key: "page_type")
-        
-        
-        recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParamsInform.exclude("house_type"))
+            recordEvent(key: TraceEventName.click_confirm,
+                    params: traceConfirm.exclude("house_type").exclude("element_type"))
         
     }
     
     // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?,
+                          houseId: Int64,
+                          houseType: HouseType,
+                          searchId: String,
+                          imprId: String,
+                          disposeBag: DisposeBag) {
         
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
-        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
-            Utils.telecall(phoneNumber: phone)
-            return
-        }
         
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
+        requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
@@ -470,7 +494,7 @@ extension DetailPageViewModel {
                 EnvContext.shared.toast.dismissToast()
                 Utils.telecall(phoneNumber: phone)
             })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
         
     }
 

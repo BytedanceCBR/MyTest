@@ -11,6 +11,8 @@
 import UIKit
 import SnapKit
 import CoreGraphics
+import RxCocoa
+import RxSwift
 
 class ChatDetailListCell: BaseUITableViewCell {
 
@@ -261,4 +263,79 @@ class UserMsgSectionView: UIView {
 }
 
 
+class UserMsgFooterOpenAllView: UIView {
+    
+    lazy var openAllBtn: UIButton = {
+        let result = UIButton()
+        return result
+    }()
+    
+    lazy var title: UILabel = {
+        let re = UILabel()
+        re.backgroundColor = UIColor.clear
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        return re
+    }()
+    
+    lazy var bottomMaskView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+    
+    lazy var settingArrowImageView: UIImageView = {
+        let re = UIImageView()
+        re.image = #imageLiteral(resourceName: "arrowicon-msseage")
+        return re
+    }()
+        
+    let disposeBag = DisposeBag()
+    
+    
+    init(callBack:(() -> Void)? = nil) {
+        super.init(frame: CGRect.zero)
+        
+        self.backgroundColor = UIColor.white
+        
+        addSubview(bottomMaskView)
+        bottomMaskView.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(6)
+        }
+        
+        addSubview(openAllBtn)
+        openAllBtn.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(6)
+            maker.bottom.equalTo(bottomMaskView.snp.top).offset(-6)
+        }
+        
+        addSubview(title)
+        title.snp.makeConstraints { maker in
+            maker.left.equalToSuperview().offset(20)
+            maker.centerY.equalTo(openAllBtn)
+            
+        }
+        
+        addSubview(settingArrowImageView)
+        settingArrowImageView.snp.makeConstraints { maker in
+            maker.height.equalTo(18)
+            maker.width.equalTo(18)
+            maker.centerY.equalTo(openAllBtn.snp.centerY)
+            maker.right.equalToSuperview().offset(-14)
+        }
+        
+        self.lu.addTopBorder()
+        
+        openAllBtn.rx.tap.subscribe(onNext: callBack ?? {})
+            .disposed(by: disposeBag)
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
 

@@ -160,20 +160,20 @@ static APNsManager *_sharedManager = nil;
                 
                 // push对消息特殊处理
                 if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {
-                    if (![TTAccountManager isLogin]) {
-                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-                            if (type == TTAccountAlertCompletionEventTypeDone) {
-                                //登录成功 走发送逻辑
-                                if ([TTAccountManager isLogin]) {
-                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-                                    [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];                        }
-                             }
-                        }];
-                    } else
-                    {
+//                    if (![TTAccountManager isLogin]) {
+//                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+//                            if (type == TTAccountAlertCompletionEventTypeDone) {
+//                                //登录成功 走发送逻辑
+//                                if ([TTAccountManager isLogin]) {
+//                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+//                                    [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];                        }
+//                             }
+//                        }];
+//                    } else
+//                    {
                         [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
                         [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];
-                    }
+//                    }
                     
                     return;
                 }

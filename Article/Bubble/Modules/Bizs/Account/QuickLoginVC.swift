@@ -419,12 +419,9 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         if let isFLogin =  generalBizConfig.generalCacheSubject.value?.reviewInfo?.isFLogin, isFLogin == true {
             changeLoginTypeBtn.isHidden = false
         }
-        changeLoginTypeBtn.isHidden = false
 
         view.addSubview(agreementLabel)
         view.addSubview(acceptCheckBox)
-
-
 
         setAgreementContent()
 

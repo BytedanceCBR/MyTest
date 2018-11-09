@@ -80,6 +80,7 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+#import "UIImageAdditions.h"
 
 #import "FHMapSearchViewController.h"
 

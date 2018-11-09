@@ -101,7 +101,7 @@ func constructMoreSelectCollectionPanelWithContainer(
         action(index, nodes)
     }
     
-    thePanel.contentSizeDidChange = { size in
+    thePanel.contentSizeDidChange = { [unowned thePanel] size in
         let height = min(size.height , thePanel.superview!.height)
         let offset = height - thePanel.superview!.height
         thePanel.snp.updateConstraints({ (maker) in
@@ -191,6 +191,8 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     let disposeBag = DisposeBag()
 
+    var contentDisposeBag : DisposeBag? = DisposeBag()
+    
     var headerViewType: AnyClass
 
     convenience init(nodes: [Node]) {
@@ -212,6 +214,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let dataSource = BubbleSelectDataSource(nodes: nodes)
         self.init(nodes: nodes, headerView: headerView, dataSource: dataSource)
         self.dataSource = dataSource
+        setupUI()
     }
 
     init(nodes: [Node], headerView: AnyClass, dataSource: BubbleSelectDataSource) {
@@ -235,15 +238,16 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         }
         dataSource.nodes
             .enumerated()
-            .forEach { (offset, e) in
+            .forEach { [weak dataSource] (offset, e) in
                 e.children.filter { $0.isEmpty == 0 }
                     .enumerated()
                     .forEach { (rowOffset, item) in
                         if let externalConfig = item.externalConfig.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                             conditionStrArray.contains(externalConfig) {
-                            var indexs = dataSource.selectedIndexPaths.value
-                            indexs.insert(IndexPath(row: rowOffset, section: offset))
-                            dataSource.selectedIndexPaths.accept(indexs)
+                            if var indexs = dataSource?.selectedIndexPaths.value {
+                                indexs.insert(IndexPath(row: rowOffset, section: offset))
+                                dataSource?.selectedIndexPaths.accept(indexs)
+                            }
                         }
                 }
         }
@@ -305,13 +309,17 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                     self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
                 }
             })
-            .disposed(by: disposeBag)
+            .disposed(by: contentDisposeBag!)
 
         bindButtonActions()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        contentDisposeBag = nil
     }
 
     func bindButtonActions() {
@@ -347,6 +355,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         dataSource.restoreSelectedState()
         collectionView.reloadData()
     }
+
 }
 
 class BubbleSelectDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {

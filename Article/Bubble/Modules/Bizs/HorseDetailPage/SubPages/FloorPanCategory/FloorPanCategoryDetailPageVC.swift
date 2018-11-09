@@ -13,7 +13,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
     private let floorPanId: Int64
 
-    private var houseId: Int = 0
+    private var houseId: Int64 = 0
 
     private var viewModel: FloorPanCategoryDetailPageViewModel?
 
@@ -48,7 +48,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         } else {
             self.floorPanId = 0
         }
-        if let houseId = paramObj?.queryParams["court_id"] as? String, let houseIdInt = Int(houseId) {
+        if let houseId = paramObj?.queryParams["court_id"] as? String, let houseIdInt = Int64(houseId) {
             self.houseId = houseIdInt
         }
 
@@ -57,7 +57,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         super.init(identifier: "\(floorPanId)",
             isHiddenBottomBar: self.isHiddenBottomBar,
-            bottomBarBinder: { (_,_) in
+            bottomBarBinder: { (_,_,_) in
 
             })
 
@@ -118,7 +118,17 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                         
                         var contactPhone = FHHouseDetailContact()
                         contactPhone.phone = phone
-                        self.callRealtorPhone(contactPhone: contactPhone)
+                        
+                        var theImprId: String?
+                        var theSearchId: String?
+
+                        if let logPB = self.viewModel?.logPB as? [String: Any], let imprId = logPB["impr_id"] as? String, let searchId = logPB["searchId"] as? String {
+                            theSearchId = searchId
+                            theImprId = imprId
+
+                        }
+                        self.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
+                        
                         self.followUpViewModel?.followHouseItem(houseType: self.houseType,
                                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                                   followId: "\(self.houseId)",
@@ -134,7 +144,6 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             .exclude("filter")
                         traceParams = traceParams <|>
                             toTracerParams("house_model_detail", key: "page_type") <|>
-                            toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("be_null", key: "search_id") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
                         recordEvent(key: "click_call", params: traceParams)
@@ -147,27 +156,41 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
     }
     
+    override func getBottomBarTraceParam() -> TracerParams {
+        return self.tracerParams.exclude("house_type")
+    }
+    
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
                 {
-                    
                     self.sendPhoneNumberRequest(houseId: Int64(self.houseId), phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        
+                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                                followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            statusBehavior: self.follwUpStatus,
+                            isNeedRecord: false)()
+                        
                     }
+                    
+                    self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                            followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                            followId: "\(self.houseId)",
+                        disposeBag: self.disposeBag,
+                        statusBehavior: self.follwUpStatus,
+                        isNeedRecord: false)()
+                    
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
-                self.followUpViewModel?.followHouseItem(houseType: self.houseType,
-                                                        followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                        followId: "\(self.houseId)",
-                    disposeBag: self.disposeBag,
-                    statusBehavior: self.follwUpStatus,
-                    isNeedRecord: false)()
+
 
             }
             .disposed(by: disposeBag)
@@ -175,15 +198,15 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
 
         if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
         {
-            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
-            tracerParams = tracerParams <|>
-                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-                toTracerParams(self.houseId, key: "group_id") <|>
-                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
-            
-            
+//            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
+//            tracerParams = tracerParams <|>
+//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+//                toTracerParams(self.houseId, key: "group_id") <|>
+//                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
+//
+//
             recordEvent(key: TraceEventName.inform_show,
-                        params: tracerParams.exclude("element_type"))
+                        params: self.tracerParams.exclude("house_type"))
             
             alert.showFrom(rootView)
         }
@@ -223,18 +246,20 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
     }
     
     // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
-        
+    func callRealtorPhone(contactPhone: FHHouseDetailContact?,
+                          houseId: Int64,
+                          houseType: HouseType,
+                          searchId: String,
+                          imprId: String,
+                          disposeBag: DisposeBag) {
+
+
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
-        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
-            Utils.telecall(phoneNumber: phone)
-            return
-        }
-        
+
         EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
+        requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.toast.dismissToast()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
@@ -279,7 +304,10 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常")
         
         self.errorVM?.onRequestViewDidLoad()
+        self.errorVM?.onRequest()
         self.viewModel?.request(floorPanId: self.floorPanId)
+        
+        
     }
 
     required init?(coder aDecoder: NSCoder) {

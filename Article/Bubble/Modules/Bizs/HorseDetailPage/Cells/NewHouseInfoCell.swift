@@ -252,16 +252,16 @@ class NewHouseInfoCell: BaseUITableViewCell {
                 self.openNotify
                     .setAttributedTitle(setContentByStatus(
                         text: "开盘通知",
-                        status: !b), for: .normal)
-                if b {
-                    self.openNotify.setImage(UIImage(named: "22"), for: .normal)
-                    self.openNotify.setImage(UIImage(named: "22"), for: .highlighted)
-
-                } else {
+                        status: true), for: .normal)
+//                if b {
+//                    self.openNotify.setImage(UIImage(named: "22"), for: .normal)
+//                    self.openNotify.setImage(UIImage(named: "22"), for: .highlighted)
+//
+//                } else {
                     self.openNotify.setImage(UIImage(named: "ic-new-house-opening-notice"), for: .normal)
                     self.openNotify.setImage(UIImage(named: "ic-new-house-opening-notice"), for: .highlighted)
 
-                }
+//                }
             }
             .disposed(by: disposeBag)
 
@@ -271,17 +271,17 @@ class NewHouseInfoCell: BaseUITableViewCell {
                 self.priceChangedNotify
                     .setAttributedTitle(setContentByStatus(
                         text: "变价通知",
-                        status: !b), for: .normal)
-
-                if b {
-                    self.priceChangedNotify.setImage(UIImage(named: "23"), for: .normal)
-                    self.priceChangedNotify.setImage(UIImage(named: "23"), for: .highlighted)
-
-                } else {
+                        status: true), for: .normal)
+  
+//                if b {
+//                    self.priceChangedNotify.setImage(UIImage(named: "23"), for: .normal)
+//                    self.priceChangedNotify.setImage(UIImage(named: "23"), for: .highlighted)
+//
+//                } else {
                     self.priceChangedNotify.setImage(UIImage(named: "ic-new-house-price-change-notice"), for: .normal)
                     self.priceChangedNotify.setImage(UIImage(named: "ic-new-house-price-change-notice"), for: .highlighted)
 
-                }
+//                }
             }
             .disposed(by: disposeBag)
     }
@@ -387,23 +387,23 @@ func fillNewHouseCoreInfoCell(
         theCell.openNotify.rx.tap
             .withLatestFrom(theCell.openChangeNotifyRelay)
             .bind(onNext: { (isFollowUp) in
-                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
-                    
-                    EnvContext.shared.toast.showToast("您已订阅过啦～")
-                } else {
+//                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
+//
+//                    EnvContext.shared.toast.showToast("您已订阅过啦～")
+//                } else {
                     openCourtNotify(theCell.openChangeNotifyRelay)
-                }
+//                }
             })
             .disposed(by: disposeBag)
         theCell.priceChangedNotify.rx.tap
             .withLatestFrom(theCell.priceChangeNotifyRelay)
             .bind(onNext: { (isFollowUp) in
                 
-                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
-                    EnvContext.shared.toast.showToast("您已订阅过啦～")
-                } else {
+//                if isFollowUp && EnvContext.shared.client.accountConfig.userInfo.value != nil{
+//                    EnvContext.shared.toast.showToast("您已订阅过啦～")
+//                } else {
                     priceChangeHandler(theCell.priceChangeNotifyRelay)
-                }
+//                }
             })
             .disposed(by: disposeBag)
         let theDisposeBag = DisposeBag()

@@ -28,7 +28,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     var pageViewModelProvider: DetailPageViewModelProvider?
 
     var shareParams: TracerParams?
-
+    let stateControl = HomeHeaderStateControl()
+    
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
 //        re.rightBtn.isHidden = false
@@ -58,6 +59,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let re = HouseDetailPageBottomBarView()
         return re
     }()
+    
+    private lazy var bottomStatusBar: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.backgroundColor = hexStringToUIColor(hex: "#000000", alpha: 0.7)
+        label.text = "该房源已停售"
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = .white
+        return label
+    }()
+    
 
     let barStyle = BehaviorRelay<Int>(value: UIStatusBarStyle.lightContent.rawValue)
 
@@ -354,6 +366,18 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
         }
         
+        view.addSubview(bottomStatusBar)
+        bottomStatusBar.snp.makeConstraints { maker in
+            maker.right.left.equalToSuperview()
+            if isShowBottomBar {
+                maker.bottom.equalTo(bottomBar.snp.top)
+            } else {
+                
+                maker.bottom.equalToSuperview()
+            }
+            maker.height.equalTo(0)
+        }
+        bottomStatusBar.isHidden = true
         if  #available(iOS 11.0, *) {
             self.tableView.contentInsetAdjustmentBehavior = .never;//UIScrollView也适用
             self.tableView.estimatedRowHeight = 0;
@@ -363,14 +387,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            if isShowBottomBar {
-                maker.top.right.left.equalToSuperview()
-                maker.bottom.equalTo(bottomBar.snp.top)
-            } else {
-
-                maker.bottom.equalToSuperview()
-                maker.top.left.right.equalToSuperview()
-            }
+            maker.top.right.left.equalToSuperview()
+            maker.bottom.equalTo(bottomStatusBar.snp.top)
         }
 
         view.addSubview(infoMaskView)
@@ -383,10 +401,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         if EnvContext.shared.client.reachability.connection != .none {
             infoMaskView.isHidden = true
+            netStateInfoVM?.onRequest()
             detailPageViewModel?.requestData(houseId: houseId, logPB: logPB, showLoading: true)
         }
 
-        let stateControl = HomeHeaderStateControl()
+        
         stateControl.onStateChanged = { [weak self] (state) in
             switch state {
             case .suspend:
@@ -449,7 +468,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     
-                    if stateControl.state == .suspend
+                    if self?.stateControl.state == .suspend
                     {
                         self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect-white"), for: .normal)
                     }else
@@ -494,6 +513,41 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             })
                 .disposed(by: disposeBag)
             
+            if let ershouVM = detailPageViewModel as? ErshouHouseDetailPageViewModel, self.houseType == .secondHandHouse {
+                
+                ershouVM.houseStatus.skip(1).subscribe(onNext: { [weak self] houseStatus in
+
+                    if let theHouseStatus = houseStatus, theHouseStatus == 1 {
+                        self?.bottomStatusBar.isHidden = false
+                        self?.navBar.rightBtn.isHidden = false
+                        self?.navBar.rightBtn2.isHidden = false
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(30)
+                        })
+
+                    }else if let theHouseStatus = houseStatus, theHouseStatus == -1 {
+                        self?.bottomStatusBar.isHidden = true
+                        self?.navBar.rightBtn.isHidden = true
+                        self?.navBar.rightBtn2.isHidden = true
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(0)
+                        })
+                    }else {
+                        self?.bottomStatusBar.isHidden = true
+                        self?.navBar.rightBtn.isHidden = false
+                        self?.navBar.rightBtn2.isHidden = false
+                        self?.bottomStatusBar.snp.updateConstraints({ (maker) in
+                            
+                            maker.height.equalTo(0)
+                        })
+                    }
+                    
+                })
+                    .disposed(by: disposeBag)
+            }
+            
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(detailPageViewModel.contactPhone)
                 .throttle(0.5, latest: false, scheduler: MainScheduler.instance)
@@ -501,7 +555,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
-                        self.callRealtorPhone(contactPhone: contactPhone)
+                        var theImprId: String?
+                        var theSearchId: String?
+
+                        if let logPB = self.detailPageViewModel?.logPB as? [String: Any], let imprId = logPB["impr_id"] as? String, let searchId = self.detailPageViewModel?.searchId {
+                            theImprId = imprId
+                            theSearchId = searchId
+
+                        }
+                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
                         self.followForSendPhone()
 
                         if self.houseType != .neighborhood {
@@ -514,7 +576,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                 .exclude("filter")
                             traceParams = traceParams <|>
                                 toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                                toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("\(self.houseId)", key: "group_id")
                             recordEvent(key: "click_call", params: traceParams)
@@ -535,7 +596,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel] in
-                    detailPageViewModel?.followThisItem(isNeedRecord: true)
+                    
+                    var tracerParams = EnvContext.shared.homePageParams
+                    if let params = detailPageViewModel?.goDetailTraceParam {
+                        tracerParams = tracerParams <|> params
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                    }
+                    tracerParams = tracerParams <|>
+                        toTracerParams(pageTypeString(detailPageViewModel?.houseType ?? .newHouse), key: "page_type")
+
+                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
                     })
                     .disposed(by: disposeBag)
             detailPageViewModel.followStatus
@@ -548,7 +622,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
                 .map { [weak self] (result) -> Bool in
                     if case let .success(status) = result {
-                        if !status && stateControl.state != .suspend
+                        if !status && self?.stateControl.state != .suspend
                         {
                             self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
                         }
@@ -574,6 +648,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .exclude("element_type")
             .exclude("maintab_search"))
         
+        detailPageViewModel?.goDetailTraceParam = traceParams
+            .exclude("house_type")
+            .exclude("element_type")
+            .exclude("maintab_search")
+        
         self.netStateInfoVM?.netState
             .bind { [unowned self] hasError in
                 self.bottomBar.isHidden = hasError
@@ -581,7 +660,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 if !self.isShowBottomBar {
                     self.navBar.rightBtn.isHidden = hasError
                 }
+                self.bottomStatusBar.isHidden = hasError
+
             }.disposed(by: disposeBag)
+        
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
     }
@@ -631,38 +713,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         })
         
     }
-    
-    
-    
-    // MARK: 电话转接以及拨打相关操作
-    func callRealtorPhone(contactPhone: FHHouseDetailContact?) {
-        
-        guard let phone = contactPhone?.phone, phone.count > 0 else {
-            return
-        }
-        guard let realtorId = contactPhone?.realtorId, realtorId.count > 0 else {
-            Utils.telecall(phoneNumber: phone)
-            return
-        }
-
-        EnvContext.shared.toast.showToast("电话查询中")
-        requestVirtualNumber(realtorId: realtorId)
-            .subscribe(onNext: { (response) in
-                EnvContext.shared.toast.dismissToast()
-                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
-                    
-                    Utils.telecall(phoneNumber: virtualNumber)
-                }else {
-                    Utils.telecall(phoneNumber: phone)
-                }
-                
-            }, onError: {  (error) in
-                EnvContext.shared.toast.dismissToast()
-                Utils.telecall(phoneNumber: phone)
-            })
-            .disposed(by: self.disposeBag)
-        
-    }
 
     fileprivate func bindShareAction() {
         self.navBar.rightBtn2.rx.tap
@@ -694,6 +744,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             EnvContext.shared.client.accountConfig.userInfo
                 .subscribe(onNext: { [weak self] (userInfo) in
                     if userInfo != nil {
+                        self?.netStateInfoVM?.onRequest()
                         self?.detailPageViewModel?.requestData(houseId: self?.houseId ?? 0, logPB: self?.logPB, showLoading: false)
                     }
                 })
@@ -787,6 +838,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             }
         }
+        
+        if EnvContext.shared.client.reachability.connection == .none
+        {
+            navBar.rightBtn.isUserInteractionEnabled = false
+            navBar.rightBtn2.isUserInteractionEnabled = false
+        }
+        
 //        if houseType == .newHouse
 //        {
 //           self.detailPageViewModel?.onDataArrived
@@ -795,12 +853,27 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.barStyle.value == UIStatusBarStyle.lightContent.rawValue {
-            UIApplication.shared.statusBarStyle = .lightContent
-            self.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
-        } else {
-            UIApplication.shared.statusBarStyle = .default
-            self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [weak self] in
+            
+            guard let state = self?.stateControl.state else {
+                return
+            }
+            if state == .normal {
+                let alpha = (1 - (139 - (self?.tableView.contentOffset.y ?? 0)) / 139) * 2
+                self?.navBar.alpha = alpha
+                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
+                UIApplication.shared.statusBarStyle = .default
+                self?.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
+
+            } else {
+                self?.navBar.alpha = 1
+                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+                UIApplication.shared.statusBarStyle = .lightContent
+                self?.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
+
+            }
+
         }
 
         self.recordGoDetailSearch()
@@ -876,19 +949,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
                 {
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfirmTrace()
+                        self.followForSendPhone()
                     }
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
                 }
                 
-                self.followForSendPhone()
 
             }
             .disposed(by: disposeBag)
@@ -902,7 +975,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
         
-       recordEvent(key: TraceEventName.inform_show,
+        recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))
     
         alert.showFrom(self.view)
@@ -912,14 +985,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     {
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
-        
         recordEvent(key: TraceEventName.click_confirm,
-                    params: tracerParams)
+                    params: tracerParams.exclude("element_type"))
     }
     
     func showFollowupAlert(title: String, subTitle: String) -> Observable<Void> {

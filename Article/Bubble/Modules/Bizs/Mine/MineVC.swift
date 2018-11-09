@@ -33,6 +33,8 @@ class MineVC: BaseViewController {
     private var stayTabParams = TracerParams.momoid()
     private var theThresholdTracer: ((String, TracerParams) -> Void)?
 
+    private var lastRequestFavoriteCount: TimeInterval = 0
+
     deinit {
 
     }
@@ -72,7 +74,11 @@ class MineVC: BaseViewController {
                 toTracerParams("click_tab", key: "enter_type") <|>
                 toTracerParams("0", key: "with_tips") <|>
                 traceStayTime()
-        self.mineViewModel?.requestFavoriteCount()
+        if Date().timeIntervalSince1970 - lastRequestFavoriteCount > 2 {
+            self.mineViewModel?.favoriteDisposeBag = DisposeBag()
+            self.mineViewModel?.requestFavoriteCount()
+            lastRequestFavoriteCount = Date().timeIntervalSince1970
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

@@ -16,6 +16,9 @@ class NIHSearchPanelViewModel: NSObject {
     var baseVC: UIViewController
     
     let disposeBag = DisposeBag()
+
+    var showLoadingAlert: ((String) -> Void)?
+    var dismissLoadingAlert: (() -> Void)?
     
     @objc init (searchPanel:HomePageSearchPanel,viewController:UIViewController)
     {
@@ -54,14 +57,33 @@ class NIHSearchPanelViewModel: NSObject {
     
     private func openCountryList() {
         let vc = CountryListVC()
-        vc.onClose = { _ in
-            self.baseVC.navigationController?.popViewController(animated: true)
+        vc.onClose = { [weak self] _ in
+            self?.baseVC.navigationController?.popViewController(animated: true)
         }
         vc.onItemSelect
-            .subscribe(onNext: { i in
-                EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
-                EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
-                self.baseVC.navigationController?.popViewController(animated: true)
+            .subscribe(onNext: { [unowned self] i in
+                EnvContext.shared.toast.showModeLoadingToast("正在切换城市")
+                EnvContext.shared.client.currentCitySwitcher
+                    .switchCity(cityId: i)
+                    .subscribe(onNext: { (state) in
+                        switch state {
+                        case .onFinishedRequestFilterConfig:
+                            EnvContext.shared.toast.dismissToast()
+                            self.baseVC.navigationController?.popViewController(animated: true)
+
+                            return
+                        case .onError:
+                            DispatchQueue.main
+                                .asyncAfter(deadline: DispatchTime.now() + .milliseconds(500)) {
+                                    EnvContext.shared.toast.dismissToast()
+                                    EnvContext.shared.toast.showToast("网络异常，城市切换失败")
+                            }
+                            return
+                        default:
+                            return
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: self.disposeBag)
         self.baseVC.navigationController?.pushViewController(vc, animated: true)
@@ -138,7 +160,7 @@ class NIHSearchPanelViewModel: NSObject {
         let nav = self.baseVC.navigationController
         nav?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
+            .subscribe(onNext: { [weak nav] void in
                 EnvContext.shared.toast.dismissToast()
                 nav?.popViewController(animated: true)
             })

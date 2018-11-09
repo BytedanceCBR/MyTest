@@ -7,6 +7,8 @@ import Foundation
 import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var goDetailTraceParam: TracerParams?
+    
 
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
@@ -416,14 +418,30 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     recordEvent(key: TraceEventName.click_house_comment, params: infoParams)
                 }
                 <- parseFlineNode(data.comment?.hasMore ?? false == false && data.comment?.list?.count ?? 0 > 0 ? 6 : 0)
-                <- parseHeaderNode("周边配套")
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0)
                 //地图cell
-                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag)
+                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag){
+                    [weak self] in
+                    
+                    UIView.performWithoutAnimation { [weak self] in
+                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        {
+                            visibleCells.forEach({ [weak self] (indexPath) in
+                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
+                                {
+                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
+                                }
+                            })
+                            
+                        }
+                    }
+                }
                 <- parseHeaderNode("周边新盘") { [unowned self] in
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
-                <- parseRelateCourtCollectionNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
-                <- parseDisclaimerNode(data)
+//                <- parseRelateCourtCollectionNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
+                <- parseNearbyNewHouseListNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
+//                <- parseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -487,6 +505,9 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
             
+            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            
+            /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")
                 <|> toTracerParams(self.houseId, key: "group_id")
@@ -545,6 +566,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     .disposed(by: self.disposeBag)
 
             }
+            
+            */
 //
 //            recordEvent(key: TraceEventName.inform_show,
 //                        params: informParams)
@@ -554,7 +577,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
-            
+            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")
                 <|> toTracerParams(self.houseId, key: "group_id")
@@ -568,13 +592,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         self.dismissMessageAlert?()
                         if let status = response?.status, status == 0 {
                             self.closeAlert?()
-                            DispatchQueue.main.async {
-                                if response?.data?.followStatus ?? 0 == 0 {
-                                    EnvContext.shared.toast.showToast("订阅成功")
-                                } else {
-                                    EnvContext.shared.toast.showToast("您已订阅")
-                                }
-                            }
+//                            DispatchQueue.main.async {
+//                                if response?.data?.followStatus ?? 0 == 0 {
+//                                    EnvContext.shared.toast.showToast("订阅成功")
+//                                } else {
+//                                    EnvContext.shared.toast.showToast("您已订阅")
+//                                }
+//                            }
                         }
                         }, onError: { error in
                             EnvContext.shared.toast.dismissToast()
@@ -611,6 +635,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     })
                     .disposed(by: self.disposeBag)
             }
+            */
 
 //            recordEvent(key: TraceEventName.inform_show,
 //                        params: informParams)
@@ -618,7 +643,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         }
     }
 
-    func followThisItem(isNeedRecord: Bool) {
+    func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         switch followStatus.value {
         case let .success(status):
             if status {
@@ -634,7 +659,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         followId: "\(houseId)",
                         disposeBag: disposeBag,
                         isNeedRecord: isNeedRecord)()
-
+                self.recordFollowEvent(traceParam)
             }
         case .failure(_): do {}
         }
@@ -797,6 +822,8 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
         super.init()
     }
     
+    var nearByCell : NewHouseNearByCell?
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return datas.count
     }
@@ -808,11 +835,19 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()

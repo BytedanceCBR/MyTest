@@ -113,6 +113,14 @@ class NIHNoticeAlertView: UIView {
                         self.contentView.top -= offsetY
                     }
                     
+                    if UIScreen.main.bounds.width < 375
+                    {
+                        self.contentView.snp.remakeConstraints { maker in
+                            maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
+                            maker.centerX.equalToSuperview()
+                            maker.centerY.equalToSuperview().offset(-100)
+                        }
+                    }
                 }
                 
                 if duration > 0 {
@@ -365,6 +373,16 @@ class NHSendPhoneNumberPanel: UIView {
             maker.height.equalTo(46)
         }
         
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UITextFieldTextDidChange, object: nil)
+            .subscribe(onNext: { [unowned self] notification in
+                
+                if let input = self.phoneTextField.text, input.count > 11 {
+                    self.phoneTextField.text = String(input.prefix(11))
+                }
+            
+            })
+            .disposed(by: disposeBag)
         
         phoneTextField.rx.text
             .filter { $0 != nil }
