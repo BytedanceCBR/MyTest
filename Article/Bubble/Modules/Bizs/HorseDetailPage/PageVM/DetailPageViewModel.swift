@@ -234,7 +234,8 @@ extension DetailPageViewModel {
         followAction: FollowActionType,
         followId: String,
         disposeBag: DisposeBag,
-        isNeedRecord: Bool = true) -> () -> Void {
+        isNeedRecord: Bool = true,
+        showTip: Bool = false) -> () -> Void {
 
         return { [weak self] in
 
@@ -264,6 +265,12 @@ extension DetailPageViewModel {
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
+                            }
+                        }else if response?.data?.followStatus ?? 0 == 1 {
+                            let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 && showTip {
+                                
+                                EnvContext.shared.toast.showToast("提交成功")
                             }
                         }
                         self?.followStatus.accept(.success(true))
@@ -423,9 +430,9 @@ extension DetailPageViewModel {
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
                 {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        [unowned self]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
-                        
                         let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
                         recordEvent(key: TraceEventName.inform_show,
                                     params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
@@ -436,7 +443,8 @@ extension DetailPageViewModel {
                                              followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                              followId: "\(self.houseId)",
                             disposeBag: self.disposeBag,
-                            isNeedRecord: false)()
+                            isNeedRecord: false,
+                            showTip: true)()
                     }
                 }else
                 {
