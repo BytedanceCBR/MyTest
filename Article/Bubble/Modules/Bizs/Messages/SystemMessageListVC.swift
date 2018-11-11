@@ -66,7 +66,7 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
 
         navBar.title.text = paramObj?.queryParams["title"] as? String
         listId = paramObj?.queryParams["list_id"] as? String
-        errorVM = NHErrorViewModel(errorMask: infoDisplay) { [weak self] in
+        errorVM = NHErrorViewModel(errorMask: infoDisplay, requestRetryText: "网络异常") { [weak self] in
             self?.requestSystemMessage()
         }
 

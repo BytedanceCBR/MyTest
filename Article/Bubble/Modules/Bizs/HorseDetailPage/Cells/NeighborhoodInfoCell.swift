@@ -140,15 +140,10 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             
             return nil
         }
-        let params = TracerParams.momoid() <|>
-            toTracerParams("neighborhood_detail", key: "element_type") <|>
-        traceExtension
-        //            toTracerParams(ershouHouseData.logPB ?? "be_null", key: "log_pb")
-        
+
         let houseShowParams = EnvContext.shared.homePageParams <|>
             traceExtension <|>
-            //            toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-            //            toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(ershouHouseData.neighborhoodInfo?.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(ershouHouseData.neighborhoodInfo?.id ?? "be_null", key: "group_id") <|>
             toTracerParams("no_pic", key: "card_type") <|>
             toTracerParams("neighborhood", key: "house_type") <|>
@@ -159,11 +154,12 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
         let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
         
         return TableSectionNode(
-            items: [render],
-            selectors: nil,
-            tracer: [elementShowOnceRecord(params: params)],
-            label: "",
-            type: .node(identifier: NeighborhoodInfoCell.identifier))
+
+                items: [render],
+                selectors: nil,
+                tracer: [tracer],
+                label: "",
+                type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 
@@ -180,8 +176,9 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, 
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }
         
-        tracer(TracerParams.momoid())
-        
+
+//        tracer(TracerParams.momoid())
+
         
     }
 }

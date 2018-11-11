@@ -171,7 +171,7 @@ class HomeListViewModel: DetailPageViewModel {
                     
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （二手房）
-              
+
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
                     return
                 }
@@ -512,9 +512,14 @@ class HomeListViewModel: DetailPageViewModel {
                         self.onError?(error)
 
                         self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullDown(withSuccess: true)
+                        
                     }, onCompleted: {
 
-                })
+                    }, onDisposed: {
+                        self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullDown(withSuccess: true)
+                    })
                 .disposed(by: listDataRequestDisposeBag)
         }
 
@@ -525,7 +530,8 @@ class HomeListViewModel: DetailPageViewModel {
         oneTimeToast = createOneTimeToast()
 
         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
-  
+
+        
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
         

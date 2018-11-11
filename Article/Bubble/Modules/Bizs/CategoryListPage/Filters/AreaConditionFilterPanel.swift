@@ -625,7 +625,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "item")
-        if let theCell = cell as? AreaConditionCell {
+        if let theCell = cell as? AreaConditionCell, nodes.count > indexPath.row {
             theCell.label.text = nodes[indexPath.row].label
             theCell.showCheckbox(isShowCheckBox && nodes[indexPath.row].isEmpty != 1)
             if selectedIndexPaths.contains(indexPath) {
@@ -670,7 +670,11 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
 
         if !selectedIndexPaths.contains(indexPath) {
-            selectedIndexPaths.insert(indexPath)
+            if selectedIndexPaths.count >= 20 {
+                fhShowToast("最多支持同时选中20个")
+            } else {
+                selectedIndexPaths.insert(indexPath)
+            }
         } else {
             selectedIndexPaths.remove(indexPath)
         }
@@ -678,7 +682,10 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     }
 
     func selectedNodes() -> [Node] {
-        return selectedIndexPaths.map { path -> Node in
+        let sortedPaths = selectedIndexPaths.sorted(by: { (l, r) -> Bool in
+            l.row < r.row
+        })
+        return sortedPaths.map { path -> Node in
             nodes[path.row]
         }
     }

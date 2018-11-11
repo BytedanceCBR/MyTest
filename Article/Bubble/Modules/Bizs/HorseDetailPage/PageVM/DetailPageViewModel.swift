@@ -256,7 +256,7 @@ extension DetailPageViewModel {
 
                                 var style = fhCommonToastStyle()
                                 style.verticalOffset = 24
-                                style.titleFont = CommonUIStyle.Font.pingFangRegular(12)
+                                style.verticalOffset = 24 + (CommonUIStyle.Screen.isIphoneX ? 10 : 0)
                                 style.cornerRadius = 8
                                 style.verticalPadding = 8
                                 style.horizontalPadding = 10
@@ -277,15 +277,12 @@ extension DetailPageViewModel {
     
     func recordFollowEvent(_ traceParam: TracerParams) {
         
-        print("xxxxx=\(traceParam.paramsGetter([:]))")
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
         
     }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
-            print("xxxxx=\(traceParam.paramsGetter([:]))")
-
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 

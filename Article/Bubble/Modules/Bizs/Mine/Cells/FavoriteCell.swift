@@ -199,6 +199,9 @@ class SpringBroadCell: BaseUITableViewCell {
         return view
     }()
     
+    
+    var currentItemData: [OpData.Item]?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -214,10 +217,35 @@ class SpringBroadCell: BaseUITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    fileprivate func setItem(items: [SpringBroadItemView],isNeedUpdateBoard: Bool) {
+    fileprivate func setItem(items: [SpringBroadItemView],isNeedUpdateBoard: Bool,itemData: [OpData.Item]?) {
 
         if isNeedUpdateBoard
         {
+            
+            var isEqualData = true
+            // 遍历数组，判断是否需要更新
+            if let count = itemData?.count,itemData?.count == currentItemData?.count, count != 0
+            {
+                for index in 0...count - 1
+                {
+                        if itemData?[index].openUrl == currentItemData?[index].openUrl, itemData?[index].title == currentItemData?[index].title, itemData?[index].id == currentItemData?[index].id, itemData?[index].image.first?.uri == currentItemData?[index].image.first?.uri
+                        {
+                            continue
+                        }else
+                        {
+                            isEqualData = false
+                        }
+                }
+            }else
+            {
+                isEqualData = false
+            }
+          
+            if isEqualData
+            {
+                return
+            }
+            
             for v in contentView.subviews where v is SpringBroadItemView {
                 v.removeFromSuperview()
             }
@@ -264,6 +292,8 @@ class SpringBroadCell: BaseUITableViewCell {
             
             setNeedsLayout()
             layoutIfNeeded()
+            
+            currentItemData = itemData
         }
         
     }
@@ -320,6 +350,15 @@ fileprivate class SpringBroadItemView: UIView {
 
 func parseSpringboardNode(_ items: [OpData.Item],isNeedUpdateBoard: Bool, disposeBag: DisposeBag, navVC: UINavigationController?) -> () -> TableSectionNode? {
     
+    var nedUpdateBoard = true
+    if items.count == 0 {
+        nedUpdateBoard = false
+    }else
+    {
+        nedUpdateBoard = isNeedUpdateBoard
+    }
+    
+    
     let views = items.map { createFavoriteItemViewByEntryId(item: $0) }
 
     zip(items, views).forEach { e in
@@ -330,14 +369,14 @@ func parseSpringboardNode(_ items: [OpData.Item],isNeedUpdateBoard: Bool, dispos
             .disposed(by: disposeBag)
     }
     return {
-        let cellRender = curry(fillSpringboardCell)(views)(isNeedUpdateBoard)
+        let cellRender = curry(fillSpringboardCell)(views)(items)(nedUpdateBoard)
         return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
     }
 }
 
-fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView],isNeedUpdateBoard: Bool, cell: BaseUITableViewCell) -> Void {
+fileprivate func fillSpringboardCell(_ items: [SpringBroadItemView], itemsData: [OpData.Item]?,isNeedUpdateBoard: Bool, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? SpringBroadCell {
-        theCell.setItem(items: items,isNeedUpdateBoard: isNeedUpdateBoard)
+        theCell.setItem(items: items,isNeedUpdateBoard: isNeedUpdateBoard,itemData: itemsData)
     }
 }
 

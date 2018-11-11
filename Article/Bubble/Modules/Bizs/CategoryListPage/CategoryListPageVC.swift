@@ -188,6 +188,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
         self.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
         self.searchAndConditionFilterVM.conditions = [:]
+        self.searchAndConditionFilterVM.searchSortCondition = nil
+
         self.queryString = ""
         if let theHouseType = paramObj?.allParams["house_type"] as? String {
             houseType.accept(HouseType(rawValue: Int(theHouseType)!) ?? .secondHandHouse)
@@ -430,14 +432,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         UIApplication.shared.statusBarStyle = .default
         self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
 
-        if let houseSearchParams = allParams?["houseSearch"] as? [String: Any] {
-            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
-                pageType: (houseSearchParams["page_type"] as? String) ?? "be_null",
-                houseSearchParams: TracerParams.momoid(),
-                searchParams: houseSearchParams)
-            self.categoryListViewModel?.houseSearch = houseSearchParams
-        }
-
+        bindHouseSearchParams()
+        
         view.addSubview(navBar)
 
         //loadingView
@@ -494,21 +490,24 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             })
                             .disposed(by: self.disposeBag)
 
+                    // 关键词搜索
                     vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-//                        self.isNeedEncode = true
+                        //                        self.isNeedEncode = true
                         self.conditionFilterViewModel?.cleanSortCondition()
                         self.suggestionParams = nil
-                        self.resetFilterCondition(routeParamObj: params)
+                        self.hasRecordEnterCategory = false
+                        self.resetFilterCondition(routeParamObj: params?.paramObj)
                         self.houseType.accept(vc.houseType.value)
                         self.resetConditionData()
-//                        }
+                        //                        }
                         if let queryParams = self.queryParams {
                             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
                         }
                         nav?.popViewController(animated: true)
                         self.navBar.searchInput.text = nil
-//                        self.searchAndConditionFilterVM.sendSearchRequest()
-//                        self.navBar.searchInput.placeholder = associationalWord
+                        //                        self.searchAndConditionFilterVM.sendSearchRequest()
+                        //                        self.navBar.searchInput.placeholder = associationalWord
+                        self.allParams = params?.paramObj.allParams as? [String: Any]
                     }
                 })
                 .disposed(by: disposeBag)
@@ -588,6 +587,24 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
         self.errorVM?.onRequestViewDidLoad()
     }
+    
+    func bindHouseSearchParams() {
+        if let houseSearchParams = allParams?["houseSearch"] as? [String: Any] {
+            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
+                pageType: (houseSearchParams["page_type"] as? String) ?? "be_null",
+                houseSearchParams: TracerParams.momoid(),
+                searchParams: houseSearchParams)
+            self.categoryListViewModel?.houseSearch = houseSearchParams
+        } else {
+            let houseSearchParams = ["eearch_query": "be_null",
+                                     "enter_query": "be_null"]
+            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
+                pageType: self.pageTypeString(),
+                houseSearchParams: TracerParams.momoid(),
+                searchParams: houseSearchParams)
+            self.categoryListViewModel?.houseSearch = houseSearchParams
+        }
+    }
 
     func bindLoadMore() {
         
@@ -634,8 +651,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.traceHouseRank(
                 searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
                 rankType: rankType)
-
-            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
+            self?.allParams?["houseSearch"] = nil
+            self?.bindHouseSearchParams()
+//            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
         }
 
     }
@@ -706,6 +724,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.searchAndConditionFilterVM.sendSearchRequest()
             })
         }
+        bindHouseSearchParams()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -714,6 +733,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             recordEvent(key: TraceEventName.stay_category, params: stayTimeParams <|> toTracerParams(self.categoryListViewModel?.originSearchId ?? "be_null", key: "search_id"))
         }
         stayTimeParams = nil
+        self.hasRecordEnterCategory = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -868,13 +888,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         pageType: String,
         houseSearchParams: TracerParams,
         searchParams: [String: Any]? = nil) -> (String?) -> Void {
-        var hasRecord = false
         return { [weak self] (searchId) in
-
-            if hasRecord {
-                return
-            }
-            hasRecord = true
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(searchId ?? "be_null", key: "origin_search_id")
 
@@ -885,6 +899,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 toTracerParams(self?.houseType.value.traceTypeValue() ?? "be_null", key: "house_type") <|>
                 toTracerParams(pageType, key: "page_type")
             recordEvent(key: "house_search", params: params)
+            self?.allParams?["houseSearch"] = nil
         }
     }
 

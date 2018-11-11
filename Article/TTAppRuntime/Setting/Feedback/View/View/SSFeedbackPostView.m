@@ -59,8 +59,10 @@
         self.inputTextView.text = [SSFeedbackManager needPostMsg];
         [self.inputTextView showOrHidePlaceHolderTextView];
         self.inputTextView.delegate = self;
+        
+        // add by zjing 去掉初始化截屏
         //当画面初始化时，初始化截屏图片
-         _screenImg = [self getCurrentFeedImage];
+//         _screenImg = [self getCurrentFeedImage];
         
     }
     return self;
