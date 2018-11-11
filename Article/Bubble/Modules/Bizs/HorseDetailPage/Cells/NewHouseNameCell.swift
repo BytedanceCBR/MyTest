@@ -45,6 +45,12 @@ class NewHouseNameCell: BaseUITableViewCell {
         result.lineBreakMode = NSLineBreakMode.byWordWrapping//按照单词分割换行，保证换行时的单词完整。
         return result
     }()
+    
+    lazy var bottomLine: UIView = {
+        let re = UIView(frame: CGRect.zero)
+        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
+        return re
+    }()
 
     let leftMerge: CGFloat = 20
     let rightMerge: CGFloat = -20
@@ -79,11 +85,13 @@ class NewHouseNameCell: BaseUITableViewCell {
             maker.bottom.equalToSuperview().offset(-16)
             maker.width.equalToSuperview().offset(-30)
         }
-        contentView.lu
-                .addBottomBorder(
-                color: hexStringToUIColor(hex: kFHSilver2Color),
-                leading: 20,
-                trailing: -20)
+        contentView.addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { (make) in
+            make.bottom.equalToSuperview()
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+            make.height.equalTo(UIScreen.main.scale == 3 ? 0.34 : 0.5)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -180,6 +188,7 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
         return
     }
 
+    theCell.bottomLine.isHidden = false
     theCell.nameLabel.text = newHouseData.coreInfo?.name
     theCell.setAlias(alias: newHouseData.coreInfo?.aliasName)
     var tags: [NSAttributedString] = []
@@ -210,6 +219,7 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
     guard let theCell = cell as? NewHouseNameCell else {
         return
     }
+    theCell.bottomLine.isHidden = true
     theCell.nameLabel.text = ershouHouseData.title
     let tags = ershouHouseData.tags.map({ (item) -> NSAttributedString in
         createTagAttributeTextNormal(content: item.content)
