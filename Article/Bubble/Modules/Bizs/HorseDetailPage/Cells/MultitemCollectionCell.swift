@@ -201,6 +201,96 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     }
 }
 
+class FHStarsCountView: UIView
+{
+    lazy var starsName: UILabel = {
+        let re = UILabel()
+        re.text = "3.0"
+        re.font = CommonUIStyle.Font.pingFangMedium(36)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        re.textAlignment = .left
+        return re
+    }()
+    
+    lazy var starsCountView: UIView = {
+        let re = UIView()
+        re.backgroundColor = UIColor.red
+        return re
+    }()
+    
+    override init(frame: CGRect = CGRect.zero) {
+        super.init(frame: frame)
+
+        addSubview(starsName)
+        starsName.snp.makeConstraints { maker in
+            maker.bottom.top.equalToSuperview()
+            maker.left.equalToSuperview().offset(20)
+            maker.height.equalTo(50)
+            maker.width.equalTo(70)
+        }
+        
+        addSubview(starsCountView)
+        starsCountView.snp.makeConstraints { maker in
+            maker.bottom.right.top.equalToSuperview()
+            maker.left.equalTo(starsName.snp.right)
+            maker.height.equalTo(50)
+        }
+        
+        
+    }
+    
+    func updateStarsCount(scoreValue: Int)
+    {
+        let startCount = scoreValue / 10
+        let isShowHalfStart = scoreValue > startCount * 10
+        
+        var privousView : UIImageView?
+        
+        for index in 1...5 {
+            
+            let starImageView = UIImageView(image: UIImage(named: "star_evaluation_default"))
+            addSubview(starImageView)
+            
+            starImageView.snp.makeConstraints { maker in
+//                if (privousView != nil)
+//                {
+//                    maker.left.equalTo(privousView?.snp.right ?? <#default value#>)
+//                }
+                maker.width.height.equalTo(26)
+                maker.centerY.equalToSuperview()
+            }
+            
+            if startCount == 0
+            {
+                if isShowHalfStart
+                {
+                    
+                }else
+                {
+                    
+                }
+                return
+            }
+            
+            if index < startCount
+            {
+                
+            }else if index == startCount,isShowHalfStart
+            {
+                
+            }else
+            {
+                
+            }
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     
     var collectionViewCellRenders: [CollectionViewCellRender] = []
@@ -237,25 +327,12 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         return re
     }()
     
-    lazy var starsContainer: UIView = {
-        let re = UIView()
+    lazy var starsContainer: FHStarsCountView = {
+        let re = FHStarsCountView()
         return re
     }()
     
-    lazy var starsName: UILabel = {
-        let re = UILabel()
-        re.text = "3.0"
-        re.font = CommonUIStyle.Font.pingFangMedium(36)
-        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
-        re.textAlignment = .left
-        return re
-    }()
-    
-    lazy var starsCountView: UIView = {
-        let re = UIView()
-        re.backgroundColor = UIColor.red
-        return re
-    }()
+
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -263,21 +340,6 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         contentView.addSubview(starsContainer)
         starsContainer.snp.makeConstraints { maker in
             maker.top.left.right.equalToSuperview()
-            maker.height.equalTo(50)
-        }
-        
-        starsContainer.addSubview(starsName)
-        starsName.snp.makeConstraints { maker in
-            maker.bottom.top.equalToSuperview()
-            maker.left.equalToSuperview().offset(20)
-            maker.height.equalTo(50)
-            maker.width.equalTo(70)
-        }
-        
-        starsContainer.addSubview(starsCountView)
-        starsCountView.snp.makeConstraints { maker in
-            maker.bottom.right.top.equalToSuperview()
-            maker.left.equalTo(starsName.snp.right)
             maker.height.equalTo(50)
         }
         
@@ -291,44 +353,6 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self
         collectionContainer.dataSource = self
-    }
-    
-    
-    func updateStarsCount(scoreValue: Int)
-    {
-        
-//        starsView.su
-        
-        
-        let startCount = scoreValue / 10
-        let isShowHalfStart = scoreValue > startCount * 10
-        
-        for index in 1...5 {
-            
-            if startCount == 0
-            {
-                if isShowHalfStart
-                {
-                    
-                }else
-                {
-                    
-                }
-                return
-            }
-            
-            if index < startCount
-            {
-                
-            }else if index == startCount,isShowHalfStart
-            {
-                
-            }else
-            {
-                
-            }
-        }
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
