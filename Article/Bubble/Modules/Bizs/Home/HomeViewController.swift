@@ -331,9 +331,22 @@ class HomeViewController: BaseViewController {
             toTracerParams(originFrom ?? "be_null", key: "origin_from") <|>
             toTracerParams(self.detailPageViewModel?.originSearchId ?? "be_null", key: "origin_search_id")
         TTLaunchTracer.shareInstance().writeEvent()
+
+        
+        // add by zjing hard code 为了解决push到视频然后回首页状态栏被隐藏的问题
+        UIApplication.shared.statusBarStyle = .default
+        self.barStyle.accept(UIStatusBarStyle.default.rawValue)
+        UIApplication.shared.isStatusBarHidden = false
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(550)) {
+            UIApplication.shared.isStatusBarHidden = false
+        }
     }
 
-    
+    override var prefersStatusBarHidden: Bool {
+        
+        return false
+    }
     private func bindNetReachability() {
         let generalBizConfig = EnvContext.shared.client.generalBizconfig
         Observable

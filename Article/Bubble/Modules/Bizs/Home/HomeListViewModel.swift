@@ -462,7 +462,7 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            if houseTypeValue == HouseType.newHouse
+                            if houseTypeValue == HouseType.newHouse, typeValue == .newHouse
                             {
                                 self.itemsNewHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsNewHouse?.append(contentsOf: items)
@@ -471,7 +471,7 @@ class HomeListViewModel: DetailPageViewModel {
                                     self.isNewHouseHasMore = hasMore
                                 }
                                 return self.generateSectionNode(items: self.itemsNewHouse)
-                            } else if houseTypeValue == HouseType.secondHandHouse
+                            } else if houseTypeValue == HouseType.secondHandHouse, typeValue == .secondHandHouse
                             {
                                 self.itemsSecondHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsSecondHouse?.append(contentsOf: items)
@@ -487,7 +487,7 @@ class HomeListViewModel: DetailPageViewModel {
                     return [] //条件不符合返回空数组
                 }
                 .subscribe(onNext: { [unowned self] response in
-                    if let dataSource = self.dataSource {
+                    if let dataSource = self.dataSource, response.count != 0 {
                         dataSource.datas = response
                         dataSource.recordIndexCache = []
                         self.tableView?.reloadData()
