@@ -689,7 +689,7 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
         let pricingPerSqm = Double(data.neighborhoodInfo?.pricingPerSqmValue ?? 0)
         if pricingPerSqm > 0 {
             let pricingPerSqmValue = Double(data.pricingPerSqmValue)
-            let priceUp = (pricingPerSqm - pricingPerSqmValue) / pricingPerSqm * 100
+            let priceUp = (pricingPerSqmValue - pricingPerSqm) / pricingPerSqm * 100
             if priceUp == 0 {
                 theCell.priceUpValueLabel.text = "持平"
                 theCell.monthUpTrend.isHidden = true
