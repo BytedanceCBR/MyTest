@@ -347,6 +347,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     return data.neighborhoodInfo != nil ? true : false
                 }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
+                <- parseHeaderNode("价格分析") {
+                    return data.housePriceRank != nil ? true : false
+                }
+                <- parsePriceRankNode(data.housePriceRank, traceExtension: traceExtension)
                 <- parseHeaderNode("均价走势")
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id

@@ -577,6 +577,9 @@
 		616F787921916B0A009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
 		616F787A21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
 		616F787B21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
+		61761952219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		61761953219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		61761954219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
@@ -6586,6 +6589,7 @@
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
 		616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHDetailSuggestTipCell.swift; sourceTree = "<group>"; };
+		61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHErshouDetailPriceRankCell.swift; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
@@ -14771,6 +14775,7 @@
 				616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */,
 				76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */,
 				76CE80542193E899005D199B /* NearbyNewHouseCell.swift */,
+				61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -19900,6 +19905,7 @@
 				AB1621E51F500EFA00B4CC0C /* SSShareMessageManager.m in Sources */,
 				F87694381F31D0D500D59CA5 /* TTVShareDetailTracker.m in Sources */,
 				F87694041F31D0D400D59CA5 /* TTVVideoDetailNatantInfoViewModel.m in Sources */,
+				61761952219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				D09F07B51D953F5E00B586B9 /* ExploreCollectionBookCellModel.m in Sources */,
 				A97DBC3F1F1332E40002B455 /* TTHandleShorcutItemTask.m in Sources */,
 				2DB9A6CF1F29BB85005E4A06 /* TTAdRefreshRelateModel.m in Sources */,
@@ -21977,6 +21983,7 @@
 				B373CC222174587A008F9905 /* TTVFeedListVideoItem.m in Sources */,
 				B373CC232174587A008F9905 /* TTFeedPreloadTask.m in Sources */,
 				B373CC242174587A008F9905 /* HorizontalCard.m in Sources */,
+				61761954219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				B373CC252174587A008F9905 /* TTRoundrectButtonView.m in Sources */,
 				B373CC262174587A008F9905 /* TTUGCTrackerHelper.m in Sources */,
 				B373CC272174587A008F9905 /* TTPhotoNewCommentViewController.m in Sources */,
@@ -23682,6 +23689,7 @@
 				FEFA5710205FB1A8001F50D8 /* TTFeedPreloadTask.m in Sources */,
 				FEFA5712205FB1A8001F50D8 /* HorizontalCard.m in Sources */,
 				FEFA5714205FB1A8001F50D8 /* TTRoundrectButtonView.m in Sources */,
+				61761953219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				FEF53DC52068CEF300EEA647 /* TTUGCTrackerHelper.m in Sources */,
 				FEFA5717205FB1A8001F50D8 /* TTPhotoNewCommentViewController.m in Sources */,
 				B388CB6B2142652A00653188 /* NewHouseInfoCell.swift in Sources */,
