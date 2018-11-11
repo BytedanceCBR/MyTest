@@ -251,7 +251,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         return re
     }()
     
-    lazy var starsView: UIView = {
+    lazy var starsCountView: UIView = {
         let re = UIView()
         re.backgroundColor = UIColor.red
         return re
@@ -274,8 +274,8 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
             maker.width.equalTo(70)
         }
         
-        starsContainer.addSubview(starsView)
-        starsView.snp.makeConstraints { maker in
+        starsContainer.addSubview(starsCountView)
+        starsCountView.snp.makeConstraints { maker in
             maker.bottom.right.top.equalToSuperview()
             maker.left.equalTo(starsName.snp.right)
             maker.height.equalTo(50)
@@ -298,6 +298,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     {
         
 //        starsView.su
+        
         
         let startCount = scoreValue / 10
         let isShowHalfStart = scoreValue > startCount * 10
