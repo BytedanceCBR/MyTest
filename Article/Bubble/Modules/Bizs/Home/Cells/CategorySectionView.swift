@@ -89,7 +89,7 @@ class CategorySectionView: UIView {
             maker.height.equalTo(20)
         }
 
-        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.8, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.5, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
