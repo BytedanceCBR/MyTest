@@ -223,6 +223,10 @@ class CountryListVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+//        if let textCity = EnvContext.shared.client.locationManager.currentCity.geocode.city
+//        {
+//            self.locationBar.countryLabel.text = textCity
+//        }
     }
 
     override func didReceiveMemoryWarning() {

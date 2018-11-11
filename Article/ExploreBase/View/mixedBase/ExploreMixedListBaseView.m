@@ -1205,7 +1205,11 @@ TTRefreshViewDelegate
 //    }
 //    //uploading section + function area section + explore section
 //    return ExploreMixedListBaseViewSectionExploreCells + 1;
-    return 1;
+    if (_fetchListManager.items.count == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
