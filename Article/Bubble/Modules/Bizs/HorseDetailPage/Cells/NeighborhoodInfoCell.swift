@@ -23,9 +23,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
     
     lazy var nameKey: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        re.text = "名称"
+        re.text = "所属区域"
         return re
     }()
     
@@ -36,13 +36,46 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         return re
     }()
     
+    lazy var schoolKey: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.text = "教育资源"
+        return re
+    }()
     
+    lazy var schoolLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        return re
+    }()
     
     lazy var mapImageView: UIImageView = {
         let re = UIImageView()
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
+    
+    lazy var bgView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#000000",alpha: 0.5)
+        return re
+    }()
+    lazy var evaluateLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.text = "小区测评"
+        re.textColor = .white
+        return re
+    }()
+    
+    lazy var rightArrow: UIImageView = {
+        let re = UIImageView()
+        re.image = UIImage(named: "arrowicon-feed-white")
+        return re
+    }()
+    
     
     lazy var mapViewGesture: UITapGestureRecognizer = {
         let re = UITapGestureRecognizer()
@@ -54,7 +87,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
     var data: NeighborhoodInfo?
     var logPB: [String: Any]?
     var neighborhoodId:String?
-    
+    var evaluationInfo: NeighborhoodEvaluationinfo?
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(nameKey)
@@ -80,6 +114,36 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
             maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
             maker.top.equalTo(nameKey.snp.bottom).offset(16)
         }
+        
+        contentView.addSubview(bgView)
+        bgView.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalTo(mapImageView)
+            maker.height.equalTo(40)
+        }
+        bgView.addSubview(evaluateLabel)
+        evaluateLabel.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+            maker.left.equalTo(20)
+        }
+        bgView.addSubview(rightArrow)
+        rightArrow.snp.makeConstraints { maker in
+            maker.right.equalTo(-20)
+            maker.centerY.equalTo(evaluateLabel)
+        }
+        
+        let evaluateGest = UITapGestureRecognizer()
+        evaluateGest.rx.event
+            .subscribe(onNext: { [weak self] (_) in
+
+                if let url = self?.evaluationInfo?.detailUrl {
+                    TTRoute.shared().openURL(byPushViewController: URL(string: url), userInfo: nil)
+                }
+                
+            })
+            .disposed(by: self.disposeBag)
+        bgView.addGestureRecognizer(evaluateGest)
+        bgView.isUserInteractionEnabled = true
+
         mapImageView.addGestureRecognizer(mapViewGesture)
         mapImageView.isUserInteractionEnabled = true
         
@@ -152,7 +216,7 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
         
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
         
         return TableSectionNode(
 
@@ -164,16 +228,18 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
     }
 }
 
-func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
-        theCell.nameValue.text = data?.name
+        theCell.nameValue.text = data.neighborhoodInfo?.name
         theCell.navVC = navVC
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
-        theCell.data = data
-        
-        if let url = data?.gaodeImageUrl {
+        theCell.data = data.neighborhoodInfo
+        theCell.evaluationInfo = data.evaluationInfo
+        theCell.bgView.isHidden = data.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
+
+        if let url = data.neighborhoodInfo?.gaodeImageUrl {
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }
         
