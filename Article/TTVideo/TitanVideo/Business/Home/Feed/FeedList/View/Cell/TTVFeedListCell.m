@@ -24,7 +24,7 @@
 #import "TTSettingsManager.h"
 #import "TTASettingConfiguration.h"
 
-#define kBottomPaddingViewH [TTDeviceUIUtils tt_newPadding:6]
+#define kBottomPaddingViewH [TTDeviceUIUtils tt_newPadding:0]
 
 CGFloat ttv_feedContainerWidth(CGFloat contentViewWidth)
 {

@@ -243,6 +243,7 @@ struct NeighborhoodInfo: Mappable {
     var displayPricePerSqm: String?
     var displayPrice: String?
 
+    var logPB: [String: Any]?
 
     
     init?(map: Map) {
@@ -267,6 +268,8 @@ struct NeighborhoodInfo: Mappable {
         houseType <- map["house_type"]
         pricingPerSqmValue <- map["pricing_per_sqm_v"]
         displayPricePerSqm <- map["display_price_per_sqm"]
+        logPB <- map["log_pb"]
+
     }
 }
 

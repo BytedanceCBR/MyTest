@@ -316,7 +316,7 @@ static NSString *kTTAccountNetworkHttpInterfaceDebugKey = @"com.account.http_int
 
 + (NSString *)TTALogoutURLPathString
 {
-    return (@"/2/user/logout/");
+    return (@"/passport/user/logout/");
 }
 
 + (NSString *)TTABindPhoneV1URLPathString

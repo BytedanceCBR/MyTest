@@ -60,7 +60,8 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
         items.forEach { view in
             contentView.addSubview(view)
         }
-        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+//        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 4, averageLayout: true, leadSpacing: 20, tailSpacing: 20)
         items.snp.makeConstraints { maker in
             maker.top.bottom.equalToSuperview()
          }
@@ -171,48 +172,37 @@ fileprivate class ItemView: UIView {
     lazy var keyLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: "#8a9299")
+        re.textColor = hexStringToUIColor(hex: "#a1aab3")
         return re
     }()
 
     lazy var valueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.font = CommonUIStyle.Font.pingFangMedium(18)
         re.textColor = hexStringToUIColor(hex: "#ff5b4c")
-        return re
-    }()
-
-    lazy var verticalLine: UIView = {
-        let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: "#e8eaeb")
         return re
     }()
 
     init() {
         super.init(frame: CGRect.zero)
+        backgroundColor = hexStringToUIColor(hex: "#f7f8f9")
+        layer.cornerRadius = 4.0
+        
+        addSubview(valueLabel)
+        valueLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(16)
+            maker.top.equalTo(12)
+            maker.height.equalTo(25)
+            maker.right.equalToSuperview().offset(-10)
+        }
+        
         addSubview(keyLabel)
         keyLabel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
-            maker.top.equalTo(16)
+            maker.top.equalTo(valueLabel.snp.bottom)
             maker.height.equalTo(17)
-            maker.right.equalToSuperview().offset(-20)
-        }
-
-        addSubview(valueLabel)
-        valueLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(keyLabel.snp.left)
-            maker.top.equalTo(keyLabel.snp.bottom).offset(4)
-            maker.height.equalTo(22)
-            maker.right.equalTo(keyLabel.snp.right)
-            maker.bottom.equalToSuperview().offset(-16)
-        }
-
-        addSubview(verticalLine)
-        verticalLine.snp.makeConstraints { maker in
-            maker.left.equalToSuperview()
-            maker.width.equalTo(0.5)
-            maker.top.equalTo(23)
-            maker.bottom.equalToSuperview().offset(-20)
+            maker.right.equalToSuperview().offset(-10)
+            maker.bottom.equalToSuperview().offset(-12)
         }
     }
 
@@ -298,7 +288,6 @@ func fillErshouHouseCoreInfoCell(_ ershouHouseData: ErshouHouseData, cell: BaseU
             re.valueLabel.text = info.value
             return re
         }
-        infos.first?.verticalLine.isHidden = true
 
         theCell.setItem(items: infos)
     }

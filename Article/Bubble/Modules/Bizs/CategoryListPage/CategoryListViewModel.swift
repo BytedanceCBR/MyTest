@@ -228,12 +228,16 @@ class CategoryListViewModel: DetailPageViewModel {
             self?.cleanData()
         })
         let dataReloader = reloadData()
+        var hasRecordSearch = false
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
                         cleanDataOnce()
                         self.oneTimeToast?(response?.data?.refreshTip)
+                    if hasRecordSearch == false {
                         self.houseSearchRecorder?(response?.data?.searchId)
+                        hasRecordSearch = true
+                    }
 
                         if let data = response?.data {
 
@@ -564,15 +568,17 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                        } else {
 
-                        tableView.beginUpdates()
                         theDatas.remove(at: indexPath.row)
                         self.datas.accept(theDatas)
-                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                        UIView.performWithoutAnimation {
+                            tableView.reloadData()
+                        }
+                        
                         if self.canCancelFollowUp
                         {
                             self.datasDeleteBehavior.accept(theDatas.count)
                         }
-                        tableView.endUpdates()
+                        
                         
 //                        }
                         EnvContext.shared.toast.dismissToast()
@@ -623,16 +629,18 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                    } else {
 
-                    tableView.beginUpdates()
                     theDatas.remove(at: indexPath.row)
                     self.datas.accept(theDatas)
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    
+                    UIView.performWithoutAnimation {
+                        tableView.reloadData()
+                    }
+                    
                     if self.canCancelFollowUp
                     {
                         self.datasDeleteBehavior.accept(theDatas.count)
                     }
-                    handler(true)
-                    tableView.endUpdates()
+                    
                     
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("已取消关注")

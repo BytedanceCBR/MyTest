@@ -182,6 +182,7 @@ func parseFloorPanItemsNode(
                         toTracerParams("house_model", key: "house_type") <|>
                         toTracerParams("house_model_list", key: "page_type") <|>
                         toTracerParams("house_model_list", key: "enter_from") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.id ?? "be_null", key: "group_id")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("enter_from").exclude("element_from"))
         }

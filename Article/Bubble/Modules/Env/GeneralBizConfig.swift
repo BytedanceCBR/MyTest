@@ -34,6 +34,8 @@ class GeneralBizConfig {
 
     let disposeBag = DisposeBag()
 
+    var disposeBagConfig = DisposeBag()
+
     let cityHistoryDataSource = CountryListHistoryDataSource()
 
     var hasSetTemporySelectCity = false
@@ -113,6 +115,7 @@ class GeneralBizConfig {
     }
 
     func fetchConfiguration() {
+        disposeBagConfig = DisposeBag()
         requestGeneralConfig(cityId: nil,
                              gaodeCityId: locationManager?.currentCity.value?.citycode,
                              lat: locationManager?.currentLocation.value?.coordinate.latitude,
@@ -150,7 +153,7 @@ class GeneralBizConfig {
                     //                print(error)
 //                    assertionFailure("搜索配置请求异常")
             })
-            .disposed(by: disposeBag)
+            .disposed(by: disposeBagConfig)
     }
 
     func setCurrentSelectCityId(cityId: Int) {
