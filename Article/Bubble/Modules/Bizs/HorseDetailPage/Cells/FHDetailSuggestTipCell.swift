@@ -10,27 +10,23 @@ import UIKit
 class FHDetailSuggestTipCell: BaseUITableViewCell {
 
     
-    func setPriceRange(priceRange: HousePriceRange) {
+    func setBuySuggestion(suggestion: HousePriceRankSuggestion) {
         
-        var tipStr: String?
-        trendIcon.isHidden = false
-
-        if let maxPrice = priceRange.price_max, let currentPrice = priceRange.cur_price, let minPrice = priceRange.price_min {
+        trendIcon.isHidden = true
+        if let type = suggestion.type {
             
-            if currentPrice <= minPrice {
-                tipStr = "该房源当前价格偏低，请勿错过入手好时机，建议尽快联系经纪人看房。"
+            subtitleLabel.text = suggestion.content
+            trendIcon.isHidden = false
+
+            if type == 1 {
                 trendIcon.image = UIImage(named: "sentiment-satisfied-material")
-            }else if currentPrice > minPrice && currentPrice < maxPrice {
-                tipStr = "该房源当前价格合理，房东诚心出售，建议尽快联系经纪人看房。"
+            }else if type == 2 {
                 trendIcon.image = UIImage(named: "sentiment-neutral-material")
 
-            }else {
-                tipStr = "该房源当前价格偏高，请结合综合情况合理评估，详情咨询经纪人。"
+            }else if type == 2 {
                 trendIcon.image = UIImage(named: "sentiment-dissatisfied-material")
             }
         }
-        
-        subtitleLabel.text = tipStr
         
     }
     
@@ -143,16 +139,16 @@ class FHDetailSuggestTipCell: BaseUITableViewCell {
 
 }
 
-func parsePriceRangeNode(_ priceRange: HousePriceRange?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
+func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         
-        if let thePriceRange = priceRange {
+        if let thePriceRank = priceRank {
             
-            if thePriceRange.price_min ?? 0 == 0 && thePriceRange.price_max ?? 0 == 0 {
+            guard let buySuggestion = thePriceRank.buySuggestion else {
                 
                 return nil
             }
-            let cellRender = oneTimeRender(curry(fillPriceRangeCell)(thePriceRange))
+            let cellRender = oneTimeRender(curry(fillPriceRangeCell)(buySuggestion))
             let params = TracerParams.momoid() <|>
                 toTracerParams("price_reference", key: "element_type") <|>
                 toTracerParams("old_detail", key: "page_type") <|>
@@ -173,11 +169,11 @@ func parsePriceRangeNode(_ priceRange: HousePriceRange?, traceExtension: TracerP
 }
 
 func fillPriceRangeCell(
-    _ data: HousePriceRange,
+    _ data: HousePriceRankSuggestion,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHDetailSuggestTipCell {
         
-        theCell.setPriceRange(priceRange: data)
+        theCell.setBuySuggestion(suggestion: data)
     }
     
 }

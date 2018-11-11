@@ -177,9 +177,5 @@ func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, 
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }
         
-
-//        tracer(TracerParams.momoid())
-
-        
     }
 }

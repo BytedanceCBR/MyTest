@@ -380,7 +380,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseHeaderNode("同小区价格对比", adjustBottomSpace: -10) {
                     (data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? false : true
                 }
-                <- parsePriceRangeNode(data.housePriceRange, traceExtension: traceExtension)
+                <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
                 <- parseFlineNode(((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) || self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0) ? 6 : 0)
                 <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
