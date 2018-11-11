@@ -2046,7 +2046,7 @@ TTRefreshViewDelegate
 //    }
 }
 
-- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore {
+- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore { 
     NSMutableDictionary * exploreMixedListConsumeTimeStamps = [NSMutableDictionary dictionary];
     [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime]) forKey:kExploreFetchListTriggerRequestTimeStampKey];
     
