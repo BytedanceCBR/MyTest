@@ -789,17 +789,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.searchAndConditionFilterVM.sendSearchRequest()
             })
         }
-<<<<<<< Updated upstream
         bindHouseSearchParams()
-=======
-        if let houseSearchParams = allParams?["houseSearch"] as? [String: Any] {
-            self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
-                pageType: (houseSearchParams["page_type"] as? String) ?? "be_null",
-                houseSearchParams: TracerParams.momoid(),
-                searchParams: houseSearchParams)
-            self.categoryListViewModel?.houseSearch = houseSearchParams
-        }
->>>>>>> Stashed changes
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
