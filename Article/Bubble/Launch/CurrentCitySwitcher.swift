@@ -132,7 +132,8 @@ class CurrentCitySwitcher {
         }
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
-
+        self.updateSearchCondition(response: searchConfigResponse)
+        self.updateGeneralConfig(response: generalConfigRsponse)
     }
 
 
@@ -179,6 +180,10 @@ class CurrentCitySwitcher {
     fileprivate func updateSearchCondition(response: SearchConfigResponse?) {
         let client = EnvContext.shared.client
         client.saveSearchConfigToCache(response: response)
+    }
+    
+    fileprivate func updateGeneralConfig(response: GeneralConfigResponse?) {
+        EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
     }
 
 }
