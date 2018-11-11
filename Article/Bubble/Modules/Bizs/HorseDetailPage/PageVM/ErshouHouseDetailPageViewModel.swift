@@ -1020,9 +1020,15 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
                 maker.height.equalTo(17)
             }
             theCell.priceLabel.text = data.pricePerSqm
-
+            theCell.priceLabel.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.areaLabel.snp.bottom).offset(3)
+            }
+            
         } else {
             
+            theCell.priceLabel.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.areaLabel.snp.bottom).offset(5)
+            }
             let text = NSMutableAttributedString()
             let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
                 createTagAttrString(
