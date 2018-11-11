@@ -80,14 +80,12 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
-<<<<<<< Updated upstream
+
 #import "UIImageAdditions.h"
 
 #import "FHMapSearchViewController.h"
 
 #import "FHSearchHouseModel.h"
-=======
 #import "ArticleListNotifyBarView.h"
->>>>>>> Stashed changes
 
 #endif /* Article_Bridging_Header_h */
