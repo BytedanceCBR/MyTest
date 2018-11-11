@@ -143,17 +143,19 @@ class GeneralBizConfig {
                 EnvContext.shared.client.fetchSearchConfig()
 
                 self.generalCacheSubject.accept(response?.data)
-                if let payload = response?.data?.toJSONString(), !payload.isEmpty {
-                    self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
-                } else {
-//                    assertionFailure("搜索配置请求异常")
-                }
+                self.saveGeneralConfig(response: response)
 
                 }, onError: { error in
                     //                print(error)
 //                    assertionFailure("搜索配置请求异常")
             })
             .disposed(by: disposeBagConfig)
+    }
+    
+    func saveGeneralConfig(response: GeneralConfigResponse?) {
+        if let payload = response?.data?.toJSONString(), !payload.isEmpty {
+            self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
+        }
     }
 
     func setCurrentSelectCityId(cityId: Int) {

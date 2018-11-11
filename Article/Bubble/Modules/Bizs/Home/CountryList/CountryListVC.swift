@@ -222,13 +222,20 @@ class CountryListVC: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        let generalBizConfig = EnvContext.shared.client.generalBizconfig
+        generalBizConfig.currentSelectCityId
+            .map(generalBizConfig.cityNameById())
+            .subscribe(onNext: { [unowned self] (city) in
+                if let cityV = city {
+                    self.locationBar.countryLabel.text = cityV
+                }
+            })
+            .disposed(by: disposeBag)
+        
         self.navigationController?.navigationBar.isHidden = true
-//        if let textCity = EnvContext.shared.client.locationManager.currentCity.geocode.city
-//        {
-//            self.locationBar.countryLabel.text = textCity
-//        }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
