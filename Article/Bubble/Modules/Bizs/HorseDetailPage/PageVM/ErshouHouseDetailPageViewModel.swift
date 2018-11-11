@@ -518,18 +518,8 @@ func openErshouHouseList(
         searchSource: searchSource,
         searchId: searchId,
         bottomBarBinder: bottomBarBinder)
-    if let followStatus = followStatus {
-        listVC.sameNeighborhoodFollowUp.accept(followStatus.value)
-        listVC.sameNeighborhoodFollowUp
-            .bind(to: followStatus)
-            .disposed(by: disposeBag)
-    }
+    listVC.followStatus = followStatus
     listVC.tracerParams = tracerParams
-    listVC.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
-                navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
     navVC?.pushViewController(listVC, animated: true)
 }
 
