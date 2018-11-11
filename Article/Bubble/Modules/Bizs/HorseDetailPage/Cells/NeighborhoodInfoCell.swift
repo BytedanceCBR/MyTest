@@ -89,6 +89,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
                 let theParams = TracerParams.momoid() <|>
                     toTracerParams("map_list", key: "click_type") <|>
                     toTracerParams("old_detail", key: "enter_from") <|>
+                    toTracerParams("map", key: "element_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
                     toTracerParams(self.logPB ?? "be_null", key: "log_pb")
                 

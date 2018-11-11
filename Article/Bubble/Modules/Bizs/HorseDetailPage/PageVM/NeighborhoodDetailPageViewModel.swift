@@ -162,7 +162,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         }
 //        "\(houseId)"
 //        houseId =
-        requestNeighborhoodDetail(neighborhoodId: "\(6581417114710573326)", logPB: logPB)
+        requestNeighborhoodDetail(neighborhoodId: "6581417114710573326", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {

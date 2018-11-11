@@ -176,7 +176,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                                                                 followId: "\(self.houseId)",
                             disposeBag: self.disposeBag,
                             statusBehavior: self.follwUpStatus,
-                            isNeedRecord: false)()
+                            isNeedRecord: false,
+                            showTip: true)()
                         
                     }
                     

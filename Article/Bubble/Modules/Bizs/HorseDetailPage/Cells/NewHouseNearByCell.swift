@@ -673,6 +673,7 @@ func parseNeighorhoodNearByNode(
 
 
         let params = TracerParams.momoid() <|>
+                toTracerParams("map", key: "element_from") <|>
                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseId, key: "group_id") <|>
                 toTracerParams("map_list", key: "click_type") <|>
@@ -750,6 +751,7 @@ func parseNewHouseNearByNode(
             traceExt
 
         let params = TracerParams.momoid() <|>
+            toTracerParams("map", key: "element_from") <|>
             toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseId, key: "group_id") <|>
                 toTracerParams("map_list", key: "click_type") <|>

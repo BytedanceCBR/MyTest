@@ -80,10 +80,12 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+
 #import "UIImageAdditions.h"
 
 #import "FHMapSearchViewController.h"
 
 #import "FHSearchHouseModel.h"
+#import "ArticleListNotifyBarView.h"
 
 #endif /* Article_Bridging_Header_h */

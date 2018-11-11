@@ -62,6 +62,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
     var stayMapParams = TracerParams.momoid()
 
     var centerPointName: String
+
+    var fromLogPb: Any?
     
     init(centerPointName: String) {
         self.centerPointName = centerPointName
@@ -175,7 +177,10 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                     self.creatOptionMenu()
                 }
                 .disposed(by: disposeBag)
-        self.tracerParams = self.tracerParams <|>
+
+        self.tracerParams = EnvContext.shared.homePageParams <|>
+                self.tracerParams <|>
+//                toTracerParams(self.fromLogPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams("map_detail", key: "page_type")
         self.stayMapParams = self.tracerParams <|>
             traceStayTime()

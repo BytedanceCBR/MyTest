@@ -133,7 +133,8 @@ class FollowUpViewModel {
         followId: String,
         disposeBag: DisposeBag,
         statusBehavior: BehaviorRelay<Bool>,
-        isNeedRecord: Bool = true) -> () -> Void {
+        isNeedRecord: Bool = true,
+        showTip: Bool = false) -> () -> Void {
         
         return {
             
@@ -163,6 +164,12 @@ class FollowUpViewModel {
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
+                            }
+                        }else if response?.data?.followStatus ?? 0 == 1 {
+                            let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 && showTip {
+                                
+                                EnvContext.shared.toast.showToast("提交成功")
                             }
                         }
                         NotificationCenter.default.post(name: .followUpDidChange, object: nil)

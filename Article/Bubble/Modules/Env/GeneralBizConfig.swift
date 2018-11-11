@@ -48,7 +48,7 @@ class GeneralBizConfig {
         // 监控城市列表选择
         currentSelectCityId
             .skip(1)
-            .ifEmpty(default: 122)
+//            .ifEmpty(default: 122)
             .filter { $0 != nil }
             .distinctUntilChanged()
             .subscribe(onNext: { [unowned self] (cityId) in
