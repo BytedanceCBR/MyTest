@@ -80,7 +80,6 @@ class ChatVC: BaseViewController {
         
 
         
-
         view.addSubview(emptyMaskView)
         emptyMaskView.icon.image = UIImage(named: "group-4")
         emptyMaskView.snp.makeConstraints { maker in
@@ -88,11 +87,11 @@ class ChatVC: BaseViewController {
         }
         
         self.errorVM = NHErrorViewModel(
-            errorMask:emptyMaskView,
+            errorMask: emptyMaskView,
             requestRetryText: "网络异常",
             requestNilDataText: "啊哦～您还没收到相关消息",
             requestNilDataImage: "empty_message",
-            requestErrorText: "网络不给力",
+            requestErrorText: "网络异常",
             isUserClickEnable: false)
     }
     

@@ -131,7 +131,6 @@ func fillNewHouseContactCell(_ data: NewHouseData, traceParams: TracerParams, co
                         .exclude("filter")
                     traceParams = traceParams <|>
                         toTracerParams("new_detail", key: "page_type") <|>
-                        toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                         toTracerParams(searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(courtId, key: "group_id")
 

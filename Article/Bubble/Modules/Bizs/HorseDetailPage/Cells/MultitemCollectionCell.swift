@@ -499,7 +499,7 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("old_detail", key: "page_type") <|>
@@ -547,7 +547,7 @@ fileprivate func searchInNeighborhoodItemCellSelector(
                 logPB: item.logPB,
                 disposeBag: disposeBag,
                 tracerParams: theParams <|>
-                        toTracerParams(item.logPB, key: "log_pb") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(offset, key: "rank"),
                 navVC: navVC)(TracerParams.momoid())
@@ -824,7 +824,7 @@ fileprivate func searchInNeighborhoodItemCellSelector(
     let theParams = itemTracerParams <|>
             toTracerParams("slide", key: "card_type") <|>
             itemTracerParams <|>
-            toTracerParams(item.logPB, key: "log_pb") <|>
+            toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams("related", key: "element_from") <|>
             toTracerParams("new_detail", key: "enter_from")
@@ -853,8 +853,9 @@ func parseNewHouseFloorPanCollectionNode(
             let params = TracerParams.momoid() <|>
                 toTracerParams("house_model", key: "element_type") <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(newHouseData.logPB, key: "log_pb") <|>
-                toTracerParams(newHouseData.id, key: "group_id") <|>
+                toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(newHouseData.id ?? "be_null", key: "group_id") <|>
+
                 traceExtension
             return TableSectionNode(
                 items: [cellRender],
@@ -868,7 +869,7 @@ func parseNewHouseFloorPanCollectionNode(
     }
 }
 
-// MARK: 猜你喜欢
+// MARK: 楼盘户型
 fileprivate func fillGuessLikeFloorPanCell(
         _ data: [FloorPan.Item],
         logPB: Any?,
@@ -884,20 +885,22 @@ fileprivate func fillGuessLikeFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(logPBVC)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(item.logPB)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
         }
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("new_detail", key: "enter_from") <|>
                     toTracerParams("house_model", key: "element_from") <|>
                     toTracerParams("house_model", key: "house_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
-                    toTracerParams(logPB, key: "log_pb")
+                    //实际上这个地方是空
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
@@ -1068,9 +1071,9 @@ fileprivate func fillSearchInNeighborhoodCell(
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.logPB, key: "log_pb") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("neighborhood_detail", key: "page_type") <|>
@@ -1117,10 +1120,11 @@ fileprivate func searchInNeighborhoodSelector(
     if let id = item.id, let houseId = Int64(id) {
         openErshouHouseDetailPage(
                 houseId: houseId,
+                logPB: item.logPB,
                 followStatus: followStatus,
                 disposeBag: disposeBag,
                 tracerParams: theParams <|>
-                        toTracerParams(item.logPB, key: "log_pb") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(offset, key: "rank"),
                 navVC: navVC)(TracerParams.momoid())
@@ -1173,9 +1177,9 @@ fileprivate func fillFloorPanCell(
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.logPB, key: "log_pb") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("new", key: "house_type") <|>
                     toTracerParams("house_model_detail", key: "page_type") <|>

@@ -767,14 +767,14 @@ TTRefreshViewDelegate
 
 - (void)setCategoryID:(NSString *)categoryID
 {
-    if (!_suggestionWordsView) {
-        CGRect rect = [self frameForListView];
-        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
-        if (self.superview) {
-            [self.superview addSubview:_suggestionWordsView];
-            [self.superview bringSubviewToFront:self];
-        }
-    }
+//    if (!_suggestionWordsView) {
+//        CGRect rect = [self frameForListView];
+//        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
+//        if (self.superview) {
+//            [self.superview addSubview:_suggestionWordsView];
+//            [self.superview bringSubviewToFront:self];
+//        }
+//    }
     
     if (!isEmptyString(categoryID) && !isEmptyString(_categoryID) && [_categoryID isEqualToString:categoryID]) {
         return;

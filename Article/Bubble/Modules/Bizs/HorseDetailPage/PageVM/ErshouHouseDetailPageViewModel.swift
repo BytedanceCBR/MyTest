@@ -151,6 +151,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     tracer: datas[indexPath.section].tracer,
                     atIndexPath: indexPath,
                     traceParams: params)
+                print("callTracer: \(indexPath)")
                 recordRowIndex.insert(indexPath)
             }
 
