@@ -550,7 +550,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
                         }
                         self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
-                        self.followForSendPhone()
+                        self.followForSendPhone(false)
 
                         if self.houseType != .neighborhood {
                             
@@ -930,12 +930,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
     }
     
-    func followForSendPhone() {
+    func followForSendPhone(_ showTip: Bool = false) {
         self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                   followId: "\(self.houseId)",
             disposeBag: self.disposeBag,
-            isNeedRecord: false)()
+            isNeedRecord: false,
+            showTip: showTip)()
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
@@ -949,7 +950,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfirmTrace()
-                        self.followForSendPhone()
+                        self.followForSendPhone(true)
                     }
                 }else
                 {
