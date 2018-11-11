@@ -9,13 +9,36 @@ import UIKit
 
 class FHErshouDetailPriceRankCell: BaseUITableViewCell {
 
-    fileprivate func setPriceRank(priceRank: HousePriceRank) {
+    fileprivate func setPriceRank(priceRank: HousePriceRank?) {
+    
+        // add by zjing for test
+
+//        var text = "\(priceRank.position ?? 0 / total)"
+        let attributeText = NSMutableAttributedString()
         
-        if let total = priceRank.total, total > 0 {
-            
-            rankLabel.text = "\(priceRank.position ?? 0 / total)"
-        }
-        subtitleLabel.text = priceRank.analyseDetail
+        let attr1 = NSMutableAttributedString(string: "1/")
+        attr1.yy_font = CommonUIStyle.Font.pingFangRegular(16)
+        attributeText.append(attr1)
+
+        let attr2 = NSMutableAttributedString(string: "23")
+        attr2.yy_font = CommonUIStyle.Font.pingFangRegular(12)
+        attributeText.append(attr2)
+        rankLabel.attributedText = attributeText
+        
+//        if let total = priceRank.total, total > 0 {
+//
+//            rankLabel.text = "\(priceRank.position ?? 0 / total)"
+//        }
+//        subtitleLabel.text = priceRank.analyseDetail
+        
+        
+        
+//        rankLabel.text = "1/23"
+        subtitleLabel.text = "对照组：二手房详情页线上+部分字段及教育资源补\n实验组A：二手房有小区评测，小区详情页有小区评测\n实验组B：二手房详情页补充房源概况"
+
+        let subAttr = NSMutableAttributedString(string: "对照组：二手房详情页线上+部分字段及教育资源补\n实验组A：二手房有小区评测，小区详情页有小区评测\n实验组B：二手房详情页补充房源概况")
+        subAttr.yy_lineSpacing = 6
+        subtitleLabel.attributedText = subAttr
         
     }
     
@@ -46,7 +69,7 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
             maker.height.equalTo(50)
         }
         rankLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(-15)
+            maker.right.equalTo(-15)
             maker.top.equalToSuperview()
             maker.height.equalTo(tipLabel)
         }
@@ -54,15 +77,17 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
         line.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(tipLabel.snp.bottom)
-            maker.height.equalTo(TTDeviceHelper.ssOnePixel())
+//            maker.height.equalTo(TTDeviceHelper.ssOnePixel())
+            maker.height.equalTo(1)
+
         }
         
         bgView.addSubview(subtitleLabel)
         subtitleLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(line.snp.bottom).offset(15)
+            maker.top.equalTo(line.snp.bottom).offset(17)
             maker.left.equalTo(15)
             maker.right.equalTo(-15)
-            maker.bottom.equalTo(-15)
+            maker.bottom.equalTo(-17)
         }
     }
     
@@ -89,7 +114,7 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
     lazy var rankLabel: UILabel = {
         let re = UILabel()
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
-        re.font = CommonUIStyle.Font.pingFangRegular(16)
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
         return re
     }()
     
@@ -128,9 +153,10 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
 func parsePriceRankNode(_ priceRank: HousePriceRank?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         
-        if let thePriceRank = priceRank {
+        // add by zjing for test
+//        if let thePriceRank = priceRank {
 
-            let cellRender = oneTimeRender(curry(fillPriceRankCell)(thePriceRank))
+            let cellRender = oneTimeRender(curry(fillPriceRankCell)(nil))
             let params = TracerParams.momoid() <|>
                 toTracerParams("price_reference", key: "element_type") <|>
                 toTracerParams("old_detail", key: "page_type") <|>
@@ -143,15 +169,15 @@ func parsePriceRankNode(_ priceRank: HousePriceRank?, traceExtension: TracerPara
                 label: "",
                 type: .node(identifier: FHErshouDetailPriceRankCell.identifier))
             
-        }else {
-            
-            return nil
-        }
+//        }else {
+//
+//            return nil
+//        }
     }
 }
 
 func fillPriceRankCell(
-    _ data: HousePriceRank,
+    _ data: HousePriceRank?,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHErshouDetailPriceRankCell {
         
