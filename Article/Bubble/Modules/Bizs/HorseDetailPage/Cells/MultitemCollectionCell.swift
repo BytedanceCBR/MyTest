@@ -218,6 +218,8 @@ class FHStarsCountView: UIView
         return re
     }()
     
+    
+    
     override init(frame: CGRect = CGRect.zero) {
         super.init(frame: frame)
 
@@ -247,10 +249,15 @@ class FHStarsCountView: UIView
         
         var privousView : UIImageView?
         
+        for v in starsCountView.subviews
+        {
+            v.removeFromSuperview()
+        }
+        
         for index in 1...5 {
             
             let starImageView = UIImageView(image: UIImage(named: "star_evaluation_default"))
-            addSubview(starImageView)
+            starsCountView.addSubview(starImageView)
             
             starImageView.snp.makeConstraints { maker in
                 if (privousView != nil)
@@ -258,7 +265,7 @@ class FHStarsCountView: UIView
                     maker.left.equalTo(privousView?.snp.right ?? 0).offset(5)
                 }else
                 {
-                    maker.left.equalTo(starsName.snp.right).offset(5)
+                    maker.left.equalToSuperview().offset(5)
                 }
                 maker.width.height.equalTo(26)
                 maker.centerY.equalToSuperview()
@@ -274,10 +281,10 @@ class FHStarsCountView: UIView
                 return
             }
             
-            if index < startCount
+            if index <= startCount
             {
                 starImageView.image = UIImage(named: "star_evaluation")
-            }else if index == startCount,isShowHalfStart
+            }else if index == startCount + 1,isShowHalfStart
             {
                 createHalfStarView(superView: starImageView, ratio: scoreValue % 10)
             }
@@ -289,6 +296,12 @@ class FHStarsCountView: UIView
     
     func createHalfStarView(superView : UIImageView, ratio: Int)
     {
+        
+        for v in superView.subviews
+        {
+            v.removeFromSuperview()
+        }
+        
         let harfImageView = UIImageView(image: UIImage(named: "star_evaluation"))
         harfImageView.contentMode = .scaleAspectFit
         superView.addSubview(harfImageView)
@@ -301,8 +314,8 @@ class FHStarsCountView: UIView
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: 0, y: 26))
-        path.addLine(to: CGPoint(x: 26 * Double(ratio) / 10.0, y: 26))
-        path.addLine(to: CGPoint(x: 26 * Double(ratio) / 10.0, y: 0))
+        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 26)) //11 是因为图片有缝隙
+        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 0))
         path.addLine(to: CGPoint(x: 0, y: 0))
       
         shapeLayer.path = path.cgPath
@@ -725,7 +738,7 @@ fileprivate func fillEvaluationCell(
         theCell.itemReuseIdentifier = "evaluate"
         print("datas = \(datas)")
         theCell.starsContainer.updateStarsCount(scoreValue: datas.totalScore ?? 0)
-        
+
         if let datasScoresEntity = datas.subScores
         {
             theCell.collectionViewCellRenders = datasScoresEntity.take(5).map { entity -> CollectionViewCellRender in
