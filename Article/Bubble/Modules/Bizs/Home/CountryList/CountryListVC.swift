@@ -220,9 +220,23 @@ class CountryListVC: BaseViewController {
         
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined, .restricted, .denied:
+            break
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            if self.locationBar.countryLabel.text == "定位失败"
+            {
+                if EnvContext.shared.client.reachability.connection == .none {
+                    return
+                }
+                EnvContext.shared.client.locationManager.requestCurrentLocation(true)
+            }
+            break
+        }
     }
     
     override func didReceiveMemoryWarning() {
