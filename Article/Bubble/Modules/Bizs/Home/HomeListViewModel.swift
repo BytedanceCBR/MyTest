@@ -628,18 +628,29 @@ class HomeListViewModel: DetailPageViewModel {
                 }
                 .subscribe(
                     onNext: { [unowned self] response in
+                        
+                        //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
+                        self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullDown(withSuccess: true)
+                        
+                        //                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
+
                         if let dataSource = self.dataSource {
                             dataSource.datas = response
                             dataSource.recordIndexCache = []
                             self.tableView?.reloadData()
                         }
-                        //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
-                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
 
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     },
                     onError: { [unowned self] error in
-                        //                        print(error)
+
+                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
+                        //                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
+                        
+                        self.tableView?.finishPullUp(withSuccess: false)
+                        self.tableView?.finishPullDown(withSuccess: false)
+                        
                         if EnvContext.shared.client.reachability.connection == .none
                         {
                             EnvContext.shared.toast.showToast("网络异常")
@@ -647,8 +658,7 @@ class HomeListViewModel: DetailPageViewModel {
                         {
                             EnvContext.shared.toast.showToast("请求失败,请检查网络后重试")
                         }
-                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
-                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
+
                     },
                     onCompleted: {
 
