@@ -233,7 +233,7 @@ class CountryListVC: BaseViewController {
                 if EnvContext.shared.client.reachability.connection == .none {
                     return
                 }
-                EnvContext.shared.client.locationManager.requestCurrentLocation(true)
+                EnvContext.shared.client.locationManager.requestCurrentLocation(showToast:true)
             }
             break
         }

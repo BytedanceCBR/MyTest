@@ -35,14 +35,14 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
             .skip(1)
             .subscribe(onNext: { [weak self] (notify) in
                 if self?.currentLocation.value == nil {
-                    self?.requestCurrentLocation()
+                    self?.requestCurrentLocation(showToast: false)
                 }
             })
             .disposed(by: disposeBag)
     }
 
 
-    func requestCurrentLocation(_ showAlert: Bool = false) {
+    func requestCurrentLocation(_ showAlert: Bool = false, showToast: Bool = true) {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
 
         locationManager.locationTimeout = 2
@@ -51,7 +51,6 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
         locationManager.requestLocation(
             withReGeocode: true,
             completionBlock: { [weak self] (location: CLLocation?, reGeocode: AMapLocationReGeocode?, error: Error?) in
-
                 if let error = error {
                     let error = error as NSError
 
@@ -91,8 +90,18 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()
                 }
-
-                self?.currentCity.accept(reGeocode)
+                
+                if showToast
+                {
+                    self?.currentCity.accept(reGeocode)
+                }else
+                {
+                    if reGeocode != nil
+                    {
+                        self?.currentCity.accept(reGeocode)
+                    }
+                }
+                
 
                 self?.currentLocation.accept(location)
         })
