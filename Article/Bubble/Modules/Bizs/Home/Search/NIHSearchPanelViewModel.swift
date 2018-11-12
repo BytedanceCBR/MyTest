@@ -48,11 +48,19 @@ class NIHSearchPanelViewModel: NSObject {
                 if let city = city {
                     self.suspendSearchBar.countryLabel.text = city
                 } else {
-                    if self.suspendSearchBar.countryLabel.text == "深圳"
+                    if self.suspendSearchBar.countryLabel.text == "", self.suspendSearchBar.countryLabel.text == "深圳"
                     {
                         return
                     }
-                    self.suspendSearchBar.countryLabel.text = "深圳"
+                    switch CLLocationManager.authorizationStatus() {
+                    case .notDetermined, .restricted, .denied:
+                        self.suspendSearchBar.countryLabel.text = "深圳"
+                        break
+                        
+                    case .authorizedWhenInUse, .authorizedAlways:
+                        self.suspendSearchBar.countryLabel.text = ""
+                        break
+                    }
                 }
             })
             .disposed(by: disposeBag)
