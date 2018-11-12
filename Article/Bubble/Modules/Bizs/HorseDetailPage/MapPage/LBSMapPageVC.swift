@@ -490,7 +490,6 @@ func getMapPoiIcon(category: String) -> UIImage {
     return categoryIconMap[category] ?? #imageLiteral(resourceName: "icon-location")
 }
 
-
 fileprivate class MyMAAnnotation: MAPointAnnotation {
     var type: String = ""
 }

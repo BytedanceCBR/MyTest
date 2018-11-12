@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-class NeighborhoodInfoCell: BaseUITableViewCell {
+class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDelegate {
     
     open override class var identifier: String {
         return "NeighborhoodInfoCell"
@@ -57,6 +57,19 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         return re
     }()
     
+    let mapView: MAMapView = {
+        let screenWidth = UIScreen.main.bounds.width
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let re = MAMapView(frame: frame)
+        re.runLoopMode = RunLoopMode.defaultRunLoopMode;
+        re.showsCompass = false
+        re.showsScale = false
+        re.isZoomEnabled = false
+        re.isScrollEnabled = false
+        re.zoomLevel = 13
+        return re
+    }()
+    
     lazy var bgView: UIView = {
         let re = UIView()
         re.backgroundColor = hexStringToUIColor(hex: "#000000",alpha: 0.5)
@@ -91,10 +104,46 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
     var data: NeighborhoodInfo?
     var logPB: [String: Any]?
     var neighborhoodId:String?
+    var centerPoint: CLLocationCoordinate2D?
+
+    func setLocation(lat: String, lng: String) {
+        if let theLat = Double(lat), let theLng = Double(lng) {
+            let center = CLLocationCoordinate2D(latitude: theLat, longitude: theLng)
+            centerPoint = center
+            mapView.setCenter(center, animated: false)
+        }
+    }
+    
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        
+        if let annotation = annotation as? FHMAAnnotation {
+            
+            let pointReuseIndetifier = "pointReuseIndetifier"
+            var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier)
+            
+            if annotationView == nil {
+                annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
+            }
+            
+            if annotation.type.rawValue == "center"
+            {
+                annotationView?.image = UIImage(named: "icon-location")
+            }
+            
+            //设置中心点偏移，使得标注底部中间点成为经纬度对应点
+            annotationView?.centerOffset = CGPoint(x: 0, y: -18)
+            
+            return annotationView ?? MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
+        }
+        
+        return MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
+    }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        mapView.delegate = self
+
         contentView.addSubview(starsContainer)
         starsContainer.snp.makeConstraints { maker in
             maker.top.left.right.equalToSuperview()
@@ -135,6 +184,11 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
             maker.top.equalTo(schoolKey.snp.bottom).offset(20)
+        }
+        
+        let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.4)
+        self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
+            self?.mapImageView.image = image
         }
         
         contentView.addSubview(bgView)
@@ -266,9 +320,8 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         theCell.data = data.neighborhoodInfo
         theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
 
-        if let url = data.neighborhoodInfo?.gaodeImageUrl {
-            theCell.mapImageView.bd_setImage(with: URL(string: url))
-        }
+        if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
+            theCell.setLocation(lat: lat, lng: lng)
         
         if let evaluationInfo = data.neighborhoodInfo?.evaluationInfo {
             
@@ -322,7 +375,7 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         
     }
 }
-
+}
 
 func openEvaluateWebPage(
     urlStr: String,

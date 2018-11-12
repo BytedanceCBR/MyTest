@@ -26,7 +26,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     var requestIndex: Int = 0
     
-    fileprivate var poiAnnotationDatas : [String : [MyMAAnnotation]]?
+    fileprivate var poiAnnotationDatas : [String : [FHMAAnnotation]]?
 
     fileprivate var poiMapDatas : [String : [AMapPOI]]?
 
@@ -141,13 +141,13 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return re
     }()
 
-    fileprivate var pointAnnotation: MyMAAnnotation?
+    fileprivate var pointAnnotation: FHMAAnnotation?
 
     var disposeBag = DisposeBag()
     
     var disposeCell = DisposeBag()
 
-    fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
+    fileprivate let poiData = BehaviorRelay<[FHMAAnnotation]>(value: [])
 
     var centerPoint: CLLocationCoordinate2D?
 
@@ -242,7 +242,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             self.callBackIndexChanged?()
         }
         
-        poiAnnotationDatas = [String : [MyMAAnnotation]]()
+        poiAnnotationDatas = [String : [FHMAAnnotation]]()
         poiMapDatas = [String : [AMapPOI]]()
         titleDatas = [String : String]()
     }
@@ -303,11 +303,11 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     }
 
 
-    fileprivate func resetAnnotations(_ annotations: [MyMAAnnotation]) {
+    fileprivate func resetAnnotations(_ annotations: [FHMAAnnotation]) {
         guard let center = centerPoint else {
             return
         }
-        let pointAnnotation = MyMAAnnotation()
+        let pointAnnotation = FHMAAnnotation()
         pointAnnotation.type = .center
         pointAnnotation.coordinate = center
         self.pointAnnotation = pointAnnotation
@@ -360,7 +360,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
     func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
 
-        if let annotation = annotation as? MyMAAnnotation {
+        if let annotation = annotation as? FHMAAnnotation {
 
             let pointReuseIndetifier = "pointReuseIndetifier"
             var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier)
@@ -428,8 +428,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             emptyInfoLabel.isHidden = false
             return
         }
-        let pois = response.pois.take(3).map { (poi) -> MyMAAnnotation in
-            let re = MyMAAnnotation()
+        let pois = response.pois.take(3).map { (poi) -> FHMAAnnotation in
+            let re = FHMAAnnotation()
             re.type = categorys[segmentedControl.selectedSegmentIndex]
             re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
             re.title = poi.name
@@ -548,7 +548,7 @@ enum POIType: String {
     case traffic = "交通"
 }
 
-fileprivate class MyMAAnnotation: MAPointAnnotation {
+class FHMAAnnotation: MAPointAnnotation {
     var type: POIType = .center
 }
 
