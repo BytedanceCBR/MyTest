@@ -123,6 +123,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return _mapView;
 }
 
+-(void)moveToUserLocation
+{
+    MAUserLocation *location =  self.mapView.userLocation;
+    if (location.location) {
+        [self.mapView setCenterCoordinate:location.location.coordinate animated:YES];
+    }
+}
+
 -(void)changeNavbarAppear:(BOOL)show
 {
     [self.viewController showNavTopViews:show?1:0 animated:YES];
