@@ -158,6 +158,7 @@ class NeighborhoodEvaluationItem: UIView
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(16)
         re.textColor = hexStringToUIColor(hex: "#081f33")
+        re.textAlignment = .left
         return re
     }()
     
@@ -198,7 +199,8 @@ class NeighborhoodEvaluationItem: UIView
         
         backView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
-            maker.left.top.equalToSuperview().offset(12)
+            maker.left.equalToSuperview().offset(12)
+            maker.top.equalToSuperview().offset(18)
             maker.height.equalTo(22)
             maker.width.equalTo(70)
         }
@@ -224,19 +226,12 @@ class NeighborhoodEvaluationItem: UIView
     func layOutDescLabelForText(text: String)
     {
         descLabel.removeFromSuperview()
-        let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 116)
+        let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 120)
         backView.addSubview(descLabel)
-        descLabel.frame = CGRect(x: 12, y: 43, width: 116, height: heightText > 73 ? 73 : heightText)
-//        descLabel.snp.makeConstraints { maker in
-//            maker.top.equalTo(nameLabel.snp.bottom).offset(6)
-//            maker.left.equalToSuperview().offset(12)
-//            maker.right.equalToSuperview().offset(-12)
-//            maker.height.equalTo(heightText > 73 ? 73 : heightText)
-//        }
+        descLabel.frame = CGRect(x: 12, y: 43, width: 120, height: heightText > 73 ? 73 : heightText)
         descLabel.text = text
         descLabel.lineBreakMode = .byTruncatingTail
         descLabel.numberOfLines = 4
-//        descLabel.sizeToFit()
     }
     
     func labelWithHeight(labelStr: String, label: UILabel, width: CGFloat) ->CGFloat {

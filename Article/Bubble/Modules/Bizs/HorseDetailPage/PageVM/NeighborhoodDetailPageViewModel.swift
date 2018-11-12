@@ -273,6 +273,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseNeighborhoodEvaluationCollectionNode(
                     data,
                     traceExtension: traceExtension,
+                    disposeBag: disposeBag,
                     followStatus: self.followStatus,
                     navVC: self.navVC)
                 <- parseFlineNode(6)

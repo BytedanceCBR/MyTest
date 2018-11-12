@@ -345,7 +345,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        flowLayout.itemSize = CGSize(width: 156, height: 122)
+        flowLayout.itemSize = CGSize(width: 140, height: 122)
         flowLayout.minimumLineSpacing = 8
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
@@ -1083,6 +1083,7 @@ func parseSearchInNeighborhoodCollectionNode(
 func parseNeighborhoodEvaluationCollectionNode(
     _ data: NeighborhoodDetailData?,
     traceExtension: TracerParams = TracerParams.momoid(),
+    disposeBag: DisposeBag,
     followStatus: BehaviorRelay<Result<Bool>>,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
@@ -1103,13 +1104,15 @@ func parseNeighborhoodEvaluationCollectionNode(
 //                toTracerParams("same_neighborhood", key: "element_from")
 //
             
+            var selector: ((TracerParams) -> Void)? = openEvaluationPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", disposeBag: disposeBag)
+            
             let openParams = TracerParams.momoid()
             if let evaluatInfo = data?.evaluationInfo
             {
                 let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(openParams)(navVC))
                 return TableSectionNode(
                     items: [render],
-                    selectors: nil,
+                    selectors: selector != nil ? [selector!] : nil,
                     tracer: [elementShowOnceRecord(params: params)],
                     label: "小区房源",
                     type: .node(identifier: MultitemCollectionEvaluateCell.identifier))
@@ -1320,5 +1323,16 @@ fileprivate func floorPanItemSelector(
                 followPage: followPage,
                 bottomBarBinder: bottomBarBinder,
                 params: params)()
+    }
+}
+
+func openEvaluationPage(
+    urlStr: String,
+    disposeBag: DisposeBag) -> (TracerParams) -> Void{
+    return { (_) in
+        if urlStr != ""
+        {
+            TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(urlStr)"))
+        }
     }
 }
