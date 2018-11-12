@@ -751,7 +751,7 @@ fileprivate func fillEvaluationCell(
             
             theCell.itemSelectors = datasScoresEntity.take(5).enumerated().map { e -> (DisposeBag) -> Void in
                 let (offset, item) = e
-                return curry(EvaluationItemSelector)(offset)(item)(itemTracerParamsResult)(navVC)
+                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParamsResult)(navVC)
             }
             theCell.itemRecorders = datasScoresEntity.take(5).enumerated().map { e -> (TracerParams) -> Void in
                 let (offset, item) = e
@@ -791,14 +791,18 @@ fileprivate func fillEvaluationCollectionItemCell(
     }
 }
 
-fileprivate func EvaluationItemSelector(
+func EvaluationItemSelector(
     offset: Int,
-    data: EvaluationIteminfo,
+    data: NeighborhoodEvaluationinfo,
     itemTracerParams: TracerParams,
     navVC: UINavigationController?,
     disposeBag: DisposeBag) {
-    
-    
+      if let detailUrlV = data.detailUrl
+      {
+//         openEvaluationPage(urlStr: detailUrlV, title: "小区评测", disposeBag: disposeBag)
+//        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+        FRRouteHelper.openWebView(forURL: detailUrlV)
+      }
      //to do jump
 }
 
@@ -1339,13 +1343,3 @@ fileprivate func floorPanItemSelector(
     }
 }
 
-func openEvaluationPage(
-    urlStr: String,
-    disposeBag: DisposeBag) -> (TracerParams) -> Void{
-    return { (_) in
-        if urlStr != ""
-        {
-            TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(urlStr)"))
-        }
-    }
-}
