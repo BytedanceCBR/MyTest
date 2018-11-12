@@ -1117,7 +1117,7 @@ func parseNeighborhoodEvaluationCollectionNode(
 //                toTracerParams("same_neighborhood", key: "element_from")
 //
             
-            var selector: ((TracerParams) -> Void)? = openEvaluationPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", disposeBag: disposeBag)
+            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
             
             let openParams = TracerParams.momoid()
             if let evaluatInfo = data?.evaluationInfo

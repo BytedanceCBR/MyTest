@@ -326,7 +326,7 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
 
 func openEvaluateWebPage(
     urlStr: String,
-    title: String,
+    title: String = "小区评测",
     traceParams: TracerParams,
     disposeBag: DisposeBag) -> (TracerParams) -> Void{
     return { (_) in
