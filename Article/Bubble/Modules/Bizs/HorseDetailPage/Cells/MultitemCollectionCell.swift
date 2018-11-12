@@ -290,13 +290,25 @@ class FHStarsCountView: UIView
     func createHalfStarView(superView : UIImageView, ratio: Int)
     {
         let harfImageView = UIImageView(image: UIImage(named: "star_evaluation"))
-        harfImageView.contentMode = .scaleToFill
-        harfImageView.layer.contentsRect = CGRect(x: 0, y: 0, width: Double(ratio) / 10.0, height: 1)
+        harfImageView.contentMode = .scaleAspectFit
         superView.addSubview(harfImageView)
         harfImageView.snp.makeConstraints { maker in
             maker.top.left.equalToSuperview()
+//            maker.left.equalToSuperview().offset((1 - Double(ratio) / 10.0) * 26)
             maker.width.height.equalTo(26)
         }
+        let shapeLayer = CAShapeLayer()
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 26))
+        path.addLine(to: CGPoint(x: 26 * Double(ratio) / 10.0, y: 26))
+        path.addLine(to: CGPoint(x: 26 * Double(ratio) / 10.0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+      
+        shapeLayer.path = path.cgPath
+        harfImageView.layer.mask = shapeLayer
+
+//        harfImageView.layer.contentsRect = CGRect(x: 0.0, y: 0.0, width: Double(ratio) / 10.0, height: 1)
     }
     
     
