@@ -774,7 +774,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
-    param[@"category_name"] = @"mapfind";
+    param[@"category_name"] = @"old_list";
     param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
     
     [EnvContext.shared.tracer writeEvent:@"click_switch_mapfind" params:param];
