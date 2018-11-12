@@ -38,6 +38,7 @@
 @property(nonatomic , strong) UIBarButtonItem *showHouseListBarItem;
 @property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
 @property(nonatomic , strong) UILabel *navTitleLabel;
+@property(nonatomic , strong) UIButton *locationButton;
 
 @end
 
@@ -115,6 +116,19 @@
     return _showMapBarItem;
 }
 
+-(UIButton *)locationButton
+{
+    if (!_locationButton) {
+        _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIImage *img = [UIImage imageNamed:@"mapsearch_location"];
+        [_locationButton setImage:img forState:UIControlStateNormal];
+        [_locationButton setImage:img forState:UIControlStateHighlighted];
+        _locationButton.backgroundColor = [UIColor whiteColor];
+        [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _locationButton;
+}
+
 -(void)backAction
 {
     if (self.viewModel.showMode == FHMapSearchShowModeMap) {
@@ -124,6 +138,11 @@
         [self.viewModel dismissHouseListView];
     }
     
+}
+
+-(void)locationAction
+{
+    [self.viewModel moveToUserLocation];
 }
 
 -(void)showHouseList
@@ -188,6 +207,7 @@
     self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel viewController:self];
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
+    [self.view addSubview:self.locationButton];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
     self.filterBgControl.hidden = YES;
@@ -243,15 +263,22 @@
     [self.viewModel.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.bottom.right.mas_equalTo(self.view);
     }];
+    
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.view);
         make.top.equalTo(self.filterPanel.mas_bottom);
     }];
-        
+
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(navHeight);
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(kFilterBarHeight);
+    }];
+    
+    [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-20);
+        make.top.mas_equalTo(self.filterPanel.mas_bottom).offset(20);
+        make.size.mas_equalTo(CGSizeMake(40, 40));
     }];
 }
 
