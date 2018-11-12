@@ -516,7 +516,7 @@ class HomeListViewModel: DetailPageViewModel {
                         
                     }, onCompleted: {
 
-                    }, onDisposed: {
+                    }, onDisposed: { [unowned self] in
                         self.tableView?.finishPullUp(withSuccess: true)
                         self.tableView?.finishPullDown(withSuccess: true)
                     })
@@ -645,9 +645,6 @@ class HomeListViewModel: DetailPageViewModel {
                     },
                     onError: { [unowned self] error in
 
-                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
-                        //                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
-                        
                         self.tableView?.finishPullUp(withSuccess: false)
                         self.tableView?.finishPullDown(withSuccess: false)
                         
@@ -663,8 +660,10 @@ class HomeListViewModel: DetailPageViewModel {
                     onCompleted: {
 
                 },
-                    onDisposed: {
-
+                    onDisposed: { [unowned self] in
+                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
+                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
+                        
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
