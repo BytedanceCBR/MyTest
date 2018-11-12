@@ -469,6 +469,12 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
     }
 }
 
+
+enum EvaluationLevelType : Int{
+    case evaluationLevelTypeLow = 1
+    case evaluationLevelTypeHeight = 2
+}
+
 fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
     lazy var neighborhoodItemView: NeighborhoodEvaluationItem = {
         let re = NeighborhoodEvaluationItem()
@@ -756,9 +762,20 @@ fileprivate func fillEvaluationCollectionItemCell(
     cell: UICollectionViewCell) {
     if let theCell = cell as? EvaluationItemCollectionCell {
         theCell.neighborhoodItemView.descLabel.text = data.content
+        theCell.neighborhoodItemView.descLabel.sizeToFit()
         theCell.neighborhoodItemView.nameLabel.text = data.scoreName
-        theCell.neighborhoodItemView.scoreLabel.text = String(data.scoreValue ?? 0)
+        theCell.neighborhoodItemView.scoreLabel.text = String((Double(data.scoreValue ?? 0) / 10.0) )
         theCell.neighborhoodItemView.levelLabel.text = String(data.scoreLevel ?? 0)
+        
+        if let levelV = data.scoreLevel, levelV == EvaluationLevelType.evaluationLevelTypeHeight.rawValue
+        {
+            theCell.neighborhoodItemView.levelLabel.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
+            theCell.neighborhoodItemView.levelLabel.text = "高"
+        }else
+        {
+            theCell.neighborhoodItemView.levelLabel.backgroundColor = hexStringToUIColor(hex: kFHClearBlueColor)
+            theCell.neighborhoodItemView.levelLabel.text = "低"
+        }
     }
 }
 

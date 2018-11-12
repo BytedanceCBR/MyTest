@@ -143,33 +143,39 @@ class NeighborhoodEvaluationItem: UIView
         let re = UIView()
         re.layer.cornerRadius = 4
         re.layer.masksToBounds = true
-        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
+        re.backgroundColor = hexStringToUIColor(hex: kFHClearGreyColor)
         return re
     }() 
     
     lazy var descLabel: YYLabel = {
-        let re = YYLabel()
+        let re = YYLabel() 
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
         return re
     }()
     
     lazy var nameLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(16)
-        re.textColor = hexStringToUIColor(hex: "#f85959")
+        re.textColor = hexStringToUIColor(hex: "#081f33")
         return re
     }()
     
     lazy var scoreLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
         return re
     }()
     
     lazy var levelLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.textColor = UIColor.white
+        re.textAlignment = .center
+        re.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
+        re.layer.masksToBounds = true
+        re.layer.cornerRadius = 4.0
         return re
     }()
     
@@ -186,44 +192,44 @@ class NeighborhoodEvaluationItem: UIView
         
         backView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.width.equalTo(156)
-            maker.height.equalTo(116)
+            maker.width.equalTo(140)
+            maker.height.equalTo(122)
             maker.top.equalToSuperview()
         }
         
         backView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
-            maker.right.equalToSuperview()
+            maker.left.top.equalToSuperview().offset(12)
             maker.height.equalTo(22)
-            maker.bottom.equalToSuperview()
+            maker.width.equalTo(70)
+        }
+        
+        backView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { maker in
+            maker.right.equalToSuperview()
+            maker.height.width.equalTo(22)
+            maker.top.equalTo(nameLabel)
         }
         
         scoreLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         scoreLabel.setContentHuggingPriority(.required, for: .horizontal)
         backView.addSubview(scoreLabel)
         scoreLabel.snp.makeConstraints { maker in
-            maker.left.equalToSuperview()
+            maker.right.equalTo(levelLabel.snp.left).offset(-9)
             maker.height.equalTo(22)
-            maker.top.equalToSuperview().offset(3)
-        }
-        
-        backView.addSubview(levelLabel)
-        levelLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(scoreLabel.snp.right).offset(6)
-            maker.right.equalToSuperview()
-            maker.height.equalTo(22)
-            maker.centerY.equalTo(scoreLabel.snp.centerY)
-            maker.bottom.equalToSuperview()
+            maker.top.equalTo(nameLabel)
         }
         
         backView.addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.height.equalTo(22)
-            maker.bottom.equalTo(backView.snp.bottom).offset(9)
+            maker.top.equalTo(nameLabel.snp.bottom).offset(4)
+            maker.left.equalTo(nameLabel)
+            maker.right.bottom.equalToSuperview().offset(-10)
         }
         
-        //        addGestureRecognizer(tapGesture)
+        descLabel.backgroundColor = UIColor.clear
+        descLabel.numberOfLines = 4
+        descLabel.sizeToFit()
         
     }
     
