@@ -123,7 +123,7 @@
         UIImage *img = [UIImage imageNamed:@"mapsearch_location"];
         [_locationButton setImage:img forState:UIControlStateNormal];
         [_locationButton setImage:img forState:UIControlStateHighlighted];
-        _locationButton.backgroundColor = [UIColor whiteColor];
+        _locationButton.backgroundColor = [UIColor clearColor];
         [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _locationButton;
@@ -277,8 +277,8 @@
     
     [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.filterPanel.mas_bottom).offset(20);
-        make.size.mas_equalTo(CGSizeMake(40, 40));
+        make.bottom.mas_equalTo(self.view).offset(-20);
+        make.size.mas_equalTo(CGSizeMake(42, 42));
     }];
 }
 
