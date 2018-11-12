@@ -42,9 +42,9 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
         
         contentView.addSubview(bgView)
         bgView.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
+            maker.top.equalToSuperview()
             maker.left.equalTo(20)
-            maker.right.equalTo(-20)
+            maker.right.bottom.equalTo(-20)
         }
         bgView.layer.cornerRadius = 4
         bgView.layer.masksToBounds = true

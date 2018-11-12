@@ -347,11 +347,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     return data.neighborhoodInfo != nil ? true : false
                 }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
-                <- parseHeaderNode("价格分析") {
-                    return data.housePriceRank != nil ? true : false
-                }
+                <- parseHeaderNode("价格分析")
                 <- parsePriceRankNode(data.housePriceRank, traceExtension: traceExtension)
-                <- parseHeaderNode("均价走势")
+
+                // 均价走势
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id
                     {
@@ -377,11 +376,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             recordEvent(key: "click_price_trend", params: loadMoreParams)
                     }
                 }
-                <- parseHeaderNode("同小区价格对比", adjustBottomSpace: -10) {
-                    (data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? false : true
-                }
+                <- parseFlineNode(6)
+                // 购房小建议
                 <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
-                <- parseFlineNode(((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) || self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(data.housePriceRank?.buySuggestion != nil ? 6 : 0)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "同小区房源"  : "同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
