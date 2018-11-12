@@ -344,7 +344,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         flowLayout.itemSize = CGSize(width: 156, height: 122)
         flowLayout.minimumLineSpacing = 8
         flowLayout.scrollDirection = .horizontal
@@ -761,8 +761,7 @@ fileprivate func fillEvaluationCollectionItemCell(
     itemTracerParams: TracerParams,
     cell: UICollectionViewCell) {
     if let theCell = cell as? EvaluationItemCollectionCell {
-        theCell.neighborhoodItemView.descLabel.text = data.content
-        theCell.neighborhoodItemView.descLabel.sizeToFit()
+        theCell.neighborhoodItemView.layOutDescLabelForText(text:data.content ?? "暂无信息")
         theCell.neighborhoodItemView.nameLabel.text = data.scoreName
         theCell.neighborhoodItemView.scoreLabel.text = String((Double(data.scoreValue ?? 0) / 10.0) )
         theCell.neighborhoodItemView.levelLabel.text = String(data.scoreLevel ?? 0)

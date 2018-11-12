@@ -147,8 +147,8 @@ class NeighborhoodEvaluationItem: UIView
         return re
     }() 
     
-    lazy var descLabel: YYLabel = {
-        let re = YYLabel() 
+    lazy var descLabel: UILabel = {
+        let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
         return re
@@ -191,10 +191,9 @@ class NeighborhoodEvaluationItem: UIView
         addSubview(backView)
         
         backView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
             maker.width.equalTo(140)
             maker.height.equalTo(122)
-            maker.top.equalToSuperview()
+            maker.centerX.centerY.equalToSuperview()
         }
         
         backView.addSubview(nameLabel)
@@ -219,18 +218,33 @@ class NeighborhoodEvaluationItem: UIView
             maker.height.equalTo(22)
             maker.top.equalTo(nameLabel)
         }
-        
+
+    }
+    
+    func layOutDescLabelForText(text: String)
+    {
+        descLabel.removeFromSuperview()
+        let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 116)
         backView.addSubview(descLabel)
-        descLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(nameLabel.snp.bottom).offset(4)
-            maker.left.equalTo(nameLabel)
-            maker.right.bottom.equalToSuperview().offset(-10)
-        }
-        
-        descLabel.backgroundColor = UIColor.clear
+        descLabel.frame = CGRect(x: 12, y: 43, width: 116, height: heightText > 73 ? 73 : heightText)
+//        descLabel.snp.makeConstraints { maker in
+//            maker.top.equalTo(nameLabel.snp.bottom).offset(6)
+//            maker.left.equalToSuperview().offset(12)
+//            maker.right.equalToSuperview().offset(-12)
+//            maker.height.equalTo(heightText > 73 ? 73 : heightText)
+//        }
+        descLabel.text = text
+        descLabel.lineBreakMode = .byTruncatingTail
         descLabel.numberOfLines = 4
-        descLabel.sizeToFit()
-        
+//        descLabel.sizeToFit()
+    }
+    
+    func labelWithHeight(labelStr: String, label: UILabel, width: CGFloat) ->CGFloat {
+        let statusLabelText: NSString = labelStr as NSString
+        let size =  CGSize(width: width, height: 900)
+        let dic = NSDictionary(object: label.font, forKey: NSAttributedStringKey.font as NSCopying)
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [NSAttributedStringKey : Any], context: nil).size
+        return strSize.height
     }
     
     required init?(coder aDecoder: NSCoder) {
