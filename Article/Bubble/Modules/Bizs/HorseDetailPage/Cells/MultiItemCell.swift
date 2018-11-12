@@ -265,7 +265,7 @@ class NeighborhoodItemView: UIView {
 
     lazy var descLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.font = CommonUIStyle.Font.pingFangRegular(16)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
@@ -280,7 +280,7 @@ class NeighborhoodItemView: UIView {
     lazy var spaceLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.textColor = hexStringToUIColor(hex: "#ffffff")
         return re
     }()
 
@@ -304,21 +304,23 @@ class NeighborhoodItemView: UIView {
         addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
+            maker.height.equalTo(22)
             maker.top.equalTo(icon.snp.bottom).offset(10)
         }
 
         addSubview(spaceLabel)
         spaceLabel.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(descLabel.snp.bottom).offset(4)
+            maker.height.equalTo(17)
+            maker.right.equalToSuperview().offset(-6)
+            maker.bottom.equalTo(icon.snp.bottom).offset(-6)
         }
 
         addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(spaceLabel.snp.bottom).offset(4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(descLabel.snp.bottom)
             maker.bottom.equalToSuperview()
-
         }
     }
 

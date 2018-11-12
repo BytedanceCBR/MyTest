@@ -91,7 +91,6 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
     var data: NeighborhoodInfo?
     var logPB: [String: Any]?
     var neighborhoodId:String?
-    var evaluationInfo: NeighborhoodEvaluationinfo?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -111,19 +110,31 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         
         contentView.addSubview(nameValue)
         nameValue.snp.makeConstraints { maker in
-            maker.left.equalTo(nameKey.snp.right).offset(10)
+            maker.left.equalTo(nameKey.snp.right).offset(12)
             maker.top.equalTo(nameKey)
             maker.height.equalTo(20)
-            maker.right.equalToSuperview().offset(rightMarge)
         }
         
+        contentView.addSubview(schoolKey)
+        schoolKey.snp.makeConstraints { maker in
+            maker.left.equalTo(nameKey)
+            maker.top.equalTo(nameKey.snp.bottom).offset(10)
+            maker.height.equalTo(20)
+        }
+        
+        contentView.addSubview(schoolLabel)
+        schoolLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(schoolKey.snp.right).offset(12)
+            maker.top.equalTo(schoolKey)
+            maker.height.equalTo(20)
+        }
         
         mapImageView.contentMode = .scaleAspectFill
         contentView.addSubview(mapImageView)
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
-            maker.top.equalTo(nameKey.snp.bottom).offset(16)
+            maker.top.equalTo(schoolKey.snp.bottom).offset(20)
         }
         
         contentView.addSubview(bgView)
@@ -146,7 +157,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         evaluateGest.rx.event
             .subscribe(onNext: { [weak self] (_) in
 
-                if let url = self?.evaluationInfo?.detailUrl {
+                if let url = self?.data?.evaluationInfo?.detailUrl {
                     TTRoute.shared().openURL(byPushViewController: URL(string: url), userInfo: nil)
                 }
                 
@@ -247,11 +258,44 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
         theCell.data = data.neighborhoodInfo
-        theCell.evaluationInfo = data.evaluationInfo
-        theCell.bgView.isHidden = data.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
+        theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
+        if let totalScore = data.neighborhoodInfo?.evaluationInfo?.totalScore {
+            
+            theCell.evaluateLabel.text = "\(totalScore)"
+        }
+        theCell.starsContainer.updateStarsCount(scoreValue: data.neighborhoodInfo?.evaluationInfo?.totalScore ?? 0)
 
         if let url = data.neighborhoodInfo?.gaodeImageUrl {
             theCell.mapImageView.bd_setImage(with: URL(string: url))
+        }
+        
+        if let schoolInfo = data.neighborhoodInfo?.schoolInfo?.first, let schoolName = schoolInfo.schoolName {
+            
+            theCell.schoolLabel.text = schoolName
+            theCell.schoolLabel.snp.updateConstraints { (maker) in
+                maker.height.equalTo(20)
+            }
+            theCell.schoolKey.snp.updateConstraints { (maker) in
+                maker.height.equalTo(20)
+            }
+            theCell.mapImageView.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.schoolKey.snp.bottom).offset(20)
+            }
+            theCell.schoolLabel.isHidden = false
+            theCell.schoolKey.isHidden = false
+        }else {
+            theCell.schoolLabel.snp.updateConstraints { (maker) in
+                maker.height.equalTo(0)
+            }
+            theCell.schoolKey.snp.updateConstraints { (maker) in
+                maker.height.equalTo(0)
+            }
+            theCell.mapImageView.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.schoolKey.snp.bottom).offset(10)
+            }
+            theCell.schoolLabel.isHidden = true
+            theCell.schoolKey.isHidden = true
+
         }
         
     }

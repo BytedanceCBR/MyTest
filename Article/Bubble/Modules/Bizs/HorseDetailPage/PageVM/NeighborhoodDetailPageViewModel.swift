@@ -266,7 +266,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
-                <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension)
+                <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: nil) {
                     return data.neighborhoodInfo != nil ? true : false
                 }
@@ -488,6 +488,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var sectionHeaderGenerator: TableViewSectionViewGen?
 
     var nearByCell : NewHouseNearByCell?
+    
+    var neighborhoodInfoFoldState:Bool = true
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -513,6 +515,14 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            if let refreshCell = cell as? PropertyListCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isNeighborhoodInfoFold = self.neighborhoodInfoFoldState
+                processRefreshableTableViewCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
             datas[indexPath.section].items[indexPath.row](cell)
             if cell is NewHouseNearByCell
             {
@@ -522,6 +532,24 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         default:
             return CycleImageCell()
         }
+    }
+    
+    fileprivate func processRefreshableTableViewCell(
+        cell: RefreshableTableViewCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        var tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self] in
+            self?.changeNeighborhoodInfoFoldState()
+            UIView.performWithoutAnimation {
+                tableView?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    fileprivate func changeNeighborhoodInfoFoldState()
+    {
+        self.neighborhoodInfoFoldState = !self.neighborhoodInfoFoldState
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
