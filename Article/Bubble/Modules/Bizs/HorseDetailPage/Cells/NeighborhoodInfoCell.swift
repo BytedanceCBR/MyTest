@@ -149,7 +149,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         }
         bgView.addSubview(rightArrow)
         rightArrow.snp.makeConstraints { maker in
-            maker.right.equalTo(-15)
+            maker.right.equalTo(-13)
             maker.centerY.equalTo(evaluateLabel)
         }
         
