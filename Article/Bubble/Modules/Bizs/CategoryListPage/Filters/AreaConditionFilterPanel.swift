@@ -543,7 +543,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                         animated: false,
                         scrollPosition: .none)
                 if extentValueDS?.nodes.count ?? 0 > 0 {
-                    extentValueTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    DispatchQueue.main.async {
+                        extentValueTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    }
                 }
             }
         }
