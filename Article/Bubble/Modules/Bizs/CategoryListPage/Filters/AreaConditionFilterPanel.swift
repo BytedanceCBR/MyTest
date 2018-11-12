@@ -533,9 +533,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 }
                 extentValueDS?.selectedIndexPaths.removeAll()
                 extentValueTable?.reloadData()
-                if extentValueDS?.nodes.count ?? 0 > 0 {
-                    extentValueTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                }
+
                 subCategoryTable?.selectRow(
                         at: indexPath,
                         animated: false,
@@ -544,6 +542,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                         at: IndexPath(row: 0, section: 0),
                         animated: false,
                         scrollPosition: .none)
+                if extentValueDS?.nodes.count ?? 0 > 0 {
+                    extentValueTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                }
             }
         }
     }
