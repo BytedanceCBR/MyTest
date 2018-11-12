@@ -18,7 +18,7 @@ class ToastAlertCenter {
 
     func showToast(_ message: String, duration: TimeInterval = 1) {
 
-        re.isUserInteractionEnabled = false
+        toastAlert.isUserInteractionEnabled = false
         UIApplication.shared.keyWindow?.addSubview(toastAlert)
         toastAlert.snp.makeConstraints { maker in
             maker.top.bottom.left.right.equalToSuperview()
