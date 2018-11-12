@@ -181,7 +181,7 @@ struct NeighborhoodEvaluationinfo: Mappable  {
         
     }
     
-    var totalScore: String?
+    var totalScore: Int?
     var detailUrl: String?
     var content: String?
     var subScores: [EvaluationIteminfo]?

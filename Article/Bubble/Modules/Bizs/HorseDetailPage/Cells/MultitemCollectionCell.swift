@@ -214,7 +214,7 @@ class FHStarsCountView: UIView
     
     lazy var starsCountView: UIView = {
         let re = UIView()
-        re.backgroundColor = UIColor.red
+        re.backgroundColor = UIColor.clear
         return re
     }()
     
@@ -236,13 +236,14 @@ class FHStarsCountView: UIView
             maker.height.equalTo(50)
         }
         
-        
     }
     
     func updateStarsCount(scoreValue: Int)
     {
         let startCount = scoreValue / 10
         let isShowHalfStart = scoreValue > startCount * 10
+        let scoreTotal = Double(scoreValue) / 10.0
+        starsName.text = String("\(scoreTotal)")
         
         var privousView : UIImageView?
         
@@ -252,38 +253,52 @@ class FHStarsCountView: UIView
             addSubview(starImageView)
             
             starImageView.snp.makeConstraints { maker in
-//                if (privousView != nil)
-//                {
-//                    maker.left.equalTo(privousView?.snp.right ?? <#default value#>)
-//                }
+                if (privousView != nil)
+                {
+                    maker.left.equalTo(privousView?.snp.right ?? 0).offset(5)
+                }else
+                {
+                    maker.left.equalTo(starsName.snp.right).offset(5)
+                }
                 maker.width.height.equalTo(26)
                 maker.centerY.equalToSuperview()
             }
+            
             
             if startCount == 0
             {
                 if isShowHalfStart
                 {
-                    
-                }else
-                {
-                    
+                    createHalfStarView(superView: starImageView, ratio: scoreValue % 10)
                 }
                 return
             }
             
             if index < startCount
             {
-                
+                starImageView.image = UIImage(named: "star_evaluation")
             }else if index == startCount,isShowHalfStart
             {
-                
-            }else
-            {
-                
+                createHalfStarView(superView: starImageView, ratio: scoreValue % 10)
             }
+            
+            privousView = starImageView
+
         }
     }
+    
+    func createHalfStarView(superView : UIImageView, ratio: Int)
+    {
+        let harfImageView = UIImageView(image: UIImage(named: "star_evaluation"))
+        harfImageView.contentMode = .scaleToFill
+        harfImageView.layer.contentsRect = CGRect(x: 0, y: 0, width: Double(ratio) / 10.0, height: 1)
+        superView.addSubview(harfImageView)
+        harfImageView.snp.makeConstraints { maker in
+            maker.top.left.equalToSuperview()
+            maker.width.height.equalTo(26)
+        }
+    }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -690,6 +705,9 @@ fileprivate func fillEvaluationCell(
     cell: BaseUITableViewCell) {
     if let theCell = cell as? MultitemCollectionEvaluateCell {
         theCell.itemReuseIdentifier = "evaluate"
+        print("datas = \(datas)")
+        theCell.starsContainer.updateStarsCount(scoreValue: datas.totalScore ?? 0)
+        
         if let datasScoresEntity = datas.subScores
         {
             theCell.collectionViewCellRenders = datasScoresEntity.take(5).map { entity -> CollectionViewCellRender in
