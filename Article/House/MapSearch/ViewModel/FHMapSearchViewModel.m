@@ -127,7 +127,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     MAUserLocation *location =  self.mapView.userLocation;
     if (location.location) {
-        [self.mapView setCenterCoordinate:location.location.coordinate animated:YES];
+        [self.mapView setZoomLevel:16 animated:YES];//变化到小区的范围
+        [self.mapView setCenterCoordinate:location.location.coordinate animated:YES];        
     }
 }
 
