@@ -97,7 +97,7 @@ struct ErshouHouseData: Mappable {
     
     var contact: FHHouseDetailContact?
     var status: Int? // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-    var evaluationInfo: NeighborhoodEvaluationinfo?
+ 
 
     init?(map: Map) {
         
@@ -123,7 +123,6 @@ struct ErshouHouseData: Mappable {
         logPB <- map["log_pb"]
         status <- map["status"]
         outLineOverreview <- map["house_overreview"]
-        evaluationInfo <- map["evaluation_info"]
 
     }
 }

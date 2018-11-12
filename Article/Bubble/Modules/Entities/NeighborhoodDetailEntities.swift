@@ -175,6 +175,7 @@ struct NeighborhoodDetailData: Mappable {
     }
 }
 
+// MARK: 小区评测
 struct NeighborhoodEvaluationinfo: Mappable  {
     init?(map: Map) {
         
@@ -193,6 +194,25 @@ struct NeighborhoodEvaluationinfo: Mappable  {
 
     }
 }
+
+// MARK: 学校信息
+struct NeighborhoodSchoolInfo: Mappable  {
+    init?(map: Map) {
+        
+    }
+    
+    var schoolId: String?
+    var schoolName: String?
+    var schoolType: Int? // 学校类型，类型 int， 0：未知（客户端不展示）1：区重点 2：省重点 3：市重点
+    
+    mutating func mapping(map: Map) {
+        schoolId <- map["school_id"]
+        schoolName <- map["school_name"]
+        schoolType <- map["school_type"]
+        
+    }
+}
+
 
 struct EvaluationIteminfo: Mappable  {
     init?(map: Map) {
