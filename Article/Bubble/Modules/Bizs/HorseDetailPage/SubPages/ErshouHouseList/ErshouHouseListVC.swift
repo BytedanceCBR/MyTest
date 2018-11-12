@@ -261,9 +261,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     fileprivate func requestData() {
         errorVM?.onRequest()
-        ershouHouseListViewModel?.requestErshouHouseList(
-            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
-            condition: nil)
+//        ershouHouseListViewModel?.requestErshouHouseList(
+//            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
+//            condition: nil)
+        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
