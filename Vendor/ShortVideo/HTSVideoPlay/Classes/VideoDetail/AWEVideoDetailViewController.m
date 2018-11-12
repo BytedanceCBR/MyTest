@@ -496,8 +496,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
-    self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY)];
-    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
+//    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
@@ -1184,7 +1184,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     @weakify(self);
     [UIView animateWithDuration:0.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
-        self.commentView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.commentView.bounds));
+        self.commentView.frame = CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.commentView.bounds));
     } completion:^(BOOL finished) {
         @strongify(self);
         self.commentView.hidden = YES;
