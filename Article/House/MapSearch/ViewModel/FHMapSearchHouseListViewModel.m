@@ -109,6 +109,7 @@
     }
     
     _maskView.hidden = YES;
+    [self addEnterListPageLog];
 }
 
 -(void)showNeighborDetail
