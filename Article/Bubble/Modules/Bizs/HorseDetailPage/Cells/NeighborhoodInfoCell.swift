@@ -76,6 +76,10 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         return re
     }()
     
+    lazy var starsContainer: FHStarsCountView = {
+        let re = FHStarsCountView()
+        return re
+    }()
     
     lazy var mapViewGesture: UITapGestureRecognizer = {
         let re = UITapGestureRecognizer()
@@ -91,17 +95,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(starsContainer)
+        starsContainer.snp.makeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(50)
+        }
+        
         contentView.addSubview(nameKey)
         nameKey.snp.makeConstraints { maker in
             maker.left.equalTo(leftMarge)
-            maker.top.equalToSuperview()
+            maker.top.equalTo(starsContainer.snp.bottom)
             maker.height.equalTo(20)
-            maker.width.equalTo(28)
         }
         
         contentView.addSubview(nameValue)
         nameValue.snp.makeConstraints { maker in
             maker.left.equalTo(nameKey.snp.right).offset(10)
+            maker.top.equalTo(nameKey)
             maker.height.equalTo(20)
             maker.right.equalToSuperview().offset(rightMarge)
         }
