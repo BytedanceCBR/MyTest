@@ -244,7 +244,9 @@ struct NeighborhoodInfo: Mappable {
     var displayPrice: String?
     var evaluationInfo: NeighborhoodEvaluationinfo?
     var schoolInfo: [NeighborhoodSchoolInfo]?
-    
+    var districtName: String?
+    var areaName: String?
+
     var logPB: [String: Any]?
 
     
@@ -273,6 +275,9 @@ struct NeighborhoodInfo: Mappable {
         logPB <- map["log_pb"]
         evaluationInfo <- map["evaluation_info"]
         schoolInfo <- map["school_info"]
+        districtName <- map["district_name"]
+        areaName <- map["area_name"]
+
     }
 }
 

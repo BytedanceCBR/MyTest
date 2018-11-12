@@ -149,16 +149,17 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
         }
         bgView.addSubview(rightArrow)
         rightArrow.snp.makeConstraints { maker in
-            maker.right.equalTo(-20)
+            maker.right.equalTo(-15)
             maker.centerY.equalTo(evaluateLabel)
         }
         
         let evaluateGest = UITapGestureRecognizer()
         evaluateGest.rx.event
-            .subscribe(onNext: { [weak self] (_) in
+            .subscribe(onNext: { [unowned self] (_) in
 
-                if let url = self?.data?.evaluationInfo?.detailUrl {
-                    TTRoute.shared().openURL(byPushViewController: URL(string: url), userInfo: nil)
+                if let urlStr = self.data?.evaluationInfo?.detailUrl {
+
+                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: self.disposeBag)(TracerParams.momoid())
                 }
                 
             })
@@ -253,21 +254,42 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
 func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
-        theCell.nameValue.text = data.neighborhoodInfo?.name
+        if let areaName = data.neighborhoodInfo?.areaName, let districtName = data.neighborhoodInfo?.districtName {
+            theCell.nameValue.text = "\(districtName)-\(areaName)"
+        }else {
+            
+            theCell.nameValue.text = data.neighborhoodInfo?.districtName
+        }
         theCell.navVC = navVC
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
         theCell.data = data.neighborhoodInfo
         theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
-        if let totalScore = data.neighborhoodInfo?.evaluationInfo?.totalScore {
-            
-            theCell.evaluateLabel.text = "\(totalScore)"
-        }
-        theCell.starsContainer.updateStarsCount(scoreValue: data.neighborhoodInfo?.evaluationInfo?.totalScore ?? 0)
 
         if let url = data.neighborhoodInfo?.gaodeImageUrl {
             theCell.mapImageView.bd_setImage(with: URL(string: url))
         }
+        
+        if let evaluationInfo = data.neighborhoodInfo?.evaluationInfo {
+            
+            theCell.starsContainer.updateStarsCount(scoreValue: evaluationInfo.totalScore ?? 0)
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(50)
+            }
+            theCell.starsContainer.isHidden = false
+            
+            if let url = evaluationInfo.detailUrl, url.count > 0 {
+                theCell.bgView.isHidden = false
+            }else {
+                theCell.bgView.isHidden = true
+            }
+        }else {
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(0)
+            }
+            theCell.starsContainer.isHidden = true
+        }
+
         
         if let schoolInfo = data.neighborhoodInfo?.schoolInfo?.first, let schoolName = schoolInfo.schoolName {
             
@@ -300,3 +322,16 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         
     }
 }
+
+
+func openEvaluateWebPage(
+    urlStr: String,
+    title: String,
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> (TracerParams) -> Void{
+    return { (_) in
+        
+        FRRouteHelper.openWebView(forURL: urlStr)
+    }
+}
+

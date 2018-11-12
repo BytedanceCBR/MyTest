@@ -87,5 +87,6 @@
 
 #import "FHSearchHouseModel.h"
 #import "ArticleListNotifyBarView.h"
+#import "FRRouteHelper.h"
 
 #endif /* Article_Bridging_Header_h */
