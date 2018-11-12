@@ -198,7 +198,7 @@ fileprivate class ItemView: UIView {
         
         addSubview(keyLabel)
         keyLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(20)
+            maker.left.equalTo(16)
             maker.top.equalTo(valueLabel.snp.bottom)
             maker.height.equalTo(17)
             maker.right.equalToSuperview().offset(-10)
