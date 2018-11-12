@@ -459,7 +459,7 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
         contentView.addSubview(neighborhoodItemView)
         neighborhoodItemView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(-16)
+            maker.bottom.equalTo(-20)
             maker.top.equalToSuperview()
         }
     }
