@@ -12,9 +12,20 @@ import RxCocoa
 @objc class LocationManager: NSObject, AMapLocationManagerDelegate {
     // local test
 //        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
-    // release
-    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
-
+//     release
+//    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
+    static var apiKey : String {
+        get {
+            if "com.bytedance.fp1" == TTSandBoxHelper.bundleIdentifier()  {
+             //local test
+                return "003c8c31d052f8882bfb2a1d712dea84"
+            }
+            //release
+            return "69c1887b8d0d2d252395c58e3da184dc"
+        }
+    }
+    
+    
     @objc static let shared = LocationManager()
 
     private lazy var locationManager: AMapLocationManager = {
