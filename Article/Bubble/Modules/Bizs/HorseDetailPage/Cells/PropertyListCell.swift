@@ -306,7 +306,7 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, dis
                 return re
             }
             
-            let foldButton = CommonFoldViewButton(downText: "查看全部信息", upText: "折叠")
+            let foldButton = CommonFoldViewButton(downText: "查看全部信息", upText: "收起")
             
             foldButton.isFold = theCell.isNeighborhoodInfoFold
             

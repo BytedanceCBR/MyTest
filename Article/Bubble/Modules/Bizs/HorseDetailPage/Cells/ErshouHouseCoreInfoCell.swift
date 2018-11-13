@@ -101,9 +101,10 @@ fileprivate class ItemButtonControl: UIControl {
         }
         addSubview(rightArrowImageView)
         rightArrowImageView.snp.makeConstraints { maker in
-            maker.left.equalTo(valueLabel.snp.right).offset(7)
+            maker.left.equalTo(valueLabel.snp.right).offset(10)
             maker.right.equalTo(self)
-            maker.width.height.equalTo(10)
+            maker.width.equalTo(4)
+            maker.height.equalTo(8)
             maker.centerY.equalTo(valueLabel)
         }
         addSubview(bottomLine)
