@@ -515,7 +515,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     fileprivate func createSubCategorySelector(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
-
+            if indexPath.row >= nodes.count {
+                return
+            }
             let extentValueDS = self?.dataSources[ConditionType.extendValue.rawValue]
             let extentValueTable = self?.tableViews[ConditionType.extendValue.rawValue]
             let subCategoryTable = self?.tableViews[ConditionType.subCategory.rawValue]
