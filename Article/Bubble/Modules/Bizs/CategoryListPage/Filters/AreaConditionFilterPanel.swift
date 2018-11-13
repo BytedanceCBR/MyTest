@@ -263,11 +263,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             if let nodes = dataSources.first?.nodes {
                 let selectedIndexPath = dataSources.first?.selectedIndexPaths.first ?? IndexPath(row: 0, section: 0)
                 if nodes.count > selectedIndexPath.row {
-                    dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
+                    reBindTableItemSelector()
 
-                    let children = nodes[selectedIndexPath.row].children
-                    dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
-                    
                     //根据第一列选择行设置第二列数据
                     dataSources[1].nodes = nodes[selectedIndexPath.row].children
                     if dataSources[1].nodes.count > dataSources[1].selectedIndexPaths.first?.row ?? 0 {
@@ -332,7 +329,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     let categoryTable = self.tableViews[ConditionType.category.rawValue]
                     let subCategoryDS = self.dataSources[ConditionType.subCategory.rawValue]
                     let categoryDS = self.dataSources[ConditionType.category.rawValue]
+                    let extentValueDS = self.dataSources[ConditionType.extendValue.rawValue]
                     subCategoryDS.nodes = categoryDS.nodes.first?.children ?? []
+                    extentValueDS.nodes = subCategoryDS.nodes.first?.children ?? []
+
+                    self.reBindTableItemSelector()
 
                     self.dataSources.forEach {
                         $0.selectedIndexPaths.removeAll()
@@ -354,6 +355,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
                             scrollPosition: .none)
+                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
+                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    }
+
                     self.displayNormalCondition()
                 })
                 .disposed(by: disposeBag)
@@ -365,6 +370,14 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     self.didSelect?(selected)
                 })
                 .disposed(by: disposeBag)
+    }
+
+    fileprivate func reBindTableItemSelector() {
+        dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
+
+        if let children = nodes.first?.children {
+            dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+        }
     }
 
 
@@ -528,6 +541,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 self?.displayNormalCondition()
             } else { // 点击中间列选项
                 extentValueDS?.nodes = nodes[indexPath.row].children
+                extentValueTable?.reloadData()
                 if let displayExtendValue = self?.displayExtendValue {
                     self?.layoutWithAniminate(apply: displayExtendValue)
                 }
@@ -535,7 +549,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     extentValueTable?.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                 }
                 extentValueDS?.selectedIndexPaths.removeAll()
-                extentValueTable?.reloadData()
+//                extentValueTable?.reloadData()
 
                 subCategoryTable?.selectRow(
                         at: indexPath,
