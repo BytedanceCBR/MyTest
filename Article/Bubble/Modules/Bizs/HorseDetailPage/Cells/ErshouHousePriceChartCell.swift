@@ -332,7 +332,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             leftAxis.drawBottomYLabelEntryEnabled = true
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
             leftAxis.setLabelCount(4, force: true)
@@ -493,7 +492,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.orientation = .horizontal
         l.drawInside = true
         l.wordWrapEnabled = true
-
+        l.xEntrySpace = -20
+        
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
@@ -505,7 +505,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         xAxis.axisLineWidth = 0.5
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
+        xAxis.xOffset = -20
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
@@ -517,13 +521,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
-        // 横轴的虚线
-        leftAxis.spaceBottom = 0.0
+        // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
 //        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
 //        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
+        leftAxis.spaceTop = 0.5
+        leftAxis.spaceBottom = 1
+        leftAxis.spaceMax = 0.5
+        leftAxis.spaceMin = 0.5
+        leftAxis.yOffset = 10
+        
 
         // 右边轴
         let rightAxis = chartView.rightAxis
