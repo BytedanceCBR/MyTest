@@ -195,12 +195,12 @@ class HomeListViewModel: DetailPageViewModel {
             {
                 if houseType == .newHouse
                 {
-                    self?.searchIdNews = ""
+                    self?.searchIdNews = nil
                 }
                 
                 if houseType == .secondHandHouse
                 {
-                    self?.searchIdSecond = ""
+                    self?.searchIdSecond = nil
                 }
             }
             
@@ -344,7 +344,7 @@ class HomeListViewModel: DetailPageViewModel {
             
             let theDataItems = dataItems.map {[weak self] (item) -> HouseItemInnerEntity in
                 var newItem = item
-                newItem.fhSearchId = self?.searchId
+                newItem.fhSearchId = self?.originSearchId
                 return newItem
             }
             let dataParser = DetailDataParser.monoid()
@@ -451,8 +451,6 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
-                        
                         
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -582,7 +580,6 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
 
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
