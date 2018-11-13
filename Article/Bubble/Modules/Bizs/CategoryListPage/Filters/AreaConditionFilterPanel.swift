@@ -139,6 +139,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     init(nodes: [Node]) {
         self.nodes = nodes
         super.init(frame: CGRect.zero)
+        dataSources.first?.nodes = self.nodes
         initPanelWithNativeDS()
     }
 
@@ -333,11 +334,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     subCategoryDS.nodes = categoryDS.nodes.first?.children ?? []
                     extentValueDS.nodes = subCategoryDS.nodes.first?.children ?? []
 
-                    self.reBindTableItemSelector()
 
                     self.dataSources.forEach {
                         $0.selectedIndexPaths.removeAll()
                     }
+                    self.reBindTableItemSelector()
 
                     self.tableViews.forEach {
                         $0.reloadData()
@@ -373,11 +374,28 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     }
 
     fileprivate func reBindTableItemSelector() {
-        dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
 
-        if let children = nodes.first?.children {
-            dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+        func bindExtensionValueListSelector(_ children: [Node]) {
+            if children.count > 0,
+                children[1].children.count > 0 {
+                dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+            } else {
+                dataSources[ConditionType.subCategory.rawValue].onSelect = { _ in }
+                //触发收起第三级列表页收起
+                self.displayNormalCondition()
+
+            }
         }
+
+        let categoryDS = dataSources[ConditionType.category.rawValue]
+        categoryDS.onSelect = createCategorySelectorHandler(nodes: nodes)
+
+        if let node = categoryDS.selectedNodes().first {
+            bindExtensionValueListSelector(node.children)
+        } else if let node = nodes.first {
+            bindExtensionValueListSelector(node.children)
+        }
+
     }
 
 
