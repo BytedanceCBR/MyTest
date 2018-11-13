@@ -492,7 +492,6 @@ class HomeListViewModel: DetailPageViewModel {
                         dataSource.recordIndexCache = []
                         self.tableView?.reloadData()
                     }
-                    self.tableView?.finishPullUp(withSuccess: true)
                     self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                     self.isFirstEnterCategorySwitch ? self.uploadTracker(enterType:((TTCategoryStayTrackManager.share().enterType ?? "be_null") as NSString)) : self.uploadTracker(enterType:"switch")
@@ -506,17 +505,21 @@ class HomeListViewModel: DetailPageViewModel {
                     self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
                     self.isFirstEnterCategory = false
                     self.isFirstEnterCategorySwitch = false
+                    
+                    self.tableView?.finishPullUp(withSuccess: true)
+                    self.tableView?.finishPullDown(withSuccess: true)
+                    
                     }, onError: { [unowned self] error in
                         //                        print(error)
                         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                         self.onError?(error)
 
-                        self.tableView?.finishPullUp(withSuccess: true)
-                        self.tableView?.finishPullDown(withSuccess: true)
+                        self.tableView?.finishPullUp(withSuccess: false)
+                        self.tableView?.finishPullDown(withSuccess: false)
                         
                     }, onCompleted: {
 
-                    }, onDisposed: { [unowned self] in
+                    }, onDisposed: {
                         self.tableView?.finishPullUp(withSuccess: true)
                         self.tableView?.finishPullDown(withSuccess: true)
                     })
@@ -533,6 +536,13 @@ class HomeListViewModel: DetailPageViewModel {
         
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        
+        
+        //区分上拉还是下拉请求，如果是下拉刷新，立刻完成上拉状态
+        if pullType == .pullDownType
+        {
+           self.tableView?.finishPullUp(withSuccess: true)
+        }
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
@@ -560,7 +570,7 @@ class HomeListViewModel: DetailPageViewModel {
                             
                             self.oneTimeToast?(response?.data?.refreshTip)
                             pullString = "pull"
-
+                            
                         }else if pullType == .pullUpType {
                             pullString = "pre_load_more"
                             
@@ -630,23 +640,25 @@ class HomeListViewModel: DetailPageViewModel {
                     onNext: { [unowned self] response in
                         
                         //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
-                        self.tableView?.finishPullUp(withSuccess: true)
-                        self.tableView?.finishPullDown(withSuccess: true)
+                        if pullType == .pullUpType
+                        {
+                            self.tableView?.finishPullUp(withSuccess: true)
+                            self.tableView?.finishPullDown(withSuccess: true)
+                        }else
+                        {
+                            self.tableView?.finishPullDown(withSuccess: true)
+                        }
                         
-                        //                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
-
                         if let dataSource = self.dataSource {
                             dataSource.datas = response
                             dataSource.recordIndexCache = []
                             self.tableView?.reloadData()
                         }
-
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     },
                     onError: { [unowned self] error in
 
-                        self.tableView?.finishPullUp(withSuccess: false)
-                        self.tableView?.finishPullDown(withSuccess: false)
+                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
                         
                         if EnvContext.shared.client.reachability.connection == .none
                         {
@@ -655,15 +667,12 @@ class HomeListViewModel: DetailPageViewModel {
                         {
                             EnvContext.shared.toast.showToast("请求失败,请检查网络后重试")
                         }
-
                     },
                     onCompleted: {
 
                 },
-                    onDisposed: { [unowned self] in
-                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
-                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
-                        
+                    onDisposed: {
+                    
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
