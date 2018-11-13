@@ -297,10 +297,12 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
-                set1.lineWidth = 2
-                set1.circleRadius = 1
+                set1.lineWidth = 1
+                set1.circleRadius = 4
+                set1.circleHoleColor = .white
+                set1.circleHoleRadius = 3
                 // 选中效果
-                set1.highlightColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
+                set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
                 set1.highlightLineDashLengths = [2,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
 
