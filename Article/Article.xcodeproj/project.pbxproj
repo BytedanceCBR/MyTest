@@ -580,6 +580,9 @@
 		61761952219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
 		61761953219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
 		61761954219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		617619562199E33C00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
+		617619572199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
+		617619582199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
@@ -6593,6 +6596,7 @@
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
 		616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHDetailSuggestTipCell.swift; sourceTree = "<group>"; };
 		61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHErshouDetailPriceRankCell.swift; sourceTree = "<group>"; };
+		617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHNeighborhoodChartCell.swift; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
@@ -14781,6 +14785,7 @@
 				76CE80542193E899005D199B /* NearbyNewHouseCell.swift */,
 				61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */,
 				76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */,
+				617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -19570,6 +19575,7 @@
 				FE1FC31E206922D800664B00 /* ExploreMixedListBaseView+Monitor.m in Sources */,
 				B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */,
 				A97DBCC71F1332E50002B455 /* TTStartupTask.m in Sources */,
+				617619562199E33C00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				FEF53DC82068EE2400EEA647 /* FRImageInfoModel.m in Sources */,
 				A97DBC9F1F1332E50002B455 /* TTLocationStartupTask.m in Sources */,
 				FEF53DCC2068EE8700EEA647 /* FRRouteHelper.m in Sources */,
@@ -22241,6 +22247,7 @@
 				B373CD172174587A008F9905 /* TTVideoBannerModel.m in Sources */,
 				B373CD182174587A008F9905 /* TTSwizzle.m in Sources */,
 				B373CD192174587A008F9905 /* SSADSplashDownloadManager.m in Sources */,
+				617619582199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				B373CD1A2174587A008F9905 /* TTNotificationCenterDelegate.m in Sources */,
 				B373CD1B2174587A008F9905 /* TTTimeIntervalTask.m in Sources */,
 				B373CD1C2174587A008F9905 /* SSFeedbackCell.m in Sources */,
@@ -23948,6 +23955,7 @@
 				FEFA5826205FB1A8001F50D8 /* TTVideoBannerModel.m in Sources */,
 				FEFA5828205FB1A8001F50D8 /* TTSwizzle.m in Sources */,
 				FEFA5829205FB1A8001F50D8 /* SSADSplashDownloadManager.m in Sources */,
+				617619572199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				FEFA582A205FB1A8001F50D8 /* TTNotificationCenterDelegate.m in Sources */,
 				FEFA582B205FB1A8001F50D8 /* TTTimeIntervalTask.m in Sources */,
 				FEFA582C205FB1A8001F50D8 /* SSFeedbackCell.m in Sources */,
