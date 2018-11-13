@@ -109,22 +109,29 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
         Observable
             .combineLatest(ershouHouseData, relateNeighborhoodData, houseInSameNeighborhood, relateErshouHouseData)
-            .bind { [unowned self] (_) in
+            .bind { [weak self] (_) in
                 
-                if self.ershouHouseData.value?.data?.status == -1 {
+                if let status = self?.ershouHouseData.value?.data?.status, status == -1 {
                     
-                    self.infoMaskView?.isHidden = false
-                    self.infoMaskView?.label.text = "该房源已下架"
-                    self.infoMaskView?.retryBtn.isHidden = true
-                    self.infoMaskView?.isUserInteractionEnabled = false
+                    self?.infoMaskView?.isHidden = false
+                    self?.infoMaskView?.label.text = "该房源已下架"
+                    self?.infoMaskView?.retryBtn.isHidden = true
+                    self?.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
                 
-                let result = self.processData()([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-                DispatchQueue.main.async {
-                    self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                if let result = self?.processData()([]) {
+                    
+                    self?.dataSource.datas = result
+                    self?.tableView?.reloadData()
+                    DispatchQueue.main.async {
+                        
+                        if let tableView = self?.tableView, let datas = self?.dataSource.datas {
+                            
+                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                        }
+                    }
+                    
                 }
             }
             .disposed(by: disposeBag)

@@ -165,7 +165,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
         let thirdTable = self.tableViews[2]
         let thirdDs = self.dataSources[2]
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.init(uptimeNanoseconds: 1)) { [weak self] in
+//        self.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+        DispatchQueue.main.async { [weak self] in
             self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
         }
     }
@@ -514,7 +515,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     fileprivate func createSubCategorySelector(nodes: [Node]) -> (IndexPath) -> Void {
         return { [weak self] (indexPath) in
-
+            if indexPath.row >= nodes.count {
+                return
+            }
             let extentValueDS = self?.dataSources[ConditionType.extendValue.rawValue]
             let extentValueTable = self?.tableViews[ConditionType.extendValue.rawValue]
             let subCategoryTable = self?.tableViews[ConditionType.subCategory.rawValue]
@@ -586,7 +589,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         let sortedIndexPath = datasource.selectedIndexPaths.sorted()
         if datasource.selectedIndexPaths.count > 0,
             let itemPath = sortedIndexPath.first,
-            itemPath.row < datasource.nodes.count {
+            itemPath.row < tableView.numberOfRows(inSection: 0) {
             tableView.scrollToRow(at: itemPath, at: .top, animated: false)
         } else {
             tableView.scrollRectToVisible(tableView.bounds, animated: false)

@@ -62,6 +62,7 @@
 #import "TTWechatTimelineActivity.h"
 #import "TTQQFriendActivity.h"
 #import "TTQQZoneActivity.h"
+#import <TTSandBoxHelper.h>
 
 #import "TTCategoryStayTrackManager.h"
 
