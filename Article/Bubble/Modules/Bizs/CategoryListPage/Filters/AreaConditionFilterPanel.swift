@@ -334,11 +334,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     subCategoryDS.nodes = categoryDS.nodes.first?.children ?? []
                     extentValueDS.nodes = subCategoryDS.nodes.first?.children ?? []
 
-                    self.reBindTableItemSelector()
 
                     self.dataSources.forEach {
                         $0.selectedIndexPaths.removeAll()
                     }
+                    self.reBindTableItemSelector()
 
                     self.tableViews.forEach {
                         $0.reloadData()
