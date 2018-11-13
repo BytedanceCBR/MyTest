@@ -288,6 +288,7 @@ class NeighborhoodItemView: UIView {
 
     init() {
         super.init(frame: CGRect.zero)
+        
         addSubview(icon)
         icon.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
@@ -295,6 +296,18 @@ class NeighborhoodItemView: UIView {
             maker.height.equalTo(116)
             maker.top.equalToSuperview()
         }
+        
+        let topColor = color(1, 1, 1, 0)
+        let bottomColor = color(0, 0, 0, 0.5)
+        let gradientColors = [topColor.cgColor, bottomColor.cgColor]
+        let gradientLocations:[NSNumber] = [0.0, 1.0]
+        
+        let gradientlayer = CAGradientLayer()
+        gradientlayer.colors = gradientColors
+        gradientlayer.locations = gradientLocations
+        gradientlayer.frame = CGRect(x: 0, y: 0, width: 156, height: 120)
+        gradientlayer.cornerRadius = 4.0
+        icon.layer.addSublayer(gradientlayer)
 
         addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
