@@ -302,8 +302,9 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
                 set1.circleHoleColor = .white
                 set1.circleHoleRadius = 3
                 // 选中效果
+                set1.highlightLineWidth = 1
                 set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
-                set1.highlightLineDashLengths = [2,2]
+                set1.highlightLineDashLengths = [3,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
 
 
