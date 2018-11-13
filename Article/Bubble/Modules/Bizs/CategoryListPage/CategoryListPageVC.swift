@@ -54,6 +54,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     let tipViewHeight: CGFloat = 32
 
+    fileprivate var userInteractionObv: NSKeyValueObservation?
+    
     let disposeBag = DisposeBag()
 
     var suggestionParams: String?
@@ -396,7 +398,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
+            if let _ = value.newValue {
+                self?.view.endEditing(true)
+            }
+        }
+        
         if let associationalWord = self.associationalWord {
             self.navBar.searchInput.placeholder = associationalWord
         }
