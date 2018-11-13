@@ -72,6 +72,10 @@ class HomeListViewModel: DetailPageViewModel {
     
     var originSearchId: String?
     var originFrom: String?
+    
+    var searchIdNews: String?
+
+    var searchIdSecond: String?
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
@@ -184,6 +188,20 @@ class HomeListViewModel: DetailPageViewModel {
         // 下拉刷新，修改tabbar条和请求数据
         tableView.tt_addDefaultPullDownRefresh { [weak self] in
             self?.resetHomeRecommendState()
+            
+            if let houseType = self?.dataSource?.categoryView.houseTypeRelay.value
+            {
+                if houseType == .newHouse
+                {
+                    self?.searchIdNews = ""
+                }
+                
+                if houseType == .secondHandHouse
+                {
+                    self?.searchIdSecond = ""
+                }
+            }
+            
             self?.requestHomeRecommendData(pullType: .pullDownType, reloadFromType: self?.reloadFromType) // 下拉刷新
         }
         
@@ -432,7 +450,8 @@ class HomeListViewModel: DetailPageViewModel {
 
                         self.originSearchId = data.searchId
                         self.searchId = data.searchId
-
+                        
+                        
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -454,6 +473,7 @@ class HomeListViewModel: DetailPageViewModel {
                         {
                             if houseTypeValue == HouseType.newHouse, typeValue == .newHouse
                             {
+                                self.searchIdNews = response?.data?.searchId
                                 self.itemsNewHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsNewHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -463,6 +483,7 @@ class HomeListViewModel: DetailPageViewModel {
                                 return self.generateSectionNode(items: self.itemsNewHouse)
                             } else if houseTypeValue == HouseType.secondHandHouse, typeValue == .secondHandHouse
                             {
+                                self.searchIdSecond = response?.data?.searchId
                                 self.itemsSecondHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsSecondHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -537,10 +558,20 @@ class HomeListViewModel: DetailPageViewModel {
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
+            
+            var requestId = searchIdNews
+            if typeValue == .newHouse
+            {
+                requestId = searchIdNews
+            }else
+            {
+                requestId = searchIdSecond
+            }
+            
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: (typeValue == .newHouse ? self.itemsNewHouse?.count : self.itemsSecondHouse?.count) ?? 0,
-                                  searchId: self.originSearchId,
+                                  searchId: requestId,
                                   count: (houseId == -1 ? 20 : 20))
                 
                 // TODO: 重试逻辑
