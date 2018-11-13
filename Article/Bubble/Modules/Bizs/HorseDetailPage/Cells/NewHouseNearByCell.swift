@@ -389,8 +389,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     let reactSize = annotation.title.boundingRect
                     
                     print("react size = \(reactSize)")
-                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 12, height: 32)
-                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13 + 10, height: 38)
+                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
+                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 38)
 
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
@@ -445,7 +445,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     latitude: CLLocationDegrees(poi.location.latitude),
                     longitude: CLLocationDegrees(poi.location.longitude)))
                 let distance = MAMetersBetweenMapPoints(from, to)
-                return distance < 2000 //2 公里
+                return distance < 5000 //5 公里
             }.take(10)
             
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
@@ -453,11 +453,6 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                 poiMapDatas?[reuqestPoi.keywords] = poisMap
                 titleDatas?[reuqestPoi.keywords == "公交地铁" ? "交通": reuqestPoi.keywords] = "(\(poisMap.count))"
             }
-            
-//            locationListViewModel.datas = pois
-//            emptyInfoLabel.isHidden = locationListViewModel.datas.count != 0
-//            locationList.isUserInteractionEnabled = locationListViewModel.datas.count == 0
-//            locationList.reloadData()
         }
         
         if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
