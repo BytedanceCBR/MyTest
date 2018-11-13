@@ -134,8 +134,8 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        flowLayout.itemSize = CGSize(width: 156, height: 211)
-        flowLayout.minimumLineSpacing = 8
+        flowLayout.itemSize = CGSize(width: 156, height: 190)
+        flowLayout.minimumLineSpacing = 10
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         re.showsHorizontalScrollIndicator = false
@@ -148,7 +148,7 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
         contentView.addSubview(collectionContainer)
         collectionContainer.snp.makeConstraints { maker in
             maker.edges.equalToSuperview()
-            maker.height.equalTo(211)
+            maker.height.equalTo(190)
         }
         collectionContainer.register(FloorPanItemCollectionCell.self, forCellWithReuseIdentifier: "floorPan")
         collectionContainer.register(NeighborhoodItemCollectionCell.self, forCellWithReuseIdentifier: "neighborhood")

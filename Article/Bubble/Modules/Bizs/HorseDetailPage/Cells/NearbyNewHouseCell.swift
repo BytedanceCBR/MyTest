@@ -44,7 +44,7 @@ class NearbyNewHouseCell: BaseUITableViewCell {
     lazy var areaLabel: YYLabel = {
         let label = YYLabel()
         label.numberOfLines = 0
-        label.font = CommonUIStyle.Font.pingFangRegular(12)
+        label.font = CommonUIStyle.Font.pingFangRegular(10)
         label.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         label.lineBreakMode = NSLineBreakMode.byWordWrapping//按照单词分割换行，保证换行时的单词完整。
         return label
@@ -90,7 +90,7 @@ class NearbyNewHouseCell: BaseUITableViewCell {
         
         self.contentView.addSubview(bottomView)
         bottomView.snp.makeConstraints { maker in
-            maker.top.equalTo(90)
+            maker.top.equalTo(85)
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(20)
         }
@@ -99,14 +99,14 @@ class NearbyNewHouseCell: BaseUITableViewCell {
         majorImageView.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(20)
             maker.top.equalTo(headView.snp.bottom)
-            maker.width.equalTo(120)
-            maker.height.equalTo(90)
+            maker.width.equalTo(114)
+            maker.height.equalTo(85)
         }
         
         let infoPanel = UIView()
         contentView.addSubview(infoPanel)
         infoPanel.snp.makeConstraints { maker in
-            maker.left.equalTo(majorImageView.snp.right).offset(16)
+            maker.left.equalTo(majorImageView.snp.right).offset(12)
             maker.top.equalTo(majorImageView)
             maker.bottom.equalTo(bottomView.snp.top)
             maker.right.equalToSuperview().offset(-15)
@@ -115,40 +115,40 @@ class NearbyNewHouseCell: BaseUITableViewCell {
         infoPanel.addSubview(majorTitle)
         majorTitle.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(16)
+            maker.height.equalTo(19)
         }
         
         infoPanel.addSubview(extendTitle)
         extendTitle.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(majorTitle.snp.bottom).offset(8)
-            maker.height.equalTo(12)
+            maker.top.equalTo(majorTitle.snp.bottom).offset(4)
+            maker.height.equalTo(17)
         }
         
         infoPanel.addSubview(priceLabel)
         infoPanel.addSubview(roomSpaceLabel)
         
-        priceLabel.snp.makeConstraints { maker in
-            maker.left.equalToSuperview()
-            maker.top.equalTo(extendTitle.snp.bottom).offset(10)
-            maker.height.equalTo(14)
-            maker.width.lessThanOrEqualTo(130)
-        }
-        
         roomSpaceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         roomSpaceLabel.setContentHuggingPriority(.required, for: .horizontal)
         
         roomSpaceLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(priceLabel.snp.right).offset(7)
-            maker.bottom.equalTo(priceLabel.snp.bottom).offset(-2)
-            maker.height.equalTo(12)
+            maker.left.equalToSuperview()
+            maker.bottom.equalTo(extendTitle.snp.bottom).offset(6)
+            maker.height.equalTo(15)
         }
         
         infoPanel.addSubview(areaLabel)
         areaLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(10)
+            maker.top.equalTo(extendTitle.snp.bottom).offset(6)
+            maker.height.equalTo(15)
+        }
+        
+        priceLabel.snp.makeConstraints { maker in
+            maker.left.equalToSuperview()
+            maker.top.equalTo(areaLabel.snp.bottom).offset(7)
+            maker.height.equalTo(20)
+            maker.width.lessThanOrEqualTo(130)
         }
     }
     
@@ -213,65 +213,42 @@ fileprivate func fillNearbyNewHouseCell(
     navVC: UINavigationController?,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NearbyNewHouseCell {
-        /*
-        theCell.tracerParams = params
-        theCell.itemReuseIdentifier = "floorPan"
-        theCell.collectionViewCellRenders = items.take(5).map({ (entity) -> CollectionViewCellRender in
-            curry(fillSearchInNeighborhoodItemCell)(entity)(params)(navVC)(params)
-        })
-        theCell.itemSelectors = items.take(5).enumerated().map { e -> (DisposeBag) -> Void in
-            let (offset, item) = e
-            return curry(searchInNeighborhoodItemCellSelector)(offset)(item)(params)(navVC)
-        }
-        // 详情页猜你喜欢house_show埋点
-        theCell.itemRecorders = items.take(5).enumerated().map { e -> (TracerParams) -> Void in
-            let (offset, item) = e
-            let params = EnvContext.shared.homePageParams <|>
-                toTracerParams("new", key: "house_type") <|>
-                toTracerParams("slide", key: "card_type") <|>
-                toTracerParams("new_detail", key: "page_type") <|>
-                toTracerParams("related", key: "element_type") <|>
-                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                toTracerParams(offset, key: "rank")
-            return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
-        }
-         */
+        
         theCell.majorTitle.text = item.displayTitle
         theCell.extendTitle.text = item.displayDescription
 
-        // 一行显示不完，截断后继续添加
         let text = NSMutableAttributedString()
-        var height: CGFloat = 0
-        let dotAttributedString = createTagAttributeTextNormal(content: " · ",fontSize: 10.0)
-        let attrTexts = item.tags?.enumerated().map({ (arg) -> NSAttributedString in
-            let (_, item) = arg
-            return createTagAttributeTextNormal(content: item.content,fontSize: 10.0)
+        let attrTexts = item.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
+            createTagAttrString(
+                item.content,
+                isFirst: offset == 0,
+                textColor: hexStringToUIColor(hex: item.textColor),
+                backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
         })
-        attrTexts?.enumerated().forEach { (e) in
+        
+        var height: CGFloat = 0
+        attrTexts?.enumerated().forEach({ (e) in
             let (offset, tag) = e
-            if offset > 0 {
-                text.append(dotAttributedString)
-            }
+            
             text.append(tag)
-            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 176, height: CGFloat.greatestFiniteMagnitude), text: text)
+            
+            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 166, height: CGFloat.greatestFiniteMagnitude), text: text)
             let lineHeight = tagLayout?.textBoundingSize.height ?? 0
-            // 只显示一行
             if lineHeight > height {
+                if offset != 0 {
+                    text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                }
                 if offset == 0 {
                     height = lineHeight
-                } else {
-                    // 删除： · tag
-                    if text.length - (tag.length + 3) >= 0 {
-                        text.deleteCharacters(in: NSRange(location: text.length - (tag.length + 3), length: tag.length + 3))
-                    }
                 }
             }
-        theCell.areaLabel.attributedText = text
+        })
         
+        theCell.areaLabel.attributedText = text
+        theCell.areaLabel.snp.updateConstraints { (maker) in
+            maker.left.equalToSuperview().offset(-3)
+        }
         theCell.priceLabel.text = item.displayPricePerSqm
         theCell.majorImageView.bd_setImage(with: URL(string: item.courtImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         }
-    }
 }
