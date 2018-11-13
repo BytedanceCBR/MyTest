@@ -375,8 +375,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     fileprivate func reBindTableItemSelector() {
         dataSources[ConditionType.category.rawValue].onSelect = createCategorySelectorHandler(nodes: nodes)
 
-        if let children = nodes.first?.children {
+        if let children = nodes.first?.children, children.first?.children.count ?? 0 > 0 {
             dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
+        } else {
+            dataSources[ConditionType.subCategory.rawValue].onSelect = { _ in }
         }
     }
 
