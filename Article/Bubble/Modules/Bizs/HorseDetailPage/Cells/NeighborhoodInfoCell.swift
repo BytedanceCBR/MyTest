@@ -36,6 +36,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         return re
     }()
     
+    fileprivate var pointAnnotation: FHMAAnnotation?
+    
     lazy var schoolKey: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(15)
@@ -57,6 +59,13 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         return re
     }()
     
+    lazy var mapAnnotionImageView: UIImageView = {
+        let screenWidth = UIScreen.main.bounds.width
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let re = UIImageView(frame: frame)
+        return re
+    }()
+    
     let mapView: MAMapView = {
         let screenWidth = UIScreen.main.bounds.width
         let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
@@ -67,6 +76,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         re.isZoomEnabled = false
         re.isScrollEnabled = false
         re.zoomLevel = 13
+        re.showsUserLocation = true
         return re
     }()
     
@@ -111,7 +121,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             let center = CLLocationCoordinate2D(latitude: theLat, longitude: theLng)
             centerPoint = center
             mapView.setCenter(center, animated: false)
+            
+            addUserAnnotation()
         }
+    }
+    
+    fileprivate func addUserAnnotation()
+    {
+        guard let center = centerPoint else {
+            return
+        }
+        
+        let pointAnnotation = FHMAAnnotation()
+        pointAnnotation.type = .center
+        pointAnnotation.coordinate = center
+        mapView.addAnnotation(pointAnnotation)
+        self.pointAnnotation = pointAnnotation
+        
+        snapshotMap()
     }
     
     func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
@@ -186,6 +213,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             maker.top.equalTo(schoolKey.snp.bottom).offset(20)
         }
         
+        mapAnnotionImageView.backgroundColor = UIColor.clear
+        mapImageView.addSubview(mapAnnotionImageView)
+        
         let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.4)
         self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
             self?.mapImageView.image = image
@@ -253,6 +283,20 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             })
             .disposed(by: self.disposeBag)
         
+    }
+    
+    func snapshotMap()
+    {
+        if let annotionView = mapView.view(for: self.pointAnnotation)
+        {
+            if let superAnnotionView = annotionView.superview
+            {
+                mapAnnotionImageView.image = NewHouseNearByCell.getImageFromView(view: superAnnotionView)
+            }
+        }else
+        {
+            mapAnnotionImageView.image = nil
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

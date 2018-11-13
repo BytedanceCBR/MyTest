@@ -389,23 +389,25 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     let reactSize = annotation.title.boundingRect
                     
                     print("react size = \(reactSize)")
-                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14, height: 35)
-                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 20, height: 38)
+                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 12, height: 32)
+                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13 + 10, height: 38)
 
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
                     titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)
                     titileLabel.layer.masksToBounds = true
-                    titileLabel.layer.cornerRadius = 19
+//                    titileLabel.layer.cornerRadius = 19
                     titileLabel.numberOfLines = 1
                     titileLabel.textAlignment = .center
                     titileLabel.backgroundColor = UIColor.clear
-                    titileLabel.center = backImageView.center
+                    titileLabel.sizeToFit()
+                    titileLabel.center = CGPoint(x: backImageView.center.x, y: backImageView.center.y - 2
+                    )
                     
                     let bottomArrowView = UIImageView(image: UIImage(named: "mapcell_annotation_arrow"))
                     backImageView.addSubview(bottomArrowView)
                     bottomArrowView.backgroundColor = UIColor.clear
-                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 10.5, width: 10.5, height: 10.5)
+                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 12, width: 10.5, height: 10.5)
                 }
             }
             

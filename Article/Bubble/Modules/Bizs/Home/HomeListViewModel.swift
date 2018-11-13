@@ -23,10 +23,8 @@ enum RequestSuccessType: Int {
 class HomeListViewModel: DetailPageViewModel {
     var goDetailTraceParam: TracerParams?
     
-    
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
-    
     
     var showMessageAlert: ((String) -> Void)?
 
@@ -424,8 +422,6 @@ class HomeListViewModel: DetailPageViewModel {
                                   count: 20)
                 
                 // TODO: 重试逻辑
-//                .retryOnConnect(timeout: 60)
-//                .retry(100)
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
