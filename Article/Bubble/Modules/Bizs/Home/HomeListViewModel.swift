@@ -440,7 +440,7 @@ class HomeListViewModel: DetailPageViewModel {
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: 0,
-                                  searchId: self.originSearchId,
+                                  searchId: nil,
                                   count: 20)
                 
                 // TODO: 重试逻辑
