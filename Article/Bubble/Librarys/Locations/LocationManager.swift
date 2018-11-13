@@ -9,13 +9,24 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class LocationManager: NSObject, AMapLocationManagerDelegate {
+@objc class LocationManager: NSObject, AMapLocationManagerDelegate {
     // local test
-        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
-    // release
+//        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
+//     release
 //    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
-
-    static let shared = LocationManager()
+    static var apiKey : String {
+        get {
+            if "com.bytedance.fp1" == TTSandBoxHelper.bundleIdentifier()  {
+             //local test
+                return "003c8c31d052f8882bfb2a1d712dea84"
+            }
+            //release
+            return "69c1887b8d0d2d252395c58e3da184dc"
+        }
+    }
+    
+    
+    @objc static let shared = LocationManager()
 
     private lazy var locationManager: AMapLocationManager = {
         AMapLocationManager()
@@ -24,7 +35,8 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
     let currentCity = BehaviorRelay<AMapLocationReGeocode?>(value: nil)
 
     let disposeBag = DisposeBag()
-
+    
+    
     private override init() {
         AMapServices.shared().apiKey = LocationManager.apiKey
         AMapServices.shared().enableHTTPS = true
@@ -123,6 +135,22 @@ class LocationManager: NSObject, AMapLocationManagerDelegate {
             }
             return params
         }
+    }
+    
+    func isSameCity(cityName: String) -> Bool {
+        
+        guard let locationCity = self.currentCity.value?.city else {
+            return false
+        }
+        
+        if locationCity == cityName {
+            return true
+        }
+        if locationCity.hasPrefix(cityName) || cityName.hasPrefix(locationCity) {
+            return true
+        }
+        
+        return false
     }
 
 }

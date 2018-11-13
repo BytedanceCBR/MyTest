@@ -272,7 +272,41 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     bottomBarBinder: self.bindBottomView(params: coreInfoParams <|> toTracerParams("new_detail", key: "page_type")))
                 <- parseNewHouseContactNode(data, traceExt: traceExtension <|> self.traceParams, courtId: "\(courtId)")
                 <- parseFlineNode(((data.contact?.phone?.count ?? 0) > 0) ? 6 : 0)
-                <- parseFloorPanHeaderNode(data)
+                <- parseHeaderNode("楼盘户型", subTitle: "查看更多", showLoadMore: data.floorPan?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = data.floorPan?.hasMore, hasMore == true {
+                        let floorPanTraceParams = theParams <|>
+                            toTracerParams("house_model_list", key: "category_name") <|>
+                            toTracerParams("house_model", key: "element_from") <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            // add by zjing 埋点问题
+                            toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("new_detail", key: "enter_from")
+                        
+                        let phoneTracer = TracerParams.momoid() <|>
+                            toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams("house_model_list", key: "page_type")
+                        openFloorPanCategoryPage(
+                            floorPanId: "\(courtId)",
+                            logPBVC: data.floorPan?.logPB ?? "be_null",
+                            isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
+                            traceParams: floorPanTraceParams,
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC,
+                            followPage: self.followPage,
+                            logPB: data.logPB,
+                            bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))()
+                        let params = EnvContext.shared.homePageParams <|>
+                            toTracerParams("house_model", key: "element_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("house_model_list", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: params)
+                    }
+                }, filter: { () -> Bool in
+                    data.floorPan?.list?.count ?? 0 > 0
+                })
                 <- parseNewHouseFloorPanCollectionNode(
                     data,
                     logPb: logPbVC,
@@ -282,40 +316,38 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     bottomBarBinder: self.bindBottomView(
                         params: theParams <|>
                             toTracerParams("house_model_detail", key: "page_type")))
-                <- parseOpenAllNode(data.floorPan?.hasMore ?? false, barHeight: 0) { [unowned self] in
-                    let floorPanTraceParams = theParams <|>
-                        toTracerParams("house_model_list", key: "category_name") <|>
-                        toTracerParams("house_model", key: "element_from") <|>
-                        toTracerParams("slide", key: "card_type") <|>
-                        // add by zjing 埋点问题
-                        toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams("new_detail", key: "enter_from")
-
-                    let phoneTracer = TracerParams.momoid() <|>
-                        toTracerParams("call_bottom", key: "element_type") <|>
-                        toTracerParams(data.floorPan?.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams("house_model_list", key: "page_type")
-                    openFloorPanCategoryPage(
-                        floorPanId: "\(courtId)",
-                        logPBVC: data.floorPan?.logPB ?? "be_null",
-                        isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
-                        traceParams: floorPanTraceParams,
-                        disposeBag: self.disposeBag,
-                        navVC: self.navVC,
-                        followPage: self.followPage,
-                        logPB: data.logPB,
-                        bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))()
-                    let params = EnvContext.shared.homePageParams <|>
-                        toTracerParams("house_model", key: "element_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams("house_model_list", key: "page_type")
-                    recordEvent(key: "click_loadmore", params: params)
-                }
-                <- parseFlineNode((data.floorPan?.list?.count ?? 0 > 0 && data.floorPan?.hasMore ?? false == false) ? 6 : 0)
+                <- parseFlineNode((data.floorPan?.list?.count ?? 0 > 0) ? 6 : 0)
                 //楼盘动态
-                <- parseTimeLineHeaderNode(data)
+                <- parseHeaderNode("楼盘动态", subTitle: "查看更多", showLoadMore: data.timeLine?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = data.timeLine?.hasMore, hasMore == true {
+                        let phoneTracer = TracerParams.momoid() <|>
+                            toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams("house_history_detail", key: "page_type")
+                        self.openFloorPanList(
+                            courtId: courtId,
+                            isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
+                            logPB: data.logPB,
+                            bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
+                        let params = EnvContext.shared.homePageParams <|>
+                            toTracerParams("house_history", key: "element_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: params)
+                        
+                        let infoParams = EnvContext.shared.homePageParams <|>
+                            traceExtension <|>
+                            toTracerParams("new_detail", key: "page_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                        
+                        recordEvent(key: TraceEventName.click_house_history, params: infoParams)
+                    }
+                    }, filter: { () -> Bool in
+                        data.timeLine?.list?.count ?? 0 > 0
+                })
                 <- parseTimelineNode(data,
                                      traceExt:traceExtension,
                                      processor: { [unowned self] (_) in
@@ -338,35 +370,40 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                         
                                         recordEvent(key: TraceEventName.click_house_history, params: infoParams)
                 })
-                <- parseOpenAllNode(data.timeLine?.hasMore ?? false, barHeight: 0) { [unowned self] in
-                    let phoneTracer = TracerParams.momoid() <|>
-                        toTracerParams("call_bottom", key: "element_type") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams("house_history_detail", key: "page_type")
-                    self.openFloorPanList(
-                        courtId: courtId,
-                        isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
-                        logPB: data.logPB,
-                        bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
-                    let params = EnvContext.shared.homePageParams <|>
-                        toTracerParams("house_history", key: "element_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams("new_detail", key: "page_type")
-                    recordEvent(key: "click_loadmore", params: params)
-                    
-                    let infoParams = EnvContext.shared.homePageParams <|>
-                        traceExtension <|>
-                        toTracerParams("new_detail", key: "page_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-                    
-                    recordEvent(key: TraceEventName.click_house_history, params: infoParams)
-                    
-                }
-                <- parseFlineNode((data.timeLine?.list?.count ?? 0) > 0 && (data.timeLine?.hasMore ?? false) == false ? 6 : 0)
-                <- parseCommentHeaderNode(data)
+                <- parseFlineNode((data.timeLine?.list?.count ?? 0) > 0 ? 6 : 0)
+                <- parseHeaderNode("全网点评", subTitle: "查看更多", showLoadMore: data.comment?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = data.comment?.hasMore, hasMore == true {
+                        let phoneTracer = TracerParams.momoid() <|>
+                            toTracerParams("call_bottom", key: "element_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("house_comment_detail", key: "page_type")
+                        
+                        
+                        self.openCommentList(
+                            courtId: courtId,
+                            isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
+                            logPB: data.logPB,
+                            bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
+                        
+                        let params = EnvContext.shared.homePageParams <|>
+                            toTracerParams("house_comment", key: "element_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("new_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: params)
+                        
+                        let infoParams = EnvContext.shared.homePageParams <|>
+                            traceExtension <|>
+                            toTracerParams("new_detail", key: "page_type") <|>
+                            toTracerParams(courtId, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                        
+                        recordEvent(key: TraceEventName.click_house_comment, params: infoParams)
+                    }
+                    }, filter: { () -> Bool in
+                        data.comment?.list?.count ?? 0 > 0
+                })
                 <- parseNewHouseCommentNode(data,
                                             traceExtension: traceExtension,
                                             processor: { [unowned self] (_) in
@@ -389,44 +426,29 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                                 
                                                 recordEvent(key: TraceEventName.click_house_comment, params: infoParams)
                 })
-                <- parseOpenAllNode(data.comment?.hasMore ?? false, barHeight: 0) { [unowned self] in
-                    let phoneTracer = TracerParams.momoid() <|>
-                        toTracerParams("call_bottom", key: "element_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams("house_comment_detail", key: "page_type")
-
-
-                    self.openCommentList(
-                        courtId: courtId,
-                        isHiddenBottomBtn: data.contact?.phone?.count ?? 0 < 1,
-                        logPB: data.logPB,
-                        bottomBarBinder: self.bindBottomView(params: phoneTracer <|> toTracerParams("new_detail", key: "page_type")))
-
-                    let params = EnvContext.shared.homePageParams <|>
-                        toTracerParams("house_comment", key: "element_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams("new_detail", key: "page_type")
-                    recordEvent(key: "click_loadmore", params: params)
-                    
-                    let infoParams = EnvContext.shared.homePageParams <|>
-                        traceExtension <|>
-                        toTracerParams("new_detail", key: "page_type") <|>
-                        toTracerParams(courtId, key: "group_id") <|>
-                        toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-                    
-                    recordEvent(key: TraceEventName.click_house_comment, params: infoParams)
-                }
-                <- parseFlineNode(data.comment?.hasMore ?? false == false && data.comment?.list?.count ?? 0 > 0 ? 6 : 0)
-                <- parseHeaderNode("周边配套")
+                <- parseFlineNode(data.comment?.list?.count ?? 0 > 0 ? 6 : 0)
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0)
                 //地图cell
-                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag)
+                <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag){
+                    [weak self] in
+                    
+                    UIView.performWithoutAnimation { [weak self] in
+                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        {
+                            visibleCells.forEach({ [weak self] (indexPath) in
+                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
+                                {
+                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
+                                }
+                            })
+                            
+                        }
+                    }
+                }
                 <- parseHeaderNode("周边新盘") { [unowned self] in
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
-                <- parseRelateCourtCollectionNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC)
-                <- parseDisclaimerNode(data)
+                <- parseNearbyNewHouseListNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC, disposeBag: disposeBag)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -807,6 +829,8 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
         super.init()
     }
     
+    var nearByCell : NewHouseNearByCell?
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return datas.count
     }
@@ -818,11 +842,19 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()

@@ -82,10 +82,12 @@ struct ErshouHouseData: Mappable {
     var houseImage: [ImageItem]?
     var coreInfo: [ErshouHouseCoreInfo]?
     var baseInfo: [ErshouHouseBaseInfo]?
+    var outLineOverreview:ErshouOutlineOverreview?
     var neighborhoodInfo: NeighborhoodInfo?
 
     var priceTrend: [PriceTrend]?
     var housePriceRange: HousePriceRange?
+    var housePriceRank: HousePriceRank?
     var tags: [TagItem] = []
     var userStatus: UserStatus?
     var disclaimer: Disclaimer?
@@ -95,6 +97,7 @@ struct ErshouHouseData: Mappable {
     
     var contact: FHHouseDetailContact?
     var status: Int? // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+ 
 
     init?(map: Map) {
         
@@ -111,6 +114,7 @@ struct ErshouHouseData: Mappable {
         contact <- map["contact"]
         priceTrend <- map["price_trend"]
         housePriceRange <- map["house_price_range"]
+        housePriceRank <- map["house_pricing_rank"]
         tags <- map["tags"]
         userStatus <- map["user_status"]
         disclaimer <- map["disclaimer"]
@@ -118,6 +122,7 @@ struct ErshouHouseData: Mappable {
         pricingPerSqmValue <- map["pricing_per_sqm_v"]
         logPB <- map["log_pb"]
         status <- map["status"]
+        outLineOverreview <- map["house_overreview"]
 
     }
 }
@@ -135,6 +140,35 @@ struct ErshouHouseBaseInfo: Mappable {
         attr <- map["attr"]
         value <- map["value"]
         isSingle <- map["is_single"]
+    }
+}
+
+struct ErshouOutlineInfo: Mappable {
+    var title: String?
+    var content: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        title <- map["title"]
+        content <- map["content"]
+    }
+}
+
+struct ErshouOutlineOverreview: Mappable {
+    
+    var list: [ErshouOutlineInfo]?
+    var reportUrl: String?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        list <- map["list"]
+        reportUrl <- map["report_url"]
     }
 }
 
@@ -186,6 +220,40 @@ struct HousePriceRange: Mappable {
 
     }
 }
+
+struct HousePriceRank: Mappable {
+    var position: Int? // 排名位置
+    var total: Int? // 排名总数 类型 int
+    var analyseDetail: String? // 排名分析，类型 string
+    var buySuggestion: HousePriceRankSuggestion? // 购买建议，类型 dict
+
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        position <- map["position"]
+        total <- map["total"]
+        analyseDetail <- map["analyse_detail"]
+        buySuggestion <- map["buy_suggestion"]
+
+    }
+}
+
+struct HousePriceRankSuggestion: Mappable {
+    var type: Int? // 类型 int(1 建议,2普通,3不建议)
+    var content: String? // 建议内容，类型 string
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        type <- map["type"]
+        content <- map["content"]
+    }
+}
+
 
 struct PriceTrend: Mappable {
     var name: String?

@@ -78,7 +78,7 @@ class NeighborhoodNameCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        addBottomLine()
+        // addBottomLine()
 
         contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in

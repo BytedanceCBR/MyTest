@@ -52,6 +52,8 @@ fileprivate func getPlaceholderText(inputText: String?, inputField: UITextField)
 
 class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
+    let tipViewHeight: CGFloat = 32
+
     fileprivate var userInteractionObv: NSKeyValueObservation?
     
     let disposeBag = DisposeBag()
@@ -71,6 +73,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     lazy var searchFilterPanel: SearchFilterPanel = {
         let result = SearchFilterPanel()
+        result.backgroundColor = UIColor.white
         return result
     }()
 
@@ -139,6 +142,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     var searchSortBtnBG: UIView = {
         let re = UIView()
+        re.backgroundColor = UIColor.white
         re.lu.addBottomBorder()
         return re
     }()
@@ -158,6 +162,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         super.init(nibName: nil, bundle: nil)
     }
 
+    var integratedMessageBar: ArticleListNotifyBarView?
+
     @objc
     public required init(routeParamObj paramObj: TTRouteParamObj?) {
         self.isOpenConditionFilter = false
@@ -175,6 +181,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.navBar.backBtn.rx.tap.bind { [weak self] void in
             EnvContext.shared.toast.dismissToast()
             self?.navigationController?.popViewController(animated: true)
+        }.disposed(by: disposeBag)
+        self.navBar.mapBtn.rx.tap.bind { [weak self] void in
+            self?.gotoMapSearch()
         }.disposed(by: disposeBag)
 
         self.conditionFilterViewModel = ConditionFilterViewModel(
@@ -212,7 +221,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 return false
             }
         } as? [String: Any]
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -255,6 +263,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                         assertionFailure()
                     }
                 }
+                self.navBar.showMapButton(show:(self.houseType.value == .secondHandHouse))
             }
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
@@ -307,7 +316,86 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.navBar.searchInput.text = nil
         }
     }
-
+    
+    func gotoMapSearch(){
+        
+        guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
+            return
+        }
+        
+        //点击切换埋点
+        let catName = pageTypeString()
+        var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
+        let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
+        let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
+        var enterFrom = selectTraceParam(self.tracerParams, key: "enter_from")
+        if enterFrom == nil {
+            if originFrom != "be_null" {
+                enterFrom = originFrom.split(separator: "_")[0]
+            }else{
+                enterFrom = "be_null"
+            }
+        }
+        if elementName == "be_null" && originFrom != "be_null" {
+            elementName = originFrom
+        }
+        
+        var dict : [String : Any] = [
+            "house_type" : self.houseType.value.rawValue ,
+            "center_longitude" : mapSearch.centerLongitude ?? "" ,
+            "center_latitude" : mapSearch.centerLatitude ?? "" ,
+            "resize_level" : mapSearch.resizeLevel ?? 11 ,
+            "origin_from" : originFrom ,
+            "origin_search_id" : originSearchId ,
+            "element_from" : elementName ,
+            ]
+        let condition = self.searchAndConditionFilterVM.queryCondition.value
+        let url = URL(string: "http://a?\(condition)")
+        let obj = TTRoute.shared()?.routeParamObj(with: url)
+        if let query = obj?.queryParams {
+            dict["condition_params"] = query
+        }
+        if let suggestionParams = self.suggestionParams {
+            dict["suggestion_params"] = suggestionParams
+        }
+        
+        guard let configModel = try? FHMapSearchConfigModel(dictionary: dict) else {
+            return
+        }
+                
+        let params = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("map", key: "click_type") <|>
+            toTracerParams(catName, key: "category_name") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(elementName, key: "element_from") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        
+        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
+        
+        //进入地图找房页埋点
+        let enterParams = TracerParams.momoid() <|>
+            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(originFrom, key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id")
+        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
+        
+        let controller = FHMapSearchViewController(configModel: configModel)
+        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
+            if let condition = conditions {
+                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
+            }
+            if let sug = suggestion {
+                self?.suggestionParams = sug
+            }
+        }
+        self.navigationController?.pushViewController(controller, animated: true)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -338,6 +426,16 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.tableView.estimatedSectionFooterHeight = 0
 
         }
+
+        self.tableView.addPullDown(
+            withInitText: "下拉刷新数据",
+            pullText: "松开即可刷新",
+            loadingText: "正在努力加载",
+            noMoreText: "没有更多数据",
+            timeText: "",
+            lastTimeKey: "") { [weak self] in
+                self?.pullAndRefresh()
+            }
         
         self.errorVM = NHErrorViewModel(
             errorMask:infoMaskView,
@@ -373,11 +471,26 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.categoryListViewModel?.onError = { [weak self] (error) in
             self?.tableView.mj_footer.endRefreshing()
             self?.errorVM?.onRequestError(error: error)
+            self?.tableView.finishPullDown(withSuccess: false)
         }
         
         self.categoryListViewModel?.onSuccess = { [weak self] (isHaveData) in
             
             self?.tableView.mj_footer.endRefreshing()
+            self?.tableView.finishPullDown(withSuccess: true)
+
+            self?.integratedMessageBar?.showMessage(
+                "lalalal",
+                actionButtonTitle: "",
+                delayHide: true,
+                duration: 1,
+                bgButtonClickAction: { (button) in
+
+            }, actionButtonClick: { (button) in
+
+            }, didHide: { (view) in
+
+            })
 
             if(isHaveData)
             {
@@ -446,9 +559,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 })
                 .disposed(by: disposeBag)
 
+        let integratedMessageBar = ArticleListNotifyBarView(
+            frame: CGRect(
+                x: 0,
+                y: 200,
+                width: 500, height: tipViewHeight))
+        self.integratedMessageBar = integratedMessageBar
+
+//        self.ttErrorToastView = integratedMessageBar
+        view.addSubview(tableView)
+        view.addSubview(integratedMessageBar)
+
         view.addSubview(searchSortBtnBG)
         searchSortBtnBG.addSubview(searchSortBtn)
         view.addSubview(searchFilterPanel)
+        
 
         searchSortBtnBG.snp.makeConstraints { (maker) in
             maker.right.equalToSuperview()
@@ -470,7 +595,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.height.equalTo(44)
         }
 
-        view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(searchFilterPanel.snp.bottom)
@@ -488,6 +612,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         infoMaskView.snp.makeConstraints { maker in
             maker.edges.equalTo(tableView.snp.edges)
         }
+
+
+
 
         setupSortCondition()
 
@@ -507,10 +634,22 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.errorVM?.onRequest()
         self.searchAndConditionFilterVM.sendSearchRequest()
         self.resetConditionData()
+
 //        stayTimeParams = tracerParams <|> traceStayTime() <|> EnvContext.shared.homePageParams
 //        // 进入列表页埋点
 //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
         self.errorVM?.onRequestViewDidLoad()
+
+
+        self.view.bringSubview(toFront: searchFilterPanel)
+    }
+
+    override func viewDidLayoutSubviews() {
+        self.integratedMessageBar?.frame = CGRect(
+            x: 0,
+            y: self.tableView.top,
+            width: self.tableView.width,
+            height: tipViewHeight)
     }
     
     func bindHouseSearchParams() {
@@ -599,39 +738,48 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
                 .map { [unowned self] (result) -> String in
-                    var theResult = result
-                    //增加设置，如果关闭API部分的转码，需要这里将条件过滤器拼接的条件，进行转码
-                    if !self.isNeedEncode {
-                        if let encodeUrl = result.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                            theResult = encodeUrl
-                        }
-                    }
-                    return "house_type=\(self.houseType.value.rawValue)" + theResult + self.queryString
+                    self.getQueryCondition(filterCondition: result)
                 }
                 .debounce(0.1, scheduler: MainScheduler.instance)
+                .debug("searchAndConditionFilterVM")
                 .subscribe(onNext: { [unowned self] query in
-                    if EnvContext.shared.client.reachability.connection == .none
-                    {
-                        EnvContext.shared.toast.showToast("网络异常")
-                        return
-                    }
-                    self.errorVM?.onRequest()
-                    self.categoryListViewModel?.requestData(
-                            houseType: self.houseType.value,
-                            query: query,
-                            condition: self.suggestionParams,
-                            needEncode: self.isNeedEncode)
-                    let theTracerParams = EnvContext.shared.homePageParams
-                    self.tracerParams = self.tracerParams <|> theTracerParams
-                    self.stayTimeParams = self.tracerParams <|> traceStayTime()
-
-                    // 进入列表页埋点
-                }, onError: { error in
-                    print(error)
-                }, onCompleted: {
-
+                    self.requestData(query: query)
                 })
                 .disposed(by: disposeBag)
+    }
+
+    fileprivate func getQueryCondition(filterCondition: String) -> String {
+        var theResult = filterCondition
+        //增加设置，如果关闭API部分的转码，需要这里将条件过滤器拼接的条件，进行转码
+        if !self.isNeedEncode {
+            if let encodeUrl = filterCondition.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                theResult = encodeUrl
+            }
+        }
+        return "house_type=\(self.houseType.value.rawValue)" + theResult + self.queryString
+    }
+
+    fileprivate func requestData(query: String) {
+        if EnvContext.shared.client.reachability.connection == .none
+        {
+            EnvContext.shared.toast.showToast("网络异常")
+            return
+        }
+        self.errorVM?.onRequest()
+        self.categoryListViewModel?.requestData(
+            houseType: self.houseType.value,
+            query: query,
+            condition: self.suggestionParams,
+            needEncode: self.isNeedEncode)
+        let theTracerParams = EnvContext.shared.homePageParams
+        self.tracerParams = self.tracerParams <|> theTracerParams
+        self.stayTimeParams = self.tracerParams <|> traceStayTime()
+    }
+
+    fileprivate func pullAndRefresh() {
+        let filterCondition = searchAndConditionFilterVM.queryCondition.value
+        let query = getQueryCondition(filterCondition: filterCondition)
+        requestData(query: query)
     }
 
     override func didReceiveMemoryWarning() {
@@ -650,6 +798,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             })
         }
         bindHouseSearchParams()
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -753,6 +902,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                     })
                 self.queryString = self.queryString + conditions
+                print(self.queryString)
                 if let queryParams = self.queryParams {
                     self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
                 }

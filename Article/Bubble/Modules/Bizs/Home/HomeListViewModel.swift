@@ -524,6 +524,7 @@ class HomeListViewModel: DetailPageViewModel {
         oneTimeToast = createOneTimeToast()
 
         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
+
         
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value

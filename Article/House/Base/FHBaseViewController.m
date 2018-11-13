@@ -9,6 +9,7 @@
 
 @interface FHBaseViewController ()
 
+
 @end
 
 @implementation FHBaseViewController
@@ -16,6 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 /*

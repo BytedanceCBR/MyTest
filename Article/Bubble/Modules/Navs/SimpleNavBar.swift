@@ -298,6 +298,14 @@ class CategorySearchNavBar: UIView {
         result.clearButtonMode = .always
         return result
     }()
+    
+    lazy var mapBtn : UIButton = {
+       let button = UIButton()
+        let img = UIImage(named: "navbar_showmap")
+        button.setImage(img, for: .normal)
+        button.setImage(img, for: .highlighted)
+        return button
+    }()
     /*
     lazy var bottomLine: UIView = {
         let re = UIView()
@@ -382,6 +390,15 @@ class CategorySearchNavBar: UIView {
             maker.height.width.equalTo(20)
         }
 
+        self.addSubview(mapBtn)
+        mapBtn.isHidden = true
+        mapBtn.snp.makeConstraints { (maker) in
+            maker.right.equalToSuperview().offset(-15)
+            maker.top.equalTo(searchAreaPanel)
+            maker.bottom.equalTo(searchAreaPanel)
+            maker.width.equalTo(0)
+        }
+        
         searchAreaPanel.addSubview(searchInput)
         searchInput.snp.makeConstraints { maker in
             maker.left.equalTo(searchIcon.snp.right).offset(1)
@@ -452,6 +469,23 @@ class CategorySearchNavBar: UIView {
             maker.left.equalTo(searchTypeLabel.snp.right).offset(6).priority(.high)
         }
 
+    }
+    
+    func showMapButton(show: Bool) {
+     
+        if mapBtn.isHidden != show {
+            return
+        }
+        mapBtn.isHidden = !show
+        let width = show ? 30 : 0
+        mapBtn.snp.updateConstraints { (maker) in
+            maker.width.equalTo(width)
+        }
+        let inputOffset = show ? -60 : -15
+        searchAreaPanel.snp.updateConstraints { (maker) in
+            maker.right.equalToSuperview().offset(inputOffset)
+        }
+        
     }
     
 

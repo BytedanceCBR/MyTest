@@ -137,6 +137,117 @@ class FloorPanItemView: UIView {
     }
 }
 
+class NeighborhoodEvaluationItem: UIView
+{
+    lazy var backView: UIView = {
+        let re = UIView()
+        re.layer.cornerRadius = 4
+        re.layer.masksToBounds = true
+        re.backgroundColor = hexStringToUIColor(hex: kFHClearGreyColor)
+        return re
+    }() 
+    
+    lazy var descLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
+        return re
+    }()
+    
+    lazy var nameLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
+        re.textColor = hexStringToUIColor(hex: "#081f33")
+        re.textAlignment = .left
+        return re
+    }()
+    
+    lazy var scoreLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
+        return re
+    }()
+    
+    lazy var levelLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = UIColor.white
+        re.textAlignment = .center
+        re.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
+        re.layer.masksToBounds = true
+        re.layer.cornerRadius = 4.0
+        return re
+    }()
+    
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let re = UITapGestureRecognizer()
+        return re
+    }()
+    
+    let disposeBag = DisposeBag()
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        addSubview(backView)
+        
+        backView.snp.makeConstraints { maker in
+            maker.width.equalTo(140)
+            maker.height.equalTo(122)
+            maker.centerX.centerY.equalToSuperview()
+        }
+        
+        backView.addSubview(nameLabel)
+        nameLabel.snp.makeConstraints { maker in
+            maker.left.equalToSuperview().offset(12)
+            maker.top.equalToSuperview().offset(18)
+            maker.height.equalTo(22)
+            maker.width.equalTo(70)
+        }
+        
+        backView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { maker in
+            maker.right.equalToSuperview()
+            maker.height.width.equalTo(22)
+            maker.top.equalTo(nameLabel)
+        }
+        
+        scoreLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        scoreLabel.setContentHuggingPriority(.required, for: .horizontal)
+        backView.addSubview(scoreLabel)
+        scoreLabel.snp.makeConstraints { maker in
+            maker.right.equalTo(levelLabel.snp.left).offset(-9)
+            maker.height.equalTo(22)
+            maker.top.equalTo(nameLabel)
+        }
+
+    }
+    
+    func layOutDescLabelForText(text: String)
+    {
+        descLabel.removeFromSuperview()
+        let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 120)
+        backView.addSubview(descLabel)
+        descLabel.frame = CGRect(x: 12, y: 43, width: 120, height: heightText > 73 ? 73 : heightText)
+        descLabel.text = text
+        descLabel.lineBreakMode = .byTruncatingTail
+        descLabel.numberOfLines = 4
+    }
+    
+    func labelWithHeight(labelStr: String, label: UILabel, width: CGFloat) ->CGFloat {
+        let statusLabelText: NSString = labelStr as NSString
+        let size =  CGSize(width: width, height: 900)
+        let dic = NSDictionary(object: label.font, forKey: NSAttributedStringKey.font as NSCopying)
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [NSAttributedStringKey : Any], context: nil).size
+        return strSize.height
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
 class NeighborhoodItemView: UIView {
     lazy var icon: UIImageView = {
         let re = UIImageView()
@@ -149,7 +260,7 @@ class NeighborhoodItemView: UIView {
 
     lazy var descLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.font = CommonUIStyle.Font.pingFangRegular(16)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
@@ -164,7 +275,7 @@ class NeighborhoodItemView: UIView {
     lazy var spaceLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.textColor = hexStringToUIColor(hex: "#ffffff")
         return re
     }()
 
@@ -177,6 +288,7 @@ class NeighborhoodItemView: UIView {
 
     init() {
         super.init(frame: CGRect.zero)
+        
         addSubview(icon)
         icon.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
@@ -184,25 +296,39 @@ class NeighborhoodItemView: UIView {
             maker.height.equalTo(116)
             maker.top.equalToSuperview()
         }
+        
+        let topColor = color(1, 1, 1, 0)
+        let bottomColor = color(0, 0, 0, 0.5)
+        let gradientColors = [topColor.cgColor, bottomColor.cgColor]
+        let gradientLocations:[NSNumber] = [0.0, 1.0]
+        
+        let gradientlayer = CAGradientLayer()
+        gradientlayer.colors = gradientColors
+        gradientlayer.locations = gradientLocations
+        gradientlayer.frame = CGRect(x: 0, y: 0, width: 156, height: 120)
+        gradientlayer.cornerRadius = 4.0
+        icon.layer.addSublayer(gradientlayer)
 
         addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
+            maker.height.equalTo(22)
             maker.top.equalTo(icon.snp.bottom).offset(10)
         }
 
         addSubview(spaceLabel)
         spaceLabel.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(descLabel.snp.bottom).offset(4)
+            maker.height.equalTo(17)
+            maker.right.equalToSuperview().offset(-6)
+            maker.bottom.equalTo(icon.snp.bottom).offset(-6)
         }
 
         addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(spaceLabel.snp.bottom).offset(4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(descLabel.snp.bottom)
             maker.bottom.equalToSuperview()
-
         }
     }
 

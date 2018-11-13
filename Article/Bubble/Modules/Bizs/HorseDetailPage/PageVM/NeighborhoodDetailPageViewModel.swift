@@ -74,7 +74,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     var traceParams = TracerParams.momoid()
 
     var recordRowIndex: Set<IndexPath> = []
-
+    
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?) {
         self.tableView = tableView
         self.navVC = navVC
@@ -160,7 +160,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if showLoading {
             self.showMessageAlert?("正在加载")
         }
-        requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)
+//        "\(houseId)"
+//        houseId =
+        requestNeighborhoodDetail(neighborhoodId: "6581417114710573326", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {
@@ -252,19 +254,49 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
             
+            let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+            
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
-                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension)
-                <- parseFlineNode((data.baseInfo?.count ?? 0) > 0 ? 6 : 0)
+                <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
+                    if let openUrl = info.openUrl {
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data)
+                    }
+                }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
-                <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension)
-                <- parseHeaderNode("周边配套") {
+                <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
+                <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: openEvaluationWeb) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
+                <- parseNeighborhoodEvaluationCollectionNode(
+                    data,
+                    traceExtension: traceExtension,
+                    disposeBag: disposeBag,
+                    followStatus: self.followStatus,
+                    navVC: self.navVC)
+                <- parseFlineNode(6)
+                <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }
-                <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag)
+                <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag){
+                    [weak self] in
+                    
+                    UIView.performWithoutAnimation { [weak self] in
+                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        {
+                            visibleCells.forEach({ [weak self] (indexPath) in
+                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
+                                {
+                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
+                                }
+                            })
+                           
+                        }
+                    }
+                }
                 <- parseHeaderNode("均价走势")
                 <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
                     if let id = data.neighborhoodInfo?.id
@@ -405,14 +437,39 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         let vc = TransactionHistoryVC(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
         vc.tracerParams = traceParams
-        vc.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    self.navVC?.popViewController(animated: true)
-                })
-                .disposed(by: disposeBag)
         navVC?.pushViewController(vc, animated: true)
     }
-
+    
+    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData) {
+        let decodedUrl = url.removingPercentEncoding ?? ""
+        let arrUrls = decodedUrl.components(separatedBy: "?")
+        if arrUrls.count > 0 {
+            let openUrl = arrUrls[0]
+            if let theUrl = URL(string: openUrl) {
+                var params:[String:Any] = [:]
+                if let id = data.id {
+                    params["neighborhoodId"] = id
+                }
+                if let title = data.name {
+                    params["title"] = title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))"
+                }
+                if let searchId = self.houseInSameNeighborhood.value?.data?.searchId {
+                    params["searchId"] = searchId
+                }
+                params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
+                params["followStatus"] = self.followStatus
+                // add by zyk 要修改埋点数据，以及参数,区分不同的点击  important
+                let tracePramas = TracerParams.momoid()
+                params["tracerParams"] = tracePramas
+                
+                let bottomBarBinder = self.bindBottomView(params: TracerParams.momoid())
+                params["bottomBarBinder"] = bottomBarBinder
+                
+                let userInfo = TTRouteUserInfo(info: params)
+                TTRoute.shared().openURL(byPushViewController: theUrl,userInfo:userInfo)
+            }
+        }
+    }
 }
 
 func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel {
@@ -432,6 +489,10 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
 
+    var nearByCell : NewHouseNearByCell?
+    
+    var neighborhoodInfoFoldState:Bool = true
+
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
         super.init()
@@ -448,15 +509,49 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch datas[indexPath.section].type {
         case let .node(identifier):
+            if identifier == "NewHouseNearByCell",let cellV = nearByCell
+            {
+                return cellV
+            }
             let cell = cellFactory.dequeueReusableCell(
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            if let refreshCell = cell as? PropertyListCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isNeighborhoodInfoFold = self.neighborhoodInfoFoldState
+                processRefreshableTableViewCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
             datas[indexPath.section].items[indexPath.row](cell)
+            if cell is NewHouseNearByCell
+            {
+                nearByCell = cell as? NewHouseNearByCell
+            }
             return cell
         default:
             return CycleImageCell()
         }
+    }
+    
+    fileprivate func processRefreshableTableViewCell(
+        cell: RefreshableTableViewCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        var tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self] in
+            self?.changeNeighborhoodInfoFoldState()
+            UIView.performWithoutAnimation {
+                tableView?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    fileprivate func changeNeighborhoodInfoFoldState()
+    {
+        self.neighborhoodInfoFoldState = !self.neighborhoodInfoFoldState
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

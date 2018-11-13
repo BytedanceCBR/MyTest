@@ -5,18 +5,18 @@
 
 import Foundation
 import SnapKit
-class ToastAlertCenter {
+@objc class ToastAlertCenter : NSObject{
     lazy var toastAlert: ToastAlertView = {
         let re = ToastAlertView(frame: UIScreen.main.bounds)
         re.isUserInteractionEnabled = false
         return re
     }()
 
-    init() {
-
+    override init() {
+        super.init()
     }
 
-    func showToast(_ message: String, duration: TimeInterval = 1) {
+    @objc func showToast(_ message: String, duration: TimeInterval = 1) {
 
         toastAlert.isUserInteractionEnabled = false
         UIApplication.shared.keyWindow?.addSubview(toastAlert)
@@ -34,7 +34,7 @@ class ToastAlertCenter {
 
     }
 
-    func showLoadingToast(_ message: String) {
+    @objc func showLoadingToast(_ message: String) {
         toastAlert.isUserInteractionEnabled = false
         self.dismissToast()
         if let window = UIApplication.shared.keyWindow {
@@ -60,7 +60,7 @@ class ToastAlertCenter {
         }
     }
     
-    func dismissToast() {
+    @objc func dismissToast() {
         toastAlert.hideProgressHud()
         toastAlert.hideAllToasts()
         toastAlert.removeFromSuperview()

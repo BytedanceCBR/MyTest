@@ -166,7 +166,8 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常")
         
         self.errorVM?.onRequestViewDidLoad()
-        self.errorVM?.onRequest()
+        //FIXME: uncomment this
+//        self.errorVM?.onRequest()
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
     }
 

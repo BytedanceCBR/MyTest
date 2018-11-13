@@ -5,7 +5,8 @@
 
 import Foundation
 import SnapKit
-class EmptyMaskView: UIView {
+
+@objc class EmptyMaskView: UIView {
 
     lazy var icon: UIImageView = {
         let re = UIImageView()
@@ -44,7 +45,7 @@ class EmptyMaskView: UIView {
         return re
     }()
 
-    init() {
+    @objc init() {
         super.init(frame: CGRect.zero)
         backgroundColor = UIColor.white
         addSubview(contentView)

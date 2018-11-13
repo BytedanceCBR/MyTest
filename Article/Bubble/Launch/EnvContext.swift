@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EnvContext: NSObject {
+@objc class EnvContext: NSObject {
     @objc static let shared = EnvContext()
 
     @objc static let networkConfig: NetworkConfig = {
@@ -21,7 +21,7 @@ class EnvContext: NSObject {
 
     @objc let client = Client()
 
-    lazy var toast: ToastAlertCenter = {
+    @objc lazy var toast: ToastAlertCenter = {
         ToastAlertCenter()
     }()
 

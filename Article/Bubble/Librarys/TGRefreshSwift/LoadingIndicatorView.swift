@@ -81,7 +81,7 @@ class LoadingIndicatorView: UIView {
 }
 
 
-class CycleIndicatorView: UIView {
+@objc class CycleIndicatorView: UIView {
 
     lazy var loadingIndicator: UIImageView = {
         let re = UIImageView()
@@ -121,7 +121,7 @@ class CycleIndicatorView: UIView {
 
 
 
-    public final func startAnimating() {
+    @objc public final func startAnimating() {
         isAnimating = true
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotationAnimation.toValue = Double.pi * 2
@@ -131,7 +131,7 @@ class CycleIndicatorView: UIView {
         loadingIndicator.layer.add(rotationAnimation, forKey: "rotationAnimation")
     }
 
-    public final func stopAnimating() {
+    @objc public final func stopAnimating() {
         isAnimating = false
         loadingIndicator.layer.removeAllAnimations()
     }

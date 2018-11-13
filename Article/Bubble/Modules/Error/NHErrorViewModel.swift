@@ -20,7 +20,7 @@ enum ErrorType: Int {
     case errorRequest = 5 //请求错误（404，500，超时）
 }
 
-class NHErrorViewModel: NSObject {
+@objc class NHErrorViewModel: NSObject {
     weak var errorMask: EmptyMaskView!
     
     var isHaveData: Bool?
@@ -52,6 +52,12 @@ class NHErrorViewModel: NSObject {
     let errorState = BehaviorRelay<ErrorType>(value:.normal) //错误状态
 
     var isInRequest = false
+    
+    @objc convenience init(_ errorMask : EmptyMaskView ,
+                     retryAction:(() -> Void)? = nil )
+    {
+        self.init(errorMask: errorMask, retryAction: retryAction)
+    }
     
     /**
      初始化，根据需要选择是否自定义参数
@@ -224,7 +230,7 @@ class NHErrorViewModel: NSObject {
     
 
     //VC页面加载调用，请求之前判断网络状态
-    func onRequestViewDidLoad()
+    @objc func onRequestViewDidLoad()
     {
         checkErrorState()
         isViewDidLoad = false
@@ -235,7 +241,7 @@ class NHErrorViewModel: NSObject {
     }
 
     //无网络状态
-    func onRequestInvalidNetWork()
+    @objc func onRequestInvalidNetWork()
     {
         isInRequest = false
         if self.invalidNetwork()
@@ -248,7 +254,7 @@ class NHErrorViewModel: NSObject {
         }
     }
     //请求错误，包括404，500，timeout等
-    func onRequestError(error: Error?) {
+    @objc func onRequestError(error: Error?) {
         isInRequest = false
 
         self.errorMask.label.text = self.requestErrorText
@@ -264,7 +270,7 @@ class NHErrorViewModel: NSObject {
     }
     
     //网络正常，无数据状态
-    func onRequestNilData() {
+    @objc func onRequestNilData() {
         isInRequest = false
 
         self.isHaveData = false
@@ -278,11 +284,11 @@ class NHErrorViewModel: NSObject {
         errorState.accept(.errorNoData)
     }
     //请求刷新，下拉，分类重选等操作
-    func onRequestRefreshData(){
+    @objc func onRequestRefreshData(){
         checkErrorState()
     }
     //数据正常
-    func onRequestNormalData() {
+    @objc func onRequestNormalData() {
         isInRequest = false
         self.isHaveData = true
         self.errorMask.isHidden = true

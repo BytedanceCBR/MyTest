@@ -180,6 +180,14 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             showTip: true)()
                         
                     }
+                    
+                    self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                            followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                            followId: "\(self.houseId)",
+                        disposeBag: self.disposeBag,
+                        statusBehavior: self.follwUpStatus,
+                        isNeedRecord: false)()
+                    
                 }else
                 {
                     alert.sendPhoneView.showErrorText()

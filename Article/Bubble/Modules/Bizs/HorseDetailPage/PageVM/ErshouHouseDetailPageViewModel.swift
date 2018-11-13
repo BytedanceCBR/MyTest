@@ -344,11 +344,20 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
-                <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
+//                <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
-                <- parseHeaderNode("小区详情", subTitle: "查看小区", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor)
+                <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
+                    (data.outLineOverreview == nil) ? false : true
+                }
+                <- parseHouseOutlineListNode(data)
+                <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor) {
+                    return data.neighborhoodInfo != nil ? true : false
+                }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
-                <- parseHeaderNode("均价走势")
+                <- parseHeaderNode("价格分析")
+                <- parsePriceRankNode(data.housePriceRank, traceExtension: traceExtension)
+
+                // 均价走势
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id
                     {
@@ -374,12 +383,11 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             recordEvent(key: "click_price_trend", params: loadMoreParams)
                     }
                 }
-                <- parseHeaderNode("同小区价格对比", adjustBottomSpace: -10) {
-                    (data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? false : true
-                }
-                <- parsePriceRangeNode(data.housePriceRange, traceExtension: traceExtension)
-                <- parseFlineNode(((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) || self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
+                <- parseFlineNode(6)
+                // 购房小建议
+                <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
+                <- parseFlineNode(data.housePriceRank?.buySuggestion != nil ? 6 : 0)
+                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "同小区房源"  : "同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNodeCollection(houseInSameNeighborhood.value?.data, traceExtension: traceExtension, navVC: navVC, tracerParams: theParams)
@@ -418,7 +426,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                 }
                 <- parseFlineNode(((houseInSameNeighborhood.value?.data?.total ?? 0 > 0 && houseInSameNeighborhood.value?.data?.total ?? 0 <= 5) || self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
+                <- parseHeaderNode((relateNeighborhoodData.value?.data?.hasMore ?? false) ? "周边小区"  : "周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseRelatedNeighborhoodCollectionNode(
@@ -465,7 +473,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-                <- parseErshouHouseDisclaimerNode(data)
+//                <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -519,18 +527,8 @@ func openErshouHouseList(
         searchSource: searchSource,
         searchId: searchId,
         bottomBarBinder: bottomBarBinder)
-    if let followStatus = followStatus {
-        listVC.sameNeighborhoodFollowUp.accept(followStatus.value)
-        listVC.sameNeighborhoodFollowUp
-            .bind(to: followStatus)
-            .disposed(by: disposeBag)
-    }
+    listVC.followStatus = followStatus
     listVC.tracerParams = tracerParams
-    listVC.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
-                navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
     navVC?.pushViewController(listVC, animated: true)
 }
 

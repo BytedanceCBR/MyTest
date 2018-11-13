@@ -114,7 +114,7 @@ class TimelineCell: BaseUITableViewCell {
             maker.top.equalTo(titleLabel.snp.bottom).offset(4)
             maker.left.equalTo(titleLabel.snp.left)
             maker.right.equalToSuperview().offset(-20)
-            maker.bottom.equalToSuperview().offset(-26)
+            maker.bottom.equalToSuperview().offset(-20)
          }
 
         contentView.addSubview(timeLineLeading)

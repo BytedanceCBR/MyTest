@@ -5,11 +5,11 @@
 
 import ObjectMapper
 
-enum HouseType: Int {
+@objc enum HouseType: Int {
     case newHouse = 1
     case secondHandHouse = 2
     case rentHouse = 3
-    case neighborhood = 4
+    case neighborhood = 4    
 
     func traceTypeValue() -> String {
         switch self {
@@ -242,6 +242,10 @@ struct NeighborhoodInfo: Mappable {
     var pricingPerSqmValue: Int = 1
     var displayPricePerSqm: String?
     var displayPrice: String?
+    var evaluationInfo: NeighborhoodEvaluationinfo?
+    var schoolInfo: [NeighborhoodSchoolInfo]?
+    var districtName: String?
+    var areaName: String?
 
     var logPB: [String: Any]?
 
@@ -269,6 +273,10 @@ struct NeighborhoodInfo: Mappable {
         pricingPerSqmValue <- map["pricing_per_sqm_v"]
         displayPricePerSqm <- map["display_price_per_sqm"]
         logPB <- map["log_pb"]
+        evaluationInfo <- map["evaluation_info"]
+        schoolInfo <- map["school_info"]
+        districtName <- map["district_name"]
+        areaName <- map["area_name"]
 
     }
 }

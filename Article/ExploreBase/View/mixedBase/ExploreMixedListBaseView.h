@@ -19,6 +19,7 @@
 
 @protocol ExploreMixedListBaseViewDelegate;
 
+extern const NSUInteger ExploreMixedListBaseViewSectionFHouseCells;
 //extern const NSUInteger ExploreMixedListBaseViewSectionUploadingCells;
 //extern const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells;
 extern const NSUInteger ExploreMixedListBaseViewSectionExploreCells;

@@ -62,6 +62,7 @@
 #import "TTWechatTimelineActivity.h"
 #import "TTQQFriendActivity.h"
 #import "TTQQZoneActivity.h"
+#import <TTSandBoxHelper.h>
 
 #import "TTCategoryStayTrackManager.h"
 
@@ -80,5 +81,13 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+
+#import "UIImageAdditions.h"
+
+#import "FHMapSearchViewController.h"
+
+#import "FHSearchHouseModel.h"
+#import "ArticleListNotifyBarView.h"
+#import "FRRouteHelper.h"
 
 #endif /* Article_Bridging_Header_h */

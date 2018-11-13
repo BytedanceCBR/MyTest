@@ -59,7 +59,11 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
 
     var tracerParams = TracerParams.momoid()
 
+    var stayMapParams = TracerParams.momoid()
+
     var centerPointName: String
+
+    var fromLogPb: Any?
     
     init(centerPointName: String) {
         self.centerPointName = centerPointName
@@ -113,6 +117,16 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
         mapView.snp.makeConstraints { maker in
             maker.top.bottom.right.left.equalToSuperview()
         }
+//        if let stylePath = Bundle.main.path(forResource: "gaode_map_style", ofType: "data"){
+//            if let styleUrl = URL(string:stylePath){
+//                if let styleData = try? Data(contentsOf: styleUrl) {
+//                    mapView.customMapStyleEnabled = true
+//                    mapView.setCustomMapStyleWithWebData(styleData)
+//                }
+//            }
+//        }
+        
+        
         self.mapView = mapView
         setupBottomBar()
         
@@ -163,13 +177,25 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                     self.creatOptionMenu()
                 }
                 .disposed(by: disposeBag)
-        self.tracerParams = self.tracerParams <|>
+
+        self.tracerParams = EnvContext.shared.homePageParams <|>
+                self.tracerParams <|>
+//                toTracerParams(self.fromLogPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams("map_detail", key: "page_type")
+        self.stayMapParams = self.tracerParams <|>
+            traceStayTime()
         recordEvent(key: "enter_map", params: self.tracerParams)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.stayMapParams = self.tracerParams <|>
+            traceStayTime()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        recordEvent(key: "stay_map", params: self.stayMapParams)
     }
 
     fileprivate func cleanAllAnnotations() {
@@ -463,7 +489,6 @@ fileprivate let categoryIconMap = ["银行": #imageLiteral(resourceName: "icon-b
 func getMapPoiIcon(category: String) -> UIImage {
     return categoryIconMap[category] ?? #imageLiteral(resourceName: "icon-location")
 }
-
 
 fileprivate class MyMAAnnotation: MAPointAnnotation {
     var type: String = ""

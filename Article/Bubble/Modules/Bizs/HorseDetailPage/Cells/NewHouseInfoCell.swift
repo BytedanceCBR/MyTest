@@ -411,6 +411,7 @@ func fillNewHouseCoreInfoCell(
             toTracerParams("new_detail", key: "enter_from") <|>
             toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(floorPanId, key: "group_id") <|>
+            toTracerParams("house_info", key: "element_from") <|>
             toTracerParams("address", key: "click_type")
         theCell.openMapBtn.rx.tap
                 .bind { void in

@@ -145,7 +145,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
+        
+        checkTraceParam(paramObj?.allParams)
         self.isFromPush = true
+
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -230,6 +233,50 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         fatalError("init(coder:) has not been implemented")
     }
 
+    
+    fileprivate func checkTraceParam(_ allParams :  [AnyHashable: Any]?) {
+        
+        guard let allParams = allParams else {
+            return
+        }
+        
+        if (allParams["enter_from"]  as? String ) == "mapfind" {
+            //enter from mapfind page
+            traceParams = traceParams <|> toTracerParams("mapfind", key: "enter_from")
+            
+            if let cardType = allParams["card_type"] {
+                traceParams = traceParams <|> toTracerParams(cardType,key:"card_type")
+            }
+            
+            if let elementFrom = allParams["element_from"] {
+                traceParams = traceParams <|> toTracerParams(elementFrom, key: "element_from")
+            }
+            
+            if let rank = allParams["rank"] {
+                traceParams = traceParams <|> toTracerParams(rank, key: "rank")
+            }
+            if let groupId = allParams["group_id"] {
+                traceParams = traceParams <|> toTracerParams(groupId,key:"group_id")
+            }
+            if let imprId = allParams["impr_id"] {
+                traceParams = traceParams <|> toTracerParams(imprId,key:"impr_id")
+            }
+            
+            if let searchId = allParams["search_id"] {
+                traceParams = traceParams <|> toTracerParams(searchId,key:"search_id")
+                self.searchId = searchId as? String
+            }
+            
+            if let originFrom = allParams["origin_from"] {
+                traceParams = traceParams <|> toTracerParams(originFrom,key:"origin_from")
+            }
+            if let originSearchId = allParams["origin_search_id"] {
+                traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
+            }
+        }
+        
+    }
+    
 
     fileprivate func bindNetStatusViewModel() {
         self.detailPageViewModel?.onNetworkError = { [weak self] (error) in
@@ -260,7 +307,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             {
                 searchId = (dictTracePara["search_id"] as! String)
             }
-            self.searchId = searchId
+            if let searchId = searchId {
+                self.searchId = searchId
+            }
             self.traceParams = self.traceParams <|> toTracerParams(searchId ?? "be_null", key: "search_id")
         }
 
@@ -272,9 +321,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self?.dismissLoadingAlert()
         }
         detailPageViewModel?.traceParams = traceParams
+        detailPageViewModel?.searchId = self.searchId
         self.bindNetStatusViewModel()
         setupNavBar()
-
         //绑定二手房跳小区详情页followUp信号
         if let detailPageViewModel = detailPageViewModel as? ErshouHouseDetailPageViewModel {
             detailPageViewModel.sameNeighborhoodFollowUp.accept(self.sameNeighborhoodFollowUp.value)

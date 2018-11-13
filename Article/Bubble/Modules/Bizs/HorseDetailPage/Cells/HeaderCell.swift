@@ -17,14 +17,14 @@ class HeaderCell: BaseUITableViewCell {
     lazy var label: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(18)
-        re.textColor = hexStringToUIColor(hex: "#081f33")
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
 
     lazy var loadMore: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
-        re.textColor = hexStringToUIColor(hex: "#8a9299")
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         re.textAlignment = .right
         re.text = "查看更多"
         re.isHidden = true
@@ -52,13 +52,6 @@ class HeaderCell: BaseUITableViewCell {
         self.adjustBottomSpace = -16
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)
-        label.snp.makeConstraints { maker in
-            maker.left.equalTo(20)
-            maker.top.equalTo(30)
-            maker.height.equalTo(22)
-            maker.bottom.equalToSuperview().offset(-20)
-         }
-
         contentView.addSubview(arrowsImg)
         arrowsImg.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-20)
@@ -73,6 +66,14 @@ class HeaderCell: BaseUITableViewCell {
             maker.width.equalTo(80)
             maker.right.equalTo(arrowsImg.snp.left)
          }
+        
+        label.snp.makeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.right.equalTo(loadMore.snp.left).offset(-10)
+            maker.top.equalTo(20)
+            maker.height.equalTo(26)
+            maker.bottom.equalToSuperview().offset(-20)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

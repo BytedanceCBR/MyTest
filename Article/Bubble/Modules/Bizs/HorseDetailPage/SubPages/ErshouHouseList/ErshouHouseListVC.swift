@@ -8,7 +8,7 @@ import SnapKit
 import RxCocoa
 import RxSwift
 import Reachability
-class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
+class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol {
     
     var hasMore = true
 
@@ -45,6 +45,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
     
     var sameNeighborhoodFollowUp = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
+    var followStatus: BehaviorRelay<Result<Bool>>? = nil
+    
     init(title: String?,
          neighborhoodId: String,
          houseId: String? = nil,
@@ -58,6 +60,22 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.titleName.accept(title ?? "小区房源")
     }
+    
+    required convenience init(routeParamObj paramObj: TTRouteParamObj?) {
+        let title = (paramObj?.userInfo.allInfo["title"] as? String) ?? ""
+        let houseId = (paramObj?.userInfo.allInfo["houseId"] as? String) ?? ""
+        let searchId = (paramObj?.userInfo.allInfo["searchId"] as? String) ?? ""
+        let searchSource = SearchSourceKey(rawValue: ((paramObj?.userInfo.allInfo["searchSource"] as? String) ?? "")) ?? .neighborhoodDetail
+        let neighborhoodId = (paramObj?.userInfo.allInfo["neighborhoodId"] as? String) ?? ""
+        let bottomBarBinder = paramObj?.userInfo.allInfo["bottomBarBinder"] as! FollowUpBottomBarBinder
+        let traceParam = (paramObj?.userInfo.allInfo["tracerParams"] as? TracerParams) ?? TracerParams.momoid()
+        var followStatus: BehaviorRelay<Result<Bool>>? = nil
+        followStatus = paramObj?.userInfo.allInfo["followStatus"] as? BehaviorRelay<Result<Bool>>
+        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, bottomBarBinder: bottomBarBinder)
+        self.tracerParams = traceParam
+        self.followStatus = followStatus
+    }
+
 
     override func viewDidLoad() {
         self.navigationController?.navigationBar.isHidden = true
@@ -80,6 +98,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
             .bind(to: tableView.rx.isHidden)
             .disposed(by: disposeBag)
        
+        if let fs = self.followStatus {
+            self.sameNeighborhoodFollowUp.accept(fs.value)
+            self.sameNeighborhoodFollowUp
+                .bind(to: fs)
+                .disposed(by: disposeBag)
+        }
         
         ershouHouseListViewModel?.onDataLoaded = self.onDataLoaded()
         self.navBar.title.text = self.titleName.value
@@ -115,6 +139,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
             }
         }
 
+        navBar.backBtn.rx.tap.subscribe({[weak self] void in
+            self?.navigationController?.popViewController(animated: true)
+        })
+            .disposed(by: disposeBag)
+        
         view.addSubview(searchFilterPanel)
         searchFilterPanel.snp.makeConstraints { maker in
             maker.top.equalTo(navBar.snp.bottom)
@@ -232,9 +261,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC {
 
     fileprivate func requestData() {
         errorVM?.onRequest()
-        ershouHouseListViewModel?.requestErshouHouseList(
-            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
-            condition: nil)
+//        ershouHouseListViewModel?.requestErshouHouseList(
+//            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
+//            condition: nil)
+        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {

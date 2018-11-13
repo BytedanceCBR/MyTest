@@ -45,6 +45,12 @@ class NewHouseNameCell: BaseUITableViewCell {
         result.lineBreakMode = NSLineBreakMode.byWordWrapping//按照单词分割换行，保证换行时的单词完整。
         return result
     }()
+    
+    lazy var bottomLine: UIView = {
+        let re = UIView(frame: CGRect.zero)
+        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
+        return re
+    }()
 
     let leftMerge: CGFloat = 20
     let rightMerge: CGFloat = -20
@@ -74,16 +80,18 @@ class NewHouseNameCell: BaseUITableViewCell {
 
         contentView.addSubview(tagsView)
         tagsView.snp.makeConstraints { maker in
-            maker.top.equalTo(aliasLabel.snp.bottom).offset(10)
+            maker.top.equalTo(aliasLabel.snp.bottom).offset(4)
             maker.left.equalTo(nameLabel.snp.left)
             maker.bottom.equalToSuperview().offset(-16)
             maker.width.equalToSuperview().offset(-30)
         }
-        contentView.lu
-                .addBottomBorder(
-                color: hexStringToUIColor(hex: kFHSilver2Color),
-                leading: 20,
-                trailing: -20)
+        contentView.addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { (make) in
+            make.bottom.equalToSuperview()
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+            make.height.equalTo(UIScreen.main.scale == 3 ? 0.34 : 0.5)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -104,25 +112,24 @@ class NewHouseNameCell: BaseUITableViewCell {
     func setTags(tags: [NSAttributedString]) {
         let text = NSMutableAttributedString()
         var height: CGFloat = 0
-
+        let dotAttributedString = createTagAttributeTextNormal(content: " · ")
         tags.enumerated().forEach { (e) in
             let (offset, tag) = e
+            if offset > 0 {
+                text.append(dotAttributedString)
+            }
             text.append(tag)
             let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 30, height: CGFloat.greatestFiniteMagnitude), text: text)
             let lineHeight = tagLayout?.textBoundingSize.height ?? 0
-//            if lineHeight > height {
-//                if offset != 0 {
-//                    text.yy_insertString("\n", at: UInt(text.length - tag.length))
-//                }
-//                height = lineHeight
-//            }
-            //只显示一行
+            // 只显示一行
             if lineHeight > height {
-                if offset != 0 {
-                    text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
-                }
                 if offset == 0 {
                     height = lineHeight
+                } else {
+                    // 删除： · tag
+                    if text.length - (tag.length + 3) >= 0 {
+                       text.deleteCharacters(in: NSRange(location: text.length - (tag.length + 3), length: tag.length + 3))
+                    }
                 }
             }
         }
@@ -141,7 +148,7 @@ class NewHouseNameCell: BaseUITableViewCell {
                 maker.height.equalTo(17)
             }
             tagsView.snp.updateConstraints { maker in
-                maker.top.equalTo(aliasLabel.snp.bottom).offset(8)
+                maker.top.equalTo(aliasLabel.snp.bottom).offset(10)
             }
             aliasLabel.isHidden = false
             secondaryLabel.isHidden = false
@@ -154,7 +161,7 @@ class NewHouseNameCell: BaseUITableViewCell {
                 maker.height.equalTo(0)
             }
             tagsView.snp.updateConstraints { maker in
-                maker.top.equalTo(aliasLabel.snp.bottom).offset(2)
+                maker.top.equalTo(aliasLabel.snp.bottom).offset(-2)
             }
             aliasLabel.isHidden = true
             secondaryLabel.isHidden = true
@@ -181,16 +188,14 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
         return
     }
 
+    theCell.bottomLine.isHidden = false
     theCell.nameLabel.text = newHouseData.coreInfo?.name
     theCell.setAlias(alias: newHouseData.coreInfo?.aliasName)
     var tags: [NSAttributedString] = []
 
     if let tgs = newHouseData.tags {
         tgs.map { (item) in
-            createTagAttributeText(
-                    content: item.content,
-                    textColor: hexStringToUIColor(hex: item.textColor),
-                    backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+            createTagAttributeTextNormal(content: item.content)
         }.forEach { item in
             tags.append(item)
         }
@@ -214,16 +219,24 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
     guard let theCell = cell as? NewHouseNameCell else {
         return
     }
+    theCell.bottomLine.isHidden = true
     theCell.nameLabel.text = ershouHouseData.title
     let tags = ershouHouseData.tags.map({ (item) -> NSAttributedString in
-        createTagAttributeText(
-            content: item.content,
-            textColor: hexStringToUIColor(hex: item.textColor),
-            backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+        createTagAttributeTextNormal(content: item.content)
     })
     theCell.setAlias(alias: nil)
-
     theCell.setTags(tags: tags)
+}
+
+func createTagAttributeTextNormal(content:String, fontSize:CGFloat = 12.0) -> NSMutableAttributedString {
+    let attributeText = NSMutableAttributedString(string: content)
+    attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(fontSize)
+    attributeText.yy_color = hexStringToUIColor(hex: kFHCoolGrey2Color)
+    attributeText.yy_lineSpacing = 2
+    attributeText.yy_lineHeightMultiple = 0
+    attributeText.yy_maximumLineHeight = 0
+    attributeText.yy_minimumLineHeight = 20
+    return attributeText
 }
 
 func createTagAttributeText(

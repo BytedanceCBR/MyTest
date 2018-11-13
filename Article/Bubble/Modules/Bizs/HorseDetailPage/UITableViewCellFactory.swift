@@ -83,6 +83,8 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: GlobalPricingCell.self)
             .addCellClass(cellType: DisclaimerCell.self)
             .addCellClass(cellType: HeaderCell.self)
+            .addCellClass(cellType: HouseOutlineHeaderCell.self)
+            .addCellClass(cellType: NearbyNewHouseCell.self)
             .addCellClass(cellType: ErshouHouseCoreInfoCell.self)
             .addCellClass(cellType: PropertyListCell.self)
             .addCellClass(cellType: NeighborhoodInfoCell.self)
@@ -100,12 +102,15 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: FavoriteCell.self)
             .addCellClass(cellType: SpringBroadCell.self)
             .addCellClass(cellType: ErshouHousePriceChartCell.self)
-            .addCellClass(cellType: NIHPriceRangeCell.self)
+            .addCellClass(cellType: FHDetailSuggestTipCell.self)
             .addCellClass(cellType: InformationCell.self)
             .addCellClass(cellType: MultitemCollectionCell.self)
             .addCellClass(cellType: FGrayLineCell.self)
+            .addCellClass(cellType: MultitemCollectionEvaluateCell.self)
             .addCellClass(cellType: FHMultiImagesInfoCell.self)
             .addCellClass(cellType: FHPlaceholderCell.self)
+            .addCellClass(cellType: FHErshouDetailPriceRankCell.self)
+            .addCellClass(cellType: FHNeighborhoodChartCell.self)
 
 
 }

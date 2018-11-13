@@ -8,7 +8,7 @@ import RxSwift
 import Reachability
 
 /// 楼盘动态
-class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
+class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol {
 
     var hasMore: Bool = true
 
@@ -25,7 +25,14 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.transactionHistoryVM = TransactionHistoryVM(tableView: tableView)
         self.transactionHistoryVM?.onDataLoaded = self.onDataLoaded()
-        
+    }
+    
+    required convenience init(routeParamObj paramObj: TTRouteParamObj?) {
+        let neighborhoodId = (paramObj?.userInfo.allInfo["neighborhoodId"] as? String) ?? ""
+        let bottomBarBinder = paramObj?.userInfo.allInfo["bottomBarBinder"] as! FollowUpBottomBarBinder
+        let traceParam = (paramObj?.userInfo.allInfo["tracerParams"] as? TracerParams) ?? TracerParams.momoid()
+        self.init(neighborhoodId: neighborhoodId, bottomBarBinder: bottomBarBinder)
+        self.tracerParams = traceParam
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -58,6 +65,12 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC {
             errorVM?.onRequest()
             self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
         }
+        
+        navBar.backBtn.rx.tap.subscribe({[weak self] void in
+            self?.navigationController?.popViewController(animated: true)
+        })
+            .disposed(by: disposeBag)
+
         
 //        infoMaskView.tapGesture.rx.event
 //            .bind { [unowned self] (_) in

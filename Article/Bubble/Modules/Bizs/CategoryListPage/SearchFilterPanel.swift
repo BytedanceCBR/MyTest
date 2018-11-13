@@ -18,7 +18,7 @@ enum ConditionItemType {
     case expand(String)
 }
 
-class SearchFilterPanel: UIView {
+@objc class SearchFilterPanel: UIView {
 
     var itemViews: [SearchConditionItemView] = []
 
@@ -26,10 +26,12 @@ class SearchFilterPanel: UIView {
 
     var items: [SearchConditionItem] = []
 
+    var bottomLine : UIView? = nil
+    
     init() {
         super.init(frame: CGRect.zero)
         let color = hexStringToUIColor(hex: kFHSilver2Color)
-        self.lu.addBottomBorder(color: color)
+        bottomLine = self.lu.addBottomBorder(color: color)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -159,7 +161,7 @@ func setFilterConditionItemBy(item: SearchConditionItem, reload: @escaping () ->
     reload()
 }
 
-class SearchConditionItemView: UIView {
+@objc class SearchConditionItemView: UIView {
 
     lazy var conditionLabel: UILabel = {
         let result = UILabel()

@@ -10,76 +10,217 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-class NeighborhoodInfoCell: BaseUITableViewCell {
-
+class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDelegate {
+    
     open override class var identifier: String {
         return "NeighborhoodInfoCell"
     }
     
     var navVC: UINavigationController?
-
+    
     let leftMarge: CGFloat = 20
     let rightMarge: CGFloat = -20
-
+    
     lazy var nameKey: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        re.text = "名称"
+        re.text = "所属区域"
         return re
     }()
-
+    
     lazy var nameValue: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
-
-
-
+    
+    lazy var schoolKey: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.text = "教育资源"
+        return re
+    }()
+    
+    lazy var schoolLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        return re
+    }()
+    
     lazy var mapImageView: UIImageView = {
         let re = UIImageView()
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
-
+    
+    let mapView: MAMapView = {
+        let screenWidth = UIScreen.main.bounds.width
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let re = MAMapView(frame: frame)
+        re.runLoopMode = RunLoopMode.defaultRunLoopMode;
+        re.showsCompass = false
+        re.showsScale = false
+        re.isZoomEnabled = false
+        re.isScrollEnabled = false
+        re.zoomLevel = 13
+        return re
+    }()
+    
+    lazy var bgView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#000000",alpha: 0.5)
+        return re
+    }()
+    lazy var evaluateLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.text = "小区测评"
+        re.textColor = .white
+        return re
+    }()
+    
+    lazy var rightArrow: UIImageView = {
+        let re = UIImageView()
+        re.image = UIImage(named: "arrowicon-feed-white")
+        return re
+    }()
+    
+    lazy var starsContainer: FHStarsCountView = {
+        let re = FHStarsCountView()
+        return re
+    }()
+    
     lazy var mapViewGesture: UITapGestureRecognizer = {
         let re = UITapGestureRecognizer()
         return re
     }()
     
     let disposeBag = DisposeBag()
-
+    
     var data: NeighborhoodInfo?
     var logPB: [String: Any]?
     var neighborhoodId:String?
+    var centerPoint: CLLocationCoordinate2D?
+
+    func setLocation(lat: String, lng: String) {
+        if let theLat = Double(lat), let theLng = Double(lng) {
+            let center = CLLocationCoordinate2D(latitude: theLat, longitude: theLng)
+            centerPoint = center
+            mapView.setCenter(center, animated: false)
+        }
+    }
+    
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        
+        if let annotation = annotation as? FHMAAnnotation {
+            
+            let pointReuseIndetifier = "pointReuseIndetifier"
+            var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier)
+            
+            if annotationView == nil {
+                annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
+            }
+            
+            if annotation.type.rawValue == "center"
+            {
+                annotationView?.image = UIImage(named: "icon-location")
+            }
+            
+            //设置中心点偏移，使得标注底部中间点成为经纬度对应点
+            annotationView?.centerOffset = CGPoint(x: 0, y: -18)
+            
+            return annotationView ?? MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
+        }
+        
+        return MAAnnotationView(annotation: annotation, reuseIdentifier: "default")
+    }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        mapView.delegate = self
+
+        contentView.addSubview(starsContainer)
+        starsContainer.snp.makeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(50)
+        }
+        
         contentView.addSubview(nameKey)
         nameKey.snp.makeConstraints { maker in
             maker.left.equalTo(leftMarge)
-            maker.top.equalToSuperview()
+            maker.top.equalTo(starsContainer.snp.bottom)
             maker.height.equalTo(20)
-            maker.width.equalTo(28)
-         }
-
+        }
+        
         contentView.addSubview(nameValue)
         nameValue.snp.makeConstraints { maker in
-            maker.left.equalTo(nameKey.snp.right).offset(10)
+            maker.left.equalTo(nameKey.snp.right).offset(12)
+            maker.top.equalTo(nameKey)
             maker.height.equalTo(20)
-            maker.right.equalToSuperview().offset(rightMarge)
         }
-
-
+        
+        contentView.addSubview(schoolKey)
+        schoolKey.snp.makeConstraints { maker in
+            maker.left.equalTo(nameKey)
+            maker.top.equalTo(nameKey.snp.bottom).offset(10)
+            maker.height.equalTo(20)
+        }
+        
+        contentView.addSubview(schoolLabel)
+        schoolLabel.snp.makeConstraints { maker in
+            maker.left.equalTo(schoolKey.snp.right).offset(12)
+            maker.top.equalTo(schoolKey)
+            maker.height.equalTo(20)
+        }
+        
         mapImageView.contentMode = .scaleAspectFill
         contentView.addSubview(mapImageView)
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
-            maker.top.equalTo(nameKey.snp.bottom).offset(16)
-         }
+            maker.top.equalTo(schoolKey.snp.bottom).offset(20)
+        }
+        
+        let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.4)
+        self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
+            self?.mapImageView.image = image
+        }
+        
+        contentView.addSubview(bgView)
+        bgView.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalTo(mapImageView)
+            maker.height.equalTo(40)
+        }
+        bgView.addSubview(evaluateLabel)
+        evaluateLabel.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+            maker.left.equalTo(20)
+        }
+        bgView.addSubview(rightArrow)
+        rightArrow.snp.makeConstraints { maker in
+            maker.right.equalTo(-13)
+            maker.centerY.equalTo(evaluateLabel)
+        }
+        
+        let evaluateGest = UITapGestureRecognizer()
+        evaluateGest.rx.event
+            .subscribe(onNext: { [unowned self] (_) in
+
+                if let urlStr = self.data?.evaluationInfo?.detailUrl {
+
+                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: self.disposeBag)(TracerParams.momoid())
+                }
+                
+            })
+            .disposed(by: self.disposeBag)
+        bgView.addGestureRecognizer(evaluateGest)
+        bgView.isUserInteractionEnabled = true
+
         mapImageView.addGestureRecognizer(mapViewGesture)
         mapImageView.isUserInteractionEnabled = true
         
@@ -89,6 +230,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
                 let theParams = TracerParams.momoid() <|>
                     toTracerParams("map_list", key: "click_type") <|>
                     toTracerParams("old_detail", key: "enter_from") <|>
+                    toTracerParams("map", key: "element_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
                     toTracerParams(self.logPB ?? "be_null", key: "log_pb")
                 
@@ -112,22 +254,22 @@ class NeighborhoodInfoCell: BaseUITableViewCell {
             .disposed(by: self.disposeBag)
         
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
     }
@@ -151,9 +293,10 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
         
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData.neighborhoodInfo)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
-
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
+        
         return TableSectionNode(
+
                 items: [render],
                 selectors: nil,
                 tracer: [tracer],
@@ -162,21 +305,86 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
     }
 }
 
-func fillNeighborhoodInfoCell(_ data: NeighborhoodInfo?, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
-        theCell.nameValue.text = data?.name
+        if let areaName = data.neighborhoodInfo?.areaName, let districtName = data.neighborhoodInfo?.districtName {
+            theCell.nameValue.text = "\(districtName)-\(areaName)"
+        }else {
+            
+            theCell.nameValue.text = data.neighborhoodInfo?.districtName
+        }
         theCell.navVC = navVC
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
-        theCell.data = data
+        theCell.data = data.neighborhoodInfo
+        theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
 
-        if let url = data?.gaodeImageUrl {
-            theCell.mapImageView.bd_setImage(with: URL(string: url))
-        }
+        if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
+            theCell.setLocation(lat: lat, lng: lng)
         
-//        tracer(TracerParams.momoid())
+        if let evaluationInfo = data.neighborhoodInfo?.evaluationInfo {
+            
+            theCell.starsContainer.updateStarsCount(scoreValue: evaluationInfo.totalScore ?? 0)
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(50)
+            }
+            theCell.starsContainer.isHidden = false
+            
+            if let url = evaluationInfo.detailUrl, url.count > 0 {
+                theCell.bgView.isHidden = false
+            }else {
+                theCell.bgView.isHidden = true
+            }
+        }else {
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(0)
+            }
+            theCell.starsContainer.isHidden = true
+        }
 
+        
+        if let schoolInfo = data.neighborhoodInfo?.schoolInfo?.first, let schoolName = schoolInfo.schoolName {
+            
+            theCell.schoolLabel.text = schoolName
+            theCell.schoolLabel.snp.updateConstraints { (maker) in
+                maker.height.equalTo(20)
+            }
+            theCell.schoolKey.snp.updateConstraints { (maker) in
+                maker.height.equalTo(20)
+            }
+            theCell.mapImageView.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.schoolKey.snp.bottom).offset(20)
+            }
+            theCell.schoolLabel.isHidden = false
+            theCell.schoolKey.isHidden = false
+        }else {
+            theCell.schoolLabel.snp.updateConstraints { (maker) in
+                maker.height.equalTo(0)
+            }
+            theCell.schoolKey.snp.updateConstraints { (maker) in
+                maker.height.equalTo(0)
+            }
+            theCell.mapImageView.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.schoolKey.snp.bottom).offset(10)
+            }
+            theCell.schoolLabel.isHidden = true
+            theCell.schoolKey.isHidden = true
+
+        }
         
     }
 }
+}
+
+func openEvaluateWebPage(
+    urlStr: String,
+    title: String = "小区评测",
+    traceParams: TracerParams,
+    disposeBag: DisposeBag) -> (TracerParams) -> Void{
+    return { (_) in
+        
+        FRRouteHelper.openWebView(forURL: urlStr)
+    }
+}
+
