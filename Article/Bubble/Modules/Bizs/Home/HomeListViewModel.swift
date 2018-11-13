@@ -144,8 +144,10 @@ class HomeListViewModel: DetailPageViewModel {
                 var origin_from = "be_null"
                 if index == .newHouse {
                     origin_from = "new_list"
+                    self?.originSearchId = self?.searchIdNews
                 }else if index == .secondHandHouse {
                     origin_from = "old_list"
+                    self?.originSearchId = self?.searchIdSecond
                 }
                 
                 self?.originFrom = origin_from
@@ -626,6 +628,7 @@ class HomeListViewModel: DetailPageViewModel {
                             if houseTypeValue == HouseType.newHouse
                             {
                                 self.itemsNewHouse?.append(contentsOf: items)
+                                self.searchIdNews = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
@@ -640,6 +643,7 @@ class HomeListViewModel: DetailPageViewModel {
                             } else if houseTypeValue == HouseType.secondHandHouse
                             {
                                 self.itemsSecondHouse?.append(contentsOf: items)
+                                self.searchIdSecond = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
