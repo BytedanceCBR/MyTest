@@ -539,6 +539,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var cellFactory: UITableViewCellFactory
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
+    
+    var priceChartFoldState:Bool = true
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -560,11 +562,39 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            
+            if let refreshCell = cell as? ErshouHousePriceChartCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isPriceChartFoldState = self.priceChartFoldState
+                processRefreshableTableViewCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
+            
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
             return CycleImageCell()
         }
+    }
+    
+    fileprivate func processRefreshableTableViewCell(
+        cell: RefreshableTableViewCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        var tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self] in
+            self?.changePriceChartFoldState()
+            UIView.performWithoutAnimation {
+                tableView?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    fileprivate func changePriceChartFoldState()
+    {
+        self.priceChartFoldState = !self.priceChartFoldState
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

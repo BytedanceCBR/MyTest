@@ -47,8 +47,12 @@ class FHMonthValueFormatter: IAxisValueFormatter {
 }
 
 
-class ErshouHousePriceChartCell: BaseUITableViewCell {
+class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell {
 
+    var refreshCallback: CellRefreshCallback?
+    
+    var isPriceChartFoldState:Bool = true
+    
     open override class var identifier: String {
         return "ErshouHousePriceChartCell"
     }
@@ -169,18 +173,16 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     }()
     
     lazy var foldButton: CommonFoldViewButton = {
-        
-        let view = CommonFoldViewButton(downText: "查看全部信息", upText: "折叠")
+        let view = CommonFoldViewButton(downText: "更多信息", upText: "收起")
         return view
     }()
-
-
-    
     
     private var hasClick: Bool = false
     
     private var minValue: Double = 0
     private var maxValue: Double = 0
+    
+    private let disposeBag = DisposeBag()
 
     // 单位，万元/平或元/平
     private var unitPerSquare: Double = 100.0 * 10000.0 {
@@ -430,56 +432,73 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         }
         
         contentView.addSubview(chartBgView)
-        chartBgView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(priceView.snp.bottom)
-        }
         
         chartBgView.addSubview(titleView)
         chartBgView.addSubview(priceLabel)
-
-        titleView.snp.makeConstraints { maker in
+        chartBgView.addSubview(chartView)
+        
+        titleView.snp.remakeConstraints { maker in
             maker.right.equalToSuperview()
             maker.left.equalTo(70)
             maker.centerY.equalTo(priceLabel)
             maker.height.equalTo(20)
         }
         
-        priceLabel.snp.makeConstraints { maker in
+        priceLabel.snp.remakeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(20)
         }
-
-        chartBgView.addSubview(chartView)
-        chartView.snp.makeConstraints { maker in
+        
+        chartView.snp.remakeConstraints { maker in
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
             maker.height.equalTo(180)
             maker.bottom.equalToSuperview()
         }
-
+        
         contentView.addSubview(foldButton)
-        foldButton.snp.makeConstraints { (maker) in
-            
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(chartBgView.snp.bottom)
-            maker.height.equalTo(60)
-            maker.bottom.equalToSuperview()
-        }
-
+    
         chartView.delegate = self
         setupChartUI()
         
-//        foldButton.rx.tap
-//            .bind(onNext: { [weak theCell, weak foldButton] () in
-//                theCell?.refreshCell()
-//                foldButton?.isFold = theCell?.isNeighborhoodInfoFold ?? true
-//            })
-//            .disposed(by: disposeBag)
+        updateChartConstraints()
         
+        foldButton.rx.tap
+            .bind(onNext: { [weak self] () in
+                self?.refreshCell()
+                self?.foldButton.isFold = self?.isPriceChartFoldState ?? true
+            }).disposed(by: disposeBag)
     }
-
+    
+    func updateChartConstraints() {
+        
+        if self.isPriceChartFoldState {
+            chartBgView.isHidden = true
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        } else {
+            chartBgView.isHidden = false
+            
+            chartBgView.snp.remakeConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(257)
+            }
+            
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(chartBgView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        }
+    }
+    
     func setupChartUI() {
 
         // 左边竖轴的区间
@@ -696,7 +715,7 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
                 traceExtension
 //                toTracerParams(ershouHouseData.logPB ?? [:], key: "log_pb")
             return TableSectionNode(
-                items: [oneTimeRender(render)],
+                items: [render],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
                 label: "",
@@ -713,8 +732,9 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
 
         theCell.priceValueLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.priceView.isHidden = false
-        // add by zjing for test
-        theCell.foldButton.isFold = false
+        
+        theCell.foldButton.isFold = theCell.isPriceChartFoldState
+        theCell.updateChartConstraints()
 
         let pricingPerSqm = Double(data.neighborhoodInfo?.pricingPerSqmValue ?? 0)
         if pricingPerSqm > 0 {
