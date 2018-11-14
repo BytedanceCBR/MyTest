@@ -150,7 +150,7 @@ func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerPar
         suggestion.type = 2
         suggestion.content = "该房源当前价格合理，房东诚心出售，建议尽快联系经纪人看房"
         
-        let cellRender = oneTimeRender(curry(fillPriceRangeCell)(buySuggestion ?? suggestion))
+        let cellRender = curry(fillPriceRangeCell)(buySuggestion ?? suggestion)
         let params = TracerParams.momoid() <|>
             toTracerParams("price_reference", key: "element_type") <|>
             toTracerParams("old_detail", key: "page_type") <|>
