@@ -104,7 +104,7 @@
 -(void)updateWithMode:(FHMapSearchDataListModel *)model
 {
     self.nameLabel.text = model.name;
-    self.locationLabel.text = model.location;
+    self.locationLabel.text = [NSString stringWithFormat:@"%@ 在售%@套房源", model.location,model.onSaleCount];
     self.priceLabel.text = model.pricePerSqm;
     [self.priceLabel sizeToFit];
     CGFloat width = self.priceLabel.width;

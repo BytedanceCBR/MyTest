@@ -386,7 +386,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseFlineNode(6)
                 // 购房小建议
                 <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
-                <- parseFlineNode(data.housePriceRank?.buySuggestion != nil ? 6 : 0)
+                <- parseFlineNode(6)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "同小区房源"  : "同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }

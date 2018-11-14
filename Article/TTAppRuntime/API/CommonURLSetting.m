@@ -142,7 +142,16 @@ static inline NSString* baseURLForKey(NSString *key) {
 //        }
 //    }
     
+#if DEBUG
+    
     return [NSString stringWithFormat:@"http://%@", domain];
+    
+#else
+    
+    return [NSString stringWithFormat:@"https://%@", domain];
+    
+#endif
+    
 }
 
 

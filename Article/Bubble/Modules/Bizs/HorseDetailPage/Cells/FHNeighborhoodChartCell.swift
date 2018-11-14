@@ -285,6 +285,9 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
         
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
