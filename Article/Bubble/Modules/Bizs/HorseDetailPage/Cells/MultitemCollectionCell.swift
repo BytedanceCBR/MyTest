@@ -746,13 +746,9 @@ fileprivate func fillEvaluationCell(
                 curry(fillEvaluationCollectionItemCell)(entity)(itemTracerParams)
             }
             
-            var traceParamsDict = itemTracerParams.paramsGetter([:])
-            let itemTracerParamsResult = TracerParams.momoid() <|>
-                toTracerParams(traceParamsDict["page_type"] ?? "be_null", key: "enter_from") //本页类型是下次进入小区详情页的enter_from
-            
             theCell.itemSelectors = datasScoresEntity.take(5).enumerated().map { e -> (DisposeBag) -> Void in
                 let (offset, item) = e
-                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParamsResult)(navVC)
+                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParams)(navVC)
             }
             theCell.itemRecorders = datasScoresEntity.take(5).enumerated().map { e -> (TracerParams) -> Void in
                 let (offset, item) = e
@@ -800,11 +796,8 @@ func EvaluationItemSelector(
     disposeBag: DisposeBag) {
       if let detailUrlV = data.detailUrl
       {
-//         openEvaluationPage(urlStr: detailUrlV, title: "小区评测", disposeBag: disposeBag)
-//        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
-        FRRouteHelper.openWebView(forURL: detailUrlV)
+        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: itemTracerParams, disposeBag: disposeBag)(TracerParams.momoid())
       }
-     //to do jump
 }
 
 
@@ -1106,28 +1099,21 @@ func parseNeighborhoodEvaluationCollectionNode(
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         if let datas = data?.evaluationInfo?.subScores, datas.count > 0 {
-            let params = TracerParams.momoid() <|>
-                toTracerParams("be_null", key: "element_type") <|>
+            
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("neighborhood_evaluation", key: "element_type") <|>
+                toTracerParams("neighborhood_detail", key: "page_type") <|>
             traceExtension
-            
-//            let theDatas = datas.map({ (item) -> EvaluationIteminfo in
-//                var newItem = item
-//                newItem.fhSearchId = data?.searchId
-//                return newItem
-//            })
-            
-//            let openParams = params <|>
-//                toTracerParams("slide", key: "card_type") <|>
+
+//            let openParams = EnvContext.shared.homePageParams <|>
 //                toTracerParams("neighborhood_detail", key: "enter_from") <|>
-//                toTracerParams("same_neighborhood", key: "element_from")
-//
+//            traceExtension.exclude("rank")
             
             let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
             
-            let openParams = TracerParams.momoid()
             if let evaluatInfo = data?.evaluationInfo
             {
-                let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(openParams)(navVC))
+                let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(traceExtension)(navVC))
                 return TableSectionNode(
                     items: [render],
                     selectors: selector != nil ? [selector!] : nil,

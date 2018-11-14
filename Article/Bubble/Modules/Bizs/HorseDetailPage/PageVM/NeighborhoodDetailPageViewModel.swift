@@ -254,7 +254,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
             
-            let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+            let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: traceExtension, disposeBag: disposeBag)
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
@@ -269,7 +269,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: openEvaluationWeb) {
-                    return data.neighborhoodInfo != nil ? true : false
+                    return data.evaluationInfo != nil ? true : false
                 }
                 <- parseNeighborhoodEvaluationCollectionNode(
                     data,

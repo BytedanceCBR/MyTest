@@ -427,8 +427,16 @@ func openEvaluateWebPage(
     traceParams: TracerParams,
     disposeBag: DisposeBag) -> (TracerParams) -> Void{
     return { (_) in
-        
-        FRRouteHelper.openWebView(forURL: urlStr)
+        if urlStr.count > 0 {
+            
+            let openParams = EnvContext.shared.homePageParams <|>
+                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                traceParams.exclude("rank")
+            
+            recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
+            
+            FRRouteHelper.openWebView(forURL: urlStr)
+        }
     }
 }
 
