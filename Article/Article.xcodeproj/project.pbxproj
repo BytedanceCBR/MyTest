@@ -17953,6 +17953,7 @@
 				B373CF0C2174587A008F9905 /* ShellScript */,
 				3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */,
 				8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */,
+				3D396439219ACED0002E9010 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -17980,6 +17981,7 @@
 				8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */,
 				5EC0BBC33EF7FD6E06D77572 /* [CP] Copy Pods Resources */,
 				B3BDFA9721460B9700C948FC /* ShellScript */,
+				3D39643A219ACF07002E9010 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -18355,6 +18357,40 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3D396439219ACED0002E9010 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
+		};
+		3D39643A219ACF07002E9010 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
 		3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

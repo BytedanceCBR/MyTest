@@ -23,10 +23,8 @@ enum RequestSuccessType: Int {
 class HomeListViewModel: DetailPageViewModel {
     var goDetailTraceParam: TracerParams?
     
-    
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
-    
     
     var showMessageAlert: ((String) -> Void)?
 
@@ -205,18 +203,8 @@ class HomeListViewModel: DetailPageViewModel {
                 {
                     self.onSuccess?(.requestSuccessTypeInvalidNetWork)
                 }
-//                self.onSuccess?(true) 是否切换无数据状态显示默认加载图状态
-//                if let data = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value, let typeValue = data.housetypelist.first
-//                {
-//                    if let type = HouseType(rawValue: typeValue)
-//                    {
-//                        self.isFirstEnterCategorySwitch = true
-//                        self.dataSource?.categoryView.houseTypeRelay.accept(type)
-//                    }
-//                }
             }.disposed(by: disposeBag)
         
-//        self.requestData(houseId: -1, logPB: nil)
         //判断是否展示tabbar 到顶
         tableView.rx.contentOffset.asObservable().subscribe(onNext: { [unowned self] (contentOffset) in
             
@@ -434,8 +422,6 @@ class HomeListViewModel: DetailPageViewModel {
                                   count: 20)
                 
                 // TODO: 重试逻辑
-//                .retryOnConnect(timeout: 60)
-//                .retry(100)
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
@@ -520,6 +506,7 @@ class HomeListViewModel: DetailPageViewModel {
                     }, onCompleted: {
 
                     }, onDisposed: {
+                        [unowned self] in
                         self.tableView?.finishPullUp(withSuccess: true)
                         self.tableView?.finishPullDown(withSuccess: true)
                     })
@@ -554,8 +541,6 @@ class HomeListViewModel: DetailPageViewModel {
                                   count: (houseId == -1 ? 20 : 20))
                 
                 // TODO: 重试逻辑
-                //                .retryOnConnect(timeout: 60)
-                //                .retry(100)
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {

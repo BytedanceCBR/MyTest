@@ -116,9 +116,6 @@ class HomeViewController: BaseViewController {
                 }
                 
             })
-//        self.setupPageableViewModel()
-        
-//        print("width=\(UIScreen.main.bounds.width),height=\(UIScreen.main.bounds.height)")
         
         self.detailPageViewModel?.onError = { [weak self] (error) in
             //天真说:首页很关键，大部分时候都要显示点击重试

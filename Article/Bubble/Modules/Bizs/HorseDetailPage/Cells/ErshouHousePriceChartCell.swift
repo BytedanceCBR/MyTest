@@ -299,11 +299,14 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
-                set1.lineWidth = 2
-                set1.circleRadius = 1
+                set1.lineWidth = 1
+                set1.circleRadius = 4
+                set1.circleHoleColor = .white
+                set1.circleHoleRadius = 3
                 // 选中效果
-                set1.highlightColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-                set1.highlightLineDashLengths = [2,2]
+                set1.highlightLineWidth = 1
+                set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
+                set1.highlightLineDashLengths = [3,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
 
 
@@ -331,7 +334,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             leftAxis.drawBottomYLabelEntryEnabled = true
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
             leftAxis.setLabelCount(4, force: true)
@@ -509,7 +511,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         l.orientation = .horizontal
         l.drawInside = true
         l.wordWrapEnabled = true
-
+        l.xEntrySpace = -20
+        
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
@@ -521,7 +524,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         xAxis.axisLineWidth = 0.5
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
+        xAxis.xOffset = -20
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
@@ -533,13 +540,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
-        // 横轴的虚线
-        leftAxis.spaceBottom = 0.0
+        // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
 //        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
 //        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
+        leftAxis.spaceTop = 0.5
+        leftAxis.spaceBottom = 1
+        leftAxis.spaceMax = 0.5
+        leftAxis.spaceMin = 0.5
+        leftAxis.yOffset = 10
+        
 
         // 右边轴
         let rightAxis = chartView.rightAxis
