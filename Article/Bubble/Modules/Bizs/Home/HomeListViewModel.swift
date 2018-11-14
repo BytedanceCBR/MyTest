@@ -150,6 +150,9 @@ class HomeListViewModel: DetailPageViewModel {
                     self?.originSearchId = self?.searchIdSecond
                 }
                 
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(self?.originSearchId ?? "be_null", key: "origin_search_id")
+                
                 self?.originFrom = origin_from
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                     toTracerParams(origin_from, key: "origin_from")
