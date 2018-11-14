@@ -160,9 +160,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if showLoading {
             self.showMessageAlert?("正在加载")
         }
-//        "\(houseId)"
-//        houseId =
-        requestNeighborhoodDetail(neighborhoodId: "6581417114710573326", logPB: logPB)
+
+        requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {

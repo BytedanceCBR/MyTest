@@ -66,10 +66,10 @@ func fillHousePlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCe
     }
 }
 
-func parseHousePlaceholderNode() -> () -> TableSectionNode? {
+func parseHousePlaceholderNode(nodeCount: Int = 5) -> () -> TableSectionNode? {
     return {
         var defaultItems :[TableCellRender] = [] //默认5个占位cell
-        for i in 0..<5 {
+        for i in 0..<nodeCount {
             
           defaultItems.append(curry(fillHousePlaceholderItemCell)(i == 0))
         }
@@ -79,6 +79,25 @@ func parseHousePlaceholderNode() -> () -> TableSectionNode? {
             tracer: nil,
             label: "placeholder",
             type: .node(identifier: FHPlaceholderCell.identifier))
+    }
+}
+
+func parseHousePlaceholderRowNode(nodeCount: Int = 5) -> () -> [TableRowNode] {
+    
+    var defaultItems :[TableCellRender] = [] //默认5个占位cell
+    for i in 0..<nodeCount {
+        
+        defaultItems.append(curry(fillHousePlaceholderItemCell)(i == 0))
+    }
+    return {
+        let renders = defaultItems.map({ (render) -> TableRowNode in
+            return TableRowNode(
+                itemRender: render,
+                selector: nil,
+                tracer: nil,
+                type: .node(identifier: FHPlaceholderCell.identifier), editor: nil)
+        })
+        return renders
     }
 }
 

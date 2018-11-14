@@ -120,6 +120,8 @@ class CategoryListViewModel: DetailPageViewModel {
                 }
             }
         }.disposed(by: disposeBag)
+        
+        showDefaultLoadTable()
     }
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
@@ -217,7 +219,15 @@ class CategoryListViewModel: DetailPageViewModel {
         }
         pageableLoader?()
     }
-
+    
+    func showDefaultLoadTable()
+    {
+        self.dataSource.datas.accept(parseHousePlaceholderRowNode(nodeCount: 10)())
+        UIView.performWithoutAnimation { [weak self] in
+            self?.tableView?.reloadData()
+        }
+    }
+    
     func requestErshouHouseList(
         query: String,
         condition: String?,
@@ -459,7 +469,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate , TableViewTracer {
 
-    let datas = BehaviorRelay<[TableRowNode]>(value: [])
+    var datas = BehaviorRelay<[TableRowNode]>(value: [])
 
     var cellFactory: UITableViewCellFactory
 
