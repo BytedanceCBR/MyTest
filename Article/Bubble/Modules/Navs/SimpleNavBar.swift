@@ -300,7 +300,7 @@ class CategorySearchNavBar: UIView {
     }()
     
     lazy var mapBtn : UIButton = {
-       let button = UIButton()
+       let button = ExtendHotAreaButton()
         let img = UIImage(named: "navbar_showmap")
         button.setImage(img, for: .normal)
         button.setImage(img, for: .highlighted)
