@@ -148,8 +148,9 @@ func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerPar
                 return nil
             }
             let cellRender = oneTimeRender(curry(fillPriceRangeCell)(buySuggestion))
-            let params = TracerParams.momoid() <|>
-                toTracerParams("price_reference", key: "element_type") <|>
+  
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("trade_tips", key: "element_type") <|>
                 toTracerParams("old_detail", key: "page_type") <|>
             traceExtension
             

@@ -710,10 +710,12 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
         if let count = ershouHouseData.priceTrend?.count, count > 0 {
             
             let render = curry(fillErshouHousePriceChartCell)(ershouHouseData)(callBack)
-            let params = TracerParams.momoid() <|>
+
+            let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("price_trend", key: "element_type") <|>
-                traceExtension
-//                toTracerParams(ershouHouseData.logPB ?? [:], key: "log_pb")
+                toTracerParams("old_detail", key: "page_type") <|>
+            traceExtension
+
             return TableSectionNode(
                 items: [render],
                 selectors: nil,

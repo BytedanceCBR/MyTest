@@ -145,8 +145,9 @@ func parsePriceRankNode(_ priceRank: HousePriceRank?, traceExtension: TracerPara
         if let thePriceRank = priceRank {
 
             let cellRender = oneTimeRender(curry(fillPriceRankCell)(thePriceRank))
-            let params = TracerParams.momoid() <|>
-                toTracerParams("price_reference", key: "element_type") <|>
+            
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("price_rank", key: "element_type") <|>
                 toTracerParams("old_detail", key: "page_type") <|>
             traceExtension
             
