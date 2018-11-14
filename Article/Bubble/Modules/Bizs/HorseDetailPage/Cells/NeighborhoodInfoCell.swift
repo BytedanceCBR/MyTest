@@ -20,7 +20,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     
     let leftMarge: CGFloat = 20
     let rightMarge: CGFloat = -20
-    
+    var tracerParams:TracerParams = TracerParams.momoid()
     lazy var nameKey: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(15)
@@ -240,12 +240,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         let evaluateGest = UITapGestureRecognizer()
         evaluateGest.rx.event
             .subscribe(onNext: { [unowned self] (_) in
-
                 if let urlStr = self.data?.evaluationInfo?.detailUrl {
-
-                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: self.disposeBag)(TracerParams.momoid())
+                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: self.tracerParams, disposeBag: self.disposeBag)(TracerParams.momoid())
                 }
-                
             })
             .disposed(by: self.disposeBag)
         bgView.addGestureRecognizer(evaluateGest)
@@ -337,19 +334,34 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
         
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
+        let tracerParam = EnvContext.shared.homePageParams <|>
+            toTracerParams("neighborhood_evaluation", key: "element_type") <|>
+            toTracerParams("old_detail", key: "page_type") <|>
+        traceExtension
+        
+        let tracerEvaluationRecord = elementShowOnceRecord(params: tracerParam)
+
+        let elementRecord: ElementRecord = { (params) in
+            tracer(params)
+            if ershouHouseData.neighborhoodInfo?.evaluationInfo != nil {
+                tracerEvaluationRecord(params)
+            }
+        }
+        let tracers = [elementRecord]
+
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)(traceExtension)
         
         return TableSectionNode(
 
                 items: [render],
                 selectors: nil,
-                tracer: [tracer],
+                tracer: tracers,
                 label: "",
                 type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 
-func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?,traceExtension: TracerParams = TracerParams.momoid(), cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
         if let areaName = data.neighborhoodInfo?.areaName, let districtName = data.neighborhoodInfo?.districtName {
@@ -361,6 +373,7 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         theCell.navVC = navVC
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
+        theCell.tracerParams = traceExtension
         theCell.data = data.neighborhoodInfo
         theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
 
@@ -425,12 +438,17 @@ func openEvaluateWebPage(
     urlStr: String,
     title: String = "小区评测",
     traceParams: TracerParams,
+    houseType: HouseType = .secondHandHouse,
     disposeBag: DisposeBag) -> (TracerParams) -> Void{
     return { (_) in
         if urlStr.count > 0 {
             
+            var enterFrom = "old_detail"
+            if houseType == .neighborhood {
+                enterFrom = "neighborhood_detail"
+            }
             let openParams = EnvContext.shared.homePageParams <|>
-                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                toTracerParams(enterFrom, key: "enter_from") <|>
                 traceParams.exclude("rank")
             
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
