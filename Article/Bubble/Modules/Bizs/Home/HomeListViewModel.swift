@@ -70,6 +70,10 @@ class HomeListViewModel: DetailPageViewModel {
     
     var originSearchId: String?
     var originFrom: String?
+    
+    var searchIdNews: String?
+
+    var searchIdSecond: String?
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
@@ -138,9 +142,14 @@ class HomeListViewModel: DetailPageViewModel {
                 var origin_from = "be_null"
                 if index == .newHouse {
                     origin_from = "new_list"
+                    self?.originSearchId = self?.searchIdNews
                 }else if index == .secondHandHouse {
                     origin_from = "old_list"
+                    self?.originSearchId = self?.searchIdSecond
                 }
+                
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(self?.originSearchId ?? "be_null", key: "origin_search_id")
                 
                 self?.originFrom = origin_from
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -182,6 +191,20 @@ class HomeListViewModel: DetailPageViewModel {
         // 下拉刷新，修改tabbar条和请求数据
         tableView.tt_addDefaultPullDownRefresh { [weak self] in
             self?.resetHomeRecommendState()
+            
+            if let houseType = self?.dataSource?.categoryView.houseTypeRelay.value
+            {
+                if houseType == .newHouse
+                {
+                    self?.searchIdNews = nil
+                }
+                
+                if houseType == .secondHandHouse
+                {
+                    self?.searchIdSecond = nil
+                }
+            }
+            
             self?.requestHomeRecommendData(pullType: .pullDownType, reloadFromType: self?.reloadFromType) // 下拉刷新
         }
         
@@ -322,7 +345,7 @@ class HomeListViewModel: DetailPageViewModel {
             
             let theDataItems = dataItems.map {[weak self] (item) -> HouseItemInnerEntity in
                 var newItem = item
-                newItem.fhSearchId = self?.searchId
+                newItem.fhSearchId = self?.originSearchId
                 return newItem
             }
             let dataParser = DetailDataParser.monoid()
@@ -418,7 +441,7 @@ class HomeListViewModel: DetailPageViewModel {
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: 0,
-                                  searchId: self.originSearchId,
+                                  searchId: nil,
                                   count: 20)
                 
                 // TODO: 重试逻辑
@@ -427,8 +450,7 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
-
+                        
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -450,6 +472,7 @@ class HomeListViewModel: DetailPageViewModel {
                         {
                             if houseTypeValue == HouseType.newHouse, typeValue == .newHouse
                             {
+                                self.searchIdNews = response?.data?.searchId
                                 self.itemsNewHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsNewHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -459,6 +482,7 @@ class HomeListViewModel: DetailPageViewModel {
                                 return self.generateSectionNode(items: self.itemsNewHouse)
                             } else if houseTypeValue == HouseType.secondHandHouse, typeValue == .secondHandHouse
                             {
+                                self.searchIdSecond = response?.data?.searchId
                                 self.itemsSecondHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsSecondHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -534,10 +558,20 @@ class HomeListViewModel: DetailPageViewModel {
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
+            
+            var requestId = searchIdNews
+            if typeValue == .newHouse
+            {
+                requestId = searchIdNews
+            }else
+            {
+                requestId = searchIdSecond
+            }
+            
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: (typeValue == .newHouse ? self.itemsNewHouse?.count : self.itemsSecondHouse?.count) ?? 0,
-                                  searchId: self.originSearchId,
+                                  searchId: requestId,
                                   count: (houseId == -1 ? 20 : 20))
                 
                 // TODO: 重试逻辑
@@ -546,7 +580,6 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
 
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -592,6 +625,7 @@ class HomeListViewModel: DetailPageViewModel {
                             if houseTypeValue == HouseType.newHouse
                             {
                                 self.itemsNewHouse?.append(contentsOf: items)
+                                self.searchIdNews = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
@@ -606,6 +640,7 @@ class HomeListViewModel: DetailPageViewModel {
                             } else if houseTypeValue == HouseType.secondHandHouse
                             {
                                 self.itemsSecondHouse?.append(contentsOf: items)
+                                self.searchIdSecond = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
