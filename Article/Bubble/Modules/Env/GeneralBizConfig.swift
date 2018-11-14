@@ -73,8 +73,8 @@ class GeneralBizConfig {
             } else {
                 let generalPayload = searchConfigCache.object(forKey: "config") as! String
                 let generalConfig = GeneralConfigData(JSONString: generalPayload)
-                generalCacheSubject.accept(generalConfig)
                 currentSelectCityId.accept(getCurrentSelectCityId())
+                generalCacheSubject.accept(generalConfig)
                 if CLLocationManager.authorizationStatus() == .denied {
                     fetchConfiguration()
                 }
@@ -125,7 +125,8 @@ class GeneralBizConfig {
             .retryOnConnect(timeout: 60)
             .retry(50)
             .subscribe(onNext: { [unowned self] response in
-                self.generalCacheSubject.accept(response?.data)
+                
+                self.saveGeneralConfig(response: response)
 
                 // 只在用户没有选择城市时才回设置城市
                 if let currentCityId = response?.data?.currentCityId {
@@ -141,9 +142,8 @@ class GeneralBizConfig {
                     }
                 }
                 EnvContext.shared.client.fetchSearchConfig()
-
+            
                 self.generalCacheSubject.accept(response?.data)
-                self.saveGeneralConfig(response: response)
 
                 }, onError: { error in
                     //                print(error)

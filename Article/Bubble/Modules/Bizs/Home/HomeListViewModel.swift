@@ -221,7 +221,7 @@ class HomeListViewModel: DetailPageViewModel {
             .bind { [unowned self] (_) in
                 //切换城市默认触发信号
                 self.resetHomeRecommendState()
-                self.tableView?.setContentOffset(CGPoint.zero, animated: true)
+                self.tableView?.setContentOffset(CGPoint.zero, animated: false)
                 if EnvContext.shared.client.reachability.connection == .none
                 {
                     self.onSuccess?(.requestSuccessTypeInvalidNetWork)
