@@ -81,5 +81,6 @@ import UIKit
     
     static let stay_map = "stay_map" // 地图详情页停留时长
     
+    static let click_price_rank = "click_price_rank" // 点击价格排名查看更多 展开
 
 }

@@ -50,7 +50,7 @@ class FHMonthValueFormatter: IAxisValueFormatter {
 class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell {
 
     var refreshCallback: CellRefreshCallback?
-    
+    var traceParams: TracerParams = TracerParams.momoid()
     var isPriceChartFoldState:Bool = true
     
     open override class var identifier: String {
@@ -468,6 +468,13 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             .bind(onNext: { [weak self] () in
                 self?.refreshCell()
                 self?.foldButton.isFold = self?.isPriceChartFoldState ?? true
+                
+                if let isFold = self?.foldButton.isFold, let traceParams = self?.traceParams, isFold == true {
+                    
+                    recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
+                        EnvContext.shared.homePageParams <|>
+                        toTracerParams("old_detail", key: "page_type"))
+                }
             }).disposed(by: disposeBag)
     }
     
@@ -709,7 +716,7 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
         
         if let count = ershouHouseData.priceTrend?.count, count > 0 {
             
-            let render = curry(fillErshouHousePriceChartCell)(ershouHouseData)(callBack)
+            let render = curry(fillErshouHousePriceChartCell)(ershouHouseData)(traceExtension)(callBack)
 
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("price_trend", key: "element_type") <|>
@@ -728,10 +735,11 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
     }
 }
 
-func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
+func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: TracerParams = TracerParams.momoid(), callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHousePriceChartCell {
         theCell.clickCallBack = callBack
 
+        theCell.traceParams = traceExtension
         theCell.priceValueLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.priceView.isHidden = false
         
