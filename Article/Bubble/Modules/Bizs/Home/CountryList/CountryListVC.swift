@@ -125,7 +125,7 @@ class CountryListVC: BaseViewController {
         EnvContext.shared.client.locationManager.currentCity
                 .skip(1)
                 .subscribe(onNext: { geocode in
-                    EnvContext.shared.toast.dismissToast()
+                    EnvContext.shared.toast.dismissCustomLoadingToast()()
                     if geocode != nil {
                         EnvContext.shared.toast.showToast("定位成功")
                     } else {
@@ -137,7 +137,7 @@ class CountryListVC: BaseViewController {
         locationBar.reLocateBtn.rx.tap
                 .subscribe(onNext: { void in
                     if EnvContext.shared.client.reachability.connection != .none {
-                        EnvContext.shared.toast.showLoadingToast("定位中")
+                        EnvContext.shared.toast.showCustomLoadingToast("定位中")
                         EnvContext.shared.client.locationManager.requestCurrentLocation(true,showToast:true)
                     } else {
                         EnvContext.shared.toast.showToast("网络异常")

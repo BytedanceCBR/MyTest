@@ -27,58 +27,58 @@ class HomeListViewModel: DetailPageViewModel {
     var houseId: Int64 = -1
     
     var showMessageAlert: ((String) -> Void)?
-
+    
     var dismissMessageAlert: (() -> Void)?
-
+    
     var searchId: String?
-
+    
     var groupId: String {
         get {
             return "be_null"
         }
     }
-
+    
     var shareInfo: ShareInfo?
-
+    
     var onDataArrived: (() -> Void)?
-
+    
     var onNetworkError: ((Error) -> Void)?
-
+    
     var onEmptyData: (() -> Void)?
     
     var logPB: Any?
     
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "be_null")
-
+    
     var traceParams = TracerParams.momoid()
-
+    
     var followTraceParams: TracerParams = TracerParams.momoid()
-
+    
     var followStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay<Result<Bool>>(value: Result.success(false))
-
+    
     var titleValue: BehaviorRelay<String?> = BehaviorRelay(value: nil)
-
+    
     weak var tableView: UITableView?
-
+    
     private var cellFactory: UITableViewCellFactory
-
+    
     fileprivate var dataSource: FHFunctionListDataSourceDelegate?
-
+    
     let disposeBag = DisposeBag()
-
+    
     let disposeBagHouse = DisposeBag()
     
     var originSearchId: String?
     var originFrom: String?
     
     var searchIdNews: String?
-
+    
     var searchIdSecond: String?
-
+    
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
-
+    
     var homePageCommonParams: TracerParams = TracerParams.momoid()
     
     var onError: ((Error) -> Void)?
@@ -104,17 +104,17 @@ class HomeListViewModel: DetailPageViewModel {
     var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
     
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
-
+    
     var reloadFromType: TTReloadType?
     
     var stayTimeParams: TracerParams = TracerParams.momoid()
-
+    
     var enterType: String?
     
     fileprivate var pageFrameObv: NSKeyValueObservation?
-
+    
     var listDataRequestDisposeBag = DisposeBag()
-
+    
     init(tableView: UITableView, navVC: UINavigationController?) {
         
         self.navVC = navVC
@@ -122,7 +122,7 @@ class HomeListViewModel: DetailPageViewModel {
         let cellFactory = getHouseDetailCellFactory()
         self.cellFactory = cellFactory
         cellFactory.register(tableView: tableView)
-
+        
         let datas = self.generateDefaultSection()
         self.dataSource = FHFunctionListDataSourceDelegate(tableView: tableView,datasV:datas)
         
@@ -163,7 +163,7 @@ class HomeListViewModel: DetailPageViewModel {
                 {
                     //首次切换，先显示默认
                     self?.showDefaultLoadTable()
-
+                    
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
@@ -178,7 +178,7 @@ class HomeListViewModel: DetailPageViewModel {
                     
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （二手房）
-
+                    
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
                     return
                 }
@@ -187,7 +187,7 @@ class HomeListViewModel: DetailPageViewModel {
                 
             }).disposed(by: self.disposeBagHouse)
         }
- 
+        
         // 下拉刷新，修改tabbar条和请求数据
         tableView.tt_addDefaultPullDownRefresh { [weak self] in
             self?.resetHomeRecommendState()
@@ -237,14 +237,14 @@ class HomeListViewModel: DetailPageViewModel {
                 self.isShowTop = false
             }
             reloadHomeTabBarItem(self.isShowTop)
-
-            })
+            
+        })
             .disposed(by: disposeBag)
-    
+        
     }
     
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
-
+        
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
             
             if let recordIndexCache = self.dataSource?.recordIndexCache, !recordIndexCache.contains(indexPath) {
@@ -268,15 +268,15 @@ class HomeListViewModel: DetailPageViewModel {
             self?.tableView?.reloadData()
         }
     }
-
+    
     func getShareItem() -> ShareItem {
         return ShareItem(title: "", desc: "", webPageUrl: "", thumbImage: #imageLiteral(resourceName: "icon-bus"), shareType: TTShareType.webPage, groupId: "")
     }
-
+    
     func reloadDataChange(dataType: HouseType?)
     {
-       if let dataItems = dataType == .newHouse ? itemsNewHouse : itemsSecondHouse
-       {
+        if let dataItems = dataType == .newHouse ? itemsNewHouse : itemsSecondHouse
+        {
             isNeedUpdateSpringBoard = false //纯切换推荐数据源，不需要更新board
             let datas = generateSectionNode(items: dataItems)
             if let dataSource = self.dataSource {
@@ -285,12 +285,12 @@ class HomeListViewModel: DetailPageViewModel {
                     self.tableView?.reloadData()
                 }
             }
-        
+            
             if !self.isFirstEnterCategory
             {
                 self.uploadTracker(isWithStayTime: true, stayTime: self.stayTimeParams, enterType:"switch",isStay: true)
             }
-        
+            
             self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
             self.uploadTracker(enterType: "switch")
             self.tableView?.finishPullDown(withSuccess: true)
@@ -334,7 +334,7 @@ class HomeListViewModel: DetailPageViewModel {
         let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
         
         let entrys = config?.opData?.items
-
+        
         let homeCommonParams = EnvContext.shared.homePageParams <|>
             toTracerParams("maintab", key: "page_type") <|>
             toTracerParams("maintab_list", key: "element_type") <|>
@@ -379,7 +379,7 @@ class HomeListViewModel: DetailPageViewModel {
             }else
             {
                 params = TracerParams.momoid() <|>
-                traceStayTime()
+                    traceStayTime()
             }
         }else
         {
@@ -421,7 +421,7 @@ class HomeListViewModel: DetailPageViewModel {
     //第一次请求，继承协议方法
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         listDataRequestDisposeBag = DisposeBag()
-
+        
         self.houseId = houseId
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
@@ -448,7 +448,7 @@ class HomeListViewModel: DetailPageViewModel {
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
-
+                        
                         self.originSearchId = data.searchId
                         
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -458,7 +458,7 @@ class HomeListViewModel: DetailPageViewModel {
                     {
                         self.onSuccess?(.requestSuccessTypeDataError)
                     }
-
+                    
                     if let items = response?.data?.items {
                         
                         self.onSuccess?(items.count > 0 ? .requestSuccessTypeNormal : .requestSuccessTypeNoData)
@@ -487,12 +487,12 @@ class HomeListViewModel: DetailPageViewModel {
                                 self.itemsSecondHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
                                 {
-                                     self.isSecondHouseHasMore = hasMore
+                                    self.isSecondHouseHasMore = hasMore
                                 }
                                 
                                 return self.generateSectionNode(items: self.itemsSecondHouse)
                             }
-                         }
+                        }
                     }
                     return [] //条件不符合返回空数组
                 }
@@ -523,28 +523,28 @@ class HomeListViewModel: DetailPageViewModel {
                         //                        print(error)
                         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                         self.onError?(error)
-
+                        
                         self.tableView?.finishPullUp(withSuccess: false)
                         self.tableView?.finishPullDown(withSuccess: false)
                         
                     }, onCompleted: {
-
-                    }, onDisposed: {
-                        [unowned self] in
-                        self.tableView?.finishPullUp(withSuccess: true)
-                        self.tableView?.finishPullDown(withSuccess: true)
-                    })
+                        
+                }, onDisposed: {
+                    [unowned self] in
+                    self.tableView?.finishPullUp(withSuccess: true)
+                    self.tableView?.finishPullDown(withSuccess: true)
+                })
                 .disposed(by: listDataRequestDisposeBag)
         }
-
+        
     }
-
+    
     func requestHomeRecommendData(pullType: PullTriggerType, reloadFromType: TTReloadType?) {
         listDataRequestDisposeBag = DisposeBag()
         oneTimeToast = createOneTimeToast()
-
+        
         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
-
+        
         
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
@@ -553,7 +553,7 @@ class HomeListViewModel: DetailPageViewModel {
         //区分上拉还是下拉请求，如果是下拉刷新，立刻完成上拉状态
         if pullType == .pullDownType
         {
-           self.tableView?.finishPullUp(withSuccess: true)
+            self.tableView?.finishPullUp(withSuccess: true)
         }
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
@@ -578,9 +578,9 @@ class HomeListViewModel: DetailPageViewModel {
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
-
+                        
                         self.originSearchId = data.searchId
-
+                        
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -604,7 +604,7 @@ class HomeListViewModel: DetailPageViewModel {
                         }
                         let refreshType = reloadFromType != nil ? refreshTypeByReloadType(reloadType: reloadFromType!) : pullString
                         let enterType = self.enterType != nil ? self.enterType! : TTCategoryStayTrackManager.share().enterType
-
+                        
                         let params = EnvContext.shared.homePageParams <|>
                             toTracerParams(categoryName ?? "be_null", key: "category_name") <|>
                             toTracerParams("maintab", key: "enter_from") <|>
@@ -616,7 +616,7 @@ class HomeListViewModel: DetailPageViewModel {
                         recordEvent(key: TraceEventName.category_refresh, params: params)
                         self.reloadFromType = nil
                         self.enterType = nil
-
+                        
                     }
                     
                     if let items = response?.data?.items {
@@ -678,7 +678,7 @@ class HomeListViewModel: DetailPageViewModel {
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     },
                     onError: { [unowned self] error in
-
+                        
                         pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
                         
                         if EnvContext.shared.client.reachability.connection == .none
@@ -690,10 +690,10 @@ class HomeListViewModel: DetailPageViewModel {
                         }
                     },
                     onCompleted: {
-
+                        
                 },
                     onDisposed: {
-                    
+                        
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
@@ -707,13 +707,13 @@ class HomeListViewModel: DetailPageViewModel {
             if !hasToast, let message = message {
                 if self.isCurrentShowHome
                 {
-                   EnvContext.shared.toast.showToast(message)
-                   hasToast = true
+                    EnvContext.shared.toast.showToast(message)
+                    hasToast = true
                 }
             }
         }
     }
-
+    
     func followThisItem(isNeedRecord: Bool, traceParam: TracerParams) {
         followIt(
             houseType: .newHouse,
@@ -722,9 +722,9 @@ class HomeListViewModel: DetailPageViewModel {
             disposeBag: disposeBag,
             isNeedRecord: isNeedRecord)()
         self.recordFollowEvent(traceParam)
-
+        
     }
-
+    
     private func openCategoryList(
         houseType: HouseType,
         traceParams: TracerParams,
@@ -739,11 +739,11 @@ class HomeListViewModel: DetailPageViewModel {
         navVC?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap
             .subscribe(onNext: { [unowned self] void in
-               self.navVC?.popViewController(animated: true)
+                self.navVC?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
-
+    
 }
 
 func parseHomeNewHouseListItemNode(
@@ -751,53 +751,53 @@ func parseHomeNewHouseListItemNode(
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
-
+    
     return {
         let selectors = items?
-                .filter { $0.id != nil }
-                .enumerated()
-                .map { (e) -> (TracerParams) -> Void in
-                    let (offset, item) = e
-                    return openNewHouseDetailPage(
-                        houseId: Int64(item.id ?? "")!,
-                        logPB: item.logPB ?? [:],
-                        disposeBag: disposeBag,
-                        tracerParams: tracerParams <|>
-                                toTracerParams(offset, key: "rank") <|>
-                                toTracerParams("maintab", key: "enter_from") <|>
-                                toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                                toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
-                        navVC:navVC)
-                }
- 
+            .filter { $0.id != nil }
+            .enumerated()
+            .map { (e) -> (TracerParams) -> Void in
+                let (offset, item) = e
+                return openNewHouseDetailPage(
+                    houseId: Int64(item.id ?? "")!,
+                    logPB: item.logPB ?? [:],
+                    disposeBag: disposeBag,
+                    tracerParams: tracerParams <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams("maintab", key: "enter_from") <|>
+                        toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                    navVC:navVC)
+        }
+        
         
         let records = items?
-                .filter { $0.id != nil }
-                .enumerated()
-                .map { (e) -> ElementRecord in
-                    let (offset, item) = e
-                    let theParams = tracerParams <|>
-                            toTracerParams(offset, key: "rank") <|>
-                            toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                            toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                            toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                            toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                    return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
-                }
-
-         let count = items?.count ?? 0
-
+            .filter { $0.id != nil }
+            .enumerated()
+            .map { (e) -> ElementRecord in
+                let (offset, item) = e
+                let theParams = tracerParams <|>
+                    toTracerParams(offset, key: "rank") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+        }
+        
+        let count = items?.count ?? 0
+        
         if let renders = items?.enumerated().map({(index, item) in
             items?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(true) : curry(fillHomeNewHouseListitemCell)(item)(index == count - 1)
-
+            
         }), let selectors = selectors {
             return TableSectionNode(
-                    items: renders,
-                    selectors: selectors,
-                    tracer: records,
-                    label: "",
-                    type: .node(identifier:items?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
+                items: renders,
+                selectors: selectors,
+                tracer: records,
+                label: "",
+                type: .node(identifier:items?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
         } else {
             return nil
         }
@@ -812,55 +812,55 @@ func paresNewHouseListRowItemNode(
     navVC: UINavigationController?) -> [TableRowNode] {
     let theParams = traceParams
     let selectors = data?
-            .enumerated()
-            .map { (e) -> (TracerParams) -> Void in
-                let (offset, item) = e
-                return openNewHouseDetailPage(
-                    houseId: Int64(item.id ?? "")!,
-                    logPB: item.logPB as? [String: Any],
-                    disposeBag: disposeBag,
-                    tracerParams: theParams <|>
-                        toTracerParams(offset, key: "rank") <|>
-                        toTracerParams("new_list", key: "enter_from") <|>
-                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
-                    houseSearchParams: houseSearchParams,
-                    navVC: navVC) }
+        .enumerated()
+        .map { (e) -> (TracerParams) -> Void in
+            let (offset, item) = e
+            return openNewHouseDetailPage(
+                houseId: Int64(item.id ?? "")!,
+                logPB: item.logPB as? [String: Any],
+                disposeBag: disposeBag,
+                tracerParams: theParams <|>
+                    toTracerParams(offset, key: "rank") <|>
+                    toTracerParams("new_list", key: "enter_from") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                houseSearchParams: houseSearchParams,
+                navVC: navVC) }
     let params = TracerParams.momoid() <|>
-            toTracerParams("new", key: "house_type") <|>
-            toTracerParams("left_pic", key: "card_type")
-
+        toTracerParams("new", key: "house_type") <|>
+        toTracerParams("left_pic", key: "card_type")
+    
     let records = data?
-            .filter { $0.id != nil }
-            .enumerated()
-            .map { (e) -> ElementRecord in
-                let (_, item) = e
-                let theParams = params <|>
-//                        toTracerParams(offset, key: "rank") <|>
-                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams("new_list", key: "page_type") <|>
-                        beNull(key: "element_type") <|>
-                        toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
-            }
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (_, item) = e
+            let theParams = params <|>
+                //                        toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams("new_list", key: "page_type") <|>
+                beNull(key: "element_type") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+            return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
+    }
     if let renders = data?.map( {
-       
+        
         return fillNewHouseListitemCell($0)
     }),
-       let selectors = selectors,
-       let records = records {
+        let selectors = selectors,
+        let records = records {
         let items = zip(selectors, records)
         return zip(renders, items).map { (e) -> TableRowNode in
             let (render, item) = e
             return TableRowNode(
                 itemRender: render,
                 selector: item.0,
-                    tracer: item.1,
+                tracer: item.1,
                 type: .node(identifier: SingleImageInfoCell.identifier),
                 editor: nil)
         }
-
+        
     }
     return []
 }
@@ -894,26 +894,26 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity,
             }
         }
     })
-
+    
     
     return { cell in
         
         if let theCell = cell as? SingleImageInfoCell {
             theCell.majorTitle.text = data.displayTitle
             theCell.extendTitle.text = data.displayDescription
-
+            
             theCell.areaLabel.attributedText = text
             theCell.areaLabel.snp.updateConstraints { (maker) in
-
+                
                 maker.left.equalToSuperview().offset(-3)
             }
             
             theCell.isTail = isLastCell
-
+            
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.courtImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+            
         }
         
     }
@@ -959,13 +959,13 @@ func fillHomeNewHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool
                 
                 maker.left.equalToSuperview().offset(-3)
             }
-
+            
             theCell.isTail = isLastCell
-
+            
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.images?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+            
         }
         
     }
@@ -980,23 +980,23 @@ func openNewHouseDetailPage(
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     return { (theTracerParams) in
         let detailPage = HorseDetailPageVC(
-                houseId: houseId,
-                houseType: .newHouse,
-                isShowBottomBar: true)
+            houseId: houseId,
+            houseType: .newHouse,
+            isShowBottomBar: true)
         detailPage.logPB = logPB
         detailPage.traceParams = EnvContext.shared.homePageParams <|>
             theTracerParams <|>
             tracerParams <|>
             toTracerParams("left_pic", key: "card_type")
         detailPage.houseSearchParams = houseSearchParams
-
+        
         let mainEntrance = tracerParams.paramsGetter([:])["maintab_entrance"]
         if let mainEntrance = mainEntrance {
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(mainEntrance, key: "origin_from")
             
         }
-
+        
         detailPage.pageViewModelProvider = { [unowned detailPage] (tableView, infoMaskView, navVC, searchId) in
             let viewModel = getNewHouseDetailPageViewModel(
                 detailPageVC: detailPage,
@@ -1006,14 +1006,14 @@ func openNewHouseDetailPage(
             viewModel.searchId = searchId
             return viewModel
         }
-
+        
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
-
+                
                 navVC?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
-         navVC?.pushViewController(detailPage, animated: true)
+        navVC?.pushViewController(detailPage, animated: true)
     }
 }
 
@@ -1034,23 +1034,23 @@ func openNeighborhoodDetailPage(
         detailPage.logPB = logPB
         detailPage.houseSearchParams = houseSearchParams
         let traceDict = tracerParams.paramsGetter([:])
-      
+        
         if let sameNeighborhoodFollowUp = sameNeighborhoodFollowUp {
             detailPage.sameNeighborhoodFollowUp.bind(to: sameNeighborhoodFollowUp).disposed(by: disposeBag)
         }
         detailPage.traceParams = EnvContext.shared.homePageParams <|>
             tracerParams <|>
-            theParams
+        theParams
         
-//            <|>
-//            toTracerParams(traceDict["page_type"] ?? "be_null", key: "enter_from")
-
+        //            <|>
+        //            toTracerParams(traceDict["page_type"] ?? "be_null", key: "enter_from")
+        
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
-         navVC?.pushViewController(detailPage, animated: true)
+        navVC?.pushViewController(detailPage, animated: true)
     }
 }
 
@@ -1064,7 +1064,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         return view
     }()
     
-   override init(tableView: UITableView,datasV: [TableSectionNode]? = []) {
+    override init(tableView: UITableView,datasV: [TableSectionNode]? = []) {
         super.init(tableView:tableView,datasV:datasV)
     }
     
@@ -1073,7 +1073,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     }
     
     let disposeBag = DisposeBag()
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return datas.count
     }
@@ -1143,7 +1143,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
             return categoryView
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if datas.count == 0 || section != 1 {
             return 0
@@ -1151,11 +1151,11 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
             return 50
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0
     }
-
+    
     
 }
 func reloadHomeTabBarItem(_ isBackTop: Bool) {
@@ -1170,16 +1170,16 @@ func reloadHomeTabBarItem(_ isBackTop: Bool) {
         tabBarItem.setTitle("首页")
         tabBarItem.setNormalImage(UIImage(named: "tab-home"), highlightedImage: UIImage(named: "tab-home_press"), loading: UIImage(named: "tab-home_press"))
     }
-
+    
 }
 fileprivate func homeListTypeBySection(_ section: Int) -> String? {
     switch section {
-        case 2:
-            return "maintab_old_list"
-        case 4:
-            return "maintab_new_list"
-        default:
-            return nil
+    case 2:
+        return "maintab_old_list"
+    case 4:
+        return "maintab_new_list"
+    default:
+        return nil
     }
 }
 
