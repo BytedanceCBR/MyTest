@@ -485,8 +485,8 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
 
 
 enum EvaluationLevelType : Int{
-    case evaluationLevelTypeLow = 1
-    case evaluationLevelTypeHeight = 2
+    case evaluationLevelTypeHeight = 1
+    case evaluationLevelTypeLow = 2
 }
 
 fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
@@ -592,7 +592,7 @@ fileprivate func fillSearchInNeighborhoodItemCell(
             theCell.floorPanItemView.icon.image = #imageLiteral(resourceName: "default_image")
         }
         let text = NSMutableAttributedString()
-        let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+        let attributeText = NSMutableAttributedString(string: item.displaySameneighborhoodTitle ?? "")
         attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
         attributeText.yy_color = hexStringToUIColor(hex: kFHDarkIndigoColor)
         text.append(attributeText)
@@ -1173,7 +1173,7 @@ fileprivate func fillSearchInNeighborhoodItemCell(
             theCell.floorPanItemView.icon.image = #imageLiteral(resourceName: "default_image")
         }
         let text = NSMutableAttributedString()
-        let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+        let attributeText = NSMutableAttributedString(string: item.displaySameneighborhoodTitle ?? "")
         attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
         attributeText.yy_color = hexStringToUIColor(hex: kFHDarkIndigoColor)
         text.append(attributeText)

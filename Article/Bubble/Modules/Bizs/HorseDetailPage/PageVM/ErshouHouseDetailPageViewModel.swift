@@ -391,7 +391,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNodeCollection(houseInSameNeighborhood.value?.data, traceExtension: traceExtension, navVC: navVC, tracerParams: theParams)
-                <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5), "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源") { [unowned self] in
+                <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.hasMore ?? false), "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源") { [unowned self] in
                     if let id = data.neighborhoodInfo?.id,
                         let title = data.neighborhoodInfo?.name {
 
