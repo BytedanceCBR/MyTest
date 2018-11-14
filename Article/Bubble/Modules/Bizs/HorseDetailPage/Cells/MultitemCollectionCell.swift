@@ -20,6 +20,8 @@ class MultitemCollectionCell: BaseUITableViewCell {
 
     var itemRecorders: [(TracerParams) -> Void] = []
 
+    var recordItemIndex: Set<IndexPath> = []
+
     var hasShowOnScreen = false {
         didSet {
             traceShowElement()
@@ -85,8 +87,9 @@ extension MultitemCollectionCell: UICollectionViewDataSource, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
             itemRecorders[indexPath.row](tracerParams)
+            recordItemIndex.insert(indexPath)
         }
     }
 
@@ -98,9 +101,12 @@ extension MultitemCollectionCell: UICollectionViewDataSource, UICollectionViewDe
 
     // 系统控件会提前将每种类型的cell提前渲染出一个，目前仅能通过延时激活来避免提前上报埋点
     func traceShowElement() {
+        
         collectionContainer.indexPathsForVisibleItems.forEach { (indexPath) in
-            if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        
+            if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
                 itemRecorders[indexPath.row](tracerParams)
+                recordItemIndex.insert(indexPath)
             }
         }
     }
@@ -114,6 +120,8 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
     var itemSelectors: [(DisposeBag) -> Void] = []
 
     var itemRecorders: [(TracerParams) -> Void] = []
+
+    var recordItemIndex: Set<IndexPath> = []
 
     var hasShowOnScreen = false {
         didSet {
@@ -180,8 +188,9 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
             itemRecorders[indexPath.row](tracerParams)
+            recordItemIndex.insert(indexPath)
         }
     }
 
@@ -194,8 +203,10 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     // 系统控件会提前将每种类型的cell提前渲染出一个，目前仅能通过延时激活来避免提前上报埋点
     func traceShowElement() {
         collectionContainer.indexPathsForVisibleItems.forEach { (indexPath) in
-            if itemRecorders.count > indexPath.row, hasShowOnScreen {
+            if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
                 itemRecorders[indexPath.row](tracerParams)
+                
+                recordItemIndex.insert(indexPath)
             }
         }
     }
@@ -534,7 +545,7 @@ func parseSearchInNeighborhoodNodeCollection(
                 toTracerParams("old_detail", key: "enter_from") <|>
                 toTracerParams("same_neighborhood", key: "element_from") 
 
-            let render = oneTimeRender(curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams))
+            let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams)
             return TableSectionNode(
                 items: [render],
                 selectors: nil,
@@ -638,7 +649,7 @@ func parseRelatedNeighborhoodCollectionNode(
                 toTracerParams("neighborhood_nearby", key: "element_from") <|>
                 toTracerParams("old_detail", key: "enter_from") <|>
                 traceExtension
-            let render = oneTimeRender(curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(navVC))
+            let render = curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(navVC)
             let params = itemTracerParams <|>
 //                    toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("neighborhood_nearby", key: "element_type") <|>
