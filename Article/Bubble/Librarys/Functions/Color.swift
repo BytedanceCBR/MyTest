@@ -22,6 +22,7 @@ let kFHCoolGrey2Color = "#a1aab3" // gray4
 let kFHSilverColor = "#e1e3e6" // gray5
 let kFHSilver2Color = "#e8eaeb" // gray6
 let kFHPaleGreyColor = "#f2f4f5" // gray7
+let kFHClearGreyColor = "#f7f8f9" // gray7
 
 let kFHCoralColor = "#ff5b4c" // red1
 let kFHLightishGreenColor = "#69db82" // green1

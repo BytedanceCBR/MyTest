@@ -12,9 +12,20 @@ import RxCocoa
 @objc class LocationManager: NSObject, AMapLocationManagerDelegate {
     // local test
 //        static let apiKey = "003c8c31d052f8882bfb2a1d712dea84"
-    // release
-    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
-
+//     release
+//    static let apiKey = "69c1887b8d0d2d252395c58e3da184dc"
+    static var apiKey : String {
+        get {
+            if "com.bytedance.fp1" == TTSandBoxHelper.bundleIdentifier()  {
+             //local test
+                return "003c8c31d052f8882bfb2a1d712dea84"
+            }
+            //release
+            return "69c1887b8d0d2d252395c58e3da184dc"
+        }
+    }
+    
+    
     @objc static let shared = LocationManager()
 
     private lazy var locationManager: AMapLocationManager = {
@@ -36,14 +47,14 @@ import RxCocoa
             .skip(1)
             .subscribe(onNext: { [weak self] (notify) in
                 if self?.currentLocation.value == nil {
-                    self?.requestCurrentLocation()
+                    self?.requestCurrentLocation(showToast: false)
                 }
             })
             .disposed(by: disposeBag)
     }
 
 
-    func requestCurrentLocation(_ showAlert: Bool = false) {
+    func requestCurrentLocation(_ showAlert: Bool = false, showToast: Bool = true) {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
 
         locationManager.locationTimeout = 2
@@ -52,7 +63,6 @@ import RxCocoa
         locationManager.requestLocation(
             withReGeocode: true,
             completionBlock: { [weak self] (location: CLLocation?, reGeocode: AMapLocationReGeocode?, error: Error?) in
-
                 if let error = error {
                     let error = error as NSError
 
@@ -92,8 +102,18 @@ import RxCocoa
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()
                 }
-
-                self?.currentCity.accept(reGeocode)
+                
+                if showToast
+                {
+                    self?.currentCity.accept(reGeocode)
+                }else
+                {
+                    if reGeocode != nil
+                    {
+                        self?.currentCity.accept(reGeocode)
+                    }
+                }
+                
 
                 self?.currentLocation.accept(location)
         })

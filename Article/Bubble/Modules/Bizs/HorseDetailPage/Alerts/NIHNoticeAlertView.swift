@@ -78,11 +78,9 @@ class NIHNoticeAlertView: UIView {
         contentView.clipsToBounds = true
         addSubview(contentView)
         contentView.snp.makeConstraints { maker in
-            
             maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
             maker.centerX.equalToSuperview()
-            maker.centerY.equalToSuperview()
-            
+            maker.centerY.equalToSuperview().offset(-30)
         }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))

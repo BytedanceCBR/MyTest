@@ -18,6 +18,8 @@ typealias DetailPageViewModelProvider = (UITableView, EmptyMaskView, UINavigatio
 class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate {
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
+    private var isFromPush: Bool = false
+
     private let houseId: Int64
     private let houseType: HouseType
 
@@ -70,9 +72,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return label
     }()
     
-
-    let barStyle = BehaviorRelay<Int>(value: UIStatusBarStyle.lightContent.rawValue)
-
     var isShowBottomBar: Bool
 
     weak var quickLoginVM: QuickLoginAlertViewModel?
@@ -83,7 +82,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
-//    weak var alert: BubbleAlertController?
     
     var isShowFollowNavBtn = false
 
@@ -133,23 +131,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             requestRetryText:"网络异常",
             isUserClickEnable:false)
 
-        if houseType == HouseType.neighborhood && CommonUIStyle.Screen.isIphoneX {
-            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 34, right: 0)
-
-        }
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
-        barStyle
-                .bind { [unowned self] i in
-                    self.ttStatusBarStyle = i
-                    self.ttNeedChangeNavBar = true
-                }
-                .disposed(by: disposeBag)
+
     }
 
     public required init(routeParamObj paramObj: TTRouteParamObj?) {
         let (houseId, houseType) = HorseDetailPageVC.getHouseId(paramObj?.queryParams)
+        
         self.houseId = Int64(houseId) ?? 0
         self.houseType = houseType
         self.isShowBottomBar = true
@@ -157,6 +147,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
         
         checkTraceParam(paramObj?.allParams)
+        self.isFromPush = true
+
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -170,12 +162,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
-        barStyle
-            .bind { [unowned self] i in
-                self.ttStatusBarStyle = i
-                self.ttNeedChangeNavBar = true
-            }
-            .disposed(by: disposeBag)
 
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
@@ -410,7 +396,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             switch state {
             case .suspend:
                     self?.navBar.setGradientColor()
-                    UIApplication.shared.statusBarStyle = .lightContent
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .normal)
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return-white"), for: .highlighted)
 
@@ -424,7 +409,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             default:
                     self?.navBar.removeGradientColor()
-                    UIApplication.shared.statusBarStyle = .default
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .normal)
                     self?.navBar.backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .highlighted)
 
@@ -442,11 +426,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             if state == .normal {
                 let alpha = (1 - (139 - offset.y) / 139) * 2
                 self?.navBar.alpha = alpha
-                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
-                UIApplication.shared.statusBarStyle = .default
+
             } else {
                 self?.navBar.alpha = 1
-                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
+            }
+            if offset.y > 0 {
+                UIApplication.shared.statusBarStyle = .default
+            }else {
                 UIApplication.shared.statusBarStyle = .lightContent
             }
         }
@@ -564,7 +550,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
                         }
                         self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
-                        self.followForSendPhone()
+                        self.followForSendPhone(false)
 
                         if self.houseType != .neighborhood {
                             
@@ -666,7 +652,26 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
         self.automaticallyAdjustsScrollViewInsets = false
         bindShareAction()
+        
+        UIApplication.shared.statusBarStyle = .lightContent
+
+        
     }
+    
+    func refreshStatusBar() {
+        
+        if self.tableView.contentOffset.y > 0 {
+            
+            UIApplication.shared.statusBarStyle = .default
+            
+        } else {
+            
+            UIApplication.shared.statusBarStyle = .lightContent
+            
+        }
+
+    }
+    
     // MARK: 设置二手房bottomBar
     func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
         
@@ -854,28 +859,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) { [weak self] in
-            
-            guard let state = self?.stateControl.state else {
-                return
+        if isFromPush {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(600)) { [weak self] in
+                self?.refreshStatusBar()
             }
-            if state == .normal {
-                let alpha = (1 - (139 - (self?.tableView.contentOffset.y ?? 0)) / 139) * 2
-                self?.navBar.alpha = alpha
-                self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
-                UIApplication.shared.statusBarStyle = .default
-                self?.ttStatusBarStyle = UIStatusBarStyle.lightContent.rawValue
-
-            } else {
-                self?.navBar.alpha = 1
-                self?.barStyle.accept(UIStatusBarStyle.lightContent.rawValue)
-                UIApplication.shared.statusBarStyle = .lightContent
-                self?.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
-
-            }
+        }else {
+            refreshStatusBar()
 
         }
-
+        isFromPush = false
         self.recordGoDetailSearch()
     }
 
@@ -937,25 +929,27 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.showSendPhoneAlert(title: title, subTitle: subTitleStr, confirmBtnTitle: confirmBtnTitle)
     }
     
-    func followForSendPhone() {
+    func followForSendPhone(_ showTip: Bool = false) {
         self.detailPageViewModel?.followHouseItem(houseType: self.houseType,
                                                   followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                                   followId: "\(self.houseId)",
             disposeBag: self.disposeBag,
-            isNeedRecord: false)()
+            isNeedRecord: false,
+            showTip: showTip)()
     }
     
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        [unowned self]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         self.sendClickConfirmTrace()
-                        self.followForSendPhone()
+                        self.followForSendPhone(true)
                     }
                 }else
                 {

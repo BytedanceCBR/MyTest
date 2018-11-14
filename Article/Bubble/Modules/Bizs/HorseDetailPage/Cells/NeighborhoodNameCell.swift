@@ -78,7 +78,7 @@ class NeighborhoodNameCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        addBottomLine()
+        // addBottomLine()
 
         contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
@@ -119,6 +119,8 @@ class NeighborhoodNameCell: BaseUITableViewCell {
             maker.width.height.equalTo(12)
         }
         
+        monthUpLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        monthUpLabel.setContentHuggingPriority(.required, for: .horizontal)
         contentView.addSubview(monthUpLabel)
         monthUpLabel.snp.makeConstraints { maker in
             maker.height.equalTo(20)

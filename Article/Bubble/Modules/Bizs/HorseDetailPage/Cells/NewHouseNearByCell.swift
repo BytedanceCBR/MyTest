@@ -26,7 +26,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     var requestIndex: Int = 0
     
-    fileprivate var poiAnnotationDatas : [String : [MyMAAnnotation]]?
+    fileprivate var poiAnnotationDatas : [String : [FHMAAnnotation]]?
 
     fileprivate var poiMapDatas : [String : [AMapPOI]]?
 
@@ -141,13 +141,13 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         return re
     }()
 
-    fileprivate var pointAnnotation: MyMAAnnotation?
+    fileprivate var pointAnnotation: FHMAAnnotation?
 
     var disposeBag = DisposeBag()
     
     var disposeCell = DisposeBag()
 
-    fileprivate let poiData = BehaviorRelay<[MyMAAnnotation]>(value: [])
+    fileprivate let poiData = BehaviorRelay<[FHMAAnnotation]>(value: [])
 
     var centerPoint: CLLocationCoordinate2D?
 
@@ -242,7 +242,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             self.callBackIndexChanged?()
         }
         
-        poiAnnotationDatas = [String : [MyMAAnnotation]]()
+        poiAnnotationDatas = [String : [FHMAAnnotation]]()
         poiMapDatas = [String : [AMapPOI]]()
         titleDatas = [String : String]()
     }
@@ -303,11 +303,11 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     }
 
 
-    fileprivate func resetAnnotations(_ annotations: [MyMAAnnotation]) {
+    fileprivate func resetAnnotations(_ annotations: [FHMAAnnotation]) {
         guard let center = centerPoint else {
             return
         }
-        let pointAnnotation = MyMAAnnotation()
+        let pointAnnotation = FHMAAnnotation()
         pointAnnotation.type = .center
         pointAnnotation.coordinate = center
         self.pointAnnotation = pointAnnotation
@@ -360,7 +360,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 
     func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
 
-        if let annotation = annotation as? MyMAAnnotation {
+        if let annotation = annotation as? FHMAAnnotation {
 
             let pointReuseIndetifier = "pointReuseIndetifier"
             var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier)
@@ -389,23 +389,25 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     let reactSize = annotation.title.boundingRect
                     
                     print("react size = \(reactSize)")
-                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14, height: 35)
-                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 20, height: 38)
+                    titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
+                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 38)
 
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
                     titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)
                     titileLabel.layer.masksToBounds = true
-                    titileLabel.layer.cornerRadius = 19
+//                    titileLabel.layer.cornerRadius = 19
                     titileLabel.numberOfLines = 1
                     titileLabel.textAlignment = .center
                     titileLabel.backgroundColor = UIColor.clear
-                    titileLabel.center = backImageView.center
+                    titileLabel.sizeToFit()
+                    titileLabel.center = CGPoint(x: backImageView.center.x, y: backImageView.center.y - 2
+                    )
                     
                     let bottomArrowView = UIImageView(image: UIImage(named: "mapcell_annotation_arrow"))
                     backImageView.addSubview(bottomArrowView)
                     bottomArrowView.backgroundColor = UIColor.clear
-                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 10.5, width: 10.5, height: 10.5)
+                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 12, width: 10.5, height: 10.5)
                 }
             }
             
@@ -428,8 +430,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             emptyInfoLabel.isHidden = false
             return
         }
-        let pois = response.pois.take(3).map { (poi) -> MyMAAnnotation in
-            let re = MyMAAnnotation()
+        let pois = response.pois.take(3).map { (poi) -> FHMAAnnotation in
+            let re = FHMAAnnotation()
             re.type = categorys[segmentedControl.selectedSegmentIndex]
             re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
             re.title = poi.name
@@ -443,7 +445,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     latitude: CLLocationDegrees(poi.location.latitude),
                     longitude: CLLocationDegrees(poi.location.longitude)))
                 let distance = MAMetersBetweenMapPoints(from, to)
-                return distance < 2000 //2 公里
+                return distance < 5000 //5 公里
             }.take(10)
             
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
@@ -451,11 +453,6 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                 poiMapDatas?[reuqestPoi.keywords] = poisMap
                 titleDatas?[reuqestPoi.keywords == "公交地铁" ? "交通": reuqestPoi.keywords] = "(\(poisMap.count))"
             }
-            
-//            locationListViewModel.datas = pois
-//            emptyInfoLabel.isHidden = locationListViewModel.datas.count != 0
-//            locationList.isUserInteractionEnabled = locationListViewModel.datas.count == 0
-//            locationList.reloadData()
         }
         
         if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
@@ -548,7 +545,7 @@ enum POIType: String {
     case traffic = "交通"
 }
 
-fileprivate class MyMAAnnotation: MAPointAnnotation {
+class FHMAAnnotation: MAPointAnnotation {
     var type: POIType = .center
 }
 
@@ -673,6 +670,7 @@ func parseNeighorhoodNearByNode(
 
 
         let params = TracerParams.momoid() <|>
+                toTracerParams("map", key: "element_from") <|>
                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseId, key: "group_id") <|>
                 toTracerParams("map_list", key: "click_type") <|>
@@ -750,6 +748,7 @@ func parseNewHouseNearByNode(
             traceExt
 
         let params = TracerParams.momoid() <|>
+            toTracerParams("map", key: "element_from") <|>
             toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseId, key: "group_id") <|>
                 toTracerParams("map_list", key: "click_type") <|>

@@ -577,6 +577,12 @@
 		616F787921916B0A009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
 		616F787A21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
 		616F787B21916B0C009C900F /* FHDetailSuggestTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */; };
+		61761952219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		61761953219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		61761954219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */; };
+		617619562199E33C00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
+		617619572199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
+		617619582199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
@@ -701,6 +707,9 @@
 		76CE80532192F5E9005D199B /* HouseOutlineHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */; };
 		76CE80552193E89A005D199B /* NearbyNewHouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80542193E899005D199B /* NearbyNewHouseCell.swift */; };
 		76CE80562193E89A005D199B /* NearbyNewHouseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE80542193E899005D199B /* NearbyNewHouseCell.swift */; };
+		76DF4DCE219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */; };
+		76DF4DCF219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */; };
+		76DF4DD0219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */; };
 		7B036C351F9DC94D009AA77A /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
 		7B27B0C81FC41F4700679550 /* TTRWenda.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B27B0C61FC41F4200679550 /* TTRWenda.m */; };
 		7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B4772551CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m */; };
@@ -6586,6 +6595,8 @@
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
 		616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHDetailSuggestTipCell.swift; sourceTree = "<group>"; };
+		61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHErshouDetailPriceRankCell.swift; sourceTree = "<group>"; };
+		617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHNeighborhoodChartCell.swift; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
@@ -6814,6 +6825,7 @@
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
 		76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseOutlineHeaderCell.swift; sourceTree = "<group>"; };
 		76CE80542193E899005D199B /* NearbyNewHouseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyNewHouseCell.swift; sourceTree = "<group>"; };
+		76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableTableViewCell.swift; sourceTree = "<group>"; };
 		7B036C331F9DC94D009AA77A /* TTWendaMethodDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWendaMethodDelegate.h; sourceTree = "<group>"; };
 		7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTWendaMethodDelegate.m; sourceTree = "<group>"; };
 		7B27B0C61FC41F4200679550 /* TTRWenda.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRWenda.m; sourceTree = "<group>"; };
@@ -14771,6 +14783,9 @@
 				616F787821916B0A009C900F /* FHDetailSuggestTipCell.swift */,
 				76CE80512192F384005D199B /* HouseOutlineHeaderCell.swift */,
 				76CE80542193E899005D199B /* NearbyNewHouseCell.swift */,
+				61761951219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift */,
+				76DF4DCD219966B9003DE381 /* RefreshableTableViewCell.swift */,
+				617619552199E33C00F06CCF /* FHNeighborhoodChartCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -17938,6 +17953,7 @@
 				B373CF0C2174587A008F9905 /* ShellScript */,
 				3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */,
 				8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */,
+				3D396439219ACED0002E9010 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -17965,6 +17981,7 @@
 				8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */,
 				5EC0BBC33EF7FD6E06D77572 /* [CP] Copy Pods Resources */,
 				B3BDFA9721460B9700C948FC /* ShellScript */,
+				3D39643A219ACF07002E9010 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -18022,7 +18039,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = Y22NS3RT95;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -18340,6 +18357,40 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3D396439219ACED0002E9010 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
+		};
+		3D39643A219ACF07002E9010 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
 		3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -18946,7 +18997,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
 		CACE9FE10A51A5B2FF679EC0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -19560,6 +19611,7 @@
 				FE1FC31E206922D800664B00 /* ExploreMixedListBaseView+Monitor.m in Sources */,
 				B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */,
 				A97DBCC71F1332E50002B455 /* TTStartupTask.m in Sources */,
+				617619562199E33C00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				FEF53DC82068EE2400EEA647 /* FRImageInfoModel.m in Sources */,
 				A97DBC9F1F1332E50002B455 /* TTLocationStartupTask.m in Sources */,
 				FEF53DCC2068EE8700EEA647 /* FRRouteHelper.m in Sources */,
@@ -19900,6 +19952,7 @@
 				AB1621E51F500EFA00B4CC0C /* SSShareMessageManager.m in Sources */,
 				F87694381F31D0D500D59CA5 /* TTVShareDetailTracker.m in Sources */,
 				F87694041F31D0D400D59CA5 /* TTVVideoDetailNatantInfoViewModel.m in Sources */,
+				61761952219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				D09F07B51D953F5E00B586B9 /* ExploreCollectionBookCellModel.m in Sources */,
 				A97DBC3F1F1332E40002B455 /* TTHandleShorcutItemTask.m in Sources */,
 				2DB9A6CF1F29BB85005E4A06 /* TTAdRefreshRelateModel.m in Sources */,
@@ -20779,6 +20832,7 @@
 				329F2C811F5F943C00F476ED /* SDWebImageManager+TTHook.m in Sources */,
 				B388CB5A2142652A00653188 /* ErshouHousePriceChartCell.swift in Sources */,
 				A97DB9831F1332DE0002B455 /* SSMyFeedbackView.m in Sources */,
+				76DF4DCE219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */,
 				43AAB80B1F975800004B4071 /* TTVPlayerTipRelatedCreator.m in Sources */,
 				B388CCE42142652C00653188 /* Mapping+Helper.swift in Sources */,
 				F6CD5DB720F6007B00E5A8D5 /* TSVHorizontalCardViewModel.m in Sources */,
@@ -21227,6 +21281,7 @@
 				B373C93B2174587A008F9905 /* TGIndicator.swift in Sources */,
 				B373C93C2174587A008F9905 /* SSQRCodeScanViewController.m in Sources */,
 				B373C93D2174587A008F9905 /* TTLocalResourceDownloader.m in Sources */,
+				76DF4DD0219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */,
 				B373C93E2174587A008F9905 /* TTInterestResponseModel.m in Sources */,
 				B373C93F2174587A008F9905 /* TTEditUserProfileItemCell.m in Sources */,
 				B373C9402174587A008F9905 /* TTRNVideoView.m in Sources */,
@@ -21977,6 +22032,7 @@
 				B373CC222174587A008F9905 /* TTVFeedListVideoItem.m in Sources */,
 				B373CC232174587A008F9905 /* TTFeedPreloadTask.m in Sources */,
 				B373CC242174587A008F9905 /* HorizontalCard.m in Sources */,
+				61761954219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				B373CC252174587A008F9905 /* TTRoundrectButtonView.m in Sources */,
 				B373CC262174587A008F9905 /* TTUGCTrackerHelper.m in Sources */,
 				B373CC272174587A008F9905 /* TTPhotoNewCommentViewController.m in Sources */,
@@ -22227,6 +22283,7 @@
 				B373CD172174587A008F9905 /* TTVideoBannerModel.m in Sources */,
 				B373CD182174587A008F9905 /* TTSwizzle.m in Sources */,
 				B373CD192174587A008F9905 /* SSADSplashDownloadManager.m in Sources */,
+				617619582199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				B373CD1A2174587A008F9905 /* TTNotificationCenterDelegate.m in Sources */,
 				B373CD1B2174587A008F9905 /* TTTimeIntervalTask.m in Sources */,
 				B373CD1C2174587A008F9905 /* SSFeedbackCell.m in Sources */,
@@ -22932,6 +22989,7 @@
 				FEFA53C8205FB1A8001F50D8 /* TTVSwipeView.m in Sources */,
 				B388CC8B2142652B00653188 /* TGIndicator.swift in Sources */,
 				FEFA53C9205FB1A8001F50D8 /* SSQRCodeScanViewController.m in Sources */,
+				76DF4DCF219966B9003DE381 /* RefreshableTableViewCell.swift in Sources */,
 				FEFA53CA205FB1A8001F50D8 /* TTLocalResourceDownloader.m in Sources */,
 				FEFA53CB205FB1A8001F50D8 /* TTInterestResponseModel.m in Sources */,
 				FEFA53CC205FB1A8001F50D8 /* TTEditUserProfileItemCell.m in Sources */,
@@ -23682,6 +23740,7 @@
 				FEFA5710205FB1A8001F50D8 /* TTFeedPreloadTask.m in Sources */,
 				FEFA5712205FB1A8001F50D8 /* HorizontalCard.m in Sources */,
 				FEFA5714205FB1A8001F50D8 /* TTRoundrectButtonView.m in Sources */,
+				61761953219820EF00F06CCF /* FHErshouDetailPriceRankCell.swift in Sources */,
 				FEF53DC52068CEF300EEA647 /* TTUGCTrackerHelper.m in Sources */,
 				FEFA5717205FB1A8001F50D8 /* TTPhotoNewCommentViewController.m in Sources */,
 				B388CB6B2142652A00653188 /* NewHouseInfoCell.swift in Sources */,
@@ -23932,6 +23991,7 @@
 				FEFA5826205FB1A8001F50D8 /* TTVideoBannerModel.m in Sources */,
 				FEFA5828205FB1A8001F50D8 /* TTSwizzle.m in Sources */,
 				FEFA5829205FB1A8001F50D8 /* SSADSplashDownloadManager.m in Sources */,
+				617619572199E33D00F06CCF /* FHNeighborhoodChartCell.swift in Sources */,
 				FEFA582A205FB1A8001F50D8 /* TTNotificationCenterDelegate.m in Sources */,
 				FEFA582B205FB1A8001F50D8 /* TTTimeIntervalTask.m in Sources */,
 				FEFA582C205FB1A8001F50D8 /* SSFeedbackCell.m in Sources */,
@@ -24866,7 +24926,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = Y22NS3RT95;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24970,7 +25030,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = Y22NS3RT95;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",

@@ -767,14 +767,14 @@ TTRefreshViewDelegate
 
 - (void)setCategoryID:(NSString *)categoryID
 {
-    if (!_suggestionWordsView) {
-        CGRect rect = [self frameForListView];
-        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
-        if (self.superview) {
-            [self.superview addSubview:_suggestionWordsView];
-            [self.superview bringSubviewToFront:self];
-        }
-    }
+//    if (!_suggestionWordsView) {
+//        CGRect rect = [self frameForListView];
+//        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
+//        if (self.superview) {
+//            [self.superview addSubview:_suggestionWordsView];
+//            [self.superview bringSubviewToFront:self];
+//        }
+//    }
     
     if (!isEmptyString(categoryID) && !isEmptyString(_categoryID) && [_categoryID isEqualToString:categoryID]) {
         return;
@@ -1207,7 +1207,12 @@ TTRefreshViewDelegate
 //    }
 //    //uploading section + function area section + explore section
 //    return ExploreMixedListBaseViewSectionExploreCells + 1;
-    return 2;
+
+    if (_fetchListManager.items.count == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
@@ -2046,7 +2051,7 @@ TTRefreshViewDelegate
 //    }
 }
 
-- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore {
+- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore { 
     NSMutableDictionary * exploreMixedListConsumeTimeStamps = [NSMutableDictionary dictionary];
     [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime]) forKey:kExploreFetchListTriggerRequestTimeStampKey];
     

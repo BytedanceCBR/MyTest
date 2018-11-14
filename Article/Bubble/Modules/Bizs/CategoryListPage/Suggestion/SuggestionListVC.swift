@@ -94,7 +94,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
 
     var tableViewModel: SuggestionListTableViewModel
     var onSuggestSelect: ((String, String?, String?, TracerParams) -> Void)?
-    var onSuggestionSelected: ((TTRouteParamObj?) -> Void)? {
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)? {
         didSet {
             self.tableViewModel.onSuggestionSelected = onSuggestionSelected
         }
@@ -379,6 +379,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         let houseSearchParams = TracerParams.momoid() <|>
             toTracerParams(userInputText, key: "enter_query") <|>
             toTracerParams(userInputText, key: "search_query") <|>
+            toTracerParams(pageTypeString(self.houseType.value), key: "page_type") <|>
             toTracerParams("enter", key: "query_type")
 
         // 保存关键词搜索到历史记录
@@ -395,11 +396,14 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         let fullText = userInputText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         var jumpUrl = "fschema://house_list?house_type=\(self.houseType.value.rawValue)&full_text=\(fullText ??  userInputText)"
         jumpUrl = jumpUrl + "&placeholder=\(fullText ?? userInputText)"
-        let userInfo = TTRouteUserInfo(info: houseSearchParams.paramsGetter([:]))
+        var infos:[String: Any] = [:]
+        infos["houseSearch"] = houseSearchParams.paramsGetter([:])
+
+        let userInfo = TTRouteUserInfo(info: infos)
 
         if self.onSuggestionSelected != nil {
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
-            self.onSuggestionSelected?(routerObj?.paramObj)
+            self.onSuggestionSelected?(routerObj)
         } else {
             onSuggestSelect?("&full_text=\(userInputText)", nil, userInputText, houseSearchParams)
         }
@@ -494,7 +498,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var sendHistoryQueryBag = DisposeBag()
 
     var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
-    var onSuggestionSelected: ((TTRouteParamObj?) -> Void)?
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)?
 
     let houseType: BehaviorRelay<HouseType>
 
@@ -635,10 +639,15 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             if userInput.isEmpty {
                 userInput = "be_null"
             }
-            let houseSearchParams = ["page_type": self.pageTypeString(),
+            var houseSearchParams = ["page_type": self.pageTypeString(),
                                      "query_type": queryType,
                                      "enter_query": item.userOriginEnter ?? userInput,
                                      "search_query": item.text ?? "be_null"]
+
+            if suggestions.value.count == 0 {
+                //如果点击的是历史，就统一都报text
+                houseSearchParams["enter_query"] = item.text ?? "be_null"
+            }
             var infos: [String: Any] = [:]
             infos["houseSearch"] = houseSearchParams
             if let info = item.info {
@@ -647,7 +656,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             let userInfo = TTRouteUserInfo(info: infos)
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
             if self.onSuggestionSelected != nil {
-                self.onSuggestionSelected?(routerObj?.paramObj)
+                self.onSuggestionSelected?(routerObj)
 
             } else {
                 TTRoute.shared()?.openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)

@@ -88,6 +88,8 @@ class CategoryListViewModel: DetailPageViewModel {
     
     var currentHouseType: HouseType?
 
+    var showTips:((String) -> Void)?
+
     // houseSearch补充埋点
     var limit = 20
     var offset = 0
@@ -228,12 +230,16 @@ class CategoryListViewModel: DetailPageViewModel {
             self?.cleanData()
         })
         let dataReloader = reloadData()
+        var hasRecordSearch = false
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
                         cleanDataOnce()
                         self.oneTimeToast?(response?.data?.refreshTip)
+                    if hasRecordSearch == false {
                         self.houseSearchRecorder?(response?.data?.searchId)
+                        hasRecordSearch = true
+                    }
 
                         if let data = response?.data {
 
@@ -428,10 +434,11 @@ class CategoryListViewModel: DetailPageViewModel {
     func createOneTimeToast() -> (String?) -> Void {
         var hasToast = false
         return { [weak self] (message) in
-            EnvContext.shared.toast.dismissToast()
+//            EnvContext.shared.toast.dismissToast()
             self?.dismissLoading?()
             if !hasToast, let message = message {
-                EnvContext.shared.toast.showToast(message)
+//                EnvContext.shared.toast.showToast(message)
+                self?.showTips?(message)
                 hasToast = true
             }
         }
@@ -564,15 +571,17 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                        } else {
 
-                        tableView.beginUpdates()
                         theDatas.remove(at: indexPath.row)
                         self.datas.accept(theDatas)
-                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                        UIView.performWithoutAnimation {
+                            tableView.reloadData()
+                        }
+                        
                         if self.canCancelFollowUp
                         {
                             self.datasDeleteBehavior.accept(theDatas.count)
                         }
-                        tableView.endUpdates()
+                        
                         
 //                        }
                         EnvContext.shared.toast.dismissToast()
@@ -623,16 +632,18 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //
 //                    } else {
 
-                    tableView.beginUpdates()
                     theDatas.remove(at: indexPath.row)
                     self.datas.accept(theDatas)
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    
+                    UIView.performWithoutAnimation {
+                        tableView.reloadData()
+                    }
+                    
                     if self.canCancelFollowUp
                     {
                         self.datasDeleteBehavior.accept(theDatas.count)
                     }
-                    handler(true)
-                    tableView.endUpdates()
+                    
                     
                     EnvContext.shared.toast.dismissToast()
                     EnvContext.shared.toast.showToast("已取消关注")

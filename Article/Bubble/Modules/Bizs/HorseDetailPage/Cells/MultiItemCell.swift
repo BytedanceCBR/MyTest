@@ -143,34 +143,40 @@ class NeighborhoodEvaluationItem: UIView
         let re = UIView()
         re.layer.cornerRadius = 4
         re.layer.masksToBounds = true
-        re.layer.borderWidth = 0.5
-        re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
+        re.backgroundColor = hexStringToUIColor(hex: kFHClearGreyColor)
         return re
-    }()
+    }() 
     
-    lazy var descLabel: YYLabel = {
-        let re = YYLabel()
+    lazy var descLabel: UILabel = {
+        let re = UILabel()
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
         return re
     }()
     
     lazy var nameLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(16)
-        re.textColor = hexStringToUIColor(hex: "#f85959")
+        re.textColor = hexStringToUIColor(hex: "#081f33")
+        re.textAlignment = .left
         return re
     }()
     
     lazy var scoreLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: kFHBattleShipGreyColor)
         return re
     }()
     
     lazy var levelLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.textColor = UIColor.white
+        re.textAlignment = .center
+        re.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
+        re.layer.masksToBounds = true
+        re.layer.cornerRadius = 4.0
         return re
     }()
     
@@ -186,46 +192,54 @@ class NeighborhoodEvaluationItem: UIView
         addSubview(backView)
         
         backView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.width.equalTo(156)
-            maker.height.equalTo(116)
-            maker.top.equalToSuperview()
+            maker.width.equalTo(140)
+            maker.height.equalTo(122)
+            maker.centerX.centerY.equalToSuperview()
         }
         
         backView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
-            maker.right.equalToSuperview()
+            maker.left.equalToSuperview().offset(12)
+            maker.top.equalToSuperview().offset(18)
             maker.height.equalTo(22)
-            maker.bottom.equalToSuperview()
+            maker.width.equalTo(70)
+        }
+        
+        backView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { maker in
+            maker.right.equalToSuperview()
+            maker.height.width.equalTo(22)
+            maker.top.equalTo(nameLabel)
         }
         
         scoreLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         scoreLabel.setContentHuggingPriority(.required, for: .horizontal)
         backView.addSubview(scoreLabel)
         scoreLabel.snp.makeConstraints { maker in
-            maker.left.equalToSuperview()
+            maker.right.equalTo(levelLabel.snp.left).offset(-9)
             maker.height.equalTo(22)
-            maker.top.equalToSuperview().offset(3)
+            maker.top.equalTo(nameLabel)
         }
-        
-        backView.addSubview(levelLabel)
-        levelLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(scoreLabel.snp.right).offset(6)
-            maker.right.equalToSuperview()
-            maker.height.equalTo(22)
-            maker.centerY.equalTo(scoreLabel.snp.centerY)
-            maker.bottom.equalToSuperview()
-        }
-        
+
+    }
+    
+    func layOutDescLabelForText(text: String)
+    {
+        descLabel.removeFromSuperview()
+        let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 120)
         backView.addSubview(descLabel)
-        descLabel.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.height.equalTo(22)
-            maker.bottom.equalTo(backView.snp.bottom).offset(9)
-        }
-        
-        //        addGestureRecognizer(tapGesture)
-        
+        descLabel.frame = CGRect(x: 12, y: 43, width: 120, height: heightText > 73 ? 73 : heightText)
+        descLabel.text = text
+        descLabel.lineBreakMode = .byTruncatingTail
+        descLabel.numberOfLines = 4
+    }
+    
+    func labelWithHeight(labelStr: String, label: UILabel, width: CGFloat) ->CGFloat {
+        let statusLabelText: NSString = labelStr as NSString
+        let size =  CGSize(width: width, height: 900)
+        let dic = NSDictionary(object: label.font, forKey: NSAttributedStringKey.font as NSCopying)
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [NSAttributedStringKey : Any], context: nil).size
+        return strSize.height
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -246,7 +260,7 @@ class NeighborhoodItemView: UIView {
 
     lazy var descLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(15)
+        re.font = CommonUIStyle.Font.pingFangRegular(16)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
@@ -261,7 +275,7 @@ class NeighborhoodItemView: UIView {
     lazy var spaceLabel: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.textColor = hexStringToUIColor(hex: "#ffffff")
         return re
     }()
 
@@ -274,6 +288,7 @@ class NeighborhoodItemView: UIView {
 
     init() {
         super.init(frame: CGRect.zero)
+        
         addSubview(icon)
         icon.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
@@ -281,25 +296,39 @@ class NeighborhoodItemView: UIView {
             maker.height.equalTo(116)
             maker.top.equalToSuperview()
         }
+        
+        let topColor = color(1, 1, 1, 0)
+        let bottomColor = color(0, 0, 0, 0.5)
+        let gradientColors = [topColor.cgColor, bottomColor.cgColor]
+        let gradientLocations:[NSNumber] = [0.0, 1.0]
+        
+        let gradientlayer = CAGradientLayer()
+        gradientlayer.colors = gradientColors
+        gradientlayer.locations = gradientLocations
+        gradientlayer.frame = CGRect(x: 0, y: 0, width: 156, height: 120)
+        gradientlayer.cornerRadius = 4.0
+        icon.layer.addSublayer(gradientlayer)
 
         addSubview(descLabel)
         descLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
+            maker.height.equalTo(22)
             maker.top.equalTo(icon.snp.bottom).offset(10)
         }
 
         addSubview(spaceLabel)
         spaceLabel.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(descLabel.snp.bottom).offset(4)
+            maker.height.equalTo(17)
+            maker.right.equalToSuperview().offset(-6)
+            maker.bottom.equalTo(icon.snp.bottom).offset(-6)
         }
 
         addSubview(priceLabel)
         priceLabel.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(spaceLabel.snp.bottom).offset(4)
+            maker.height.equalTo(22)
+            maker.top.equalTo(descLabel.snp.bottom)
             maker.bottom.equalToSuperview()
-
         }
     }
 
@@ -574,30 +603,6 @@ func generateRelatedNeighborhoodView(_ item: NeighborhoodInnerItemEntity) -> Nei
     return re
 }
 
-//func parseFloorPanNode(
-//        _ newHouseData: NewHouseData,
-//        navVC: UINavigationController?,
-//        followPage: BehaviorRelay<String>,
-//        bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
-//    return {
-//
-//        if let count = newHouseData.floorPan?.list?.count,count > 0 {
-//
-//            let cellRender = curry(fillFloorPanCell)(newHouseData.floorPan?.list ?? [])(navVC)(followPage)(bottomBarBinder)
-//            let params = TracerParams.momoid() <|>
-//                toTracerParams("neighborhood_nearby", key: "element_type")
-//            return TableSectionNode(
-//                items: [cellRender],
-//                selectors: nil,
-//                tracer: [elementShowOnceRecord(params: params)],
-//                label: "楼盘户型",
-//                type: .node(identifier: MultiItemCell.identifier))
-//        }else {
-//
-//            return nil
-//        }
-//    }
-//}
 
 fileprivate func fillFloorPanCell(
         _ data: [FloorPan.Item],
@@ -671,70 +676,6 @@ fileprivate func generateFloorPanItemView(_ item: FloorPan.Item) -> FloorPanItem
     return re
 }
 
-//func parseFloorPanNode(
-//        _ items: [FloorPlanInfoData.Recommend]?,
-//        navVC: UINavigationController?,
-//        followPage: BehaviorRelay<String>,
-//        bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> TableSectionNode? {
-//    return {
-//        if let items = items {
-//            let params = TracerParams.momoid() <|>
-//                    toTracerParams("house_model", key: "element_type")
-//            let cellRender = curry(fillFloorPanCell)(items)(navVC)(followPage)(bottomBarBinder)
-//            return TableSectionNode(
-//                    items: [cellRender],
-//                    selectors: nil,
-//                    tracer: [elementShowOnceRecord(params: params)],
-//                    label: "楼盘户型",
-//                    type: .node(identifier: MultiItemCell.identifier))
-//        } else {
-//            return nil
-//        }
-//    }
-//}
-
-//fileprivate func fillFloorPanCell(
-//        _ data: [FloorPlanInfoData.Recommend],
-//        logPBVC: Any?,
-//        navVC: UINavigationController?,
-//        followPage: BehaviorRelay<String>,
-//        bottomBarBinder: @escaping FollowUpBottomBarBinder,
-//        cell: BaseUITableViewCell) -> Void {
-//    if let theCell = cell as? MultiItemCell {
-//        let views = data.take(5).map { item -> FloorPanItemView in
-//            let re = generateFloorPanItemView(item)
-//            re.tapGesture.rx.event
-//                    .subscribe(onNext: { [unowned re] recognizer in
-//                        if let id = item.id, let floorPanId = Int64(id) {
-//                            
-//                            followPage.accept("house_model_detail")
-//
-//                            openFloorPanCategoryDetailPage(
-//                                    floorPanId: floorPanId,
-//                                    logPbVC: logPBVC,
-//                                    disposeBag: re.disposeBag,
-//                                    navVC: navVC,
-//                                    followPage: followPage,
-//                                    bottomBarBinder: bottomBarBinder)()
-//                        }
-//                    })
-//                    .disposed(by: re.disposeBag)
-//            return re
-//        }
-//        views.forEach { view in
-//            theCell.groupView.addSubview(view)
-//        }
-//        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-//        views.snp.makeConstraints { maker in
-//            maker.top.bottom.equalToSuperview()
-//        }
-//        if let view = views.last {
-//            theCell.groupView.snp.makeConstraints { [unowned view] maker in
-//                maker.height.equalTo(view.snp.height).offset(16)
-//            }
-//        }
-//    }
-//}
 
 fileprivate func generateFloorPanItemView(_ item: FloorPlanInfoData.Recommend) -> FloorPanItemView {
     let re = FloorPanItemView()

@@ -97,8 +97,8 @@ class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDele
             let parmasMap = tracerParams.paramsGetter([:])
             let houseSearchParams = ["page_type": self.pageTypeString(),
                                      "query_type": "history",
-                                     "enter_query": item.userOriginEnter ?? "be_null",
-                                     "search_query": item.desc ?? "be_null"]
+                                     "enter_query": item.text ?? "be_null",
+                                     "search_query": item.text ?? "be_null"]
             var infoParams: [String: Any] = ["tracer": parmasMap,
                               "houseSearch": houseSearchParams]
             if let extInfo = item.extinfo {

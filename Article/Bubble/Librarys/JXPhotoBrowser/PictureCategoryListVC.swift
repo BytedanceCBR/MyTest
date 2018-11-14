@@ -107,7 +107,7 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
 
     func openBrowser(index: Int) {
         // 创建图片浏览器
-        let browser = PhotoBrowser(photoLoader: BDWebImagePhotoLoader())
+        let browser = FHPhotoBrowser(photoLoader: BDWebImagePhotoLoader())
         // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
         // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleNoHiding`。
         browser.animationType = .scale

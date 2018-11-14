@@ -164,9 +164,10 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.sendPhoneNumberRequest(houseId: Int64(self.houseId), phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        [unowned self]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         
@@ -175,7 +176,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                                                                 followId: "\(self.houseId)",
                             disposeBag: self.disposeBag,
                             statusBehavior: self.follwUpStatus,
-                            isNeedRecord: false)()
+                            isNeedRecord: false,
+                            showTip: true)()
                         
                     }
                     
@@ -354,7 +356,7 @@ func openFloorPanCategoryDetailPage(
         }
         
         detailPage.tracerParams = params <|>
-            toTracerParams(logPbVC as Any, key: "log_pb") <|>
+            toTracerParams(logPbVC ?? "be_null", key: "log_pb") <|>
             toTracerParams(searchId, key: "search_id")
         detailPage.navBar.backBtn.rx.tap
                 .subscribe(onNext: { void in

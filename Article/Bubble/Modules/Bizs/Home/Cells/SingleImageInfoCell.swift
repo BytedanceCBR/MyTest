@@ -222,6 +222,11 @@ class CornerView: UIView {
 
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageTopLeftLabelBgView.isHidden = true
+    }
+    
     override func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

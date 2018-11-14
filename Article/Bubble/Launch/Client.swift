@@ -105,10 +105,10 @@ extension Notification.Name {
         //TODO leo
         generalBizconfig.currentSelectCityId
             .subscribe(onNext: { [weak self] (cityId) in
-                if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
-//                    self?.generalBizconfig.fetchConfiguration()
-//                    self?.fetchSearchConfig()
-                }
+//                if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
+////                    self?.generalBizconfig.fetchConfiguration()
+////                    self?.fetchSearchConfig()
+//                }
                 self?.setCommonNetwork()
             })
             .disposed(by: disposeBag)

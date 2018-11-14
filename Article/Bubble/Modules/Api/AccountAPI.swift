@@ -118,7 +118,13 @@ func getSMSVerifyCodeCommand(mobileString: String, bdCodeType: Int) -> Observabl
         
         TTAccountManager.startSendCode(withPhoneNumber: mobileString, captcha: nil, type: TTASMSCodeScenarioType.quickLogin, unbindExist: false, completion: {(number, image, error) in
 //            print("sms number = \(String(describing: number))")
-            delegate.onResponse?(.successed)
+            
+            if error == nil {
+                delegate.onResponse?(.successed)
+
+            }else {
+                delegate.onResponse?(.error(error))
+            }
         })
         
         /*

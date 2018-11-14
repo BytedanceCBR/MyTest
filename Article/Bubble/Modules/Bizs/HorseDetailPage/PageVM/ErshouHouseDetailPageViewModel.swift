@@ -109,22 +109,29 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
 
         Observable
             .combineLatest(ershouHouseData, relateNeighborhoodData, houseInSameNeighborhood, relateErshouHouseData)
-            .bind { [unowned self] (_) in
+            .bind { [weak self] (_) in
                 
-                if self.ershouHouseData.value?.data?.status == -1 {
+                if let status = self?.ershouHouseData.value?.data?.status, status == -1 {
                     
-                    self.infoMaskView?.isHidden = false
-                    self.infoMaskView?.label.text = "该房源已下架"
-                    self.infoMaskView?.retryBtn.isHidden = true
-                    self.infoMaskView?.isUserInteractionEnabled = false
+                    self?.infoMaskView?.isHidden = false
+                    self?.infoMaskView?.label.text = "该房源已下架"
+                    self?.infoMaskView?.retryBtn.isHidden = true
+                    self?.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
                 
-                let result = self.processData()([])
-                self.dataSource.datas = result
-                self.tableView?.reloadData()
-                DispatchQueue.main.async {
-                    self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                if let result = self?.processData()([]) {
+                    
+                    self?.dataSource.datas = result
+                    self?.tableView?.reloadData()
+                    DispatchQueue.main.async {
+                        
+                        if let tableView = self?.tableView, let datas = self?.dataSource.datas {
+                            
+                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                        }
+                    }
+                    
                 }
             }
             .disposed(by: disposeBag)
@@ -151,6 +158,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     tracer: datas[indexPath.section].tracer,
                     atIndexPath: indexPath,
                     traceParams: params)
+//                print("callTracer: \(indexPath)")
                 recordRowIndex.insert(indexPath)
             }
 
@@ -336,7 +344,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
-                <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
+//                <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
                 <- parsePropertyListNode(data)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
@@ -346,7 +354,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     return data.neighborhoodInfo != nil ? true : false
                 }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)
-                <- parseHeaderNode("均价走势")
+                <- parseHeaderNode("价格分析")
+                <- parsePriceRankNode(data.housePriceRank, traceExtension: traceExtension)
+
+                // 均价走势
                 <- parseErshouHousePriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC){
                     if let id = data.neighborhoodInfo?.id
                     {
@@ -372,12 +383,11 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             recordEvent(key: "click_price_trend", params: loadMoreParams)
                     }
                 }
-                <- parseHeaderNode("同小区价格对比", adjustBottomSpace: -10) {
-                    (data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) ? false : true
-                }
-                <- parsePriceRangeNode(data.housePriceRange, traceExtension: traceExtension)
-                <- parseFlineNode(((data.housePriceRange?.price_min ?? 0 == 0 && data.housePriceRange?.price_max ?? 0 == 0) || self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
+                <- parseFlineNode(6)
+                // 购房小建议
+                <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
+                <- parseFlineNode(6)
+                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "同小区房源"  : "同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNodeCollection(houseInSameNeighborhood.value?.data, traceExtension: traceExtension, navVC: navVC, tracerParams: theParams)
@@ -416,7 +426,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     }
                 }
                 <- parseFlineNode(((houseInSameNeighborhood.value?.data?.total ?? 0 > 0 && houseInSameNeighborhood.value?.data?.total ?? 0 <= 5) || self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
+                <- parseHeaderNode((relateNeighborhoodData.value?.data?.hasMore ?? false) ? "周边小区"  : "周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseRelatedNeighborhoodCollectionNode(
@@ -517,18 +527,8 @@ func openErshouHouseList(
         searchSource: searchSource,
         searchId: searchId,
         bottomBarBinder: bottomBarBinder)
-    if let followStatus = followStatus {
-        listVC.sameNeighborhoodFollowUp.accept(followStatus.value)
-        listVC.sameNeighborhoodFollowUp
-            .bind(to: followStatus)
-            .disposed(by: disposeBag)
-    }
+    listVC.followStatus = followStatus
     listVC.tracerParams = tracerParams
-    listVC.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
-                navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
     navVC?.pushViewController(listVC, animated: true)
 }
 
@@ -539,6 +539,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var cellFactory: UITableViewCellFactory
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
+    
+    var priceChartFoldState:Bool = true
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -560,11 +562,39 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            
+            if let refreshCell = cell as? ErshouHousePriceChartCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isPriceChartFoldState = self.priceChartFoldState
+                processRefreshableTableViewCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
+            
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
             return CycleImageCell()
         }
+    }
+    
+    fileprivate func processRefreshableTableViewCell(
+        cell: RefreshableTableViewCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        var tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self] in
+            self?.changePriceChartFoldState()
+            UIView.performWithoutAnimation {
+                tableView?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    fileprivate func changePriceChartFoldState()
+    {
+        self.priceChartFoldState = !self.priceChartFoldState
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -1019,9 +1049,15 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
                 maker.height.equalTo(17)
             }
             theCell.priceLabel.text = data.pricePerSqm
-
+            theCell.priceLabel.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.areaLabel.snp.bottom).offset(3)
+            }
+            
         } else {
             
+            theCell.priceLabel.snp.makeConstraints { maker in
+                maker.top.equalTo(theCell.areaLabel.snp.bottom).offset(5)
+            }
             let text = NSMutableAttributedString()
             let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
                 createTagAttrString(

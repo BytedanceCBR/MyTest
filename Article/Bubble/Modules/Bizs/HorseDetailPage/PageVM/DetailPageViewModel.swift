@@ -234,7 +234,8 @@ extension DetailPageViewModel {
         followAction: FollowActionType,
         followId: String,
         disposeBag: DisposeBag,
-        isNeedRecord: Bool = true) -> () -> Void {
+        isNeedRecord: Bool = true,
+        showTip: Bool = false) -> () -> Void {
 
         return { [weak self] in
 
@@ -256,7 +257,7 @@ extension DetailPageViewModel {
 
                                 var style = fhCommonToastStyle()
                                 style.verticalOffset = 24
-                                style.titleFont = CommonUIStyle.Font.pingFangRegular(12)
+                                style.verticalOffset = 24 + (CommonUIStyle.Screen.isIphoneX ? 10 : 0)
                                 style.cornerRadius = 8
                                 style.verticalPadding = 8
                                 style.horizontalPadding = 10
@@ -264,6 +265,12 @@ extension DetailPageViewModel {
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
+                            }
+                        }else if response?.data?.followStatus ?? 0 == 1 {
+                            let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            if toastCount < 3 && showTip {
+                                
+                                EnvContext.shared.toast.showToast("提交成功")
                             }
                         }
                         self?.followStatus.accept(.success(true))
@@ -277,15 +284,12 @@ extension DetailPageViewModel {
     
     func recordFollowEvent(_ traceParam: TracerParams) {
         
-        print("xxxxx=\(traceParam.paramsGetter([:]))")
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
         
     }
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
-            print("xxxxx=\(traceParam.paramsGetter([:]))")
-
             followUpButton.rx.tap
                 .bind(onNext: { [weak self] in
 
@@ -423,12 +427,12 @@ extension DetailPageViewModel {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1"
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+                        [unowned self]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
-                        
                         let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
                         recordEvent(key: TraceEventName.inform_show,
                                     params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
@@ -439,7 +443,8 @@ extension DetailPageViewModel {
                                              followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
                                              followId: "\(self.houseId)",
                             disposeBag: self.disposeBag,
-                            isNeedRecord: false)()
+                            isNeedRecord: false,
+                            showTip: true)()
                     }
                 }else
                 {

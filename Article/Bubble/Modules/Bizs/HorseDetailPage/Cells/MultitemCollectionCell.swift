@@ -40,7 +40,7 @@ class MultitemCollectionCell: BaseUITableViewCell {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         flowLayout.itemSize = CGSize(width: 156, height: 190)
-        flowLayout.minimumLineSpacing = 8       
+        flowLayout.minimumLineSpacing = 10
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         re.showsHorizontalScrollIndicator = false
@@ -134,8 +134,8 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        flowLayout.itemSize = CGSize(width: 156, height: 211)
-        flowLayout.minimumLineSpacing = 8
+        flowLayout.itemSize = CGSize(width: 156, height: 194)
+        flowLayout.minimumLineSpacing = 10
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         re.showsHorizontalScrollIndicator = false
@@ -148,7 +148,7 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
         contentView.addSubview(collectionContainer)
         collectionContainer.snp.makeConstraints { maker in
             maker.edges.equalToSuperview()
-            maker.height.equalTo(211)
+            maker.height.equalTo(194)
         }
         collectionContainer.register(FloorPanItemCollectionCell.self, forCellWithReuseIdentifier: "floorPan")
         collectionContainer.register(NeighborhoodItemCollectionCell.self, forCellWithReuseIdentifier: "neighborhood")
@@ -201,6 +201,136 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     }
 }
 
+class FHStarsCountView: UIView
+{
+    lazy var starsName: UILabel = {
+        let re = UILabel()
+        re.text = "3.0"
+        re.font = CommonUIStyle.Font.pingFangMedium(36)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        re.textAlignment = .left
+        return re
+    }()
+    
+    lazy var starsCountView: UIView = {
+        let re = UIView()
+        re.backgroundColor = UIColor.clear
+        return re
+    }()
+    
+    
+    
+    override init(frame: CGRect = CGRect.zero) {
+        super.init(frame: frame)
+
+        addSubview(starsName)
+        starsName.snp.makeConstraints { maker in
+            maker.bottom.top.equalToSuperview()
+            maker.left.equalToSuperview().offset(20)
+            maker.height.equalTo(50)
+            maker.width.equalTo(70)
+        }
+        
+        addSubview(starsCountView)
+        starsCountView.snp.makeConstraints { maker in
+            maker.bottom.right.top.equalToSuperview()
+            maker.left.equalTo(starsName.snp.right)
+            maker.height.equalTo(50)
+        }
+        
+    }
+    
+    func updateStarsCount(scoreValue: Int)
+    {
+        let startCount = scoreValue / 10
+        let isShowHalfStart = scoreValue > startCount * 10
+        let scoreTotal = Double(scoreValue) / 10.0
+        starsName.text = String("\(scoreTotal)")
+        
+        var privousView : UIImageView?
+        
+        for v in starsCountView.subviews
+        {
+            v.removeFromSuperview()
+        }
+        
+        for index in 1...5 {
+            
+            let starImageView = UIImageView(image: UIImage(named: "star_evaluation_default"))
+            starsCountView.addSubview(starImageView)
+            
+            starImageView.snp.makeConstraints { maker in
+                if (privousView != nil)
+                {
+                    maker.left.equalTo(privousView?.snp.right ?? 0).offset(5)
+                }else
+                {
+                    maker.left.equalToSuperview().offset(5)
+                }
+                maker.width.height.equalTo(26)
+                maker.centerY.equalToSuperview()
+            }
+            
+            
+            if startCount == 0
+            {
+                if isShowHalfStart
+                {
+                    createHalfStarView(superView: starImageView, ratio: scoreValue % 10)
+                }
+                return
+            }
+            
+            if index <= startCount
+            {
+                starImageView.image = UIImage(named: "star_evaluation")
+            }else if index == startCount + 1,isShowHalfStart
+            {
+                createHalfStarView(superView: starImageView, ratio: scoreValue % 10)
+            }
+            
+            privousView = starImageView
+
+        }
+    }
+    
+    func createHalfStarView(superView : UIImageView, ratio: Int)
+    {
+        
+        for v in superView.subviews
+        {
+            v.removeFromSuperview()
+        }
+        
+        let harfImageView = UIImageView(image: UIImage(named: "star_evaluation"))
+        harfImageView.contentMode = .scaleAspectFit
+        superView.addSubview(harfImageView)
+        harfImageView.snp.makeConstraints { maker in
+            maker.top.left.equalToSuperview()
+//            maker.left.equalToSuperview().offset((1 - Double(ratio) / 10.0) * 26)
+            maker.width.height.equalTo(26)
+        }
+        let shapeLayer = CAShapeLayer()
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 26))
+        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 26)) //11 是因为图片有缝隙
+        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+      
+        shapeLayer.path = path.cgPath
+        harfImageView.layer.mask = shapeLayer
+
+//        harfImageView.layer.contentsRect = CGRect(x: 0.0, y: 0.0, width: Double(ratio) / 10.0, height: 1)
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     
     var collectionViewCellRenders: [CollectionViewCellRender] = []
@@ -227,8 +357,8 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
     
     lazy var collectionContainer: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        flowLayout.itemSize = CGSize(width: 156, height: 122)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        flowLayout.itemSize = CGSize(width: 140, height: 122)
         flowLayout.minimumLineSpacing = 8
         flowLayout.scrollDirection = .horizontal
         let re = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
@@ -237,25 +367,12 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         return re
     }()
     
-    lazy var starsContainer: UIView = {
-        let re = UIView()
+    lazy var starsContainer: FHStarsCountView = {
+        let re = FHStarsCountView()
         return re
     }()
     
-    lazy var starsName: UILabel = {
-        let re = UILabel()
-        re.text = "3.0"
-        re.font = CommonUIStyle.Font.pingFangMedium(36)
-        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
-        re.textAlignment = .left
-        return re
-    }()
-    
-    lazy var starsView: UIView = {
-        let re = UIView()
-        re.backgroundColor = UIColor.red
-        return re
-    }()
+
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -263,21 +380,6 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         contentView.addSubview(starsContainer)
         starsContainer.snp.makeConstraints { maker in
             maker.top.left.right.equalToSuperview()
-            maker.height.equalTo(50)
-        }
-        
-        starsContainer.addSubview(starsName)
-        starsName.snp.makeConstraints { maker in
-            maker.bottom.top.equalToSuperview()
-            maker.left.equalToSuperview().offset(20)
-            maker.height.equalTo(50)
-            maker.width.equalTo(70)
-        }
-        
-        starsContainer.addSubview(starsView)
-        starsView.snp.makeConstraints { maker in
-            maker.bottom.right.top.equalToSuperview()
-            maker.left.equalTo(starsName.snp.right)
             maker.height.equalTo(50)
         }
         
@@ -291,43 +393,6 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
         collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self
         collectionContainer.dataSource = self
-    }
-    
-    
-    func updateStarsCount(scoreValue: Int)
-    {
-        
-//        starsView.su
-        
-        let startCount = scoreValue / 10
-        let isShowHalfStart = scoreValue > startCount * 10
-        
-        for index in 1...5 {
-            
-            if startCount == 0
-            {
-                if isShowHalfStart
-                {
-                    
-                }else
-                {
-                    
-                }
-                return
-            }
-            
-            if index < startCount
-            {
-                
-            }else if index == startCount,isShowHalfStart
-            {
-                
-            }else
-            {
-                
-            }
-        }
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -386,7 +451,8 @@ fileprivate class FloorPanItemCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(floorPanItemView)
         floorPanItemView.snp.makeConstraints { maker in
-            maker.top.left.right.bottom.equalToSuperview()
+            maker.top.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-20)
         }
     }
 
@@ -407,7 +473,7 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
         contentView.addSubview(neighborhoodItemView)
         neighborhoodItemView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(-16)
+            maker.bottom.equalTo(-20)
             maker.top.equalToSuperview()
         }
     }
@@ -415,6 +481,12 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+
+enum EvaluationLevelType : Int{
+    case evaluationLevelTypeLow = 1
+    case evaluationLevelTypeHeight = 2
 }
 
 fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
@@ -499,7 +571,7 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("old_detail", key: "page_type") <|>
@@ -547,7 +619,7 @@ fileprivate func searchInNeighborhoodItemCellSelector(
                 logPB: item.logPB,
                 disposeBag: disposeBag,
                 tracerParams: theParams <|>
-                        toTracerParams(item.logPB, key: "log_pb") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(offset, key: "rank"),
                 navVC: navVC)(TracerParams.momoid())
@@ -665,6 +737,9 @@ fileprivate func fillEvaluationCell(
     cell: BaseUITableViewCell) {
     if let theCell = cell as? MultitemCollectionEvaluateCell {
         theCell.itemReuseIdentifier = "evaluate"
+        print("datas = \(datas)")
+        theCell.starsContainer.updateStarsCount(scoreValue: datas.totalScore ?? 0)
+
         if let datasScoresEntity = datas.subScores
         {
             theCell.collectionViewCellRenders = datasScoresEntity.take(5).map { entity -> CollectionViewCellRender in
@@ -677,7 +752,7 @@ fileprivate func fillEvaluationCell(
             
             theCell.itemSelectors = datasScoresEntity.take(5).enumerated().map { e -> (DisposeBag) -> Void in
                 let (offset, item) = e
-                return curry(EvaluationItemSelector)(offset)(item)(itemTracerParamsResult)(navVC)
+                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParamsResult)(navVC)
             }
             theCell.itemRecorders = datasScoresEntity.take(5).enumerated().map { e -> (TracerParams) -> Void in
                 let (offset, item) = e
@@ -700,21 +775,35 @@ fileprivate func fillEvaluationCollectionItemCell(
     itemTracerParams: TracerParams,
     cell: UICollectionViewCell) {
     if let theCell = cell as? EvaluationItemCollectionCell {
-        theCell.neighborhoodItemView.descLabel.text = data.content
+        theCell.neighborhoodItemView.layOutDescLabelForText(text:data.content ?? "暂无信息")
         theCell.neighborhoodItemView.nameLabel.text = data.scoreName
-        theCell.neighborhoodItemView.scoreLabel.text = String(data.scoreValue ?? 0)
+        theCell.neighborhoodItemView.scoreLabel.text = String((Double(data.scoreValue ?? 0) / 10.0) )
         theCell.neighborhoodItemView.levelLabel.text = String(data.scoreLevel ?? 0)
+        
+        if let levelV = data.scoreLevel, levelV == EvaluationLevelType.evaluationLevelTypeHeight.rawValue
+        {
+            theCell.neighborhoodItemView.levelLabel.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
+            theCell.neighborhoodItemView.levelLabel.text = "高"
+        }else
+        {
+            theCell.neighborhoodItemView.levelLabel.backgroundColor = hexStringToUIColor(hex: kFHClearBlueColor)
+            theCell.neighborhoodItemView.levelLabel.text = "低"
+        }
     }
 }
 
-fileprivate func EvaluationItemSelector(
+func EvaluationItemSelector(
     offset: Int,
-    data: EvaluationIteminfo,
+    data: NeighborhoodEvaluationinfo,
     itemTracerParams: TracerParams,
     navVC: UINavigationController?,
     disposeBag: DisposeBag) {
-    
-    
+      if let detailUrlV = data.detailUrl
+      {
+//         openEvaluationPage(urlStr: detailUrlV, title: "小区评测", disposeBag: disposeBag)
+//        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+        FRRouteHelper.openWebView(forURL: detailUrlV)
+      }
      //to do jump
 }
 
@@ -824,7 +913,7 @@ fileprivate func searchInNeighborhoodItemCellSelector(
     let theParams = itemTracerParams <|>
             toTracerParams("slide", key: "card_type") <|>
             itemTracerParams <|>
-            toTracerParams(item.logPB, key: "log_pb") <|>
+            toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams("related", key: "element_from") <|>
             toTracerParams("new_detail", key: "enter_from")
@@ -853,8 +942,9 @@ func parseNewHouseFloorPanCollectionNode(
             let params = TracerParams.momoid() <|>
                 toTracerParams("house_model", key: "element_type") <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
-                toTracerParams(newHouseData.logPB, key: "log_pb") <|>
-                toTracerParams(newHouseData.id, key: "group_id") <|>
+                toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(newHouseData.id ?? "be_null", key: "group_id") <|>
+
                 traceExtension
             return TableSectionNode(
                 items: [cellRender],
@@ -868,7 +958,7 @@ func parseNewHouseFloorPanCollectionNode(
     }
 }
 
-// MARK: 猜你喜欢
+// MARK: 楼盘户型
 fileprivate func fillGuessLikeFloorPanCell(
         _ data: [FloorPan.Item],
         logPB: Any?,
@@ -884,20 +974,22 @@ fileprivate func fillGuessLikeFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(logPBVC)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(item.logPB)(isHiddenBottomBtn)(offset)(navVC)(followPage)(bottomBarBinder)
         }
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("new_detail", key: "enter_from") <|>
                     toTracerParams("house_model", key: "element_from") <|>
                     toTracerParams("house_model", key: "house_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
-                    toTracerParams(logPB, key: "log_pb")
+                    //实际上这个地方是空
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
@@ -1009,6 +1101,7 @@ func parseSearchInNeighborhoodCollectionNode(
 func parseNeighborhoodEvaluationCollectionNode(
     _ data: NeighborhoodDetailData?,
     traceExtension: TracerParams = TracerParams.momoid(),
+    disposeBag: DisposeBag,
     followStatus: BehaviorRelay<Result<Bool>>,
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
@@ -1029,13 +1122,15 @@ func parseNeighborhoodEvaluationCollectionNode(
 //                toTracerParams("same_neighborhood", key: "element_from")
 //
             
+            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+            
             let openParams = TracerParams.momoid()
             if let evaluatInfo = data?.evaluationInfo
             {
                 let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(openParams)(navVC))
                 return TableSectionNode(
                     items: [render],
-                    selectors: nil,
+                    selectors: selector != nil ? [selector!] : nil,
                     tracer: [elementShowOnceRecord(params: params)],
                     label: "小区房源",
                     type: .node(identifier: MultitemCollectionEvaluateCell.identifier))
@@ -1068,9 +1163,9 @@ fileprivate func fillSearchInNeighborhoodCell(
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.logPB, key: "log_pb") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("neighborhood_detail", key: "page_type") <|>
@@ -1117,10 +1212,11 @@ fileprivate func searchInNeighborhoodSelector(
     if let id = item.id, let houseId = Int64(id) {
         openErshouHouseDetailPage(
                 houseId: houseId,
+                logPB: item.logPB,
                 followStatus: followStatus,
                 disposeBag: disposeBag,
                 tracerParams: theParams <|>
-                        toTracerParams(item.logPB, key: "log_pb") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(offset, key: "rank"),
                 navVC: navVC)(TracerParams.momoid())
@@ -1173,9 +1269,9 @@ fileprivate func fillFloorPanCell(
             let (offset, item) = e
             let params = EnvContext.shared.homePageParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.logPB, key: "log_pb") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(item.id, key: "group_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("new", key: "house_type") <|>
                     toTracerParams("house_model_detail", key: "page_type") <|>
@@ -1247,3 +1343,4 @@ fileprivate func floorPanItemSelector(
                 params: params)()
     }
 }
+

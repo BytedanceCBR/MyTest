@@ -47,8 +47,12 @@ class FHMonthValueFormatter: IAxisValueFormatter {
 }
 
 
-class ErshouHousePriceChartCell: BaseUITableViewCell {
+class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell {
 
+    var refreshCallback: CellRefreshCallback?
+    
+    var isPriceChartFoldState:Bool = true
+    
     open override class var identifier: String {
         return "ErshouHousePriceChartCell"
     }
@@ -60,6 +64,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     lazy var bgView: UIImageView = {
         let re = UIImageView(image: UIImage(named: "group-7"))
         re.contentMode = .scaleAspectFill
+        re.layer.masksToBounds = true
         return re
     }()
     
@@ -147,6 +152,12 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         label.text = "(万元/平）"
         return label
     }()
+    
+    lazy var chartBgView: UIView = {
+        
+        let view = UIView()
+        return view
+    }()
 
     lazy var chartView: LineChartView = {
 
@@ -161,10 +172,17 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         return view
     }()
     
+    lazy var foldButton: CommonFoldViewButton = {
+        let view = CommonFoldViewButton(downText: "更多信息", upText: "收起")
+        return view
+    }()
+    
     private var hasClick: Bool = false
     
     private var minValue: Double = 0
     private var maxValue: Double = 0
+    
+    private let disposeBag = DisposeBag()
 
     // 单位，万元/平或元/平
     private var unitPerSquare: Double = 100.0 * 10000.0 {
@@ -281,11 +299,14 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
-                set1.lineWidth = 2
-                set1.circleRadius = 1
+                set1.lineWidth = 1
+                set1.circleRadius = 4
+                set1.circleHoleColor = .white
+                set1.circleHoleRadius = 3
                 // 选中效果
-                set1.highlightColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-                set1.highlightLineDashLengths = [2,2]
+                set1.highlightLineWidth = 1
+                set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
+                set1.highlightLineDashLengths = [3,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
 
 
@@ -313,7 +334,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             leftAxis.drawBottomYLabelEntryEnabled = true
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
             leftAxis.setLabelCount(4, force: true)
@@ -327,20 +347,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(priceView)
-        priceView.isHidden = true
         priceView.snp.makeConstraints { maker in
-            maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(0)
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(0)
+//            maker.height.equalTo(130)
         }
-        
+
         priceView.addSubview(bgView)
-        bgView.snp.makeConstraints { (maker) in
-            maker.edges.equalToSuperview()
-        }
+
         // 小区均价
         priceView.addSubview(priceKeyLabel)
         priceKeyLabel.snp.makeConstraints { maker in
-            maker.top.equalToSuperview()
+            maker.top.equalTo(0)
             maker.left.equalTo(20)
             maker.height.equalTo(20)
         }
@@ -367,6 +385,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             maker.left.equalTo(pricePerKeyLabel)
             maker.top.equalTo(pricePerKeyLabel.snp.bottom).offset(11)
             maker.height.equalTo(20)
+
         }
         
         priceView.addSubview(priceUpTrend)
@@ -376,12 +395,19 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             maker.width.height.equalTo(16)
         }
         
+        bgView.snp.makeConstraints { (maker) in
+            maker.top.equalToSuperview()
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalTo(priceUpValueLabel.snp.bottom).offset(18)
+            maker.bottom.equalToSuperview()
+        }
+        
         priceView.addSubview(line)
         line.snp.makeConstraints { (maker) in
             maker.centerX.equalToSuperview()
-            maker.top.equalTo(pricePerKeyLabel).offset(1)
+            maker.top.equalTo(pricePerKeyLabel).offset(10)
             maker.height.equalTo(30)
-            maker.width.equalTo(TTDeviceHelper.ssOnePixel())
+            maker.width.equalTo(1) // TTDeviceHelper.ssOnePixel()
         }
         
         priceView.addSubview(monthUpKeyLabel)
@@ -405,37 +431,74 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             maker.width.height.equalTo(16)
         }
         
-        contentView.addSubview(titleView)
-        contentView.addSubview(priceLabel)
-
-        titleView.snp.makeConstraints { maker in
+        contentView.addSubview(chartBgView)
+        
+        chartBgView.addSubview(titleView)
+        chartBgView.addSubview(priceLabel)
+        chartBgView.addSubview(chartView)
+        
+        titleView.snp.remakeConstraints { maker in
             maker.right.equalToSuperview()
             maker.left.equalTo(70)
             maker.centerY.equalTo(priceLabel)
             maker.height.equalTo(20)
         }
         
-        priceLabel.snp.makeConstraints { maker in
+        priceLabel.snp.remakeConstraints { maker in
             maker.left.equalTo(20)
-            maker.top.equalTo(priceView.snp.bottom).offset(20)
+            maker.top.equalTo(20)
         }
-
-        contentView.addSubview(chartView)
-        chartView.snp.makeConstraints { maker in
+        
+        chartView.snp.remakeConstraints { maker in
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
             maker.height.equalTo(180)
-            maker.bottom.equalToSuperview().offset(-20)
+            maker.bottom.equalToSuperview()
         }
-
+        
+        contentView.addSubview(foldButton)
+    
         chartView.delegate = self
-
-
         setupChartUI()
         
+        updateChartConstraints()
+        
+        foldButton.rx.tap
+            .bind(onNext: { [weak self] () in
+                self?.refreshCell()
+                self?.foldButton.isFold = self?.isPriceChartFoldState ?? true
+            }).disposed(by: disposeBag)
     }
-
+    
+    func updateChartConstraints() {
+        
+        if self.isPriceChartFoldState {
+            chartBgView.isHidden = true
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        } else {
+            chartBgView.isHidden = false
+            
+            chartBgView.snp.remakeConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(257)
+            }
+            
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(chartBgView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        }
+    }
+    
     func setupChartUI() {
 
         // 左边竖轴的区间
@@ -448,7 +511,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.orientation = .horizontal
         l.drawInside = true
         l.wordWrapEnabled = true
-
+        l.xEntrySpace = -20
+        
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
@@ -460,7 +524,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         xAxis.axisLineWidth = 0.5
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
+        xAxis.xOffset = -20
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
@@ -472,13 +540,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
-        // 横轴的虚线
-        leftAxis.spaceBottom = 0.0
+        // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
 //        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
 //        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
+        leftAxis.spaceTop = 0.5
+        leftAxis.spaceBottom = 1
+        leftAxis.spaceMax = 0.5
+        leftAxis.spaceMin = 0.5
+        leftAxis.yOffset = 10
+        
 
         // 右边轴
         let rightAxis = chartView.rightAxis
@@ -543,7 +616,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
 
 }
-fileprivate func lineColorByIndex(_ index: Int) -> UIColor {
+func lineColorByIndex(_ index: Int) -> UIColor {
 
     switch index {
         
@@ -560,7 +633,7 @@ fileprivate func lineColorByIndex(_ index: Int) -> UIColor {
     
 }
 
-fileprivate func imgNameByIndex(_ index: Int) -> String {
+func imgNameByIndex(_ index: Int) -> String {
     
     switch index {
         
@@ -576,7 +649,7 @@ fileprivate func imgNameByIndex(_ index: Int) -> String {
     }
 }
 
-fileprivate func highlightImgNameByIndex(_ index: Int) -> String {
+func highlightImgNameByIndex(_ index: Int) -> String {
     
     switch index {
         
@@ -642,7 +715,7 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
                 traceExtension
 //                toTracerParams(ershouHouseData.logPB ?? [:], key: "log_pb")
             return TableSectionNode(
-                items: [oneTimeRender(render)],
+                items: [render],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
                 label: "",
@@ -652,33 +725,6 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
         }
     }
 }
-
-func parseNeighboorhoodPriceChartNode(_ neighborhoodData: NeighborhoodDetailData,traceExtension: TracerParams = TracerParams.momoid(), navVC: UINavigationController?,callBack: @escaping () -> Void) -> () -> TableSectionNode? {
-
-    return {
-
-        if let count = neighborhoodData.priceTrend?.count, count > 0 {
-
-            let render = curry(fillNeighboorhoodPriceChartCell)(neighborhoodData)(callBack)
-            let params = TracerParams.momoid() <|>
-                toTracerParams("price_trend", key: "element_type") <|>
-                traceExtension
-            return TableSectionNode(
-                items: [oneTimeRender(render)],
-                selectors: nil,
-                tracer: [elementShowOnceRecord(params: params)],
-                label: "",
-                type: .node(identifier: ErshouHousePriceChartCell.identifier))
-        } else {
-            
-            return nil
-        }
-    }
-
-
-
-}
-
 
 func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHousePriceChartCell {
@@ -686,10 +732,14 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
 
         theCell.priceValueLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.priceView.isHidden = false
+        
+        theCell.foldButton.isFold = theCell.isPriceChartFoldState
+        theCell.updateChartConstraints()
+
         let pricingPerSqm = Double(data.neighborhoodInfo?.pricingPerSqmValue ?? 0)
         if pricingPerSqm > 0 {
             let pricingPerSqmValue = Double(data.pricingPerSqmValue)
-            let priceUp = (pricingPerSqm - pricingPerSqmValue) / pricingPerSqm * 100
+            let priceUp = (pricingPerSqmValue - pricingPerSqm) / pricingPerSqm * 100
             if priceUp == 0 {
                 theCell.priceUpValueLabel.text = "持平"
                 theCell.monthUpTrend.isHidden = true
@@ -704,9 +754,6 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
             }
         }
 
-        theCell.priceView.snp.updateConstraints { (maker) in
-            maker.height.equalTo(130)
-        }
         if let monthUp = data.neighborhoodInfo?.monthUp {
             let absValue = abs(monthUp) * 100
             if absValue == 0 {
@@ -728,16 +775,3 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping 
         }
     }
 }
-
-func fillNeighboorhoodPriceChartCell(_ neighboorData: NeighborhoodDetailData, callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
-    if let theCell = cell as? ErshouHousePriceChartCell {
-        
-        theCell.priceView.isHidden = true
-        if let priceTrend = neighboorData.priceTrend{
-
-            theCell.priceTrends = priceTrend
-        }
-        
-    }
-}
-

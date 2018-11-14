@@ -104,11 +104,18 @@ class HomeViewController: BaseViewController {
             requestErrorImage: "group-8",
             isUserClickEnable: true,
             retryAction: { [weak self] in
-                self?.detailPageViewModel?.requestData(houseId: -1, logPB: nil, showLoading: true)
+                if EnvContext.shared.client.generalBizconfig.generalCacheSubject.value == nil {
+                    if EnvContext.shared.client.reachability.connection == .none {
+                        EnvContext.shared.toast.showToast("网络不给力,请稍后重试")
+                    }else
+                    {
+                        EnvContext.shared.client.generalBizconfig.fetchConfiguration()
+                    }
+                } else  {
+                    self?.detailPageViewModel?.requestData(houseId: -1, logPB: nil, showLoading: true)
+                }
+                
             })
-//        self.setupPageableViewModel()
-        
-//        print("width=\(UIScreen.main.bounds.width),height=\(UIScreen.main.bounds.height)")
         
         self.detailPageViewModel?.onError = { [weak self] (error) in
             //天真说:首页很关键，大部分时候都要显示点击重试
@@ -321,9 +328,22 @@ class HomeViewController: BaseViewController {
             toTracerParams(originFrom ?? "be_null", key: "origin_from") <|>
             toTracerParams(self.detailPageViewModel?.originSearchId ?? "be_null", key: "origin_search_id")
         TTLaunchTracer.shareInstance().writeEvent()
+
+        
+        // add by zjing hard code 为了解决push到视频然后回首页状态栏被隐藏的问题
+        UIApplication.shared.statusBarStyle = .default
+        self.barStyle.accept(UIStatusBarStyle.default.rawValue)
+        UIApplication.shared.isStatusBarHidden = false
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(550)) {
+            UIApplication.shared.isStatusBarHidden = false
+        }
     }
 
-    
+    override var prefersStatusBarHidden: Bool {
+        
+        return false
+    }
     private func bindNetReachability() {
         let generalBizConfig = EnvContext.shared.client.generalBizconfig
         Observable

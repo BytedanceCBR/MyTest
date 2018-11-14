@@ -8,8 +8,15 @@
 
 import UIKit
 import SnapKit
+import RxCocoa
+import RxSwift
 
-class PropertyListCell: BaseUITableViewCell {
+class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
+    
+    var refreshCallback: CellRefreshCallback?
+    
+    var isNeighborhoodInfoFold:Bool = true
+    
     open override class var identifier: String {
         return "PropertyListCell"
     }
@@ -81,14 +88,13 @@ class PropertyListCell: BaseUITableViewCell {
         resetListBottomView()
     }
     
-    func removeListBottomView(heightOffset:CGFloat = -10) {
+    func removeListBottomView(_ heightOffset:CGFloat = -10, _ bottomMaskHidden:Bool = true) {
         wrapperView.snp.remakeConstraints { maker in
             maker.top.equalTo(2)
             maker.bottom.equalToSuperview().offset(heightOffset)
             maker.left.right.equalToSuperview()
         }
-        bottomMaskView.isHidden = true
-        
+        bottomMaskView.isHidden = bottomMaskHidden
     }
     
     func resetListBottomView()
@@ -162,6 +168,74 @@ fileprivate class TwoRowView: UIView {
 
 }
 
+class CommonFoldViewButton:UIButton {
+    
+    lazy var iconView: UIImageView = {
+        let re = UIImageView()
+        re.image = UIImage(named: "arrowicon-feed-2")
+        return re
+    }()
+    
+    lazy var keyLabel: UILabel = {
+        let re = UILabel()
+        re.text = ""
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#299cff")
+        return re
+    }()
+    
+    var upText:String = "收起"
+    var downText:String = "展开"
+    
+    var isFold:Bool = true {
+        didSet {
+            if isFold {
+                keyLabel.text = self.downText
+                iconView.image = UIImage(named: "arrowicon-feed-3")
+            } else {
+                keyLabel.text = self.upText
+                iconView.image = UIImage(named: "arrowicon-feed-2")
+            }
+        }
+    }
+    
+    init(downText:String, upText:String) {
+        self.upText = upText
+        self.downText = downText
+        super.init(frame: CGRect.zero)
+        setupUI()
+    }
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        setupUI()
+    }
+    
+    func setupUI()
+    {
+        addSubview(keyLabel)
+        addSubview(iconView)
+        
+        keyLabel.snp.makeConstraints { maker in
+            maker.centerX.equalTo(self).offset(-11)
+            maker.top.equalTo(self).offset(20)
+            maker.height.equalTo(18)
+        }
+        
+        iconView.snp.makeConstraints { maker in
+            maker.left.equalTo(keyLabel.snp.right).offset(4)
+            maker.centerY.equalTo(keyLabel)
+            maker.height.width.equalTo(18)
+        }
+        self.isFold = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
 
 func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
     return {
@@ -194,7 +268,7 @@ func parseFloorPlanPropertyListNode(_ data: FloorPlanInfoData) -> () -> TableSec
     }
 }
 
-func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
+func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid(), disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         
         let params = TracerParams.momoid() <|>
@@ -203,7 +277,7 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
             traceExtension
         
         if let count = data.baseInfo?.count, count > 0 {
-            let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)(data.neighborhoodBaseInfoFold)
+            let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)(disposeBag)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -216,9 +290,10 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
     }
 }
 
-func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, infoFold:Bool, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
-        cell.prepareForReuse()
+        theCell.prepareForReuse()
+        theCell.removeListBottomView(-26, false)
         if let groups = infos {
             func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
                 rowView.keyLabel.text = info.attr
@@ -232,11 +307,28 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, inf
                 return re
             }
             
-            if infoFold {
+            let foldButton = CommonFoldViewButton(downText: "查看全部信息", upText: "收起")
+            
+            foldButton.isFold = theCell.isNeighborhoodInfoFold
+            
+            foldButton.rx.tap
+                .bind(onNext: { [weak theCell, weak foldButton] () in
+                    theCell?.refreshCell()
+                    foldButton?.isFold = theCell?.isNeighborhoodInfoFold ?? true
+                })
+                .disposed(by: disposeBag)
+            
+            var listViews:[UIView] = []
+            
+            if theCell.isNeighborhoodInfoFold {
                 let rowVeiws = singleViews.take(4)
-                theCell.addRowView(rows: rowVeiws)
+                listViews.append(contentsOf: rowVeiws)
+                listViews.append(foldButton)
+                theCell.addRowView(rows: listViews)
             } else {
-                theCell.addRowView(rows: singleViews)
+                listViews.append(contentsOf: singleViews)
+                listViews.append(foldButton)
+                theCell.addRowView(rows: listViews)
             }
         }
     }

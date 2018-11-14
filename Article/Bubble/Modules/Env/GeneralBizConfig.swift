@@ -34,6 +34,8 @@ class GeneralBizConfig {
 
     let disposeBag = DisposeBag()
 
+    var disposeBagConfig = DisposeBag()
+
     let cityHistoryDataSource = CountryListHistoryDataSource()
 
     var hasSetTemporySelectCity = false
@@ -46,7 +48,7 @@ class GeneralBizConfig {
         // 监控城市列表选择
         currentSelectCityId
             .skip(1)
-            .ifEmpty(default: 122)
+//            .ifEmpty(default: 122)
             .filter { $0 != nil }
             .distinctUntilChanged()
             .subscribe(onNext: { [unowned self] (cityId) in
@@ -71,8 +73,8 @@ class GeneralBizConfig {
             } else {
                 let generalPayload = searchConfigCache.object(forKey: "config") as! String
                 let generalConfig = GeneralConfigData(JSONString: generalPayload)
-                generalCacheSubject.accept(generalConfig)
                 currentSelectCityId.accept(getCurrentSelectCityId())
+                generalCacheSubject.accept(generalConfig)
                 if CLLocationManager.authorizationStatus() == .denied {
                     fetchConfiguration()
                 }
@@ -113,6 +115,7 @@ class GeneralBizConfig {
     }
 
     func fetchConfiguration() {
+        disposeBagConfig = DisposeBag()
         requestGeneralConfig(cityId: nil,
                              gaodeCityId: locationManager?.currentCity.value?.citycode,
                              lat: locationManager?.currentLocation.value?.coordinate.latitude,
@@ -122,7 +125,8 @@ class GeneralBizConfig {
             .retryOnConnect(timeout: 60)
             .retry(50)
             .subscribe(onNext: { [unowned self] response in
-                self.generalCacheSubject.accept(response?.data)
+                
+                self.saveGeneralConfig(response: response)
 
                 // 只在用户没有选择城市时才回设置城市
                 if let currentCityId = response?.data?.currentCityId {
@@ -138,19 +142,20 @@ class GeneralBizConfig {
                     }
                 }
                 EnvContext.shared.client.fetchSearchConfig()
-
+            
                 self.generalCacheSubject.accept(response?.data)
-                if let payload = response?.data?.toJSONString(), !payload.isEmpty {
-                    self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
-                } else {
-//                    assertionFailure("搜索配置请求异常")
-                }
 
                 }, onError: { error in
                     //                print(error)
 //                    assertionFailure("搜索配置请求异常")
             })
-            .disposed(by: disposeBag)
+            .disposed(by: disposeBagConfig)
+    }
+    
+    func saveGeneralConfig(response: GeneralConfigResponse?) {
+        if let payload = response?.data?.toJSONString(), !payload.isEmpty {
+            self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
+        }
     }
 
     func setCurrentSelectCityId(cityId: Int) {

@@ -23,10 +23,8 @@ enum RequestSuccessType: Int {
 class HomeListViewModel: DetailPageViewModel {
     var goDetailTraceParam: TracerParams?
     
-    
     var houseType: HouseType = .newHouse
     var houseId: Int64 = -1
-    
     
     var showMessageAlert: ((String) -> Void)?
 
@@ -72,6 +70,10 @@ class HomeListViewModel: DetailPageViewModel {
     
     var originSearchId: String?
     var originFrom: String?
+    
+    var searchIdNews: String?
+
+    var searchIdSecond: String?
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
@@ -140,9 +142,14 @@ class HomeListViewModel: DetailPageViewModel {
                 var origin_from = "be_null"
                 if index == .newHouse {
                     origin_from = "new_list"
+                    self?.originSearchId = self?.searchIdNews
                 }else if index == .secondHandHouse {
                     origin_from = "old_list"
+                    self?.originSearchId = self?.searchIdSecond
                 }
+                
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(self?.originSearchId ?? "be_null", key: "origin_search_id")
                 
                 self?.originFrom = origin_from
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -171,7 +178,7 @@ class HomeListViewModel: DetailPageViewModel {
                     
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （二手房）
-              
+
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
                     return
                 }
@@ -184,6 +191,20 @@ class HomeListViewModel: DetailPageViewModel {
         // 下拉刷新，修改tabbar条和请求数据
         tableView.tt_addDefaultPullDownRefresh { [weak self] in
             self?.resetHomeRecommendState()
+            
+            if let houseType = self?.dataSource?.categoryView.houseTypeRelay.value
+            {
+                if houseType == .newHouse
+                {
+                    self?.searchIdNews = nil
+                }
+                
+                if houseType == .secondHandHouse
+                {
+                    self?.searchIdSecond = nil
+                }
+            }
+            
             self?.requestHomeRecommendData(pullType: .pullDownType, reloadFromType: self?.reloadFromType) // 下拉刷新
         }
         
@@ -200,23 +221,13 @@ class HomeListViewModel: DetailPageViewModel {
             .bind { [unowned self] (_) in
                 //切换城市默认触发信号
                 self.resetHomeRecommendState()
-                self.tableView?.setContentOffset(CGPoint.zero, animated: true)
+                self.tableView?.setContentOffset(CGPoint.zero, animated: false)
                 if EnvContext.shared.client.reachability.connection == .none
                 {
                     self.onSuccess?(.requestSuccessTypeInvalidNetWork)
                 }
-//                self.onSuccess?(true) 是否切换无数据状态显示默认加载图状态
-//                if let data = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value, let typeValue = data.housetypelist.first
-//                {
-//                    if let type = HouseType(rawValue: typeValue)
-//                    {
-//                        self.isFirstEnterCategorySwitch = true
-//                        self.dataSource?.categoryView.houseTypeRelay.accept(type)
-//                    }
-//                }
             }.disposed(by: disposeBag)
         
-//        self.requestData(houseId: -1, logPB: nil)
         //判断是否展示tabbar 到顶
         tableView.rx.contentOffset.asObservable().subscribe(onNext: { [unowned self] (contentOffset) in
             
@@ -334,7 +345,7 @@ class HomeListViewModel: DetailPageViewModel {
             
             let theDataItems = dataItems.map {[weak self] (item) -> HouseItemInnerEntity in
                 var newItem = item
-                newItem.fhSearchId = self?.searchId
+                newItem.fhSearchId = self?.originSearchId
                 return newItem
             }
             let dataParser = DetailDataParser.monoid()
@@ -430,19 +441,16 @@ class HomeListViewModel: DetailPageViewModel {
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: 0,
-                                  searchId: self.originSearchId,
+                                  searchId: nil,
                                   count: 20)
                 
                 // TODO: 重试逻辑
-//                .retryOnConnect(timeout: 60)
-//                .retry(100)
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
-
+                        
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -462,8 +470,9 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            if houseTypeValue == HouseType.newHouse
+                            if houseTypeValue == HouseType.newHouse, typeValue == .newHouse
                             {
+                                self.searchIdNews = response?.data?.searchId
                                 self.itemsNewHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsNewHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -471,8 +480,9 @@ class HomeListViewModel: DetailPageViewModel {
                                     self.isNewHouseHasMore = hasMore
                                 }
                                 return self.generateSectionNode(items: self.itemsNewHouse)
-                            } else if houseTypeValue == HouseType.secondHandHouse
+                            } else if houseTypeValue == HouseType.secondHandHouse, typeValue == .secondHandHouse
                             {
+                                self.searchIdSecond = response?.data?.searchId
                                 self.itemsSecondHouse?.removeAll() //第一次请求清除相应缓存
                                 self.itemsSecondHouse?.append(contentsOf: items)
                                 if let hasMore = response?.data?.hasMore
@@ -487,12 +497,11 @@ class HomeListViewModel: DetailPageViewModel {
                     return [] //条件不符合返回空数组
                 }
                 .subscribe(onNext: { [unowned self] response in
-                    if let dataSource = self.dataSource {
+                    if let dataSource = self.dataSource, response.count != 0 {
                         dataSource.datas = response
                         dataSource.recordIndexCache = []
                         self.tableView?.reloadData()
                     }
-                    self.tableView?.finishPullUp(withSuccess: true)
                     self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                     self.isFirstEnterCategorySwitch ? self.uploadTracker(enterType:((TTCategoryStayTrackManager.share().enterType ?? "be_null") as NSString)) : self.uploadTracker(enterType:"switch")
@@ -506,15 +515,25 @@ class HomeListViewModel: DetailPageViewModel {
                     self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
                     self.isFirstEnterCategory = false
                     self.isFirstEnterCategorySwitch = false
+                    
+                    self.tableView?.finishPullUp(withSuccess: true)
+                    self.tableView?.finishPullDown(withSuccess: true)
+                    
                     }, onError: { [unowned self] error in
                         //                        print(error)
                         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
                         self.onError?(error)
 
-                        self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullUp(withSuccess: false)
+                        self.tableView?.finishPullDown(withSuccess: false)
+                        
                     }, onCompleted: {
 
-                })
+                    }, onDisposed: {
+                        [unowned self] in
+                        self.tableView?.finishPullUp(withSuccess: true)
+                        self.tableView?.finishPullDown(withSuccess: true)
+                    })
                 .disposed(by: listDataRequestDisposeBag)
         }
 
@@ -525,27 +544,42 @@ class HomeListViewModel: DetailPageViewModel {
         oneTimeToast = createOneTimeToast()
 
         self.dataSource?.categoryView.segmentedControl.touchEnabled = true
-  
+
+        
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
         
+        
+        //区分上拉还是下拉请求，如果是下拉刷新，立刻完成上拉状态
+        if pullType == .pullDownType
+        {
+           self.tableView?.finishPullUp(withSuccess: true)
+        }
+        
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
+            
+            var requestId = searchIdNews
+            if typeValue == .newHouse
+            {
+                requestId = searchIdNews
+            }else
+            {
+                requestId = searchIdSecond
+            }
+            
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: (typeValue == .newHouse ? self.itemsNewHouse?.count : self.itemsSecondHouse?.count) ?? 0,
-                                  searchId: self.originSearchId,
+                                  searchId: requestId,
                                   count: (houseId == -1 ? 20 : 20))
                 
                 // TODO: 重试逻辑
-                //                .retryOnConnect(timeout: 60)
-                //                .retry(100)
                 .map { [unowned self] response -> [TableSectionNode] in
                     
                     if let data = response?.data {
 
                         self.originSearchId = data.searchId
-                        self.searchId = data.searchId
 
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -555,7 +589,7 @@ class HomeListViewModel: DetailPageViewModel {
                             
                             self.oneTimeToast?(response?.data?.refreshTip)
                             pullString = "pull"
-
+                            
                         }else if pullType == .pullUpType {
                             pullString = "pre_load_more"
                             
@@ -591,6 +625,7 @@ class HomeListViewModel: DetailPageViewModel {
                             if houseTypeValue == HouseType.newHouse
                             {
                                 self.itemsNewHouse?.append(contentsOf: items)
+                                self.searchIdNews = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
@@ -605,6 +640,7 @@ class HomeListViewModel: DetailPageViewModel {
                             } else if houseTypeValue == HouseType.secondHandHouse
                             {
                                 self.itemsSecondHouse?.append(contentsOf: items)
+                                self.searchIdSecond = response?.data?.searchId
                                 if let hasMore = response?.data?.hasMore
                                 {
                                     if items.count != 0
@@ -623,18 +659,28 @@ class HomeListViewModel: DetailPageViewModel {
                 }
                 .subscribe(
                     onNext: { [unowned self] response in
+                        
+                        //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
+                        if pullType == .pullUpType
+                        {
+                            self.tableView?.finishPullUp(withSuccess: true)
+                            self.tableView?.finishPullDown(withSuccess: true)
+                        }else
+                        {
+                            self.tableView?.finishPullDown(withSuccess: true)
+                        }
+                        
                         if let dataSource = self.dataSource {
                             dataSource.datas = response
                             dataSource.recordIndexCache = []
                             self.tableView?.reloadData()
                         }
-                        //区分上拉还是下拉请求，如果是上拉刷新，完成上拉状态
-                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: true) : self.tableView?.finishPullDown(withSuccess: true)
-
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     },
                     onError: { [unowned self] error in
-                        //                        print(error)
+
+                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
+                        
                         if EnvContext.shared.client.reachability.connection == .none
                         {
                             EnvContext.shared.toast.showToast("网络异常")
@@ -642,14 +688,12 @@ class HomeListViewModel: DetailPageViewModel {
                         {
                             EnvContext.shared.toast.showToast("请求失败,请检查网络后重试")
                         }
-                        //区分上拉还是下拉请求,如果是上拉刷新，完成上拉状态
-                        pullType == .pullUpType ? self.tableView?.finishPullUp(withSuccess: false) :self.tableView?.finishPullDown(withSuccess: false)
                     },
                     onCompleted: {
 
                 },
                     onDisposed: {
-
+                    
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }

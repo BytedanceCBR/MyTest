@@ -113,12 +113,27 @@ class CurrentCitySwitcher {
         })
     }
 
+    func switchCityBy(lat: Double?, lng: Double?, gaodeCityId: String?) {
+        
+//        requestGeneralConfig(cityName: cityName,
+//                             cityId: nil,
+//                             gaodeCityId: gaodeCityId,
+//                             lat: lat,
+//                             lng: lng,
+//                             needCommonParams: false,
+//                             params: params ?? [:])
+    }
+
     fileprivate func finishedFilterConfigAction() {
         self.currentCityId = switchToCityId
         EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(self.currentCityId)
+        if let currentCityId = self.currentCityId {
+            EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: currentCityId)
+        }
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
-
+        self.updateSearchCondition(response: searchConfigResponse)
+        self.updateGeneralConfig(response: generalConfigRsponse)
     }
 
 
@@ -165,6 +180,10 @@ class CurrentCitySwitcher {
     fileprivate func updateSearchCondition(response: SearchConfigResponse?) {
         let client = EnvContext.shared.client
         client.saveSearchConfigToCache(response: response)
+    }
+    
+    fileprivate func updateGeneralConfig(response: GeneralConfigResponse?) {
+        EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
     }
 
 }

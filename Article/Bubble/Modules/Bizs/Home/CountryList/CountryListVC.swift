@@ -138,7 +138,7 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { void in
                     if EnvContext.shared.client.reachability.connection != .none {
                         EnvContext.shared.toast.showLoadingToast("定位中")
-                        EnvContext.shared.client.locationManager.requestCurrentLocation(true)
+                        EnvContext.shared.client.locationManager.requestCurrentLocation(true,showToast:true)
                     } else {
                         EnvContext.shared.toast.showToast("网络异常")
                     }
@@ -186,9 +186,22 @@ class CountryListVC: BaseViewController {
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                     }
-       
+
+                    //TODO: 暂时的解决方案，需要也加入到switcher中去
+                    requestSearchFilterConfig()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
+                })
+                .disposed(by: self.requestDisposeBag)
+        }
+
+        func requestSearchFilterConfig() {
+            requestSearchConfig()
+                .timeout(5, scheduler: MainScheduler.instance)
+                .subscribe(onNext: { (response) in
+                    EnvContext.shared.client.configCacheSubject.accept(response?.data)
+                }, onError: { (error) in
+                    EnvContext.shared.toast.showToast("加载失败")
                 })
                 .disposed(by: self.requestDisposeBag)
         }
@@ -207,11 +220,25 @@ class CountryListVC: BaseViewController {
         
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined, .restricted, .denied:
+            break
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            if self.locationBar.countryLabel.text == "定位失败"
+            {
+                if EnvContext.shared.client.reachability.connection == .none {
+                    return
+                }
+                EnvContext.shared.client.locationManager.requestCurrentLocation(showToast:true)
+            }
+            break
+        }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
