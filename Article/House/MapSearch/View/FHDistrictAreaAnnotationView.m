@@ -25,7 +25,7 @@
                      reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        int width = 64;
+        int width = 68;
         
         self.frame = CGRectMake(0, 0, width, width);
         self.layer.cornerRadius = width/2;
@@ -34,12 +34,12 @@
         
         UIFont *font = [UIFont systemFontOfSize:12];
         UIColor *textColor = [UIColor whiteColor];
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 16, 60, 17)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(1, 16, 66, 17)];
         _nameLabel.font = font;
         _nameLabel.textColor = textColor;
         _nameLabel.textAlignment = NSTextAlignmentCenter;
 
-        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(2, 32, 60, 17)];
+        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(1, 32, 66, 17)];
         _descLabel.font = font;
         _descLabel.textColor = textColor;
         _descLabel.textAlignment = NSTextAlignmentCenter;

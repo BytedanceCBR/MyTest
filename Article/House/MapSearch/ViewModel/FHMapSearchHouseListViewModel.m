@@ -31,6 +31,8 @@
 @property(nonatomic , strong) NHErrorViewModel *erroViewModel;
 @property(nonatomic , assign) CGPoint currentOffset;
 @property(nonatomic , assign) BOOL dismissing;
+@property(nonatomic , strong) FHMapSearchDataListModel *currentNeighbor;
+
 @end
 
 @implementation FHMapSearchHouseListViewModel
@@ -84,6 +86,7 @@
     if (self.requestTask.state == TTHttpTaskStateRunning) {
         [self.requestTask cancel];
     }
+    self.currentNeighbor = neighbor;
     [_headerView updateWithMode:neighbor];
     
     [_houseList removeAllObjects];
@@ -268,6 +271,7 @@
 {
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
     [self.listController showLoadingAlert:nil offset:offset];
+    [self.houseList removeAllObjects];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
 }
@@ -308,6 +312,16 @@
             if (showLoading) {
                 [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];
             }
+            
+            if (wself.houseList.count == 0) {
+                //first page
+                wself.currentNeighbor.onSaleCount = houseModel.total;
+                [wself.headerView updateWithMode:wself.currentNeighbor];
+                
+                NSString *toast = [NSString stringWithFormat:@"共找到%@套房源",houseModel.total];
+                [[[EnvContext shared] toast] showToast:toast duration:1];
+            }
+            
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
