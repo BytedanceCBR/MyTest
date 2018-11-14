@@ -11,12 +11,13 @@
 #import "FHHouseAreaHeaderView.h"
 #import "Bubble-Swift.h"
 #import "UIColor+Theme.h"
+#import "FHErrorMaskView.h"
 
 @interface FHMapSearchHouseListViewController ()
 
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
-@property(nonatomic , strong) EmptyMaskView *maskView;
+@property(nonatomic , strong) FHErrorMaskView *maskView;
 
 @end
 
@@ -45,7 +46,7 @@
         make.top.left.bottom.right.mas_equalTo(self.view);
     }];
     
-    _maskView = [[EmptyMaskView alloc]init];
+    _maskView = [[FHErrorMaskView alloc]init];
     [self.view addSubview:_maskView];
     [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);

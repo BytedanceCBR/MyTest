@@ -315,6 +315,9 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D310A55219C690D0024B164 /* FHErrorMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D310A54219C690D0024B164 /* FHErrorMaskView.m */; };
+		3D310A56219C690D0024B164 /* FHErrorMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D310A54219C690D0024B164 /* FHErrorMaskView.m */; };
+		3D310A57219C690D0024B164 /* FHErrorMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D310A54219C690D0024B164 /* FHErrorMaskView.m */; };
 		3D33D0EE218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
 		3D33D0EF218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
 		3D33D0F0218B110B00B13F55 /* UIFont+House.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D33D0ED218B110B00B13F55 /* UIFont+House.m */; };
@@ -6166,6 +6169,8 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D310A53219C690D0024B164 /* FHErrorMaskView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHErrorMaskView.h; sourceTree = "<group>"; };
+		3D310A54219C690D0024B164 /* FHErrorMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHErrorMaskView.m; sourceTree = "<group>"; };
 		3D33D0EC218B110B00B13F55 /* UIFont+House.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+House.h"; sourceTree = "<group>"; };
 		3D33D0ED218B110B00B13F55 /* UIFont+House.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+House.m"; sourceTree = "<group>"; };
 		3D33D0F1218B1F1000B13F55 /* UIViewController+HUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+HUD.h"; sourceTree = "<group>"; };
@@ -10691,6 +10696,8 @@
 				3D49A0F72181E4FD00597A21 /* FHHouseAreaHeaderView.m */,
 				3DCF10E42193E13800842740 /* FHMapNavigationBar.h */,
 				3DCF10E52193E13800842740 /* FHMapNavigationBar.m */,
+				3D310A53219C690D0024B164 /* FHErrorMaskView.h */,
+				3D310A54219C690D0024B164 /* FHErrorMaskView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -19412,6 +19419,7 @@
 				F87695441F31D0D700D59CA5 /* TTVFeedListViewController+HeaderView.m in Sources */,
 				A97DB95F1F1332DE0002B455 /* TTFeedMultiDeleteViewModel.m in Sources */,
 				43538E5D1F98D6B100F6B6FF /* TTVPlayerTipRelatedFinishedForward.m in Sources */,
+				3D310A55219C690D0024B164 /* FHErrorMaskView.m in Sources */,
 				2DB9A5DC1F20B01D005E4A06 /* SSADSplashView.m in Sources */,
 				F87695241F31D0D600D59CA5 /* TTVMoreAction.m in Sources */,
 				4883308319F9177D0004419A /* ExploreDetailnatantActionButton.m in Sources */,
@@ -21789,6 +21797,7 @@
 				B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */,
 				B373CB332174587A008F9905 /* NSMutableDictionary+DMPExtensions.m in Sources */,
 				B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */,
+				3D310A57219C690D0024B164 /* FHErrorMaskView.m in Sources */,
 				3DBD8B0A21952C0800903D1F /* NearbyNewHouseCell.swift in Sources */,
 				B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */,
 				B373CB372174587A008F9905 /* TTCellBridge.m in Sources */,
@@ -23497,6 +23506,7 @@
 				FEFA560A205FB1A8001F50D8 /* ArticleInsertDataOperation.m in Sources */,
 				FEFA560B205FB1A8001F50D8 /* NSMutableDictionary+DMPExtensions.m in Sources */,
 				FEFA560C205FB1A8001F50D8 /* TTVFeedListVideoAdItem.m in Sources */,
+				3D310A56219C690D0024B164 /* FHErrorMaskView.m in Sources */,
 				FEFA560F205FB1A8001F50D8 /* TTBackgroundModeTask.m in Sources */,
 				FEFA5610205FB1A8001F50D8 /* TTCellBridge.m in Sources */,
 				FEFA5611205FB1A8001F50D8 /* ExploreOrderedData+TTAd.m in Sources */,

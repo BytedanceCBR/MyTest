@@ -29,4 +29,9 @@
     return RGB(0xff, 0x5b, 0x4c);
 }
 
++(UIColor *)themeBlue
+{
+    return RGB(0x29, 0x9c, 0xff);
+}
+
 @end
