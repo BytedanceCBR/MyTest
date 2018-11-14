@@ -138,7 +138,7 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { void in
                     if EnvContext.shared.client.reachability.connection != .none {
                         EnvContext.shared.toast.showLoadingToast("定位中")
-                        EnvContext.shared.client.locationManager.requestCurrentLocation(true)
+                        EnvContext.shared.client.locationManager.requestCurrentLocation(true,showToast:true)
                     } else {
                         EnvContext.shared.toast.showToast("网络异常")
                     }
