@@ -142,7 +142,7 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
 func parsePriceRankNode(_ priceRank: HousePriceRank?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         
-        if let thePriceRank = priceRank {
+        if let thePriceRank = priceRank, let analyseDetail = thePriceRank.analyseDetail, analyseDetail.count > 0 {
 
             let cellRender = oneTimeRender(curry(fillPriceRankCell)(thePriceRank))
             

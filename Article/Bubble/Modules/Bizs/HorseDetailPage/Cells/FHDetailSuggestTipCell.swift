@@ -141,29 +141,29 @@ class FHDetailSuggestTipCell: BaseUITableViewCell {
 func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         
-        var buySuggestion: HousePriceRankSuggestion?
-        if let thePriceRank = priceRank {
-            buySuggestion = thePriceRank.buySuggestion
+        if let buySuggestion = priceRank?.buySuggestion {
+            
+            let cellRender = curry(fillPriceRangeCell)(buySuggestion)
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("trade_tips", key: "element_type") <|>
+                toTracerParams("old_detail", key: "page_type") <|>
+            traceExtension
+            
+            return TableSectionNode(
+                items: [cellRender],
+                selectors: nil,
+                tracer: [elementShowOnceRecord(params: params)],
+                label: "",
+                type: .node(identifier: FHDetailSuggestTipCell.identifier))
+            
+        }else {
+            
+            return nil
         }
         
-        var suggestion: HousePriceRankSuggestion = HousePriceRankSuggestion()
-        suggestion.type = 2
-        suggestion.content = "该房源当前价格合理，房东诚心出售，建议尽快联系经纪人看房"
-        
-        let cellRender = curry(fillPriceRangeCell)(buySuggestion ?? suggestion)
-        let params = EnvContext.shared.homePageParams <|>
-            toTracerParams("trade_tips", key: "element_type") <|>
-            toTracerParams("old_detail", key: "page_type") <|>
-        traceExtension
-        
-        return TableSectionNode(
-            items: [cellRender],
-            selectors: nil,
-            tracer: [elementShowOnceRecord(params: params)],
-            label: "",
-            type: .node(identifier: FHDetailSuggestTipCell.identifier))
-        
     }
+        
+
 }
 
 func fillPriceRangeCell(
