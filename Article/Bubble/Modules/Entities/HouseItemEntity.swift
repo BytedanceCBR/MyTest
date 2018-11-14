@@ -68,6 +68,7 @@ struct HouseItemInnerEntity: Mappable {
     var title: String?
     var uploadAt: Int?
     var displayTitle: String?
+    var displaySameneighborhoodTitle: String?
     var displaySubtitle: String?
     var displayDescription: String?
     var url: String?
@@ -87,7 +88,6 @@ struct HouseItemInnerEntity: Mappable {
     var houseImageTag: HouseImageTag?
     var recommendReasons: [ResommendReason]?
     var fhSearchId: String?
-
     init?(map: Map) {
         
     }
@@ -107,6 +107,7 @@ struct HouseItemInnerEntity: Mappable {
         displayDescription <- map["display_description"]
         neighborhoodInfo <- map["neighborhood_info"]
         url <- map["url"]
+        displaySameneighborhoodTitle <- map["display_same_neighborhood_title"]
         coreInfo <- map["core_info"]
         baseInfo <- map["base_info"]
         baseInfoMap <- map["base_info_map"]

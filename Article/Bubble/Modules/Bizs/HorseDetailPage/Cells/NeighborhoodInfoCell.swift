@@ -75,7 +75,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         re.showsScale = false
         re.isZoomEnabled = false
         re.isScrollEnabled = false
-        re.zoomLevel = 13
+        re.zoomLevel = 14
         re.showsUserLocation = false
         return re
     }()
