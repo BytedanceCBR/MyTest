@@ -329,7 +329,11 @@
 -(void)tryCallbackFilterCondition
 {
     if (self.choosedConditionFilter) {
-        NSString *conditions =  [self.viewModel filterConditionParams];
+        BOOL conditionChanged = [self.viewModel conditionChanged];
+        NSString *conditions = nil;
+        if (conditionChanged) {
+            conditions = [self.viewModel filterConditionParams];;
+        }
         if (conditions) {
             NSURL *url = [NSURL URLWithString:[@"https://a?" stringByAppendingString:conditions]];
             TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
@@ -361,6 +365,11 @@
 - (BOOL)prefersStatusBarHidden
 {
     return NO;
+}
+
+-(void)insertHouseListView:(UIView *)houseListView
+{
+    [self.view insertSubview:houseListView aboveSubview:self.locationButton];
 }
 
 @end

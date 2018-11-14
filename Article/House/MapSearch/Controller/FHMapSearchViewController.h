@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 -(void)showNavTopViews:(CGFloat)ratio animated:(BOOL)animated;
 
+-(void)insertHouseListView:(UIView *)houseListView;
+
 @end
 
 NS_ASSUME_NONNULL_END
