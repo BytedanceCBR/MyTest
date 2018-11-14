@@ -227,6 +227,7 @@ class CommonFoldViewButton:UIButton {
             maker.centerY.equalTo(keyLabel)
             maker.height.width.equalTo(18)
         }
+        self.isFold = true
     }
     
     required init?(coder aDecoder: NSCoder) {
