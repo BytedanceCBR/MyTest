@@ -316,6 +316,23 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.navBar.searchInput.text = nil
         }
     }
+
+    fileprivate func showTips() -> (String) -> Void {
+        return { [weak self] (message) in
+            self?.integratedMessageBar?.showMessage(
+                message,
+                actionButtonTitle: "",
+                delayHide: true,
+                duration: 1,
+                bgButtonClickAction: { (button) in
+
+            }, actionButtonClick: { (button) in
+
+            }, didHide: { (view) in
+
+            })
+        }
+    }
     
     func gotoMapSearch(){
         
@@ -479,24 +496,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.tableView.mj_footer.endRefreshing()
             self?.tableView.finishPullDown(withSuccess: true)
 
-            self?.integratedMessageBar?.showMessage(
-                "lalalal",
-                actionButtonTitle: "",
-                delayHide: true,
-                duration: 1,
-                bgButtonClickAction: { (button) in
-
-            }, actionButtonClick: { (button) in
-
-            }, didHide: { (view) in
-
-            })
-
             if(isHaveData)
             {
                 self?.errorVM?.onRequestNormalData()
             }
         }
+
+        self.categoryListViewModel?.showTips = self.showTips()
         
         navBar.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()

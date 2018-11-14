@@ -88,6 +88,8 @@ class CategoryListViewModel: DetailPageViewModel {
     
     var currentHouseType: HouseType?
 
+    var showTips:((String) -> Void)?
+
     // houseSearch补充埋点
     var limit = 20
     var offset = 0
@@ -432,10 +434,11 @@ class CategoryListViewModel: DetailPageViewModel {
     func createOneTimeToast() -> (String?) -> Void {
         var hasToast = false
         return { [weak self] (message) in
-            EnvContext.shared.toast.dismissToast()
+//            EnvContext.shared.toast.dismissToast()
             self?.dismissLoading?()
             if !hasToast, let message = message {
-                EnvContext.shared.toast.showToast(message)
+//                EnvContext.shared.toast.showToast(message)
+                self?.showTips?(message)
                 hasToast = true
             }
         }
