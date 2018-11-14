@@ -123,6 +123,16 @@
     self.contentLabel.frame = CGRectMake(15, 7, self.width-30, 17);
 }
 
+-(void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (newSuperview) {
+        self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.1, 0.1);
+        [UIView animateWithDuration:0.25 animations:^{
+            self.transform = CGAffineTransformIdentity;
+        }];
+    }
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

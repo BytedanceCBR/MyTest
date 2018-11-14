@@ -28,7 +28,6 @@
 @property(nonatomic , assign) NSTimeInterval startTimestamp;
 @property(nonatomic , weak)   TTHttpTask * requestTask;
 @property(nonatomic , assign) BOOL enteredFullListPage;
-@property(nonatomic , strong) NHErrorViewModel *erroViewModel;
 @property(nonatomic , assign) CGPoint currentOffset;
 @property(nonatomic , assign) BOOL dismissing;
 @property(nonatomic , strong) FHMapSearchDataListModel *currentNeighbor;
@@ -70,15 +69,14 @@
     [headerView addTarget:self action:@selector(showNeighborDetail) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(void)setMaskView:(EmptyMaskView *)maskView
+-(void)setMaskView:(FHErrorMaskView *)maskView
 {
     _maskView = maskView;
     maskView.hidden = YES;
     __weak typeof(self) wself = self;
-    _erroViewModel = [[NHErrorViewModel alloc]init:_maskView retryAction:^{
+    _maskView.retryBlock = ^{
         [wself reloadingHouseData];
-    }];
-    [_erroViewModel onRequestViewDidLoad];
+    };
 }
 
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor
@@ -300,13 +298,14 @@
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:self.configModel.conditionQuery param:param offset:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+        
         if (!wself) {
             return ;
         }
         if (showLoading) {
             [wself.listController dismissLoadingAlert];
         }
-                
+                        
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
             if (showLoading) {
@@ -331,13 +330,12 @@
             }
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
-            
-            [wself.erroViewModel onRequestNormalData];
+        
         }else{
             if (error) {
-                [wself.erroViewModel onRequestErrorWithError:error];
+                wself.maskView.hidden = false;
             }else{
-                [wself.erroViewModel onRequestNilData];
+                wself.maskView.hidden = true;
             }
         }
     }];

@@ -18,6 +18,8 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 #import <TTRoute/TTRoute.h>
+#import <TTReachability.h>
+
 
 #define kTipDuration 3
 
@@ -111,7 +113,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};        
         if (center.latitude > 0 && center.longitude > 0) {
-            [_mapView setCenterCoordinate:center animated:YES];
+            [_mapView setCenterCoordinate:center animated:NO];
         }
         
 //        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
@@ -349,6 +351,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
+    if (![TTReachability isNetworkConnected]) {
+        [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+        return;
+    }
+    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
@@ -592,9 +599,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (!_originCondition) {
         _originCondition = condition;
+        return;
     }
     
     if (![self.filterConditionParams isEqualToString:condition]) {
+        if (![TTReachability isNetworkConnected]) {
+            [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+            return;
+        }
+        
         self.filterConditionParams = condition;
         if (_firstEnterLogAdded) {
             [self requestHouses:NO];

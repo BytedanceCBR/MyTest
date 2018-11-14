@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 // #ff5b4c
 +(UIColor *)themeRed;
 
+//299cff
++(UIColor *)themeBlue;
+
 @end
 
 
