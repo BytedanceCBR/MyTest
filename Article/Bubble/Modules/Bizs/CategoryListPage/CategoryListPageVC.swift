@@ -160,6 +160,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.isOpenConditionFilter = isOpenConditionFilter
         self.associationalWord = associationalWord
         super.init(nibName: nil, bundle: nil)
+        self.navBar.mapBtn.rx.tap
+            .debounce(0.2, scheduler: MainScheduler.instance)
+            .bind { [weak self] void in
+                self?.gotoMapSearch()
+            }.disposed(by: disposeBag)
     }
 
     var integratedMessageBar: ArticleListNotifyBarView?
@@ -182,9 +187,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             EnvContext.shared.toast.dismissToast()
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
-        self.navBar.mapBtn.rx.tap.bind { [weak self] void in
-            self?.gotoMapSearch()
-        }.disposed(by: disposeBag)
+        self.navBar.mapBtn.rx.tap
+            .debounce(0.2, scheduler: MainScheduler.instance)
+            .bind { [weak self] void in
+                self?.gotoMapSearch()
+            }.disposed(by: disposeBag)
 
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
