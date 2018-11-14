@@ -449,7 +449,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     latitude: CLLocationDegrees(poi.location.latitude),
                     longitude: CLLocationDegrees(poi.location.longitude)))
                 let distance = MAMetersBetweenMapPoints(from, to)
-                return distance < 2000 //2 公里
+                return distance < 5000 //2 公里
                 }.take(10)
             
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
@@ -505,13 +505,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             if centerPoint != nil {
                 if let poisData = poiMapDatas?[self.categorys[index] == POIType.traffic ? "公交地铁" : self.categorys[index].rawValue]
                 {
-                    if index == 1
-                    {
-                        locationListViewModel.datas = poisData.take(2)
-                    }else
-                    {
-                        locationListViewModel.datas = poisData
-                    }
+                    locationListViewModel.datas = poisData
                 }
                 
                 let count  = locationListViewModel.datas.count

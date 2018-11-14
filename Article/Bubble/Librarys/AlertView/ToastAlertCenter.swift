@@ -54,15 +54,15 @@ import SnapKit
     }
     
     @objc func showCustomLoadingToast(_ message: String) {
-        toastAlert.isUserInteractionEnabled = false
-        self.dismissToast()
+        toastLoadingAlert.isUserInteractionEnabled = false
+        self.dismissCustomLoadingToast()
         if let window = UIApplication.shared.keyWindow {
-            window.addSubview(toastAlert)
-            toastAlert.snp.makeConstraints { maker in
+            window.addSubview(toastLoadingAlert)
+            toastLoadingAlert.snp.makeConstraints { maker in
                 maker.top.bottom.left.right.equalToSuperview()
             }
-            toastAlert.hideProgressHud()
-            toastAlert.showProgressHud(message)
+            toastLoadingAlert.hideProgressHud()
+            toastLoadingAlert.showProgressHud(message)
         }
     }
 
