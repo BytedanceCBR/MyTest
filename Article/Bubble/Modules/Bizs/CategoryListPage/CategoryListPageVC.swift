@@ -373,12 +373,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             "origin_search_id" : originSearchId ,
             "element_from" : elementName ,
             ]
-        let condition = self.searchAndConditionFilterVM.queryCondition.value
-        let url = URL(string: "http://a?\(condition)")
-        let obj = TTRoute.shared()?.routeParamObj(with: url)
-        if let query = obj?.queryParams {
-            dict["condition_params"] = query
+
+        if let theCondition = self.searchAndConditionFilterVM.queryCondition.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let url = URL(string: "http://a?\(theCondition)")
+            let obj = TTRoute.shared()?.routeParamObj(with: url)
+            if let query = obj?.queryParams {
+                dict["condition_params"] = query
+            }
         }
+
         if let suggestionParams = self.suggestionParams {
             dict["suggestion_params"] = suggestionParams
         }
