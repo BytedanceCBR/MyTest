@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
 @property(nonatomic , assign) CLLocationCoordinate2D lastRequestCenter;
 @property(nonatomic , assign) BOOL firstEnterLogAdded;
+@property(nonatomic , copy) NSString *originCondition;
 
 @end
 
@@ -149,6 +150,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
 }
 
+-(BOOL)conditionChanged
+{
+    return ![_originCondition isEqualToString: _configModel.conditionQuery];
+}
+
 -(void)setFilterConditionParams:(NSString *)filterConditionParams
 {
     _configModel.conditionQuery = filterConditionParams;
@@ -170,7 +176,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController = [[FHMapSearchHouseListViewController alloc]init];
         [self.viewController addChildViewController:_houseListViewController];
         _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
-        [self.viewController.view insertSubview:_houseListViewController.view aboveSubview:_mapView];
+        [self.viewController insertHouseListView:_houseListViewController.view];
+        
         _houseListViewController.view.hidden = YES;
         /*
          * TTNavigationcontroller 会设置view的subview中scrollview的 contentinset 和 offset
@@ -583,11 +590,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - filter delegate
 -(void)onConditionChangedWithCondition:(NSString *)condition
 {
+    if (!_originCondition) {
+        _originCondition = condition;
+    }
+    
     if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
         if (_firstEnterLogAdded) {
             [self requestHouses:NO];
-        }
+            if (self.showMode != FHMapSearchShowModeMap) {
+                [self.houseListViewController.viewModel reloadingHouseData];
+            }
+        }        
     }
     
 }
