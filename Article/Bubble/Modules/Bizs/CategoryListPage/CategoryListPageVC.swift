@@ -161,7 +161,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.associationalWord = associationalWord
         super.init(nibName: nil, bundle: nil)
         self.navBar.mapBtn.rx.tap
-            .debounce(0.2, scheduler: MainScheduler.instance)
+            .debounce(0.1, scheduler: MainScheduler.instance)
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
@@ -188,7 +188,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
         self.navBar.mapBtn.rx.tap
-            .debounce(0.2, scheduler: MainScheduler.instance)
+            .debounce(0.1, scheduler: MainScheduler.instance)
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)

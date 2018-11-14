@@ -139,7 +139,7 @@ class CategoryListViewModel: DetailPageViewModel {
             // 无网络时直接返回空，不请求
             return
         }
-        self.showLoading?("正在加载")
+//        self.showLoading?("正在加载")
         switch houseType {
         case .newHouse:
             requestNewHouseList(query: query, condition: condition, needEncode: needEncode)
