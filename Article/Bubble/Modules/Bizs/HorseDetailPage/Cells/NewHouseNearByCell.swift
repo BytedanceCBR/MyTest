@@ -195,9 +195,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         
         contentView.addSubview(locationList)
         locationList.snp.makeConstraints { maker in
-            maker.top.equalTo(mapImageView.snp.bottom)
+            maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
-            //  maker.bottom.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-10)
             maker.height.equalTo(136)
         }
 
@@ -290,7 +290,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     {
         mapImageView.snp.remakeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(segmentedControl.bottom).offset(56.5)
+            maker.top.equalTo(segmentedControl.snp.bottom)
             maker.height.equalTo(160)
         }
         
