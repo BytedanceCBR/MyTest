@@ -208,12 +208,12 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             maker.height.equalTo(20)
         }
         
-        contentView.addSubview(seperateLineView)
-        seperateLineView.snp.makeConstraints { maker in
-            maker.height.equalTo(6)
-            maker.bottom.left.right.equalToSuperview()
-            maker.top.equalTo(locationList.snp.bottom)
-        }
+//        contentView.addSubview(seperateLineView)
+//        seperateLineView.snp.makeConstraints { maker in
+//            maker.height.equalTo(6)
+//            maker.bottom.left.right.equalToSuperview()
+//            maker.top.equalTo(locationList.snp.bottom)
+//        }
         locationList.estimatedRowHeight = 52
         locationList.rowHeight = UITableViewAutomaticDimension
         locationList.dataSource = locationListViewModel
@@ -295,10 +295,10 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         }
         
         locationList.snp.remakeConstraints { maker in
-            maker.top.equalTo(mapImageView.snp.bottom).offset(20)
+            maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
-            maker.bottom.equalToSuperview()
-            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 43)
+            maker.bottom.equalToSuperview().offset(-10)
+            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35)
         }
     }
     
@@ -593,14 +593,14 @@ fileprivate class LocationCell: UITableViewCell {
         label2.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-20)
             maker.top.bottom.equalToSuperview
-            maker.height.equalTo(23)
+            maker.height.equalTo(35)
         }
         
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(label2)
-            maker.height.equalTo(23)
+            maker.height.equalTo(label2)
             maker.bottom.equalTo(label2)
             maker.right.equalTo(label2.snp.left).offset(-5)
         }
@@ -674,6 +674,10 @@ class LocationListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
             
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
