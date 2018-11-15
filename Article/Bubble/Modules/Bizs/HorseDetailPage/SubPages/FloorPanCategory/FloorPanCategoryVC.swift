@@ -186,7 +186,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("card_type"))
         }
         EnvContext.shared.toast.dismissToast()
     }
