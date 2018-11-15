@@ -82,7 +82,7 @@
         //定位城市和选择城市是同一城市时 进入小区视野
         _configModel.resizeLevel = 16;
         self.locationButton.hidden = NO;
-        
+
         CLLocationCoordinate2D location = [[[EnvContext shared] client] currentLocation];
         if (location.latitude > 0 && location.longitude > 0) {
             _configModel.centerLatitude = [@(location.latitude) description];
