@@ -618,6 +618,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (!_originCondition) {
         _originCondition = condition;
+        self.filterConditionParams = condition;
         return;
     }
     

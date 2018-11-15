@@ -70,6 +70,8 @@
 -(void)dealloc
 {
     [self tryCallbackFilterCondition];
+    
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 -(void)setupConfigModel
@@ -227,6 +229,8 @@
     [self.navBar setTitle:self.title];
     [self.view bringSubviewToFront:self.navBar];
     
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -370,6 +374,13 @@
 -(void)insertHouseListView:(UIView *)houseListView
 {
     [self.view insertSubview:houseListView aboveSubview:self.locationButton];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 @end
