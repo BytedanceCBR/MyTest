@@ -60,6 +60,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                     }
 
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                    self.onSuccess?(self.datas.value.count != 0)
                     self.oneTimeToast?(response?.data?.refreshTip)
                     
                     },
