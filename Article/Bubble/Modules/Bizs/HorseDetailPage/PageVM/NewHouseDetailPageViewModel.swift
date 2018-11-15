@@ -335,7 +335,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                             toTracerParams(courtId, key: "group_id") <|>
                             toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("new_detail", key: "page_type")
-                        recordEvent(key: "click_loadmore", params: params)
+//                        recordEvent(key: "click_loadmore", params: params)
                         
                         let infoParams = EnvContext.shared.homePageParams <|>
                             traceExtension <|>
@@ -391,7 +391,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                             toTracerParams(courtId, key: "group_id") <|>
                             toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                             toTracerParams("new_detail", key: "page_type")
-                        recordEvent(key: "click_loadmore", params: params)
+//                        recordEvent(key: "click_loadmore", params: params)
                         
                         let infoParams = EnvContext.shared.homePageParams <|>
                             traceExtension <|>

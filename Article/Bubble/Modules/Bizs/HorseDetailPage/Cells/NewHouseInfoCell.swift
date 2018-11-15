@@ -360,7 +360,7 @@ func fillNewHouseCoreInfoCell(
                         toTracerParams(floorPanId, key: "group_id") <|>
                         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams("new_detail", key: "page_type")
-                recordEvent(key: "click_loadmore", params: params)
+//                recordEvent(key: "click_loadmore", params: params)
                 if let disposeBag = disposeBag {
                     openFloorPanInfoPage(
                         floorPanId: floorPanId,
