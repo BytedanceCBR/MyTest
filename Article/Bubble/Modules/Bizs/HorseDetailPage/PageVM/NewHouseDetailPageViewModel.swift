@@ -445,10 +445,12 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         }
                     }
                 }
+                <- parseFlineNode(6)
                 <- parseHeaderNode("周边新盘") { [unowned self] in
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseNearbyNewHouseListNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC, disposeBag: disposeBag)
+
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser

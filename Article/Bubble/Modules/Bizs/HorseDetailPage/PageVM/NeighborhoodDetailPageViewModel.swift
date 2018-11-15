@@ -304,6 +304,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         }
                     }
                 }
+                <- parseFlineNode(data.neighborhoodInfo == nil ? 0 : 6)
                 <- parseHeaderNode("均价走势")
                 <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
                     if let id = data.neighborhoodInfo?.id
@@ -357,7 +358,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
-                <- parseFlineNode(((data.totalSales?.hasMore ?? false) == false && data.totalSales?.list?.count ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(data.totalSales?.list?.count ?? 0 > 0 ? 6 : 0)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
@@ -398,7 +399,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                                 bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
-                <- parseFlineNode(((houseInSameNeighborhood.value?.data?.hasMore ?? false) == false && houseInSameNeighborhood.value?.data?.total ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(houseInSameNeighborhood.value?.data?.total ?? 0 > 0 ? 6 : 0)
 
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
