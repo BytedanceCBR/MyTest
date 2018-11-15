@@ -368,16 +368,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
-    if (![TTReachability isNetworkConnected]) {
-        [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
-        return;
-    }
-    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
     if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
+        
+        if (![TTReachability isNetworkConnected]) {
+            [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+            return;
+        }
+        
         //show district zoom map
         CGFloat zoomLevel = self.mapView.zoomLevel;
         /*
@@ -618,8 +619,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (!_originCondition) {
         _originCondition = condition;
-        self.filterConditionParams = condition;
-        return;
+        
+//        self.filterConditionParams = condition;
+//        return;
     }
     
     if (![self.filterConditionParams isEqualToString:condition]) {
@@ -698,14 +700,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     /*
      *  zoomlevel 与显示对应关系
-     *  区域 7 - 13
-     *  商圈 13 - 16
-     *  小区 16 - 20
+     *  区域 7 - 13   district
+     *  商圈 13 - 16  area
+     *  小区 16 - 20  neighborhood
      */
     if (zoomLevel < 13) {
-        return FHMapZoomViewLevelTypeArea;
-    }else if (zoomLevel < 16){
         return FHMapZoomViewLevelTypeDistrict;
+    }else if (zoomLevel < 16){
+        return FHMapZoomViewLevelTypeArea;
     }
     return FHMapZoomViewLevelTypeNeighborhood;
 }
@@ -812,6 +814,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
+    
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
 

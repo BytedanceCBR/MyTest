@@ -332,32 +332,24 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     }
                 }
                 <- parseFlineNode(6)
-                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
-                    data.totalSalesCount ?? 0 > 0
-                }
-//                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))",subTitle: "查看更多",
-                <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
-                <- parseOpenAllNode(data.totalSales?.hasMore ?? false, "全部成交房源", barHeight: 0) { [unowned self] in
-                    if let id = data.id {
-
-                        let loadMoreParams = EnvContext.shared.homePageParams <|>
-                                toTracerParams("neighborhood_trade", key: "element_type") <|>
-                                toTracerParams(id, key: "group_id") <|>
-                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams("neighborhood_detail", key: "page_type")
-//                        recordEvent(key: "click_loadmore", params: loadMoreParams)
-
-                        let transactionTrace = theParams <|>
-                            toTracerParams("neighborhood_trade_list", key: "category_name") <|>
-                            toTracerParams("neighborhood_trade", key: "element_from") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-
-                        self.openTransactionHistoryPage(
-                            neighborhoodId: id,
-                            traceParams: transactionTrace,
-                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))", subTitle: "查看更多", showLoadMore: data.totalSales?.hasMore ?? false, adjustBottomSpace: -10, process: { [unowned self]  (traceParam) in
+                    if let hasMore = data.totalSales?.hasMore, hasMore == true {
+                        if let id = data.id {
+                            let transactionTrace = theParams <|>
+                                toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+                                toTracerParams("neighborhood_trade", key: "element_from") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                            
+                            self.openTransactionHistoryPage(
+                                neighborhoodId: id,
+                                traceParams: transactionTrace,
+                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                        }
                     }
-                }
+                    }, filter: { () -> Bool in
+                        data.totalSales?.list?.count ?? 0 > 0
+                })
+                <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
                 <- parseFlineNode(data.totalSales?.list?.count ?? 0 > 0 ? 6 : 0)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0

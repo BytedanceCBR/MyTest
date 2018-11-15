@@ -41,7 +41,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         re.showsScale = false
         re.isZoomEnabled = false
         re.isScrollEnabled = false
-        re.zoomLevel = 13
+        re.zoomLevel = 14
         return re
     }()
     
@@ -197,10 +197,10 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         locationList.snp.makeConstraints { maker in
             maker.top.equalTo(mapImageView.snp.bottom)
             maker.left.right.equalToSuperview()
-            //            maker.bottom.equalToSuperview()
-            maker.height.equalTo(156)
+            //  maker.bottom.equalToSuperview()
+            maker.height.equalTo(136)
         }
-        
+
         contentView.addSubview(emptyInfoLabel)
         emptyInfoLabel.snp.makeConstraints { maker in
             maker.center.equalTo(locationList.snp.center)
@@ -295,10 +295,10 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         }
         
         locationList.snp.remakeConstraints { maker in
-            maker.top.equalTo(mapImageView.snp.bottom)
+            maker.top.equalTo(mapImageView.snp.bottom).offset(20)
             maker.left.right.equalToSuperview()
             maker.bottom.equalToSuperview()
-            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 52)
+            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 43)
         }
     }
     
@@ -397,18 +397,19 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     print("react size = \(reactSize)")
                     titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
                     backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 38)
-                    backImageView.layer.masksToBounds = true
-                    backImageView.layer.cornerRadius = 16
                     
-                    let imageAnnotation =  UIImage(named: "mapcell_annotation_bg")
+                    
+                    var imageAnnotation =  UIImage(named: "mapcell_annotation_bg")
                     
                     let width = imageAnnotation?.size.width ?? 10
                     let height = imageAnnotation?.size.height ?? 10
 
-                    imageAnnotation?.resizableImage(withCapInsets: UIEdgeInsets(top: height / 2.0, left: width / 2.0,  bottom: height / 2.0, right: width / 2.0), resizingMode: .stretch)
-                    
+                    imageAnnotation = imageAnnotation?.resizableImage(withCapInsets: UIEdgeInsets(top: height / 2.0, left: width / 2.0,  bottom: height / 2.0, right: width / 2.0), resizingMode: .stretch)
                     backImageView.image = imageAnnotation
-                    
+//                    backImageView.contentMode = .center
+                    backImageView.layer.cornerRadius = 19
+                    backImageView.layer.masksToBounds = true
+
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
                     titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)
@@ -424,7 +425,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     let bottomArrowView = UIImageView(image: UIImage(named: "mapcell_annotation_arrow"))
                     backImageView.addSubview(bottomArrowView)
                     bottomArrowView.backgroundColor = UIColor.clear
-                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0, y: backImageView.frame.size.height - 12, width: 10.5, height: 10.5)
+                    bottomArrowView.frame = CGRect(x: backImageView.frame.size.width/2.0 - 5, y: backImageView.frame.size.height - 12, width: 10.5, height: 10.5)
                 }
             }
             
@@ -462,7 +463,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     latitude: CLLocationDegrees(poi.location.latitude),
                     longitude: CLLocationDegrees(poi.location.longitude)))
                 let distance = MAMetersBetweenMapPoints(from, to)
-                return distance < 5000 //2 公里
+                return distance < 2000 //2 公里
                 }.take(10)
             
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
@@ -591,16 +592,15 @@ fileprivate class LocationCell: UITableViewCell {
         contentView.addSubview(label2)
         label2.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-20)
-            maker.top.equalTo(15)
-            maker.height.equalTo(22)
-            maker.bottom.equalToSuperview().offset(-15)
+            maker.top.bottom.equalToSuperview
+            maker.height.equalTo(23)
         }
         
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(label2)
-            maker.height.equalTo(22)
+            maker.height.equalTo(23)
             maker.bottom.equalTo(label2)
             maker.right.equalTo(label2.snp.left).offset(-5)
         }
@@ -629,8 +629,25 @@ class LocationListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.labelMask?.isHidden = (datas.count != 0)
-        return datas.count
+        return datas.count > 3 ? 3 : datas.count
     }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        return UIView()
+//    }
+//
+//    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        return UIView()
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 20
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 15
+//    }
+//
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "item", for: indexPath)

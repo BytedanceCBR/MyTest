@@ -75,7 +75,8 @@ import RxCocoa
 //                        theResult = encodeUrl
 //                    }
 //                }
-                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
+                return result
+//                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
             .debounce(0.1, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] query in    
