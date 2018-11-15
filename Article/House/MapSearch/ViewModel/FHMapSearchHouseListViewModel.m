@@ -331,8 +331,15 @@
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
         
+            if (wself.houseList.count == 0) {
+                //没有数据 提示数据走丢了
+                [wself.maskView showErrorWithTip:@"数据走丢了"];
+                wself.maskView.hidden = false;
+            }
+            
         }else{
             if (error) {
+                [wself.maskView showErrorWithTip:@"网络异常"];
                 wself.maskView.hidden = false;
             }else{
                 wself.maskView.hidden = true;

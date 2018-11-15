@@ -244,7 +244,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.houseListViewController dismiss];
 }
 
--(void)requestHouses:(BOOL)byUser
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip
 {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
@@ -271,7 +271,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [[[EnvContext shared] toast] showToast:@"房源请求失败" duration:2];
             return;
         }
-        if (wself.showMode == FHMapSearchShowModeMap) {
+        if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
                 CGFloat topY = [wself.viewController topBarBottom];
@@ -318,6 +318,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     houseAnnotation.type = FHHouseAnnotationTypeNormal;
                 }
                 houseAnnotation.houseData = info;//update date
+                houseAnnotation.title = info.name;
+                houseAnnotation.subtitle = info.desc;
+                houseAnnotation.searchType = [info.type integerValue];
+                MAAnnotationView *annotationView = [self.mapView viewForAnnotation:houseAnnotation];
+                annotationView.annotation = houseAnnotation;
                 [removeAnnotationDict removeObjectForKey:info.nid];
                 continue;
             }
@@ -451,7 +456,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CGFloat threshold = MIN(self.viewController.view.width/2, self.viewController.view.height/3);
     threshold *= (mapView.zoomLevel/8);
     if (fabs(ccenter.x - lcenter.x) > threshold || fabs(ccenter.y - lcenter.y) > threshold) {
-        [self requestHouses:wasUserAction];
+        [self requestHouses:wasUserAction showTip:NO];
     }
 }
 
@@ -467,7 +472,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
-        [self requestHouses:wasUserAction];
+        [self requestHouses:wasUserAction showTip:YES];
     }
     
 }
@@ -603,14 +608,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     if (![self.filterConditionParams isEqualToString:condition]) {
+        self.filterConditionParams = condition;
         if (![TTReachability isNetworkConnected]) {
             [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
             return;
-        }
-        
-        self.filterConditionParams = condition;
+        }        
         if (_firstEnterLogAdded) {
-            [self requestHouses:NO];
+            [self requestHouses:NO showTip:YES];
             if (self.showMode != FHMapSearchShowModeMap) {
                 [self.houseListViewController.viewModel reloadingHouseData];
             }
