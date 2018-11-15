@@ -209,6 +209,13 @@
     }
 
     self.viewModel = [[FHMapSearchViewModel alloc]initWithConfigModel:_configModel viewController:self];
+    
+    if (self.configModel.conditionParams) {
+        [self.houseFilterViewModel resetFilterConditionWithQueryParams:_configModel.conditionParams];
+        _viewModel.filterConditionParams = [self.houseFilterViewModel getConditions];
+    }
+    self.houseFilterViewModel.delegate = _viewModel;
+    
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
     [self.view addSubview:self.locationButton];
@@ -219,11 +226,6 @@
     [self initConstraints];
     
     _viewModel.tipView = self.tipView;
-    if (self.configModel.conditionParams) {
-        [self.houseFilterViewModel resetFilterConditionWithQueryParams:_configModel.conditionParams];
-        _viewModel.filterConditionParams = [self.houseFilterViewModel getConditions];
-    }
-    self.houseFilterViewModel.delegate = _viewModel;
     
     self.title = _viewModel.navTitle;
     [self.navBar setTitle:self.title];

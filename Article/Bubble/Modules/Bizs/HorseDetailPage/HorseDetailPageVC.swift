@@ -100,7 +100,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }()
 
     var logPB: [String: Any]?
-    var searchId: String?
+    var searchId: String? 
 
     var houseSearchParams: TracerParams? {
         didSet {
@@ -311,6 +311,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 self.searchId = searchId
             }
             self.traceParams = self.traceParams <|> toTracerParams(searchId ?? "be_null", key: "search_id")
+        }else if let sId = detailPageParams["search_id"] as? String {
+            self.searchId = sId
+            self.traceParams = self.traceParams <|> toTracerParams(sId ?? "be_null", key: "search_id")
         }
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController, searchId)

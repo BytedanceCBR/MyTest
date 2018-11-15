@@ -484,6 +484,9 @@
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
     param[@"enter_from"] = @"old_list";
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
+    
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
 
