@@ -214,8 +214,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if let data = neighborhoodDetailResponse.value?.data {
 
             
-            let theParams = EnvContext.shared.homePageParams <|>
-                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+            var theParams = EnvContext.shared.homePageParams <|>
+//                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                 beNull(key: "card_type") <|>
                 toTracerParams("neighborhood_detail", key: "enter_from") <|>
                 toTracerParams("click", key: "enter_type")
@@ -230,8 +230,15 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
                     toTracerParams(logPb, key: "log_pb")
+                
+                theParams = theParams <|>
+                    toTracerParams(logPb, key: "log_pb")
             }
             
+            // add by zjing for test
+            print("zjing-traceParamsDic-\(traceParamsDic)")
+            print("zjing-theParams-\(theParams.paramsGetter([:]))")
+
             /*
             if let code = traceParamsDic["search_id"] as? String {
                 traceExtension = traceExtension <|>
