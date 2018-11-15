@@ -270,6 +270,7 @@
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
     [self.listController showLoadingAlert:nil offset:offset];
     [self.houseList removeAllObjects];
+    [self.tableView reloadData];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
 }
