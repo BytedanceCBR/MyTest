@@ -3554,6 +3554,9 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
+		D4B8BFD3219D226700540C8E /* FHWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B8BFD2219D226600540C8E /* FHWebViewController.swift */; };
+		D4B8BFD4219D226700540C8E /* FHWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B8BFD2219D226600540C8E /* FHWebViewController.swift */; };
+		D4B8BFD5219D226700540C8E /* FHWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B8BFD2219D226600540C8E /* FHWebViewController.swift */; };
 		D500CFA2205AABCF00FBDAF5 /* AKLoginTrafficViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */; };
 		D501684E2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
 		D501684F2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
@@ -8129,6 +8132,7 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
+		D4B8BFD2219D226600540C8E /* FHWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHWebViewController.swift; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -14748,6 +14752,7 @@
 				B388CA542142652900653188 /* CityListViewModel.swift */,
 				B388CA552142652900653188 /* BDImageViewProvider.swift */,
 				B3BDFACB2146588600C948FC /* HouseShare.swift */,
+				D4B8BFD2219D226600540C8E /* FHWebViewController.swift */,
 			);
 			path = HorseDetailPage;
 			sourceTree = "<group>";
@@ -19387,6 +19392,7 @@
 				B388CC2A2142652B00653188 /* SuggestionCell.swift in Sources */,
 				A97DBC0F1F1332E40002B455 /* TTUmengSDKRegister.m in Sources */,
 				F87694F41F31D0D600D59CA5 /* TTVHomeViewController.m in Sources */,
+				D4B8BFD3219D226700540C8E /* FHWebViewController.swift in Sources */,
 				B388CC4A2142652B00653188 /* AddressBookSync.swift in Sources */,
 				A8B769331E1CF60900F22A0C /* TTLocalAssetMovieController.m in Sources */,
 				2D21A4E01F53F3F100DDF0A0 /* TTShareMethodSource.m in Sources */,
@@ -21203,6 +21209,7 @@
 				B373C8E62174587A008F9905 /* TTBuryActivity.m in Sources */,
 				B373C8E72174587A008F9905 /* TTArticleDetailView+JSBridge.m in Sources */,
 				B373C8E82174587A008F9905 /* TTHTSTabHeaderView.m in Sources */,
+				D4B8BFD5219D226700540C8E /* FHWebViewController.swift in Sources */,
 				B373C8E92174587A008F9905 /* TTLocationTransform.m in Sources */,
 				B373C8EA2174587A008F9905 /* TTRelationFooterView.m in Sources */,
 				B373C8EB2174587A008F9905 /* TTAppLogStartupTask.m in Sources */,
@@ -22912,6 +22919,7 @@
 				FEFA536B205FB1A8001F50D8 /* ExploreDetailAppADView.m in Sources */,
 				FEFA536D205FB1A8001F50D8 /* TTBuryActivity.m in Sources */,
 				FEFA536E205FB1A8001F50D8 /* TTArticleDetailView+JSBridge.m in Sources */,
+				D4B8BFD4219D226700540C8E /* FHWebViewController.swift in Sources */,
 				FEFA536F205FB1A8001F50D8 /* TTHTSTabHeaderView.m in Sources */,
 				FEFA5370205FB1A8001F50D8 /* TTLocationTransform.m in Sources */,
 				FEFA5374205FB1A8001F50D8 /* TTRelationFooterView.m in Sources */,
