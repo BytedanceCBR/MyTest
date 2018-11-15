@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) NSString *originSearchId;
 @property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , copy) NSString *elementFrom;
+@property(nonatomic , copy) NSString *enterFrom;
+@property(nonatomic , copy) NSString *enterCategory;
 @property(nonatomic , strong) NSDictionary * conditionParams;
 @property(nonatomic , strong) NSString *suggestionParams;
 

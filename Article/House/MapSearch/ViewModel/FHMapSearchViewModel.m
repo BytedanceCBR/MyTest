@@ -259,7 +259,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
         if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
             MACoordinateSpan s ;
-//            s.latitudeDelta = 0.1;
+            s.latitudeDelta = 0.1;
             s.longitudeDelta = 0.2;
             region.span = s;
         }else{
