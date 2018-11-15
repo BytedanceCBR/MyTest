@@ -477,7 +477,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
                 params["followStatus"] = self.followStatus
-                // add by zyk 要修改埋点数据，以及参数,区分不同的点击  important
+                
                 let tracePramas = transactionTrace
                 params["tracerParams"] = tracePramas
                 
