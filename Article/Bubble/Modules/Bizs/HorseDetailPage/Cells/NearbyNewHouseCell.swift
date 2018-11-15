@@ -184,11 +184,10 @@ func parseNearbyNewHouseListNode(
             traceExtension
             
             // house_show
-            // add by zyk 待确认 3. card_type：卡片样式,{'左右滑': 'slide', '左图': 'left_pic', '三图': 'three_pic'}
             let hsRecords = theDatas.enumerated().map({ (index, item) -> ElementRecord in
                 let tempParams = EnvContext.shared.homePageParams <|>
                     toTracerParams("new", key: "house_type") <|>
-                    toTracerParams("slide", key: "card_type") <|>
+                    toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("related", key: "element_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
@@ -205,9 +204,8 @@ func parseNearbyNewHouseListNode(
                     let (offset, item) = e
                     let id = item.id
                     let houseId = Int64(id ?? "0")
-                    // add by zyk 待确认 3. card_type：
                     let theParams = traceExtension <|>
-                        toTracerParams("slide", key: "card_type") <|>
+                        toTracerParams("left_pic", key: "card_type") <|>
                         toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                         toTracerParams("related", key: "element_from") <|>
