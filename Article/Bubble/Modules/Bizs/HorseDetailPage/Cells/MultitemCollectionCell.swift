@@ -229,7 +229,7 @@ class FHStarsCountView: UIView
         return re
     }()
     
-    
+    let starsSize: Double = 18
     
     override init(frame: CGRect = CGRect.zero) {
         super.init(frame: frame)
@@ -278,7 +278,7 @@ class FHStarsCountView: UIView
                 {
                     maker.left.equalToSuperview().offset(5)
                 }
-                maker.width.height.equalTo(26)
+                maker.width.height.equalTo(starsSize)
                 maker.centerY.equalToSuperview()
             }
             
@@ -319,14 +319,14 @@ class FHStarsCountView: UIView
         harfImageView.snp.makeConstraints { maker in
             maker.top.left.equalToSuperview()
 //            maker.left.equalToSuperview().offset((1 - Double(ratio) / 10.0) * 26)
-            maker.width.height.equalTo(26)
+            maker.width.height.equalTo(starsSize)
         }
         let shapeLayer = CAShapeLayer()
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: 0, y: 26))
-        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 26)) //11 是因为图片有缝隙
-        path.addLine(to: CGPoint(x: 26 * (Double(ratio) / 11.0), y: 0))
+        path.addLine(to: CGPoint(x: starsSize * (Double(ratio) / 11.0), y: 26)) //11 是因为图片有缝隙
+        path.addLine(to: CGPoint(x: starsSize * (Double(ratio) / 11.0), y: 0))
         path.addLine(to: CGPoint(x: 0, y: 0))
       
         shapeLayer.path = path.cgPath
@@ -399,7 +399,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(starsContainer.snp.bottom).offset(8)
             maker.bottom.equalToSuperview().offset(-20)
-            maker.height.equalTo(122)
+            maker.height.equalTo(128)
         }
         collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self

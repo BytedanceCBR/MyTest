@@ -267,13 +267,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
-                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data)
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: theParams)
                     }
                 }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
+                <- parseFlineNode((data.baseInfo?.count ?? 0 > 0) ? 6 : 0)
                 <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: openEvaluationWeb) {
                     return data.evaluationInfo != nil ? true : false
                 }
@@ -283,7 +284,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     disposeBag: disposeBag,
                     followStatus: self.followStatus,
                     navVC: self.navVC)
-                <- parseFlineNode(6)
+                <- parseFlineNode((data.evaluationInfo != nil) ? 6 : 0)
                 <- parseHeaderNode("周边配套",adjustBottomSpace: 0){
                     data.neighborhoodInfo != nil
                 }
@@ -303,6 +304,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         }
                     }
                 }
+                <- parseFlineNode(data.neighborhoodInfo == nil ? 0 : 6)
                 <- parseHeaderNode("均价走势")
                 <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
                     if let id = data.neighborhoodInfo?.id
@@ -333,6 +335,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
                     data.totalSalesCount ?? 0 > 0
                 }
+//                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))",subTitle: "查看更多",
                 <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
                 <- parseOpenAllNode(data.totalSales?.hasMore ?? false, "全部成交房源", barHeight: 0) { [unowned self] in
                     if let id = data.id {
@@ -355,7 +358,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
-                <- parseFlineNode(((data.totalSales?.hasMore ?? false) == false && data.totalSales?.list?.count ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(data.totalSales?.list?.count ?? 0 > 0 ? 6 : 0)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
@@ -396,7 +399,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                                 bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
-                <- parseFlineNode(((houseInSameNeighborhood.value?.data?.hasMore ?? false) == false && houseInSameNeighborhood.value?.data?.total ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(houseInSameNeighborhood.value?.data?.total ?? 0 > 0 ? 6 : 0)
 
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
@@ -446,12 +449,28 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         navVC?.pushViewController(vc, animated: true)
     }
     
-    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData) {
+    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid()) {
         let decodedUrl = url.removingPercentEncoding ?? ""
         let arrUrls = decodedUrl.components(separatedBy: "?")
         if arrUrls.count > 0 {
             let openUrl = arrUrls[0]
             if let theUrl = URL(string: openUrl) {
+                
+                var element_from = "be_null"
+                var category_name = "be_null"
+                if openUrl.contains("house_list_in_neighborhood") {
+                    element_from = "house_onsale"
+                    category_name = "same_neighborhood_list"
+                } else if openUrl.contains("neighborhood_sales_list") {
+                    element_from = "house_deal"
+                    category_name = "neighborhood_trade_list"
+                }
+                
+                let transactionTrace = traceExtension <|>
+                    toTracerParams(category_name, key: "category_name") <|>
+                    toTracerParams(element_from, key: "element_from") <|>
+                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                
                 var params:[String:Any] = [:]
                 if let id = data.id {
                     params["neighborhoodId"] = id
@@ -464,8 +483,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
                 params["followStatus"] = self.followStatus
-                // add by zyk 要修改埋点数据，以及参数,区分不同的点击  important
-                let tracePramas = TracerParams.momoid()
+                
+                let tracePramas = transactionTrace
                 params["tracerParams"] = tracePramas
                 
                 let bottomBarBinder = self.bindBottomView(params: TracerParams.momoid())

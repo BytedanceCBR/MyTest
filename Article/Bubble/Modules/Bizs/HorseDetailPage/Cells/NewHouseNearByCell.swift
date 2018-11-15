@@ -34,7 +34,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     let mapView: MAMapView = {
         let screenWidth = UIScreen.main.bounds.width
-        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 160)
         let re = MAMapView(frame: frame)
         re.runLoopMode = RunLoopMode.defaultRunLoopMode;
         re.showsCompass = false
@@ -47,7 +47,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     lazy var mapImageView: UIImageView = {
         let screenWidth = UIScreen.main.bounds.width
-        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 160)
         let re = UIImageView(frame: frame)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
@@ -55,7 +55,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     lazy var mapAnnotionImageView: UIImageView = {
         let screenWidth = UIScreen.main.bounds.width
-        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 160)
         let re = UIImageView(frame: frame)
         return re
     }()
@@ -116,7 +116,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     lazy var mapMaskBtn: UIButton = {
         let screenWidth = UIScreen.main.bounds.width
-        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 160)
         let re = UIButton(frame: frame)
         return re
     }()
@@ -126,7 +126,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     lazy var emptyInfoLabel: UILabel = {
         let re = UILabel()
         let screenWidth = UIScreen.main.bounds.width
-        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 160)
         re.font = CommonUIStyle.Font.pingFangRegular(14)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         re.isHidden = EnvContext.shared.client.reachability.connection == .none ?false:true
@@ -169,7 +169,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalToSuperview().offset(56.5)
-            maker.height.equalTo(200)
+            maker.height.equalTo(160)
         }
         mapAnnotionImageView.backgroundColor = UIColor.clear
         mapImageView.addSubview(mapAnnotionImageView)
@@ -180,7 +180,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         }
         
         
-        let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 200)
+        let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 160)
         self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
             self?.mapImageView.image = image
         }
@@ -291,7 +291,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         mapImageView.snp.remakeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(segmentedControl.bottom).offset(56.5)
-            maker.height.equalTo(200)
+            maker.height.equalTo(160)
         }
         
         locationList.snp.remakeConstraints { maker in
@@ -385,7 +385,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             {
                 if annotation.title.count != 0
                 {
-                    let backImageView = UIImageView(image: UIImage(named: "mapcell_annotation_bg"))
+                    
+                    
+                    let backImageView = UIImageView()
                     annotationView?.addSubview(backImageView)
                     
                     let titileLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 38))
@@ -395,6 +397,17 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     print("react size = \(reactSize)")
                     titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
                     backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 38)
+                    backImageView.layer.masksToBounds = true
+                    backImageView.layer.cornerRadius = 16
+                    
+                    let imageAnnotation =  UIImage(named: "mapcell_annotation_bg")
+                    
+                    let width = imageAnnotation?.size.width ?? 10
+                    let height = imageAnnotation?.size.height ?? 10
+
+                    imageAnnotation?.resizableImage(withCapInsets: UIEdgeInsets(top: height / 2.0, left: width / 2.0,  bottom: height / 2.0, right: width / 2.0), resizingMode: .stretch)
+                    
+                    backImageView.image = imageAnnotation
                     
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)

@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showErrorWithTip:(NSString *)tip;
 
+-(void)showRetry:(BOOL)show;
+
 @end
 
 NS_ASSUME_NONNULL_END

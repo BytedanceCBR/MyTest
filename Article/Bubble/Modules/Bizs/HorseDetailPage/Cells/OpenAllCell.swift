@@ -133,17 +133,17 @@ class OpenAllCell: BaseUITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.addSubview(bottomMaskView)
-        bottomMaskView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
-            maker.height.equalTo(6)
-        }
+//        contentView.addSubview(bottomMaskView)
+//        bottomMaskView.snp.makeConstraints { maker in
+//            maker.left.right.bottom.equalToSuperview()
+//            maker.height.equalTo(6)
+//        }
 
         contentView.addSubview(openAllBtn)
         openAllBtn.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(6)
-            maker.bottom.equalTo(bottomMaskView.snp.top).offset(-6)
+            maker.bottom.equalToSuperview().offset(-6)
         }
 
         contentView.addSubview(title)
@@ -185,15 +185,15 @@ class OpenAllCell: BaseUITableViewCell {
         disposeBag = nil
     }
 
-    func setIsShowBottomBar(isHsowBottomBar: Bool) {
-        bottomMaskView.snp.updateConstraints { maker in
-            if isHsowBottomBar {
-                maker.height.equalTo(6)
-            } else {
-                maker.height.equalTo(0)
-            }
-        }
-    }
+//    func setIsShowBottomBar(isHsowBottomBar: Bool) {
+//        bottomMaskView.snp.updateConstraints { maker in
+//            if isHsowBottomBar {
+//                maker.height.equalTo(6)
+//            } else {
+//                maker.height.equalTo(0)
+//            }
+//        }
+//    }
 
 }
 
@@ -204,7 +204,7 @@ func parseOpenAllNode(
         isShowBottomBar: Bool = true,
         barHeight: CGFloat = 0,
         bgColor: UIColor = hexStringToUIColor(hex: "#f4f5f6"),
-        callBack: @escaping () -> Void) -> () -> TableSectionNode {
+        callBack: @escaping () -> Void) -> () -> TableSectionNode? {
     return {
         if hasMore {
             let cellRender = curry(fillOpenAllCell)(isShowBottomBar)(moreText)(callBack)
@@ -214,21 +214,8 @@ func parseOpenAllNode(
                     tracer: nil,
                 label: "",
                 type: .node(identifier: OpenAllCell.identifier))
-        } else if barHeight > 0 {
-            let cellRender = curry(fillFGrayLineCell)(barHeight)(bgColor)
-            return TableSectionNode(
-                    items: [cellRender],
-                    selectors: nil,
-                    tracer: nil,
-                    label: "",
-                    type: .node(identifier: FGrayLineCell.identifier))
         }else {
-            return TableSectionNode(
-                items: [],
-                selectors: nil,
-                tracer: nil,
-                label: "",
-                type: .node(identifier: FGrayLineCell.identifier))
+            return nil
         }
     }
 }
@@ -287,7 +274,7 @@ func fillOpenAllCell(
     callBack: @escaping () -> Void,
     cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? OpenAllCell {
-        theCell.setIsShowBottomBar(isHsowBottomBar: isShowBottomBar)
+//        theCell.setIsShowBottomBar(isHsowBottomBar: isShowBottomBar)
         let disposeBag = DisposeBag()
         theCell.disposeBag = disposeBag
         

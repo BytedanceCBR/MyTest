@@ -34,7 +34,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
             maker.top.equalTo(2)
-            maker.bottom.equalToSuperview().offset(-35)
+            maker.bottom.equalToSuperview().offset(-26)
             maker.left.right.equalToSuperview()
         }
         
@@ -101,7 +101,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
     {
         wrapperView.snp.remakeConstraints { maker in
             maker.top.equalTo(2)
-            maker.bottom.equalToSuperview().offset(-35)
+            maker.bottom.equalToSuperview().offset(-26)
             maker.left.right.equalToSuperview()
         }
         bottomMaskView.isHidden = false
@@ -293,7 +293,7 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
 func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
-        theCell.removeListBottomView(-26, false)
+        theCell.removeListBottomView(-20, true)
         if let groups = infos {
             func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
                 rowView.keyLabel.text = info.attr

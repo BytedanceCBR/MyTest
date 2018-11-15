@@ -425,7 +425,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                     }
                 }
-                <- parseFlineNode(((houseInSameNeighborhood.value?.data?.total ?? 0 > 0 && houseInSameNeighborhood.value?.data?.total ?? 0 <= 5) || self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0) ? 6 : 0)
+                <- parseFlineNode(houseInSameNeighborhood.value?.data?.total ?? 0 > 0 ? 6 : 0)
                 <- parseHeaderNode((relateNeighborhoodData.value?.data?.hasMore ?? false) ? "周边小区"  : "周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
@@ -460,6 +460,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                             bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                     }
                 }
+                <- parseFlineNode((relateNeighborhoodData.value?.data?.total ?? 0) > 0 ? 6 : 0)
                 <- parseHeaderNode("周边房源", adjustBottomSpace: 0) {[unowned self] in
                     self.relateErshouHouseData.value?.data?.items?.count ?? 0 > 0
                 }

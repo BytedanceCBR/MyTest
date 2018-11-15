@@ -66,11 +66,27 @@ func fillHousePlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCe
     }
 }
 
+func fillHouseListPlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCell) {
+    
+    if let theCell = cell as? FHPlaceholderCell {
+        
+        if isFirst {
+            theCell.majorImageView.snp.updateConstraints { maker in
+                maker.top.equalTo(20)
+                maker.bottom.equalToSuperview().offset(-10)
+            }
+        }else {
+            theCell.majorImageView.snp.updateConstraints { maker in
+                maker.top.equalTo(10)
+            }
+        }
+    }
+}
+
 func parseHousePlaceholderNode(nodeCount: Int = 5) -> () -> TableSectionNode? {
     return {
         var defaultItems :[TableCellRender] = [] //默认5个占位cell
         for i in 0..<nodeCount {
-            
           defaultItems.append(curry(fillHousePlaceholderItemCell)(i == 0))
         }
         return TableSectionNode(
@@ -87,7 +103,7 @@ func parseHousePlaceholderRowNode(nodeCount: Int = 5) -> () -> [TableRowNode] {
     var defaultItems :[TableCellRender] = [] //默认5个占位cell
     for i in 0..<nodeCount {
         
-        defaultItems.append(curry(fillHousePlaceholderItemCell)(i == 0))
+        defaultItems.append(curry(fillHouseListPlaceholderItemCell)(i == 0))
     }
     return {
         let renders = defaultItems.map({ (render) -> TableRowNode in

@@ -176,7 +176,8 @@ class NeighborhoodEvaluationItem: UIView
         re.textAlignment = .center
         re.backgroundColor = hexStringToUIColor(hex: kFHCoralColor)
         re.layer.masksToBounds = true
-        re.layer.cornerRadius = 4.0
+//        re.layer.cornerRadius = 4.0
+        
         return re
     }()
     
@@ -189,18 +190,22 @@ class NeighborhoodEvaluationItem: UIView
     
     init() {
         super.init(frame: CGRect.zero)
+        
+//        self.layer.cornerRadius = 4
+//        self.layer.masksToBounds = true
+        
         addSubview(backView)
         
         backView.snp.makeConstraints { maker in
-            maker.width.equalTo(140)
-            maker.height.equalTo(122)
             maker.centerX.centerY.equalToSuperview()
+            maker.height.equalTo(122)
+            maker.width.equalTo(140)
         }
         
         backView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(12)
-            maker.top.equalToSuperview().offset(18)
+            maker.top.equalToSuperview().offset(16)
             maker.height.equalTo(22)
             maker.width.equalTo(70)
         }
@@ -211,6 +216,12 @@ class NeighborhoodEvaluationItem: UIView
             maker.height.width.equalTo(22)
             maker.top.equalTo(nameLabel)
         }
+        
+        let path = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 22, height: 22), byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: 4, height: 4))
+        let layer = CAShapeLayer()
+        layer.frame = self.bounds
+        layer.path = path.cgPath
+        levelLabel.layer.mask = layer
         
         scoreLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         scoreLabel.setContentHuggingPriority(.required, for: .horizontal)
