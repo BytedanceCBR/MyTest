@@ -56,7 +56,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         contentView.addSubview(totalPriceLabel)
         totalPriceLabel.snp.makeConstraints { maker in
             maker.right.equalTo(-20)
-            maker.top.equalTo(18)
+            maker.top.equalTo(10)
             maker.width.greaterThanOrEqualTo(45)
             maker.height.equalTo(22)
         }
@@ -64,7 +64,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         contentView.addSubview(namelabel)
         namelabel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
-            maker.top.equalTo(14)
+            maker.top.equalTo(10)
             maker.right.equalTo(totalPriceLabel.snp.left).offset(-5)
             maker.height.equalTo(22)
          }
@@ -72,7 +72,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         contentView.addSubview(pricePreSqmLabel)
         pricePreSqmLabel.snp.makeConstraints { maker in
             maker.right.equalTo(-20)
-            maker.height.equalTo(20)
+            maker.height.equalTo(17)
             maker.top.equalTo(totalPriceLabel.snp.bottom).offset(5)
         }
 
@@ -80,18 +80,9 @@ class TransactionRecordCell: BaseUITableViewCell {
         descLabel.snp.makeConstraints { maker in
             maker.top.equalTo(namelabel.snp.bottom).offset(5)
             maker.left.equalTo(20)
-            maker.bottom.equalToSuperview().offset(-13)
+            maker.bottom.equalToSuperview().offset(-11)
             maker.right.equalTo(pricePreSqmLabel.snp.left).offset(-5)
         }
-        /*
-        contentView.addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { maker in
-            maker.height.equalTo(0.5)
-            maker.bottom.equalToSuperview()
-            maker.left.equalToSuperview().offset(20)
-            maker.right.equalToSuperview().offset(-20)
-        }
-        */
     }
     
     override var isTail: Bool {
@@ -177,7 +168,14 @@ func fillTransactionRecordCell(_ item: TotalSalesInnerItem,
             theCell.descLabel.snp.remakeConstraints { maker in
                 maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
                 maker.left.equalTo(20)
-                maker.bottom.equalToSuperview().offset(-23)
+                maker.bottom.equalToSuperview().offset(-21)
+                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
+            }
+        } else {
+            theCell.descLabel.snp.remakeConstraints { maker in
+                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
+                maker.left.equalTo(20)
+                maker.bottom.equalToSuperview().offset(-11)
                 maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
             }
         }
