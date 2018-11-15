@@ -193,7 +193,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 wself.showMode = FHMapSearchShowModeMap;
                 [wself.viewController switchNavbarMode:FHMapSearchShowModeMap];
                 [wself.mapView deselectAnnotation:wself.currentSelectAnnotation animated:YES];
-                [wself moveAnnotationToCenter:wself.currentSelectAnnotation];
+                [wself moveAnnotationToCenter:wself.currentSelectAnnotation animated:YES];
                 wself.currentSelectAnnotation = nil;
                 [wself.mapView becomeFirstResponder];
             }
@@ -259,7 +259,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
         if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
             MACoordinateSpan s ;
-            s.latitudeDelta = 0.1;
+//            s.latitudeDelta = 0.1;
             s.longitudeDelta = 0.2;
             region.span = s;
         }else{
@@ -386,12 +386,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
          *  商圈 13 - 16
          *  小区 16 - 20
          */
-        if (zoomLevel < 7) {
-            zoomLevel = 7;
+        if (zoomLevel < 10) {
+            //BY PM qiuruixiang 
+            zoomLevel = 10;
         }else if (zoomLevel < 13) {
-            zoomLevel = 13;
+            zoomLevel = 13.5;
         }else if (zoomLevel < 16){
-            zoomLevel = 16;
+            zoomLevel = 16.5;
         }else{
             zoomLevel += 1;
         }
@@ -400,7 +401,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         
         [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeClickAnnotation currentLevel:zoomLevel];
-        [self.mapView setZoomLevel:zoomLevel atPivot:annotationView.center animated:YES];
+        [self moveAnnotationToCenter:houseAnnotation animated:NO];
+        [self.mapView setZoomLevel:zoomLevel animated:YES]; //atPivot:annotationView.center
         
     }else{
         //show house list
@@ -415,14 +417,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self addClickBubbleLog:houseAnnotation];
 }
 
--(void)moveAnnotationToCenter:(FHHouseAnnotation *)annotation
+-(void)moveAnnotationToCenter:(FHHouseAnnotation *)annotation animated:(BOOL)animated
 {
     if (!annotation) {
         return;
     }
     FHMapSearchDataListModel *model = annotation.houseData;
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
-    [self.mapView setCenterCoordinate:center animated:YES];
+    [self.mapView setCenterCoordinate:center animated:animated];
 }
 
 
