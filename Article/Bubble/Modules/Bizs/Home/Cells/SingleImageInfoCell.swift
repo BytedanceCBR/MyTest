@@ -209,14 +209,14 @@ class CornerView: UIView {
         imageTopLeftLabelBgView.snp.makeConstraints { (maker) in
             maker.left.equalTo(majorImageView.snp.left).offset(6)
             maker.top.equalTo(majorImageView.snp.top)
+            maker.height.equalTo(16)
         }
 
         imageTopLeftLabelBgView.addSubview(imageTopLeftLabel)
         imageTopLeftLabel.snp.makeConstraints { (maker) in
             maker.left.equalTo(4)
             maker.right.equalTo(-4)
-            maker.top.equalTo(3)
-            maker.bottom.equalTo(-3)
+            maker.centerY.equalToSuperview()
         }
 
 

@@ -304,9 +304,9 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
                 set1.lineWidth = 1
-                set1.circleRadius = 4
+                set1.circleRadius = 3
                 set1.circleHoleColor = .white
-                set1.circleHoleRadius = 3
+                set1.circleHoleRadius = 2
                 // 选中效果
                 set1.highlightLineWidth = 1
                 set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
@@ -705,6 +705,7 @@ extension ErshouHousePriceChartCell:ChartViewDelegate {
                 
                 if i == selectIndex {
                     set.entryForIndex(i)?.icon = UIImage(named: highlightImgNameByIndex(offset))
+
                 }else {
                     set.entryForIndex(i)?.icon = nil
                 }
