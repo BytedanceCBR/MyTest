@@ -255,6 +255,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     _lastRequestCenter = _mapView.centerCoordinate;
     
     MACoordinateRegion region = _mapView.region;
+    if (region.span.latitudeDelta == 0 || region.span.longitudeDelta == 0) {
+        MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
+        if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
+            MACoordinateSpan s ;
+            s.latitudeDelta = 0.1;
+            s.longitudeDelta = 0.2;
+            region.span = s;
+        }else{
+            region.span =r.span;
+        }
+    }
+    
     CGFloat maxLat = region.center.latitude + region.span.latitudeDelta/2;
     CGFloat minLat = maxLat - region.span.latitudeDelta;
     CGFloat maxLong = region.center.longitude + region.span.longitudeDelta/2;
