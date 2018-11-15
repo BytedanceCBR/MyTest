@@ -342,7 +342,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                                 toTracerParams(id, key: "group_id") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("neighborhood_detail", key: "page_type")
-                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+//                        recordEvent(key: "click_loadmore", params: loadMoreParams)
 
                         let transactionTrace = theParams <|>
                             toTracerParams("neighborhood_trade_list", key: "category_name") <|>
