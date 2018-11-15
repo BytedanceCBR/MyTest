@@ -349,9 +349,9 @@
     }];
     
     self.requestTask = task;
-    
-    [self addHouseListLoadMoreLog];
-    
+    if (!showLoading) {
+        [self addHouseListLoadMoreLog];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated

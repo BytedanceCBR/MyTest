@@ -352,14 +352,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
         let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
         let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
-        var enterFrom = selectTraceParam(self.tracerParams, key: "enter_from")
-        if enterFrom == nil {
-            if originFrom != "be_null" {
-                enterFrom = originFrom.split(separator: "_")[0]
-            }else{
-                enterFrom = "be_null"
-            }
-        }
+        let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
+        let enterFrom = catName
+        
+        
         if elementName == "be_null" && originFrom != "be_null" {
             elementName = originFrom
         }
@@ -372,6 +368,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             "origin_from" : originFrom ,
             "origin_search_id" : originSearchId ,
             "element_from" : elementName ,
+            "enter_from" : enterFrom ,
+            "enter_category" : enterCategory ,
             ]
 
         if let theCondition = self.searchAndConditionFilterVM.queryCondition.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
@@ -391,7 +389,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
                 
         let params = TracerParams.momoid() <|>
-            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams(enterFrom, key: "enter_from") <|>
             toTracerParams("click", key: "enter_type") <|>
             toTracerParams("map", key: "click_type") <|>
             toTracerParams(catName, key: "category_name") <|>
@@ -404,7 +402,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         
         //进入地图找房页埋点
         let enterParams = TracerParams.momoid() <|>
-            toTracerParams(enterFrom!, key: "enter_from") <|>
+            toTracerParams(enterFrom, key: "enter_from") <|>
             toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams(originFrom, key: "origin_from") <|>
             toTracerParams(originSearchId, key: "origin_search_id")
