@@ -76,6 +76,7 @@
     __weak typeof(self) wself = self;
     _maskView.retryBlock = ^{
         [wself reloadingHouseData];
+        wself.maskView.hidden = YES;
     };
 }
 
@@ -273,6 +274,7 @@
     [self.tableView reloadData];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
+    self.maskView.hidden = YES;
 }
 
 -(void)loadHouseData:(BOOL)showLoading
@@ -334,13 +336,24 @@
         
             if (wself.houseList.count == 0) {
                 //没有数据 提示数据走丢了
-                [wself.maskView showErrorWithTip:@"数据走丢了"];
+                NSString *tip = nil;
+                BOOL showRetry = YES;
+                if ([wself.configModel.conditionQuery containsString:@"&"]) {
+                    tip = @"没有找到相关信息，换个条件试试吧~";
+                    showRetry = NO;
+                }else{
+                    tip = @"数据走丢了";
+                }
+                
+                [wself.maskView showErrorWithTip:tip];
+                [wself.maskView showRetry:showRetry];
                 wself.maskView.hidden = false;
             }
             
         }else{
             if (error) {
                 [wself.maskView showErrorWithTip:@"网络异常"];
+                [wself.maskView showRetry:YES];
                 wself.maskView.hidden = false;
             }else{
                 wself.maskView.hidden = true;
