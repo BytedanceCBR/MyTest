@@ -154,7 +154,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     }()
     
     lazy var chartBgView: UIView = {
-        
+        let view = UIView()
+        return view
+    }()
+    
+    lazy var bottomBgView: UIView = {
         let view = UIView()
         return view
     }()
@@ -350,7 +354,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         priceView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(0)
-//            maker.height.equalTo(130)
+            maker.height.equalTo(138)
         }
 
         priceView.addSubview(bgView)
@@ -367,8 +371,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         priceValueLabel.snp.makeConstraints { maker in
             
             maker.left.equalTo(priceKeyLabel)
-            maker.top.equalTo(priceKeyLabel.snp.bottom).offset(9)
-            maker.height.equalTo(22)
+            maker.top.equalTo(priceKeyLabel.snp.bottom).offset(8)
+            maker.height.equalTo(24)
         }
         
         // "本房源单价比小区均价"
@@ -431,11 +435,21 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.width.height.equalTo(16)
         }
         
-        contentView.addSubview(chartBgView)
+        contentView.addSubview(bottomBgView)
+        bottomBgView.addSubview(chartBgView)
+        bottomBgView.addSubview(foldButton)
+        
+        bottomBgView.snp.makeConstraints { (maker) in
+            maker.left.right.equalToSuperview()
+            maker.top.equalToSuperview().offset(138)
+            maker.height.equalTo(58)
+            maker.bottom.equalToSuperview()
+        }
         
         chartBgView.addSubview(titleView)
         chartBgView.addSubview(priceLabel)
         chartBgView.addSubview(chartView)
+        
         
         titleView.snp.remakeConstraints { maker in
             maker.right.equalToSuperview()
@@ -456,8 +470,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.height.equalTo(180)
             maker.bottom.equalToSuperview()
         }
-        
-        contentView.addSubview(foldButton)
     
         chartView.delegate = self
         setupChartUI()
@@ -482,21 +494,30 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         
         if self.isPriceChartFoldState {
             chartBgView.isHidden = true
+            bottomBgView.snp.updateConstraints { (maker) in
+                maker.height.equalTo(58)
+            }
+            chartBgView.snp.remakeConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalToSuperview().offset(0)
+                maker.height.equalTo(0)
+            }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(priceView.snp.bottom)
+                maker.top.equalTo(chartBgView.snp.bottom)
                 maker.height.equalTo(58)
                 maker.bottom.equalToSuperview()
             }
         } else {
             chartBgView.isHidden = false
-            
+            bottomBgView.snp.updateConstraints { (maker) in
+                maker.height.equalTo(315)
+            }
             chartBgView.snp.remakeConstraints { maker in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(priceView.snp.bottom)
+                maker.top.equalToSuperview().offset(0)
                 maker.height.equalTo(257)
             }
-            
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
                 maker.top.equalTo(chartBgView.snp.bottom)

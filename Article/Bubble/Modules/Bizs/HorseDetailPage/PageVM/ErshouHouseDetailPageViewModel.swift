@@ -580,15 +580,20 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     fileprivate func processRefreshableTableViewCell(
-        cell: RefreshableTableViewCell,
+        cell: ErshouHousePriceChartCell,
         indexPath: IndexPath,
         tableView: UITableView) {
-        var tempCell = cell
-        tempCell.refreshCallback = { [weak tableView, weak self] in
+        let tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
             self?.changePriceChartFoldState()
-            UIView.performWithoutAnimation {
-                tableView?.reloadRows(at: [indexPath], with: .none)
+            tableView?.beginUpdates()
+            if let refreshCell = tempCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isPriceChartFoldState = self?.priceChartFoldState ?? true
+                self?.datas[indexPath.section].items[indexPath.row](refreshCell)
+                tempRefreshCell.setNeedsUpdateConstraints()
             }
+            tableView?.endUpdates()
         }
     }
     
