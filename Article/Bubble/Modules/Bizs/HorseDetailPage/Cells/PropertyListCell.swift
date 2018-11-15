@@ -66,7 +66,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         // Configure the view for the selected state
     }
 
-    fileprivate func addRowView(rows: [UIView]) {
+    fileprivate func addRowView(rows: [UIView], fixedSpacing:CGFloat = 0, averageLayout: Bool = true ) {
         for v in wrapperView.subviews {
             v.removeFromSuperview()
         }
@@ -74,7 +74,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         rows.forEach { view in
             wrapperView.addSubview(view)
         }
-        rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: 0)
+        rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: fixedSpacing, averageLayout:averageLayout)
         rows.snp.makeConstraints { maker in
             maker.width.equalToSuperview()
             maker.left.right.equalToSuperview()
@@ -227,6 +227,7 @@ class CommonFoldViewButton:UIButton {
             maker.centerY.equalTo(keyLabel)
             maker.height.width.equalTo(18)
         }
+        self.isFold = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -478,11 +479,13 @@ func parseHouseOutlineListNode(_ ershouHouseData: ErshouHouseData) -> () -> Tabl
 func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
+        theCell.removeListBottomView(-26, false)
         func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
             infoView.valueLabel.sizeToFit()
         }
+        
         let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in
             let (_,outline) = e
             let re = HouseOutlineInfoView()
@@ -490,7 +493,7 @@ func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell:
             return re
         })
         
-        theCell.addRowView(rows: listView ?? [])
+        theCell.addRowView(rows: listView ?? [], fixedSpacing: 4, averageLayout: false)
         
         if let count = listView?.count, count == 1 {
             listView![0].snp.remakeConstraints { (maker) in

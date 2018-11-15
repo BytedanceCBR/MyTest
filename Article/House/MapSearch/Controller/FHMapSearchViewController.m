@@ -82,6 +82,7 @@
         //定位城市和选择城市是同一城市时 进入小区视野
         _configModel.resizeLevel = 16;
         self.locationButton.hidden = NO;
+
         CLLocationCoordinate2D location = [[[EnvContext shared] client] currentLocation];
         if (location.latitude > 0 && location.longitude > 0) {
             _configModel.centerLatitude = [@(location.latitude) description];
@@ -328,7 +329,11 @@
 -(void)tryCallbackFilterCondition
 {
     if (self.choosedConditionFilter) {
-        NSString *conditions =  [self.viewModel filterConditionParams];
+        BOOL conditionChanged = [self.viewModel conditionChanged];
+        NSString *conditions = nil;
+        if (conditionChanged) {
+            conditions = [self.viewModel filterConditionParams];;
+        }
         if (conditions) {
             NSURL *url = [NSURL URLWithString:[@"https://a?" stringByAppendingString:conditions]];
             TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
@@ -360,6 +365,11 @@
 - (BOOL)prefersStatusBarHidden
 {
     return NO;
+}
+
+-(void)insertHouseListView:(UIView *)houseListView
+{
+    [self.view insertSubview:houseListView aboveSubview:self.locationButton];
 }
 
 @end

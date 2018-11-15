@@ -20,7 +20,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     
     let leftMarge: CGFloat = 20
     let rightMarge: CGFloat = -20
-    
+    var tracerParams:TracerParams = TracerParams.momoid()
     lazy var nameKey: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangRegular(15)
@@ -35,6 +35,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
+    
+    fileprivate var pointAnnotation: FHMAAnnotation?
     
     lazy var schoolKey: UILabel = {
         let re = UILabel()
@@ -57,6 +59,13 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         return re
     }()
     
+    lazy var mapAnnotionImageView: UIImageView = {
+        let screenWidth = UIScreen.main.bounds.width
+        let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
+        let re = UIImageView(frame: frame)
+        return re
+    }()
+    
     let mapView: MAMapView = {
         let screenWidth = UIScreen.main.bounds.width
         let frame = CGRect(x: 0, y: 0, width: screenWidth, height: 200)
@@ -66,7 +75,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         re.showsScale = false
         re.isZoomEnabled = false
         re.isScrollEnabled = false
-        re.zoomLevel = 13
+        re.zoomLevel = 14
+        re.showsUserLocation = false
         return re
     }()
     
@@ -111,7 +121,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             let center = CLLocationCoordinate2D(latitude: theLat, longitude: theLng)
             centerPoint = center
             mapView.setCenter(center, animated: false)
+            
+            addUserAnnotation()
         }
+    }
+    
+    fileprivate func addUserAnnotation()
+    {
+        guard let center = centerPoint else {
+            return
+        }
+        
+        let pointAnnotation = FHMAAnnotation()
+        pointAnnotation.type = .center
+        pointAnnotation.coordinate = center
+        mapView.addAnnotation(pointAnnotation)
+        self.pointAnnotation = pointAnnotation
+        
+        snapshotMap()
     }
     
     func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
@@ -186,6 +213,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             maker.top.equalTo(schoolKey.snp.bottom).offset(20)
         }
         
+        mapAnnotionImageView.backgroundColor = UIColor.clear
+        mapImageView.addSubview(mapAnnotionImageView)
+        
         let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.4)
         self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
             self?.mapImageView.image = image
@@ -210,12 +240,9 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         let evaluateGest = UITapGestureRecognizer()
         evaluateGest.rx.event
             .subscribe(onNext: { [unowned self] (_) in
-
                 if let urlStr = self.data?.evaluationInfo?.detailUrl {
-
-                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: self.disposeBag)(TracerParams.momoid())
+                    openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: self.tracerParams, disposeBag: self.disposeBag)(TracerParams.momoid())
                 }
-                
             })
             .disposed(by: self.disposeBag)
         bgView.addGestureRecognizer(evaluateGest)
@@ -253,6 +280,20 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
             })
             .disposed(by: self.disposeBag)
         
+    }
+    
+    func snapshotMap()
+    {
+        if let annotionView = mapView.view(for: self.pointAnnotation)
+        {
+            if let superAnnotionView = annotionView.superview
+            {
+                mapAnnotionImageView.image = NewHouseNearByCell.getImageFromView(view: superAnnotionView)
+            }
+        }else
+        {
+            mapAnnotionImageView.image = nil
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -293,19 +334,34 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
         
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)
+        let tracerParam = EnvContext.shared.homePageParams <|>
+            toTracerParams("neighborhood_evaluation", key: "element_type") <|>
+            toTracerParams("old_detail", key: "page_type") <|>
+        traceExtension
+        
+        let tracerEvaluationRecord = elementShowOnceRecord(params: tracerParam)
+
+        let elementRecord: ElementRecord = { (params) in
+            tracer(params)
+            if ershouHouseData.neighborhoodInfo?.evaluationInfo != nil {
+                tracerEvaluationRecord(params)
+            }
+        }
+        let tracers = [elementRecord]
+
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)(traceExtension)
         
         return TableSectionNode(
 
                 items: [render],
                 selectors: nil,
-                tracer: [tracer],
+                tracer: tracers,
                 label: "",
                 type: .node(identifier: NeighborhoodInfoCell.identifier))
     }
 }
 
-func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, neighborhoodId: String, navVC: UINavigationController?, logPB: [String: Any]?,traceExtension: TracerParams = TracerParams.momoid(), cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodInfoCell {
         
         if let areaName = data.neighborhoodInfo?.areaName, let districtName = data.neighborhoodInfo?.districtName {
@@ -317,6 +373,7 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         theCell.navVC = navVC
         theCell.neighborhoodId = neighborhoodId
         theCell.logPB = logPB
+        theCell.tracerParams = traceExtension
         theCell.data = data.neighborhoodInfo
         theCell.bgView.isHidden = data.neighborhoodInfo?.evaluationInfo?.detailUrl?.count ?? 0 > 0 ? false : true
 
@@ -381,10 +438,45 @@ func openEvaluateWebPage(
     urlStr: String,
     title: String = "小区评测",
     traceParams: TracerParams,
+    houseType: HouseType = .secondHandHouse,
     disposeBag: DisposeBag) -> (TracerParams) -> Void{
     return { (_) in
+        if urlStr.count > 0 {
+            
+            var enterFrom = "old_detail"
+            if houseType == .neighborhood {
+                enterFrom = "neighborhood_detail"
+            }
+            let openParams = EnvContext.shared.homePageParams <|>
+                toTracerParams(enterFrom, key: "enter_from") <|>
+                traceParams.exclude("rank")
+            
+            recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
+            
+            
+            let jumpUrl = "fschema://fh_webview?url=" + urlStr + "&title=\(title)"
         
-        FRRouteHelper.openWebView(forURL: urlStr)
+            //设置 vorigin_from
+            let tracerRouteParams = TracerParams.momoid() <|>
+                EnvContext.shared.homePageParams <|>
+                traceParams <|>
+                toTracerParams("housedetail", key: "enter_from") <|>
+                toTracerParams("evaluate", key: "element_from") <|>
+                toTracerParams("click", key: "enter_type")
+            
+            let webTraceParams = ["query_type": "filter",
+                                     "enter_query": "be_null",
+                                     "search_query": "be_null"]
+            
+            
+            let parmasMap = tracerRouteParams.paramsGetter([:])
+            let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
+                                                  "houseSearch": webTraceParams])
+            
+            TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
+            
+//            FRRouteHelper.openWebView(forURL: urlStr)
+        }
     }
 }
 

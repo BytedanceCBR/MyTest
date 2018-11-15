@@ -262,13 +262,13 @@ inline CGFloat cellInfoBarHeight() {
 inline CGFloat cellTypeLabelFontSize() {
     CGFloat fontSize;
     if ([TTDeviceHelper isPadDevice]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else {
-        fontSize = 10.f;
+        fontSize = 12.f;
     }
     return fontSize;
 }

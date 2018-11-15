@@ -386,12 +386,12 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseFlineNode(6)
                 // 购房小建议
                 <- parsePriceRangeNode(data.housePriceRank, traceExtension: traceExtension)
-                <- parseFlineNode(data.housePriceRank?.buySuggestion != nil ? 6 : 0)
+                <- parseFlineNode(data.housePriceRank?.buySuggestion != nil ? 6: 0)
                 <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "同小区房源"  : "同小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodNodeCollection(houseInSameNeighborhood.value?.data, traceExtension: traceExtension, navVC: navVC, tracerParams: theParams)
-                <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.total ?? 0 > 5), "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源") { [unowned self] in
+                <- parseOpenAllNode((houseInSameNeighborhood.value?.data?.hasMore ?? false), "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源") { [unowned self] in
                     if let id = data.neighborhoodInfo?.id,
                         let title = data.neighborhoodInfo?.name {
 
@@ -539,6 +539,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var cellFactory: UITableViewCellFactory
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
+    
+    var priceChartFoldState:Bool = true
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -560,11 +562,39 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
+            
+            if let refreshCell = cell as? ErshouHousePriceChartCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isPriceChartFoldState = self.priceChartFoldState
+                processRefreshableTableViewCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
+            
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
             return CycleImageCell()
         }
+    }
+    
+    fileprivate func processRefreshableTableViewCell(
+        cell: RefreshableTableViewCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        var tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self] in
+            self?.changePriceChartFoldState()
+            UIView.performWithoutAnimation {
+                tableView?.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    fileprivate func changePriceChartFoldState()
+    {
+        self.priceChartFoldState = !self.priceChartFoldState
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

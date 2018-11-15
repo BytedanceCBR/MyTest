@@ -27,7 +27,7 @@
 {
     if (![self.orderedData nextCellHasTopPadding]){
         self.bottomLineViewFrame = CGRectMake(kCellLeftPadding, self.cellCacheHeight - [TTDeviceHelper ssOnePixel], self.containWidth, [TTDeviceHelper ssOnePixel]);
-        self.bottomLineViewHidden = NO;
+        self.bottomLineViewHidden = YES;
     }
 }
 

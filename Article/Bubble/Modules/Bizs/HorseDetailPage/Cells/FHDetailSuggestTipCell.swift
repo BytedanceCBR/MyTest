@@ -141,15 +141,11 @@ class FHDetailSuggestTipCell: BaseUITableViewCell {
 func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         
-        if let thePriceRank = priceRank {
+        if let buySuggestion = priceRank?.buySuggestion {
             
-            guard let buySuggestion = thePriceRank.buySuggestion else {
-                
-                return nil
-            }
-            let cellRender = oneTimeRender(curry(fillPriceRangeCell)(buySuggestion))
-            let params = TracerParams.momoid() <|>
-                toTracerParams("price_reference", key: "element_type") <|>
+            let cellRender = curry(fillPriceRangeCell)(buySuggestion)
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("trade_tips", key: "element_type") <|>
                 toTracerParams("old_detail", key: "page_type") <|>
             traceExtension
             
@@ -164,7 +160,10 @@ func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerPar
             
             return nil
         }
+        
     }
+        
+
 }
 
 func fillPriceRangeCell(

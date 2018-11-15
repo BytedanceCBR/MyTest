@@ -20,6 +20,8 @@ class MultitemCollectionCell: BaseUITableViewCell {
 
     var itemRecorders: [(TracerParams) -> Void] = []
 
+    var recordItemIndex: Set<IndexPath> = []
+
     var hasShowOnScreen = false {
         didSet {
             traceShowElement()
@@ -85,8 +87,9 @@ extension MultitemCollectionCell: UICollectionViewDataSource, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
             itemRecorders[indexPath.row](tracerParams)
+            recordItemIndex.insert(indexPath)
         }
     }
 
@@ -98,9 +101,12 @@ extension MultitemCollectionCell: UICollectionViewDataSource, UICollectionViewDe
 
     // 系统控件会提前将每种类型的cell提前渲染出一个，目前仅能通过延时激活来避免提前上报埋点
     func traceShowElement() {
+        
         collectionContainer.indexPathsForVisibleItems.forEach { (indexPath) in
-            if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        
+            if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
                 itemRecorders[indexPath.row](tracerParams)
+                recordItemIndex.insert(indexPath)
             }
         }
     }
@@ -114,6 +120,8 @@ class MultitemCollectionNeighborhoodCell: BaseUITableViewCell {
     var itemSelectors: [(DisposeBag) -> Void] = []
 
     var itemRecorders: [(TracerParams) -> Void] = []
+
+    var recordItemIndex: Set<IndexPath> = []
 
     var hasShowOnScreen = false {
         didSet {
@@ -180,8 +188,9 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if itemRecorders.count > indexPath.row, hasShowOnScreen {
+        if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
             itemRecorders[indexPath.row](tracerParams)
+            recordItemIndex.insert(indexPath)
         }
     }
 
@@ -194,8 +203,10 @@ extension MultitemCollectionNeighborhoodCell: UICollectionViewDataSource, UIColl
     // 系统控件会提前将每种类型的cell提前渲染出一个，目前仅能通过延时激活来避免提前上报埋点
     func traceShowElement() {
         collectionContainer.indexPathsForVisibleItems.forEach { (indexPath) in
-            if itemRecorders.count > indexPath.row, hasShowOnScreen {
+            if itemRecorders.count > indexPath.row && hasShowOnScreen && !recordItemIndex.contains(indexPath) {
                 itemRecorders[indexPath.row](tracerParams)
+                
+                recordItemIndex.insert(indexPath)
             }
         }
     }
@@ -485,8 +496,8 @@ fileprivate class NeighborhoodItemCollectionCell: UICollectionViewCell {
 
 
 enum EvaluationLevelType : Int{
-    case evaluationLevelTypeLow = 1
-    case evaluationLevelTypeHeight = 2
+    case evaluationLevelTypeHeight = 1
+    case evaluationLevelTypeLow = 2
 }
 
 fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
@@ -534,7 +545,7 @@ func parseSearchInNeighborhoodNodeCollection(
                 toTracerParams("old_detail", key: "enter_from") <|>
                 toTracerParams("same_neighborhood", key: "element_from") 
 
-            let render = oneTimeRender(curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams))
+            let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams)
             return TableSectionNode(
                 items: [render],
                 selectors: nil,
@@ -592,7 +603,7 @@ fileprivate func fillSearchInNeighborhoodItemCell(
             theCell.floorPanItemView.icon.image = #imageLiteral(resourceName: "default_image")
         }
         let text = NSMutableAttributedString()
-        let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+        let attributeText = NSMutableAttributedString(string: item.displaySameneighborhoodTitle ?? "")
         attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
         attributeText.yy_color = hexStringToUIColor(hex: kFHDarkIndigoColor)
         text.append(attributeText)
@@ -638,7 +649,7 @@ func parseRelatedNeighborhoodCollectionNode(
                 toTracerParams("neighborhood_nearby", key: "element_from") <|>
                 toTracerParams("old_detail", key: "enter_from") <|>
                 traceExtension
-            let render = oneTimeRender(curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(navVC))
+            let render = curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(navVC)
             let params = itemTracerParams <|>
 //                    toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("neighborhood_nearby", key: "element_type") <|>
@@ -746,13 +757,9 @@ fileprivate func fillEvaluationCell(
                 curry(fillEvaluationCollectionItemCell)(entity)(itemTracerParams)
             }
             
-            var traceParamsDict = itemTracerParams.paramsGetter([:])
-            let itemTracerParamsResult = TracerParams.momoid() <|>
-                toTracerParams(traceParamsDict["page_type"] ?? "be_null", key: "enter_from") //本页类型是下次进入小区详情页的enter_from
-            
             theCell.itemSelectors = datasScoresEntity.take(5).enumerated().map { e -> (DisposeBag) -> Void in
                 let (offset, item) = e
-                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParamsResult)(navVC)
+                return curry(EvaluationItemSelector)(offset)(datas)(itemTracerParams)(navVC)
             }
             theCell.itemRecorders = datasScoresEntity.take(5).enumerated().map { e -> (TracerParams) -> Void in
                 let (offset, item) = e
@@ -800,11 +807,8 @@ func EvaluationItemSelector(
     disposeBag: DisposeBag) {
       if let detailUrlV = data.detailUrl
       {
-//         openEvaluationPage(urlStr: detailUrlV, title: "小区评测", disposeBag: disposeBag)
-//        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
-        FRRouteHelper.openWebView(forURL: detailUrlV)
+        openEvaluateWebPage(urlStr: detailUrlV, title: "小区评测", traceParams: itemTracerParams, houseType:.neighborhood, disposeBag: disposeBag)(TracerParams.momoid())
       }
-     //to do jump
 }
 
 
@@ -1106,28 +1110,21 @@ func parseNeighborhoodEvaluationCollectionNode(
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     return {
         if let datas = data?.evaluationInfo?.subScores, datas.count > 0 {
-            let params = TracerParams.momoid() <|>
-                toTracerParams("be_null", key: "element_type") <|>
+            
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("neighborhood_evaluation", key: "element_type") <|>
+                toTracerParams("neighborhood_detail", key: "page_type") <|>
             traceExtension
-            
-//            let theDatas = datas.map({ (item) -> EvaluationIteminfo in
-//                var newItem = item
-//                newItem.fhSearchId = data?.searchId
-//                return newItem
-//            })
-            
-//            let openParams = params <|>
-//                toTracerParams("slide", key: "card_type") <|>
+
+//            let openParams = EnvContext.shared.homePageParams <|>
 //                toTracerParams("neighborhood_detail", key: "enter_from") <|>
-//                toTracerParams("same_neighborhood", key: "element_from")
-//
+//            traceExtension.exclude("rank")
             
-            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(),houseType:.neighborhood, disposeBag: disposeBag)
             
-            let openParams = TracerParams.momoid()
             if let evaluatInfo = data?.evaluationInfo
             {
-                let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(openParams)(navVC))
+                let render = oneTimeRender(curry(fillEvaluationCell)(evaluatInfo)(traceExtension)(navVC))
                 return TableSectionNode(
                     items: [render],
                     selectors: selector != nil ? [selector!] : nil,
@@ -1187,7 +1184,7 @@ fileprivate func fillSearchInNeighborhoodItemCell(
             theCell.floorPanItemView.icon.image = #imageLiteral(resourceName: "default_image")
         }
         let text = NSMutableAttributedString()
-        let attributeText = NSMutableAttributedString(string: item.displayTitle ?? "")
+        let attributeText = NSMutableAttributedString(string: item.displaySameneighborhoodTitle ?? "")
         attributeText.yy_font = CommonUIStyle.Font.pingFangRegular(16)
         attributeText.yy_color = hexStringToUIColor(hex: kFHDarkIndigoColor)
         text.append(attributeText)

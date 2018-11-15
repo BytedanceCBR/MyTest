@@ -11,6 +11,12 @@ import SnapKit
         re.isUserInteractionEnabled = false
         return re
     }()
+    
+    lazy var toastLoadingAlert: ToastAlertView = {
+        let re = ToastAlertView(frame: UIScreen.main.bounds)
+        re.isUserInteractionEnabled = true
+        return re
+    }()
 
     override init() {
         super.init()
@@ -46,6 +52,19 @@ import SnapKit
             toastAlert.showProgressHud(message)
         }
     }
+    
+    @objc func showCustomLoadingToast(_ message: String) {
+        toastLoadingAlert.isUserInteractionEnabled = false
+        self.dismissCustomLoadingToast()
+        if let window = UIApplication.shared.keyWindow {
+            window.addSubview(toastLoadingAlert)
+            toastLoadingAlert.snp.makeConstraints { maker in
+                maker.top.bottom.left.right.equalToSuperview()
+            }
+            toastLoadingAlert.hideProgressHud()
+            toastLoadingAlert.showProgressHud(message)
+        }
+    }
 
     func showModeLoadingToast(_ message: String) {
         toastAlert.isUserInteractionEnabled = true
@@ -65,6 +84,12 @@ import SnapKit
         toastAlert.hideAllToasts()
         toastAlert.removeFromSuperview()
 
+    }
+    @objc func dismissCustomLoadingToast() {
+        toastLoadingAlert.hideProgressHud()
+        toastLoadingAlert.hideAllToasts()
+        toastLoadingAlert.removeFromSuperview()
+        
     }
 }
 

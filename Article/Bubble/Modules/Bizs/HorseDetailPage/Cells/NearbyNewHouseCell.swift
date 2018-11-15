@@ -166,6 +166,13 @@ func parseNearbyNewHouseListNode(
     disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
         if let datas = data?.data?.items?.take(5), datas.count > 0 {
+            // 周边新盘element_show
+            let es_params = EnvContext.shared.homePageParams <|>
+                toTracerParams("related", key: "element_type") <|>
+                toTracerParams("old_detail", key: "page_type") <|>
+            traceExtension
+            
+            recordEvent(key: "element_show", params: es_params)
             
             let theDatas = datas.map({ (item) -> CourtItemInnerEntity in
                 var newItem = item
@@ -176,7 +183,20 @@ func parseNearbyNewHouseListNode(
                 toTracerParams("related", key: "element_type") <|>
             traceExtension
             
-            // add by zyk:注意埋点
+            // house_show
+            let hsRecords = theDatas.enumerated().map({ (index, item) -> ElementRecord in
+                let tempParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("new", key: "house_type") <|>
+                    toTracerParams("left_pic", key: "card_type") <|>
+                    toTracerParams("new_detail", key: "page_type") <|>
+                    toTracerParams("related", key: "element_type") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(index, key: "rank")
+                return onceRecord(key: "house_show", params: tempParams)
+            })
+            
             let selectors = theDatas
                 .filter { $0.id != nil }
                 .enumerated()
@@ -184,11 +204,19 @@ func parseNearbyNewHouseListNode(
                     let (offset, item) = e
                     let id = item.id
                     let houseId = Int64(id ?? "0")
+                    let theParams = traceExtension <|>
+                        toTracerParams("left_pic", key: "card_type") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams("related", key: "element_from") <|>
+                        toTracerParams("new_detail", key: "enter_from") <|>
+                        toTracerParams(offset, key: "rank")
+                    
                     return openNewHouseDetailPage(
                         houseId: houseId ?? 0,
                         logPB: item.logPB as? [String: Any],
                         disposeBag: disposeBag,
-                        tracerParams: TracerParams.momoid(),
+                        tracerParams: theParams,
                         navVC:navVC)
             }
             
@@ -198,7 +226,7 @@ func parseNearbyNewHouseListNode(
             return TableSectionNode(
                 items: renders,
                 selectors: selectors,
-                tracer: [elementShowOnceRecord(params:params)],
+                tracer: hsRecords,
                 label: "",
                 type: .node(identifier: NearbyNewHouseCell.identifier))
         } else {

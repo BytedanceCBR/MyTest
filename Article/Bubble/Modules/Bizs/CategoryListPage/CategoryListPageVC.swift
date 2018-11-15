@@ -160,6 +160,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.isOpenConditionFilter = isOpenConditionFilter
         self.associationalWord = associationalWord
         super.init(nibName: nil, bundle: nil)
+        self.navBar.mapBtn.rx.tap
+            .debounce(0.1, scheduler: MainScheduler.instance)
+            .bind { [weak self] void in
+                self?.gotoMapSearch()
+            }.disposed(by: disposeBag)
     }
 
     var integratedMessageBar: ArticleListNotifyBarView?
@@ -182,9 +187,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             EnvContext.shared.toast.dismissToast()
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
-        self.navBar.mapBtn.rx.tap.bind { [weak self] void in
-            self?.gotoMapSearch()
-        }.disposed(by: disposeBag)
+        self.navBar.mapBtn.rx.tap
+            .debounce(0.1, scheduler: MainScheduler.instance)
+            .bind { [weak self] void in
+                self?.gotoMapSearch()
+            }.disposed(by: disposeBag)
 
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
@@ -316,6 +323,23 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.navBar.searchInput.text = nil
         }
     }
+
+    fileprivate func showTips() -> (String) -> Void {
+        return { [weak self] (message) in
+            self?.integratedMessageBar?.showMessage(
+                message,
+                actionButtonTitle: "",
+                delayHide: true,
+                duration: 1,
+                bgButtonClickAction: { (button) in
+
+            }, actionButtonClick: { (button) in
+
+            }, didHide: { (view) in
+
+            })
+        }
+    }
     
     func gotoMapSearch(){
         
@@ -349,12 +373,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             "origin_search_id" : originSearchId ,
             "element_from" : elementName ,
             ]
-        let condition = self.searchAndConditionFilterVM.queryCondition.value
-        let url = URL(string: "http://a?\(condition)")
-        let obj = TTRoute.shared()?.routeParamObj(with: url)
-        if let query = obj?.queryParams {
-            dict["condition_params"] = query
+
+        if let theCondition = self.searchAndConditionFilterVM.queryCondition.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let url = URL(string: "http://a?\(theCondition)")
+            let obj = TTRoute.shared()?.routeParamObj(with: url)
+            if let query = obj?.queryParams {
+                dict["condition_params"] = query
+            }
         }
+
         if let suggestionParams = self.suggestionParams {
             dict["suggestion_params"] = suggestionParams
         }
@@ -479,24 +506,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.tableView.mj_footer.endRefreshing()
             self?.tableView.finishPullDown(withSuccess: true)
 
-            self?.integratedMessageBar?.showMessage(
-                "lalalal",
-                actionButtonTitle: "",
-                delayHide: true,
-                duration: 1,
-                bgButtonClickAction: { (button) in
-
-            }, actionButtonClick: { (button) in
-
-            }, didHide: { (view) in
-
-            })
-
             if(isHaveData)
             {
                 self?.errorVM?.onRequestNormalData()
             }
         }
+
+        self.categoryListViewModel?.showTips = self.showTips()
         
         navBar.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()

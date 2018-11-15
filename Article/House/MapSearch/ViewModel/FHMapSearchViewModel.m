@@ -18,6 +18,8 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 #import <TTRoute/TTRoute.h>
+#import <TTReachability.h>
+
 
 #define kTipDuration 3
 
@@ -50,6 +52,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
 @property(nonatomic , assign) CLLocationCoordinate2D lastRequestCenter;
 @property(nonatomic , assign) BOOL firstEnterLogAdded;
+@property(nonatomic , copy) NSString *originCondition;
 
 @end
 
@@ -110,7 +113,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};        
         if (center.latitude > 0 && center.longitude > 0) {
-            [_mapView setCenterCoordinate:center animated:YES];
+            [_mapView setCenterCoordinate:center animated:NO];
         }
         
 //        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style.data" ofType:nil];
@@ -149,6 +152,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
 }
 
+-(BOOL)conditionChanged
+{
+    return ![_originCondition isEqualToString: _configModel.conditionQuery];
+}
+
 -(void)setFilterConditionParams:(NSString *)filterConditionParams
 {
     _configModel.conditionQuery = filterConditionParams;
@@ -170,7 +178,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController = [[FHMapSearchHouseListViewController alloc]init];
         [self.viewController addChildViewController:_houseListViewController];
         _houseListViewController.view.frame = CGRectMake(0, 0, self.viewController.view.width, [self.viewController contentViewHeight]);
-        [self.viewController.view insertSubview:_houseListViewController.view aboveSubview:_mapView];
+        [self.viewController insertHouseListView:_houseListViewController.view];
+        
         _houseListViewController.view.hidden = YES;
         /*
          * TTNavigationcontroller 会设置view的subview中scrollview的 contentinset 和 offset
@@ -235,7 +244,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.houseListViewController dismiss];
 }
 
--(void)requestHouses:(BOOL)byUser
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip
 {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
@@ -246,6 +255,18 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     _lastRequestCenter = _mapView.centerCoordinate;
     
     MACoordinateRegion region = _mapView.region;
+    if (region.span.latitudeDelta == 0 || region.span.longitudeDelta == 0) {
+        MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
+        if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
+            MACoordinateSpan s ;
+            s.latitudeDelta = 0.1;
+            s.longitudeDelta = 0.2;
+            region.span = s;
+        }else{
+            region.span =r.span;
+        }
+    }
+    
     CGFloat maxLat = region.center.latitude + region.span.latitudeDelta/2;
     CGFloat minLat = maxLat - region.span.latitudeDelta;
     CGFloat maxLong = region.center.longitude + region.span.longitudeDelta/2;
@@ -262,7 +283,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [[[EnvContext shared] toast] showToast:@"房源请求失败" duration:2];
             return;
         }
-        if (wself.showMode == FHMapSearchShowModeMap) {
+        if (showTip && wself.showMode == FHMapSearchShowModeMap) {
             NSString *tip = model.tips;
             if (tip) {
                 CGFloat topY = [wself.viewController topBarBottom];
@@ -309,6 +330,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     houseAnnotation.type = FHHouseAnnotationTypeNormal;
                 }
                 houseAnnotation.houseData = info;//update date
+                houseAnnotation.title = info.name;
+                houseAnnotation.subtitle = info.desc;
+                houseAnnotation.searchType = [info.type integerValue];
+                MAAnnotationView *annotationView = [self.mapView viewForAnnotation:houseAnnotation];
+                annotationView.annotation = houseAnnotation;
                 [removeAnnotationDict removeObjectForKey:info.nid];
                 continue;
             }
@@ -342,6 +368,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
+    if (![TTReachability isNetworkConnected]) {
+        [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+        return;
+    }
+    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
@@ -437,7 +468,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     CGFloat threshold = MIN(self.viewController.view.width/2, self.viewController.view.height/3);
     threshold *= (mapView.zoomLevel/8);
     if (fabs(ccenter.x - lcenter.x) > threshold || fabs(ccenter.y - lcenter.y) > threshold) {
-        [self requestHouses:wasUserAction];
+        [self requestHouses:wasUserAction showTip:NO];
     }
 }
 
@@ -453,7 +484,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
-        [self requestHouses:wasUserAction];
+        [self requestHouses:wasUserAction showTip:YES];
     }
     
 }
@@ -583,11 +614,23 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 #pragma mark - filter delegate
 -(void)onConditionChangedWithCondition:(NSString *)condition
 {
+    if (!_originCondition) {
+        _originCondition = condition;
+        return;
+    }
+    
     if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
+        if (![TTReachability isNetworkConnected]) {
+            [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+            return;
+        }        
         if (_firstEnterLogAdded) {
-            [self requestHouses:NO];
-        }
+            [self requestHouses:NO showTip:YES];
+            if (self.showMode != FHMapSearchShowModeMap) {
+                [self.houseListViewController.viewModel reloadingHouseData];
+            }
+        }        
     }
     
 }

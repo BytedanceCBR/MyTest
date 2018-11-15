@@ -100,10 +100,16 @@ func parseHouseOutlineHeaderNode(
             return nil
         } else {
             let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
+            
+            let params = EnvContext.shared.homePageParams <|>
+                toTracerParams("house_info", key: "element_type") <|>
+                toTracerParams("old_detail", key: "page_type") <|>
+            traceExtension
+            
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
-                tracer: nil,
+                tracer: [elementShowOnceRecord(params: params)],
                 label: "",
                 type: .node(identifier: HouseOutlineHeaderCell.identifier))
         }

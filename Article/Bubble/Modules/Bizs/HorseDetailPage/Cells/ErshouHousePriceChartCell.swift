@@ -47,8 +47,12 @@ class FHMonthValueFormatter: IAxisValueFormatter {
 }
 
 
-class ErshouHousePriceChartCell: BaseUITableViewCell {
+class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell {
 
+    var refreshCallback: CellRefreshCallback?
+    var traceParams: TracerParams = TracerParams.momoid()
+    var isPriceChartFoldState:Bool = true
+    
     open override class var identifier: String {
         return "ErshouHousePriceChartCell"
     }
@@ -169,18 +173,16 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
     }()
     
     lazy var foldButton: CommonFoldViewButton = {
-        
-        let view = CommonFoldViewButton(downText: "查看全部信息", upText: "折叠")
+        let view = CommonFoldViewButton(downText: "更多信息", upText: "收起")
         return view
     }()
-
-
-    
     
     private var hasClick: Bool = false
     
     private var minValue: Double = 0
     private var maxValue: Double = 0
+    
+    private let disposeBag = DisposeBag()
 
     // 单位，万元/平或元/平
     private var unitPerSquare: Double = 100.0 * 10000.0 {
@@ -297,11 +299,14 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
-                set1.lineWidth = 2
-                set1.circleRadius = 1
+                set1.lineWidth = 1
+                set1.circleRadius = 4
+                set1.circleHoleColor = .white
+                set1.circleHoleRadius = 3
                 // 选中效果
-                set1.highlightColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-                set1.highlightLineDashLengths = [2,2]
+                set1.highlightLineWidth = 1
+                set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
+                set1.highlightLineDashLengths = [3,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
 
 
@@ -329,7 +334,6 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
             leftAxis.drawBottomYLabelEntryEnabled = true
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
             leftAxis.setLabelCount(4, force: true)
@@ -428,56 +432,80 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         }
         
         contentView.addSubview(chartBgView)
-        chartBgView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(priceView.snp.bottom)
-        }
         
         chartBgView.addSubview(titleView)
         chartBgView.addSubview(priceLabel)
-
-        titleView.snp.makeConstraints { maker in
+        chartBgView.addSubview(chartView)
+        
+        titleView.snp.remakeConstraints { maker in
             maker.right.equalToSuperview()
             maker.left.equalTo(70)
             maker.centerY.equalTo(priceLabel)
             maker.height.equalTo(20)
         }
         
-        priceLabel.snp.makeConstraints { maker in
+        priceLabel.snp.remakeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(20)
         }
-
-        chartBgView.addSubview(chartView)
-        chartView.snp.makeConstraints { maker in
+        
+        chartView.snp.remakeConstraints { maker in
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
             maker.height.equalTo(180)
             maker.bottom.equalToSuperview()
         }
-
+        
         contentView.addSubview(foldButton)
-        foldButton.snp.makeConstraints { (maker) in
-            
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(chartBgView.snp.bottom)
-            maker.height.equalTo(60)
-            maker.bottom.equalToSuperview()
-        }
-
+    
         chartView.delegate = self
         setupChartUI()
         
-//        foldButton.rx.tap
-//            .bind(onNext: { [weak theCell, weak foldButton] () in
-//                theCell?.refreshCell()
-//                foldButton?.isFold = theCell?.isNeighborhoodInfoFold ?? true
-//            })
-//            .disposed(by: disposeBag)
+        updateChartConstraints()
         
+        foldButton.rx.tap
+            .bind(onNext: { [weak self] () in
+                self?.refreshCell()
+                self?.foldButton.isFold = self?.isPriceChartFoldState ?? true
+                
+                if let isFold = self?.foldButton.isFold, let traceParams = self?.traceParams, isFold == true {
+                    
+                    recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
+                        EnvContext.shared.homePageParams <|>
+                        toTracerParams("old_detail", key: "page_type"))
+                }
+            }).disposed(by: disposeBag)
     }
-
+    
+    func updateChartConstraints() {
+        
+        if self.isPriceChartFoldState {
+            chartBgView.isHidden = true
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        } else {
+            chartBgView.isHidden = false
+            
+            chartBgView.snp.remakeConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(priceView.snp.bottom)
+                maker.height.equalTo(257)
+            }
+            
+            foldButton.snp.remakeConstraints { (maker) in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(chartBgView.snp.bottom)
+                maker.height.equalTo(58)
+                maker.bottom.equalToSuperview()
+            }
+        }
+    }
+    
     func setupChartUI() {
 
         // 左边竖轴的区间
@@ -490,7 +518,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         l.orientation = .horizontal
         l.drawInside = true
         l.wordWrapEnabled = true
-
+        l.xEntrySpace = -20
+        
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
@@ -502,7 +531,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         xAxis.axisLineWidth = 0.5
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
+        xAxis.xOffset = -20
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
@@ -514,13 +547,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell {
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
-        // 横轴的虚线
-        leftAxis.spaceBottom = 0.0
+        // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
 //        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
 //        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
+        leftAxis.spaceTop = 0.5
+        leftAxis.spaceBottom = 1
+        leftAxis.spaceMax = 0.5
+        leftAxis.spaceMin = 0.5
+        leftAxis.yOffset = 10
+        
 
         // 右边轴
         let rightAxis = chartView.rightAxis
@@ -678,13 +716,15 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
         
         if let count = ershouHouseData.priceTrend?.count, count > 0 {
             
-            let render = curry(fillErshouHousePriceChartCell)(ershouHouseData)(callBack)
-            let params = TracerParams.momoid() <|>
+            let render = curry(fillErshouHousePriceChartCell)(ershouHouseData)(traceExtension)(callBack)
+
+            let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("price_trend", key: "element_type") <|>
-                traceExtension
-//                toTracerParams(ershouHouseData.logPB ?? [:], key: "log_pb")
+                toTracerParams("old_detail", key: "page_type") <|>
+            traceExtension
+
             return TableSectionNode(
-                items: [oneTimeRender(render)],
+                items: [render],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
                 label: "",
@@ -695,14 +735,16 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
     }
 }
 
-func fillErshouHousePriceChartCell(_ data: ErshouHouseData, callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
+func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: TracerParams = TracerParams.momoid(), callBack: @escaping () -> Void, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHousePriceChartCell {
         theCell.clickCallBack = callBack
 
+        theCell.traceParams = traceExtension
         theCell.priceValueLabel.text = data.neighborhoodInfo?.pricingPerSqm
         theCell.priceView.isHidden = false
-        // add by zjing for test
-        theCell.foldButton.isFold = false
+        
+        theCell.foldButton.isFold = theCell.isPriceChartFoldState
+        theCell.updateChartConstraints()
 
         let pricingPerSqm = Double(data.neighborhoodInfo?.pricingPerSqmValue ?? 0)
         if pricingPerSqm > 0 {

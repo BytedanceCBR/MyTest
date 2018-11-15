@@ -176,13 +176,15 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
                 
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
-                set1.lineWidth = 2
-                set1.circleRadius = 1
+                set1.lineWidth = 1
+                set1.circleRadius = 4
+                set1.circleHoleColor = .white
+                set1.circleHoleRadius = 3
                 // 选中效果
-                set1.highlightColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-                set1.highlightLineDashLengths = [2,2]
+                set1.highlightLineWidth = 1
+                set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
+                set1.highlightLineDashLengths = [3,2]
                 set1.drawHorizontalHighlightIndicatorEnabled = false
-                
                 
                 return set1
                 
@@ -283,6 +285,9 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
         xAxis.valueFormatter = self.monthFormatter
+        xAxis.enabled = true
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
         
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)

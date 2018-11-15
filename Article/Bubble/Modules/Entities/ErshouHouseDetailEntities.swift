@@ -252,6 +252,10 @@ struct HousePriceRankSuggestion: Mappable {
         type <- map["type"]
         content <- map["content"]
     }
+    
+    init() {
+
+    }
 }
 
 

@@ -88,6 +88,8 @@ class CategoryListViewModel: DetailPageViewModel {
     
     var currentHouseType: HouseType?
 
+    var showTips:((String) -> Void)?
+
     // houseSearch补充埋点
     var limit = 20
     var offset = 0
@@ -118,6 +120,8 @@ class CategoryListViewModel: DetailPageViewModel {
                 }
             }
         }.disposed(by: disposeBag)
+        
+        showDefaultLoadTable()
     }
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
@@ -137,7 +141,7 @@ class CategoryListViewModel: DetailPageViewModel {
             // 无网络时直接返回空，不请求
             return
         }
-        self.showLoading?("正在加载")
+//        self.showLoading?("正在加载")
         switch houseType {
         case .newHouse:
             requestNewHouseList(query: query, condition: condition, needEncode: needEncode)
@@ -215,7 +219,15 @@ class CategoryListViewModel: DetailPageViewModel {
         }
         pageableLoader?()
     }
-
+    
+    func showDefaultLoadTable()
+    {
+        self.dataSource.datas.accept(parseHousePlaceholderRowNode(nodeCount: 10)())
+        UIView.performWithoutAnimation { [weak self] in
+            self?.tableView?.reloadData()
+        }
+    }
+    
     func requestErshouHouseList(
         query: String,
         condition: String?,
@@ -432,10 +444,11 @@ class CategoryListViewModel: DetailPageViewModel {
     func createOneTimeToast() -> (String?) -> Void {
         var hasToast = false
         return { [weak self] (message) in
-            EnvContext.shared.toast.dismissToast()
+//            EnvContext.shared.toast.dismissToast()
             self?.dismissLoading?()
             if !hasToast, let message = message {
-                EnvContext.shared.toast.showToast(message)
+//                EnvContext.shared.toast.showToast(message)
+                self?.showTips?(message)
                 hasToast = true
             }
         }
@@ -456,7 +469,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
 class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate , TableViewTracer {
 
-    let datas = BehaviorRelay<[TableRowNode]>(value: [])
+    var datas = BehaviorRelay<[TableRowNode]>(value: [])
 
     var cellFactory: UITableViewCellFactory
 

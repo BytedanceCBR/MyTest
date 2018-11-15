@@ -160,9 +160,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if showLoading {
             self.showMessageAlert?("正在加载")
         }
-//        "\(houseId)"
-//        houseId =
-        requestNeighborhoodDetail(neighborhoodId: "6581417114710573326", logPB: logPB)
+
+        requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)
                 .subscribe(onNext: { [unowned self] (response) in
   
                     if let status = response?.data?.neighbordhoodStatus {
@@ -215,8 +214,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         if let data = neighborhoodDetailResponse.value?.data {
 
             
-            let theParams = EnvContext.shared.homePageParams <|>
-                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
+            var theParams = EnvContext.shared.homePageParams <|>
+//                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                 beNull(key: "card_type") <|>
                 toTracerParams("neighborhood_detail", key: "enter_from") <|>
                 toTracerParams("click", key: "enter_type")
@@ -231,8 +230,15 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
                     toTracerParams(logPb, key: "log_pb")
+                
+                theParams = theParams <|>
+                    toTracerParams(logPb, key: "log_pb")
             }
             
+            // add by zjing for test
+            print("zjing-traceParamsDic-\(traceParamsDic)")
+            print("zjing-theParams-\(theParams.paramsGetter([:]))")
+
             /*
             if let code = traceParamsDic["search_id"] as? String {
                 traceExtension = traceExtension <|>
@@ -254,7 +260,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
             
-            let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(), disposeBag: disposeBag)
+            let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: traceExtension,houseType:.neighborhood ,disposeBag: disposeBag)
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
@@ -269,7 +275,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
                 <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: openEvaluationWeb) {
-                    return data.neighborhoodInfo != nil ? true : false
+                    return data.evaluationInfo != nil ? true : false
                 }
                 <- parseNeighborhoodEvaluationCollectionNode(
                     data,
@@ -350,7 +356,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     }
                 }
                 <- parseFlineNode(((data.totalSales?.hasMore ?? false) == false && data.totalSales?.list?.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
+                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 }
                 <- parseSearchInNeighborhoodCollectionNode(
