@@ -80,6 +80,14 @@
     };
 }
 
+-(void)showMaskView:(BOOL)show
+{
+    self.maskView.hidden = !show;
+    
+    self.maskView.height = self.listController.view.superview.height - self.listController.view.top;
+    
+}
+
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor
 {
     if (self.requestTask.state == TTHttpTaskStateRunning) {
@@ -274,7 +282,6 @@
     [self.tableView reloadData];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
-//    self.maskView.hidden = YES;
 }
 
 -(void)loadHouseData:(BOOL)showLoading
@@ -308,7 +315,7 @@
         if (showLoading) {
             [wself.listController dismissLoadingAlert];
         }
-                        
+        
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
             if (showLoading) {
@@ -347,18 +354,17 @@
                 
                 [wself.maskView showErrorWithTip:tip];
                 [wself.maskView showRetry:showRetry];
-                wself.maskView.hidden = false;
+                [wself showMaskView:YES];
             }else{
-                wself.maskView.hidden = true;
+                [wself showMaskView:NO];
             }
-            
         }else{
             if (error) {
                 [wself.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
                 [wself.maskView showRetry:YES];
-                wself.maskView.hidden = false;
+                [wself showMaskView:YES];
             }else{
-                wself.maskView.hidden = true;
+                [wself showMaskView:NO];
             }
         }
     }];
