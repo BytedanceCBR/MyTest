@@ -453,7 +453,29 @@ func openEvaluateWebPage(
             
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
             
-            FRRouteHelper.openWebView(forURL: urlStr)
+            
+            let jumpUrl = "fschema://fh_webview?url=" + urlStr + "&title=\(title)"
+        
+            //设置 vorigin_from
+            let tracerRouteParams = TracerParams.momoid() <|>
+                EnvContext.shared.homePageParams <|>
+                traceParams <|>
+                toTracerParams("housedetail", key: "enter_from") <|>
+                toTracerParams("evaluate", key: "element_from") <|>
+                toTracerParams("click", key: "enter_type")
+            
+            let webTraceParams = ["query_type": "filter",
+                                     "enter_query": "be_null",
+                                     "search_query": "be_null"]
+            
+            
+            let parmasMap = tracerRouteParams.paramsGetter([:])
+            let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
+                                                  "houseSearch": webTraceParams])
+            
+            TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
+            
+//            FRRouteHelper.openWebView(forURL: urlStr)
         }
     }
 }

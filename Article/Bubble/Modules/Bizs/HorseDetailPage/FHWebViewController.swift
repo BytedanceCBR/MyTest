@@ -42,12 +42,16 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
     
+    var urlString: String?
+    
     public required init(routeParamObj paramObj: TTRouteParamObj?) {
         super.init(nibName: nil, bundle: nil)
 
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.title.text = paramObj?.queryParams["title"] as? String
+        
+        urlString = paramObj?.queryParams["url"] as? String
         
         errorVM = NHErrorViewModel(errorMask: infoDisplay, requestRetryText: "网络异常") { [weak self] in
         }
@@ -98,6 +102,19 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams("be_null", key: "search_id")
         self.stayTimeParams =  self.tracerParams  <|> traceStayTime()
         recordEvent(key: "enter_category", params: tracerParams)
+        
+        
+        if let urlV = urlString
+        {
+            let url = URL(string: urlV)
+            if let urlV = url
+            {
+                webviewContainer.loadRequest(URLRequest(url: urlV))
+            }
+        }
+        
+        stayTimeParams = tracerParams <|> traceStayTime()
+
         // Do any additional setup after loading the view.
     }
     
