@@ -191,8 +191,7 @@ class NeighborhoodEvaluationItem: UIView
     init() {
         super.init(frame: CGRect.zero)
         
-//        self.layer.cornerRadius = 4
-//        self.layer.masksToBounds = true
+
         
         addSubview(backView)
         
@@ -239,7 +238,7 @@ class NeighborhoodEvaluationItem: UIView
         descLabel.removeFromSuperview()
         let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 120)
         backView.addSubview(descLabel)
-        descLabel.frame = CGRect(x: 12, y: 43, width: 120, height: heightText > 73 ? 73 : heightText)
+        descLabel.frame = CGRect(x: 12, y: 41, width: 120, height: heightText > 73 ? 73 : heightText)
         descLabel.text = text
         descLabel.lineBreakMode = .byTruncatingTail
         descLabel.numberOfLines = 4
