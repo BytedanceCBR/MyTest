@@ -7,7 +7,6 @@
 */
 
 // f100
-"fh_webview"            = "_TtC6Bubble19FHWebViewController";
 "house_list"            = "_TtC6Bubble18CategoryListPageVC";
 "flogin"                = "_TtC6Bubble12QuickLoginVC";
 "aboutUs"               = "_TtC6Bubble19AboutViewController";
@@ -19,6 +18,7 @@
 "message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
 "house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
 "neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
+"fh_webview"            = "_TtC6Bubble19FHWebViewController";
 
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";

@@ -11,8 +11,8 @@ import RxCocoa
 import SnapKit
 import Reachability
 
-class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
-
+class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
+    
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
         re.backBtn.isHidden = true
@@ -42,24 +42,75 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
     
+    var readPct: Int64?
+    
     var urlString: String?
     
-    public required init(routeParamObj paramObj: TTRouteParamObj?) {
+    init() {
         super.init(nibName: nil, bundle: nil)
-
-        self.automaticallyAdjustsScrollViewInsets = false
-
-        navBar.title.text = paramObj?.queryParams["title"] as? String
-        
-        urlString = paramObj?.queryParams["url"] as? String
-        
-        errorVM = NHErrorViewModel(errorMask: infoDisplay, requestRetryText: "网络异常") { [weak self] in
-        }
+    }
+    
+    init(url: String, title: String, traceParam: TracerParams) {
+        super.init(nibName: nil, bundle: nil)
+        self.urlString = url
+        navBar.title.text = title
+        tracerParams = traceParam
         
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
-                self?.navigationController?.popViewController(animated: true)
+                if let navVC = self?.navigationController, navVC.viewControllers.count > 1 {
+                    self?.view.endEditing(true)
+                    navVC.popViewController(animated: true)
+                } else {
+                    self?.dismiss(animated: true, completion: {
+                    })
+                }
+            }.disposed(by: disposeBag)
+    }
+    
+    @objc
+    public required init(routeParamObj paramObj: TTRouteParamObj?) {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.automaticallyAdjustsScrollViewInsets = false
+        
+        errorVM = NHErrorViewModel(errorMask: infoDisplay, requestRetryText: "网络异常") { [weak self] in
+            if let urlV = self?.urlString
+            {
+                let url = URL(string: urlV)
+                if let urlV = url
+                {
+                    self?.webviewContainer.loadRequest(URLRequest(url: urlV))
+                }
+            }
+        }
+        
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["tracer"]{
+            self.tracerParams = paramsOfMap(params as? [String : Any] ?? [:])
+            
+        }
+        
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["title"]{
+            navBar.title.text = params as? String
+        }
+        
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["urlString"]{
+            urlString = params as? String
+        }
+        
+        
+        self.navBar.backBtn.rx.tap
+            .bind { [weak self] void in
+                EnvContext.shared.toast.dismissToast()
+                self?.dismiss(animated: true, completion: nil)
+                if let navVC = self?.navigationController, navVC.viewControllers.count > 1 {
+                    self?.view.endEditing(true)
+                    navVC.popViewController(animated: true)
+                } else {
+                    self?.dismiss(animated: true, completion: {
+                    })
+                }
             }.disposed(by: disposeBag)
         
     }
@@ -70,7 +121,7 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
@@ -88,21 +139,13 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
             maker.bottom.right.left.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
         }
+        webviewContainer.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.white
         
         self.view.addSubview(infoDisplay)
         infoDisplay.snp.makeConstraints { (maker) in
             maker.edges.equalTo(webviewContainer)
         }
-        
-        self.tracerParams = EnvContext.shared.homePageParams <|>
-            toTracerParams("official_message_list", key: "category_name") <|>
-            toTracerParams("click", key: "enter_type") <|>
-            beNull(key: "log_pb") <|>
-            toTracerParams("messagetab", key: "enter_from") <|>
-            toTracerParams("be_null", key: "search_id")
-        self.stayTimeParams =  self.tracerParams  <|> traceStayTime()
-        recordEvent(key: "enter_category", params: tracerParams)
-        
         
         if let urlV = urlString
         {
@@ -114,7 +157,7 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
         }
         
         stayTimeParams = tracerParams <|> traceStayTime()
-
+        
         // Do any additional setup after loading the view.
     }
     
@@ -124,20 +167,34 @@ class FHWebViewController: BaseViewController, TTRouteInitializeProtocol {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        if webviewContainer.scrollView.contentSize.height != 0
+        {
+            readPct = Int64((webviewContainer.scrollView.contentOffset.y + self.view.frame.size.height) / webviewContainer.scrollView.contentSize.height * 100)
+            if let pct = readPct, pct > Int64(100)
+            {
+                readPct = Int64(100)
+            }
+        }
+        
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            let reportTraceParam = TracerParams.momoid() <|>
+                stayTimeParams <|>
+                toTracerParams(readPct ?? 0, key: "read_pct")
+            recordEvent(key: "stay_neighborhood_evaluation", params: reportTraceParam)
         }
         stayTimeParams = nil
+        
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
