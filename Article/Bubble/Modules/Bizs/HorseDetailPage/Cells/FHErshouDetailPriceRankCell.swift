@@ -17,7 +17,7 @@ class FHErshouDetailPriceRankCell: BaseUITableViewCell {
         attr1.yy_font = CommonUIStyle.Font.pingFangRegular(24)
         attributeText.append(attr1)
 
-        let attr2 = NSMutableAttributedString(string: "\(priceRank.total ?? 0)/")
+        let attr2 = NSMutableAttributedString(string: "/\(priceRank.total ?? 0)")
         attr2.yy_font = CommonUIStyle.Font.pingFangRegular(12)
         attributeText.append(attr2)
         rankLabel.attributedText = attributeText
