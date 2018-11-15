@@ -267,7 +267,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
-                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data)
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: theParams)
                     }
                 }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
@@ -446,12 +446,25 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         navVC?.pushViewController(vc, animated: true)
     }
     
-    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData) {
+    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid()) {
         let decodedUrl = url.removingPercentEncoding ?? ""
         let arrUrls = decodedUrl.components(separatedBy: "?")
         if arrUrls.count > 0 {
             let openUrl = arrUrls[0]
             if let theUrl = URL(string: openUrl) {
+                
+                var element_from = "be_null"
+                if openUrl.contains("house_list_in_neighborhood") {
+                    element_from = "house_onsale"
+                } else if openUrl.contains("neighborhood_sales_list") {
+                    element_from = "house_deal"
+                }
+                
+                let transactionTrace = traceExtension <|>
+                    toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+                    toTracerParams(element_from, key: "element_from") <|>
+                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                
                 var params:[String:Any] = [:]
                 if let id = data.id {
                     params["neighborhoodId"] = id
@@ -465,7 +478,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
                 params["followStatus"] = self.followStatus
                 // add by zyk 要修改埋点数据，以及参数,区分不同的点击  important
-                let tracePramas = TracerParams.momoid()
+                let tracePramas = transactionTrace
                 params["tracerParams"] = tracePramas
                 
                 let bottomBarBinder = self.bindBottomView(params: TracerParams.momoid())
