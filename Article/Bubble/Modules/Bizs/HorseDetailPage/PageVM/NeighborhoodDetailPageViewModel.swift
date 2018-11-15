@@ -334,6 +334,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))") {
                     data.totalSalesCount ?? 0 > 0
                 }
+//                <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))",subTitle: "查看更多",
                 <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
                 <- parseOpenAllNode(data.totalSales?.hasMore ?? false, "全部成交房源", barHeight: 0) { [unowned self] in
                     if let id = data.id {
@@ -455,14 +456,17 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if let theUrl = URL(string: openUrl) {
                 
                 var element_from = "be_null"
+                var category_name = "be_null"
                 if openUrl.contains("house_list_in_neighborhood") {
                     element_from = "house_onsale"
+                    category_name = "same_neighborhood_list"
                 } else if openUrl.contains("neighborhood_sales_list") {
                     element_from = "house_deal"
+                    category_name = "neighborhood_trade_list"
                 }
                 
                 let transactionTrace = traceExtension <|>
-                    toTracerParams("neighborhood_trade_list", key: "category_name") <|>
+                    toTracerParams(category_name, key: "category_name") <|>
                     toTracerParams(element_from, key: "element_from") <|>
                     toTracerParams(data.logPB ?? "be_null", key: "log_pb")
                 
