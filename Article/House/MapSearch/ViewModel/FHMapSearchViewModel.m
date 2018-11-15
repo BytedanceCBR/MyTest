@@ -368,16 +368,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
-    if (![TTReachability isNetworkConnected]) {
-        [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
-        return;
-    }
-    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
     if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
+        
+        if (![TTReachability isNetworkConnected]) {
+            [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+            return;
+        }
+        
         //show district zoom map
         CGFloat zoomLevel = self.mapView.zoomLevel;
         /*
@@ -618,11 +619,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (!_originCondition) {
         _originCondition = condition;
+        
 //        self.filterConditionParams = condition;
 //        return;
     }
     
-    if (condition.length > 0 && ![self.filterConditionParams isEqualToString:condition]) {
+    if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
         if (![TTReachability isNetworkConnected]) {
             [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];

@@ -76,7 +76,7 @@
     __weak typeof(self) wself = self;
     _maskView.retryBlock = ^{
         [wself reloadingHouseData];
-        wself.maskView.hidden = YES;
+//        wself.maskView.hidden = YES;
     };
 }
 
@@ -98,6 +98,7 @@
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
+        _maskView.hidden = YES;
     } else {
         self.searchId = nil;
         [self reloadingHouseData];
@@ -110,7 +111,6 @@
         [self addNeighborShowLog:self.neighbor];
     }
     
-    _maskView.hidden = YES;
     [self addEnterListPageLog];
 }
 
@@ -274,7 +274,7 @@
     [self.tableView reloadData];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
-    self.maskView.hidden = YES;
+//    self.maskView.hidden = YES;
 }
 
 -(void)loadHouseData:(BOOL)showLoading
@@ -348,11 +348,13 @@
                 [wself.maskView showErrorWithTip:tip];
                 [wself.maskView showRetry:showRetry];
                 wself.maskView.hidden = false;
+            }else{
+                wself.maskView.hidden = true;
             }
             
         }else{
             if (error) {
-                [wself.maskView showErrorWithTip:@"网络异常"];
+                [wself.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
                 [wself.maskView showRetry:YES];
                 wself.maskView.hidden = false;
             }else{

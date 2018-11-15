@@ -816,7 +816,7 @@ func parseNewHouseNearByNode(
                 lng: lng,
                 title: newHouseData.coreInfo?.name ?? "",
                 clickMapParams: mapSelectorParams,
-                traceParams: params,
+                traceParams: params <|> toTracerParams("map", key: "click_type"),
                 disposeBag: disposeBag)
         }
         let cellRender = curry(fillNewHouseNearByCell)(newHouseData)(disposeBag)(callBack)(mapSelector)
