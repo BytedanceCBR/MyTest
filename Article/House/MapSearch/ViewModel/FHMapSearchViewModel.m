@@ -482,9 +482,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    if (fabs(ceil(_requestMapLevel) - ceil(mapView.zoomLevel))> 1) {
-        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
-    }
+    [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
         [self requestHouses:wasUserAction showTip:YES];
@@ -814,8 +812,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
-    param[@"category_name"] = nil;
-    param[@"element_from"] = nil;
+    param[@"category_name"] = @"be_null";
+    param[@"element_from"] = @"be_null";
     
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
@@ -824,6 +822,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     
+    param[@"enter_from"] = @"mapfind";
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
     param[@"category_name"] = @"old_list";
