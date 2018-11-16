@@ -147,8 +147,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
         
         checkTraceParam(paramObj?.allParams)
+        if let logPb = paramObj?.userInfo.allInfo["log_pb"] {
+            traceParams = traceParams <|> toTracerParams(logPb , key: "log_pb");
+        }
+        
         self.isFromPush = true
-
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -313,7 +316,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self.traceParams = self.traceParams <|> toTracerParams(searchId ?? "be_null", key: "search_id")
         }else if let sId = detailPageParams["search_id"] as? String {
             self.searchId = sId
-            self.traceParams = self.traceParams <|> toTracerParams(sId ?? "be_null", key: "search_id")
+            self.traceParams = self.traceParams <|> toTracerParams(sId , key: "search_id")
         }
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController, searchId)

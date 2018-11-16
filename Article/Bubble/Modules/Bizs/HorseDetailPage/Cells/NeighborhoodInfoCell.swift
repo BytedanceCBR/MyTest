@@ -259,7 +259,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                     toTracerParams("old_detail", key: "enter_from") <|>
                     toTracerParams("map", key: "element_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
-                    toTracerParams(self.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(self.data?.logPB ?? "be_null", key: "log_pb")
                 
                 let clickParams = theParams <|>
                     toTracerParams("map", key: "click_type")

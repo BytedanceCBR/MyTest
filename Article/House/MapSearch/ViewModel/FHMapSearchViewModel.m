@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeNavbarAlpha:(BOOL)animated
 {
-    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/100;
+    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/(([self.houseListViewController initialTop] - [self.houseListViewController minTop])/2);
     if (alpha < 0) {
         alpha = 0;
     }else if (alpha > 1){
@@ -482,9 +482,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    if (fabs(ceil(_requestMapLevel) - ceil(mapView.zoomLevel))> 1) {
-        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
-    }
+    [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
         [self requestHouses:wasUserAction showTip:YES];
@@ -644,6 +642,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     //fschema://old_house_detail?house_id=xxx
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.hid,rank];
+    TTRouteUserInfo *userInfo = nil;
     if (model.logPb) {
         NSString *groupId = model.logPb.groupId;
         NSString *imprId = model.logPb.imprId;
@@ -657,6 +656,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (searchId) {
             [strUrl appendFormat:@"&search_id=%@",searchId];
         }
+        
+        NSDictionary *dict = @{@"log_pb":[model.logPb toDictionary]};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
     }
     if (self.configModel.originFrom) {
         [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
@@ -665,12 +667,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
     NSURL *url =[NSURL URLWithString:strUrl];
-    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
 -(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
 {
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@&card_type=no_pic&enter_from=mapfind&element_from=half_category&rank=0",neighborModel.nid];
+    TTRouteUserInfo *userInfo = nil;
     if (neighborModel.logPb) {
         NSString *groupId = neighborModel.logPb.groupId;
         NSString *imprId = neighborModel.logPb.imprId;
@@ -684,6 +687,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (searchId) {
             [strUrl appendFormat:@"&search_id=%@",searchId];
         }
+        NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
     }
     if (self.configModel.originFrom) {
         [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
@@ -691,9 +696,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_configModel.originSearchId) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
-
+    
     NSURL *url =[NSURL URLWithString:strUrl];
-    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
 -(FHMapZoomViewLevelType)mapZoomViewType:(CGFloat)zoomLevel
@@ -814,8 +819,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
-    param[@"category_name"] = nil;
-    param[@"element_from"] = nil;
+    param[@"category_name"] = @"be_null";
+    param[@"element_from"] = @"be_null";
     
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
@@ -824,6 +829,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     
+    param[@"enter_from"] = @"mapfind";
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
     param[@"category_name"] = @"old_list";

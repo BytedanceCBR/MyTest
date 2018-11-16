@@ -168,7 +168,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         contentView.addSubview(mapImageView)
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalToSuperview().offset(56.5)
+            maker.top.equalTo(segmentedControl.snp.bottom)
             maker.height.equalTo(160)
         }
         mapAnnotionImageView.backgroundColor = UIColor.clear
@@ -195,9 +195,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         
         contentView.addSubview(locationList)
         locationList.snp.makeConstraints { maker in
-            maker.top.equalTo(mapImageView.snp.bottom)
+            maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
-            //  maker.bottom.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-10)
             maker.height.equalTo(136)
         }
 
@@ -208,12 +208,12 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             maker.height.equalTo(20)
         }
         
-        contentView.addSubview(seperateLineView)
-        seperateLineView.snp.makeConstraints { maker in
-            maker.height.equalTo(6)
-            maker.bottom.left.right.equalToSuperview()
-            maker.top.equalTo(locationList.snp.bottom)
-        }
+//        contentView.addSubview(seperateLineView)
+//        seperateLineView.snp.makeConstraints { maker in
+//            maker.height.equalTo(6)
+//            maker.bottom.left.right.equalToSuperview()
+//            maker.top.equalTo(locationList.snp.bottom)
+//        }
         locationList.estimatedRowHeight = 52
         locationList.rowHeight = UITableViewAutomaticDimension
         locationList.dataSource = locationListViewModel
@@ -290,15 +290,15 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     {
         mapImageView.snp.remakeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(segmentedControl.bottom).offset(56.5)
+            maker.top.equalTo(segmentedControl.snp.bottom)
             maker.height.equalTo(160)
         }
         
         locationList.snp.remakeConstraints { maker in
-            maker.top.equalTo(mapImageView.snp.bottom).offset(20)
+            maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
-            maker.bottom.equalToSuperview()
-            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 43)
+            maker.bottom.equalToSuperview().offset(-10)
+            maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35)
         }
     }
     
@@ -409,7 +409,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 //                    backImageView.contentMode = .center
                     backImageView.layer.cornerRadius = 19
                     backImageView.layer.masksToBounds = true
-
+                    
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
                     titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)
@@ -593,14 +593,14 @@ fileprivate class LocationCell: UITableViewCell {
         label2.snp.makeConstraints { maker in
             maker.right.equalToSuperview().offset(-20)
             maker.top.bottom.equalToSuperview
-            maker.height.equalTo(23)
+            maker.height.equalTo(35)
         }
         
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(label2)
-            maker.height.equalTo(23)
+            maker.height.equalTo(label2)
             maker.bottom.equalTo(label2)
             maker.right.equalTo(label2.snp.left).offset(-5)
         }
@@ -676,6 +676,10 @@ class LocationListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //        print("LocationListViewModel")
     }
@@ -706,7 +710,7 @@ func parseNeighorhoodNearByNode(
         
         let params = TracerParams.momoid() <|>
             toTracerParams("map", key: "element_from") <|>
-            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExtension, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
             toTracerParams("neighborhood_detail", key: "enter_from")
@@ -717,7 +721,7 @@ func parseNeighorhoodNearByNode(
             toTracerParams("neighborhood_nearby", key: "element_type") <|>
             toTracerParams("map", key: "click_type")
         if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
-            //            recordEvent(key: "click_map", params: params)
+
             selector = openMapPage(
                 navVC:navVC,
                 lat:lat,
@@ -784,7 +788,7 @@ func parseNewHouseNearByNode(
         
         let params = TracerParams.momoid() <|>
             toTracerParams("map", key: "element_from") <|>
-            toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExt, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
             toTracerParams("new_detail", key: "enter_from")
@@ -797,6 +801,7 @@ func parseNewHouseNearByNode(
         traceExt
         if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
             //            recordEvent(key: "click_map", params: params)
+            
             selector = openMapPage(
                 navVC:navVC,
                 lat:lat,
