@@ -689,7 +689,7 @@ func parseNeighorhoodNearByNode(
         
         let params = TracerParams.momoid() <|>
             toTracerParams("map", key: "element_from") <|>
-            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExtension, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
             toTracerParams("neighborhood_detail", key: "enter_from")
@@ -700,7 +700,7 @@ func parseNeighorhoodNearByNode(
             toTracerParams("neighborhood_nearby", key: "element_type") <|>
             toTracerParams("map", key: "click_type")
         if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
-            //            recordEvent(key: "click_map", params: params)
+
             selector = openMapPage(
                 navVC:navVC,
                 lat:lat,
@@ -767,7 +767,7 @@ func parseNewHouseNearByNode(
         
         let params = TracerParams.momoid() <|>
             toTracerParams("map", key: "element_from") <|>
-            toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExt, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
             toTracerParams("new_detail", key: "enter_from")
@@ -780,6 +780,7 @@ func parseNewHouseNearByNode(
         traceExt
         if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
             //            recordEvent(key: "click_map", params: params)
+            
             selector = openMapPage(
                 navVC:navVC,
                 lat:lat,

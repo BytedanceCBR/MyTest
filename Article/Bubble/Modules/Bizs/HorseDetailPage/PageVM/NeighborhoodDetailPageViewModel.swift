@@ -234,10 +234,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 theParams = theParams <|>
                     toTracerParams(logPb, key: "log_pb")
             }
-            
-            // add by zjing for test
-            print("zjing-traceParamsDic-\(traceParamsDic)")
-            print("zjing-theParams-\(theParams.paramsGetter([:]))")
 
             /*
             if let code = traceParamsDic["search_id"] as? String {
