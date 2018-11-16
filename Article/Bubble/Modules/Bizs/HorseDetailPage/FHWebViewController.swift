@@ -11,7 +11,7 @@ import RxCocoa
 import SnapKit
 import Reachability
 
-class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
+class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebViewDelegate {
     
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -41,6 +41,7 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
         let re = UIWebView(frame: CGRect.zero)
         return re
     }()
+    
     
     var readPct: Int64?
     
@@ -139,6 +140,7 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             maker.bottom.right.left.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
         }
+        webviewContainer.delegate = self
         webviewContainer.backgroundColor = UIColor.white
         view.backgroundColor = UIColor.white
         
@@ -152,17 +154,43 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             let url = URL(string: urlV)
             if let urlV = url
             {
+                EnvContext.shared.toast.showLoadingToast("加载中")
                 webviewContainer.loadRequest(URLRequest(url: urlV))
             }
         }
         
         stayTimeParams = tracerParams <|> traceStayTime()
         
+        
+        view.addSubview(infoDisplay)
+        infoDisplay.icon.image = UIImage(named: "group-4")
+        infoDisplay.snp.makeConstraints { maker in
+            maker.top.bottom.right.left.equalTo(webviewContainer)
+        }
+        
+        self.errorVM = NHErrorViewModel(
+            errorMask: infoDisplay,
+            requestRetryText: "网络异常",
+            requestNilDataText: "啊哦～您还没收到相关消息",
+            requestNilDataImage: "empty_message",
+            requestErrorText: "网络异常",
+            isUserClickEnable: false)
+        
+        self.errorVM?.onRequestViewDidLoad()
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        EnvContext.shared.toast.dismissToast()
+    }
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        EnvContext.shared.toast.dismissToast()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
