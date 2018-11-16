@@ -140,6 +140,7 @@
         [self tryCallbackFilterCondition];
     }else{
         [self.viewModel dismissHouseListView];
+        [self.houseFilterViewModel closeConditionFilterPanel];
     }
     
 }
