@@ -176,7 +176,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         
         contentView.addSubview(mapMaskBtn)
         mapMaskBtn.snp.makeConstraints { maker in
-            maker.edges.equalTo(mapImageView)
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(segmentedControl.snp.bottom)
+            maker.height.equalTo(160)
         }
         
         
@@ -184,15 +186,15 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         self.mapView.takeSnapshot(in: frame) {[weak self] (image, state) in
             self?.mapImageView.image = image
         }
-        contentView.addSubview(bottomLine)
         
+        contentView.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.right.equalTo(-20)
             maker.top.equalTo(mapImageView.snp.bottom).offset(-0.5)
             maker.height.equalTo(0.5)
         }
-        
+
         contentView.addSubview(locationList)
         locationList.snp.makeConstraints { maker in
             maker.top.equalTo(mapImageView.snp.bottom).offset(10)
@@ -214,7 +216,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 //            maker.bottom.left.right.equalToSuperview()
 //            maker.top.equalTo(locationList.snp.bottom)
 //        }
-        locationList.estimatedRowHeight = 52
+        locationList.estimatedRowHeight = 35
         locationList.rowHeight = UITableViewAutomaticDimension
         locationList.dataSource = locationListViewModel
         locationList.delegate = locationListViewModel
@@ -245,6 +247,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         poiAnnotationDatas = [String : [FHMAAnnotation]]()
         poiMapDatas = [String : [AMapPOI]]()
         titleDatas = [String : String]()
+        
+        changeListLayout(poiCount: 0)
     }
     
     func resetMapData()
@@ -286,18 +290,36 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     func changeListLayout(poiCount: Int)
     {
-        mapImageView.snp.remakeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(segmentedControl.snp.bottom)
-            maker.height.equalTo(160)
-        }
-        
-        locationList.snp.remakeConstraints { maker in
+        locationList.snp.updateConstraints { maker in
             maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
             maker.bottom.equalToSuperview().offset(-10)
             maker.height.equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35)
         }
+        
+        if poiCount == 0
+        {
+            emptyInfoLabel.snp.updateConstraints { maker in
+                maker.center.equalTo(locationList.snp.center)
+                maker.width.greaterThanOrEqualTo(100)
+                maker.height.equalTo(20)
+            }
+            
+            mapMaskBtn.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(segmentedControl.snp.bottom)
+                maker.height.equalTo(160)
+            }
+        }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    func updateLayoutForList()
+    {
+        let count  = locationListViewModel.datas.count
+        changeListLayout(poiCount: count)
     }
     
     
@@ -477,6 +499,8 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             if reuqestPoi.keywords == "公交地铁"
             {
                 changePoiData(index: 0)
+                let count  = locationListViewModel.datas.count
+                changeListLayout(poiCount: count)
             }
         }
         requestIndex += 1

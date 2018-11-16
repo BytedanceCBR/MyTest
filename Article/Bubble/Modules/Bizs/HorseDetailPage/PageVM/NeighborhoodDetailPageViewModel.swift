@@ -286,18 +286,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag){
                     [weak self] in
-                    
+                    let contentOffsetY = self?.tableView?.contentOffset.y
                     UIView.performWithoutAnimation { [weak self] in
-                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        self?.tableView?.isScrollEnabled = false
+                        self?.tableView?.beginUpdates()
+                        self?.dataSource.nearByCell?.updateLayoutForList()
+
+                        self?.tableView?.endUpdates()
+                        if let yValue = contentOffsetY
                         {
-                            visibleCells.forEach({ [weak self] (indexPath) in
-                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
-                                {
-                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
-                                }
-                            })
-                           
+                            self?.tableView?.contentOffset = CGPoint(x: 0, y: yValue)
                         }
+                        self?.tableView?.isScrollEnabled = true
                     }
                 }
                 <- parseFlineNode(data.neighborhoodInfo == nil ? 0 : 6)
