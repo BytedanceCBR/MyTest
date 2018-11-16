@@ -642,6 +642,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     //fschema://old_house_detail?house_id=xxx
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.hid,rank];
+    TTRouteUserInfo *userInfo = nil;
     if (model.logPb) {
         NSString *groupId = model.logPb.groupId;
         NSString *imprId = model.logPb.imprId;
@@ -655,6 +656,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (searchId) {
             [strUrl appendFormat:@"&search_id=%@",searchId];
         }
+        
+        NSDictionary *dict = @{@"log_pb":[model.logPb toDictionary]};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
     }
     if (self.configModel.originFrom) {
         [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
@@ -663,12 +667,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
     NSURL *url =[NSURL URLWithString:strUrl];
-    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
 -(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
 {
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@&card_type=no_pic&enter_from=mapfind&element_from=half_category&rank=0",neighborModel.nid];
+    TTRouteUserInfo *userInfo = nil;
     if (neighborModel.logPb) {
         NSString *groupId = neighborModel.logPb.groupId;
         NSString *imprId = neighborModel.logPb.imprId;
@@ -682,6 +687,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (searchId) {
             [strUrl appendFormat:@"&search_id=%@",searchId];
         }
+        NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
     }
     if (self.configModel.originFrom) {
         [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
@@ -689,9 +696,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_configModel.originSearchId) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
-
+    
     NSURL *url =[NSURL URLWithString:strUrl];
-    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
 -(FHMapZoomViewLevelType)mapZoomViewType:(CGFloat)zoomLevel
