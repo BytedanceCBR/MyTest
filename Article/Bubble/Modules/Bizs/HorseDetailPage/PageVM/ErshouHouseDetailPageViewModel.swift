@@ -310,7 +310,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
             
             let openBeighBor = openFloorPanDetailPage(
                 floorPanId: data.neighborhoodInfo?.id,
-                logPb: data.logPB,
+                logPb: data.neighborhoodInfo?.logPB,
                 searchId: searchIdForDetail,
                 sameNeighborhoodFollowUp: sameNeighborhoodFollowUp)
 
