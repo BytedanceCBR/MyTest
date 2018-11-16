@@ -481,7 +481,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
                 self?.refreshCell()
                 self?.foldButton.isFold = self?.isPriceChartFoldState ?? true
                 
-                if let isFold = self?.foldButton.isFold, let traceParams = self?.traceParams, isFold == true {
+                if let isFold = self?.foldButton.isFold, let traceParams = self?.traceParams, isFold == false {
                     
                     recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
                         EnvContext.shared.homePageParams <|>
