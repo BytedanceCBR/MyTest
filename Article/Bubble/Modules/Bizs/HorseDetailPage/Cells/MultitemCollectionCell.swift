@@ -514,6 +514,9 @@ fileprivate class EvaluationItemCollectionCell: UICollectionViewCell {
             maker.bottom.equalTo(-16)
             maker.top.equalToSuperview()
         }
+        
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 4.0
     }
     
     required init?(coder aDecoder: NSCoder) {

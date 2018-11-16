@@ -76,8 +76,16 @@
     __weak typeof(self) wself = self;
     _maskView.retryBlock = ^{
         [wself reloadingHouseData];
-        wself.maskView.hidden = YES;
+//        wself.maskView.hidden = YES;
     };
+}
+
+-(void)showMaskView:(BOOL)show
+{
+    self.maskView.hidden = !show;
+    
+    self.maskView.height = self.listController.view.superview.height - self.listController.view.top;
+    
 }
 
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor
@@ -98,6 +106,7 @@
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
+        _maskView.hidden = YES;
     } else {
         self.searchId = nil;
         [self reloadingHouseData];
@@ -110,7 +119,6 @@
         [self addNeighborShowLog:self.neighbor];
     }
     
-    _maskView.hidden = YES;
     [self addEnterListPageLog];
 }
 
@@ -274,7 +282,6 @@
     [self.tableView reloadData];
     [self loadHouseData:YES];
     self.tableView.mj_footer.hidden = YES;
-    self.maskView.hidden = YES;
 }
 
 -(void)loadHouseData:(BOOL)showLoading
@@ -308,7 +315,7 @@
         if (showLoading) {
             [wself.listController dismissLoadingAlert];
         }
-                        
+        
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
             if (showLoading) {
@@ -347,16 +354,17 @@
                 
                 [wself.maskView showErrorWithTip:tip];
                 [wself.maskView showRetry:showRetry];
-                wself.maskView.hidden = false;
+                [wself showMaskView:YES];
+            }else{
+                [wself showMaskView:NO];
             }
-            
         }else{
             if (error) {
-                [wself.maskView showErrorWithTip:@"网络异常"];
+                [wself.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
                 [wself.maskView showRetry:YES];
-                wself.maskView.hidden = false;
+                [wself showMaskView:YES];
             }else{
-                wself.maskView.hidden = true;
+                [wself showMaskView:NO];
             }
         }
     }];

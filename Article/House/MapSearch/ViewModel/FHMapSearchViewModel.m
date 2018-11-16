@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeNavbarAlpha:(BOOL)animated
 {
-    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/100;
+    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/(([self.houseListViewController initialTop] - [self.houseListViewController minTop])/2);
     if (alpha < 0) {
         alpha = 0;
     }else if (alpha > 1){
@@ -368,16 +368,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)handleSelect:(MAAnnotationView *)annotationView
 {
-    if (![TTReachability isNetworkConnected]) {
-        [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
-        return;
-    }
-    
     if (![annotationView.annotation isKindOfClass:[FHHouseAnnotation class]]) {
         return;
     }
     FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotationView.annotation;
     if (houseAnnotation.searchType == FHMapSearchTypeDistrict || houseAnnotation.searchType == FHMapSearchTypeArea) {
+        
+        if (![TTReachability isNetworkConnected]) {
+            [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
+            return;
+        }
+        
         //show district zoom map
         CGFloat zoomLevel = self.mapView.zoomLevel;
         /*
@@ -481,9 +482,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    if (fabs(ceil(_requestMapLevel) - ceil(mapView.zoomLevel))> 1) {
-        [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
-    }
+    [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
     
     if (fabs(_requestMapLevel - mapView.zoomLevel) > 0.08*mapView.zoomLevel) {
         [self requestHouses:wasUserAction showTip:YES];
@@ -618,11 +617,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     if (!_originCondition) {
         _originCondition = condition;
+        
 //        self.filterConditionParams = condition;
 //        return;
     }
     
-    if (condition.length > 0 && ![self.filterConditionParams isEqualToString:condition]) {
+    if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;
         if (![TTReachability isNetworkConnected]) {
             [[[EnvContext shared] toast] showToast:@"网络异常" duration:1];
@@ -812,8 +812,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
-    param[@"category_name"] = nil;
-    param[@"element_from"] = nil;
+    param[@"category_name"] = @"be_null";
+    param[@"element_from"] = @"be_null";
     
     [EnvContext.shared.tracer writeEvent:@"mapfind_half_category" params:param];
 }
@@ -822,6 +822,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     NSMutableDictionary *param = [self logBaseParams];
     
+    param[@"enter_from"] = @"mapfind";
     param[@"enter_type"] = @"click";
     param[@"click_type"] = @"list";
     param[@"category_name"] = @"old_list";
