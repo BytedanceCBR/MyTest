@@ -235,6 +235,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     toTracerParams(logPb, key: "log_pb")
             }
 
+
             /*
             if let code = traceParamsDic["search_id"] as? String {
                 traceExtension = traceExtension <|>
@@ -263,7 +264,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
-                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: theParams)
+                        var traceExtension = theParams
+                        if let traceParams  = self?.traceParams {
+                            traceExtension = traceExtension <|> toTracerParams(selectTraceParam(traceParams, key: "log_pb") ?? "be_null", key: "log_pb")
+                        }
+ 
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: traceExtension)
                     }
                 }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
@@ -456,8 +462,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 
                 let transactionTrace = traceExtension <|>
                     toTracerParams(category_name, key: "category_name") <|>
-                    toTracerParams(element_from, key: "element_from") <|>
-                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(element_from, key: "element_from")
                 
                 var params:[String:Any] = [:]
                 if let id = data.id {
