@@ -371,7 +371,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                         recordEvent(key: TraceEventName.click_house_history, params: infoParams)
                 })
                 <- parseFlineNode((data.timeLine?.list?.count ?? 0) > 0 ? 6 : 0)
-                <- parseHeaderNode("全网点评", subTitle: "查看更多", showLoadMore: data.comment?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                <- parseHeaderNode("用户点评", subTitle: "查看更多", showLoadMore: data.comment?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
                     if let hasMore = data.comment?.hasMore, hasMore == true {
                         let phoneTracer = TracerParams.momoid() <|>
                             toTracerParams("call_bottom", key: "element_type") <|>

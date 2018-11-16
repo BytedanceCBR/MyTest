@@ -133,7 +133,7 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
 func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode? {
     return {
         if newHouseData.comment?.list?.count ?? 0 > 0 {
-            let cellRender = curry(fillHeaderCell)("全网点评")("查看更多 >")(false)(-20)
+            let cellRender = curry(fillHeaderCell)("用户点评")("查看更多 >")(false)(-20)
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
