@@ -168,7 +168,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
         contentView.addSubview(mapImageView)
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalToSuperview().offset(56.5)
+            maker.top.equalTo(segmentedControl.snp.bottom)
             maker.height.equalTo(160)
         }
         mapAnnotionImageView.backgroundColor = UIColor.clear
@@ -409,7 +409,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
 //                    backImageView.contentMode = .center
                     backImageView.layer.cornerRadius = 19
                     backImageView.layer.masksToBounds = true
-
+                    
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
                     annotationView?.addSubview(titileLabel)
                     titileLabel.font = CommonUIStyle.Font.pingFangRegular(12)

@@ -222,6 +222,7 @@ class CategoryListViewModel: DetailPageViewModel {
     
     func showDefaultLoadTable()
     {
+        self.dataSource.isShowDefault = true
         self.dataSource.datas.accept(parseHousePlaceholderRowNode(nodeCount: 10)())
         UIView.performWithoutAnimation { [weak self] in
             self?.tableView?.reloadData()
@@ -408,7 +409,9 @@ class CategoryListViewModel: DetailPageViewModel {
     func reloadData() -> (Bool, [TableRowNode]) -> Void {
         var scrollToTop = false
         return { [unowned self] (hasMore, datas) in
+            self.dataSource.isShowDefault = false
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
+            self.dataSource.isShowDefault = false
             self.offset = self.dataSource.datas.value.count
             self.tableView?.reloadData()
             if !scrollToTop {
@@ -481,6 +484,8 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var showHud: ((String, Int) -> Void)?
     
+    var isShowDefault: Bool = false
+    
     let datasDeleteBehavior = BehaviorRelay<Int>(value: 0)
     
     init(cellFactory: UITableViewCellFactory) {
@@ -541,6 +546,16 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         if indexPath.row == datas.value.count - 1 {
             return 125
         }
+        if isShowDefault
+        {
+            if indexPath.row == 0
+            {
+                return 135
+            }else
+            {
+                return 115
+            }
+        }
         return 105
     }
     
@@ -582,6 +597,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //                        } else {
 
                         theDatas.remove(at: indexPath.row)
+                        self.isShowDefault = false
                         self.datas.accept(theDatas)
                         UIView.performWithoutAnimation {
                             tableView.reloadData()
@@ -643,6 +659,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //                    } else {
 
                     theDatas.remove(at: indexPath.row)
+                    self.isShowDefault = false
                     self.datas.accept(theDatas)
                     
                     UIView.performWithoutAnimation {
