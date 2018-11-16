@@ -176,6 +176,7 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData,traceExtension: Tra
             toTracerParams("neighborhood_detail", key: "enter_from") <|>
             toTracerParams(selectTraceParam(traceExtension, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(data.id ?? "be_null", key: "group_id") <|>
+            toTracerParams("be_null", key: "element_from") <|>
             toTracerParams("address", key: "click_type")
         let clickMapParams = EnvContext.shared.homePageParams <|>
             params <|>
