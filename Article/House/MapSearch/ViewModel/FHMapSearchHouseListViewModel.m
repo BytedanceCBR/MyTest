@@ -474,11 +474,7 @@
     param[@"group_id"] = item.logPb.groupId ?: @"be_null";
     param[@"impr_id"] = item.imprId ?: @"be_null";
     param[@"rank"] = @(indexPath.row);
-    if ([self.listController canMoveup]) {
-        param[@"element_type"] = @"half_category";
-    }else{
-        param[@"element_type"] = @"be_null";
-    }
+    param[@"element_type"] = @"half_category";
     
     if (item.logPb) {
         param[@"log_pb"] = [item.logPb toDictionary];
