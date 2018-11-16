@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)changeNavbarAlpha:(BOOL)animated
 {
-    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/100;
+    CGFloat alpha = 1 - (self.houseListViewController.view.top - [self.houseListViewController minTop])/(([self.houseListViewController initialTop] - [self.houseListViewController minTop])/2);
     if (alpha < 0) {
         alpha = 0;
     }else if (alpha > 1){
