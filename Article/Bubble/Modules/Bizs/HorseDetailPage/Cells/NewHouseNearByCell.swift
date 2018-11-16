@@ -198,7 +198,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             maker.top.equalTo(mapImageView.snp.bottom).offset(10)
             maker.left.right.equalToSuperview()
             maker.bottom.equalToSuperview().offset(-10)
-            maker.height.equalTo(136)
+            maker.height.equalTo(105)
         }
 
         contentView.addSubview(emptyInfoLabel)
@@ -269,8 +269,6 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        
         // Configure the view for the selected state
     }
     
@@ -396,7 +394,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     
                     print("react size = \(reactSize)")
                     titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
-                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 38)
+                    backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 35)
                     
                     
                     var imageAnnotation =  UIImage(named: "mapcell_annotation_bg")
@@ -407,7 +405,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     imageAnnotation = imageAnnotation?.resizableImage(withCapInsets: UIEdgeInsets(top: height / 2.0, left: width / 2.0,  bottom: height / 2.0, right: width / 2.0), resizingMode: .stretch)
                     backImageView.image = imageAnnotation
 //                    backImageView.contentMode = .center
-                    backImageView.layer.cornerRadius = 19
+                    backImageView.layer.cornerRadius = 17.5
                     backImageView.layer.masksToBounds = true
                     
                     titileLabel.textColor = hexStringToUIColor(hex: "#081f33")
