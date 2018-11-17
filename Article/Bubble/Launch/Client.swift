@@ -188,15 +188,15 @@ extension Notification.Name {
         }
     }
 
-    func commonParams() -> () -> [AnyHashable: Any] {
+    func commonParams() -> () -> [String: Any] {
         return { [weak self] in
-            var re: [AnyHashable: Any] = [:]
-            if let iid = self?.iid {
-                re["iid"] = iid
-            }
-            if let did = self?.did {
-                re["did"] = did
-            }
+            var re: [String: Any] = [:]
+//            if let iid = self?.iid {
+//                re["iid"] = iid
+//            }
+//            if let did = self?.did {
+//                re["did"] = did
+//            }
             return re
         }
     }

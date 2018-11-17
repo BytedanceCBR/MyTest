@@ -56,7 +56,6 @@
 }
 
 + (void)setRootViewControllerWithStoryboardName:(NSString *)name {
-    [[[EnvContext shared] client] onStart];
 
 
     //TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
@@ -67,6 +66,10 @@
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
     }
 //    [[TTFantasyTimeCountDownManager sharedManager] fetchFantasyActivityTimes];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[EnvContext shared] client] onStart];
+    });
+
     [SharedAppDelegate.window makeKeyAndVisible];
 }
 

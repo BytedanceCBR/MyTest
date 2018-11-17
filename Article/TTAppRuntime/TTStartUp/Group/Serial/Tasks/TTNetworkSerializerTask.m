@@ -21,11 +21,12 @@
 #import "TTHttpsControlManager.h"
 #import "TTLocationManager.h"  //add by songlu
 #import "TTFingerprintManager.h"
-#import "IESAntiSpam.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
+//#import <SecGuard/SGMSafeGuardManager.h>
+//#import "AKSafeGuardHelper.h"
 
 @implementation TTNetworkSerializerTask
 
@@ -46,12 +47,12 @@
         [[TTMonitor shareManager] trackData:data logTypeStr:logType];
     };
     [TTNetworkManager setMonitorBlock:block];
-    
+
     GetDomainblock GetDomainblock = ^(NSData* data) {
         NSError *jsonError = nil;
         LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-        
+
         if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
             [[CommonURLSetting sharedInstance] refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
         } else {
@@ -63,37 +64,32 @@
     NSString *city = [TTLocationManager sharedManager].city;
     [TTNetworkManager setCityName: city];
     //end by songlu
-    
+
     BOOL isHttpDnsEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isHttpDnsEnabled;
-//    isHttpDnsEnabled = YES;//TODO: hard code
+    //    isHttpDnsEnabled = YES;//TODO: hard code
     [TTNetworkManager setHttpDnsEnabled:isHttpDnsEnabled];
-    
+
     BOOL isChromiumEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isChromiumEnabled;
     isChromiumEnabled = YES;//TODO: hard code
     if (isChromiumEnabled) {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
     }
-//    } else {
-//        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
-//    }
+    //    } else {
+    //        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
+    //    }
 
-    IESAntiSpamConfig *config = [IESAntiSpamConfig configWithAppID:@"13"
-                                                            spname:@"toutiao"
-                                                         secretKey:@"2a35c29661d45a80fdf0e73ba5015be19f919081b023e952c7928006fa7a11b3"];
-    NSString *(^IESAntiSpamDeviceIDBlock)(void) = ^(void) {
-        return [[TTInstallIDManager sharedInstance] deviceID];;
-    };
-    [[IESAntiSpam sharedInstance] setIESAntiSpamDeviceIDBlock:IESAntiSpamDeviceIDBlock];
-//    [IESAntiSpam setSessionBlock:^NSString * {
-//        NSString *sessionId = [[TTInstallIDManager sharedInstance] deviceID];
-//        return sessionId;
-//    }];
-    [[IESAntiSpam sharedInstance] startWithConfig:config];
-    
-    TTURLHashBlock hash = ^(NSURL *url, NSDictionary *formData) {
-        return [[IESAntiSpam sharedInstance] encryptURLWithURL:url formData:formData];
-    };
-    [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
+//    // 初始化SafeGuard配置
+//    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
+//
+//    // 启动自动防护
+//    [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
+//
+//    // 请求验证
+//    TTURLHashBlock hash = ^(NSURL *url, NSDictionary *formData) {
+//        return [[SGMSafeGuardManager sharedManager] sgm_encryptURLWithURL:url formData:formData];
+//    };
+//
+//    [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
 
     // 网络库default serializer初始化
     [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[BDTDefaultHTTPRequestSerializer class]];
@@ -105,74 +101,109 @@
     [[TTNetworkManager shareInstance] setUrlTransformBlock:^(NSURL * url){
         NSString *urlStr = [url.absoluteString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSURL *urlObj = [NSURL URLWithString:urlStr];
-        
+
         if (!urlObj) {
             urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             urlObj = [NSURL URLWithString:urlStr];
         }
-        
+
         urlObj = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:urlObj];
         urlStr = urlObj.absoluteString;
-        
+
         BOOL isHttps = [urlStr hasPrefix:@"https://"];
         NSURL *convertUrl = urlObj;
-        
+
         if (!isHttps) {
             convertUrl = [urlObj tt_URLByReplacingDomainName];
         }
-        
+
         return convertUrl;
-        
+
     }];
 
     //改为动态的
     [[TTNetworkManager shareInstance] setCommonParamsblock:^(void) {
-        NSMutableDictionary *tmpParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
-        NSString *curVersion = [TTSandBoxHelper versionName];
-        NSArray<NSString *> *strArray = [curVersion componentsSeparatedByString:@"."];
-        NSInteger version = 0;
-        for (NSInteger i = 0; i < strArray.count; i += 1) {
-            NSString *tmp = strArray[i];
-            version = version * 10 + tmp.integerValue;
-        }
-        version += 600;
-        NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
-        for (NSInteger i = 0; i < 2; i += 1) {
-            NSInteger num = version % 10;
-            version /= 10;
-            NSString *tmp = [NSString stringWithFormat:@"%ld", num];
-            [newStrArray addObject:tmp];
-        }
-        NSString *tmp = [NSString stringWithFormat:@"%ld",version];
-        [newStrArray addObject:tmp];
-        NSString *newVersion = [[newStrArray reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
-        [tmpParams setValue:newVersion forKey:@"version_code"];
-        [tmpParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
+        NSMutableDictionary *commonParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
+        [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
-            [tmpParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
+            [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
         }
-        [tmpParams setValue:@([[AKTaskSettingHelper shareInstance] appIsReviewing]) forKey:@"review_flag"];
 
         NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [tmpParams setValue:obj forKey:key];
+            NSLog(@"%@ - %@", key, [obj class]);
+            [commonParams setValue:obj forKey:key];
         }];
-        NSDictionary *commonParams = [tmpParams copy];
-        return commonParams;
+
+//        [commonParams setValue:@([[AKTaskSettingHelper shareInstance] appIsReviewing]) forKey:@"review_flag"];
+        NSDictionary* result = [commonParams copy];
+        return result;
     }];
     [[TTNetworkManager shareInstance] creatAppInfo];
     //头条stream有 数据混淆 即对json 的data做位运算，所以这里要处理一下 返回data然后根据情况处理后 再当做JSON解析
     [TTNetworkManager shareInstance].pureChannelForJSONResponseSerializer = YES;
-    
+
     [TTNetworkManager shareInstance].isEncryptQueryInHeader = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEncryptQueryInHeader;
     [TTNetworkManager shareInstance].isEncryptQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEncryptQuery;
     [TTNetworkManager shareInstance].isKeepPlainQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isKeepPlainQuery;
-    
-//    [TTNetworkManager shareInstance].isEncryptQueryInHeader = YES;
-//    [TTNetworkManager shareInstance].isEncryptQuery = NO;
-//    [TTNetworkManager shareInstance].isKeepPlainQuery = YES;
-    
-//    [[TTNetworkManager shareInstance] enableVerboseLog];//TODO comment out this line
+
+    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.toutiao.com";
+    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm.bytedance.com";
+    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm.pstatp.com";
+
+    [[TTNetworkManager shareInstance] setDomainBase:@"ib.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainMon:@"mon.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainSec:@"security.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainChannel:@"ichannel.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainISub:@"isub.haoduofangs.com"];
+
+    [TTNetworkManager shareInstance].TokenHost = @"security.haoduofangs.com";
+
+    //    [TTNetworkManager shareInstance].isEncryptQueryInHeader = YES;
+    //    [TTNetworkManager shareInstance].isEncryptQuery = NO;
+    //    [TTNetworkManager shareInstance].isKeepPlainQuery = YES;
+
+    //    [[TTNetworkManager shareInstance] enableVerboseLog];//TODO comment out this line
+    //    [BDAccountSessionTokenManager setCommonParamsBlock:^(void) {
+    //        NSDictionary *commonParams = [TTNetworkUtilities commonURLParameters];
+    //        if ([TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled && !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
+    //            commonParams = [TTNetworkUtilities commonURLParametersAppendKeyAndValues:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
+    //        }
+    //        return commonParams;
+    //    }];
+    //    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
+    //        if ([BDAccountSessionXTTToken shared].sessionSDKIsActive) {
+    //            NSArray *domainWhiteList = @[@".snssdk.com", @".toutiao.com", @".wukong.com"];
+    //            for (NSString *domain in domainWhiteList) {
+    //                if ([request.URL.host hasSuffix:domain]) {
+    //                    [BDAccountSessionXTTToken addXTokenToRequest:request];
+    //                }
+    //            }
+    //        }
+    //    };
+    [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpResponse *response, id data, NSError *responseError){
+        BOOL sessionExpired = NO;
+        if ([data isKindOfClass:[NSData class]]) {
+            NSError *serializationError = nil;
+            id tmpdata = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&serializationError];
+            if (!serializationError && [tmpdata isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *resultData = [tmpdata objectForKey:@"data"];
+                if ([resultData isKindOfClass:[NSDictionary class]] && [resultData.allKeys containsObject:@"name"]) {
+                    if ([@"session_expired" isEqualToString:resultData[@"name"]]) {
+                        // 说明每个app判断票据过期的逻辑可能会不一样，按照自己的来
+                        sessionExpired = YES;
+                    }
+                }
+            }
+        }
+        if (sessionExpired) {
+            [[TTMonitor shareManager] trackService:@"session_expired" status:1 extra:response.allHeaderFields];
+        }
+        //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
+    };
+
+    [[TTNetworkManager shareInstance] start];
     LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
 
