@@ -11,7 +11,7 @@ import RxCocoa
 import SnapKit
 import Reachability
 
-class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
+class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebViewDelegate {
     
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -42,9 +42,12 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
         return re
     }()
     
+    
     var readPct: Int64?
     
     var urlString: String?
+    
+    var stayPageTraceName: String?
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -86,17 +89,24 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             }
         }
         
+        //埋点参数
         if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["tracer"]{
             self.tracerParams = paramsOfMap(params as? [String : Any] ?? [:])
             
         }
-        
+        //title
         if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["title"]{
             navBar.title.text = params as? String
         }
         
-        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["urlString"]{
+        //加载URL
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["url"]{
             urlString = params as? String
+        }
+        
+        //event,不传不上报
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["event"]{
+            stayPageTraceName = params as? String
         }
         
         
@@ -139,6 +149,7 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             maker.bottom.right.left.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
         }
+        webviewContainer.delegate = self
         webviewContainer.backgroundColor = UIColor.white
         view.backgroundColor = UIColor.white
         
@@ -152,17 +163,43 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             let url = URL(string: urlV)
             if let urlV = url
             {
+                EnvContext.shared.toast.showLoadingToast("加载中")
                 webviewContainer.loadRequest(URLRequest(url: urlV))
             }
         }
         
         stayTimeParams = tracerParams <|> traceStayTime()
         
+        
+        view.addSubview(infoDisplay)
+        infoDisplay.icon.image = UIImage(named: "group-4")
+        infoDisplay.snp.makeConstraints { maker in
+            maker.top.bottom.right.left.equalTo(webviewContainer)
+        }
+        
+        self.errorVM = NHErrorViewModel(
+            errorMask: infoDisplay,
+            requestRetryText: "网络异常",
+            requestNilDataText: "啊哦～您还没收到相关消息",
+            requestNilDataImage: "empty_message",
+            requestErrorText: "网络异常",
+            isUserClickEnable: false)
+        
+        self.errorVM?.onRequestViewDidLoad()
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        EnvContext.shared.toast.dismissToast()
+    }
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        EnvContext.shared.toast.dismissToast()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -177,14 +214,14 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol {
             }
         }
         
-        if let stayTimeParams = stayTimeParams {
+        //如果不传event，则不上报
+        if let stayTimeParams = stayTimeParams, let eventName = stayPageTraceName {
             let reportTraceParam = TracerParams.momoid() <|>
                 stayTimeParams <|>
                 toTracerParams(readPct ?? 0, key: "read_pct")
-            recordEvent(key: "stay_neighborhood_evaluation", params: reportTraceParam)
+            recordEvent(key: eventName, params: reportTraceParam)
         }
         stayTimeParams = nil
-        
     }
     
     /*

@@ -184,6 +184,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
                 toTracerParams("map_detail", key: "page_type")
         self.stayMapParams = self.tracerParams <|>
             traceStayTime()
+
         recordEvent(key: "enter_map", params: self.tracerParams)
     }
 

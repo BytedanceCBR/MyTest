@@ -60,7 +60,7 @@ func fillHousePlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCe
             }
         }else {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(0)
+                maker.top.equalTo(10)
             }
         }
     }
@@ -73,7 +73,6 @@ func fillHouseListPlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableVi
         if isFirst {
             theCell.majorImageView.snp.updateConstraints { maker in
                 maker.top.equalTo(20)
-                maker.bottom.equalToSuperview().offset(-10)
             }
         }else {
             theCell.majorImageView.snp.updateConstraints { maker in

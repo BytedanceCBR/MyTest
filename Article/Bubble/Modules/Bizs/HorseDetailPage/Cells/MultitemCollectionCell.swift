@@ -1123,7 +1123,7 @@ func parseNeighborhoodEvaluationCollectionNode(
 //                toTracerParams("neighborhood_detail", key: "enter_from") <|>
 //            traceExtension.exclude("rank")
             
-            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(),houseType:.neighborhood, disposeBag: disposeBag)
+            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: traceExtension,houseType:.neighborhood, disposeBag: disposeBag)
             
             if let evaluatInfo = data?.evaluationInfo
             {

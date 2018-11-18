@@ -54,6 +54,8 @@ class BaseSubPageViewController: BaseViewController {
 
     private let isHiddenBottomBar: Bool
 
+    private var isFirstLoad: Bool = true
+
     let disposeBag = DisposeBag()
 
     var bottomBarBinder: FollowUpBottomBarBinder
@@ -147,7 +149,11 @@ class BaseSubPageViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        bottomBarBinder(bottomBar, navBar.rightBtn2, getBottomBarTraceParam())
+        if isFirstLoad {
+            
+            bottomBarBinder(bottomBar, navBar.rightBtn2, getBottomBarTraceParam())
+            isFirstLoad = false
+        }
     }
 
     override func didReceiveMemoryWarning() {

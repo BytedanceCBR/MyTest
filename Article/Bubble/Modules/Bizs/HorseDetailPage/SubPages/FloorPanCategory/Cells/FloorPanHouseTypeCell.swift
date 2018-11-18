@@ -166,7 +166,7 @@ func parseFloorPanItemsNode(
                     let (offset, item) = e
                     let myParams = params <|>
                         toTracerParams(offset, key: "rank")
-                    return curry(openDetailPage)(item.id)(logPBVC)(isHiddenBottomBar)(navVC)(followPage)(disposeBag)(bottomBarBinder)(myParams)
+                    return curry(openDetailPage)(item.id)(item.logPB)(isHiddenBottomBar)(navVC)(followPage)(disposeBag)(bottomBarBinder)(myParams)
                 }
         
         let records = data

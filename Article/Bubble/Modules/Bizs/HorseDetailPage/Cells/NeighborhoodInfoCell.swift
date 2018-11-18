@@ -259,7 +259,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                     toTracerParams("old_detail", key: "enter_from") <|>
                     toTracerParams("map", key: "element_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
-                    toTracerParams(self.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(self.data?.logPB ?? "be_null", key: "log_pb")
                 
                 let clickParams = theParams <|>
                     toTracerParams("map", key: "click_type")
@@ -454,9 +454,11 @@ func openEvaluateWebPage(
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
             
             
-            let jumpUrl = "fschema://fh_webview"
-            let parmasMap = openParams.paramsGetter([:])
-            let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap, "title": title, "urlString": urlStr])
+            let jumpUrl = "fschema://fh_webview" //route协议
+            let parmasMap = openParams.paramsGetter([:]) //埋点参数
+            let stayPageTraceEventName = "stay_neighborhood_evaluation" //埋点Event ,不传不上报
+            
+            let userInfo = TTRouteUserInfo(info: ["event":stayPageTraceEventName,"tracer": parmasMap, "title": title, "url": urlStr])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)

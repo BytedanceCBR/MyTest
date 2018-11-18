@@ -27,7 +27,7 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navBar.title.text = "全网点评"
+        navBar.title.text = "用户点评"
         houseCommentViewModel = HouseCommentViewModel(tableView: tableView)
         if EnvContext.shared.client.reachability.connection == .none {
             infoMaskView.isHidden = false
