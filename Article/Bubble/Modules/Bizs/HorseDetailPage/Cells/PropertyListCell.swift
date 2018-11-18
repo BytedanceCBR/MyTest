@@ -108,6 +108,82 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
     }
 }
 
+// 子View列表容器
+class PropertyListView: UIView {
+
+    lazy var wrapperView: UIView = {
+        let re = UIView()
+        return re
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(wrapperView)
+        wrapperView.snp.makeConstraints { maker in
+            maker.top.equalTo(0)
+            maker.bottom.equalToSuperview().offset(-26)
+            maker.left.right.equalToSuperview()
+        }
+        
+        self.addSubview(bottomMaskView)
+        bottomMaskView.snp.makeConstraints { maker in
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(6)
+        }
+    }
+    
+    lazy var bottomMaskView: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        return re
+    }()
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    fileprivate func addRowView(rows: [UIView], fixedSpacing:CGFloat = 0, averageLayout: Bool = true ) {
+        for v in wrapperView.subviews {
+            v.removeFromSuperview()
+        }
+        
+        rows.forEach { view in
+            wrapperView.addSubview(view)
+        }
+        rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: fixedSpacing, averageLayout:averageLayout)
+        rows.snp.makeConstraints { maker in
+            maker.width.equalToSuperview()
+            maker.left.right.equalToSuperview()
+        }
+    }
+    
+    func prepareForReuse() {
+        for v in wrapperView.subviews {
+            v.removeFromSuperview()
+        }
+        resetListBottomView()
+    }
+    
+    func removeListBottomView(_ heightOffset:CGFloat = -10, _ bottomMaskHidden:Bool = true) {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(0)
+            maker.bottom.equalToSuperview().offset(heightOffset)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = bottomMaskHidden
+    }
+    
+    func resetListBottomView()
+    {
+        wrapperView.snp.remakeConstraints { maker in
+            maker.top.equalTo(0)
+            maker.bottom.equalToSuperview().offset(-26)
+            maker.left.right.equalToSuperview()
+        }
+        bottomMaskView.isHidden = false
+    }
+}
+
 fileprivate class RowView: UIView {
 
     lazy var keyLabel: UILabel = {
@@ -149,10 +225,18 @@ fileprivate class RowView: UIView {
     }
     // 小区详情页布局
     func remakeValueLabelConstraints() {
+        
+        keyLabel.snp.remakeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.top.equalTo(10)
+            maker.height.equalTo(20)
+            maker.bottom.equalToSuperview()
+        }
         valueLabel.snp.remakeConstraints { maker in
-            maker.left.equalTo(self).offset(96)
-            maker.right.equalTo(-25)
-            maker.top.equalTo(14)
+            maker.left.equalToSuperview().offset(96)
+            maker.right.equalToSuperview().offset(-25)
+            maker.top.equalToSuperview().offset(10)
+            maker.height.equalTo(20)
             maker.bottom.equalTo(keyLabel)
         }
     }
@@ -166,6 +250,109 @@ fileprivate class RowView: UIView {
 
 fileprivate class TwoRowView: UIView {
 
+}
+
+// 小区概况（折叠动画）
+class NeighborhoodPropertyInfoCell :  BaseUITableViewCell, RefreshableTableViewCell {
+    var refreshCallback: CellRefreshCallback?
+    
+    var isNeighborhoodInfoFold:Bool = true {
+        didSet {
+            setNeedsUpdateConstraints()
+        }
+    }
+    
+    let disposeBag:DisposeBag = DisposeBag()
+    
+    override open class var identifier: String {
+        return "NeighborhoodPropertyInfoCell"
+    }
+    
+    lazy var headListView: PropertyListView = {
+        let view = PropertyListView()
+        return view
+    }()
+    
+    lazy var bottomListView: PropertyListView = {
+        let view = PropertyListView()
+        return view
+    }()
+    
+    lazy var bottomBgView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    let foldButton = CommonFoldViewButton(downText: "查看全部信息", upText: "收起")
+    
+    let itemCellHeight:CGFloat = 30.0
+    
+    var headerListCount:Int = 0 {
+        didSet {
+            setNeedsUpdateConstraints()
+        }
+    }
+    
+    var bottomListCount:Int = 0 {
+        didSet {
+            setNeedsUpdateConstraints()
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+       
+        contentView.snp.makeConstraints { (maker) in
+            maker.edges.equalToSuperview()
+        }
+        
+        self.contentView.addSubview(headListView)
+        headListView.removeListBottomView(0, true)
+        self.contentView.addSubview(bottomBgView)
+        bottomBgView.clipsToBounds = true
+        bottomBgView.addSubview(bottomListView)
+        bottomListView.removeListBottomView(0, true)
+        bottomBgView.addSubview(foldButton)
+        foldButton.backgroundColor = UIColor.white
+        foldButton.isFold = self.isNeighborhoodInfoFold
+        
+        foldButton.rx.tap
+            .bind(onNext: { [weak self, weak foldButton] () in
+                self?.refreshCell()
+                foldButton?.isFold = self?.isNeighborhoodInfoFold ?? true
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    override func updateConstraints() {
+        
+        headListView.snp.remakeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+            maker.height.equalTo(CGFloat(headerListCount) * itemCellHeight)
+        }
+        
+        let count = isNeighborhoodInfoFold ? 0 : bottomListCount
+        
+        bottomBgView.snp.remakeConstraints { maker in
+            maker.top.equalToSuperview().offset(CGFloat(headerListCount) * itemCellHeight)
+            maker.left.right.bottom.equalToSuperview()
+            maker.height.equalTo(CGFloat(count) * itemCellHeight + 58)
+        }
+        
+        bottomListView.snp.remakeConstraints { maker in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(CGFloat(bottomListCount) * itemCellHeight)
+        }
+        foldButton.snp.remakeConstraints { (maker) in
+            maker.bottom.left.right.equalToSuperview()
+            maker.height.equalTo(58)
+        }
+        super.updateConstraints()
+    }
 }
 
 class CommonFoldViewButton:UIButton {
@@ -279,11 +466,11 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
         if let count = data.baseInfo?.count, count > 0 {
             let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)(disposeBag)
             return TableSectionNode(
-                items: [cellRender],
+                items: [oneTimeRender(cellRender)],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
                 label: "",
-                type: .node(identifier: PropertyListCell.identifier))
+                type: .node(identifier: NeighborhoodPropertyInfoCell.identifier))
         }else {
             return nil
         }
@@ -291,45 +478,32 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
 }
 
 func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
-    if let theCell = cell as? PropertyListCell {
-        theCell.prepareForReuse()
-        theCell.removeListBottomView(-20, true)
+    if let theCell = cell as? NeighborhoodPropertyInfoCell {
         if let groups = infos {
             func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
                 rowView.keyLabel.text = info.attr
                 rowView.valueLabel.text = info.value
             }
 
-            let singleViews = groups.map { (info) -> UIView in
+            var singleViews = groups.map { (info) -> UIView in
                 let re = RowView()
                 setRowValue(info, re)
                 re.remakeValueLabelConstraints()
                 return re
             }
-            
-            let foldButton = CommonFoldViewButton(downText: "查看全部信息", upText: "收起")
-            
-            foldButton.isFold = theCell.isNeighborhoodInfoFold
-            
-            foldButton.rx.tap
-                .bind(onNext: { [weak theCell, weak foldButton] () in
-                    theCell?.refreshCell()
-                    foldButton?.isFold = theCell?.isNeighborhoodInfoFold ?? true
-                })
-                .disposed(by: disposeBag)
-            
-            var listViews:[UIView] = []
-            
-            if theCell.isNeighborhoodInfoFold {
-                let rowVeiws = singleViews.take(4)
-                listViews.append(contentsOf: rowVeiws)
-                listViews.append(foldButton)
-                theCell.addRowView(rows: listViews)
+        
+            let headVeiws = singleViews.take(4)
+            theCell.headListView.addRowView(rows: headVeiws)
+//            headVeiws
+            theCell.headerListCount = headVeiws.count
+            if singleViews.count > 4 {
+                singleViews.removeFirst(4)
+                theCell.bottomListView.addRowView(rows: singleViews)
+                theCell.bottomListCount = singleViews.count
             } else {
-                listViews.append(contentsOf: singleViews)
-                listViews.append(foldButton)
-                theCell.addRowView(rows: listViews)
+                theCell.bottomListCount = 0
             }
+            theCell.updateConstraintsIfNeeded()
         }
     }
 }

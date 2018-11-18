@@ -537,7 +537,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
-            if let refreshCell = cell as? PropertyListCell {
+            if let refreshCell = cell as? NeighborhoodPropertyInfoCell {
                 let tempRefreshCell = refreshCell
                 tempRefreshCell.isNeighborhoodInfoFold = self.neighborhoodInfoFoldState
                 processRefreshableTableViewCell(
@@ -557,15 +557,19 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     fileprivate func processRefreshableTableViewCell(
-        cell: RefreshableTableViewCell,
+        cell: NeighborhoodPropertyInfoCell,
         indexPath: IndexPath,
         tableView: UITableView) {
-        var tempCell = cell
-        tempCell.refreshCallback = { [weak tableView, weak self] in
+        let tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
             self?.changeNeighborhoodInfoFoldState()
-            UIView.performWithoutAnimation {
-                tableView?.reloadRows(at: [indexPath], with: .none)
+            tableView?.beginUpdates()
+            if let refreshCell = tempCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isNeighborhoodInfoFold = self?.neighborhoodInfoFoldState ?? true
+                tempRefreshCell.setNeedsUpdateConstraints()
             }
+            tableView?.endUpdates()
         }
     }
     
