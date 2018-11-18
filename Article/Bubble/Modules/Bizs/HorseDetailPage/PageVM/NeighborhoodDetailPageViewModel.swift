@@ -510,6 +510,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var nearByCell : NewHouseNearByCell?
     
     var neighborhoodInfoFoldState:Bool = true
+    
+    var cellHeightCaches:[String:CGFloat] = [:]
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -583,6 +585,15 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        if let height = self.cellHeightCaches[tempKey] {
+            return height
+        }
         return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        cellHeightCaches[tempKey] = cell.frame.size.height
     }
 }
