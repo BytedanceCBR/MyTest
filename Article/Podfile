@@ -9,8 +9,16 @@ platform :ios, '8.0'
 
 inhibit_all_warnings!
 def appPods
+    
+    #use_frameworks!
+    
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    pod 'FHHouseBase' , :path => '../../ios_house_base' # :git => '' :branch => 'feature/develop'
+    #pod 'FHBubbleLegacy' , :path => '../../ios_house_legacy' #:git => '' :branch => 'feature/develop'
+    pod 'FHHouseRent' , :path => '../../ios_house_rent' #:git => '' :branch => 'feature/develop'
+    pod 'FHMapSearch' , :path => '../../ios_map_search' #:git => '' :branch => 'feature/develop'
+
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
     #-----安全组sdk-----#
