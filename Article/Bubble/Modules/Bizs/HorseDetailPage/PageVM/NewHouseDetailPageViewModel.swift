@@ -825,6 +825,8 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
     var cellFactory: UITableViewCellFactory
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
+    
+    var cellHeightCaches:[String:CGFloat] = [:]
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -877,11 +879,16 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
         return true
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        if let height = self.cellHeightCaches[tempKey] {
+            return height
+        }
+        return UITableViewAutomaticDimension
     }
     
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        cellHeightCaches[tempKey] = cell.frame.size.height
     }
 }
