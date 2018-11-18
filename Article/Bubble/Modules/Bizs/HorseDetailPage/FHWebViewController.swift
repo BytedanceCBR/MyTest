@@ -47,6 +47,8 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebVie
     
     var urlString: String?
     
+    var stayPageTraceName: String?
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -87,17 +89,24 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebVie
             }
         }
         
+        //埋点参数
         if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["tracer"]{
             self.tracerParams = paramsOfMap(params as? [String : Any] ?? [:])
             
         }
-        
+        //title
         if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["title"]{
             navBar.title.text = params as? String
         }
         
-        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["urlString"]{
+        //加载URL
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["url"]{
             urlString = params as? String
+        }
+        
+        //event,不传不上报
+        if let userInfo = paramObj?.userInfo,let params = userInfo.allInfo["event"]{
+            stayPageTraceName = params as? String
         }
         
         
@@ -205,14 +214,14 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebVie
             }
         }
         
-        if let stayTimeParams = stayTimeParams {
+        //如果不传event，则不上报
+        if let stayTimeParams = stayTimeParams, let eventName = stayPageTraceName {
             let reportTraceParam = TracerParams.momoid() <|>
                 stayTimeParams <|>
                 toTracerParams(readPct ?? 0, key: "read_pct")
-            recordEvent(key: "stay_neighborhood_evaluation", params: reportTraceParam)
+            recordEvent(key: eventName, params: reportTraceParam)
         }
         stayTimeParams = nil
-        
     }
     
     /*
