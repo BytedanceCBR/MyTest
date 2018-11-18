@@ -201,6 +201,8 @@ func fillNewHouseNameCell(_ newHouseData: NewHouseData, cell: BaseUITableViewCel
         }
     }
     theCell.setTags(tags: tags)
+    theCell.layoutIfNeeded()
+
 }
 
 func parseErshouHouseNameNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode {
@@ -226,6 +228,8 @@ func fillErshouHouseNameCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITab
     })
     theCell.setAlias(alias: nil)
     theCell.setTags(tags: tags)
+    theCell.layoutIfNeeded()
+
 }
 
 func createTagAttributeTextNormal(content:String, fontSize:CGFloat = 12.0) -> NSMutableAttributedString {
