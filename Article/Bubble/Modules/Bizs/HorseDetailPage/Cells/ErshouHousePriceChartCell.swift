@@ -332,17 +332,18 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             let maxValue = self.maxValue / unitPerSquare + setPadding
             let minValue = self.minValue / unitPerSquare - setPadding
 
-            chartView.data = data
-
             let leftAxis = chartView.leftAxis
-            leftAxis.drawBottomYLabelEntryEnabled = true
+            leftAxis.drawBottomYLabelEntryEnabled = false
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
-            leftAxis.setLabelCount(4, force: true)
+            leftAxis.setLabelCount(6, force: true)
             
+            chartView.data = data
 
+            chartView.setViewPortOffsets(left: chartView.viewPortHandler.offsetLeft, top: -20, right: 20, bottom: chartView.viewPortHandler.offsetBottom)
+            
         }
 
     }
@@ -467,7 +468,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(180)
+            maker.height.equalTo(210)
             maker.bottom.equalToSuperview()
         }
     
@@ -516,7 +517,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             chartBgView.snp.remakeConstraints { maker in
                 maker.left.right.equalToSuperview()
                 maker.top.equalToSuperview().offset(0)
-                maker.height.equalTo(257)
+                maker.height.equalTo(287)
             }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
@@ -570,27 +571,15 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         leftAxis.forceLabelsEnabled = true
         // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
-//        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
-//        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
-        leftAxis.spaceTop = 0.5
-        leftAxis.spaceBottom = 1
-        leftAxis.spaceMax = 0.5
-        leftAxis.spaceMin = 0.5
-        leftAxis.yOffset = 10
         
+        chartView.extraTopOffset = 40
 
         // 右边轴
         let rightAxis = chartView.rightAxis
-        rightAxis.labelTextColor = .red
-        rightAxis.axisMaximum = 0
-        rightAxis.axisMinimum = 0
-        rightAxis.drawZeroLineEnabled = false
-        rightAxis.drawAxisLineEnabled = false
-        rightAxis.axisLineColor = hexStringToUIColor(hex: kFHSilver2Color)
-        rightAxis.xOffset = 10
-
+        rightAxis.enabled = false
+        
         let marker: ErshouPriceMarkerView = ErshouPriceMarkerView.viewFromXib()! as! ErshouPriceMarkerView
         marker.markerData = {[unowned self] index in
             if self.hasClick {
