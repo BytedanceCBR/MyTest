@@ -14,13 +14,15 @@ import RxCocoa
     }
 }
 
-@objc protocol HouseFilterViewModelDelegate: NSObjectProtocol {
-    func onConditionChanged(condition: String)
-}
+//@objc protocol HouseFilterViewModelDelegate: NSObjectProtocol {
+//    func onConditionChanged(condition: String)
+//}
 
 @objc class HouseFilterViewModel: NSObject {
 
-    @objc weak var delegate: HouseFilterViewModelDelegate?
+//    @objc weak var delegate: HouseFilterViewModelDelegate? //FHHouseFilterDelegate?
+    
+    @objc weak var delegate : FHHouseFilterDelegate?
 
     private var conditionFilterViewModel: ConditionFilterViewModel?
 
@@ -67,7 +69,8 @@ import RxCocoa
 
     func bindConditionChangeDelegate() {
         searchAndConditionFilterVM?.queryCondition
-            .map { [unowned self] (result) -> String in
+            .map {  (result) -> String in
+                //[unowned self]
 //                var theResult = result
                 //增加设置，如果关闭API部分的转码，需要这里将条件过滤器拼接的条件，进行转码
 //                if !self.isNeedEncode {
@@ -79,8 +82,8 @@ import RxCocoa
 //                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
             .debounce(0.1, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] query in    
-                self.delegate?.onConditionChanged(condition: query)
+            .subscribe(onNext: { [unowned self] query in
+                self.delegate?.onConditionChanged( query)
             })
             .disposed(by: disposeBag)
     }

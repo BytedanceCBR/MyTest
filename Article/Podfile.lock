@@ -249,6 +249,7 @@ PODS:
   - Crashlytics (3.7.2):
     - Fabric (~> 1.6.3)
   - Fabric (1.6.7)
+  - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseRent (0.1.0)
   - FHMapSearch (0.1.0)
@@ -1145,6 +1146,7 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
+  - FHCommonUI (from `../../fcommonui4ios`)
   - FHHouseBase (from `../../ios_house_base`)
   - FHHouseRent (from `../../ios_house_rent`)
   - FHMapSearch (from `../../ios_map_search`)
@@ -1271,6 +1273,8 @@ EXTERNAL SOURCES:
     :tag: fixAvatarURL
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
+  FHCommonUI:
+    :path: ../../fcommonui4ios
   FHHouseBase:
     :path: ../../ios_house_base
   FHHouseRent:
@@ -1371,7 +1375,8 @@ SPEC CHECKSUMS:
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  FHHouseBase: 748a7f1e6c368ad3224e19aed909551cedad3cad
+  FHCommonUI: be1e8fa5b5d361f530ad5adafa2a73d1532c2f1e
+  FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseRent: 5ba7acc2088bbbc9cc9688b79309d7f4821cc858
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
@@ -1473,6 +1478,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: ca4b1cd040c05c7920eed2f5cf67d3d5562beca9
+PODFILE CHECKSUM: a956a2b7f690f42304001443983ffd2ede715e91
 
 COCOAPODS: 1.4.0

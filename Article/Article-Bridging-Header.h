@@ -90,4 +90,8 @@
 #import "ArticleListNotifyBarView.h"
 #import "FRRouteHelper.h"
 
+
+//for bridge
+#import <FHHouseBase/FHHouseFilterDelegate.h>
+
 #endif /* Article_Bridging_Header_h */

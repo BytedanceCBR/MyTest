@@ -14,10 +14,11 @@ def appPods
     
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
-    pod 'FHHouseBase' , :path => '../../ios_house_base' # :git => '' :branch => 'feature/develop'
-    #pod 'FHBubbleLegacy' , :path => '../../ios_house_legacy' #:git => '' :branch => 'feature/develop'
-    pod 'FHHouseRent' , :path => '../../ios_house_rent' #:git => '' :branch => 'feature/develop'
-    pod 'FHMapSearch' , :path => '../../ios_map_search' #:git => '' :branch => 'feature/develop'
+    pod 'FHCommonUI' ,  :path => '../../fcommonui4ios' # :git => '' ,:branch => 'feature/develop'
+    pod 'FHHouseBase' , :path => '../../ios_house_base' # :git => '' ,:branch => 'feature/develop'
+    #pod 'FHBubbleLegacy' , :path => '../../ios_house_legacy' #:git => '' , :branch => 'feature/develop'
+    pod 'FHHouseRent' , :path => '../../ios_house_rent' #:git => '' ,:branch => 'feature/develop'
+    pod 'FHMapSearch' , :path => '../../ios_map_search' #:git => '' ,:branch => 'feature/develop'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
