@@ -308,11 +308,13 @@ func createTagAttrString(
 }
 
 
-extension SingleImageInfoCell {
-    @objc func update(withModel item  : FHSearchHouseDataItemsModel , isLastCell: Bool) {
+extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{    
+    @objc func update(with model: FHSearchHouseDataItemsModel , isLastCell: Bool) {
+        
         let cell = self
-        cell.majorTitle.text = item.displayTitle
-        cell.extendTitle.text = item.displaySubtitle
+        let item = model
+        cell.majorTitle.text = model.displayTitle
+        cell.extendTitle.text = model.displaySubtitle
         cell.isTail = isLastCell
         
         let text = NSMutableAttributedString()
