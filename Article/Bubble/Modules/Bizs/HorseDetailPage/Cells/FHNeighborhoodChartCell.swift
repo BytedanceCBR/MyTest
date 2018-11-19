@@ -294,6 +294,7 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
+        leftAxis.labelFont = .systemFont(ofSize: 12)
         leftAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
         leftAxis.xOffset = 20
         leftAxis.labelCount = 4
