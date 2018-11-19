@@ -43,6 +43,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     var searchId: String?
     
+    fileprivate var userInteractionObv: NSKeyValueObservation?
+    
     var sameNeighborhoodFollowUp = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
     var followStatus: BehaviorRelay<Result<Bool>>? = nil
@@ -78,6 +80,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
 
     override func viewDidLoad() {
+        
+        userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
+            if let _ = value.newValue {
+                self?.view.endEditing(true)
+            }
+        }
+        
         self.navigationController?.navigationBar.isHidden = true
         self.hidesBottomBarWhenPushed = true
         self.ttHideNavigationBar = true
