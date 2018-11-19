@@ -690,7 +690,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.sourceLabel.frame = cellLayOut.sourceLabelFrame;
 //        self.sourceLabel.frame = CGRectMake(cellLayOut.sourceLabelFrame.origin.x, cellLayOut.cellCacheHeight - cellLayOut.sourceLabelFrame.size.height - 10, cellLayOut.sourceLabelFrame.size.width, cellLayOut.sourceLabelFrame.size.height);
         self.sourceLabel.textColorThemeKey = cellLayOut.sourceLabelTextColorThemeKey;
-        self.sourceLabel.font = [UIFont tt_fontOfSize:10];
+        self.sourceLabel.font = [UIFont tt_fontOfSize:12];
         self.sourceLabel.userInteractionEnabled = cellLayOut.sourceLabelUserInteractionEnabled;
         self.sourceLabel.text = cellLayOut.sourceLabelStr;
     }
@@ -706,7 +706,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 //        {
 //            self.infoLabel.frame = CGRectMake(self.sourceLabel.origin.x + self.sourceLabel.size.width, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
 //        }
-        self.infoLabel.font = [UIFont systemFontOfSize:10];
+        self.infoLabel.font = [UIFont systemFontOfSize:12];
         self.infoLabel.textColorThemeKey = cellLayOut.infoLabelTextColorThemeKey;
         self.infoLabel.text = self.orderedData.cellLayOut.infoLabelStr;
     }
