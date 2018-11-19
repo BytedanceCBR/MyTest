@@ -1307,3 +1307,29 @@ static CommonURLSetting *_sharedInstance = nil;
 
 
 @end
+
+
+NSString * baseUrl(void)
+{
+    return [CommonURLSetting  baseURL];
+}
+
+NSString* SNSBaseURL(void)
+{
+    return [CommonURLSetting SNSBaseURL];
+}
+
+NSString* securityURL(void)
+{
+    return [CommonURLSetting securityURL];
+}
+
+NSArray *baseUrlMapping(void)
+{
+    return [CommonURLSetting urlMapping];
+}
+
+NSString * logBaseURL(void)
+{
+    return [CommonURLSetting logBaseURL];
+}

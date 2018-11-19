@@ -32,6 +32,7 @@ import UIKit
         return re
     }()
     
+    @objc
     lazy var currentMapSelect :String = {
         return "公交"
     }()//全局用户状态
@@ -51,6 +52,11 @@ import UIKit
     @objc
     func homePageParamsMap() -> [String: Any] {
         return homePageParams.paramsGetter([:])
+    }
+    
+    @objc
+    func recordEvent(key: String, params: [String: Any]? = nil) {
+        tracer.writeEvent(key, params: params)
     }
 
 }
@@ -75,6 +81,7 @@ func recordEvent(key: String, params: TracerParams) {
 func recordEvent(key: String, params: [String: Any]? = nil) {
     EnvContext.shared.tracer.writeEvent(key, params: params)
 }
+
 
 
 func thresholdTracer(_ threshold: Double = 0) -> (String, TracerParams) -> Void {

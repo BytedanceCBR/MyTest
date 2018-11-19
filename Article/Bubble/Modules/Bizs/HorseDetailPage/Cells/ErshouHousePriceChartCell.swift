@@ -555,6 +555,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
+        leftAxis.labelFont = .systemFont(ofSize: 12)
         leftAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
         leftAxis.xOffset = 20
         leftAxis.labelCount = 4
@@ -635,11 +636,11 @@ func lineColorByIndex(_ index: Int) -> UIColor {
     case 0:
         return hexStringToUIColor(hex: kFHClearBlueColor)
     case 1:
-        return hexStringToUIColor(hex: "#dae1e7")
+        return hexStringToUIColor(hex: "#9eaab4")
     case 2:
-        return hexStringToUIColor(hex: "#dae1e7")
+        return hexStringToUIColor(hex: "#e1e3e6")
     default:
-        return hexStringToUIColor(hex: "#dae1e7")
+        return hexStringToUIColor(hex: "#e1e3e6")
         
     }
     

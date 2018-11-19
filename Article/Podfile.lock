@@ -274,6 +274,10 @@ PODS:
   - Crashlytics (3.7.2):
     - Fabric (~> 1.6.3)
   - Fabric (1.6.7)
+  - FHCommonUI (0.1.0)
+  - FHHouseBase (0.1.0)
+  - FHHouseRent (0.1.0)
+  - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12)
   - FLEX (2.1.1)
   - FMDB (2.6.2):
@@ -616,6 +620,16 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTBaseLib/TTUIResponderHelper
+    - TTTracker
+  - TTAppUpdateHelper/TTUpdateView (1.0.3):
+    - TTThemed
+    - TTUIWidget
   - TTAudio (0.1.4):
     - TTNetworkManager
     - TTTracker
@@ -1166,6 +1180,10 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, branch `feature/develop`)
+  - FHHouseBase (from `git@code.byted.org:fproject/ios_house_base.git`, branch `feature/develop`)
+  - FHHouseRent (from `git@code.byted.org:fproject/ios_house_rent.git`, branch `feature/develop`)
+  - FHMapSearch (from `git@code.byted.org:fproject/ios_map_search.git`, branch `feature/develop`)
   - FLEX (= 2.1.1)
   - Heimdallr/ALog (= 0.4.21)
   - Heimdallr/Core (= 0.4.21)
@@ -1218,6 +1236,8 @@ DEPENDENCIES:
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper
+  - TTAppUpdateHelper/TTUpdateView
   - TTAudio (= 0.1.4)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -1309,6 +1329,18 @@ EXTERNAL SOURCES:
     :tag: fixAvatarURL
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
+  FHCommonUI:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+  FHHouseBase:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_house_base.git
+  FHHouseRent:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_house_rent.git
+  FHMapSearch:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_map_search.git
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   React:
@@ -1360,6 +1392,18 @@ CHECKOUT OPTIONS:
   BDAccount:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
+  FHCommonUI:
+    :commit: bc4ad398a290367a82f98fb7c5f31d90ff5ac90a
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+  FHHouseBase:
+    :commit: c98911b04d433865ccf9ce5988a895491061421d
+    :git: git@code.byted.org:fproject/ios_house_base.git
+  FHHouseRent:
+    :commit: 37079d23d6a0617aeef46f3d7ef6c34d02eda8ac
+    :git: git@code.byted.org:fproject/ios_house_rent.git
+  FHMapSearch:
+    :commit: 73ad2472def4ed75b46c2a53b7ed38a8a2dd4e05
+    :git: git@code.byted.org:fproject/ios_map_search.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1400,6 +1444,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: e7f267c457ef2f7e579085be6d8307281bf797ae
   Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
+  FHCommonUI: c7b0fb8906149470c54d4ec863cda40183b558aa
+  FHHouseBase: 1d6c06e2b8c131478b262c2275cfe96a0f486b21
+  FHHouseRent: 0d7d55573f71b82851b2dda0f81c81b0e17ddd8b
+  FHMapSearch: 19d421d695f9b97e46244d285bba809a4b388e50
   FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
   FLEX: b27e70410abfc79bc87de601581581a9cad7126d
   FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
@@ -1435,6 +1483,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
+  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
@@ -1498,6 +1547,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 4137549b763206d7396319e4bbbd3ab7a3a2ca18
+PODFILE CHECKSUM: f84e894e9384151c6dc5091820d80f281bbbecdf
 
 COCOAPODS: 1.4.0
