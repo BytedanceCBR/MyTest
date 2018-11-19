@@ -1146,7 +1146,7 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
-  - FHCommonUI (from `../../fcommonui4ios`)
+  - FHCommonUI (from `../../ios_common_ui`)
   - FHHouseBase (from `../../ios_house_base`)
   - FHHouseRent (from `../../ios_house_rent`)
   - FHMapSearch (from `../../ios_map_search`)
@@ -1274,7 +1274,7 @@ EXTERNAL SOURCES:
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
   FHCommonUI:
-    :path: ../../fcommonui4ios
+    :path: ../../ios_common_ui
   FHHouseBase:
     :path: ../../ios_house_base
   FHHouseRent:
@@ -1375,7 +1375,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  FHCommonUI: be1e8fa5b5d361f530ad5adafa2a73d1532c2f1e
+  FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseRent: 5ba7acc2088bbbc9cc9688b79309d7f4821cc858
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
@@ -1478,6 +1478,6 @@ SPEC CHECKSUMS:
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: a956a2b7f690f42304001443983ffd2ede715e91
+PODFILE CHECKSUM: 5d99203ee01548d031286e17178966ab2631ea1d
 
 COCOAPODS: 1.4.0
