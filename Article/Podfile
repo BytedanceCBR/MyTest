@@ -273,6 +273,7 @@ def appPods
 #    'Location'
     ]
 
+    #----内测升级弹窗----
     pod 'TTAppUpdateHelper', :subspecs => [
     'TTUpdateHelper',
     'TTUpdateView'
