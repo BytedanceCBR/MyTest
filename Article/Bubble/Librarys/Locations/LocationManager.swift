@@ -120,15 +120,15 @@ import RxCocoa
     }
 
 
-    func locationParams() -> () -> [AnyHashable: Any] {
+    func locationParams() -> () -> [String: Any] {
         return { [weak self] in
-            var params: [AnyHashable: Any]  = [:]
+            var params: [String: Any]  = [:]
             if let lat = self?.currentLocation.value?.coordinate.latitude,
                 let lng = self?.currentLocation.value?.coordinate.longitude {
-                params["gaode_lat"] = lat
-                params["gaode_lng"] = lng
-                params["latitude"] = lat
-                params["longitude"] = lng
+                params["gaode_lat"] = "\(lat)"
+                params["gaode_lng"] = "\(lng)"
+                params["latitude"] = "\(lat)"
+                params["longitude"] = "\(lng)"
             }
             if let gaodeCityId = self?.currentCity.value?.citycode {
                 params["gaode_city_id"] = gaodeCityId

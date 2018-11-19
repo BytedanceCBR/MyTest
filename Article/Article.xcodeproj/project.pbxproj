@@ -3487,6 +3487,9 @@
 		B3BDFAA421460CCD00C948FC /* libMJRefresh.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3BDFAA321460CCD00C948FC /* libMJRefresh.a */; };
 		B3BDFACC2146588600C948FC /* HouseShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BDFACB2146588600C948FC /* HouseShare.swift */; };
 		B3BDFACD2146588600C948FC /* HouseShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BDFACB2146588600C948FC /* HouseShare.swift */; };
+		B3CA00EF219EB76C00DA8789 /* TTDecodeImageQueueConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA00EE219EB76C00DA8789 /* TTDecodeImageQueueConfig.m */; };
+		B3CA00F0219EB77100DA8789 /* TTDecodeImageQueueConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA00EE219EB76C00DA8789 /* TTDecodeImageQueueConfig.m */; };
+		B3CA00F1219EB77200DA8789 /* TTDecodeImageQueueConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA00EE219EB76C00DA8789 /* TTDecodeImageQueueConfig.m */; };
 		C2036D7E1F288E5300ECFA51 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		C212227E1F4F0CF00036101E /* TTShortVideoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BB79DA1F4578CB002C2EEF /* TTShortVideoHelper.m */; };
 		C22374101F5428E50005E844 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
@@ -8016,6 +8019,8 @@
 		B3BDFA9B21460C9000C948FC /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = Carthage/Build/iOS/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
 		B3BDFAA321460CCD00C948FC /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3BDFACB2146588600C948FC /* HouseShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseShare.swift; sourceTree = "<group>"; };
+		B3CA00ED219EB76B00DA8789 /* TTDecodeImageQueueConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTDecodeImageQueueConfig.h; sourceTree = "<group>"; };
+		B3CA00EE219EB76C00DA8789 /* TTDecodeImageQueueConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTDecodeImageQueueConfig.m; sourceTree = "<group>"; };
 		B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.release.xcconfig"; sourceTree = "<group>"; };
 		C0B392A9E342CCCDCA90EB90 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		C2036D7C1F288E5300ECFA51 /* TTQQSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTQQSDKRegister.h; sourceTree = "<group>"; };
@@ -10505,6 +10510,8 @@
 		3ABB8B45158783E700F29B4D /* external */ = {
 			isa = PBXGroup;
 			children = (
+				B3CA00ED219EB76B00DA8789 /* TTDecodeImageQueueConfig.h */,
+				B3CA00EE219EB76C00DA8789 /* TTDecodeImageQueueConfig.m */,
 				0C5F16D41FCC127800766323 /* FeedOptimizeImageSizeHelper.h */,
 				0C5F16D31FCC127700766323 /* FeedOptimizeImageSizeHelper.m */,
 				06BBE3FC1B15CC4400C4562F /* Gaode */,
@@ -19798,6 +19805,7 @@
 				D501686A2089EC4B00B8F1C7 /* TTMessageNotificationTipsView.m in Sources */,
 				3240976A1F414E55002DF7C0 /* FriendListView.m in Sources */,
 				B388CB882142652A00653188 /* GlobalPricingCell.swift in Sources */,
+				B3CA00EF219EB76C00DA8789 /* TTDecodeImageQueueConfig.m in Sources */,
 				3240978C1F4151CF002DF7C0 /* ArticleMomentProfileWapView.m in Sources */,
 				A97DBB671F1332E20002B455 /* NewsBaseDelegate+Service.m in Sources */,
 				88EDBFAA1F3076CF00911931 /* SettingPushCell.m in Sources */,
@@ -22182,6 +22190,7 @@
 				B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */,
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
+				B3CA00F1219EB77200DA8789 /* TTDecodeImageQueueConfig.m in Sources */,
 				3D3CCEED2181927C008F0378 /* FHMapSearchViewModel.m in Sources */,
 				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
@@ -23893,6 +23902,7 @@
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
 				3D3CCEEC2181927C008F0378 /* FHMapSearchViewModel.m in Sources */,
+				B3CA00F0219EB77100DA8789 /* TTDecodeImageQueueConfig.m in Sources */,
 				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				FEFA57A2205FB1A8001F50D8 /* TTVCommodityFloatView.m in Sources */,
