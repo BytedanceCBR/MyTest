@@ -274,6 +274,10 @@ PODS:
   - Crashlytics (3.7.2):
     - Fabric (~> 1.6.3)
   - Fabric (1.6.7)
+  - FHCommonUI (0.1.0)
+  - FHHouseBase (0.1.0)
+  - FHHouseRent (0.1.0)
+  - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12)
   - FLEX (2.1.1)
   - FMDB (2.6.2):
@@ -616,6 +620,16 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTBaseLib/TTUIResponderHelper
+    - TTTracker
+  - TTAppUpdateHelper/TTUpdateView (1.0.3):
+    - TTThemed
+    - TTUIWidget
   - TTAudio (0.1.4):
     - TTNetworkManager
     - TTTracker
@@ -1166,6 +1180,10 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
+  - FHCommonUI (from `../../ios_common_ui`)
+  - FHHouseBase (from `../../ios_house_base`)
+  - FHHouseRent (from `../../ios_house_rent`)
+  - FHMapSearch (from `../../ios_map_search`)
   - FLEX (= 2.1.1)
   - Heimdallr/ALog (= 0.4.21)
   - Heimdallr/Core (= 0.4.21)
@@ -1218,6 +1236,8 @@ DEPENDENCIES:
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper
+  - TTAppUpdateHelper/TTUpdateView
   - TTAudio (= 0.1.4)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -1309,6 +1329,14 @@ EXTERNAL SOURCES:
     :tag: fixAvatarURL
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
+  FHCommonUI:
+    :path: ../../ios_common_ui
+  FHHouseBase:
+    :path: ../../ios_house_base
+  FHHouseRent:
+    :path: ../../ios_house_rent
+  FHMapSearch:
+    :path: ../../ios_map_search
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   React:
@@ -1400,6 +1428,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: e7f267c457ef2f7e579085be6d8307281bf797ae
   Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
+  FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
+  FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
+  FHHouseRent: 5ba7acc2088bbbc9cc9688b79309d7f4821cc858
+  FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
   FLEX: b27e70410abfc79bc87de601581581a9cad7126d
   FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
@@ -1435,6 +1467,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
+  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
@@ -1498,6 +1531,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 4137549b763206d7396319e4bbbd3ab7a3a2ca18
+PODFILE CHECKSUM: 54e04288f64b0770e5501b4c7580e3162c57cecc
 
 COCOAPODS: 1.4.0

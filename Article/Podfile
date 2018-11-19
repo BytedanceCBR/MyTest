@@ -10,8 +10,16 @@ platform :ios, '8.0'
 
 inhibit_all_warnings!
 def appPods
+    
+    #use_frameworks!
+    
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    pod 'FHCommonUI' ,  :path => '../../ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git' ,:branch => 'feature/develop'
+    pod 'FHHouseBase' , :path => '../../ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop'
+    pod 'FHHouseRent' , :path => '../../ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.gi' ,:branch => 'feature/develop'
+    pod 'FHMapSearch' , :path => '../../ios_map_search' #:git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop'
+
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
     #-----安全组sdk-----#
@@ -174,6 +182,7 @@ def appPods
 
     #-----头条网络库-----
 #    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+#pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
     pod 'TTNetworkManager','2.2.8.41'
 
 
