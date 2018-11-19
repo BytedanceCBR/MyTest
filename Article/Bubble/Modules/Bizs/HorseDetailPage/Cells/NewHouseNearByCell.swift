@@ -499,8 +499,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             if reuqestPoi.keywords == "公交地铁"
             {
                 changePoiData(index: 0)
-                let count  = locationListViewModel.datas.count
-                changeListLayout(poiCount: count)
+                self.callBackIndexChanged?()
             }
         }
         requestIndex += 1

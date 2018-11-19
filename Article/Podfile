@@ -282,6 +282,12 @@ def appPods
 #    'Location'
     ]
 
+    #----内测升级弹窗----
+    pod 'TTAppUpdateHelper', :subspecs => [
+    'TTUpdateHelper',
+    'TTUpdateView'
+    ]
+
 #    #——头条OpenSDK和PlatformSDK库----
 #    pod 'Bytedancebase', '0.2.3', :subspecs => [
 #    'BDOpenSDK',
