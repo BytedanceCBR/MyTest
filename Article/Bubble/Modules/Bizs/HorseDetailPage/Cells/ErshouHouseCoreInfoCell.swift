@@ -80,7 +80,7 @@ fileprivate class ItemButtonControl: UIControl {
     
     lazy var rightArrowImageView: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "setting-arrow-2")
+        re.image = UIImage(named: "setting-arrow-3")
         return re
     }()
     
@@ -101,10 +101,10 @@ fileprivate class ItemButtonControl: UIControl {
         }
         addSubview(rightArrowImageView)
         rightArrowImageView.snp.makeConstraints { maker in
-            maker.left.equalTo(valueLabel.snp.right).offset(10)
+            maker.left.equalTo(valueLabel.snp.right).offset(7)
             maker.right.equalTo(self)
-            maker.width.equalTo(4)
-            maker.height.equalTo(8)
+            maker.width.equalTo(10)
+            maker.height.equalTo(10)
             maker.centerY.equalTo(valueLabel)
         }
         addSubview(bottomLine)
