@@ -204,16 +204,17 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
             let maxValue = self.maxValue / unitPerSquare + setPadding
             let minValue = self.minValue / unitPerSquare - setPadding
             
-            chartView.data = data
-            
             let leftAxis = chartView.leftAxis
-            leftAxis.drawBottomYLabelEntryEnabled = true
+            leftAxis.drawBottomYLabelEntryEnabled = false
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.spaceBottom = 0.0
             leftAxis.axisMaximum = maxValue
             leftAxis.axisMinimum = minValue
-            leftAxis.setLabelCount(4, force: true)
+            leftAxis.setLabelCount(6, force: true)
+            
+            chartView.data = data
+            
+            chartView.setViewPortOffsets(left: chartView.viewPortHandler.offsetLeft, top: -20, right: 20, bottom: chartView.viewPortHandler.offsetBottom)
             
             
         }
@@ -272,6 +273,7 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         l.orientation = .horizontal
         l.drawInside = true
         l.wordWrapEnabled = true
+        l.xEntrySpace = -20
         
         // 月份,也就是竖轴,不显示虚线
         let xAxis = chartView.xAxis
@@ -280,10 +282,11 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         xAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         xAxis.granularity = 1 // 粒度
         xAxis.drawGridLinesEnabled = false
-        xAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        xAxis.axisLineWidth = 0.5
+        xAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
+        xAxis.axisLineWidth = 1
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
+        xAxis.xOffset = -20
         xAxis.valueFormatter = self.monthFormatter
         xAxis.enabled = true
         xAxis.spaceMin = 0.5
@@ -291,31 +294,25 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-        leftAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        leftAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
         leftAxis.xOffset = 20
         leftAxis.labelCount = 4
         leftAxis.drawAxisLineEnabled = true
-        leftAxis.gridColor = hexStringToUIColor(hex: kFHSilver2Color)
+        leftAxis.gridColor = hexStringToUIColor(hex: "#ebeff2")
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
-        // 横轴的虚线
-        leftAxis.spaceBottom = 0.0
+        // 左边轴的虚线
         leftAxis.drawGridLinesEnabled = true
-        //        leftAxis.zeroLineColor = hexStringToUIColor(hex: kFHSilver2Color)
         leftAxis.drawZeroLineEnabled = false
-        //        leftAxis.zeroLineWidth = 0.5
         leftAxis.valueFormatter = FHFloatValueFormatter()
+        leftAxis.axisLineWidth = 1
+        
+        chartView.extraTopOffset = 40
         
         // 右边轴
         let rightAxis = chartView.rightAxis
-        rightAxis.labelTextColor = .red
-        rightAxis.axisMaximum = 0
-        rightAxis.axisMinimum = 0
-        rightAxis.drawZeroLineEnabled = false
-        rightAxis.drawAxisLineEnabled = false
-        rightAxis.axisLineColor = hexStringToUIColor(hex: kFHSilver2Color)
-        rightAxis.xOffset = 10
+        rightAxis.enabled = false
         
         let marker: ErshouPriceMarkerView = ErshouPriceMarkerView.viewFromXib()! as! ErshouPriceMarkerView
         marker.markerData = {[unowned self] index in
