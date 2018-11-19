@@ -80,7 +80,7 @@ fileprivate class ItemButtonControl: UIControl {
     
     lazy var rightArrowImageView: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "setting-arrow-2")
+        re.image = UIImage(named: "setting-arrow-3")
         return re
     }()
     
