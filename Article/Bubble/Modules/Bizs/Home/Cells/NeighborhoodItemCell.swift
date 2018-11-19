@@ -166,42 +166,6 @@ class NeighborhoodItemCell: BaseUITableViewCell {
 
 }
 
-//func parseNeighborhoodItemNode(_ items: [NeighborhoodInnerItemEntity]?, navVC: UINavigationController?, disposeBag: DisposeBag) -> () -> TableSectionNode?  {
-//    return {
-//        let theParams = TracerParams.momoid()
-//
-//        let selectors = items?
-//                .filter { $0.id != nil }
-//                .enumerated()
-//                .map { (e) -> TableCellSelectedProcess in
-//                let (offset, item) = e
-//                return openNeighborhoodDetailPage(
-//                            neighborhoodId: Int64(item.id!)!,
-//                            logPB: item.logPB,
-//                            disposeBag: disposeBag,
-//                            tracerParams: theParams <|>
-//                                toTracerParams(offset, key: "rank") <|>
-//                                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-//                                toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
-//                            navVC: navVC)
-//                }
-//        let count = items?.count ?? 0
-//        if let renders = items?.enumerated().map( { (index, item) in
-//
-//            curry(fillNeighborhoodItemCell)(item)(index == count - 1)
-//
-//        }), let selectors = selectors {
-//            return TableSectionNode(
-//                    items: renders,
-//                    selectors: selectors,
-//                    tracer: nil,
-//                    label: "新房房源",
-//                    type: .node(identifier: NeighborhoodItemCell.identifier))
-//        } else {
-//            return nil
-//        }
-//    }
-//}
 
 //小区列表数据解析
 func parseNeighborhoodRowItemNode(

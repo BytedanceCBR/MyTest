@@ -135,7 +135,7 @@ func parseNewHouseCommentNode(
         return TableSectionNode(items: renders ?? [],
                                 selectors: selectors,
                 tracer: [elementShowOnceRecord(params: params)],
-                                label: "全网点评",
+                                label: "用户点评",
                                 type: .node(identifier: NewHouseCommentCell.identifier))
 
     }

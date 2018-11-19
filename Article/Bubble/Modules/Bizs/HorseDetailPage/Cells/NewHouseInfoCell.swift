@@ -409,10 +409,11 @@ func fillNewHouseCoreInfoCell(
         let theDisposeBag = DisposeBag()
         let params = TracerParams.momoid() <|>
             toTracerParams("new_detail", key: "enter_from") <|>
-            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExt, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(floorPanId, key: "group_id") <|>
             toTracerParams("house_info", key: "element_from") <|>
             toTracerParams("address", key: "click_type")
+
         theCell.openMapBtn.rx.tap
                 .bind { void in
                     let clickMapParams = EnvContext.shared.homePageParams <|>

@@ -371,7 +371,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                                         recordEvent(key: TraceEventName.click_house_history, params: infoParams)
                 })
                 <- parseFlineNode((data.timeLine?.list?.count ?? 0) > 0 ? 6 : 0)
-                <- parseHeaderNode("全网点评", subTitle: "查看更多", showLoadMore: data.comment?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                <- parseHeaderNode("用户点评", subTitle: "查看更多", showLoadMore: data.comment?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
                     if let hasMore = data.comment?.hasMore, hasMore == true {
                         let phoneTracer = TracerParams.momoid() <|>
                             toTracerParams("call_bottom", key: "element_type") <|>
@@ -431,18 +431,18 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                 //地图cell
                 <- parseNewHouseNearByNode(data, traceExt: traceExtension, houseId: "\(self.houseId)",navVC: navVC, disposeBag: disposeBag){
                     [weak self] in
-                    
+                    let contentOffsetY = self?.tableView?.contentOffset.y
                     UIView.performWithoutAnimation { [weak self] in
-                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        self?.tableView?.isScrollEnabled = false
+                        self?.tableView?.beginUpdates()
+                        self?.dataSource.nearByCell?.updateLayoutForList()
+                        
+                        self?.tableView?.endUpdates()
+                        if let yValue = contentOffsetY
                         {
-                            visibleCells.forEach({ [weak self] (indexPath) in
-                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
-                                {
-                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
-                                }
-                            })
-                            
+                            self?.tableView?.contentOffset = CGPoint(x: 0, y: yValue)
                         }
+                        self?.tableView?.isScrollEnabled = true
                     }
                 }
                 <- parseFlineNode(6)
@@ -825,6 +825,8 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
     var cellFactory: UITableViewCellFactory
 
     var sectionHeaderGenerator: TableViewSectionViewGen?
+    
+    var cellHeightCaches:[String:CGFloat] = [:]
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -877,11 +879,16 @@ class NewHouseDetailDataSource: NSObject, UITableViewDelegate, UITableViewDataSo
         return true
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        if let height = self.cellHeightCaches[tempKey] {
+            return height
+        }
+        return UITableViewAutomaticDimension
     }
     
-    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        cellHeightCaches[tempKey] = cell.frame.size.height
     }
 }

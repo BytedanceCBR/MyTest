@@ -234,10 +234,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 theParams = theParams <|>
                     toTracerParams(logPb, key: "log_pb")
             }
-            
-            // add by zjing for test
-            print("zjing-traceParamsDic-\(traceParamsDic)")
-            print("zjing-theParams-\(theParams.paramsGetter([:]))")
+
 
             /*
             if let code = traceParamsDic["search_id"] as? String {
@@ -267,7 +264,12 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
-                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: theParams)
+                        var traceExtension = theParams
+                        if let traceParams  = self?.traceParams {
+                            traceExtension = traceExtension <|> toTracerParams(selectTraceParam(traceParams, key: "log_pb") ?? "be_null", key: "log_pb")
+                        }
+ 
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: traceExtension)
                     }
                 }
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
@@ -290,18 +292,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 <- parseNeighorhoodNearByNode(data, traceExtension: traceExtension, houseId: "\(self.houseId)",navVC: self.navVC, disposeBag: self.disposeBag){
                     [weak self] in
-                    
+                    let contentOffsetY = self?.tableView?.contentOffset.y
                     UIView.performWithoutAnimation { [weak self] in
-                        if let visibleCells = self?.tableView?.indexPathsForVisibleRows
+                        self?.tableView?.isScrollEnabled = false
+                        self?.tableView?.beginUpdates()
+                        self?.dataSource.nearByCell?.updateLayoutForList()
+
+                        self?.tableView?.endUpdates()
+                        if let yValue = contentOffsetY
                         {
-                            visibleCells.forEach({ [weak self] (indexPath) in
-                                if let cell = self?.tableView?.cellForRow(at: indexPath),cell is NewHouseNearByCell
-                                {
-                                    self?.tableView?.reloadRows(at: [indexPath], with: .none)
-                                }
-                            })
-                           
+                            self?.tableView?.contentOffset = CGPoint(x: 0, y: yValue)
                         }
+                        self?.tableView?.isScrollEnabled = true
                     }
                 }
                 <- parseFlineNode(data.neighborhoodInfo == nil ? 0 : 6)
@@ -460,8 +462,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 
                 let transactionTrace = traceExtension <|>
                     toTracerParams(category_name, key: "category_name") <|>
-                    toTracerParams(element_from, key: "element_from") <|>
-                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(element_from, key: "element_from")
                 
                 var params:[String:Any] = [:]
                 if let id = data.id {
@@ -509,6 +510,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var nearByCell : NewHouseNearByCell?
     
     var neighborhoodInfoFoldState:Bool = true
+    
+    var cellHeightCaches:[String:CGFloat] = [:]
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -534,7 +537,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
-            if let refreshCell = cell as? PropertyListCell {
+            if let refreshCell = cell as? NeighborhoodPropertyInfoCell {
                 let tempRefreshCell = refreshCell
                 tempRefreshCell.isNeighborhoodInfoFold = self.neighborhoodInfoFoldState
                 processRefreshableTableViewCell(
@@ -554,15 +557,19 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     fileprivate func processRefreshableTableViewCell(
-        cell: RefreshableTableViewCell,
+        cell: NeighborhoodPropertyInfoCell,
         indexPath: IndexPath,
         tableView: UITableView) {
-        var tempCell = cell
-        tempCell.refreshCallback = { [weak tableView, weak self] in
+        let tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
             self?.changeNeighborhoodInfoFoldState()
-            UIView.performWithoutAnimation {
-                tableView?.reloadRows(at: [indexPath], with: .none)
+            tableView?.beginUpdates()
+            if let refreshCell = tempCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.isNeighborhoodInfoFold = self?.neighborhoodInfoFoldState ?? true
+                tempRefreshCell.setNeedsUpdateConstraints()
             }
+            tableView?.endUpdates()
         }
     }
     
@@ -582,6 +589,15 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        if let height = self.cellHeightCaches[tempKey] {
+            return height
+        }
         return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        cellHeightCaches[tempKey] = cell.frame.size.height
     }
 }

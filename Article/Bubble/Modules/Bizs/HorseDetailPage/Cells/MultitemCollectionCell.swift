@@ -399,7 +399,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(starsContainer.snp.bottom).offset(8)
             maker.bottom.equalToSuperview().offset(-20)
-            maker.height.equalTo(128)
+            maker.height.equalTo(124)
         }
         collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self
@@ -1123,7 +1123,7 @@ func parseNeighborhoodEvaluationCollectionNode(
 //                toTracerParams("neighborhood_detail", key: "enter_from") <|>
 //            traceExtension.exclude("rank")
             
-            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: TracerParams.momoid(),houseType:.neighborhood, disposeBag: disposeBag)
+            let selector: ((TracerParams) -> Void)? = openEvaluateWebPage(urlStr: data?.evaluationInfo?.detailUrl ?? "", traceParams: traceExtension,houseType:.neighborhood, disposeBag: disposeBag)
             
             if let evaluatInfo = data?.evaluationInfo
             {

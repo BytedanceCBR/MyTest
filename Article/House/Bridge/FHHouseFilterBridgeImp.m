@@ -63,5 +63,10 @@
     return [_houseFilterViewModel getConditions];
 }
 
+-(void)closeConditionFilterPanel
+{
+    [_houseFilterViewModel closeConditionFilterPanel];
+}
+
 
 @end

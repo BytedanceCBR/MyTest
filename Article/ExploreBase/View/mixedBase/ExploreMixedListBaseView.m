@@ -1207,11 +1207,11 @@ TTRefreshViewDelegate
 //    }
 //    //uploading section + function area section + explore section
 //    return ExploreMixedListBaseViewSectionExploreCells + 1;
-
+    
     if (_fetchListManager.items.count == 0) {
-        return 0;
-    } else {
         return 1;
+    } else {
+        return 2;
     }
 }
 
@@ -1226,20 +1226,20 @@ TTRefreshViewDelegate
 //        NSUInteger count = [[_fetchListManager items] count];
 //        return count;
 //    }
-//    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
-//        if (isEmptyString(_categoryID))
-//        {
-//            return 0;
-//        }
-////        if ([_categoryID isEqualToString:@"f_house_news"]) {
-////            return 0;
-////        }
-//        return 0;
-//    }else
-//    {
+    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
+        if (isEmptyString(_categoryID))
+        {
+            return 0;
+        }
+        if ([_categoryID isEqualToString:@"f_house_news"]) {
+            return 3;
+        }
+        return 0;
+    }else
+    {
         NSUInteger count = [[_fetchListManager items] count];
         return count;
-//    }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1250,11 +1250,11 @@ TTRefreshViewDelegate
 //        return [self heightForFunctionAreaCell];
 //    }else {
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//
-//        return 44;
-//    }else
-//    {
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+
+        return 44;
+    }else
+    {
         if (indexPath.row < [self listViewMaxModelIndex]) {
             id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
             
@@ -1270,7 +1270,7 @@ TTRefreshViewDelegate
         }
         
         return 44;
-//    }
+    }
     
 //    }
 }
@@ -1284,18 +1284,20 @@ TTRefreshViewDelegate
 //        return [self functionAreaCell];
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//        UITableViewCell * tableCell = [[UITableViewCell alloc] init];
-//        if (indexPath.row == 0) {
-//            tableCell.backgroundColor = [UIColor redColor];
-//        }else
-//        {
-//            tableCell.backgroundColor = [UIColor blueColor];
-//        }
-//        return tableCell;
-//    }
-//
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+        UITableViewCell * tableCell = [[UITableViewCell alloc] init];
+        if (indexPath.row == 0) {
+            tableCell.backgroundColor = [UIColor redColor];
+        }else if (indexPath.row == 1) {
+            tableCell.backgroundColor = [UIColor purpleColor];
+        }else
+        {
+            tableCell.backgroundColor = [UIColor blueColor];
+        }
+        return tableCell;
+    }
+
     UITableViewCell * tableCell = nil;
     ExploreCellBase *cell = nil;
     
@@ -1391,13 +1393,13 @@ TTRefreshViewDelegate
 //      return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
-//
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
+
     NSInteger modelRowIndex = indexPath.row;
     if (_delegate && [_delegate respondsToSelector:@selector(mixListView:didSelectRowAtIndex:)]) {
         [_delegate mixListView:self didSelectRowAtIndex:indexPath];
@@ -1456,12 +1458,12 @@ TTRefreshViewDelegate
 //        return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
@@ -1740,12 +1742,12 @@ TTRefreshViewDelegate
 //        return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];

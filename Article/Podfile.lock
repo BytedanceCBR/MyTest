@@ -1,4 +1,28 @@
 PODS:
+  - AFgzipRequestSerializer (0.0.3):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - AKCommentPlugin (0.1.0):
     - AKShareServicePlugin
     - BDTArticle
@@ -123,10 +147,10 @@ PODS:
     - TTTracker
   - AMap3DMap (6.2.0):
     - AMapFoundation (~> 1.5)
-  - AMapFoundation (1.5.0)
+  - AMapFoundation (1.5.2)
   - AMapLocation (2.6.0):
     - AMapFoundation (~> 1.4)
-  - AMapSearch (6.1.0):
+  - AMapSearch (6.1.1):
     - AMapFoundation (~> 1.4)
   - Aspects (1.4.1)
   - AWEVideoPlayer (0.3.20):
@@ -173,6 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
+  - BDALog (0.1.6)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -258,12 +283,11 @@ PODS:
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
-  - Godzippa (1.1.0)
-  - Heimdallr (0.4.10):
-    - Heimdallr/Core (= 0.4.10)
-    - Heimdallr/TTMonitor (= 0.4.10)
-    - Heimdallr/WCDB (= 0.4.10)
-  - Heimdallr/Core (0.4.10):
+  - Godzippa (1.1.2)
+  - Heimdallr/ALog (0.4.21):
+    - BDALog
+    - SSZipArchive
+  - Heimdallr/Core (0.4.21):
     - Heimdallr/CrashDetector
     - Heimdallr/DeviceInfo
     - Heimdallr/HMDANR
@@ -279,36 +303,38 @@ PODS:
     - Heimdallr/Upload
     - Heimdallr/Utility
     - TTReachability
-  - Heimdallr/CrashDetector (0.4.10):
+  - Heimdallr/CrashDetector (0.4.21):
     - Heimdallr/Mach
-  - Heimdallr/DeviceInfo (0.4.10):
+  - Heimdallr/DeviceInfo (0.4.21):
     - Heimdallr/Utility
-  - Heimdallr/HMDANR (0.4.10)
-  - Heimdallr/HMDConfig (0.4.10):
+  - Heimdallr/FMDB (0.4.21):
+    - FMDB (>= 2.6.2)
+  - Heimdallr/HMDANR (0.4.21)
+  - Heimdallr/HMDConfig (0.4.21):
     - Heimdallr/Upload
-  - Heimdallr/HMDOOM (0.4.10):
+  - Heimdallr/HMDOOM (0.4.21):
     - Heimdallr/DeviceInfo
     - Heimdallr/Log
     - Heimdallr/Utility
-  - Heimdallr/HMDSession (0.4.10)
-  - Heimdallr/HMDStart (0.4.10)
-  - Heimdallr/HMDStore (0.4.10)
-  - Heimdallr/Log (0.4.10):
+  - Heimdallr/HMDSession (0.4.21)
+  - Heimdallr/HMDStart (0.4.21)
+  - Heimdallr/HMDStore (0.4.21)
+  - Heimdallr/Log (0.4.21):
     - Heimdallr/DeviceInfo
     - Heimdallr/Mach
     - Heimdallr/Utility
-  - Heimdallr/Mach (0.4.10)
-  - Heimdallr/MemorySnapshot (0.4.10):
+  - Heimdallr/Mach (0.4.21)
+  - Heimdallr/MemorySnapshot (0.4.21):
     - Heimdallr/Utility
-  - Heimdallr/TTMonitor (0.4.10)
-  - Heimdallr/UITracker (0.4.10):
-    - Heimdallr/Utility
-  - Heimdallr/Upload (0.4.10):
-    - TTReachability
-  - Heimdallr/Utility (0.4.10)
-  - Heimdallr/WCDB (0.4.10):
+  - Heimdallr/TTMonitor (0.4.21)
+  - Heimdallr/TTNet (0.4.21):
     - Heimdallr/Core
-    - WCDB (= 1.0.6)
+    - TTNetworkManager (< 3.0.0)
+  - Heimdallr/UITracker (0.4.21):
+    - Heimdallr/Utility
+  - Heimdallr/Upload (0.4.21):
+    - TTReachability
+  - Heimdallr/Utility (0.4.21)
   - HTSVideoPlay (0.3.9):
     - AKShareServicePlugin
     - HTSVideoPlay/Yoga (= 0.3.9)
@@ -484,7 +510,7 @@ PODS:
   - Masonry (1.0.1)
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.12)
-  - MJRefresh (3.1.15.3)
+  - MJRefresh (3.1.15.7)
   - OHHTTPStubs (4.2.1):
     - OHHTTPStubs/Default (= 4.2.1)
   - OHHTTPStubs/Core (4.2.1)
@@ -516,14 +542,14 @@ PODS:
   - ReactiveObjC (3.0.0)
   - RNCryptor-objc (3.0.5)
   - RSSwizzle (0.1.0)
-  - SDWebImage (4.1.0):
-    - SDWebImage/Core (= 4.1.0)
-  - SDWebImage/Core (4.1.0)
-  - SDWebImage/GIF (4.1.0):
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
+  - SDWebImage/GIF (4.4.1):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
-  - SDWebImage/WebP (4.1.0):
-    - libwebp
+  - SDWebImage/WebP (4.4.1):
+    - libwebp (~> 0.5)
     - SDWebImage/Core
   - SSZipArchive (1.6.2)
   - TSVToolkit (0.1.2):
@@ -743,9 +769,10 @@ PODS:
     - TTThemed
     - TTTracker
     - TTUserSettings
-  - TTNetworkManager (2.2.8.25):
-    - boringssl (~> 0.0.4)
-    - Godzippa (~> 1.0)
+  - TTNetworkManager (2.2.8.41):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+    - boringssl (~> 0.0.6)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -1103,9 +1130,6 @@ PODS:
   - TTVTLIndexPathTools (0.4.4)
   - UITableView+FDTemplateLayoutCell (1.6)
   - UMengAnalytics (4.1.4)
-  - WCDB (1.0.6):
-    - WCDB/sqlcipher (= 1.0.6)
-  - WCDB/sqlcipher (1.0.6)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -1151,7 +1175,25 @@ DEPENDENCIES:
   - FHHouseRent (from `../../ios_house_rent`)
   - FHMapSearch (from `../../ios_map_search`)
   - FLEX (= 2.1.1)
-  - Heimdallr (= 0.4.10)
+  - Heimdallr/ALog (= 0.4.21)
+  - Heimdallr/Core (= 0.4.21)
+  - Heimdallr/CrashDetector (= 0.4.21)
+  - Heimdallr/DeviceInfo (= 0.4.21)
+  - Heimdallr/FMDB (= 0.4.21)
+  - Heimdallr/HMDANR (= 0.4.21)
+  - Heimdallr/HMDConfig (= 0.4.21)
+  - Heimdallr/HMDOOM (= 0.4.21)
+  - Heimdallr/HMDSession (= 0.4.21)
+  - Heimdallr/HMDStart (= 0.4.21)
+  - Heimdallr/HMDStore (= 0.4.21)
+  - Heimdallr/Log (= 0.4.21)
+  - Heimdallr/Mach (= 0.4.21)
+  - Heimdallr/MemorySnapshot (= 0.4.21)
+  - Heimdallr/TTMonitor (= 0.4.21)
+  - Heimdallr/TTNet (= 0.4.21)
+  - Heimdallr/UITracker (= 0.4.21)
+  - Heimdallr/Upload (= 0.4.21)
+  - Heimdallr/Utility (= 0.4.21)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESSafeGuard (= 0.6.5)
   - IESVideoPlayer (= 0.1.16)
@@ -1172,7 +1214,9 @@ DEPENDENCIES:
   - ReactiveObjC (= 3.0.0)
   - RNCryptor-objc (= 3.0.5)
   - RSSwizzle (= 0.1.0)
-  - SDWebImage (= 4.1.0)
+  - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/GIF (= 4.4.1)
+  - SDWebImage/WebP (= 4.4.1)
   - SSZipArchive (= 1.6.2)
   - TSVToolkit (= 0.1.2)
   - TTABManager (= 0.0.7)
@@ -1209,7 +1253,7 @@ DEPENDENCIES:
   - TTLCSService (= 0.1.1)
   - TTMonitor (from `../AKPlugins/TTMonitor`)
   - TTNetBusiness (= 0.0.10)
-  - TTNetworkManager (from `git@code.byted.org:TTIOS/tt_pods_network.git`, commit `fea3c88cb586f624970bdf5629f11aa1dc9c8521`)
+  - TTNetworkManager (= 2.2.8.41)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -1305,9 +1349,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKImagePicker
   TTMonitor:
     :path: ../AKPlugins/TTMonitor
-  TTNetworkManager:
-    :commit: fea3c88cb586f624970bdf5629f11aa1dc9c8521
-    :git: git@code.byted.org:TTIOS/tt_pods_network.git
   TTNewsAccountBusiness:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
@@ -1341,9 +1382,6 @@ CHECKOUT OPTIONS:
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
-  TTNetworkManager:
-    :commit: fea3c88cb586f624970bdf5629f11aa1dc9c8521
-    :git: git@code.byted.org:TTIOS/tt_pods_network.git
   TTPlatformBaseLib:
     :commit: 50678ca8f9a6c34c80089a8a1cfdb133c5402657
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
@@ -1352,18 +1390,21 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
 
 SPEC CHECKSUMS:
+  AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
+  AFNetworking: 2960888b0253924f773cc95d1fffdc363335be4f
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
   AKPay: b251cdc64c45f51f809e7b8318820aa96524f27f
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
   AMap3DMap: 4170b8e1674883eefc068e277abf4dbaa9ea5f2d
-  AMapFoundation: 04fc43736ed63bed15d502e20f74ded399991f1e
+  AMapFoundation: 46b194013a3b06e0e82e8963108ceb972d4200b8
   AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
-  AMapSearch: e3f96bd0681abe70abba303709a1a05625a8f76c
-  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
+  Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
+  BDALog: 7c9ae5939b17526808824b626057185cbf96c955
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1371,47 +1412,47 @@ SPEC CHECKSUMS:
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
   BDWebImage: eb156661b41c6ee916085d3d2f3a5744424bf009
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
-  CHTCollectionViewWaterfallLayout: 775ff73f48cfc13859b62d8bceb96e772e4a0318
-  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
-  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
-  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
+  CHTCollectionViewWaterfallLayout: 561de4ad0bd34d77ea18aa1fe45a725bdc3b9d1a
+  CocoaLumberjack: e7f267c457ef2f7e579085be6d8307281bf797ae
+  Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
+  Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseRent: 5ba7acc2088bbbc9cc9688b79309d7f4821cc858
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
-  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  FLEX: 27b768fcae23a313a1eb115076d429180ca9b472
-  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
-  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
-  Heimdallr: 3a44027a0e13f85edef918634b9da700468fea63
+  FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
+  FLEX: b27e70410abfc79bc87de601581581a9cad7126d
+  FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
+  Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
+  Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESSafeGuard: 16f342dc14823ccde841b74e985024ff14d4c714
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
-  JSONModel: e1b17361ffbb9c0df86920e95054c0c7c1bfc513
-  KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
-  libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
-  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
-  lottie-ios: 836cdbba92f62f3c6a00e37a4ce485321fe317cf
+  JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
+  KVOController: 978886965ffa3f719042c14840dbf65513b9c541
+  libextobjc: 9ab0bd8ba6bc7a947067ad233fd9cd3a5b7a817a
+  libwebp: fbf61bba2dbac1d3d9369359ad101f3580458407
+  lottie-ios: 9a2284e7c76e833113b76d8a141c9583996a3c4a
   Mantle: 4464eeae1297485f4bf60910c11ac07d9ea77a17
-  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
-  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
-  MJExtension: 61bcf70d30acf0a09dde48e68502da0fde8eeafa
-  MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
-  OHHTTPStubs: ea33adf65900e6bc8c31b80eb7d527e8874a559b
-  OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
+  Masonry: ee38758f8fd3bc475d4d683d8ea436752eabb75a
+  MBProgressHUD: f673bbf063b6f733deeedaaf20baca2d48d0bf97
+  MJExtension: d8f929c31714246e660ee065b14728f38865caa6
+  MJRefresh: 2657684287cf4998d98c4ec55f17bde6308d173c
+  OHHTTPStubs: cad9b4341be7b8b5051ec5b16264d8607458818d
+  OpenSSL-Universal: 6f05fcf94f2c5f5114c56c5da02080c0f674419a
   OpenUDID: ee6ece43513e675030bd04fcfa97a8c1f16b69cb
   Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
   React: aa8f585cbea131b6781c6ad7a1aee436e1ac5ddf
-  ReactiveObjC: ce79989e8684b9086b5f8d0c74bc7b81a8729c9e
-  RNCryptor-objc: a65b15493de05dda4af0f392c70372b7a5625aab
-  RSSwizzle: d561958f595028bfcef98c7d55c318b3878a61c6
-  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
-  SSZipArchive: 428eb1ac8d37dd133404d30f422b23958c1f9acc
+  ReactiveObjC: 185066f76d2c296cef213204fe1218461e58724b
+  RNCryptor-objc: 9c0b03ebe2b563ac069f2d4d41e1d1db1e485ddc
+  RSSwizzle: 2bf09a88678d5fe2246a6fee32505bf769a9a079
+  SDWebImage: 7d9faa33fa14c9b9604c7fbedd4a314f5db1558a
+  SSZipArchive: b20c738ef5d2504fbd3cea9105c699fd6d21b4c3
   TSVToolkit: 2e7da7aa00ee6c5c498bdd075989bf23036dee91
   TTABManager: 6a5cb47d33221ec84c21382790fdc4f1bb497c03
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
-  TTAccountSDK: 403ae5a3e2ec32f4d52219b33f3e3e68bc92af2a
-  TTAddressBookService: 14669607052d9bf6f6fb983c5e06075c18b72ada
+  TTAccountSDK: f190978cb0db94f923c70da6c0d16de8327aff97
+  TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
@@ -1424,20 +1465,20 @@ SPEC CHECKSUMS:
   TTEntityBase: 2a3c254d18dfdb80e7f4f0c4ab5b19b35a5763fa
   TTEntry: 2c9d04c401b8f74ad078e570b1bf206c0bd78393
   TTFFmpeg: 5308e3b13de50e4d0a3f796972299b6c1a4002f0
-  TTFlowStatisticsManager: 550abf3d38167f8e2c5cc7e238ed3ac30d561447
+  TTFlowStatisticsManager: ac76a85b82cba6da6011af5814ed3e9e1e47e995
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
   TTImage: 6de58ab30a1db172bdcc292d65d629756e21cff2
   TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
-  TTImagePreviewAnimateManager: bb787a5386e21ef7ffd4f36c242acfb42f9a2f02
-  TTImpression: 03168af6f1f7a057b5c47fe870717ea38ed64e20
+  TTImagePreviewAnimateManager: bbd062abb22bf19f1559f306eb131ee7c49b2b11
+  TTImpression: 698d23391209be0ceb5031f13c7db097094e2267
   TTInstallService: 032c969bac47d97a0b8180b2cb7ab4ee5b3d7923
   TTKitchen: da7392fb06c9f71cc3768cdd9f356222f5ee7b24
   TTLCSService: 879748b3251901ee407a7ed42bc3c52006008dd9
   TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
-  TTNetBusiness: e05af99f3547ffb9a00eab5ec3035c8ab52d552d
-  TTNetworkManager: 2a38ca8d1daefef71af9066be296de4450b39483
+  TTNetBusiness: 9d11ca7f1eff5bd9fe286fb51ec0eb3571da9a13
+  TTNetworkManager: 24b011e649be277c089e59840ed50656673b8946
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
-  TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
+  TTPersistence: b98f72a8af4947a992a57fcdc774a7235b798946
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
   TTPlatformBaseLib: 289c001877787e8a9c37f7ed5c01e734f3c704b2
   TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
@@ -1447,17 +1488,17 @@ SPEC CHECKSUMS:
   TTPushManager: 708ba9dcc3849570f2b02cd04fc8aeeba1a562c0
   TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
-  TTReporter: 1046395050d9555af6d38c8f62f130a39f7276e1
+  TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
   TTRexxar: 0a6e1457af82dff4c7dcf1af84c2f2e41530afe1
   TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
   TTServiceKit: b21af836c140a5aed425209e8f7a3c94afd426c3
   TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
   TTSettingsManager: 5f210d19575ae35dde7e3a00c8293d3b1fb46e4c
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
-  TTTAttributedLabel: 6f3174aef8e738f44dff97c2eb7d8184f6ab6277
+  TTTAttributedLabel: 78f115a97b27abd903a6bae204cd539401f51879
   TTThemed: c441f202fc9c8833863bf6f8473fd833cd5e3ac6
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
-  TTTracker: b655ead5d710429ec53ae5f024a6ae3e218ff027
+  TTTracker: 4ae6c8f08938190fdcc0f55bc833fc40b0f35754
   TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
   TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
@@ -1467,17 +1508,16 @@ SPEC CHECKSUMS:
   TTVideoEngine: 6a02e42372cdff140cd97195633eb4d5e1b8e0e8
   TTVideoService: 1f1e94d56218260dd8b8191b467d5e31d66fa7f3
   TTVTableViewItem: 121318eeac5dfe05606ee2f86655afffcd73a4bd
-  TTVTableViewProtocolInterceptor: 95a845cebd70d82a028f5b585ab6279379c801c1
+  TTVTableViewProtocolInterceptor: 51b6f0a6caf309ca10b93aeaea6471ecfeac81df
   TTVTLIndexPathTools: 997b28f180f2847b2da6b1bd340b87623f1429d3
-  UITableView+FDTemplateLayoutCell: 5c949b4a5059c404b442926c0e80f81d10a2d66f
-  UMengAnalytics: 0bde5737767dfc18afb03a4cd6ba9d57bb2ad10d
-  WCDB: 4d2926bf695b2e00d785b50afd32c2dcc8cbbd98
-  YYCache: 8105b6638f5e849296c71f331ff83891a4942952
-  YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
-  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
-  YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
-  YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
+  UITableView+FDTemplateLayoutCell: 3b65a6822f52d2e3cf6c442220307cb1ac192dc6
+  UMengAnalytics: d318ff10358c323f18bd1cf4b2d8ac99e76bdefc
+  YYCache: 7e176e4a8882e98b59da1a0108d1b4c189af4eef
+  YYImage: 53144c062bb98bc2ea5a2551e29cf1afb97ad5df
+  YYModel: b671b05b2a2d24cb8ad6ddceaa61b1daec459be9
+  YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
+  YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 5d99203ee01548d031286e17178966ab2631ea1d
+PODFILE CHECKSUM: ad7da11b2c291b48145b04b2558f37c746c664c5
 
 COCOAPODS: 1.4.0

@@ -310,7 +310,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
             
             let openBeighBor = openFloorPanDetailPage(
                 floorPanId: data.neighborhoodInfo?.id,
-                logPb: data.logPB,
+                logPb: data.neighborhoodInfo?.logPB,
                 searchId: searchIdForDetail,
                 sameNeighborhoodFollowUp: sameNeighborhoodFollowUp)
 
@@ -542,6 +542,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var sectionHeaderGenerator: TableViewSectionViewGen?
     
     var priceChartFoldState:Bool = true
+    
+    var cellHeightCaches:[String:CGFloat] = [:]
 
     init(cellFactory: UITableViewCellFactory) {
         self.cellFactory = cellFactory
@@ -614,9 +616,17 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        if let height = self.cellHeightCaches[tempKey] {
+            return height
+        }
         return UITableViewAutomaticDimension
     }
-
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let tempKey = "\(indexPath.section)_\(indexPath.row)"
+        cellHeightCaches[tempKey] = cell.frame.size.height
+    }
 }
 
 func getErshouHouseDetailPageViewModel() -> DetailPageViewModelProvider {

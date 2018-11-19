@@ -45,7 +45,8 @@ struct HouseItemEntity: Mappable {
     var refreshTip: String?
     var searchId: String?
     var hasMore: Bool? = false
-    
+    var houseListOpenUrl: String?
+    var mapFindHouseOpenUrl: String?
     init?(map: Map) {
         
     }
@@ -57,6 +58,8 @@ struct HouseItemEntity: Mappable {
         refreshTip <- map["refresh_tip"]
         searchId <- map["search_id"]
         hasMore <- map["has_more"]
+        houseListOpenUrl <- map["house_list_open_url"]
+        mapFindHouseOpenUrl <- map["map_find_house_open_url"]
     }
 }
 

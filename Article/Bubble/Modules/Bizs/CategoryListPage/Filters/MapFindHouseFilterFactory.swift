@@ -183,6 +183,11 @@ import RxCocoa
     func getConditions() -> String? {
         return self.conditionFilterViewModel?.searchAndConditionFilterVM.queryCondition.value
     }
+    
+    @objc
+    func closeConditionFilterPanel() {
+        self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1);
+    }
 
     fileprivate func allKeysFromNodes(nodes: [Node]) -> Set<String> {
         return nodes.reduce([], { (result, node) -> Set<String> in

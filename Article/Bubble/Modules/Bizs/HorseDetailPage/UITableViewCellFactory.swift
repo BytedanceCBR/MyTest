@@ -88,6 +88,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: ErshouHouseCoreInfoCell.self)
             .addCellClass(cellType: PropertyListCell.self)
             .addCellClass(cellType: NeighborhoodInfoCell.self)
+            .addCellClass(cellType: NeighborhoodPropertyInfoCell.self)
             .addCellClass(cellType: SingleImageInfoCell.self)
             .addCellClass(cellType: NeighborhoodNameCell.self)
             .addCellClass(cellType: NeighborhoodPriceCell.self)

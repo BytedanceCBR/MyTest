@@ -151,7 +151,7 @@ class NeighborhoodNameCell: BaseUITableViewCell {
 
 func parseNeighborhoodNameNode(_ data: NeighborhoodDetailData,traceExtension: TracerParams = TracerParams.momoid(),navVC: UINavigationController? = EnvContext.shared.rootNavController,disposeBag: DisposeBag) -> () -> TableSectionNode? {
     return {
-        let cellRender = oneTimeRender(curry(fillNeighborhoodNameCell)(data)(navVC)(disposeBag))
+        let cellRender = oneTimeRender(curry(fillNeighborhoodNameCell)(data)(traceExtension)(navVC)(disposeBag))
         let paramsHoseDeal = TracerParams.momoid() <|>
             toTracerParams("house_deal", key: "element_type") <|>
             toTracerParams("neighborhood_detail", key: "page_type") <|>
@@ -166,7 +166,7 @@ func parseNeighborhoodNameNode(_ data: NeighborhoodDetailData,traceExtension: Tr
     }
 }
 
-func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData,navVC: UINavigationController?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
+func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData,traceExtension: TracerParams = TracerParams.momoid(),navVC: UINavigationController?, disposeBag: DisposeBag, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? NeighborhoodNameCell {
         theCell.nameLabel.text = data.name
         theCell.subNameLabel.text = data.neighborhoodInfo?.address
@@ -174,37 +174,20 @@ func fillNeighborhoodNameCell(_ data: NeighborhoodDetailData,navVC: UINavigation
         theCell.priceLabel.text = data.neighborhoodInfo?.pricingPerSqm
         let params = TracerParams.momoid() <|>
             toTracerParams("neighborhood_detail", key: "enter_from") <|>
-            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(selectTraceParam(traceExtension, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(data.id ?? "be_null", key: "group_id") <|>
+            toTracerParams("be_null", key: "element_from") <|>
             toTracerParams("address", key: "click_type")
         let clickMapParams = EnvContext.shared.homePageParams <|>
             params <|>
             beNull(key: "map_tag")
 
-//        theCell.locationIcon.rx.tap
-//                .bind { [unowned disposeBag] recognizer in
-//
-////                    recordEvent(key: "click_map", params: clickMapParams)
-//                    if let lat = data.neighborhoodInfo?.gaodeLat,
-//                            let lng = data.neighborhoodInfo?.gaodeLng {
-//                        openMapPage(
-//                            navVC: navVC,
-//                            lat: lat,
-//                            lng: lng,
-//                            title: data.name ?? "",
-//                            clickMapParams: clickMapParams,
-//                            traceParams: params,
-//                            openMapType:.defautFirstType,
-//                            disposeBag: disposeBag)(TracerParams.momoid())
-//                    }
-//
-//                }
-//                .disposed(by: disposeBag)
         theCell.subNameLabelButton.rx.tap
                 .bind { [unowned disposeBag] recognizer in
                     if let lat = data.neighborhoodInfo?.gaodeLat,
                        let lng = data.neighborhoodInfo?.gaodeLng {
                         recordEvent(key: "click_map", params: clickMapParams)
+
                         openMapPage(
                             navVC: navVC,
                             lat: lat,

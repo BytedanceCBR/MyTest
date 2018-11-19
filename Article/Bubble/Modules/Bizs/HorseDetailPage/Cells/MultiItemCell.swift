@@ -204,7 +204,7 @@ class NeighborhoodEvaluationItem: UIView
         backView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(12)
-            maker.top.equalToSuperview().offset(16)
+            maker.top.equalToSuperview().offset(19)
             maker.height.equalTo(22)
             maker.width.equalTo(70)
         }
@@ -238,7 +238,7 @@ class NeighborhoodEvaluationItem: UIView
         descLabel.removeFromSuperview()
         let heightText = labelWithHeight(labelStr: text, label: descLabel, width: 120)
         backView.addSubview(descLabel)
-        descLabel.frame = CGRect(x: 12, y: 41, width: 120, height: heightText > 73 ? 73 : heightText)
+        descLabel.frame = CGRect(x: 12, y: 45, width: 120, height: heightText > 68 ? 68 : heightText)
         descLabel.text = text
         descLabel.lineBreakMode = .byTruncatingTail
         descLabel.numberOfLines = 4
