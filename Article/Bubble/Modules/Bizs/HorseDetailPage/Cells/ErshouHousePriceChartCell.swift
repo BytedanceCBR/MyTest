@@ -178,6 +178,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     
     lazy var foldButton: CommonFoldViewButton = {
         let view = CommonFoldViewButton(downText: "更多信息", upText: "收起")
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -437,6 +438,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         }
         
         contentView.addSubview(bottomBgView)
+        bottomBgView.clipsToBounds = true
         bottomBgView.addSubview(chartBgView)
         bottomBgView.addSubview(foldButton)
         
@@ -468,7 +470,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(210)
+            maker.height.equalTo(207)
             maker.bottom.equalToSuperview()
         }
     
@@ -493,35 +495,27 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     
     func updateChartConstraints() {
         
+        chartBgView.snp.remakeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalToSuperview().offset(0)
+            maker.height.equalTo(257)
+        }
+        
         if self.isPriceChartFoldState {
-            chartBgView.isHidden = true
             bottomBgView.snp.updateConstraints { (maker) in
                 maker.height.equalTo(58)
             }
-            chartBgView.snp.remakeConstraints { maker in
-                maker.left.right.equalToSuperview()
-                maker.top.equalToSuperview().offset(0)
-                maker.height.equalTo(0)
-            }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(chartBgView.snp.bottom)
                 maker.height.equalTo(58)
                 maker.bottom.equalToSuperview()
             }
         } else {
-            chartBgView.isHidden = false
             bottomBgView.snp.updateConstraints { (maker) in
                 maker.height.equalTo(315)
             }
-            chartBgView.snp.remakeConstraints { maker in
-                maker.left.right.equalToSuperview()
-                maker.top.equalToSuperview().offset(0)
-                maker.height.equalTo(287)
-            }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(chartBgView.snp.bottom)
                 maker.height.equalTo(58)
                 maker.bottom.equalToSuperview()
             }
