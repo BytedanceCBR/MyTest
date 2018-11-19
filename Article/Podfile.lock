@@ -1180,10 +1180,10 @@ DEPENDENCIES:
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
-  - FHCommonUI (from `../../ios_common_ui`)
-  - FHHouseBase (from `../../ios_house_base`)
-  - FHHouseRent (from `../../ios_house_rent`)
-  - FHMapSearch (from `../../ios_map_search`)
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, branch `feature/develop`)
+  - FHHouseBase (from `git@code.byted.org:fproject/ios_house_base.git`, branch `feature/develop`)
+  - FHHouseRent (from `git@code.byted.org:fproject/ios_house_rent.git`, branch `feature/develop`)
+  - FHMapSearch (from `git@code.byted.org:fproject/ios_map_search.git`, branch `feature/develop`)
   - FLEX (= 2.1.1)
   - Heimdallr/ALog (= 0.4.21)
   - Heimdallr/Core (= 0.4.21)
@@ -1330,13 +1330,17 @@ EXTERNAL SOURCES:
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
   FHCommonUI:
-    :path: ../../ios_common_ui
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_common_ui.git
   FHHouseBase:
-    :path: ../../ios_house_base
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_house_base.git
   FHHouseRent:
-    :path: ../../ios_house_rent
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_house_rent.git
   FHMapSearch:
-    :path: ../../ios_map_search
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_map_search.git
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   React:
@@ -1388,6 +1392,18 @@ CHECKOUT OPTIONS:
   BDAccount:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
+  FHCommonUI:
+    :commit: bc4ad398a290367a82f98fb7c5f31d90ff5ac90a
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+  FHHouseBase:
+    :commit: c98911b04d433865ccf9ce5988a895491061421d
+    :git: git@code.byted.org:fproject/ios_house_base.git
+  FHHouseRent:
+    :commit: 37079d23d6a0617aeef46f3d7ef6c34d02eda8ac
+    :git: git@code.byted.org:fproject/ios_house_rent.git
+  FHMapSearch:
+    :commit: 73ad2472def4ed75b46c2a53b7ed38a8a2dd4e05
+    :git: git@code.byted.org:fproject/ios_map_search.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1428,10 +1444,10 @@ SPEC CHECKSUMS:
   CocoaLumberjack: e7f267c457ef2f7e579085be6d8307281bf797ae
   Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
-  FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
-  FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
-  FHHouseRent: 5ba7acc2088bbbc9cc9688b79309d7f4821cc858
-  FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
+  FHCommonUI: c7b0fb8906149470c54d4ec863cda40183b558aa
+  FHHouseBase: 1d6c06e2b8c131478b262c2275cfe96a0f486b21
+  FHHouseRent: 0d7d55573f71b82851b2dda0f81c81b0e17ddd8b
+  FHMapSearch: 19d421d695f9b97e46244d285bba809a4b388e50
   FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
   FLEX: b27e70410abfc79bc87de601581581a9cad7126d
   FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
@@ -1531,6 +1547,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 54e04288f64b0770e5501b4c7580e3162c57cecc
+PODFILE CHECKSUM: f84e894e9384151c6dc5091820d80f281bbbecdf
 
 COCOAPODS: 1.4.0
