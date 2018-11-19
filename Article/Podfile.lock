@@ -620,6 +620,16 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
+    - JSONModel
+    - TTBaseLib/TTCategory
+    - TTBaseLib/TTDeviceHelper
+    - TTBaseLib/TTSandBoxHelper
+    - TTBaseLib/TTUIResponderHelper
+    - TTTracker
+  - TTAppUpdateHelper/TTUpdateView (1.0.3):
+    - TTThemed
+    - TTUIWidget
   - TTAudio (0.1.4):
     - TTNetworkManager
     - TTTracker
@@ -1226,6 +1236,8 @@ DEPENDENCIES:
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.1.0)
+  - TTAppUpdateHelper/TTUpdateHelper
+  - TTAppUpdateHelper/TTUpdateView
   - TTAudio (= 0.1.4)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -1455,6 +1467,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
+  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
@@ -1518,6 +1531,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: f1895a1b933e8ee0cf20974307cc3f6beb6544ed
+PODFILE CHECKSUM: 54e04288f64b0770e5501b4c7580e3162c57cecc
 
 COCOAPODS: 1.4.0
