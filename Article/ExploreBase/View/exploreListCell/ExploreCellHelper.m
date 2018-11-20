@@ -144,6 +144,8 @@
 
 #import "TTExploreLoadMoreTipData.h"
 #import "TTExploreLoadMoreTipCell.h"
+#import "FHHouseItemFeedCell.h"
+#import "FHExploreHouseItemData.h"
 
 #define kVideoCategoryID @"video"
 #define kVideoShowListDigg @"video_show_list_digg"
@@ -288,8 +290,8 @@ static NSMutableArray *s_reusableCardViews;
     
     [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
     
-    // add by zjing for test feed支持房源
-//    [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
+    // feed支持房源
+    [[TTCellBridge sharedInstance] registerCellClass:[FHHouseItemFeedCell class] cellViewClass:[FHHouseItemFeedCellView class]];
 
 }
 
@@ -483,6 +485,8 @@ static NSMutableArray *s_reusableCardViews;
             return [ExploreArticleHotNewsCell class];
         case ExploreCellViewTypeLoadmoreTipCell:
             return [TTExploreLoadMoreTipCell class];
+        case ExploreCellViewTypeFHHouseItemCell:
+            return [FHHouseItemFeedCell class];
         default:
             break;
     }
@@ -735,6 +739,7 @@ static NSMutableArray *s_reusableCardViews;
         
         if (cellCls) {
             cellId = NSStringFromClass(cellCls);
+
             if (!isEmptyString(cellId)) {
                 *stop = YES;
             }
@@ -748,7 +753,7 @@ static NSMutableArray *s_reusableCardViews;
             cellId = NSStringFromClass(cellCls);
         }
     }
-    
+
     return cellId;
 }
 
@@ -1054,8 +1059,8 @@ static NSMutableArray *s_reusableCardViews;
             cellViewType = ExploreCellViewTypeLoadmoreTipCell;
         }
         // add by zjing 房源卡片
-        else if ([orderedData.originalData isKindOfClass:[TTExploreLoadMoreTipData class]]) {
-            cellViewType = ExploreCellViewTypeLoadmoreTipCell;
+        else if ([orderedData.originalData isKindOfClass:[FHExploreHouseItemData class]]) {
+            cellViewType = ExploreCellViewTypeFHHouseItemCell;
         }
         else {
             cellViewType = ExploreCellViewTypeNotSupport;

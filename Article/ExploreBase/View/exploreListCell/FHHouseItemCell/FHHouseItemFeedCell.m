@@ -56,7 +56,8 @@
 
 - (void)buildupView {
 
-    
+    // add by zjing for test
+    self.backgroundColor = [UIColor redColor];
 }
 
 - (void)refreshWithData:(ExploreOrderedData *)data {

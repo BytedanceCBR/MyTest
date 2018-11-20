@@ -903,6 +903,11 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
             exploreOriginData = self.loadmoreTipData;
         }
             break;
+        case ExploreOrderedDataCellTypeFHHouse:
+        {
+            exploreOriginData = self.houseItemsData;
+        }
+            break;
         case ExploreOrderedDataCellTypeHotNews:
         {
             exploreOriginData = self.hotNewsData;

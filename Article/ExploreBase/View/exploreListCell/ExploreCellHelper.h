@@ -94,6 +94,8 @@ typedef NS_ENUM(NSUInteger, ExploreCellViewType) {
     ExploreCellViewTypeHotNews,                      //置顶热点新闻cell
     ExploreCellViewTypeArticleHotNews,                 //置顶热点新闻卡片cell
     ExploreCellViewTypeLoadmoreTipCell,              // Loadmore加载提示信息
+    ExploreCellViewTypeFHHouseItemCell,              // 房源卡片
+
 };
 
 @interface ExploreCellHelper : NSObject
