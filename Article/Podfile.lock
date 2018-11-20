@@ -276,6 +276,7 @@ PODS:
   - Fabric (1.6.7)
   - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
+  - FHHouseHome (0.1.1)
   - FHHouseRent (0.1.0)
   - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12)
@@ -620,14 +621,14 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
-  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.4):
     - JSONModel
     - TTBaseLib/TTCategory
     - TTBaseLib/TTDeviceHelper
     - TTBaseLib/TTSandBoxHelper
     - TTBaseLib/TTUIResponderHelper
     - TTTracker
-  - TTAppUpdateHelper/TTUpdateView (1.0.3):
+  - TTAppUpdateHelper/TTUpdateView (1.0.4):
     - TTThemed
     - TTUIWidget
   - TTAudio (0.1.4):
@@ -1182,6 +1183,7 @@ DEPENDENCIES:
   - Fabric (= 1.6.7)
   - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, branch `feature/develop`)
   - FHHouseBase (from `git@code.byted.org:fproject/ios_house_base.git`, branch `feature/develop`)
+  - FHHouseHome (from `git@code.byted.org:fproject/ios_house_home.git`, branch `feature/develop`)
   - FHHouseRent (from `git@code.byted.org:fproject/ios_house_rent.git`, branch `feature/develop`)
   - FHMapSearch (from `git@code.byted.org:fproject/ios_map_search.git`, branch `feature/develop`)
   - FLEX (= 2.1.1)
@@ -1335,6 +1337,9 @@ EXTERNAL SOURCES:
   FHHouseBase:
     :branch: feature/develop
     :git: git@code.byted.org:fproject/ios_house_base.git
+  FHHouseHome:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_house_home.git
   FHHouseRent:
     :branch: feature/develop
     :git: git@code.byted.org:fproject/ios_house_rent.git
@@ -1398,8 +1403,11 @@ CHECKOUT OPTIONS:
   FHHouseBase:
     :commit: 5c926814fdafc4eebf1c3391db2f7b254662d70b
     :git: git@code.byted.org:fproject/ios_house_base.git
+  FHHouseHome:
+    :commit: 83fd271ed2ef92871e9e1562cb57b9d895e71b66
+    :git: git@code.byted.org:fproject/ios_house_home.git
   FHHouseRent:
-    :commit: 655146106f40519f9eae4e2926e5ccfff423dccb
+    :commit: 870ae220731074291154ca7062e619396c123dfa
     :git: git@code.byted.org:fproject/ios_house_rent.git
   FHMapSearch:
     :commit: 73ad2472def4ed75b46c2a53b7ed38a8a2dd4e05
@@ -1446,6 +1454,7 @@ SPEC CHECKSUMS:
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
   FHCommonUI: c7b0fb8906149470c54d4ec863cda40183b558aa
   FHHouseBase: 1d6c06e2b8c131478b262c2275cfe96a0f486b21
+  FHHouseHome: 6cea64e17d5742140f296f16a9084e5f45def185
   FHHouseRent: 8e031d9b6465f46da24c20cb1af9dedbf72af778
   FHMapSearch: 19d421d695f9b97e46244d285bba809a4b388e50
   FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
@@ -1483,7 +1492,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
-  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
+  TTAppUpdateHelper: d1a28f4825ef183967a2c2c2025db9abd8ba725f
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
@@ -1547,6 +1556,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 34302ff89699bf1e0267f64b07e55e2d2e2c2889
+PODFILE CHECKSUM: b810120fbd8c614dcd423f39bd10a88b08eec98b
 
 COCOAPODS: 1.4.0

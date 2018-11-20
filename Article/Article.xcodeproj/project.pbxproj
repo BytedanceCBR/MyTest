@@ -3500,7 +3500,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -3534,6 +3534,16 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
+		D4F1EAB121A40C80003A3DFE /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = D4F1EAB021A40C80003A3DFE /* config.json */; };
+		D4F1EAB521A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
+		D4F1EAB621A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
+		D4F1EAB721A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
+		D4F1EABA21A41877003A3DFE /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB921A41877003A3DFE /* FHHomeBannerView.m */; };
+		D4F1EABB21A41877003A3DFE /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB921A41877003A3DFE /* FHHomeBannerView.m */; };
+		D4F1EABC21A41878003A3DFE /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB921A41877003A3DFE /* FHHomeBannerView.m */; };
+		D4F1EABF21A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EABE21A418D5003A3DFE /* FHHomeCityTrendView.m */; };
+		D4F1EAC021A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EABE21A418D5003A3DFE /* FHHomeCityTrendView.m */; };
+		D4F1EAC121A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EABE21A418D5003A3DFE /* FHHomeCityTrendView.m */; };
 		D500CFA2205AABCF00FBDAF5 /* AKLoginTrafficViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */; };
 		D501684E2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
 		D501684F2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
@@ -8076,6 +8086,13 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
+		D4F1EAB021A40C80003A3DFE /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
+		D4F1EAB321A414C5003A3DFE /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
+		D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
+		D4F1EAB821A41877003A3DFE /* FHHomeBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBannerView.h; sourceTree = "<group>"; };
+		D4F1EAB921A41877003A3DFE /* FHHomeBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBannerView.m; sourceTree = "<group>"; };
+		D4F1EABD21A418D5003A3DFE /* FHHomeCityTrendView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendView.h; sourceTree = "<group>"; };
+		D4F1EABE21A418D5003A3DFE /* FHHomeCityTrendView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendView.m; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -8973,7 +8990,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10580,6 +10597,8 @@
 		3D2D487D21A28E590011A0EC /* House */ = {
 			isa = PBXGroup;
 			children = (
+				D4F1EAB221A41488003A3DFE /* HouseHome */,
+				D4F1EAB021A40C80003A3DFE /* config.json */,
 				B32FD2C921A26E2D007B9966 /* HouseRent */,
 				B31F42AB2189A5E500D9FE94 /* UI */,
 				B31102952181A0BC00FD2A45 /* TTContacts */,
@@ -15612,6 +15631,19 @@
 			name = SearchIDLModel;
 			sourceTree = "<group>";
 		};
+		D4F1EAB221A41488003A3DFE /* HouseHome */ = {
+			isa = PBXGroup;
+			children = (
+				D4F1EAB321A414C5003A3DFE /* FHHomeFeedHeaderView.h */,
+				D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */,
+				D4F1EAB821A41877003A3DFE /* FHHomeBannerView.h */,
+				D4F1EAB921A41877003A3DFE /* FHHomeBannerView.m */,
+				D4F1EABD21A418D5003A3DFE /* FHHomeCityTrendView.h */,
+				D4F1EABE21A418D5003A3DFE /* FHHomeCityTrendView.m */,
+			);
+			path = HouseHome;
+			sourceTree = "<group>";
+		};
 		D500CF9F205AABCF00FBDAF5 /* AKLogin */ = {
 			isa = PBXGroup;
 			children = (
@@ -17930,6 +17962,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
+				D4F1EAB121A40C80003A3DFE /* config.json in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				3DF363A321A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
@@ -18310,14 +18343,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18397,14 +18423,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18539,14 +18558,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18627,14 +18639,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18924,14 +18929,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -19010,14 +19008,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -19600,6 +19591,7 @@
 				48F838811FA1BC63002E040C /* TSVTabViewController.m in Sources */,
 				2DB9A8B81F33000C005E4A06 /* TTTouchContext.m in Sources */,
 				A97DBC6F1F1332E50002B455 /* TTStartupSerialGroup.m in Sources */,
+				D4F1EABA21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				A97DBB471F1332E20002B455 /* TTOpenInSafariWindow.m in Sources */,
 				06E5DF621AA066A700BDEAD8 /* SSLocationPickerController.m in Sources */,
 				F87694241F31D0D400D59CA5 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -19749,6 +19741,7 @@
 				F87695341F31D0D700D59CA5 /* TTVShareActionsTracker.m in Sources */,
 				ABBEA74C1F334826005DAD27 /* ExploreDetailPhoneLargePicADView.m in Sources */,
 				2DB9A5C41F20B01D005E4A06 /* TTPhotoDetailCellHelper.m in Sources */,
+				D4F1EABF21A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				2DCAD0321DDC237200EBF9CF /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC442142652B00653188 /* AboutViewController.swift in Sources */,
 				6BE022371B215BE700F9E484 /* ExploreWebCellManager.m in Sources */,
@@ -20450,6 +20443,7 @@
 				A97DBB831F1332E20002B455 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC462142652B00653188 /* BizError.swift in Sources */,
 				ABBEA6A91F334103005DAD27 /* TTPersonalHomeFollowButton.m in Sources */,
+				D4F1EAB521A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */,
 				06C518431AAC488400C2B2E3 /* SimplePing.m in Sources */,
 				F87693F41F31D0D400D59CA5 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -21302,6 +21296,7 @@
 				B373C9EB2174587A008F9905 /* TTOpenInSafariWindow.m in Sources */,
 				B373C9EC2174587A008F9905 /* SSLocationPickerController.m in Sources */,
 				B373C9ED2174587A008F9905 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				D4F1EABC21A41878003A3DFE /* FHHomeBannerView.m in Sources */,
 				B373C9EE2174587A008F9905 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				B373C9EF2174587A008F9905 /* TTHeaderView.m in Sources */,
 				B373C9F02174587A008F9905 /* SSADTrackInfoList.m in Sources */,
@@ -21451,6 +21446,7 @@
 				B373CA802174587A008F9905 /* TTPhotoDetailCellHelper.m in Sources */,
 				B373CA812174587A008F9905 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B373CA822174587A008F9905 /* AboutViewController.swift in Sources */,
+				D4F1EAC121A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				B373CA832174587A008F9905 /* ExploreWebCellManager.m in Sources */,
 				B373CA842174587A008F9905 /* TTVFeedListLiveItem.m in Sources */,
 				B373CA852174587A008F9905 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -22152,6 +22148,7 @@
 				B373CD2E2174587A008F9905 /* TTMemoryMonitorTask.m in Sources */,
 				B373CD302174587A008F9905 /* BizError.swift in Sources */,
 				B373CD312174587A008F9905 /* TTPersonalHomeFollowButton.m in Sources */,
+				D4F1EAB721A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */,
 				B373CD322174587A008F9905 /* SimplePing.m in Sources */,
 				B373CD332174587A008F9905 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				B373CD342174587A008F9905 /* FHDemanderTrackerManager.m in Sources */,
@@ -23004,6 +23001,7 @@
 				FEFA549D205FB1A8001F50D8 /* TTOpenInSafariWindow.m in Sources */,
 				FEFA549E205FB1A8001F50D8 /* SSLocationPickerController.m in Sources */,
 				FEFA549F205FB1A8001F50D8 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				D4F1EABB21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				FEFA54A2205FB1A8001F50D8 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				FEFA54A4205FB1A8001F50D8 /* TTHeaderView.m in Sources */,
 				FEFA54A6205FB1A8001F50D8 /* SSADTrackInfoList.m in Sources */,
@@ -23153,6 +23151,7 @@
 				FEFA5540205FB1A8001F50D8 /* TTPhotoDetailCellHelper.m in Sources */,
 				FEFA5543205FB1A8001F50D8 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC452142652B00653188 /* AboutViewController.swift in Sources */,
+				D4F1EAC021A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				FEFA5544205FB1A8001F50D8 /* ExploreWebCellManager.m in Sources */,
 				FEFA5545205FB1A8001F50D8 /* TTVFeedListLiveItem.m in Sources */,
 				FEFA5546205FB1A8001F50D8 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -23854,6 +23853,7 @@
 				FEFA5841205FB1A8001F50D8 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC472142652B00653188 /* BizError.swift in Sources */,
 				FEFA5842205FB1A8001F50D8 /* TTPersonalHomeFollowButton.m in Sources */,
+				D4F1EAB621A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */,
 				FEFA5844205FB1A8001F50D8 /* SimplePing.m in Sources */,
 				FEFA5845205FB1A8001F50D8 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F12152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
