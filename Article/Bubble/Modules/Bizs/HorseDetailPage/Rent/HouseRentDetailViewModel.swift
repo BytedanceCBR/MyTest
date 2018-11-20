@@ -47,6 +47,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             <- parseRentNameCellNode()
             <- parseRentCoreInfoCellNode()
             <- parseRentPropertyListCellNode(infos)
+            <- parseRentFacilityCellNode()
             <- parseRentNeighborhoodInfoNode()
         return dataParser.parser
     }
