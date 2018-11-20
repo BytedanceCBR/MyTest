@@ -38,11 +38,12 @@ import RxCocoa
 
     let disposeBag = DisposeBag()
 
+    var allKeys: Set<String> = []
+
     // 搜索过滤器展现面版
     @objc lazy var filterPanelView: UIView = {
         let re = SearchFilterPanel()
         re.backgroundColor = UIColor.white
-//        re.bottomLine?.isHidden = true
         return re
     }()
 
@@ -70,14 +71,6 @@ import RxCocoa
     func bindConditionChangeDelegate() {
         searchAndConditionFilterVM?.queryCondition
             .map {  (result) -> String in
-                //[unowned self]
-//                var theResult = result
-                //增加设置，如果关闭API部分的转码，需要这里将条件过滤器拼接的条件，进行转码
-//                if !self.isNeedEncode {
-//                    if let encodeUrl = result.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-//                        theResult = encodeUrl
-//                    }
-//                }
                 return result
 //                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
@@ -114,7 +107,6 @@ import RxCocoa
 
             }
             .map { items in //
-                //                assert(items?.count != 0)
                 let filteredItems = items?.filter { $0.text != "区域" }
 
                 let result: [SearchConditionItem] = filteredItems?
@@ -138,19 +130,10 @@ import RxCocoa
                 let reload: () -> Void = { [weak self] in
                     self?.conditionFilterViewModel?.reloadConditionPanel()
                 }
-//                let ns = items.1.reduce([], { (result, nodes) -> [Node] in
-//                    result + nodes
-//                })
-//                let keys = self.allKeysFromNodes(nodes: ns)
-//                var conditions = ""
-//                self.queryParams?.forEach({ (key, value) in
-//                    if !keys.contains(key) {
-//                        //
-//                        conditions = conditions + convertKeyValueToCondition(key: key, value: value).reduce("", { (result, value) -> String in
-//                            result + "&\(value)"
-//                        })
-//                    }
-//                })
+                let ns = items.1.reduce([], { (result, nodes) -> [Node] in
+                    result + nodes
+                })
+                self.allKeys = self.allKeysFromNodes(nodes: ns)
                 zip(items.0, items.1)
                     .enumerated()
                     .forEach({ [unowned self] (e) in
@@ -160,12 +143,7 @@ import RxCocoa
                             reload: reload,
                             item: item,
                             data: nodes)
-
                     })
-//                self.queryString = self.queryString + conditions
-//                if let queryParams = self.queryParams {
-//                    self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
-//                }
                 self.conditionFilterViewModel?.filterConditions = items.0
                 self.conditionFilterViewModel?.reloadConditionPanel()
             })
@@ -189,7 +167,12 @@ import RxCocoa
         self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1);
     }
 
-    fileprivate func allKeysFromNodes(nodes: [Node]) -> Set<String> {
+    @objc
+    func getNoneFilterQueryParams(params: [String: Any]?) -> String {
+        return getNoneFilterConditionString(params: params, conditionsKeys: self.allKeys)
+    }
+
+    func allKeysFromNodes(nodes: [Node]) -> Set<String> {
         return nodes.reduce([], { (result, node) -> Set<String> in
             var theResult = result
             if !node.children.isEmpty {

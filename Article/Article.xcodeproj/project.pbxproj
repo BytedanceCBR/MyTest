@@ -1339,6 +1339,26 @@
 		B32FD30621A3B479007B9966 /* RentNeighborhoodInfoNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */; };
 		B32FD30721A3B479007B9966 /* HouseRentDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */; };
 		B32FD30821A3B479007B9966 /* HouseRentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */; };
+		B32FD31A21A3DB51007B9966 /* RentFacilityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */; };
+		B32FD31B21A3DE1B007B9966 /* RentFacilityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */; };
+		B32FD31C21A3DE1B007B9966 /* RentFacilityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */; };
+		B32FD31D21A3E089007B9966 /* HouseRentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */; };
+		B32FD31E21A3E089007B9966 /* HouseRentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */; };
+		B32FD31F21A3E093007B9966 /* HouseRentDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */; };
+		B32FD32021A3E093007B9966 /* HouseRentDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */; };
+		B32FD32121A3E09D007B9966 /* RentNeighborhoodInfoNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */; };
+		B32FD32221A3E09D007B9966 /* RentNeighborhoodInfoNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */; };
+		B32FD32321A3E0A0007B9966 /* RentNameCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FE21A3B479007B9966 /* RentNameCellRender.swift */; };
+		B32FD32421A3E0A1007B9966 /* RentNameCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FE21A3B479007B9966 /* RentNameCellRender.swift */; };
+		B32FD32521A3E0A4007B9966 /* RentPropertyListNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */; };
+		B32FD32621A3E0A4007B9966 /* RentPropertyListNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */; };
+		B32FD32721A3E0A6007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
+		B32FD32821A3E0A7007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
+		B32FD32921A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
+		B32FD32A21A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
+		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -7737,6 +7757,8 @@
 		B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentNeighborhoodInfoNode.swift; sourceTree = "<group>"; };
 		B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailViewModel.swift; sourceTree = "<group>"; };
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
+		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
+		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -14666,6 +14688,8 @@
 				B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */,
 				B32FD2FE21A3B479007B9966 /* RentNameCellRender.swift */,
 				B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */,
+				B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */,
+				B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -19163,6 +19187,7 @@
 				B388CB302142652A00653188 /* NetworkCommonParams.swift in Sources */,
 				F87693901F31D0D300D59CA5 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				F87695401F31D0D700D59CA5 /* TTVFeedListNotificationCenter.m in Sources */,
+				B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CC402142652B00653188 /* MineVC.swift in Sources */,
 				B388CCFE2142652C00653188 /* TextParser.swift in Sources */,
 				A9AFABAB1F0E439400C1E28D /* TTTrackInitTime.m in Sources */,
@@ -20864,6 +20889,7 @@
 				B373C84A2174587A008F9905 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				B373C84B2174587A008F9905 /* TTVFeedListNotificationCenter.m in Sources */,
 				B373C84C2174587A008F9905 /* MineVC.swift in Sources */,
+				B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B373C84D2174587A008F9905 /* TextParser.swift in Sources */,
 				B373C84E2174587A008F9905 /* TTTrackInitTime.m in Sources */,
 				B373C84F2174587A008F9905 /* ArticleMomentDiggManager.m in Sources */,
@@ -22558,6 +22584,7 @@
 				FEFA52B2205FB1A8001F50D8 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				FEFA52B3205FB1A8001F50D8 /* TTVFeedListNotificationCenter.m in Sources */,
 				B388CC412142652B00653188 /* MineVC.swift in Sources */,
+				B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CCFF2142652C00653188 /* TextParser.swift in Sources */,
 				FEFA52B4205FB1A8001F50D8 /* TTTrackInitTime.m in Sources */,
 				D50439D52079B8FC00DA4953 /* ArticleMomentDiggManager.m in Sources */,

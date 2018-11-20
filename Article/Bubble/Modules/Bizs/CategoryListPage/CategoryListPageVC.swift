@@ -764,7 +764,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     self.getQueryCondition(filterCondition: result)
                 }
                 .debounce(0.1, scheduler: MainScheduler.instance)
-                .debug("searchAndConditionFilterVM")
                 .subscribe(onNext: { [unowned self] query in
                     self.requestData(query: query)
                 })
@@ -857,10 +856,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     private func resetConditionData() {
         Observable
             .zip(houseType, EnvContext.shared.client.configCacheSubject)
-//            .debug("resetConditionData")
             .filter { (e) in
                 let (_, config) = e
-//                assert(config != nil)
                 return config != nil
             }
             .map { [unowned self] (e) -> ( [SearchConfigFilterItem]?) in
@@ -904,15 +901,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     result + nodes
                 })
                 let keys = self.allKeysFromNodes(nodes: ns)
-                var conditions = ""
-                self.queryParams?.forEach({ (key, value) in
-                    if !keys.contains(key) {
-                        //
-                        conditions = conditions + convertKeyValueToCondition(key: key, value: value).reduce("", { (result, value) -> String in
-                            result + "&\(value)"
-                        })
-                    }
-                })
+//                var conditions = ""
+//
+//                self.queryParams?.forEach({ (key, value) in
+//                    if !keys.contains(key) {
+//                        //
+//                        conditions = conditions + convertKeyValueToCondition(key: key, value: value).reduce("", { (result, value) -> String in
+//                            result + "&\(value)"
+//                        })
+//                    }
+//                })
+
+                let conditions = getNoneFilterConditionString(params: self.queryParams, conditionsKeys: keys)
+
+
+
                 zip(items.0, items.1)
                     .enumerated()
                     .forEach({ [unowned self] (e) in
@@ -922,7 +925,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             reload: reload,
                             item: item,
                             data: nodes)
-
                     })
                 self.queryString = self.queryString + conditions
                 print(self.queryString)
@@ -1054,26 +1056,6 @@ func houseTypeString(_ houseType: HouseType) -> String {
         return "be_null"
     }
 }
-
-func convertKeyValueToCondition(key: String, value: Any) -> [String] {
-    if let arrays = value as? Array<Any> {
-        return arrays.map { e in
-            if let value = "\(e)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                return "\(key)=\(value)"
-            } else {
-                return "\(key)=\(e)"
-            }
-        }
-    } else {
-        if let valueStr = value as? String,
-            let theValue = valueStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            return ["\(key)=\(theValue)"]
-        } else {
-            return ["\(key)=\(value)"]
-        }
-    }
-}
-
 
 fileprivate func mapCondition(result: [String: [Any]], nodes: [Node]) -> [String: [Any]] {
     var result = result
