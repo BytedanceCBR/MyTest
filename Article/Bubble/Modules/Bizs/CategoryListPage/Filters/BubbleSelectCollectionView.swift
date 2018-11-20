@@ -251,7 +251,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                         }
                 }
         }
-        self.didSelect?(self.dataSource.selectedNodes())
+//        self.didSelect?(self.dataSource.selectedNodes())
         self.dataSource.storeSelectedState()
     }
 
