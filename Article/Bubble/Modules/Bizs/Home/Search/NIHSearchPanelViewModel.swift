@@ -9,6 +9,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+extension Notification.Name {
+    static let homePageRollScreenKey = Notification.Name("kHomePageRollScreen_Noti_Key")
+}
+
 class NIHSearchPanelViewModel: NSObject {
     
     var suspendSearchBar: HomePageSearchPanel
@@ -19,6 +23,8 @@ class NIHSearchPanelViewModel: NSObject {
 
     var showLoadingAlert: ((String) -> Void)?
     var dismissLoadingAlert: (() -> Void)?
+    
+    private var homePageRollScreen:[HomePageRollScreen] = []
     
     @objc init (searchPanel:HomePageSearchPanel,viewController:UIViewController)
     {
@@ -37,6 +43,20 @@ class NIHSearchPanelViewModel: NSObject {
         suspendSearchBar.searchBtn.rx.tap
             .subscribe(onNext: openSearchPanel)
             .disposed(by: disposeBag)
+        NotificationCenter.default.rx.notification(.homePageRollScreenKey).subscribe(onNext: {[weak self] (noti) in
+            if let userInfo = noti.userInfo {
+                if let listData = userInfo["homePageRollData"] as? [HomePageRollScreen] {
+                    self?.homePageRollScreen = listData
+                    var searchTitles:[String] = []
+                    for item in listData {
+                        if let contentText = item.text {
+                            searchTitles.append(contentText)
+                        }
+                    }
+                    self?.suspendSearchBar.searchTitles = searchTitles
+                }
+            }
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
     }
     
     private func searchLocation()
@@ -114,6 +134,10 @@ class NIHSearchPanelViewModel: NSObject {
 
         vc.tracerParams = tracerParams
         
+        let index = self.suspendSearchBar.searchTitleIndex
+        if index >= 0 && index < self.homePageRollScreen.count {
+            vc.homePageRollData = self.homePageRollScreen[index]
+        }
 
         let nav = self.baseVC.navigationController
         nav?.pushViewController(vc, animated: true)

@@ -109,6 +109,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     private var isFromHome: Bool
 
     var tracerParams = TracerParams.momoid()
+    
+    var homePageRollData:HomePageRollScreen?
 
     var stayTimeParams: TracerParams?
 
@@ -328,7 +330,9 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                 self.tableViewModel.search
         stayTimeParams = tracerParams <|> traceStayTime()
         self.tableViewModel.requestHistoryFromRemote(houseType: "\(self.houseType.value.rawValue)")
-
+        if let rollData = homePageRollData {
+            navBar.searchInput.text = rollData.text ?? ""
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

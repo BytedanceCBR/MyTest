@@ -708,15 +708,15 @@ class HomeListViewModel: DetailPageViewModel {
     func requestHomePageRollScreen()
     {
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
-        if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
-        {
-            requestHomePageRollScreenData(cityId: cityId ?? 122, horseType: typeValue.rawValue).subscribe(onNext: {[unowned self] (response) in
-                 print(response)
-                if let listData = response?.data?.data {
-                     print(listData)
-                }
-            }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
-        }
+        requestHomePageRollScreenData(cityId: cityId ?? 122).subscribe(onNext: {(response) in
+            if let listData = response?.data?.data {
+                let userInfo = ["homePageRollData":listData]
+                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
+            } else {
+                let userInfo = ["homePageRollData":[]]
+                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
+            }
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
     }
     
     func createOneTimeToast() -> (String?) -> Void {

@@ -98,12 +98,9 @@ func requestRelatedErshouHouse(
             })
 }
 
-func requestHomePageRollScreenData(
-    cityId: Int,
-    horseType: Int)-> Observable<HomePageRollScreenResponse?> {
+func requestHomePageRollScreenData(cityId: Int)-> Observable<HomePageRollScreenResponse?> {
     let params: [String : Any] = [
         "city_id": cityId,
-        "house_type": horseType,
         "source": "app"]
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
