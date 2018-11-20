@@ -126,18 +126,22 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     private var nodes: [Node]
 
+    private let redDots: [String]
+
     var didSelect: (([Node]) -> Void)?
 
     let disposeBag = DisposeBag()
 
     init() {
         nodes = []
+        self.redDots = []
         super.init(frame: CGRect.zero)
         initPanelWithNativeDS()
     }
 
-    init(nodes: [Node]) {
+    init(nodes: [Node], redDots: [String] = []) {
         self.nodes = nodes
+        self.redDots = redDots
         super.init(frame: CGRect.zero)
         dataSources.first?.nodes = self.nodes
         initPanelWithNativeDS()
@@ -752,6 +756,14 @@ fileprivate class AreaConditionCell: UITableViewCell {
         return re
     }()
 
+    lazy var redDot: UIView = {
+        let re = UIView()
+//        re.isHidden = true
+        re.layer.cornerRadius = 2.5
+        re.backgroundColor = hexStringToUIColor(hex: "#ff5b4c")
+        return re
+    }()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = UIColor.clear
@@ -773,7 +785,14 @@ fileprivate class AreaConditionCell: UITableViewCell {
             maker.left.equalTo(15)
             maker.top.equalTo(10)
             maker.bottom.equalTo(-10)
-            maker.right.equalTo(checkboxBtn.snp.left).offset(-5)            
+            maker.right.lessThanOrEqualTo(checkboxBtn.snp.left).offset(-5)
+        }
+
+        contentView.addSubview(redDot)
+        redDot.snp.makeConstraints { (make) in
+            make.top.equalTo(label).offset(4)
+            make.left.equalTo(label.snp.right).offset(1)
+            make.height.width.equalTo(5)
         }
 
     }

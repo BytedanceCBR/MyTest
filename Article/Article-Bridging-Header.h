@@ -90,4 +90,6 @@
 #import "ArticleListNotifyBarView.h"
 #import "FRRouteHelper.h"
 
+#import "HouseRentDetailPageVC.h"
+
 #endif /* Article_Bridging_Header_h */

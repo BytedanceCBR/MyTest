@@ -13,6 +13,7 @@ import RxCocoa
 import JXPhotoBrowser
 import Photos
 
+
 class HouseNumberPageControlPlugin: PhotoBrowserPlugin {
     
     let currentPageRelay = BehaviorRelay<Int>(value:0)
@@ -163,6 +164,7 @@ class FHPhotoBrowser: PhotoBrowser
 }
 
 // MARK: - CycleImageCell
+@objc
 class CycleImageCell: BaseUITableViewCell {
 
     private var pageableViewModel: PageableViewModel?
@@ -206,9 +208,9 @@ class CycleImageCell: BaseUITableViewCell {
         return "CycleImage"
     }
 
-    fileprivate var headerImages: [ImageModel] = [] {
+    var headerImages: [ImageModel] = [] {
         didSet {
-            
+            print("\(headerImages)");
             if let thePageVM = pageableViewModel {
                 
                 thePageVM.reloadData(currentPageOnly: false)
@@ -242,7 +244,7 @@ class CycleImageCell: BaseUITableViewCell {
         }
     }
     
-
+    @objc
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -484,6 +486,13 @@ class CycleImageCell: BaseUITableViewCell {
         browser.show()
     }
 
+    @objc
+    func setImageObjs(images: [ImageItemObj]) {
+        self.headerImages = images.map {
+            ImageModel(url: $0.url, category: $0.category)
+        }
+    }
+
 }
 
 fileprivate func convertToPictureSection(_ models: [ImageModel]) -> [PictureCategorySection] {
@@ -505,9 +514,18 @@ fileprivate func convertToPictureSection(_ models: [ImageModel]) -> [PictureCate
         })
 }
 
+class ImageItemObj: NSObject {
+    var url: String
+    var category: String
 
+    init(url: String, category: String) {
+        self.url = url
+        self.category = category
+        super.init()
+    }
+}
 
-fileprivate struct ImageModel {
+struct ImageModel {
     let url: String
     let category: String
 }

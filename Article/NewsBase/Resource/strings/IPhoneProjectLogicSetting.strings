@@ -13,6 +13,8 @@
 "old_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
 "neighborhood_detail"   = "_TtC6Bubble17HorseDetailPageVC";
 "new_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
+"rent_house_detail"      = "_TtC6Bubble17HouseRentDetailVC";
+
 "floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
 "message_detail_list"   = "_TtC6Bubble13MessageListVC";
 "message_system_list"   = "_TtC6Bubble19SystemMessageListVC";

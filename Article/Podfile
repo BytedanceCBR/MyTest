@@ -347,6 +347,8 @@ def appPods
     
     #支持自动约束cell缓存高度
     pod 'UITableView+FDTemplateLayoutCell', '1.6'
+    pod 'FHCommonUI' ,:path => '../../fcommonui4ios/'
+
 
 end
 target 'NewsLite' do

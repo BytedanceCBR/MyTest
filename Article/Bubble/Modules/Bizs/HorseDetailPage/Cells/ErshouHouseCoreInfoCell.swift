@@ -52,8 +52,8 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
         }
     }
 
-    fileprivate func setItem(items: [ItemView]) {
-        for v in contentView.subviews where v is ItemView {
+    func setItem(items: [HorseCoreInfoItemView]) {
+        for v in contentView.subviews where v is HorseCoreInfoItemView {
             v.removeFromSuperview()
         }
 
@@ -168,7 +168,7 @@ fileprivate class ItemValueView: UIControl {
     }
 }
 
-fileprivate class ItemView: UIView {
+class HorseCoreInfoItemView: UIView {
 
     lazy var keyLabel: UILabel = {
         let re = UILabel()
@@ -283,8 +283,8 @@ func parseErshouHouseCoreInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> T
 
 func fillErshouHouseCoreInfoCell(_ ershouHouseData: ErshouHouseData, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? ErshouHouseCoreInfoCell, let coreInfos = ershouHouseData.coreInfo {
-        let infos = coreInfos.map { info -> ItemView in
-            let re = ItemView()
+        let infos = coreInfos.map { info -> HorseCoreInfoItemView in
+            let re = HorseCoreInfoItemView()
             re.keyLabel.text = info.attr
             re.valueLabel.text = info.value
             return re

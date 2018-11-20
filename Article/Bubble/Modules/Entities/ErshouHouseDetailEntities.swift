@@ -135,6 +135,14 @@ struct ErshouHouseBaseInfo: Mappable {
     init?(map: Map) {
         
     }
+
+    init(attr: String?,
+         value: String?,
+         isSingle: Bool?) {
+        self.attr = attr
+        self.value = value
+        self.isSingle = isSingle
+    }
     
     mutating func mapping(map: Map) {
         attr <- map["attr"]

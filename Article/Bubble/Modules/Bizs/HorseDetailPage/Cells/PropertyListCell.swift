@@ -66,7 +66,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         // Configure the view for the selected state
     }
 
-    fileprivate func addRowView(rows: [UIView], fixedSpacing:CGFloat = 0, averageLayout: Bool = true ) {
+    func addRowView(rows: [UIView], fixedSpacing:CGFloat = 0, averageLayout: Bool = true ) {
         for v in wrapperView.subviews {
             v.removeFromSuperview()
         }
@@ -108,7 +108,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
     }
 }
 
-fileprivate class RowView: UIView {
+class PropertyListRowView: UIView {
 
     lazy var keyLabel: UILabel = {
         let re = UILabel()
@@ -164,7 +164,7 @@ fileprivate class RowView: UIView {
 
 }
 
-fileprivate class TwoRowView: UIView {
+class PropertyListTwoRowView: UIView {
 
 }
 
@@ -295,13 +295,13 @@ func fillNeighborhoodPropertyListCell(_ infos: [NeighborhoodItemAttribute]?, dis
         theCell.prepareForReuse()
         theCell.removeListBottomView(-20, true)
         if let groups = infos {
-            func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: RowView) {
+            func setRowValue(_ info: NeighborhoodItemAttribute, _ rowView: PropertyListRowView) {
                 rowView.keyLabel.text = info.attr
                 rowView.valueLabel.text = info.value
             }
 
             let singleViews = groups.map { (info) -> UIView in
-                let re = RowView()
+                let re = PropertyListRowView()
                 setRowValue(info, re)
                 re.remakeValueLabelConstraints()
                 return re
@@ -352,7 +352,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
 
         if let groups = groups {
 
-            func setRowValue(_ info: ErshouHouseBaseInfo, _ rowView: RowView) {
+            func setRowValue(_ info: ErshouHouseBaseInfo, _ rowView: PropertyListRowView) {
                 rowView.keyLabel.text = info.attr
                 rowView.valueLabel.text = info.value
             }
@@ -361,14 +361,14 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
             groups[0].enumerated().forEach { (e) in
                 let (offset, info) = e
                 if offset % 2 == 0 {
-                    let twoRow = TwoRowView()
-                    let row = RowView()
+                    let twoRow = PropertyListTwoRowView()
+                    let row = PropertyListRowView()
                     setRowValue(info, row)
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
                 } else {
                     let twoRow = twoValueView.last
-                    let row = RowView()
+                    let row = PropertyListRowView()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
                 }
@@ -386,7 +386,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
             }
 
             let singleViews = groups[1].map { (info) -> UIView in
-                let re = RowView()
+                let re = PropertyListRowView()
                 setRowValue(info, re)
                 return re
             }
