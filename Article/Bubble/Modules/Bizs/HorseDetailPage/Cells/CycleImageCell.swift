@@ -701,10 +701,29 @@ extension CycleImageCell: PhotoBrowserDelegate {
     @objc func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
         
         if let _ = error as NSError? {
-            var errorTip:String = "保存失败"
+            let errorTip:String = "保存失败"
             let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
             if status != .authorized {
-                errorTip = "无照片访问权限"
+                
+                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-相机」选项中，允许好多房访问您的相机", preferredType: .alert)
+                alert.addAction(withTitle: "取消", actionType: .cancel) {
+                }
+                alert.addAction(withTitle: "立刻前往", actionType: .normal, actionBlock: {
+                    
+                    if let url = URL(string: UIApplicationOpenSettingsURLString),UIApplication.shared.canOpenURL(url) {
+                        
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        } else {
+                            UIApplication.shared.openURL(url)
+                        }
+                    }
+                    
+                })
+                if let topVC = TTUIResponderHelper.topmostViewController() {
+                    alert.show(from: topVC, animated: true)
+                }
+                return
             }
             TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: errorTip, indicatorImage: UIImage(named: "close_popup_textpage")!, autoDismiss: true, dismissHandler: nil)        }
         else {
