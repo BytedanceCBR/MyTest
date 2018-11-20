@@ -618,7 +618,23 @@ static TTFeedValidator *_feedValidator;
             //没有下发item_id，客户端自己加一个
             [mutDict setValue:@([uniqueID longLongValue]) forKey:@"itemID"];
             [persistents addObject:mutDict];
+            
+        } else if (cellType == ExploreOrderedDataCellTypeFHHouse){
+            if (![[dict allKeys] containsObject:@"id"]) {
+                continue;
+            }
+            NSString *uniqueID = [NSString stringWithFormat:@"%@",[dict objectForKey:@"id"]];
+            if ([infoGIDSet containsObject:uniqueID]) {
+                //如果本次返回的数据，已经有包含这个gid 的数据， 则消重
+                continue;
+            }
+            [infoGIDSet addObject:uniqueID];
+            [mutDict setValue:@([uniqueID longLongValue]) forKey:@"uniqueID"];
+            //没有下发item_id，客户端自己加一个
+            [mutDict setValue:@([uniqueID longLongValue]) forKey:@"itemID"];
+            [persistents addObject:mutDict];
         }
+        
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
