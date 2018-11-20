@@ -748,6 +748,12 @@
 		52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FD8A4E16F2FA4A00B77520 /* ArticleShareManager.m */; };
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
+		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
+		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
+		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
+		6114DDE821A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
+		6114DDE921A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
+		6114DDEA21A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
@@ -6619,6 +6625,10 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
+		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
+		6114DDE621A432960060EBB8 /* FHHouseItemFeedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseItemFeedCell.h; sourceTree = "<group>"; };
+		6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseItemFeedCell.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
@@ -11883,6 +11893,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6114DDE021A4322A0060EBB8 /* FHHouseItemCell */ = {
+			isa = PBXGroup;
+			children = (
+				6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */,
+				6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */,
+				6114DDE621A432960060EBB8 /* FHHouseItemFeedCell.h */,
+				6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */,
+			);
+			path = FHHouseItemCell;
+			sourceTree = "<group>";
+		};
 		61501BA62148BBF800870420 /* listViewContainer */ = {
 			isa = PBXGroup;
 			children = (
@@ -12098,6 +12119,7 @@
 		6BE01FFE1B215BE400F9E484 /* exploreListCell */ = {
 			isa = PBXGroup;
 			children = (
+				6114DDE021A4322A0060EBB8 /* FHHouseItemCell */,
 				C3B82293201EBFF200E57A24 /* loadmoreTipCell */,
 				309069012015B40600764DE7 /* TTHotNewsCell */,
 				2B050C4E1FD986320058498E /* tsvFeedFollowCell */,
@@ -19180,6 +19202,7 @@
 				324097521F414E55002DF7C0 /* FriendModel.m in Sources */,
 				309069042015B50D00764DE7 /* TTHotNewsData.m in Sources */,
 				C29BDEDE1D0E63B900E2727B /* TTShareModuleBridge.m in Sources */,
+				6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */,
 				4A78DAE31F565D8F00474BA8 /* TTCPUMonitor.m in Sources */,
 				47A169021F9F2FC1004CE29E /* TTVDetailFollowRecommendViewController.m in Sources */,
 				A97DC08E1F1333310002B455 /* TTDetailContainerViewModel.m in Sources */,
@@ -19441,6 +19464,7 @@
 				1B98CADB1AAD742E00ECADCB /* BlockUsersListCell.m in Sources */,
 				B388CC902142652B00653188 /* TGLineCursor.swift in Sources */,
 				AB28EC521F2DC1AF00DB5A94 /* TTDefaultJSONResponseSerializer.m in Sources */,
+				6114DDE821A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
 				B388CC5C2142652B00653188 /* SuggestionEntities.swift in Sources */,
 				A97DBC3B1F1332E40002B455 /* TTHandleFirstLauchTask.m in Sources */,
 				D501686C2089EC4B00B8F1C7 /* TTMessageCenterRouter.m in Sources */,
@@ -20885,6 +20909,7 @@
 				B373C82B2174587A008F9905 /* TTHotNewsData.m in Sources */,
 				B373C82C2174587A008F9905 /* TTShareModuleBridge.m in Sources */,
 				B373C82D2174587A008F9905 /* TTCPUMonitor.m in Sources */,
+				6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */,
 				B373C82E2174587A008F9905 /* TTVDetailFollowRecommendViewController.m in Sources */,
 				B373C82F2174587A008F9905 /* TTDetailContainerViewModel.m in Sources */,
 				B373C8302174587A008F9905 /* Tracker.m in Sources */,
@@ -21146,6 +21171,7 @@
 				B373C92D2174587A008F9905 /* TGLineCursor.swift in Sources */,
 				B373C92E2174587A008F9905 /* TTDefaultJSONResponseSerializer.m in Sources */,
 				B373C92F2174587A008F9905 /* SuggestionEntities.swift in Sources */,
+				6114DDEA21A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
 				B373C9302174587A008F9905 /* TTHandleFirstLauchTask.m in Sources */,
 				B373C9312174587A008F9905 /* TTMessageCenterRouter.m in Sources */,
 				B373C9322174587A008F9905 /* TTVVideoDetailViewController.m in Sources */,
@@ -22590,6 +22616,7 @@
 				FEFA528E205FB1A8001F50D8 /* TTHotNewsData.m in Sources */,
 				FEFA528F205FB1A8001F50D8 /* TTShareModuleBridge.m in Sources */,
 				FEFA5290205FB1A8001F50D8 /* TTCPUMonitor.m in Sources */,
+				6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */,
 				FEFA5291205FB1A8001F50D8 /* TTVDetailFollowRecommendViewController.m in Sources */,
 				FEFA5292205FB1A8001F50D8 /* TTDetailContainerViewModel.m in Sources */,
 				FEFA5296205FB1A8001F50D8 /* Tracker.m in Sources */,
@@ -22851,6 +22878,7 @@
 				B388CC912142652B00653188 /* TGLineCursor.swift in Sources */,
 				FEFA53BE205FB1A8001F50D8 /* TTDefaultJSONResponseSerializer.m in Sources */,
 				B388CC5D2142652B00653188 /* SuggestionEntities.swift in Sources */,
+				6114DDE921A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
 				FEFA53C0205FB1A8001F50D8 /* TTHandleFirstLauchTask.m in Sources */,
 				D501686D2089EC4B00B8F1C7 /* TTMessageCenterRouter.m in Sources */,
 				FEFA53C1205FB1A8001F50D8 /* TTVVideoDetailViewController.m in Sources */,

@@ -132,6 +132,9 @@
             break;
         case ExploreOrderedDataCellTypeLoadMoreTip:
             break;
+            
+        case ExploreOrderedDataCellTypeFHHouse:
+            break;
         default:
         {
             support = NO;

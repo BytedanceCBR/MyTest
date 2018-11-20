@@ -287,6 +287,10 @@ static NSMutableArray *s_reusableCardViews;
     [[TTCellBridge sharedInstance] registerCellClass:[ExploreArticleHotNewsCell class] cellViewClass:[ExploreArticleHotNewsCellView class]];
     
     [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
+    
+    // add by zjing for test feed支持房源
+//    [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
+
 }
 
 + (void)registerAllCellClassWithTableView:(UITableView *)tableView
@@ -1046,6 +1050,10 @@ static NSMutableArray *s_reusableCardViews;
         {
             cellViewType = ExploreCellViewTypeHotNews;
         }
+        else if ([orderedData.originalData isKindOfClass:[TTExploreLoadMoreTipData class]]) {
+            cellViewType = ExploreCellViewTypeLoadmoreTipCell;
+        }
+        // add by zjing 房源卡片
         else if ([orderedData.originalData isKindOfClass:[TTExploreLoadMoreTipData class]]) {
             cellViewType = ExploreCellViewTypeLoadmoreTipCell;
         }
