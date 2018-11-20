@@ -575,8 +575,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
     
     func gotoMapSearch(){
-//        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
-//        return
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
+        return
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }

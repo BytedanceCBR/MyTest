@@ -108,21 +108,33 @@
 
     self.ttStatusBarStyle = UIStatusBarStyleDefault;
     
- 
-//    [self checkLocalTestUpgradeVersionAlert];
+    //如果是inhouse的，弹升级弹窗
+    #if INHOUSE
+    [self checkLocalTestUpgradeVersionAlert];
+    #endif
 }
 
 - (void)checkLocalTestUpgradeVersionAlert
 {
     //内测弹窗
-    NSString * iidValue = [ExploreExtenstionDataHelper sharedIID];
-    NSString * didValue = [ExploreExtenstionDataHelper sharedDeviceID];
+    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
+    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
     NSString * channelValue = @"local_test";
     NSString * aidValue = @"1370";
+//    NSString * baseUrl = [CommonURLSetting baseURL];
+    NSString * baseUrl = @"https://i.snssdk.com";
     
-    
-    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:nil correctVC:self delegate:self];
-    
+    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
+        [self.view addSubview:view];
+    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
+        if (!downloadUrl) {
+            return;
+        }
+        NSURL *url = [NSURL URLWithString:downloadUrl];
+        [[UIApplication sharedApplication] openURL:url];
+    } closeBlock:^{
+        
+    }];
 }
 
 - (void)dealloc
@@ -761,10 +773,10 @@
  @params tipVersion 弹窗升级版本号,ex: 6.7.8
  @param downloadUrl TF弹窗下载地址
  */
-- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
-{
-    
-}
+//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
+//{
+//
+//}
 
 /** 通知代理对象弹窗需要remove
  *  代理对象需要在此方法里面将弹窗remove掉
@@ -779,10 +791,10 @@
 // 可以实现自行进行判断，默认与头条判断方式相同
 // 通过检查bundleID是否有inHouse字段进行判断
 // */
-//- (BOOL)decideIsInhouseApp
-//{
-//
-//}
+- (BOOL)decideIsInhouseApp
+{
+    return YES;
+}
 //
 ///*
 // 判断是否是LR包，当打包注入与头条主工程不一致时
@@ -791,10 +803,10 @@
 // 注意：只有lr包才弹内测弹窗，如果业务方没有
 // lr包的概念，则返回YES即可
 // */
-//- (BOOL)decideIsLrPackage
-//{
-//
-//}
+- (BOOL)decideIsLrPackage
+{
+    return YES;
+}
 //
 ///*
 // 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight

@@ -40,13 +40,23 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
     var loginDelegate: QuickLoginVCDelegate?
 
+    fileprivate var userInteractionObv: NSKeyValueObservation?
+
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(backBtnImg: #imageLiteral(resourceName: "close"))
+        re.title.text = "手机快捷登录"
+        re.title.isHidden = true
         return re
     }()
     
     lazy var accountLoginView: UIView = {
         let re = UIView(frame: view.frame)
+        return re
+    }()
+    
+    lazy var scrollView: UIScrollView = {
+        let re = UIScrollView(frame: view.frame)
+        re.keyboardDismissMode = .onDrag
         return re
     }()
 
@@ -329,7 +339,18 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
+            if let _ = value.newValue {
+                self?.view.endEditing(true)
+            }
+        }
+        
         view.addSubview(navBar)
+        
+        view.addSubview(agreementLabel)
+        view.addSubview(acceptCheckBox)
+
         navBar.removeGradientColor()
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
@@ -345,83 +366,98 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             maker.bottom.equalTo(-13)
         }
 
-        view.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(navBar.snp.bottom).offset(40)
-            maker.left.equalTo(30)
-            maker.height.equalTo(42)
-            maker.width.equalTo(180)
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { (maker) in
+
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalTo(-50)
         }
 
-        view.addSubview(subTitleLabel)
+        scrollView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { maker in
+            maker.top.equalTo(40)
+            maker.left.equalTo(30)
+            maker.height.equalTo(42)
+        }
+        
+        let rightView = UIView()
+        scrollView.addSubview(rightView)
+        rightView.snp.makeConstraints { maker in
+            maker.left.equalTo(30)
+            maker.right.equalTo(-30)
+            maker.width.equalTo(UIScreen.main.bounds.width - 60)
+            maker.height.equalTo(1)
+            maker.top.equalToSuperview()
+        }
+
+        scrollView.addSubview(subTitleLabel)
         subTitleLabel.snp.makeConstraints { maker in
             maker.left.equalTo(30)
             maker.top.equalTo(titleLabel.snp.bottom).offset(6)
             maker.height.equalTo(20)
         }
 
-        view.addSubview(phoneInput)
+        scrollView.addSubview(phoneInput)
         phoneInput.snp.makeConstraints { maker in
             maker.top.equalTo(subTitleLabel.snp.bottom).offset(40)
             maker.height.equalTo(20)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
+            maker.left.equalTo(titleLabel)
+            maker.right.equalTo(rightView)
         }
-
-        view.addSubview(singleLine)
+        
+        scrollView.addSubview(singleLine)
         singleLine.snp.makeConstraints { maker in
             maker.top.equalTo(phoneInput.snp.bottom).offset(11)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
+            maker.left.equalTo(titleLabel)
+            maker.right.equalTo(rightView)
             maker.height.equalTo(0.5)
          }
 
-        view.addSubview(varifyCodeInput)
+        scrollView.addSubview(varifyCodeInput)
         varifyCodeInput.snp.makeConstraints { maker in
             maker.top.equalTo(phoneInput.snp.bottom).offset(43)
             maker.height.equalTo(20)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
+            maker.left.equalTo(titleLabel)
+            maker.right.equalTo(rightView)
         }
 
-        view.addSubview(sendVerifyCodeBtn)
+        scrollView.addSubview(sendVerifyCodeBtn)
         sendVerifyCodeBtn.snp.makeConstraints { maker in
             maker.centerY.equalTo(varifyCodeInput.snp.centerY)
-            maker.right.equalTo(-30)
+            maker.right.equalTo(rightView)
             maker.height.equalTo(30)
         }
 
-        view.addSubview(singleLine2)
+        scrollView.addSubview(singleLine2)
         singleLine2.snp.makeConstraints { maker in
             maker.top.equalTo(varifyCodeInput.snp.bottom).offset(11)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
+            maker.left.equalTo(titleLabel)
+            maker.right.equalTo(rightView)
             maker.height.equalTo(0.5)
          }
 
-        view.addSubview(confirmBtn)
+        scrollView.addSubview(confirmBtn)
         confirmBtn.snp.makeConstraints { maker in
             maker.top.equalTo(varifyCodeInput.snp.bottom).offset(40)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
+            maker.left.equalTo(titleLabel)
+            maker.right.equalTo(rightView).offset(-30)
             maker.height.equalTo(46)
         }
         
-        view.addSubview(changeLoginTypeBtn)
-        changeLoginTypeBtn.isHidden = true
-        changeLoginTypeBtn.snp.makeConstraints { maker in
-            maker.top.equalTo(confirmBtn.snp.bottom).offset(2)
-            maker.left.equalTo(30)
-            maker.right.equalTo(-30)
-            maker.height.equalTo(46)
-        }
-        let generalBizConfig = EnvContext.shared.client.generalBizconfig
-        if let isFLogin =  generalBizConfig.generalCacheSubject.value?.reviewInfo?.isFLogin, isFLogin == true {
-            changeLoginTypeBtn.isHidden = false
-        }
+//        view.addSubview(changeLoginTypeBtn)
+//        changeLoginTypeBtn.isHidden = true
+//        changeLoginTypeBtn.snp.makeConstraints { maker in
+//            maker.top.equalTo(confirmBtn.snp.bottom).offset(2)
+//            maker.left.equalTo(30)
+//            maker.right.equalTo(-30)
+//            maker.height.equalTo(46)
+//        }
+//        let generalBizConfig = EnvContext.shared.client.generalBizconfig
+//        if let isFLogin =  generalBizConfig.generalCacheSubject.value?.reviewInfo?.isFLogin, isFLogin == true {
+//            changeLoginTypeBtn.isHidden = false
+//        }
 
-        view.addSubview(agreementLabel)
-        view.addSubview(acceptCheckBox)
 
         setAgreementContent()
 
@@ -457,11 +493,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 .disposed(by: disposeBag)
 
             
-            changeLoginTypeBtn.rx.tap.subscribe { [weak self] event in
-                
-                self?.setUpAccountLoginView()
-            } .disposed(by: disposeBag)
-            
+//            changeLoginTypeBtn.rx.tap.subscribe { [weak self] event in
+//
+//                self?.setUpAccountLoginView()
+//            } .disposed(by: disposeBag)
+//
 
             quickLoginViewModel.onResponse
                     .bind(onNext: dismissHud())
@@ -519,10 +555,55 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
             recordEvent(key: TraceEventName.login_page, params: tracerParams)
 
         }
-        let screenHeight = UIScreen.main.bounds.height
-        if screenHeight < 500 {
-            bindKeybroadUpNotification()
-        }
+        handleKeyboardState()
+        navBar.title.isHidden = true
+
+    }
+
+    func handleKeyboardState() {
+
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UIKeyboardWillShow, object: nil)
+            .subscribe(onNext: { [weak self] notification in
+                let userInfo = notification.userInfo!
+                
+                let curve = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue
+                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+                
+                UIView.animate(withDuration: duration, animations: {
+                    
+                    UIView.setAnimationBeginsFromCurrentState(true)
+                    UIView.setAnimationDuration(duration)
+                    UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: curve) ?? UIViewAnimationCurve.easeIn)
+                    self?.scrollView.contentOffset = CGPoint(x: 0, y: 120)
+                    self?.navBar.title.isHidden = false
+                    
+                })
+                
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(NSNotification.Name.UIKeyboardWillHide, object: nil)
+            .subscribe(onNext: { [weak self] notification in
+                let userInfo = notification.userInfo!
+                
+                let curve = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue
+                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+                
+                UIView.animate(withDuration: duration, animations: {
+                    
+                    UIView.setAnimationBeginsFromCurrentState(true)
+                    UIView.setAnimationDuration(duration)
+                    UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: curve) ?? UIViewAnimationCurve.easeIn)
+                    self?.scrollView.contentOffset = CGPoint(x: 0, y: 0)
+                    self?.navBar.title.isHidden = true
+                    
+                })
+                
+            })
+            .disposed(by: disposeBag)
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -532,161 +613,122 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         UIApplication.shared.setStatusBarHidden(false, with: .none)
     }
 
-    func bindKeybroadUpNotification() {
-        NotificationCenter.default.rx
-            .notification(NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-            .debounce(0.08, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] notification in
-                let userInfo = notification.userInfo!
-
-                //获取键盘弹出前的Rect
-                let beginRect=(userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue;
-                //获取键盘弹出后的Rect
-                let endRect=(userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue;
-
-                let deltaY = endRect.origin.y - beginRect.origin.y;
-
-                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-
-                let animations:(() -> Void) = { [unowned self] in
-                    self.view.frame =
-                        CGRect(x: self.view.frame.origin.x,
-                               y: self.view.frame.origin.y + deltaY * 0.5,
-                               width: self.view.frame.size.width,
-                               height: self.view.frame.size.height)
-                }
-
-                if duration > 0 {
-                    let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
-                    UIView.animate(
-                        withDuration: duration,
-                        delay: 0,
-                        options:options,
-                        animations: animations,
-                        completion: nil)
-                }else{
-                    animations()
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-
-    func setUpAccountLoginView()
-    {
-        if changeLoginTypeBtn.isSelected
-        {
-            accountLoginView.isHidden = true
-        }else
-        {
-            if !view.subviews.contains(accountLoginView)
-            {
-                //账户密码登录容器
-                accountLoginView.backgroundColor = UIColor.white
-                view.addSubview(accountLoginView)
-                
-                accountLoginView.snp.makeConstraints { maker in
-                    maker.top.equalTo(titleLabel.snp.top)
-                    maker.left.equalTo(0)
-                    maker.bottom.equalTo(confirmBtn.snp.bottom)
-                    maker.width.equalTo(view)
-                }
-                
-                //账户密码登录按钮
-                accountLoginView.addSubview(confirmAccountBtn)
-                confirmAccountBtn.snp.makeConstraints { maker in
-                    maker.bottom.equalTo(accountLoginView.snp.bottom).offset(0)
-                    maker.left.equalTo(30)
-                    maker.right.equalTo(-30)
-                    maker.height.equalTo(46)
-                }
-                
-                //账户密码登录子控价title
-                accountLoginView.addSubview(titleLabelAccountLogin)
-                titleLabelAccountLogin.snp.makeConstraints { maker in
-                    maker.top.equalTo(0)
-                    maker.left.equalTo(30)
-                    maker.height.equalTo(42)
-                    maker.width.equalTo(240)
-                }
-                
-                //账户密码登录subtitle
-                accountLoginView.addSubview(subTitleLabelAccountLogin)
-                subTitleLabelAccountLogin.snp.makeConstraints { maker in
-                    maker.left.equalTo(30)
-                    maker.top.equalTo(titleLabelAccountLogin.snp.bottom).offset(6)
-                    maker.height.equalTo(20)
-                }
-                
-                //账户输入
-                accountLoginView.addSubview(userInputAccountLogin)
-                userInputAccountLogin.snp.makeConstraints { maker in
-                    maker.top.equalTo(subTitleLabelAccountLogin.snp.bottom).offset(40)
-                    maker.height.equalTo(20)
-                    maker.left.equalTo(30)
-                    maker.right.equalTo(-30)
-                }
-                
-                //账户分割线
-                accountLoginView.addSubview(singleLineAccountLogin)
-                singleLineAccountLogin.snp.makeConstraints { maker in
-                    maker.top.equalTo(userInputAccountLogin.snp.bottom).offset(11)
-                    maker.left.equalTo(30)
-                    maker.right.equalTo(-30)
-                    maker.height.equalTo(0.5)
-                }
-                
-                //密码输入
-                accountLoginView.addSubview(passwordInputAccountLogin)
-                passwordInputAccountLogin.snp.makeConstraints { maker in
-                    maker.top.equalTo(userInputAccountLogin.snp.bottom).offset(40)
-                    maker.height.equalTo(20)
-                    maker.left.equalTo(30)
-                    maker.right.equalTo(-30)
-                }
-                
-                //密码分割线
-                accountLoginView.addSubview(singleLine2AccountLogin)
-                singleLine2AccountLogin.snp.makeConstraints { maker in
-                    maker.top.equalTo(passwordInputAccountLogin.snp.bottom).offset(11)
-                    maker.left.equalTo(30)
-                    maker.right.equalTo(-30)
-                    maker.height.equalTo(0.5)
-                }
-                
-                //监听用户输入操作及内容
-                Observable
-                    .combineLatest(userInputAccountLogin.rx.text, passwordInputAccountLogin.rx.text, acceptRelay.asObservable())
-                    .skip(1)
-                    .map { (e) -> Bool in
-                        let (userAcc, passWord,isSelected) = e
-                        return userAcc?.count ?? 0 >= 1 && passWord?.count ?? 0 > 1 && isSelected
-                    }
-                    .bind(onNext: { [unowned self] isEnabled in
-                        self.enableConfirmBtn(button: self.confirmAccountBtn, isEnabled: isEnabled)
-                    })
-                    .disposed(by: disposeBag)
-                
-                if let quickLoginViewModel = self.quickLoginViewModel {
-                    let mergeInputsAcc = Observable.combineLatest(userInputAccountLogin.rx.text, passwordInputAccountLogin.rx.text)
-                    
-                    //账号密码登录Action
-                    confirmAccountBtn.rx.tap
-                        .do(onNext: { [unowned self] in
-                            self.showLoading(title: "正在登录中")
-                        })
-                        .withLatestFrom(mergeInputsAcc)
-                        .bind(to: quickLoginViewModel.requestPWDLogin) // 账号密码登录
-                        .disposed(by: disposeBag)
-                    
-                }
-            }else
-            {
-                accountLoginView.isHidden = false
-            }
-        }
-        
-        changeLoginTypeBtn.isSelected = !changeLoginTypeBtn.isSelected
-    }
+//    func setUpAccountLoginView()
+//    {
+//        if changeLoginTypeBtn.isSelected
+//        {
+//            accountLoginView.isHidden = true
+//        }else
+//        {
+//            if !view.subviews.contains(accountLoginView)
+//            {
+//                //账户密码登录容器
+//                accountLoginView.backgroundColor = UIColor.white
+//                view.addSubview(accountLoginView)
+//
+//                accountLoginView.snp.makeConstraints { maker in
+//                    maker.top.equalTo(titleLabel.snp.top)
+//                    maker.left.equalTo(0)
+//                    maker.bottom.equalTo(confirmBtn.snp.bottom)
+//                    maker.width.equalTo(view)
+//                }
+//
+//                //账户密码登录按钮
+//                accountLoginView.addSubview(confirmAccountBtn)
+//                confirmAccountBtn.snp.makeConstraints { maker in
+//                    maker.bottom.equalTo(accountLoginView.snp.bottom).offset(0)
+//                    maker.left.equalTo(30)
+//                    maker.right.equalTo(-30)
+//                    maker.height.equalTo(46)
+//                }
+//
+//                //账户密码登录子控价title
+//                accountLoginView.addSubview(titleLabelAccountLogin)
+//                titleLabelAccountLogin.snp.makeConstraints { maker in
+//                    maker.top.equalTo(0)
+//                    maker.left.equalTo(30)
+//                    maker.height.equalTo(42)
+//                    maker.width.equalTo(240)
+//                }
+//
+//                //账户密码登录subtitle
+//                accountLoginView.addSubview(subTitleLabelAccountLogin)
+//                subTitleLabelAccountLogin.snp.makeConstraints { maker in
+//                    maker.left.equalTo(30)
+//                    maker.top.equalTo(titleLabelAccountLogin.snp.bottom).offset(6)
+//                    maker.height.equalTo(20)
+//                }
+//
+//                //账户输入
+//                accountLoginView.addSubview(userInputAccountLogin)
+//                userInputAccountLogin.snp.makeConstraints { maker in
+//                    maker.top.equalTo(subTitleLabelAccountLogin.snp.bottom).offset(40)
+//                    maker.height.equalTo(20)
+//                    maker.left.equalTo(30)
+//                    maker.right.equalTo(-30)
+//                }
+//
+//                //账户分割线
+//                accountLoginView.addSubview(singleLineAccountLogin)
+//                singleLineAccountLogin.snp.makeConstraints { maker in
+//                    maker.top.equalTo(userInputAccountLogin.snp.bottom).offset(11)
+//                    maker.left.equalTo(30)
+//                    maker.right.equalTo(-30)
+//                    maker.height.equalTo(0.5)
+//                }
+//
+//                //密码输入
+//                accountLoginView.addSubview(passwordInputAccountLogin)
+//                passwordInputAccountLogin.snp.makeConstraints { maker in
+//                    maker.top.equalTo(userInputAccountLogin.snp.bottom).offset(40)
+//                    maker.height.equalTo(20)
+//                    maker.left.equalTo(30)
+//                    maker.right.equalTo(-30)
+//                }
+//
+//                //密码分割线
+//                accountLoginView.addSubview(singleLine2AccountLogin)
+//                singleLine2AccountLogin.snp.makeConstraints { maker in
+//                    maker.top.equalTo(passwordInputAccountLogin.snp.bottom).offset(11)
+//                    maker.left.equalTo(30)
+//                    maker.right.equalTo(-30)
+//                    maker.height.equalTo(0.5)
+//                }
+//
+//                //监听用户输入操作及内容
+//                Observable
+//                    .combineLatest(userInputAccountLogin.rx.text, passwordInputAccountLogin.rx.text, acceptRelay.asObservable())
+//                    .skip(1)
+//                    .map { (e) -> Bool in
+//                        let (userAcc, passWord,isSelected) = e
+//                        return userAcc?.count ?? 0 >= 1 && passWord?.count ?? 0 > 1 && isSelected
+//                    }
+//                    .bind(onNext: { [unowned self] isEnabled in
+//                        self.enableConfirmBtn(button: self.confirmAccountBtn, isEnabled: isEnabled)
+//                    })
+//                    .disposed(by: disposeBag)
+//
+//                if let quickLoginViewModel = self.quickLoginViewModel {
+//                    let mergeInputsAcc = Observable.combineLatest(userInputAccountLogin.rx.text, passwordInputAccountLogin.rx.text)
+//
+//                    //账号密码登录Action
+//                    confirmAccountBtn.rx.tap
+//                        .do(onNext: { [unowned self] in
+//                            self.showLoading(title: "正在登录中")
+//                        })
+//                        .withLatestFrom(mergeInputsAcc)
+//                        .bind(to: quickLoginViewModel.requestPWDLogin) // 账号密码登录
+//                        .disposed(by: disposeBag)
+//
+//                }
+//            }else
+//            {
+//                accountLoginView.isHidden = false
+//            }
+//        }
+//
+//        changeLoginTypeBtn.isSelected = !changeLoginTypeBtn.isSelected
+//    }
     
     func recordClickVerifyCode() -> (() -> TracerParams) {
         var executed = 0
@@ -720,10 +762,10 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        self.view.endEditing(true)
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesBegan(touches, with: event)
+//        self.view.endEditing(true)
+//    }
 
     static func setVerifyCodeBtn(
             content: String,

@@ -95,6 +95,7 @@
 //for bridge
 #import <FHHouseBase/FHHouseFilterDelegate.h>
 #import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
+#import <FHHouseRent/FHHouseRent.h>
 
 #import <FHHouseBase/FHBaseTableViewCell.h>
 

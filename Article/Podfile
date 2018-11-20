@@ -13,13 +13,14 @@ def appPods
     
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
-    #pod 'FHCommonUI'  ,  :git => 'git@code.byted.org:fproject/ios_common_ui.git' ,:branch => 'feature/develop' #:path => '../../ios_common_ui'
-    #pod 'FHHouseBase' ,  :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #:path => '../../ios_house_base'
-    #pod 'FHHouseRent' ,  :git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #:path => '../../ios_house_rent'
+    pod 'FHCommonUI'  ,  :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #:path => '../../ios_common_ui'
+    pod 'FHHouseBase' ,  :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #:path => '../../ios_house_base'
+    pod 'FHHouseRent' ,  :git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #:path => '../../ios_house_rent'
     pod 'FHMapSearch' ,  :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #:path => '../../ios_map_search' #
-    pod 'FHCommonUI'  ,  :path => '../../ios_common_ui'
-    pod 'FHHouseBase' ,  :path => '../../ios_house_base'
-    pod 'FHHouseRent' ,  :path => '../../ios_house_rent'
+    pod 'FHHouseHome' ,  :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #:path => '../../ios_house_home' #
+#    pod 'FHCommonUI'  ,  :path => '../../ios_common_ui'
+#    pod 'FHHouseBase' ,  :path => '../../ios_house_base'
+#    pod 'FHHouseRent' ,  :path => '../../ios_house_rent'
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
     #-----安全组sdk-----#
