@@ -372,7 +372,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             "enter_from" : enterFrom ,
             "enter_category" : enterCategory ,
             ]
-
+        
+        
+        if let openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl {
+            dict["map_open_url"] = openUrl
+        }
+        
         if let theCondition = self.searchAndConditionFilterVM.queryCondition.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             let url = URL(string: "http://a?\(theCondition)")
             let obj = TTRoute.shared()?.routeParamObj(with: url)
