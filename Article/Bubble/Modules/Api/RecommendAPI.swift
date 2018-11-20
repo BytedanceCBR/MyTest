@@ -97,3 +97,29 @@ func requestRelatedErshouHouse(
                 }
             })
 }
+
+func requestHomePageRollScreenData(
+    cityId: Int,
+    horseType: Int)-> Observable<HomePageRollScreenResponse?> {
+    let params: [String : Any] = [
+        "city_id": cityId,
+        "house_type": horseType,
+        "source": "app"]
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: "\(EnvContext.networkConfig.host)/f100/api/home_page_roll_screen",
+            params: params,
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> HomePageRollScreenResponse? in
+            if let payload = payload {
+                let response = HomePageRollScreenResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}

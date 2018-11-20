@@ -167,7 +167,8 @@ class HomeListViewModel: DetailPageViewModel {
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-                    
+                    // 请求首页搜索器推荐词
+                    self?.requestHomePageRollScreen()
                     return
                 }
                 
@@ -180,6 +181,8 @@ class HomeListViewModel: DetailPageViewModel {
                     //如果没有数据缓存，则去请求第一页 （二手房）
                     
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
+                    // 请求首页搜索器推荐词
+                    self?.requestHomePageRollScreen()
                     return
                 }
                 
@@ -206,6 +209,8 @@ class HomeListViewModel: DetailPageViewModel {
             }
             
             self?.requestHomeRecommendData(pullType: .pullDownType, reloadFromType: self?.reloadFromType) // 下拉刷新
+            // 请求首页搜索器推荐词
+            self?.requestHomePageRollScreen()
         }
         
         // 上拉刷新，请求上拉接口数据
@@ -698,6 +703,20 @@ class HomeListViewModel: DetailPageViewModel {
                 .disposed(by: listDataRequestDisposeBag)
         }
         
+    }
+    
+    func requestHomePageRollScreen()
+    {
+        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
+        {
+            requestHomePageRollScreenData(cityId: cityId ?? 122, horseType: typeValue.rawValue).subscribe(onNext: {[unowned self] (response) in
+                 print(response)
+                if let listData = response?.data?.data {
+                     print(listData)
+                }
+            }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
+        }
     }
     
     func createOneTimeToast() -> (String?) -> Void {

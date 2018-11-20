@@ -878,6 +878,9 @@
 		70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */; };
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
+		764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
+		764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
+		764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		7B036C351F9DC94D009AA77A /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
 		7B27B0C81FC41F4700679550 /* TTRWenda.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B27B0C61FC41F4200679550 /* TTRWenda.m */; };
 		7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B4772551CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m */; };
@@ -3500,7 +3503,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -6841,6 +6844,7 @@
 		70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAdFullScreenVideoViewModel.m; sourceTree = "<group>"; };
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
+		764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageRollScreenEntitys.swift; sourceTree = "<group>"; };
 		7B036C331F9DC94D009AA77A /* TTWendaMethodDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWendaMethodDelegate.h; sourceTree = "<group>"; };
 		7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTWendaMethodDelegate.m; sourceTree = "<group>"; };
 		7B27B0C61FC41F4200679550 /* TTRWenda.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRWenda.m; sourceTree = "<group>"; };
@@ -8973,7 +8977,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -15005,6 +15009,7 @@
 				B388CAAC2142652900653188 /* NeighborhoodDetailEntities.swift */,
 				B388CAAD2142652900653188 /* ErshouHouseDetailEntities.swift */,
 				B388CAAE2142652900653188 /* CourtItemEntity.swift */,
+				764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -20235,6 +20240,7 @@
 				A97DC1221F1333320002B455 /* TTRPay.m in Sources */,
 				A97DBBD31F1332E30002B455 /* TTStartupInterfaceGroup.m in Sources */,
 				067F115B1AE784CB00F56154 /* TTLocationManager.m in Sources */,
+				764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */,
 				D507C762206B8AE40072A03E /* ArticleMomentProfileViewController.m in Sources */,
 				88EDBF6C1F2E005600911931 /* TTArticleDetailMonitor.m in Sources */,
 				D50168522089EC4B00B8F1C7 /* TTMessageNotificationCellHelper.m in Sources */,
@@ -21937,6 +21943,7 @@
 				B373CC5D2174587A008F9905 /* TTLocationManager.m in Sources */,
 				B373CC5E2174587A008F9905 /* ArticleMomentProfileViewController.m in Sources */,
 				B373CC5F2174587A008F9905 /* TTArticleDetailMonitor.m in Sources */,
+				764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */,
 				B373CC602174587A008F9905 /* TTMessageNotificationCellHelper.m in Sources */,
 				B373CC612174587A008F9905 /* TTMemoryMonitor.m in Sources */,
 				B373CC622174587A008F9905 /* ExploreEntryHelper.m in Sources */,
@@ -23639,6 +23646,7 @@
 				FEFA5759205FB1A8001F50D8 /* TTLocationManager.m in Sources */,
 				D507C763206B8AE40072A03E /* ArticleMomentProfileViewController.m in Sources */,
 				FEFA575B205FB1A8001F50D8 /* TTArticleDetailMonitor.m in Sources */,
+				764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */,
 				D50168532089EC4B00B8F1C7 /* TTMessageNotificationCellHelper.m in Sources */,
 				FEFA575C205FB1A8001F50D8 /* TTMemoryMonitor.m in Sources */,
 				FEFA575E205FB1A8001F50D8 /* ExploreEntryHelper.m in Sources */,

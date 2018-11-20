@@ -113,6 +113,8 @@ class HomeViewController: BaseViewController {
                     }
                 } else  {
                     self?.detailPageViewModel?.requestData(houseId: -1, logPB: nil, showLoading: true)
+                    // 请求首页搜索器推荐词
+                    self?.detailPageViewModel?.requestHomePageRollScreen()
                 }
                 
             })
