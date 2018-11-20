@@ -3537,7 +3537,6 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D4F1EAB121A40C80003A3DFE /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = D4F1EAB021A40C80003A3DFE /* config.json */; };
 		D4F1EAB521A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
 		D4F1EAB621A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
 		D4F1EAB721A414C5003A3DFE /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */; };
@@ -8090,7 +8089,6 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D4F1EAB021A40C80003A3DFE /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		D4F1EAB321A414C5003A3DFE /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
 		D4F1EAB421A414C5003A3DFE /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
 		D4F1EAB821A41877003A3DFE /* FHHomeBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBannerView.h; sourceTree = "<group>"; };
@@ -10602,10 +10600,7 @@
 			isa = PBXGroup;
 			children = (
 				D4F1EAB221A41488003A3DFE /* HouseHome */,
-				D4F1EAB021A40C80003A3DFE /* config.json */,
 				B32FD2C921A26E2D007B9966 /* HouseRent */,
-				B31F42AB2189A5E500D9FE94 /* UI */,
-				B31102952181A0BC00FD2A45 /* TTContacts */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 			);
 			path = House;
@@ -14640,28 +14635,6 @@
 			path = TTDislikeView;
 			sourceTree = "<group>";
 		};
-		B31102952181A0BC00FD2A45 /* TTContacts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TTContacts;
-			sourceTree = "<group>";
-		};
-		B31F42AB2189A5E500D9FE94 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				B31F42AC2189A5F600D9FE94 /* TagView */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		B31F42AC2189A5F600D9FE94 /* TagView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TagView;
-			sourceTree = "<group>";
-		};
 		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
 			isa = PBXGroup;
 			children = (
@@ -17966,7 +17939,6 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
-				D4F1EAB121A40C80003A3DFE /* config.json in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				3DF363A321A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
