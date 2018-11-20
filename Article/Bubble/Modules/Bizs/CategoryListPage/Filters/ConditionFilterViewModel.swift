@@ -18,6 +18,8 @@ protocol ConditionPanelView: NSObjectProtocol {
 
     var isDisplay: Bool { get set }
 
+    var conditionLabelSetter: (([Node]) -> Void)? { get set }
+
     func viewDidDisplay()
 
     func viewDidDismiss()
@@ -25,12 +27,19 @@ protocol ConditionPanelView: NSObjectProtocol {
     func onDisplay()
 
     func onDismiss()
+
+    func selectedNodes() -> [Node]
 }
 
 class BaseConditionPanelView: UIView, ConditionPanelView {
 
     var isDisplay: Bool = false
 
+    var conditionParser: (([Node]) -> (String) -> String)?
+
+    var conditionLabelParser: ((String, [Node]) -> ConditionItemType)?
+
+    var conditionLabelSetter: (([Node]) -> Void)?
 
     func viewDidDisplay() {
 
@@ -43,6 +52,12 @@ class BaseConditionPanelView: UIView, ConditionPanelView {
     func setSelectedConditions(conditions: [String: Any]) {
 
     }
+
+    func selectedNodes() -> [Node] {
+        return []
+    }
+
+
 }
 
 extension ConditionPanelView {
@@ -129,6 +144,16 @@ class ConditionFilterViewModel {
         conditionItemViews.forEach { $0.setSelectedConditions(conditions: items) }
     }
 
+    func pullConditionsFromPanels() {
+        conditionItemViews.enumerated().forEach { [unowned self] (e) in
+            let (index, panel) = e
+            if let conditionParser = panel.conditionParser {
+                let selectedNode = panel.selectedNodes()
+                self.searchAndConditionFilterVM.addCondition(index: index, condition: conditionParser(selectedNode))
+            }
+        }
+    }
+
     func openOrCloseSortPanel() {
         self.closeConditionFilterPanel(index: -1)
         setSortBtnSelected()
@@ -193,6 +218,16 @@ class ConditionFilterViewModel {
             }
             // 构造条件选择面板
             let panel = constructAreaConditionPanelWithContainer(nodes: configs, container: containerView!, action: selectedAction)
+            panel.conditionParser = parseAreaSearchCondition
+            panel.conditionLabelParser = parseAreaConditionItemLabel
+            panel.conditionLabelSetter = { (nodes) in
+                setConditionItemTypeByParser(
+                    item: item,
+                    reload: reload,
+                    parser: { nodes in
+                        parseAreaConditionItemLabel(label: categoryName, nodePath: nodes)
+                })(nodes)
+            }
             conditionItemViews.append(panel)
 
             return { [weak self, weak panel] (index) in
@@ -219,6 +254,16 @@ class ConditionFilterViewModel {
                     nodes: configs,
                     container: containerView!,
                     selectedAction)
+            panel.conditionParser = parseAreaSearchCondition
+            panel.conditionLabelParser = parseAreaConditionItemLabel
+            panel.conditionLabelSetter = { (nodes) in
+                setConditionItemTypeByParser(
+                    item: item,
+                    reload: reload,
+                    parser: { nodes in
+                        parseAreaConditionItemLabel(label: categoryName, nodePath: nodes)
+                })(nodes)
+            }
             conditionItemViews.append(panel)
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
@@ -244,6 +289,16 @@ class ConditionFilterViewModel {
                     nodes: configs,
                     container: containerView!,
                     selectedAction)
+            panel.conditionParser = parseHorseTypeSearchCondition
+            panel.conditionLabelParser = parseHorseTypeConditionItemLabel
+            panel.conditionLabelSetter = { (nodes) in
+                setConditionItemTypeByParser(
+                    item: item,
+                    reload: reload,
+                    parser: { nodes in
+                        parseHorseTypeConditionItemLabel(label: categoryName, nodePath: nodes)
+                })(nodes)
+            }
             conditionItemViews.append(panel)
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
@@ -269,6 +324,16 @@ class ConditionFilterViewModel {
                     nodes: configs,
                     container: containerView!,
                     selectedAction)
+            panel.conditionParser = parseHorseTypeSearchCondition
+            panel.conditionLabelParser = parseMoreConditionItemLabel
+            panel.conditionLabelSetter = { (nodes) in
+                setConditionItemTypeByParser(
+                    item: item,
+                    reload: reload,
+                    parser: { nodes in
+                        parseMoreConditionItemLabel(label: categoryName, nodePath: nodes)
+                })(nodes)
+            }
             conditionItemViews.append(panel)
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
@@ -279,7 +344,6 @@ class ConditionFilterViewModel {
     }
 
     func onOpenConditionPanel(panel: BaseConditionPanelView, index: Int) {
-//        print("open")
         self.resetAllSearchFilterPanelState()
         let currentDisplayItem = self.conditionItemViews.first(where: { $0.isDisplay })
         if let currentDisplayItem = currentDisplayItem, currentDisplayItem != panel {
@@ -324,6 +388,7 @@ class ConditionFilterViewModel {
         item: SearchConditionItem,
         conditionLabelParser: @escaping (String, [Node]) -> ConditionItemType,
         conditionParser: ([Node]) -> (String) -> String) {
+
         var conditions = self.searchAndConditionFilterVM.conditionTracer.value
         conditions[index] = selectedNode
         self.searchAndConditionFilterVM.conditionTracer.accept(conditions)

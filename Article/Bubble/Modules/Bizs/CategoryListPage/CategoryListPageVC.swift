@@ -192,11 +192,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
-
-//        self.conditionFilterViewModel = ConditionFilterViewModel(
-//            conditionPanelView: conditionPanelView,
-//            searchFilterPanel: searchFilterPanel,
-//            searchAndConditionFilterVM: searchAndConditionFilterVM)
     }
 
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
@@ -585,7 +580,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
-        print("\(self.categoryListViewModel?.mapFindHouseOpenUrl)")
         //点击切换埋点
         let catName = pageTypeString()
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
@@ -937,6 +931,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 }
                 self.conditionFilterViewModel?.filterConditions = items.0
                 self.conditionFilterViewModel?.reloadConditionPanel()
+                self.conditionFilterViewModel?.pullConditionsFromPanels()
             })
             .disposed(by: disposeBag)
     }

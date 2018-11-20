@@ -252,6 +252,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                 }
         }
 //        self.didSelect?(self.dataSource.selectedNodes())
+        self.conditionLabelSetter?(self.dataSource.selectedNodes())
         self.dataSource.storeSelectedState()
     }
 
@@ -354,6 +355,11 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 //        print("AreaConditionFilterPanel -> viewDidDismiss")
         dataSource.restoreSelectedState()
         collectionView.reloadData()
+    }
+
+    override func selectedNodes() -> [Node] {
+        self.dataSource.storeSelectedState()
+        return dataSource.selectedNodes()
     }
 
 }
