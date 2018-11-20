@@ -342,12 +342,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
     
     func gotoMapSearch(){
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
-        return
+//        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
+//        return
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
-        
+        print("\(self.categoryListViewModel?.mapFindHouseOpenUrl)")
         //点击切换埋点
         let catName = pageTypeString()
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
@@ -410,6 +410,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
         
         let controller = FHMapSearchViewController(configModel: configModel)
+
         controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
             if let condition = conditions {
                 self?.conditionFilterViewModel?.setSelectedItem(items: condition)

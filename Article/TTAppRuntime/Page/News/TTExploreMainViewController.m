@@ -45,9 +45,11 @@
 #import "TTRNView.h"
 //#import "TTContactsGuideManager.h"
 #import "TTTabBarProvider.h"
+#import "ExploreExtenstionDataHelper.h"
+#import <TTAppUpdateHelper.h>
 #import "Bubble-Swift.h"
 
-@interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol>
+@interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
 //新版首页
 @property (nonatomic, strong) TTFeedCollectionViewController *collectionVC;
@@ -105,6 +107,22 @@
     self.adShow = [TTAdSplashMediator shareInstance].isAdShowing;
 
     self.ttStatusBarStyle = UIStatusBarStyleDefault;
+    
+ 
+//    [self checkLocalTestUpgradeVersionAlert];
+}
+
+- (void)checkLocalTestUpgradeVersionAlert
+{
+    //内测弹窗
+    NSString * iidValue = [ExploreExtenstionDataHelper sharedIID];
+    NSString * didValue = [ExploreExtenstionDataHelper sharedDeviceID];
+    NSString * channelValue = @"local_test";
+    NSString * aidValue = @"1370";
+    
+    
+    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:nil correctVC:self delegate:self];
+    
 }
 
 - (void)dealloc
@@ -734,5 +752,57 @@
     additionalSafeAreaInsets.top += kTopSearchButtonHeight + kSelectorViewHeight;
     return additionalSafeAreaInsets;
 }
+
+#pragma mark upgrade alert delegate
+
+/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
+ @params title 弹窗升级title,ex: 6.x.x内测更新了..
+ @param content 更新具体内容
+ @params tipVersion 弹窗升级版本号,ex: 6.7.8
+ @param downloadUrl TF弹窗下载地址
+ */
+- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
+{
+    
+}
+
+/** 通知代理对象弹窗需要remove
+ *  代理对象需要在此方法里面将弹窗remove掉
+ */
+- (void)dismissTipView
+{
+    
+}
+
+///*
+// 判断是否是内测包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查bundleID是否有inHouse字段进行判断
+// */
+//- (BOOL)decideIsInhouseApp
+//{
+//
+//}
+//
+///*
+// 判断是否是LR包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查buildinfo字段进行判断
+// 注意：只有lr包才弹内测弹窗，如果业务方没有
+// lr包的概念，则返回YES即可
+// */
+//- (BOOL)decideIsLrPackage
+//{
+//
+//}
+//
+///*
+// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
+// 的情况，业务方可以自行通过开关控制
+// */
+//- (BOOL)decideShouldReportDid
+//{
+//
+//}
 
 @end

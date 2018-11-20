@@ -178,6 +178,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     
     lazy var foldButton: CommonFoldViewButton = {
         let view = CommonFoldViewButton(downText: "更多信息", upText: "收起")
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -372,8 +373,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         priceValueLabel.snp.makeConstraints { maker in
             
             maker.left.equalTo(priceKeyLabel)
-            maker.top.equalTo(priceKeyLabel.snp.bottom).offset(8)
-            maker.height.equalTo(24)
+            maker.top.equalTo(priceKeyLabel.snp.bottom).offset(5)
+            maker.height.equalTo(30)
         }
         
         // "本房源单价比小区均价"
@@ -437,6 +438,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         }
         
         contentView.addSubview(bottomBgView)
+        bottomBgView.clipsToBounds = true
         bottomBgView.addSubview(chartBgView)
         bottomBgView.addSubview(foldButton)
         
@@ -468,7 +470,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.left.equalTo(0)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(210)
+            maker.height.equalTo(207)
             maker.bottom.equalToSuperview()
         }
     
@@ -493,35 +495,27 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     
     func updateChartConstraints() {
         
+        chartBgView.snp.remakeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalToSuperview().offset(0)
+            maker.height.equalTo(257)
+        }
+        
         if self.isPriceChartFoldState {
-            chartBgView.isHidden = true
             bottomBgView.snp.updateConstraints { (maker) in
                 maker.height.equalTo(58)
             }
-            chartBgView.snp.remakeConstraints { maker in
-                maker.left.right.equalToSuperview()
-                maker.top.equalToSuperview().offset(0)
-                maker.height.equalTo(0)
-            }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(chartBgView.snp.bottom)
                 maker.height.equalTo(58)
                 maker.bottom.equalToSuperview()
             }
         } else {
-            chartBgView.isHidden = false
             bottomBgView.snp.updateConstraints { (maker) in
                 maker.height.equalTo(315)
             }
-            chartBgView.snp.remakeConstraints { maker in
-                maker.left.right.equalToSuperview()
-                maker.top.equalToSuperview().offset(0)
-                maker.height.equalTo(287)
-            }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
-                maker.top.equalTo(chartBgView.snp.bottom)
                 maker.height.equalTo(58)
                 maker.bottom.equalToSuperview()
             }
@@ -549,8 +543,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         xAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         xAxis.granularity = 1 // 粒度
         xAxis.drawGridLinesEnabled = false
-        xAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        xAxis.axisLineWidth = 0.5
+        xAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
+        xAxis.axisLineWidth = 1
         xAxis.drawAxisLineEnabled = true
         xAxis.yOffset = 10
         xAxis.xOffset = -20
@@ -561,11 +555,12 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
 
         let leftAxis = chartView.leftAxis
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
-        leftAxis.axisLineColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        leftAxis.labelFont = .systemFont(ofSize: 12)
+        leftAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
         leftAxis.xOffset = 20
         leftAxis.labelCount = 4
         leftAxis.drawAxisLineEnabled = true
-        leftAxis.gridColor = hexStringToUIColor(hex: kFHSilver2Color)
+        leftAxis.gridColor = hexStringToUIColor(hex: "#ebeff2")
         leftAxis.drawBottomYLabelEntryEnabled = true
         leftAxis.drawTopYLabelEntryEnabled = true
         leftAxis.forceLabelsEnabled = true
@@ -573,7 +568,8 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawZeroLineEnabled = false
         leftAxis.valueFormatter = FHFloatValueFormatter()
-        
+        leftAxis.axisLineWidth = 1
+
         chartView.extraTopOffset = 40
 
         // 右边轴
@@ -638,32 +634,16 @@ func lineColorByIndex(_ index: Int) -> UIColor {
     switch index {
         
     case 0:
-        return hexStringToUIColor(hex: kFHCoralColor)
-    case 1:
         return hexStringToUIColor(hex: kFHClearBlueColor)
-    case 2:
-        return hexStringToUIColor(hex: kFHSilverColor)
-    default:
-        return hexStringToUIColor(hex: kFHSilverColor)
-        
-    }
-    
-}
-
-func imgNameByIndex(_ index: Int) -> String {
-    
-    switch index {
-        
-    case 0:
-        return "img-new-house-circle-red"
     case 1:
-        return "img-new-house-circle-blue"
+        return hexStringToUIColor(hex: "#9eaab4")
     case 2:
-        return "img-new-house-circle-gray"
+        return hexStringToUIColor(hex: "#e1e3e6")
     default:
-        return "img-new-house-circle-red"
+        return hexStringToUIColor(hex: "#e1e3e6")
         
     }
+    
 }
 
 func highlightImgNameByIndex(_ index: Int) -> String {
@@ -671,13 +651,13 @@ func highlightImgNameByIndex(_ index: Int) -> String {
     switch index {
         
     case 0:
-        return "img-summary-graph-circle-red"
-    case 1:
         return "img-summary-graph-circle-blue"
+    case 1:
+        return "img-summary-graph-circle-gray"
     case 2:
         return "img-summary-graph-circle-gray"
     default:
-        return "img-summary-graph-circle-red"
+        return "img-summary-graph-circle-gray"
         
     }
 }

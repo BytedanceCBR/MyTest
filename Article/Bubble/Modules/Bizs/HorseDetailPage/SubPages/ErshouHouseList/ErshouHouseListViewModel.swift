@@ -61,7 +61,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
                     self.onSuccess?(self.datas.value.count != 0)
-                    self.oneTimeToast?(response?.data?.refreshTip)
+                    // self.oneTimeToast?(response?.data?.refreshTip)
                     
                     },
                     onError: self.processError())
@@ -112,7 +112,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         self.title.accept("(\(response?.data?.total ?? 0))")
                         self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
                         self.onSuccess?(self.datas.value.count != 0)
-                        self.oneTimeToast?(response?.data?.refreshTip)
+                        // self.oneTimeToast?(response?.data?.refreshTip)
                     },
                     onError: { [weak self] in
                         self?.processError()

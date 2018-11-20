@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
+NSString * baseUrl(void);
+NSString * SNSBaseURL(void);
+NSString * securityURL(void);
+NSArray  * baseUrlMapping(void);
+NSString * logBaseURL(void);
+
+
 @interface CommonURLSetting : NSObject{
 }
 
@@ -255,4 +262,5 @@
 + (NSString *)searchSongListURLString;
 
 @end
+
 

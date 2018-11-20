@@ -92,4 +92,8 @@
 
 #import "HouseRentDetailPageVC.h"
 
+//for bridge
+#import <FHHouseBase/FHHouseFilterDelegate.h>
+#import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
+
 #endif /* Article_Bridging_Header_h */

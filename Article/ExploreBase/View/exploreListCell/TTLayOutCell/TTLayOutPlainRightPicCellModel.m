@@ -66,7 +66,7 @@
         regionHeight = picSize.height;
     }
     
-    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY - 9, titleSize.width, titleSize.height);
+    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY - 6, titleSize.width, titleSize.height);
     self.titleLabelFrame = titleFrame;
     self.titleLabelHidden = NO;
     self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;
@@ -78,7 +78,7 @@
     self.picViewHiddenMessage = NO;
     self.picViewUserInteractionEnabled = YES;
     
-    self.infoBarOriginY = top;
+    self.infoBarOriginY = top - 5;
     self.infoBarContainWidth = infoBarWidth;
     
     [self heightForArticleInfoRegionWithTop:self.infoBarOriginY containWidth:self.infoBarContainWidth];
@@ -154,7 +154,7 @@
     height += [self heightForCommentRegionWithTop:height];
     height += [self heightForEntityWordViewRegionWithTop:height];
     height += [self heightForCellBottomPadding];
-    
+
     self.cellCacheHeight = ceilf(height);
     
     [self calculateBottomLineFrame];

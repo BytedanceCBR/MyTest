@@ -8,7 +8,7 @@
 
 #import "TTWebImageDownloaderOperation.h"
 #import "SDWebImageDownloaderOperation.h"
-#import "SDWebImageDecoder.h"
+#import "UIImage+ForceDecode.h"
 #import "UIImage+MultiFormat.h"
 #import <ImageIO/ImageIO.h>
 #import <BDWebImage/SDWebImageAdapter.h>
@@ -24,7 +24,7 @@
 #import <TTMonitor.h>
 #import "TTImageMonitor.h"
 #import "TTWebImageHEIFCoder.h"
-#import "TTKitchenHeader.h"
+#import "TTDecodeImageQueueConfig.h"
 
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
@@ -50,7 +50,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 @property (strong, nonatomic, readwrite, nullable) NSURLSessionTask *dataTask;
 
-@property (SDDispatchQueueSetterSementics, nonatomic, nullable) dispatch_queue_t barrierQueue;
+@property (strong, nonatomic, nullable) dispatch_queue_t barrierQueue;
 
 @property (strong, nonatomic) TTHttpTask *ttHttpTask;
 
@@ -75,10 +75,10 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                               inSession:(nullable NSURLSession *)session
                                 options:(SDWebImageDownloaderOptions)options {
     if ((self = [super init])) {
-        
+
         //change isa
         object_setClass(self, [TTWebImageDownloaderOperation class]);
-        
+
         _request = [request copy];
         _shouldDecompressImages = YES;
         _options = options;
@@ -95,8 +95,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 }
 
 - (void)dealloc {
-
-    SDDispatchQueueRelease(_barrierQueue);
+    // 在OC环境下是没有定义的
+    //    SDDispatchQueueRelease(_barrierQueue);
 }
 
 - (nullable id)addHandlersForProgress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
@@ -105,7 +105,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     if (progressBlock) self.hasProgressCallbackBlock = YES;
     if (progressBlock) callbacks[kProgressCallbackKey] = [progressBlock copy];
     if (completedBlock) callbacks[kCompletedCallbackKey] = [completedBlock copy];
-    
+
     WeakSelf;
     dispatch_barrier_async(self.barrierQueue, ^{
         if (!wself) {
@@ -149,30 +149,30 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
             [self reset];
             return;
         }
-        
+
         /*
-#if SD_UIKIT·
-        Class UIApplicationClass = NSClassFromString(@"UIApplication");
-        BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
-        if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
-            __weak __typeof__ (self) wself = self;
-            UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
-            self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
-                __strong __typeof (wself) sself = wself;
-                if (sself) {
-                    [sself cancel];
-                    [app endBackgroundTask:sself.backgroundTaskId];
-                    sself.backgroundTaskId = UIBackgroundTaskInvalid;
-                }
-            }];
-        }
-#endif
+         #if SD_UIKIT·
+         Class UIApplicationClass = NSClassFromString(@"UIApplication");
+         BOOL hasApplication = UIApplicationClass && [UIApplicationClass respondsToSelector:@selector(sharedApplication)];
+         if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
+         __weak __typeof__ (self) wself = self;
+         UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
+         self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
+         __strong __typeof (wself) sself = wself;
+         if (sself) {
+         [sself cancel];
+         [app endBackgroundTask:sself.backgroundTaskId];
+         sself.backgroundTaskId = UIBackgroundTaskInvalid;
+         }
+         }];
+         }
+         #endif
          */
         NSURLSession *session = self.unownedSession;
         if (!self.unownedSession) {
             NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
             sessionConfig.timeoutIntervalForRequest = 15;
-            
+
             /**
              *  Create the session for this task
              *  We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate
@@ -183,38 +183,38 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                                                          delegateQueue:nil];
             session = self.ownedSession;
         }
-        
+
         self.executing = YES;
     }
     [self startLoadImg];
 
-    
+
     if (self.ttHttpTask) {
         for (SDWebImageDownloaderProgressBlock progressBlock in [self callbacksForKey:kProgressCallbackKey]) {
             progressBlock(0, NSURLResponseUnknownLength, self.request.URL);
         }
         /*
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
-        });
+         dispatch_async(dispatch_get_main_queue(), ^{
+         [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
+         });
          */
     } else {
         [self callCompletionBlocksWithError:[NSError errorWithDomain:NSURLErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Connection can't be initialized"}]];
     }
     /*
-#if SD_UIKIT
-    Class UIApplicationClass = NSClassFromString(@"UIApplication");
-    if(!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) {
-        return;
-    }
-    
-    if (self.backgroundTaskId != UIBackgroundTaskInvalid) {
-        UIApplication * app = [UIApplication performSelector:@selector(sharedApplication)];
-        [app endBackgroundTask:self.backgroundTaskId];
-        self.backgroundTaskId = UIBackgroundTaskInvalid;
-    }
-#endif
-    */
+     #if SD_UIKIT
+     Class UIApplicationClass = NSClassFromString(@"UIApplication");
+     if(!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) {
+     return;
+     }
+
+     if (self.backgroundTaskId != UIBackgroundTaskInvalid) {
+     UIApplication * app = [UIApplication performSelector:@selector(sharedApplication)];
+     [app endBackgroundTask:self.backgroundTaskId];
+     self.backgroundTaskId = UIBackgroundTaskInvalid;
+     }
+     #endif
+     */
 
 }
 
@@ -227,21 +227,21 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 - (void)cancelInternal {
     if (self.isFinished) return;
     [super cancel];
-    
+
     if (self.ttHttpTask) {
         [self.ttHttpTask cancel];
         /*
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
-        });
+         dispatch_async(dispatch_get_main_queue(), ^{
+         [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+         });
          */
-        
+
         // As we cancelled the connection, its callback won't be called and thus won't
         // maintain the isFinished and isExecuting flags.
         if (self.isExecuting) self.executing = NO;
         if (!self.isFinished) self.finished = YES;
     }
-    
+
     [self reset];
 }
 
@@ -252,7 +252,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 }
 
 - (void)reset {
-    
+
     WeakSelf;
     dispatch_barrier_async(self.barrierQueue, ^{
         if (!wself) {
@@ -311,12 +311,12 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         }
         return;
     }
-    
-    
+
+
     __autoreleasing NSProgress *progress = nil;
-    
+
     WeakSelf;
-    
+
     self.ttHttpTask =  [[TTNetworkManager shareInstance] requestForBinaryWithResponse:self.request.URL.absoluteString
                                                                                params:nil
                                                                                method:@"GET"
@@ -332,8 +332,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                                                                                  StrongSelf;
                                                                                  [self callbackActionWithError:error Obj:obj response:response];
                                                                              }];
-    
-    
+
+
     if (progress && self.hasProgressCallbackBlock) {
         [self.KVOController observe:progress
                             keyPath:@"completedUnitCount"
@@ -343,7 +343,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                                       return ;
                                   }
                                   StrongSelf;
-                                  
+
                                   if ([object isKindOfClass:[NSProgress class]] ) {
                                       NSProgress * theProgress = object;
                                       NSInteger completedSize = (NSInteger)theProgress.completedUnitCount;
@@ -352,12 +352,12 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                                           completedSize = (NSInteger)theProgress.totalUnitCount;
                                       }
                                       self.expectedSize = (NSInteger)theProgress.totalUnitCount;
-                                      
+
                                       for (SDWebImageDownloaderProgressBlock progressBlock in [self callbacksForKey:kProgressCallbackKey]) {
-                                           progressBlock(completedSize, self.expectedSize, self.request.URL);
+                                          progressBlock(completedSize, self.expectedSize, self.request.URL);
                                       }
                                   }
-                                  
+
                               }];
     }
 
@@ -367,12 +367,12 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 {
     WeakSelf;
     dispatch_async(creat_complete_handle_queue(), ^{
-        
+
         if (!wself) {
             return ;
         }
         StrongSelf;
-        
+
         if (!error && obj && [obj isKindOfClass:[NSData class]]) {
             [self successAction:obj];
         } else {
@@ -383,18 +383,18 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                 }
             }
             [self.ttHttpTask cancel];
-            
+
             /*
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
-            });
+             dispatch_async(dispatch_get_main_queue(), ^{
+             [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+             });
              */
 
             [self callCompletionBlocksWithError:error];
             [self done];
         }
     });
-    
+
 }
 
 - (void)successAction:(NSData *)obj
@@ -404,45 +404,33 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     if ([TTImageMonitor enableImageMonitorForSource:source]) {
         NSTimeInterval interval = [TTStopWatch stop:self.request.URL.absoluteString];
         double killoBytes = obj.length/1024.f;
-       
+
         NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
         [attributes setValue:@(interval) forKey:@"image_download_time"];
         [attributes setValue:@(killoBytes) forKey:@"image_size"];
         [attributes setValue:isHeifData ? @(0) : @(1) forKey:@"status"];
-    
-        if ([source isEqualToString:kBDTSourceUGCCell]) { //原来没统计UGC image的下载情况，现在统计，避免脏数据，条件语句换掉
-            NSString *host = [self.request.URL host];
-            [attributes setValue:host forKey:@"host"];
-            SDImageFormat imageFormat = [NSData sd_imageFormatForImageData:obj];
-            if (imageFormat == SDImageFormatGIF) {
-                [attributes setValue:@(2) forKey:@"status"];
-            } else if (imageFormat == SDImageFormatWebP) {
-                [attributes setValue:@(3) forKey:@"status"];
-            }
-            [[TTMonitor shareManager] trackService:@"ugc_cell_image_download" attributes:[attributes copy]];
-        } else {
-            [[TTMonitor shareManager] trackService:[NSString stringWithFormat:@"image_monitor_%@",source] attributes:[attributes copy]];
-        }
+
+        [[TTMonitor shareManager] trackService:[NSString stringWithFormat:@"image_monitor_%@",source] attributes:[attributes copy]];
     }
     self.expectedSize = obj.length;
     self.imageData = [obj mutableCopy];
     obj = nil;
-    
+
     if (![[NSURLCache sharedURLCache] cachedResponseForRequest:_request]) {
         responseFromCached = NO;
     }
 
     @synchronized(self) {
         self.ttHttpTask = nil;
-        
+
         /*
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadFinishNotification object:self];
-        });
+         dispatch_async(dispatch_get_main_queue(), ^{
+         [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+         [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadFinishNotification object:self];
+         });
          */
     }
-    
+
     if ([self callbacksForKey:kCompletedCallbackKey].count > 0) {
         /**
          *  See #1608 and #1623 - apparently, there is a race condition on `NSURLCache` that causes a crash
@@ -450,53 +438,62 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
          *    and images for which responseFromCached is YES (only the ones that cannot be cached).
          *  Note: responseFromCached is set to NO inside `willCacheResponse:`. This method doesn't get called for large images or images behind authentication
          */
-        NSData *imageData = [self.imageData copy];
-        if (self.options & SDWebImageDownloaderIgnoreCachedResponse && responseFromCached && [[NSURLCache sharedURLCache] cachedResponseForRequest:self.request]) {
+        __block NSData *imageData = [self.imageData copy];
+        if (self.options & (1 << 3) && responseFromCached && [[NSURLCache sharedURLCache] cachedResponseForRequest:self.request]) {
             // hack
             [self callCompletionBlocksWithImage:nil imageData:nil error:nil finished:YES];
+            [self done];
         } else if (imageData) {
-            if ([TTImageMonitor enableImageMonitorForSource:source]) {
-                [TTStopWatch start:self.request.URL.absoluteString];
-            }
-            UIImage *image = [UIImage sd_imageWithData:imageData];
-            if ([TTImageMonitor enableImageMonitorForSource:source]) {
-                NSTimeInterval interval = [TTStopWatch stop:self.request.URL.absoluteString];
-                
-                NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-                [attributes setValue:@(interval) forKey:@"image_decode_time"];
-                [attributes setValue:isHeifData ? @(0) : @(1) forKey:@"status"];
-                if ([source isEqualToString:kBDTSourceUGCCell]) { //原来没统计UGC image的下载情况，现在统计，避免脏数据，条件语句换掉
-                    
-                } else {
+            void (^decodeBlock)() = ^(){
+                if ([TTImageMonitor enableImageMonitorForSource:source]) {
+                    [TTStopWatch start:self.request.URL.absoluteString];
+                }
+                UIImage *image = [UIImage sd_imageWithData:imageData];
+                if ([TTImageMonitor enableImageMonitorForSource:source]) {
+                    NSTimeInterval interval = [TTStopWatch stop:self.request.URL.absoluteString];
+
+                    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+                    [attributes setValue:@(interval) forKey:@"image_decode_time"];
+                    [attributes setValue:isHeifData ? @(0) : @(1) forKey:@"status"];
                     [[TTMonitor shareManager] trackService:[NSString stringWithFormat:@"image_monitor_%@",source] attributes:[attributes copy]];
                 }
-            }
-            NSString *key = [[SDWebImageAdapter sharedAdapter] cacheKeyForURL:self.request.URL];
-            image = [self scaledImageForKey:key image:image];
-            
-            // Do not force decoding animated GIFs
-            if (!image.images) {
-                if (self.shouldDecompressImages) {
-                    if (self.options & SDWebImageDownloaderScaleDownLargeImages) {
-                        image = [UIImage decodedAndScaledDownImageWithImage:image];
-                        imageData = UIImagePNGRepresentation(image);
-                    } else {
-                        image = [UIImage decodedImageWithImage:image];
+                NSString *key = [[SDWebImageAdapter sharedAdapter] cacheKeyForURL:self.request.URL];
+                image = [self scaledImageForKey:key image:image];
+
+                // Do not force decoding animated GIFs
+                if (!image.images) {
+                    if (self.shouldDecompressImages) {
+                        if (self.options & (1 << 8)) {
+                            image = [UIImage decodedAndScaledDownImageWithImage:image];
+                            imageData = UIImagePNGRepresentation(image);
+                        } else {
+                            image = [UIImage decodedImageWithImage:image];
+                        }
                     }
                 }
-            }
-            if (CGSizeEqualToSize(image.size, CGSizeZero)) {
-                [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image has 0 pixels"}]];
+
+                if (CGSizeEqualToSize(image.size, CGSizeZero)) {
+                    [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image has 0 pixels"}]];
+                } else {
+                    [self callCompletionBlocksWithImage:image imageData:imageData error:nil finished:YES];
+                }
+                [self done];
+            };
+
+            if ([TTDecodeImageQueueConfig isDecodeImageInAnIndependentQueueEnabled]) {
+                dispatch_async(create_decode_image_queue(), ^{
+                    decodeBlock();
+                });
             } else {
-                [self callCompletionBlocksWithImage:image imageData:imageData error:nil finished:YES];
+                decodeBlock();
             }
         } else {
             [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey : @"Image data is nil"}]];
+            [self done];
         }
+    } else {
+        [self done];
     }
-
-    [self done];
-    
 }
 
 
@@ -530,7 +527,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 }
 
 - (BOOL)shouldContinueWhenAppEntersBackground {
-    return self.options & SDWebImageDownloaderContinueInBackground;
+    return self.options & (1 << 4);
 }
 
 - (void)callCompletionBlocksWithError:(nullable NSError *)error {
@@ -610,7 +607,7 @@ didReceiveResponse:(NSURLResponse *)response
     }else{
         id p = nil;
         [invocation setReturnValue:&p];
-        
+
         NSString *errorDesc = [NSString stringWithFormat:@"TTWebImageDownloaderOperation unrecognized selector :%@",NSStringFromSelector([invocation selector])];
         NSLog(@"%@",errorDesc);
         NSError *error = [[NSError alloc]initWithDomain:@"TTWebImageDownloaderOperation unrecognized selector" code:-10086 userInfo:@{@"errorDesc":errorDesc}];
@@ -653,7 +650,14 @@ static dispatch_queue_t creat_complete_handle_queue() {
     return complete_handle_queue;
 }
 
-
+static dispatch_queue_t create_decode_image_queue() {
+    static dispatch_queue_t decode_image_queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        decode_image_queue = dispatch_queue_create("tt_network_complete_decode_queue", DISPATCH_QUEUE_CONCURRENT);
+    });
+    return decode_image_queue;
+}
 
 @end
 

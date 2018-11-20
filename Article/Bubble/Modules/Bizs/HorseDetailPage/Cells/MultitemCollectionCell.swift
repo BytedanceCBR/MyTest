@@ -399,7 +399,7 @@ class MultitemCollectionEvaluateCell: BaseUITableViewCell {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(starsContainer.snp.bottom).offset(8)
             maker.bottom.equalToSuperview().offset(-20)
-            maker.height.equalTo(128)
+            maker.height.equalTo(124)
         }
         collectionContainer.register(EvaluationItemCollectionCell.self, forCellWithReuseIdentifier: "evaluate")
         collectionContainer.delegate = self

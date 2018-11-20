@@ -1,16 +1,25 @@
 #—————————————pod私有源--------------------------------------
-source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
-source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+
 
 platform :ios, '8.0'
 
 inhibit_all_warnings!
 def appPods
+    
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    #pod 'FHCommonUI'  ,  :git => 'git@code.byted.org:fproject/ios_common_ui.git' ,:branch => 'feature/develop' #:path => '../../ios_common_ui'
+    #pod 'FHHouseBase' ,  :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #:path => '../../ios_house_base'
+    #pod 'FHHouseRent' ,  :git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #:path => '../../ios_house_rent'
+    pod 'FHMapSearch' ,  :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #:path => '../../ios_map_search' #
+    pod 'FHCommonUI'  ,  :path => '../../ios_common_ui'
+    pod 'FHHouseBase' ,  :path => '../../ios_house_base'
+    pod 'FHHouseRent' ,  :path => '../../ios_house_rent'
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
     #-----安全组sdk-----#
@@ -172,7 +181,11 @@ def appPods
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
 
     #-----头条网络库-----
-    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+#    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+#pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
+    pod 'TTNetworkManager','2.2.8.41'
+
+
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
 #    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'
@@ -194,7 +207,28 @@ def appPods
     #-----头条端监控库-----
 #    pod 'TTMonitor', '0.7.9.42'
     pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
-    pod 'Heimdallr', '0.4.10'
+    pod 'Heimdallr','0.4.21', :subspecs => [
+    'Core',
+    'TTMonitor',
+    'TTNet',
+    'HMDStart',
+    'FMDB',
+    'Mach',
+    'Utility',
+    'DeviceInfo',
+    'HMDANR',
+    'HMDOOM',
+    'CrashDetector',
+    'Log',
+    'UITracker',
+    'MemorySnapshot',
+    'Upload',
+    'HMDSession',
+    'HMDConfig',
+    'HMDStore',
+    'ALog'
+    ]
+
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
@@ -246,6 +280,12 @@ def appPods
     'UserNotification',
     'Contacts',
 #    'Location'
+    ]
+
+    #----内测升级弹窗----
+    pod 'TTAppUpdateHelper', :subspecs => [
+    'TTUpdateHelper',
+    'TTUpdateView'
     ]
 
 #    #——头条OpenSDK和PlatformSDK库----
@@ -314,7 +354,11 @@ def appPods
     #pod 'ProtocolBuffers', '1.9.11'
     pod 'libextobjc', '0.4.1'
     pod 'ReactiveObjC', '3.0.0'
-    pod 'SDWebImage', '4.1.0'
+    pod 'SDWebImage', '4.4.1', :subspecs => [
+    'Core',
+    'GIF',
+    'WebP'
+    ]
     pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
     'Core',
     'RCTText',
@@ -347,7 +391,6 @@ def appPods
     
     #支持自动约束cell缓存高度
     pod 'UITableView+FDTemplateLayoutCell', '1.6'
-    pod 'FHCommonUI' ,:path => '../../fcommonui4ios/'
 
 
 end

@@ -297,7 +297,8 @@
  */
 + (CGSize)resizablePicSize:(CGFloat)width {
     CGFloat w = (width - kPicViewPaddingInner() * 2) / 3;
-    CGFloat h = ceil(w * 0.6935);
+//    CGFloat h = ceil(w * 0.6935);
+    CGFloat h = ceil(w * 0.6548);
     w = ceil(w);
     return CGSizeMake(w, h);
 }

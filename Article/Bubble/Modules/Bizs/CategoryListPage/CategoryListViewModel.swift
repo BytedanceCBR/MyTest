@@ -94,6 +94,7 @@ class CategoryListViewModel: DetailPageViewModel {
     var limit = 20
     var offset = 0
     var time = 0 //点击搜索内容时间戳，等同于进入列表页的时机
+    var mapFindHouseOpenUrl: String?
 
     init(
             tableView: UITableView,
@@ -253,7 +254,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     }
 
                         if let data = response?.data {
-
+                            self.mapFindHouseOpenUrl = data.mapFindHouseOpenUrl
                             self.originSearchId = data.searchId
 
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
