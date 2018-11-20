@@ -441,7 +441,7 @@ TTRefreshViewDelegate
         _isShowWithScenesEnabled = [SSCommonLogic showWithScensEnabled];
         
         CGRect rect = [self frameForListView];
-        self.listView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height - 0) style:UITableViewStyleGrouped];
+        self.listView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height - 0) style:UITableViewStylePlain];
         self.ttErrorToastView = [ArticleListNotifyBarView addErrorToastViewWithTop:self.ttContentInset.top width:self.width height:[SSCommonLogic articleNotifyBarHeight]];
         self.listView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _listView.delegate = self;
@@ -1754,9 +1754,9 @@ TTRefreshViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if ([_categoryID isEqualToString:@"f_house_news"]) {
-        return 300;
-    }
+//    if ([_categoryID isEqualToString:@"f_house_news"]) {
+//        return 300;
+//    }
     return 0;
 }
 
