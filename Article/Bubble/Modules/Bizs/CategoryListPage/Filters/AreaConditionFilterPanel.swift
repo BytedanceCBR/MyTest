@@ -160,7 +160,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
         self.dataSources.forEach { $0.storeSelectedState() }
         let selected = self.selectNodePath()
-        self.didSelect?(selected)
+//        self.didSelect?(selected)
         scrollVisibleCellInScreen()
     }
 

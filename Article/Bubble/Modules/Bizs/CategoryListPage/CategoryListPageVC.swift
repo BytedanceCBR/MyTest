@@ -193,11 +193,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
 
-        self.conditionFilterViewModel = ConditionFilterViewModel(
-            conditionPanelView: conditionPanelView,
-            searchFilterPanel: searchFilterPanel,
-            searchAndConditionFilterVM: searchAndConditionFilterVM)
-
+//        self.conditionFilterViewModel = ConditionFilterViewModel(
+//            conditionPanelView: conditionPanelView,
+//            searchFilterPanel: searchFilterPanel,
+//            searchAndConditionFilterVM: searchAndConditionFilterVM)
     }
 
     func resetFilterCondition(routeParamObj paramObj: TTRouteParamObj?) {
@@ -236,6 +235,245 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
+            if let _ = value.newValue {
+                self?.view.endEditing(true)
+            }
+        }
+
+        if let associationalWord = self.associationalWord {
+            self.navBar.searchInput.placeholder = associationalWord
+        }
+        if self.associationalWord?.isEmpty ?? true &&
+            navBar.searchInput.placeholder == nil {
+            navBar.searchInput.placeholder = searchBarPlaceholder(self.houseType.value)
+        }
+        self.conditionFilterViewModel = ConditionFilterViewModel(
+            conditionPanelView: conditionPanelView,
+            searchFilterPanel: searchFilterPanel,
+            searchAndConditionFilterVM: searchAndConditionFilterVM)
+        self.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.isHidden = true
+        self.automaticallyAdjustsScrollViewInsets = false
+
+        if #available(iOS 11.0, *) {
+            self.tableView.estimatedRowHeight = 0
+            self.tableView.estimatedSectionHeaderHeight = 0
+            self.tableView.estimatedSectionFooterHeight = 0
+
+        }
+
+        self.tableView.addPullDown(
+            withInitText: "下拉刷新数据",
+            pullText: "松开即可刷新",
+            loadingText: "正在努力加载",
+            noMoreText: "没有更多数据",
+            timeText: "",
+            lastTimeKey: "") { [weak self] in
+                self?.pullAndRefresh()
+        }
+
+        self.errorVM = NHErrorViewModel(
+            errorMask:infoMaskView,
+            requestRetryText:"网络异常",
+            requestNilDataText:"没有找到相关的信息，换个条件试试吧~",
+            requestNilDataImage:"group-9",
+            isUserClickEnable:false,
+            retryAction:{ [weak self] in
+                if let hasNone = self?.hasNone{
+                    if !hasNone {
+                        self?.searchAndConditionFilterVM.sendSearchRequest()
+                    }
+                }
+        })
+
+
+        UIApplication.shared.statusBarStyle = .default
+        self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
+
+        bindHouseSearchParams()
+
+        view.addSubview(navBar)
+
+        //loadingView
+        self.categoryListViewModel?.showLoading = { [weak self] (message) in
+            self?.showLoadingAlert(message: message)
+        }
+
+        self.categoryListViewModel?.dismissLoading = { [weak self] in
+            self?.dismissLoadingAlert()
+        }
+
+        self.categoryListViewModel?.onError = { [weak self] (error) in
+            self?.tableView.mj_footer.endRefreshing()
+            self?.errorVM?.onRequestError(error: error)
+            self?.tableView.finishPullDown(withSuccess: false)
+        }
+
+        self.categoryListViewModel?.onSuccess = { [weak self] (isHaveData) in
+
+            self?.tableView.mj_footer.endRefreshing()
+            self?.tableView.finishPullDown(withSuccess: true)
+
+            if(isHaveData)
+            {
+                self?.errorVM?.onRequestNormalData()
+            }
+        }
+
+        self.categoryListViewModel?.showTips = self.showTips()
+
+        navBar.snp.makeConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+            maker.height.equalTo(44 + CommonUIStyle.StatusBar.height)
+        }
+
+        navBar.searchAreaBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.recordClickHouseSearch()
+
+                self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
+                let vc = SuggestionListVC(isFromHome: EnterSuggestionType.enterSuggestionTypeList)
+                let params = TracerParams.momoid() <|>
+                    toTracerParams(categoryEnterNameByHouseType(houseType: self.houseType.value), key: "enter_from") <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("click", key: "category_name") <|>
+                    beNull(key: "element_from")
+                self.tracerParams = self.tracerParams <|>
+                    toTracerParams("maintab_search", key: "element_from")
+                vc.tracerParams = params
+                vc.filterConditionResetter = self.filterConditionResetter()
+                vc.houseType.accept(self.houseType.value)
+                vc.navBar.searchable = true
+                let nav = self.navigationController
+                nav?.pushViewController(vc, animated: true)
+                vc.navBar.backBtn.rx.tap
+                    .subscribe(onNext: { [weak nav] void in
+                        nav?.popViewController(animated: true)
+                    })
+                    .disposed(by: self.disposeBag)
+
+                // 关键词搜索
+                vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
+                    //                        self.isNeedEncode = true
+                    self.conditionFilterViewModel?.cleanSortCondition()
+                    self.suggestionParams = nil
+                    self.hasRecordEnterCategory = false
+                    self.resetFilterCondition(routeParamObj: params?.paramObj)
+                    self.houseType.accept(vc.houseType.value)
+                    self.resetConditionData()
+                    //                        }
+                    if let queryParams = self.queryParams {
+                        self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
+                    }
+                    nav?.popViewController(animated: true)
+                    self.navBar.searchInput.text = nil
+                    //                        self.searchAndConditionFilterVM.sendSearchRequest()
+                    //                        self.navBar.searchInput.placeholder = associationalWord
+                    self.allParams = params?.paramObj.allParams as? [String: Any]
+                }
+            })
+            .disposed(by: disposeBag)
+
+        navBar.searchTypeBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                if self.navBar.canSelectType {
+                    self.displayPopupMenu()
+                    self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        let integratedMessageBar = ArticleListNotifyBarView(
+            frame: CGRect(
+                x: 0,
+                y: 200,
+                width: 500, height: tipViewHeight))
+        self.integratedMessageBar = integratedMessageBar
+
+        //        self.ttErrorToastView = integratedMessageBar
+        view.addSubview(tableView)
+        view.addSubview(integratedMessageBar)
+
+        view.addSubview(searchSortBtnBG)
+        searchSortBtnBG.addSubview(searchSortBtn)
+        view.addSubview(searchFilterPanel)
+
+
+        searchSortBtnBG.snp.makeConstraints { (maker) in
+            maker.right.equalToSuperview()
+            maker.left.equalTo(searchFilterPanel.snp.right)
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.height.equalTo(44)
+        }
+
+        searchSortBtn.snp.makeConstraints { (maker) in
+            maker.height.width.equalTo(20)
+            maker.right.equalTo(-15)
+            maker.bottom.equalTo(searchFilterPanel.snp.bottom).offset(-10)
+        }
+
+        searchFilterPanel.snp.makeConstraints { maker in
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.equalToSuperview()
+            maker.right.equalTo(searchSortBtn.snp.left)
+            maker.height.equalTo(44)
+        }
+
+        tableView.snp.makeConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(searchFilterPanel.snp.bottom)
+            maker.bottom.equalToSuperview()
+        }
+
+        self.categoryListViewModel?.dataSource.datas
+            .skip(1)
+            .map { $0.count < 1 }
+            .bind(to: tableView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        view.addSubview(infoMaskView)
+        infoMaskView.isHidden = true
+        infoMaskView.snp.makeConstraints { maker in
+            maker.edges.equalTo(tableView.snp.edges)
+        }
+
+
+
+
+        setupSortCondition()
+
+        bindLoadMore()
+
+        bindSearchRequest()
+
+
+        view.addSubview(conditionPanelView)
+        conditionPanelView.snp.makeConstraints { maker in
+            maker.top.equalTo(searchFilterPanel.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview()
+
+        }
+        conditionPanelView.isHidden = true
+        self.errorVM?.onRequest()
+        self.searchAndConditionFilterVM.sendSearchRequest()
+        self.resetConditionData()
+
+        //        stayTimeParams = tracerParams <|> traceStayTime() <|> EnvContext.shared.homePageParams
+        //        // 进入列表页埋点
+        //        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
+        self.errorVM?.onRequestViewDidLoad()
+
+
+        self.view.bringSubview(toFront: searchFilterPanel)
+
+
     }
 
     func setupSortCondition() {
@@ -427,245 +665,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.navigationController?.pushViewController(controller, animated: true)
         
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
-            if let _ = value.newValue {
-                self?.view.endEditing(true)
-            }
-        }
-        
-        if let associationalWord = self.associationalWord {
-            self.navBar.searchInput.placeholder = associationalWord
-        }
-        if self.associationalWord?.isEmpty ?? true &&
-            navBar.searchInput.placeholder == nil {
-            navBar.searchInput.placeholder = searchBarPlaceholder(self.houseType.value)
-        }
-        self.conditionFilterViewModel = ConditionFilterViewModel(
-            conditionPanelView: conditionPanelView,
-            searchFilterPanel: searchFilterPanel,
-            searchAndConditionFilterVM: searchAndConditionFilterVM)
-        self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.isHidden = true
-        self.automaticallyAdjustsScrollViewInsets = false
-        
-        if #available(iOS 11.0, *) {
-            self.tableView.estimatedRowHeight = 0
-            self.tableView.estimatedSectionHeaderHeight = 0
-            self.tableView.estimatedSectionFooterHeight = 0
-
-        }
-
-        self.tableView.addPullDown(
-            withInitText: "下拉刷新数据",
-            pullText: "松开即可刷新",
-            loadingText: "正在努力加载",
-            noMoreText: "没有更多数据",
-            timeText: "",
-            lastTimeKey: "") { [weak self] in
-                self?.pullAndRefresh()
-            }
-        
-        self.errorVM = NHErrorViewModel(
-            errorMask:infoMaskView,
-            requestRetryText:"网络异常",
-            requestNilDataText:"没有找到相关的信息，换个条件试试吧~",
-            requestNilDataImage:"group-9",
-            isUserClickEnable:false,
-            retryAction:{ [weak self] in
-                if let hasNone = self?.hasNone{
-                    if !hasNone {
-                        self?.searchAndConditionFilterVM.sendSearchRequest()
-                    }
-                }
-        })
-
-        
-        UIApplication.shared.statusBarStyle = .default
-        self.categoryListViewModel = CategoryListViewModel(tableView: self.tableView, navVC: self.navigationController)
-
-        bindHouseSearchParams()
-        
-        view.addSubview(navBar)
-
-        //loadingView
-        self.categoryListViewModel?.showLoading = { [weak self] (message) in
-            self?.showLoadingAlert(message: message)
-        }
-
-        self.categoryListViewModel?.dismissLoading = { [weak self] in
-            self?.dismissLoadingAlert()
-        }
-
-        self.categoryListViewModel?.onError = { [weak self] (error) in
-            self?.tableView.mj_footer.endRefreshing()
-            self?.errorVM?.onRequestError(error: error)
-            self?.tableView.finishPullDown(withSuccess: false)
-        }
-        
-        self.categoryListViewModel?.onSuccess = { [weak self] (isHaveData) in
-            
-            self?.tableView.mj_footer.endRefreshing()
-            self?.tableView.finishPullDown(withSuccess: true)
-
-            if(isHaveData)
-            {
-                self?.errorVM?.onRequestNormalData()
-            }
-        }
-
-        self.categoryListViewModel?.showTips = self.showTips()
-        
-        navBar.snp.makeConstraints { maker in
-            maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(44 + CommonUIStyle.StatusBar.height)
-        }
-
-        navBar.searchAreaBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    self.recordClickHouseSearch()
-
-                    self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
-                    let vc = SuggestionListVC(isFromHome: EnterSuggestionType.enterSuggestionTypeList)
-                    let params = TracerParams.momoid() <|>
-                            toTracerParams(categoryEnterNameByHouseType(houseType: self.houseType.value), key: "enter_from") <|>
-                            toTracerParams("click", key: "enter_type") <|>
-                            toTracerParams("click", key: "category_name") <|>
-                            beNull(key: "element_from")
-                    self.tracerParams = self.tracerParams <|>
-                        toTracerParams("maintab_search", key: "element_from")
-                    vc.tracerParams = params
-                    vc.filterConditionResetter = self.filterConditionResetter()
-                    vc.houseType.accept(self.houseType.value)
-                    vc.navBar.searchable = true
-                    let nav = self.navigationController
-                    nav?.pushViewController(vc, animated: true)
-                    vc.navBar.backBtn.rx.tap
-                            .subscribe(onNext: { [weak nav] void in
-                                nav?.popViewController(animated: true)
-                            })
-                            .disposed(by: self.disposeBag)
-
-                    // 关键词搜索
-                    vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-                        //                        self.isNeedEncode = true
-                        self.conditionFilterViewModel?.cleanSortCondition()
-                        self.suggestionParams = nil
-                        self.hasRecordEnterCategory = false
-                        self.resetFilterCondition(routeParamObj: params?.paramObj)
-                        self.houseType.accept(vc.houseType.value)
-                        self.resetConditionData()
-                        //                        }
-                        if let queryParams = self.queryParams {
-                            self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
-                        }
-                        nav?.popViewController(animated: true)
-                        self.navBar.searchInput.text = nil
-                        //                        self.searchAndConditionFilterVM.sendSearchRequest()
-                        //                        self.navBar.searchInput.placeholder = associationalWord
-                        self.allParams = params?.paramObj.allParams as? [String: Any]
-                    }
-                })
-                .disposed(by: disposeBag)
-
-        navBar.searchTypeBtn.rx.tap
-                .subscribe(onNext: { [unowned self] void in
-                    if self.navBar.canSelectType {
-                        self.displayPopupMenu()
-                        self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
-                    }
-                })
-                .disposed(by: disposeBag)
-
-        let integratedMessageBar = ArticleListNotifyBarView(
-            frame: CGRect(
-                x: 0,
-                y: 200,
-                width: 500, height: tipViewHeight))
-        self.integratedMessageBar = integratedMessageBar
-
-//        self.ttErrorToastView = integratedMessageBar
-        view.addSubview(tableView)
-        view.addSubview(integratedMessageBar)
-
-        view.addSubview(searchSortBtnBG)
-        searchSortBtnBG.addSubview(searchSortBtn)
-        view.addSubview(searchFilterPanel)
-        
-
-        searchSortBtnBG.snp.makeConstraints { (maker) in
-            maker.right.equalToSuperview()
-            maker.left.equalTo(searchFilterPanel.snp.right)
-            maker.top.equalTo(navBar.snp.bottom)
-            maker.height.equalTo(44)
-        }
-
-        searchSortBtn.snp.makeConstraints { (maker) in
-            maker.height.width.equalTo(20)
-            maker.right.equalTo(-15)
-            maker.bottom.equalTo(searchFilterPanel.snp.bottom).offset(-10)
-        }
-
-        searchFilterPanel.snp.makeConstraints { maker in
-            maker.top.equalTo(navBar.snp.bottom)
-            maker.left.equalToSuperview()
-            maker.right.equalTo(searchSortBtn.snp.left)
-            maker.height.equalTo(44)
-        }
-
-        tableView.snp.makeConstraints { maker in
-            maker.left.right.equalToSuperview()
-            maker.top.equalTo(searchFilterPanel.snp.bottom)
-            maker.bottom.equalToSuperview()
-        }
-        
-        self.categoryListViewModel?.dataSource.datas
-            .skip(1)
-            .map { $0.count < 1 }
-            .bind(to: tableView.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        view.addSubview(infoMaskView)
-        infoMaskView.isHidden = true
-        infoMaskView.snp.makeConstraints { maker in
-            maker.edges.equalTo(tableView.snp.edges)
-        }
-
-
-
-
-        setupSortCondition()
-
-        bindLoadMore()
-
-        bindSearchRequest()
-
-
-        view.addSubview(conditionPanelView)
-        conditionPanelView.snp.makeConstraints { maker in
-            maker.top.equalTo(searchFilterPanel.snp.bottom)
-            maker.left.right.equalToSuperview()
-            maker.bottom.equalToSuperview()
-
-        }
-        conditionPanelView.isHidden = true
-        self.errorVM?.onRequest()
-        self.searchAndConditionFilterVM.sendSearchRequest()
-        self.resetConditionData()
-
-//        stayTimeParams = tracerParams <|> traceStayTime() <|> EnvContext.shared.homePageParams
-//        // 进入列表页埋点
-//        recordEvent(key: TraceEventName.enter_category, params: tracerParams)
-        self.errorVM?.onRequestViewDidLoad()
-
-
-        self.view.bringSubview(toFront: searchFilterPanel)
-
-
-    }
 
     override func viewDidLayoutSubviews() {
         self.integratedMessageBar?.frame = CGRect(
@@ -740,7 +739,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 rankType: rankType)
             self?.allParams?["houseSearch"] = nil
             self?.bindHouseSearchParams()
-//            self?.traceHouseFilter(searchId: self?.categoryListViewModel?.originSearchId ?? "be_null")
+
+            if let houseListOpenUrl = self?.categoryListViewModel?.houseListOpenUrl {
+                self?.resetFilterConditionByRequestData(openUrl: houseListOpenUrl)
+            }
         }
 
     }
@@ -901,19 +903,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     result + nodes
                 })
                 let keys = self.allKeysFromNodes(nodes: ns)
-//                var conditions = ""
-//
-//                self.queryParams?.forEach({ (key, value) in
-//                    if !keys.contains(key) {
-//                        //
-//                        conditions = conditions + convertKeyValueToCondition(key: key, value: value).reduce("", { (result, value) -> String in
-//                            result + "&\(value)"
-//                        })
-//                    }
-//                })
+                var oldConditions = ""
+
+                self.queryParams?.forEach({ (key, value) in
+                    if !keys.contains(key) {
+                        //
+                        oldConditions = oldConditions + convertKeyValueToCondition(key: key, value: value).reduce("", { (result, value) -> String in
+                            result + "&\(value)"
+                        })
+                    }
+                })
 
                 let conditions = getNoneFilterConditionString(params: self.queryParams, conditionsKeys: keys)
 
+                print("filter : \(conditions)")
+                print("filter old: \(oldConditions)")
 
 
                 zip(items.0, items.1)
@@ -938,6 +942,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
 
+    /// 调整逻辑，每次请求后，从服务器获取listUrl填充Filter过滤器
+    func resetFilterConditionByRequestData(openUrl: String) {
+        let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
+        self.allParams = routeObj?.allParams as? [String: Any]
+        if let queryParams = self.allParams {
+            self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
+        }
+    }
 
     fileprivate func allKeysFromNodes(nodes: [Node]) -> Set<String> {
         return nodes.reduce([], { (result, node) -> Set<String> in

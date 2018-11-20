@@ -59,11 +59,12 @@ class SearchAndConditionFilterViewModel {
         if let searchSortCondition = searchSortCondition {
             initQuery = "&\(searchSortCondition.externalConfig)"
         }
-        return (conditions
+        let result = (conditions
             .reduce(ConditionAggregator.monoid()) { (result, e) -> ConditionAggregator in
                 let (_, aggregator) = e
                 return result <|> ConditionAggregator(aggregator: aggregator)
             } <|> queryConditionAggregator).aggregator(initQuery)
+        return result
     }
 
     func sendSearchRequest() {
