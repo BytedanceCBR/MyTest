@@ -44,9 +44,11 @@ class SearchAndConditionFilterViewModel {
 
     }
 
-    func addCondition(index: Int, condition: @escaping (String) -> String) {
+    func addCondition(index: Int, udpateFilterOnly: Bool, condition: @escaping (String) -> String) {
         conditions[index] = condition
-        queryCondition.accept(getConditions())
+        if !udpateFilterOnly {
+            queryCondition.accept(getConditions())
+        }
     }
 
     func removeCondition(index: Int) {
@@ -59,11 +61,12 @@ class SearchAndConditionFilterViewModel {
         if let searchSortCondition = searchSortCondition {
             initQuery = "&\(searchSortCondition.externalConfig)"
         }
-        return (conditions
+        let result = (conditions
             .reduce(ConditionAggregator.monoid()) { (result, e) -> ConditionAggregator in
                 let (_, aggregator) = e
                 return result <|> ConditionAggregator(aggregator: aggregator)
             } <|> queryConditionAggregator).aggregator(initQuery)
+        return result
     }
 
     func sendSearchRequest() {

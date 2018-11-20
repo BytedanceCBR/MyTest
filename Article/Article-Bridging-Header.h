@@ -97,4 +97,7 @@
 #import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
 #import <FHHouseRent/FHHouseRent.h>
 
+#import <FHHouseBase/FHBaseTableViewCell.h>
+
+
 #endif /* Article_Bridging_Header_h */
