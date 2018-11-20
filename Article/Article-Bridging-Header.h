@@ -96,4 +96,7 @@
 #import <FHHouseBase/FHHouseFilterDelegate.h>
 #import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
 
+#import <FHHouseBase/FHBaseTableViewCell.h>
+
+
 #endif /* Article_Bridging_Header_h */

@@ -144,12 +144,14 @@ class ConditionFilterViewModel {
         conditionItemViews.forEach { $0.setSelectedConditions(conditions: items) }
     }
 
-    func pullConditionsFromPanels() {
+    func pullConditionsFromPanels(udpateFilterOnly: Bool = false) {
         conditionItemViews.enumerated().forEach { [unowned self] (e) in
             let (index, panel) = e
             if let conditionParser = panel.conditionParser {
                 let selectedNode = panel.selectedNodes()
-                self.searchAndConditionFilterVM.addCondition(index: index, condition: conditionParser(selectedNode))
+                self.searchAndConditionFilterVM.addCondition(index: index,
+                                                             udpateFilterOnly: udpateFilterOnly,
+                                                             condition: conditionParser(selectedNode))
             }
         }
     }
@@ -393,7 +395,7 @@ class ConditionFilterViewModel {
         conditions[index] = selectedNode
         self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
 
-        self.searchAndConditionFilterVM.addCondition(index: index, condition: conditionParser(selectedNode))
+        self.searchAndConditionFilterVM.addCondition(index: index, udpateFilterOnly: false, condition: conditionParser(selectedNode))
         setConditionItemTypeByParser(
             item: item,
             reload: reload,

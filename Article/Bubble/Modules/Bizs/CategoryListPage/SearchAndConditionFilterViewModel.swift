@@ -44,9 +44,11 @@ class SearchAndConditionFilterViewModel {
 
     }
 
-    func addCondition(index: Int, condition: @escaping (String) -> String) {
+    func addCondition(index: Int, udpateFilterOnly: Bool, condition: @escaping (String) -> String) {
         conditions[index] = condition
-        queryCondition.accept(getConditions())
+        if !udpateFilterOnly {
+            queryCondition.accept(getConditions())
+        }
     }
 
     func removeCondition(index: Int) {

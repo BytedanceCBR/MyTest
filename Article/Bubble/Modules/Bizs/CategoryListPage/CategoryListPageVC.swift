@@ -580,6 +580,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
             return
         }
+
         //点击切换埋点
         let catName = pageTypeString()
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
@@ -618,9 +619,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             }
         }
 
-        if let suggestionParams = self.suggestionParams {
-            dict["suggestion_params"] = suggestionParams
-        }
+//        if let suggestionParams = self.suggestionParams {
+//            dict["suggestion_params"] = suggestionParams
+//        }
         
         guard let configModel = try? FHMapSearchConfigModel(dictionary: dict) else {
             return
@@ -648,14 +649,24 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         
         let controller = FHMapSearchViewController(configModel: configModel)
 
-        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
-            if let condition = conditions {
-                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
-            }
-            if let sug = suggestion {
-                self?.suggestionParams = sug
+//        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
+//            if let condition = conditions {
+//                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
+//            }
+//            if let sug = suggestion {
+//                self?.suggestionParams = sug
+//            }
+//        }
+        controller.houseListOpenUrlCallback = { [weak self](openurl) in 
+            //TODO: handle callback open url
+            let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openurl))
+            self?.queryParams = routeObj?.queryParams as? [String: Any]
+            if let queryParams = self?.queryParams {
+                self?.conditionFilterViewModel?.setSelectedItem(items: queryParams)
+                self?.conditionFilterViewModel?.pullConditionsFromPanels()
             }
         }
+        
         self.navigationController?.pushViewController(controller, animated: true)
         
     }

@@ -70,6 +70,7 @@ import RxCocoa
 
     func bindConditionChangeDelegate() {
         searchAndConditionFilterVM?.queryCondition
+            .skip(1)
             .map {  (result) -> String in
                 return result
 //                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
@@ -151,9 +152,10 @@ import RxCocoa
     }
 
     @objc
-    func resetFilterCondition(queryParams paramObj: [AnyHashable: Any]) {
+    func resetFilterCondition(queryParams paramObj: [AnyHashable: Any], updateFilterOnly: Bool) {
         if let params = paramObj as? [String: Any] {
             self.conditionFilterViewModel?.setSelectedItem(items: params)
+            self.conditionFilterViewModel?.pullConditionsFromPanels(udpateFilterOnly: updateFilterOnly)
         }
     }
     
@@ -168,7 +170,7 @@ import RxCocoa
     }
 
     @objc
-    func getNoneFilterQueryParams(params: [String: Any]?) -> String {
+    func getNoneFilterQuery( params: [String: Any]?) -> String {
         return getNoneFilterConditionString(params: params, conditionsKeys: self.allKeys)
     }
 
