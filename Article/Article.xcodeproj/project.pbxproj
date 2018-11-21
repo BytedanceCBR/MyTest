@@ -3524,7 +3524,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -3573,6 +3573,21 @@
 		D481F84D21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
 		D481F84E21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
 		D481F84F21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
+		D481F85221A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85121A5644A007A6DE7 /* FHHomeEntrancesCell.m */; };
+		D481F85321A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85121A5644A007A6DE7 /* FHHomeEntrancesCell.m */; };
+		D481F85421A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85121A5644A007A6DE7 /* FHHomeEntrancesCell.m */; };
+		D481F85721A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85621A5645F007A6DE7 /* FHHomeBannerCell.m */; };
+		D481F85821A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85621A5645F007A6DE7 /* FHHomeBannerCell.m */; };
+		D481F85921A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F85621A5645F007A6DE7 /* FHHomeBannerCell.m */; };
+		D481F86121A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F86021A564BF007A6DE7 /* FHHomeCityTrendCell.m */; };
+		D481F86221A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F86021A564BF007A6DE7 /* FHHomeCityTrendCell.m */; };
+		D481F86321A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F86021A564BF007A6DE7 /* FHHomeCityTrendCell.m */; };
+		D481F87A21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
+		D481F87B21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
+		D481F87C21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
+		D481F87F21A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */; };
+		D481F88021A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */; };
+		D481F88121A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */; };
 		D500CFA2205AABCF00FBDAF5 /* AKLoginTrafficViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */; };
 		D501684E2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
 		D501684F2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
@@ -8138,6 +8153,16 @@
 		D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeConfigManager.m; sourceTree = "<group>"; };
 		D481F84B21A55D66007A6DE7 /* FHHomeCellHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeCellHelper.h; sourceTree = "<group>"; };
 		D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeCellHelper.m; sourceTree = "<group>"; };
+		D481F85021A5644A007A6DE7 /* FHHomeEntrancesCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeEntrancesCell.h; sourceTree = "<group>"; };
+		D481F85121A5644A007A6DE7 /* FHHomeEntrancesCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeEntrancesCell.m; sourceTree = "<group>"; };
+		D481F85521A5645F007A6DE7 /* FHHomeBannerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBannerCell.h; sourceTree = "<group>"; };
+		D481F85621A5645F007A6DE7 /* FHHomeBannerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBannerCell.m; sourceTree = "<group>"; };
+		D481F85F21A564BF007A6DE7 /* FHHomeCityTrendCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendCell.h; sourceTree = "<group>"; };
+		D481F86021A564BF007A6DE7 /* FHHomeCityTrendCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendCell.m; sourceTree = "<group>"; };
+		D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTableViewDelegate.h; sourceTree = "<group>"; };
+		D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTableViewDelegate.m; sourceTree = "<group>"; };
+		D481F87D21A56B77007A6DE7 /* FHHomeBaseTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBaseTableCell.h; sourceTree = "<group>"; };
+		D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBaseTableCell.m; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -9035,7 +9060,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -15686,12 +15711,22 @@
 				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
 				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
+				D481F85021A5644A007A6DE7 /* FHHomeEntrancesCell.h */,
+				D481F85121A5644A007A6DE7 /* FHHomeEntrancesCell.m */,
+				D481F85521A5645F007A6DE7 /* FHHomeBannerCell.h */,
+				D481F85621A5645F007A6DE7 /* FHHomeBannerCell.m */,
+				D481F85F21A564BF007A6DE7 /* FHHomeCityTrendCell.h */,
+				D481F86021A564BF007A6DE7 /* FHHomeCityTrendCell.m */,
 				D481F84621A540F6007A6DE7 /* FHHomeConfigManager.h */,
 				D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */,
 				D481F84B21A55D66007A6DE7 /* FHHomeCellHelper.h */,
 				D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */,
 				D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */,
 				D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */,
+				D481F87D21A56B77007A6DE7 /* FHHomeBaseTableCell.h */,
+				D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */,
+				D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */,
+				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -19260,6 +19295,7 @@
 				ABBEA69D1F3340A4005DAD27 /* ExploreArticleStockCell.m in Sources */,
 				0AECC4BD1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5E2142652B00653188 /* ConfigEntities.swift in Sources */,
+				D481F85221A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */,
 				A97DB86F1F1332DB0002B455 /* TTDetailNatantRelateReadView.m in Sources */,
 				B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				A97DB85B1F1332DB0002B455 /* TTDetailNatantContainerView.m in Sources */,
@@ -19452,6 +19488,7 @@
 				2DB9A5301F20B01C005E4A06 /* TTAdCanvasFullPicCell.m in Sources */,
 				6BE021181B215BE600F9E484 /* ExploreArticleCardCellView.m in Sources */,
 				D5041F152058029600BAEE7F /* AKTaskSettingHelper.m in Sources */,
+				D481F85721A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */,
 				A9AFB0361F0E469F00C1E28D /* TTHTSTabViewController.m in Sources */,
 				3DF3637F21A29D9F0097FCB6 /* NeighborhoodPropertyInfoCell.swift in Sources */,
 				C32AF91A1F555B00003FEEBC /* TTAdCanvasContainerViewModel.m in Sources */,
@@ -20012,6 +20049,7 @@
 				3F765B2916DB563F0037C3E3 /* ArticleSaveRemoteOperation.m in Sources */,
 				A94D3B131E2E25F5003AE22B /* TTCategoryAddToFirstPageCellView.m in Sources */,
 				ABBF8E011F2D911B00FEC7BB /* TTCookieManager.m in Sources */,
+				D481F87A21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				FEE3025220590DF000072A34 /* AKActivityTabManager.m in Sources */,
 				F87697081F31D0DA00D59CA5 /* TTVideoRecommendView.m in Sources */,
 				C305DE351E6FB9DC001F4967 /* TTAricleDetailGroupUnifyADView.m in Sources */,
@@ -20037,6 +20075,7 @@
 				A97DC4361F1333630002B455 /* TTSocialBaseCell.m in Sources */,
 				324097721F414E55002DF7C0 /* NewFriendListCellUnit.m in Sources */,
 				3DF3643021A29DA00097FCB6 /* NewHouseDetailPageViewModel.swift in Sources */,
+				D481F86121A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */,
 				438F9EB31F94B8DF0050F83E /* TTVPlayerTipAdCreator.m in Sources */,
 				ABBEA7881F3349BA005DAD27 /* TTUserProfileCheckingView.m in Sources */,
 				9C276DB71E31E736002C8A74 /* TTUserData.m in Sources */,
@@ -20620,6 +20659,7 @@
 				B388CC782142652B00653188 /* ObservableType+Reachability.swift in Sources */,
 				610FF9DF21A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				A97DBB871F1332E20002B455 /* TTNetworkStubTask.m in Sources */,
+				D481F87F21A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */,
 				A97DB88B1F1332DC0002B455 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
 				B388CCCA2142652C00653188 /* TGBallScaleRippleMultiple.swift in Sources */,
 				D5041F50205802A400BAEE7F /* AKProfileBenefitModel.m in Sources */,
@@ -20974,6 +21014,7 @@
 				B373C8612174587A008F9905 /* UIImageView+TTCornerRadius.m in Sources */,
 				B373C8622174587A008F9905 /* ConfigEntities.swift in Sources */,
 				B373C8632174587A008F9905 /* TTDetailNatantRelateReadView.m in Sources */,
+				D481F85421A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */,
 				B373C8642174587A008F9905 /* HomeViewTableViewDataSource.swift in Sources */,
 				B373C8652174587A008F9905 /* TTDetailNatantContainerView.m in Sources */,
 				B373C8662174587A008F9905 /* TTRHealthScore.m in Sources */,
@@ -21166,6 +21207,7 @@
 				B373C91E2174587A008F9905 /* ExploreArticleCardCellView.m in Sources */,
 				B373C91F2174587A008F9905 /* AKTaskSettingHelper.m in Sources */,
 				B373C9212174587A008F9905 /* TTHTSTabViewController.m in Sources */,
+				D481F85921A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */,
 				B373C9222174587A008F9905 /* TTAdCanvasContainerViewModel.m in Sources */,
 				3DF3638121A29D9F0097FCB6 /* NeighborhoodPropertyInfoCell.swift in Sources */,
 				B373C9232174587A008F9905 /* AKAwardCoinTipModel.m in Sources */,
@@ -21726,6 +21768,7 @@
 				B373CB492174587A008F9905 /* AKActivityTabManager.m in Sources */,
 				B373CB4A2174587A008F9905 /* TTVideoRecommendView.m in Sources */,
 				B373CB4B2174587A008F9905 /* TTAricleDetailGroupUnifyADView.m in Sources */,
+				D481F87C21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				B373CB4C2174587A008F9905 /* TTVPlayerTipAdOldFinish.m in Sources */,
 				B373CB4D2174587A008F9905 /* TTVFeedCellForRowContext.m in Sources */,
 				B373CB4E2174587A008F9905 /* ExploreMoviePlayerControlView.m in Sources */,
@@ -21751,6 +21794,7 @@
 				B373CB622174587A008F9905 /* TTUserProfileCheckingView.m in Sources */,
 				3DF3643221A29DA00097FCB6 /* NewHouseDetailPageViewModel.swift in Sources */,
 				B373CB632174587A008F9905 /* TTUserData.m in Sources */,
+				D481F86321A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */,
 				B373CB652174587A008F9905 /* TTPushResourceMgr.m in Sources */,
 				B373CB662174587A008F9905 /* TTMovieEnterFullscreenAnimatedTransitioning.m in Sources */,
 				B373CB672174587A008F9905 /* SettingSwitch.m in Sources */,
@@ -22334,6 +22378,7 @@
 				B373CD9B2174587A008F9905 /* TTNetworkStubTask.m in Sources */,
 				610FF9E121A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				B373CD9C2174587A008F9905 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
+				D481F88121A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */,
 				B373CD9D2174587A008F9905 /* TGBallScaleRippleMultiple.swift in Sources */,
 				B373CD9E2174587A008F9905 /* AKProfileBenefitModel.m in Sources */,
 				B373CD9F2174587A008F9905 /* TTSetHookTask.m in Sources */,
@@ -22688,6 +22733,7 @@
 				FEFA52CC205FB1A8001F50D8 /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5F2142652B00653188 /* ConfigEntities.swift in Sources */,
 				FEFA52CD205FB1A8001F50D8 /* TTDetailNatantRelateReadView.m in Sources */,
+				D481F85321A5644A007A6DE7 /* FHHomeEntrancesCell.m in Sources */,
 				B388CBFF2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				FEFA52D0205FB1A8001F50D8 /* TTDetailNatantContainerView.m in Sources */,
 				FEFA52D4205FB1A8001F50D8 /* TTRHealthScore.m in Sources */,
@@ -22880,6 +22926,7 @@
 				FEFA53AA205FB1A8001F50D8 /* ExploreArticleCardCellView.m in Sources */,
 				FEFA53AB205FB1A8001F50D8 /* AKTaskSettingHelper.m in Sources */,
 				FEFA53AD205FB1A8001F50D8 /* TTHTSTabViewController.m in Sources */,
+				D481F85821A5645F007A6DE7 /* FHHomeBannerCell.m in Sources */,
 				FEFA53AF205FB1A8001F50D8 /* TTAdCanvasContainerViewModel.m in Sources */,
 				3DF3638021A29D9F0097FCB6 /* NeighborhoodPropertyInfoCell.swift in Sources */,
 				FEFA53B1205FB1A8001F50D8 /* AKAwardCoinTipModel.m in Sources */,
@@ -23440,6 +23487,7 @@
 				FEFA5620205FB1A8001F50D8 /* AKActivityTabManager.m in Sources */,
 				FEFA5621205FB1A8001F50D8 /* TTVideoRecommendView.m in Sources */,
 				FEFA5623205FB1A8001F50D8 /* TTAricleDetailGroupUnifyADView.m in Sources */,
+				D481F87B21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				FEFA5624205FB1A8001F50D8 /* TTVPlayerTipAdOldFinish.m in Sources */,
 				FEFA5625205FB1A8001F50D8 /* TTVFeedCellForRowContext.m in Sources */,
 				FEFA5626205FB1A8001F50D8 /* ExploreMoviePlayerControlView.m in Sources */,
@@ -23465,6 +23513,7 @@
 				FEFA563D205FB1A8001F50D8 /* TTUserProfileCheckingView.m in Sources */,
 				3DF3643121A29DA00097FCB6 /* NewHouseDetailPageViewModel.swift in Sources */,
 				FEFA563E205FB1A8001F50D8 /* TTUserData.m in Sources */,
+				D481F86221A564BF007A6DE7 /* FHHomeCityTrendCell.m in Sources */,
 				FEFA563F205FB1A8001F50D8 /* TTPushResourceMgr.m in Sources */,
 				FEFA5640205FB1A8001F50D8 /* TTMovieEnterFullscreenAnimatedTransitioning.m in Sources */,
 				FEFA5641205FB1A8001F50D8 /* SettingSwitch.m in Sources */,
@@ -24048,6 +24097,7 @@
 				FEFA58BB205FB1A8001F50D8 /* TTNetworkStubTask.m in Sources */,
 				610FF9E021A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				FEFA58BC205FB1A8001F50D8 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
+				D481F88021A56B77007A6DE7 /* FHHomeBaseTableCell.m in Sources */,
 				B388CCCB2142652C00653188 /* TGBallScaleRippleMultiple.swift in Sources */,
 				FEFA58BD205FB1A8001F50D8 /* AKProfileBenefitModel.m in Sources */,
 				FEFA58BF205FB1A8001F50D8 /* TTSetHookTask.m in Sources */,

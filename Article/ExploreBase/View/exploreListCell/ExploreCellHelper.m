@@ -1149,7 +1149,7 @@ static NSMutableArray *s_reusableCardViews;
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+    return [FHHomeCellHelper heightForFHHomeHeaderCellViewType];
 }
 
 + (CGFloat)largeImageWidth:(CGFloat)cellWidth

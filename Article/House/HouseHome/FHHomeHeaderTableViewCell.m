@@ -6,6 +6,7 @@
 //
 
 #import "FHHomeHeaderTableViewCell.h"
+#import "FHHomeCellHelper.h"
 
 @implementation FHHomeHeaderTableViewCell
 
@@ -29,6 +30,9 @@
     [self.contentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
+    
+    [FHHomeCellHelper registerCells:self.contentTableView];
+    
     
 //    [self addSubview:self.rowsView];
 //
@@ -54,11 +58,12 @@
 //        make.height.mas_equalTo(100);
 //    }];
 //    self.trendView.backgroundColor = [UIColor blueColor];
+    
 }
 
 - (void)refreshUI
 {
-    NSInteger num = arc4random()%10;
+    NSInteger num = arc4random()%4;
     switch (num) {
         case 0:
             self.contentTableView.backgroundColor = [UIColor redColor];
@@ -68,6 +73,9 @@
             break;
         case 2:
             self.contentTableView.backgroundColor = [UIColor purpleColor];
+            break;
+        case 3:
+            self.contentTableView.backgroundColor = [UIColor orangeColor];
             break;
         default:
             break;
