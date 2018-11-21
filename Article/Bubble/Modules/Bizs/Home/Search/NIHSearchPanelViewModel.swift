@@ -11,7 +11,6 @@ import RxCocoa
 
 extension Notification.Name {
     static let homePageRollScreenKey = Notification.Name("kHomePageRollScreen_Noti_Key")
-    static let homePagePullDownKey = Notification.Name("kHomePagePullDown_Noti_Key")
 }
 
 class NIHSearchPanelViewModel: NSObject {

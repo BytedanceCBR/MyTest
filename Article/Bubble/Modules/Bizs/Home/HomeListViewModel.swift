@@ -701,11 +701,11 @@ class HomeListViewModel: DetailPageViewModel {
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
-        
     }
     
     func registerPullDownNoti() {
-        NotificationCenter.default.rx.notification(.homePagePullDownKey).subscribe(onNext: {[weak self] (noti) in
+        // TTRefreshView+HomePage 进行下拉以及是否是首页b判断
+        NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in
             if let userInfo = noti.userInfo {
                 if let needPullDownData = userInfo["needPullDownData"] as? Bool {
                     if needPullDownData {
