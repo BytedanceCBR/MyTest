@@ -95,6 +95,7 @@ class CategoryListViewModel: DetailPageViewModel {
     var offset = 0
     var time = 0 //点击搜索内容时间戳，等同于进入列表页的时机
     var mapFindHouseOpenUrl: String?
+    var houseListOpenUrl: String?
 
     init(
             tableView: UITableView,
@@ -178,6 +179,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.oneTimeToast?(response?.data?.refreshTip)
                     self.houseSearchRecorder?(response?.data?.searchId)
                     if let data = response?.data {
+//                        self.houseListOpenUrl = data.houseListOpenUrl
 
                         self.originSearchId = data.searchId
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -255,6 +257,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
                         if let data = response?.data {
                             self.mapFindHouseOpenUrl = data.mapFindHouseOpenUrl
+                            self.houseListOpenUrl = data.houseListOpenUrl
                             self.originSearchId = data.searchId
 
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -323,7 +326,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.oneTimeToast?(response?.data?.refreshTip)
                     if let data = response?.data {
                         self.houseSearchRecorder?(response?.data?.searchId)
-
+//                        self.houseListOpenUrl = data.houseListOpenUrl
                         self.originSearchId = data.searchId
 
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>

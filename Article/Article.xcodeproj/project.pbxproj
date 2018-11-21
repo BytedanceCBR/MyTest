@@ -330,6 +330,9 @@
 		3DB7A71C21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71D21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71E21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
+		3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DF3635821A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
 		3DF3635921A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
 		3DF3635A21A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
@@ -1362,6 +1365,9 @@
 		B32FD32821A3E0A7007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
 		B32FD32921A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
 		B32FD32A21A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
+		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -2991,7 +2997,6 @@
 		B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5AC1F1332D90002B455 /* Photo.storyboard */; };
 		B373CE9B2174587A008F9905 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
 		B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6BD9022D1DB873960072138C /* index.ios.bundle */; };
-		B373CE9D2174587A008F9905 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
 		B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5B11F1332D90002B455 /* transparent_1px@2x.png */; };
 		B373CEA02174587A008F9905 /* Video.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87693001F31D0D300D59CA5 /* Video.storyboard */; };
@@ -3090,8 +3095,6 @@
 		B373CF032174587A008F9905 /* libttheif_dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF860F21FA1CA8100926C1A /* libttheif_dec.a */; };
 		B388CB162142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
 		B388CB172142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
-		B388CB182142652A00653188 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
-		B388CB192142652A00653188 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
 		B388CB1A2142652A00653188 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DC2142652800653188 /* EnvContext.swift */; };
 		B388CB1B2142652A00653188 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DC2142652800653188 /* EnvContext.swift */; };
 		B388CB1C2142652A00653188 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DD2142652800653188 /* BaseViewController.swift */; };
@@ -6165,6 +6168,7 @@
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
 		3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseCellsBridgeImp.m; sourceTree = "<group>"; };
+		3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
 		3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageVC.swift; sourceTree = "<group>"; };
 		3DF3630021A29D9D0097FCB6 /* LBSMapPageNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageNavBar.swift; sourceTree = "<group>"; };
 		3DF3630121A29D9D0097FCB6 /* HouseDetailPageBottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseDetailPageBottomBarView.swift; sourceTree = "<group>"; };
@@ -7774,12 +7778,12 @@
 		B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailViewModel.swift; sourceTree = "<group>"; };
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
 		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
+		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B388C9D92142652800653188 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B388C9DA2142652800653188 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
 		B388C9DC2142652800653188 /* EnvContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvContext.swift; sourceTree = "<group>"; };
 		B388C9DD2142652800653188 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		B388C9DE2142652800653188 /* FTTNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTTNavigationController.m; sourceTree = "<group>"; };
@@ -10607,8 +10611,6 @@
 			children = (
 				D46DA52321A43B74009D50C7 /* HouseHome */,
 				B32FD2C921A26E2D007B9966 /* HouseRent */,
-				B31F42AB2189A5E500D9FE94 /* UI */,
-				B31102952181A0BC00FD2A45 /* TTContacts */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 			);
 			path = House;
@@ -14655,28 +14657,6 @@
 			path = TTDislikeView;
 			sourceTree = "<group>";
 		};
-		B31102952181A0BC00FD2A45 /* TTContacts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TTContacts;
-			sourceTree = "<group>";
-		};
-		B31F42AB2189A5E500D9FE94 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				B31F42AC2189A5F600D9FE94 /* TagView */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		B31F42AC2189A5F600D9FE94 /* TagView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TagView;
-			sourceTree = "<group>";
-		};
 		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
 			isa = PBXGroup;
 			children = (
@@ -14723,6 +14703,7 @@
 				B32FD2FE21A3B479007B9966 /* RentNameCellRender.swift */,
 				B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */,
 				B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */,
+				B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -14730,9 +14711,9 @@
 		B388C9D82142652800653188 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
+				3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */,
 				B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */,
 				B388C9D92142652800653188 /* LaunchScreen.storyboard */,
-				B388C9DA2142652800653188 /* BubbleImages.xcassets */,
 				B388C9DB2142652800653188 /* Launch */,
 				B388C9E32142652800653188 /* Assets.xcassets */,
 				B388C9E42142652800653188 /* Bubble-Bridging-Header.h */,
@@ -15659,6 +15640,7 @@
 				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
 				D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */,
 				D46DA52921A43B74009D50C7 /* FHHomeBannerView.h */,
+
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -17903,7 +17885,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = X46375UBYG;
+						DevelopmentTeam = J3249442BT;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -17969,7 +17951,6 @@
 				A97DB8BF1F1332DC0002B455 /* Photo.storyboard in Resources */,
 				2E14CCEC1FE007C30093E05D /* sound1.caf in Resources */,
 				6BD9023E1DB873970072138C /* index.ios.bundle in Resources */,
-				B388CB182142652A00653188 /* BubbleImages.xcassets in Resources */,
 				6BF694501CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				A97DB8CF1F1332DC0002B455 /* transparent_1px@2x.png in Resources */,
 				F876968C1F31D0D900D59CA5 /* Video.storyboard in Resources */,
@@ -17986,6 +17967,7 @@
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
 				2E14CCED1FE007C30093E05D /* sound3.caf in Resources */,
 				D046AB9B1BB024ED0042210A /* recommend_cancel@2x.png in Resources */,
+				3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				6B42961B1BA14541000B7F10 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				6BA1C67E1BFACE7200B6FFFB /* ios_asset in Resources */,
 				D046AB931BB024E10042210A /* recommend_button_press.png in Resources */,
@@ -18052,7 +18034,6 @@
 				B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */,
-				B373CE9D2174587A008F9905 /* BubbleImages.xcassets in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */,
 				B373CEA02174587A008F9905 /* Video.storyboard in Resources */,
@@ -18069,6 +18050,7 @@
 				B373CEA92174587A008F9905 /* recommend_button_press@2x.png in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
 				B373CEAB2174587A008F9905 /* recommend_cancel@2x.png in Resources */,
+				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAC2174587A008F9905 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				B373CEAD2174587A008F9905 /* ios_asset in Resources */,
 				B373CEAE2174587A008F9905 /* recommend_button_press.png in Resources */,
@@ -18135,7 +18117,6 @@
 				FEFA59D7205FB1A8001F50D8 /* Photo.storyboard in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				FEFA59DC205FB1A8001F50D8 /* index.ios.bundle in Resources */,
-				B388CB192142652A00653188 /* BubbleImages.xcassets in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				FEFA59E4205FB1A8001F50D8 /* transparent_1px@2x.png in Resources */,
 				FEFA59E6205FB1A8001F50D8 /* Video.storyboard in Resources */,
@@ -18152,6 +18133,7 @@
 				FEFA59F5205FB1A8001F50D8 /* recommend_button_press@2x.png in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
 				FEFA59F7205FB1A8001F50D8 /* recommend_cancel@2x.png in Resources */,
+				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				FEFA59F8205FB1A8001F50D8 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				FEFA59F9205FB1A8001F50D8 /* ios_asset in Resources */,
 				FEFA59FA205FB1A8001F50D8 /* recommend_button_press.png in Resources */,
@@ -18353,6 +18335,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/FHMapSearch/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
@@ -18361,14 +18344,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18440,6 +18416,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
@@ -18448,14 +18425,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18582,6 +18552,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/FHMapSearch/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
@@ -18590,14 +18561,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18670,6 +18634,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
@@ -18678,14 +18643,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18967,6 +18925,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/FHMapSearch/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
@@ -18975,14 +18934,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -19053,6 +19005,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
@@ -19061,14 +19014,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -19234,6 +19180,7 @@
 				B388CB302142652A00653188 /* NetworkCommonParams.swift in Sources */,
 				F87693901F31D0D300D59CA5 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				F87695401F31D0D700D59CA5 /* TTVFeedListNotificationCenter.m in Sources */,
+				B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CC402142652B00653188 /* MineVC.swift in Sources */,
 				B388CCFE2142652C00653188 /* TextParser.swift in Sources */,
 				A9AFABAB1F0E439400C1E28D /* TTTrackInitTime.m in Sources */,
@@ -19653,6 +19600,7 @@
 				48F838811FA1BC63002E040C /* TSVTabViewController.m in Sources */,
 				2DB9A8B81F33000C005E4A06 /* TTTouchContext.m in Sources */,
 				A97DBC6F1F1332E50002B455 /* TTStartupSerialGroup.m in Sources */,
+				D4F1EABA21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				A97DBB471F1332E20002B455 /* TTOpenInSafariWindow.m in Sources */,
 				06E5DF621AA066A700BDEAD8 /* SSLocationPickerController.m in Sources */,
 				F87694241F31D0D400D59CA5 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -19802,6 +19750,7 @@
 				F87695341F31D0D700D59CA5 /* TTVShareActionsTracker.m in Sources */,
 				ABBEA74C1F334826005DAD27 /* ExploreDetailPhoneLargePicADView.m in Sources */,
 				2DB9A5C41F20B01D005E4A06 /* TTPhotoDetailCellHelper.m in Sources */,
+				D4F1EABF21A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				2DCAD0321DDC237200EBF9CF /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC442142652B00653188 /* AboutViewController.swift in Sources */,
 				6BE022371B215BE700F9E484 /* ExploreWebCellManager.m in Sources */,
@@ -20941,6 +20890,7 @@
 				B373C84A2174587A008F9905 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				B373C84B2174587A008F9905 /* TTVFeedListNotificationCenter.m in Sources */,
 				B373C84C2174587A008F9905 /* MineVC.swift in Sources */,
+				B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B373C84D2174587A008F9905 /* TextParser.swift in Sources */,
 				B373C84E2174587A008F9905 /* TTTrackInitTime.m in Sources */,
 				B373C84F2174587A008F9905 /* ArticleMomentDiggManager.m in Sources */,
@@ -21360,6 +21310,7 @@
 				B373C9EB2174587A008F9905 /* TTOpenInSafariWindow.m in Sources */,
 				B373C9EC2174587A008F9905 /* SSLocationPickerController.m in Sources */,
 				B373C9ED2174587A008F9905 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				D4F1EABC21A41878003A3DFE /* FHHomeBannerView.m in Sources */,
 				B373C9EE2174587A008F9905 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				B373C9EF2174587A008F9905 /* TTHeaderView.m in Sources */,
 				B373C9F02174587A008F9905 /* SSADTrackInfoList.m in Sources */,
@@ -21509,6 +21460,7 @@
 				B373CA802174587A008F9905 /* TTPhotoDetailCellHelper.m in Sources */,
 				B373CA812174587A008F9905 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B373CA822174587A008F9905 /* AboutViewController.swift in Sources */,
+				D4F1EAC121A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				B373CA832174587A008F9905 /* ExploreWebCellManager.m in Sources */,
 				B373CA842174587A008F9905 /* TTVFeedListLiveItem.m in Sources */,
 				B373CA852174587A008F9905 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -22648,6 +22600,7 @@
 				FEFA52B2205FB1A8001F50D8 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				FEFA52B3205FB1A8001F50D8 /* TTVFeedListNotificationCenter.m in Sources */,
 				B388CC412142652B00653188 /* MineVC.swift in Sources */,
+				B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CCFF2142652C00653188 /* TextParser.swift in Sources */,
 				FEFA52B4205FB1A8001F50D8 /* TTTrackInitTime.m in Sources */,
 				D50439D52079B8FC00DA4953 /* ArticleMomentDiggManager.m in Sources */,
@@ -23067,6 +23020,7 @@
 				FEFA549D205FB1A8001F50D8 /* TTOpenInSafariWindow.m in Sources */,
 				FEFA549E205FB1A8001F50D8 /* SSLocationPickerController.m in Sources */,
 				FEFA549F205FB1A8001F50D8 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				D4F1EABB21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				FEFA54A2205FB1A8001F50D8 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				FEFA54A4205FB1A8001F50D8 /* TTHeaderView.m in Sources */,
 				FEFA54A6205FB1A8001F50D8 /* SSADTrackInfoList.m in Sources */,
@@ -23216,6 +23170,7 @@
 				FEFA5540205FB1A8001F50D8 /* TTPhotoDetailCellHelper.m in Sources */,
 				FEFA5543205FB1A8001F50D8 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC452142652B00653188 /* AboutViewController.swift in Sources */,
+				D4F1EAC021A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				FEFA5544205FB1A8001F50D8 /* ExploreWebCellManager.m in Sources */,
 				FEFA5545205FB1A8001F50D8 /* TTVFeedListLiveItem.m in Sources */,
 				FEFA5546205FB1A8001F50D8 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -24834,7 +24789,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = J3249442BT;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24905,7 +24860,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp2;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -24938,7 +24893,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = J3249442BT;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
