@@ -6,12 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FHHouseHome/FHHomeModel.h>
+//#import <FHHouseHome/FHHomeModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeFeedHeaderView : UIView
 
-@property(nonatomic,strong) FHHomeModel * homeModel;
+//@property(nonatomic,strong) FHHomeModel * homeModel;
 
 @end
 
