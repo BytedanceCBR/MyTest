@@ -79,3 +79,6 @@
 "apply_user_auth_info"  = "TTCertificationRootViewController";
 
 "ad_full_screen_video"  = "TTAdFullScreenVideoViewController";
+
+// map search
+"mapfind_house"        = "FHMapSearchViewController";
