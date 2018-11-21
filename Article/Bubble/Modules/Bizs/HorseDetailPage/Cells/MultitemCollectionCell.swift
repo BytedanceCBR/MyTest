@@ -751,7 +751,7 @@ fileprivate func fillEvaluationCell(
     cell: BaseUITableViewCell) {
     if let theCell = cell as? MultitemCollectionEvaluateCell {
         theCell.itemReuseIdentifier = "evaluate"
-        print("datas = \(datas)")
+//        print("datas = \(datas)")
         theCell.starsContainer.updateStarsCount(scoreValue: datas.totalScore ?? 0)
 
         if let datasScoresEntity = datas.subScores

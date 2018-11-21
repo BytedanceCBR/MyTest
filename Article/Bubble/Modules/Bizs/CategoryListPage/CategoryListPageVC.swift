@@ -878,10 +878,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                 let conditions = getNoneFilterConditionString(params: self.queryParams, conditionsKeys: keys)
 
-                print("filter : \(conditions)")
-                print("filter old: \(oldConditions)")
-
-
                 zip(items.0, items.1)
                     .enumerated()
                     .forEach({ [unowned self] (e) in
@@ -893,7 +889,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             data: nodes)
                     })
                 self.queryString = self.queryString + conditions
-                print(self.queryString)
+//                print(self.queryString)
                 if let queryParams = self.queryParams {
                     self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
                 }

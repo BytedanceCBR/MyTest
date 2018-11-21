@@ -46,10 +46,10 @@ class SearchAndConditionFilterViewModel {
 
     func addCondition(index: Int, udpateFilterOnly: Bool, condition: @escaping (String) -> String) {
         conditions[index] = condition
-        print("bindConditionChangeDelegate \(conditions)")
+//        print("bindConditionChangeDelegate \(conditions)")
         conditions.forEach { (e) in
             let (key, value) = e
-            print("\(key) - \(value(""))")
+//            print("\(key) - \(value(""))")
         }
         if !udpateFilterOnly {
             queryCondition.accept(getConditions())
