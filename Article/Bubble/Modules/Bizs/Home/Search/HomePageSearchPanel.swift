@@ -9,6 +9,8 @@
 import UIKit
 import QuartzCore
 import SnapKit
+import RxCocoa
+import RxSwift
 
 class HomePageSearchPanel: UIView {
 
@@ -56,13 +58,57 @@ class HomePageSearchPanel: UIView {
         return view
     }()
 
-    lazy var categoryLabel: UILabel = {
+    lazy var categoryPlaceholderLabel: UILabel = {
         let label = UILabel()
         label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = hexStringToUIColor(hex: "#8a9299")
         label.text = UIScreen.main.bounds.width < 375 ? "输入小区/商圈/地铁" : "请输入小区/商圈/地铁"
         return label
     }()
+    
+    lazy var categoryLabel1: UILabel = {
+        let label = UILabel()
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        label.text = ""
+        return label
+    }()
+    
+    lazy var categoryLabel2: UILabel = {
+        let label = UILabel()
+        label.alpha = 0
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
+        label.text = ""
+        return label
+    }()
+    
+    lazy var categoryBgView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.isHidden = true
+        return view
+    }()
+    
+    var searchTitleIndex: Int = 0
+    var searchTitles:[String] = [] {
+        didSet {
+            searchTitleIndex = 0
+            if searchTitles.count > 0 {
+                setupTimer()
+                categoryBgView.isHidden = false
+                categoryPlaceholderLabel.isHidden = true
+                self.updateTitleText()
+            } else {
+                self.dispose?.dispose()
+                categoryBgView.isHidden = true
+                categoryPlaceholderLabel.isHidden = false
+            }
+        }
+    }
+
+    let disposeBag = DisposeBag()
+    var dispose:Disposable?
 
     init(frame: CGRect, isHighlighted: Bool = false) {
         self.isHighlighted = isHighlighted
@@ -84,6 +130,56 @@ class HomePageSearchPanel: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupTimer()
+    {
+        // 取消定时器
+        self.dispose?.dispose()
+        
+        let interval = Observable<Int>.interval(5, scheduler: MainScheduler.instance)
+
+        dispose = interval.subscribe {[weak self] (event) in
+            self?.animateTitle()
+            }
+        
+        dispose?.disposed(by: disposeBag)
+    }
+    
+    func animateTitle()
+    {
+        if categoryBgView.isHidden {
+            return
+        }
+        UIView.animate(withDuration: 0.3, animations: {
+            self.categoryLabel1.alpha = 0
+            self.categoryLabel2.alpha = 1
+            self.categoryLabel1.frame.origin.y = -11
+            self.categoryLabel2.frame.origin.y = 9
+        }) { (_) in
+            self.categoryLabel1.alpha = 1
+            self.categoryLabel2.alpha = 0
+            self.categoryLabel1.frame.origin.y = 9
+            self.categoryLabel2.frame.origin.y = 29
+        
+            self.nextTitleIndex()
+            self.updateTitleText()
+        }
+    }
+    
+    func updateTitleText() {
+        if searchTitleIndex >= 0 && searchTitles.count > 0 && searchTitleIndex < searchTitles.count {
+            self.categoryLabel1.text = searchTitles[searchTitleIndex]
+            let tempIndex = (searchTitleIndex + 1) % searchTitles.count
+            self.categoryLabel2.text = searchTitles[tempIndex]
+        }
+    }
+    
+    func nextTitleIndex()
+    {
+        if searchTitleIndex >= 0 && searchTitles.count > 0 && searchTitleIndex < searchTitles.count {
+            self.searchTitleIndex = (searchTitleIndex + 1) % searchTitles.count
+        }
     }
     
     private func setPanelStyle() {
@@ -150,12 +246,35 @@ class HomePageSearchPanel: UIView {
             maker.width.height.equalTo(16)
         }
         
-        addSubview(categoryLabel)
-        categoryLabel.snp.makeConstraints { maker in
+        addSubview(categoryPlaceholderLabel)
+        categoryPlaceholderLabel.snp.makeConstraints { maker in
             maker.left.equalTo(verticalLineView.snp.right).offset(10)
             maker.height.equalTo(20)
             maker.right.equalTo(searchIcon.snp.left).offset(-1)
             maker.centerY.equalToSuperview()
+        }
+        
+        addSubview(categoryBgView)
+        
+        categoryBgView.snp.makeConstraints { maker in
+            maker.left.equalTo(verticalLineView.snp.right).offset(10)
+            maker.height.equalTo(38)
+            maker.right.equalTo(searchIcon.snp.left).offset(-1)
+            maker.centerY.equalToSuperview()
+        }
+        
+        categoryBgView.addSubview(categoryLabel1)
+        categoryLabel1.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(9)
+            maker.height.equalTo(20)
+            maker.left.right.centerY.equalToSuperview()
+        }
+        
+        categoryBgView.addSubview(categoryLabel2)
+        categoryLabel2.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(29)
+            maker.height.equalTo(20)
+            maker.left.right.equalToSuperview()
         }
         
         addSubview(searchBtn)
