@@ -107,3 +107,27 @@ func requestDeleteSearchHistory(houseType: String) -> Observable<NSString?> {
             NSString(data: data, encoding: String.Encoding.utf8.rawValue)
         })
 }
+
+func requestGuessYouWant(cityId: Int, houseType:Int)-> Observable<GuessYouWantResponse?> {
+    let params: [String : Any] = [
+        "city_id": cityId,
+        "house_type":houseType,
+        "source": "app"]
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: "\(EnvContext.networkConfig.host)/f100/api/guess_you_want_search",
+            params: params,
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> GuessYouWantResponse? in
+            if let payload = payload {
+                let response = GuessYouWantResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}
