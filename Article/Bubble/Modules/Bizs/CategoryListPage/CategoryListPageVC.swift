@@ -1021,18 +1021,18 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
 extension CategoryListPageVC : FHMapSearchOpenUrlDelegate
 {
-    
+
     func handleHouseListCallback(_ openUrl: String) {
-        
+
         let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
         self.queryParams = routeObj?.queryParams as? [String: Any]
         if let queryParams = self.queryParams {
             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
             self.conditionFilterViewModel?.pullConditionsFromPanels()
         }
-        
+
     }
-    
+
 }
 
 func houseTypeString(_ houseType: HouseType) -> String {
