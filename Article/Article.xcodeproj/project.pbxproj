@@ -754,6 +754,12 @@
 		610FF9D521A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
 		610FF9D621A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
 		610FF9D721A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
+		610FF9DF21A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */; };
+		610FF9E021A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */; };
+		610FF9E121A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */; };
+		610FF9E321A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
+		610FF9E421A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
+		610FF9E521A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
@@ -6634,6 +6640,9 @@
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
 		610FF9D321A532E4003E8D68 /* FHFeedHouseItemViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemViewModel.h; sourceTree = "<group>"; };
 		610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemViewModel.m; sourceTree = "<group>"; };
+		610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseFooterView.h; sourceTree = "<group>"; };
+		610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseFooterView.m; sourceTree = "<group>"; };
+		610FF9E221A53E25003E8D68 /* feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = feed.xcassets; sourceTree = "<group>"; };
 		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
 		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
@@ -11909,6 +11918,9 @@
 				6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */,
 				610FF9D321A532E4003E8D68 /* FHFeedHouseItemViewModel.h */,
 				610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */,
+				610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */,
+				610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */,
+				610FF9E221A53E25003E8D68 /* feed.xcassets */,
 			);
 			path = FHHouseItemCell;
 			sourceTree = "<group>";
@@ -17992,6 +18004,7 @@
 				C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
 				6BD02B6D1BA1881900AABF64 /* InfoPlist.strings in Resources */,
 				6BF694401CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig in Resources */,
+				610FF9E321A53E25003E8D68 /* feed.xcassets in Resources */,
 				B388CB162142652A00653188 /* LaunchScreen.storyboard in Resources */,
 				6BF694581CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				A97DB89B1F1332DC0002B455 /* News.storyboard in Resources */,
@@ -18075,6 +18088,7 @@
 				B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
 				B373CEBC2174587A008F9905 /* InfoPlist.strings in Resources */,
 				B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */,
+				610FF9E521A53E25003E8D68 /* feed.xcassets in Resources */,
 				B373CEBE2174587A008F9905 /* LaunchScreen.storyboard in Resources */,
 				B373CEBF2174587A008F9905 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				B373CEC02174587A008F9905 /* News.storyboard in Resources */,
@@ -18158,6 +18172,7 @@
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
 				FEFA5A14205FB1A8001F50D8 /* InfoPlist.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
+				610FF9E421A53E25003E8D68 /* feed.xcassets in Resources */,
 				B388CB172142652A00653188 /* LaunchScreen.storyboard in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				FEFA5A17205FB1A8001F50D8 /* News.storyboard in Resources */,
@@ -20566,6 +20581,7 @@
 				B388CCD82142652C00653188 /* LoadingIndicatorView.swift in Sources */,
 				F876949C1F31D0D500D59CA5 /* TTVFeedListPicAdItem.m in Sources */,
 				B388CC782142652B00653188 /* ObservableType+Reachability.swift in Sources */,
+				610FF9DF21A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				A97DBB871F1332E20002B455 /* TTNetworkStubTask.m in Sources */,
 				A97DB88B1F1332DC0002B455 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
 				B388CCCA2142652C00653188 /* TGBallScaleRippleMultiple.swift in Sources */,
@@ -22275,6 +22291,7 @@
 				B373CD992174587A008F9905 /* TTVFeedListPicAdItem.m in Sources */,
 				B373CD9A2174587A008F9905 /* ObservableType+Reachability.swift in Sources */,
 				B373CD9B2174587A008F9905 /* TTNetworkStubTask.m in Sources */,
+				610FF9E121A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				B373CD9C2174587A008F9905 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
 				B373CD9D2174587A008F9905 /* TGBallScaleRippleMultiple.swift in Sources */,
 				B373CD9E2174587A008F9905 /* AKProfileBenefitModel.m in Sources */,
@@ -23984,6 +24001,7 @@
 				FEFA58BA205FB1A8001F50D8 /* TTVFeedListPicAdItem.m in Sources */,
 				B388CC792142652B00653188 /* ObservableType+Reachability.swift in Sources */,
 				FEFA58BB205FB1A8001F50D8 /* TTNetworkStubTask.m in Sources */,
+				610FF9E021A53C70003E8D68 /* FHFeedHouseFooterView.m in Sources */,
 				FEFA58BC205FB1A8001F50D8 /* TTDetailNatantRelateArticleGroupViewModel.m in Sources */,
 				B388CCCB2142652C00653188 /* TGBallScaleRippleMultiple.swift in Sources */,
 				FEFA58BD205FB1A8001F50D8 /* AKProfileBenefitModel.m in Sources */,
