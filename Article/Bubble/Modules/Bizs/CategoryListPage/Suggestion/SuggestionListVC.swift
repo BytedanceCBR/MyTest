@@ -156,6 +156,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         tableViewModel.dismissVC = { [unowned self] in
             self.dismissSelfVCIfNeeded()
         }
+        
+        tableViewModel.homePageRollData = self.homePageRollData
 
         UIApplication.shared.statusBarStyle = .default
 
@@ -555,6 +557,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var search = TracerParams.momoid() <|> beNull(key: "search")
 
     var dismissVC: (() -> Void)?
+    
+    var homePageRollData:HomePageRollScreen?
 
     init(houseType: BehaviorRelay<HouseType>, isFromHome: EnterSuggestionType) {
         self.houseType = houseType
@@ -583,7 +587,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                     if $0.count == 0 {
                         return "历史记录"
                     }
-                    return "猜你想搜的"
+                    return ""
                 }
                 .bind(to: sectionHeaderView.label.rx.text)
                 .disposed(by: disposeBag)
@@ -873,9 +877,29 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         let houseType = self.houseType.value
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
         requestGuessYouWant(cityId: cityId ?? 122, houseType: houseType.rawValue).subscribe(onNext: { [unowned self] (response) in
-                if let data = response?.data?.data {
-                    self.guessYouWantItems.accept(data)
-                    self.sectionHeaderView.guessView.guessYouWantItems = data
+                if let data = response?.data?.data , data.count > 0 {
+                    // 把外部传入的搜索词放到第一个位置
+                    var tempData = data
+                    if let text = self.homePageRollData?.text, self.homePageRollData?.houseType == houseType.rawValue {
+                        var index:Int = 0
+                        var tempGuess:GuessYouWant = GuessYouWant(JSON: [:])!
+                        tempGuess.text = text
+                        tempGuess.openUrl = self.homePageRollData?.openUrl
+                        tempGuess.guessSearchId = self.homePageRollData?.guessSearchId
+                        tempGuess.houseType = self.homePageRollData?.houseType ?? 0
+                        for item in data {
+                            if item.text == text {
+                                tempGuess = item
+                                tempData.remove(at: index)
+                                break
+                            }
+                            index += 1
+                        }
+                        tempData.insert(tempGuess, at: 0)
+                    }
+                    //
+                    self.guessYouWantItems.accept(tempData)
+                    self.sectionHeaderView.guessView.guessYouWantItems = tempData
                 } else {
                     self.guessYouWantItems.accept([])
                     self.sectionHeaderView.guessView.guessYouWantItems = []
