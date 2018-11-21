@@ -113,6 +113,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     var tracerParams = TracerParams.momoid()
     
     var homePageRollData:HomePageRollScreen?
+    
+    var canSearchWithRollData:Bool = false
 
     var stayTimeParams: TracerParams?
 
@@ -316,6 +318,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
             .subscribe(onNext: { [weak self] (type) in
                 self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
+                self?.canSearchWithRollData = false
                 if let tableView = self?.tableView {
                     if self?.navBar.searchInput.text?.isEmpty == false {
                         self?.tableViewModel.sendQuery(
@@ -355,6 +358,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         stayTimeParams = tracerParams <|> traceStayTime()
         self.tableViewModel.requestHistoryFromRemote(houseType: "\(self.houseType.value.rawValue)")
         if let rollData = homePageRollData {
+            self.canSearchWithRollData = true
             navBar.searchInput.placeholder = rollData.text ?? ""
         }
     }
@@ -400,7 +404,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         var userInputText: String = self.navBar.searchInput.text ?? ""
         
         // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
-        if let rollText = self.homePageRollData?.text {
+        if let rollText = self.homePageRollData?.text, self.canSearchWithRollData == true {
             if userInputText.count <= 0 && rollText.count > 0 {
                 userInputText = rollText
             }
