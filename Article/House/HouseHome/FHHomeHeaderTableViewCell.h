@@ -14,9 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeHeaderTableViewCell : UITableViewCell
 
+@property (nonatomic, strong) UITableView* contentTableView;
 @property (nonatomic, strong) FHRowsView* rowsView;
 @property (nonatomic, strong) FHHomeBannerView* bannerView;
 @property (nonatomic, strong) FHHomeCityTrendView* trendView;
+
+
+- (void)refreshUI;
+
+- (void)refreshWithData:(nonnull id)data;
 
 @end
 

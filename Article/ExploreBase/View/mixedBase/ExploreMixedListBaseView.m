@@ -162,6 +162,7 @@
 #import "Article+TTADComputedProperties.h"
 #import "TTASettingConfiguration.h"
 #import "TTVVideoDetailViewController.h"
+#import "FHHomeConfigManager.h"
 
 #import "FHHomeFeedHeaderView.h"
 
@@ -459,6 +460,8 @@ TTRefreshViewDelegate
         _listView.sectionFooterHeight = 0;
 //        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
         
+        
+        
         if (@available(iOS 11.0, *)) {
         _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
@@ -520,6 +523,14 @@ TTRefreshViewDelegate
             _animationView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
             _animationView.loopAnimation = YES;
         }
+        
+       
+        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            StrongSelf;
+             if ([_categoryID isEqualToString:@"f_house_news"]) {
+                [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
+             }
+        }];
     }
     return self;
 }
@@ -1291,13 +1302,16 @@ TTRefreshViewDelegate
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
         //首页头部cell
         NSString *cellIdentifier = NSStringFromClass([ExploreCellHelper cellClassFromCellViewType:ExploreCellViewTypeHomeHeaderTableViewCell data:nil]);
-        id tableCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        ExploreCellBase *tableCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (tableCell) {
+            [tableCell refreshUI];
             return tableCell;
         }
         else {
             Class cellClass = NSClassFromString(cellIdentifier);
-            return [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            tableCell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [tableCell refreshUI];
+            return tableCell;
         }
         return tableCell;
     }

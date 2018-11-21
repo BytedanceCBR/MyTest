@@ -88,6 +88,14 @@ extension Notification.Name {
                 .subscribe(onNext: { [unowned self] notification in
                     self.jumpToDiscovery?()
                 }).disposed(by: disposeBag)
+        
+        
+        generalBizconfig.generalCacheSubject.skip(1).throttle(0.5, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+            if let dictValue = data?.toJSON()
+            {
+                FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+            }
+        }).disposed(by: disposeBag)
     }
 
     @objc func setCommonNetwork() {

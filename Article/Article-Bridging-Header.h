@@ -99,5 +99,6 @@
 
 #import <FHHouseBase/FHBaseTableViewCell.h>
 
+#import "FHHomeConfigManager.h"
 
 #endif /* Article_Bridging_Header_h */
