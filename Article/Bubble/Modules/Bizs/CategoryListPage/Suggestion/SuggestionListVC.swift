@@ -109,6 +109,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     private var isFromHome: Bool
 
     var tracerParams = TracerParams.momoid()
+    
+    var homePageRollData:HomePageRollScreen?
 
     var stayTimeParams: TracerParams?
 
@@ -328,7 +330,9 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                 self.tableViewModel.search
         stayTimeParams = tracerParams <|> traceStayTime()
         self.tableViewModel.requestHistoryFromRemote(houseType: "\(self.houseType.value.rawValue)")
-
+        if let rollData = homePageRollData {
+            navBar.searchInput.placeholder = rollData.text ?? ""
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -368,7 +372,15 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let userInputText: String = self.navBar.searchInput.text ?? ""
+
+        var userInputText: String = self.navBar.searchInput.text ?? ""
+        
+        // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
+        if let rollText = self.homePageRollData?.text {
+            if userInputText.count <= 0 && rollText.count > 0 {
+                userInputText = rollText
+            }
+        }
 
         let info = ["search": ["full_text": userInputText],
                     "query_type": "enter",

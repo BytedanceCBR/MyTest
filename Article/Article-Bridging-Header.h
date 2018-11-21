@@ -92,6 +92,8 @@
 
 #import "HouseRentDetailPageVC.h"
 
+#import "TTRefreshView+HomePage.h"
+
 //for bridge
 #import <FHHouseBase/FHHouseFilterDelegate.h>
 #import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
