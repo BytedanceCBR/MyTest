@@ -6,6 +6,14 @@
 //
 
 #import "FHExploreHouseItemData.h"
+#import "FHSearchHouseModel.h"
+
+@interface FHExploreHouseItemData ()
+
+@property (nonatomic, copy , nullable) NSArray<FHSearchHouseDataItemsModel *> *itemList;
+
+@end
+
 
 @implementation FHExploreHouseItemData
 
@@ -13,11 +21,28 @@
     NSParameterAssert([dictionary isKindOfClass:[NSDictionary class]]);
     
     [super updateWithDictionary:dictionary];
-    NSDictionary *raw_data = dictionary[@"raw_data"];
-    if (raw_data && [raw_data isKindOfClass:[NSDictionary class]]) {
-//        self.openURL = [raw_data tt_stringValueForKey:@"open_url"];
-//        self.display_info = [raw_data tt_stringValueForKey:@"display_info"];
-//        self.enableLoadmore = [raw_data tt_boolValueForKey:@"enable_loadmore"];
+    NSDictionary *raw_data = [dictionary tt_dictionaryValueForKey:@"raw_data"];
+    if (raw_data != nil) {
+        
+        self.title = [raw_data tt_stringValueForKey:@"title"];
+        self.items = [raw_data tt_arrayValueForKey:@"items"];
+        self.loadmoreOpenUrl = [raw_data tt_stringValueForKey:@"loadmore_open_url"];
+        self.imprType = [raw_data tt_stringValueForKey:@"impr_type"];
+        self.loadmoreButton = [raw_data tt_stringValueForKey:@"loadmore_button"];
+        self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
+
+        NSMutableArray *mutable = @[].mutableCopy;
+        if (self.items.count > 0) {
+            for (NSDictionary *item in self.items) {
+                
+                FHSearchHouseDataItemsModel *model =  [[FHSearchHouseDataItemsModel alloc]initWithDictionary:item error:nil];
+                if (model != nil) {
+                    [mutable addObject:model];
+                }
+            }
+            self.itemList = mutable;
+        }
+        
     }
 }
 
@@ -26,10 +51,13 @@
     if (!properties) {
         NSMutableArray *props = [NSMutableArray arrayWithArray:[super persistentProperties]];
         properties = props;
-//        properties = [props arrayByAddingObjectsFromArray:@[
-//                                                            @"openURL",
-//                                                            @"display_info",
-//                                                            @"enableLoadmore"]];
+        properties = [props arrayByAddingObjectsFromArray:@[
+                                                            @"title",
+                                                            @"items",
+                                                            @"loadmoreOpenUrl",
+                                                            @"imprType",
+                                                            @"loadmoreButton",
+                                                            @"houseType"]];
     };
     return properties;
 }
@@ -39,15 +67,23 @@
     static NSDictionary *properties = nil;
     if (!properties) {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:[super keyMapping]];
-//        [dict addEntriesFromDictionary:@{
-//                                         @"openURL":@"open_url",
-//                                         @"display_info":@"display_info",
-//                                         @"enableLoadmore":@"enable_loadmore"
-//                                         }];
+        [dict addEntriesFromDictionary:@{
+                                         @"title":@"title",
+                                         @"items":@"items",
+                                         @"loadmoreOpenUrl":@"loadmore_open_url",
+                                         @"imprType":@"impr_type",
+                                         @"loadmoreButton":@"loadmore_button",
+                                         @"houseType":@"house_type"
+                                         }];
         properties = [dict copy];
     }
     return properties;
 }
 
+
+- (nullable NSArray<FHSearchHouseDataItemsModel *> *)houseItemList {
+    
+    return self.itemList;
+}
 
 @end
