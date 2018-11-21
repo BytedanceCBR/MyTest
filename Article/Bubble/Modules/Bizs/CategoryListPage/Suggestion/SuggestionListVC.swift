@@ -234,11 +234,31 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     /// 绑定列表刷新
     func bindDataSourceObv() {
         //绑定列表刷新
+//        Observable
+//            .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory)
+//            .debounce(0.3, scheduler: MainScheduler.instance)
+//            .map { (e) -> [SuggestionItem] in
+//                let (suggestions, history) = e
+//                if suggestions.count > 0 {
+//                    return suggestions
+//                } else {
+//                    return history
+//                }
+//            }
+//            .bind { [unowned tableView, unowned self] _ in
+//                tableView.reloadData()
+//                if self.hasShowKeyboard == false {
+//                    self.navBar.searchInput.becomeFirstResponder()
+//                    self.hasShowKeyboard = true
+//                }
+//                self.tableView.isHidden = (self.tableViewModel.combineItems.value.count == 0)
+//            }
+//            .disposed(by: disposeBag)
         Observable
-            .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory)
+            .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory, tableViewModel.guessYouWantItems)
             .debounce(0.3, scheduler: MainScheduler.instance)
             .map { (e) -> [SuggestionItem] in
-                let (suggestions, history) = e
+                let (suggestions, history, _) = e
                 if suggestions.count > 0 {
                     return suggestions
                 } else {
@@ -500,6 +520,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     let suggestionHistory = BehaviorRelay<[SuggestionItem]>(value: [])
     
     let combineItems = BehaviorRelay<[SuggestionItem]>(value: [])
+    
+    let guessYouWantItems = BehaviorRelay<[GuessYouWant]>(value:[])
 
     var highlighted: String?
     
@@ -510,6 +532,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var sendSuggestionQueryBag = DisposeBag()
 
     var sendHistoryQueryBag = DisposeBag()
+    
+    var guessYouwantBag = DisposeBag()
 
     var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
     var onSuggestionSelected: ((TTRouteObject?) -> Void)?
@@ -736,10 +760,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let guessHeight = CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
         if suggestions.value.count > 0 {
             return 0
         }
-        return 34
+        return 40 + guessHeight
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -844,12 +869,19 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     
     func requestGuessYouWantData()
     {
+        self.guessYouwantBag = DisposeBag()
         let houseType = self.houseType.value
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
         requestGuessYouWant(cityId: cityId ?? 122, houseType: houseType.rawValue).subscribe(onNext: { [unowned self] (response) in
-//                print(response)
+                if let data = response?.data?.data {
+                    self.guessYouWantItems.accept(data)
+                    self.sectionHeaderView.guessView.guessYouWantItems = data
+                } else {
+                    self.guessYouWantItems.accept([])
+                    self.sectionHeaderView.guessView.guessYouWantItems = []
+                }
             }, onError: { (error) in
-        }).disposed(by: disposeBag)
+        }).disposed(by: guessYouwantBag)
     }
 }
 
