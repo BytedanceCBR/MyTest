@@ -330,6 +330,9 @@
 		3DB7A71C21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71D21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71E21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
+		3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DF3635821A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
 		3DF3635921A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
 		3DF3635A21A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */; };
@@ -748,12 +751,15 @@
 		52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FD8A4E16F2FA4A00B77520 /* ArticleShareManager.m */; };
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
+		610FF9D521A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
+		610FF9D621A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
+		610FF9D721A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
 		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
-		6114DDE821A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
-		6114DDE921A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
-		6114DDEA21A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */; };
+		6114DDE821A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
+		6114DDE921A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
+		6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
@@ -1362,6 +1368,9 @@
 		B32FD32821A3E0A7007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
 		B32FD32921A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
 		B32FD32A21A3E0A9007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
+		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -2991,7 +3000,6 @@
 		B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5AC1F1332D90002B455 /* Photo.storyboard */; };
 		B373CE9B2174587A008F9905 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
 		B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6BD9022D1DB873960072138C /* index.ios.bundle */; };
-		B373CE9D2174587A008F9905 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
 		B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5B11F1332D90002B455 /* transparent_1px@2x.png */; };
 		B373CEA02174587A008F9905 /* Video.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87693001F31D0D300D59CA5 /* Video.storyboard */; };
@@ -3090,8 +3098,6 @@
 		B373CF032174587A008F9905 /* libttheif_dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF860F21FA1CA8100926C1A /* libttheif_dec.a */; };
 		B388CB162142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
 		B388CB172142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
-		B388CB182142652A00653188 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
-		B388CB192142652A00653188 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9DA2142652800653188 /* BubbleImages.xcassets */; };
 		B388CB1A2142652A00653188 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DC2142652800653188 /* EnvContext.swift */; };
 		B388CB1B2142652A00653188 /* EnvContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DC2142652800653188 /* EnvContext.swift */; };
 		B388CB1C2142652A00653188 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DD2142652800653188 /* BaseViewController.swift */; };
@@ -6168,6 +6174,7 @@
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
 		3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseCellsBridgeImp.m; sourceTree = "<group>"; };
+		3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
 		3DF362FF21A29D9D0097FCB6 /* LBSMapPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageVC.swift; sourceTree = "<group>"; };
 		3DF3630021A29D9D0097FCB6 /* LBSMapPageNavBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LBSMapPageNavBar.swift; sourceTree = "<group>"; };
 		3DF3630121A29D9D0097FCB6 /* HouseDetailPageBottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseDetailPageBottomBarView.swift; sourceTree = "<group>"; };
@@ -6628,10 +6635,12 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		610FF9D321A532E4003E8D68 /* FHFeedHouseItemViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemViewModel.h; sourceTree = "<group>"; };
+		610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemViewModel.m; sourceTree = "<group>"; };
 		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
-		6114DDE621A432960060EBB8 /* FHHouseItemFeedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseItemFeedCell.h; sourceTree = "<group>"; };
-		6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseItemFeedCell.m; sourceTree = "<group>"; };
+		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
+		6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemCell.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
@@ -7777,12 +7786,12 @@
 		B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailViewModel.swift; sourceTree = "<group>"; };
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
 		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
+		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B388C9D92142652800653188 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B388C9DA2142652800653188 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
 		B388C9DC2142652800653188 /* EnvContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvContext.swift; sourceTree = "<group>"; };
 		B388C9DD2142652800653188 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		B388C9DE2142652800653188 /* FTTNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTTNavigationController.m; sourceTree = "<group>"; };
@@ -10612,8 +10621,6 @@
 			children = (
 				D46DA52321A43B74009D50C7 /* HouseHome */,
 				B32FD2C921A26E2D007B9966 /* HouseRent */,
-				B31F42AB2189A5E500D9FE94 /* UI */,
-				B31102952181A0BC00FD2A45 /* TTContacts */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 			);
 			path = House;
@@ -11903,8 +11910,10 @@
 			children = (
 				6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */,
 				6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */,
-				6114DDE621A432960060EBB8 /* FHHouseItemFeedCell.h */,
-				6114DDE721A432960060EBB8 /* FHHouseItemFeedCell.m */,
+				6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */,
+				6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */,
+				610FF9D321A532E4003E8D68 /* FHFeedHouseItemViewModel.h */,
+				610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */,
 			);
 			path = FHHouseItemCell;
 			sourceTree = "<group>";
@@ -14660,28 +14669,6 @@
 			path = TTDislikeView;
 			sourceTree = "<group>";
 		};
-		B31102952181A0BC00FD2A45 /* TTContacts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TTContacts;
-			sourceTree = "<group>";
-		};
-		B31F42AB2189A5E500D9FE94 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				B31F42AC2189A5F600D9FE94 /* TagView */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		B31F42AC2189A5F600D9FE94 /* TagView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TagView;
-			sourceTree = "<group>";
-		};
 		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
 			isa = PBXGroup;
 			children = (
@@ -14728,6 +14715,7 @@
 				B32FD2FE21A3B479007B9966 /* RentNameCellRender.swift */,
 				B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */,
 				B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */,
+				B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -14735,9 +14723,9 @@
 		B388C9D82142652800653188 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
+				3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */,
 				B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */,
 				B388C9D92142652800653188 /* LaunchScreen.storyboard */,
-				B388C9DA2142652800653188 /* BubbleImages.xcassets */,
 				B388C9DB2142652800653188 /* Launch */,
 				B388C9E32142652800653188 /* Assets.xcassets */,
 				B388C9E42142652800653188 /* Bubble-Bridging-Header.h */,
@@ -17976,7 +17964,6 @@
 				A97DB8BF1F1332DC0002B455 /* Photo.storyboard in Resources */,
 				2E14CCEC1FE007C30093E05D /* sound1.caf in Resources */,
 				6BD9023E1DB873970072138C /* index.ios.bundle in Resources */,
-				B388CB182142652A00653188 /* BubbleImages.xcassets in Resources */,
 				6BF694501CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				A97DB8CF1F1332DC0002B455 /* transparent_1px@2x.png in Resources */,
 				F876968C1F31D0D900D59CA5 /* Video.storyboard in Resources */,
@@ -17993,6 +17980,7 @@
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
 				2E14CCED1FE007C30093E05D /* sound3.caf in Resources */,
 				D046AB9B1BB024ED0042210A /* recommend_cancel@2x.png in Resources */,
+				3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				6B42961B1BA14541000B7F10 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				6BA1C67E1BFACE7200B6FFFB /* ios_asset in Resources */,
 				D046AB931BB024E10042210A /* recommend_button_press.png in Resources */,
@@ -18059,7 +18047,6 @@
 				B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */,
-				B373CE9D2174587A008F9905 /* BubbleImages.xcassets in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */,
 				B373CEA02174587A008F9905 /* Video.storyboard in Resources */,
@@ -18076,6 +18063,7 @@
 				B373CEA92174587A008F9905 /* recommend_button_press@2x.png in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
 				B373CEAB2174587A008F9905 /* recommend_cancel@2x.png in Resources */,
+				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAC2174587A008F9905 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				B373CEAD2174587A008F9905 /* ios_asset in Resources */,
 				B373CEAE2174587A008F9905 /* recommend_button_press.png in Resources */,
@@ -18142,7 +18130,6 @@
 				FEFA59D7205FB1A8001F50D8 /* Photo.storyboard in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				FEFA59DC205FB1A8001F50D8 /* index.ios.bundle in Resources */,
-				B388CB192142652A00653188 /* BubbleImages.xcassets in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				FEFA59E4205FB1A8001F50D8 /* transparent_1px@2x.png in Resources */,
 				FEFA59E6205FB1A8001F50D8 /* Video.storyboard in Resources */,
@@ -18159,6 +18146,7 @@
 				FEFA59F5205FB1A8001F50D8 /* recommend_button_press@2x.png in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
 				FEFA59F7205FB1A8001F50D8 /* recommend_cancel@2x.png in Resources */,
+				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				FEFA59F8205FB1A8001F50D8 /* ProjectDayModeThemeUISetting.strings in Resources */,
 				FEFA59F9205FB1A8001F50D8 /* ios_asset in Resources */,
 				FEFA59FA205FB1A8001F50D8 /* recommend_button_press.png in Resources */,
@@ -19160,6 +19148,7 @@
 				3AA5059C15876B8C00EB27FA /* AppDelegate.m in Sources */,
 				3DF363C421A29D9F0097FCB6 /* GlobalPricingVC.swift in Sources */,
 				D0EAC22F1E0ADD26007EB2AA /* TTSearchHomeSugModel.m in Sources */,
+				610FF9D521A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */,
 				A97DBB6F1F1332E20002B455 /* NewsBaseDelegate.m in Sources */,
 				FE49F26D20674F2E00DE434C /* TTStartupAKLaunchTask.m in Sources */,
 				A97DC0761F1333300002B455 /* ExploreDetailManager.m in Sources */,
@@ -19205,6 +19194,7 @@
 				B388CB302142652A00653188 /* NetworkCommonParams.swift in Sources */,
 				F87693901F31D0D300D59CA5 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				F87695401F31D0D700D59CA5 /* TTVFeedListNotificationCenter.m in Sources */,
+				B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CC402142652B00653188 /* MineVC.swift in Sources */,
 				B388CCFE2142652C00653188 /* TextParser.swift in Sources */,
 				A9AFABAB1F0E439400C1E28D /* TTTrackInitTime.m in Sources */,
@@ -19435,7 +19425,7 @@
 				1B98CADB1AAD742E00ECADCB /* BlockUsersListCell.m in Sources */,
 				B388CC902142652B00653188 /* TGLineCursor.swift in Sources */,
 				AB28EC521F2DC1AF00DB5A94 /* TTDefaultJSONResponseSerializer.m in Sources */,
-				6114DDE821A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
+				6114DDE821A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */,
 				B388CC5C2142652B00653188 /* SuggestionEntities.swift in Sources */,
 				A97DBC3B1F1332E40002B455 /* TTHandleFirstLauchTask.m in Sources */,
 				D501686C2089EC4B00B8F1C7 /* TTMessageCenterRouter.m in Sources */,
@@ -20868,6 +20858,7 @@
 				B373C81E2174587A008F9905 /* TTSearchHomeSugModel.m in Sources */,
 				3DF363C621A29D9F0097FCB6 /* GlobalPricingVC.swift in Sources */,
 				B373C8202174587A008F9905 /* NewsBaseDelegate.m in Sources */,
+				610FF9D721A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */,
 				B373C8212174587A008F9905 /* TTStartupAKLaunchTask.m in Sources */,
 				B373C8222174587A008F9905 /* ExploreDetailManager.m in Sources */,
 				B373C8232174587A008F9905 /* TTADAppStoreContainerViewModel.m in Sources */,
@@ -20913,6 +20904,7 @@
 				B373C84A2174587A008F9905 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				B373C84B2174587A008F9905 /* TTVFeedListNotificationCenter.m in Sources */,
 				B373C84C2174587A008F9905 /* MineVC.swift in Sources */,
+				B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B373C84D2174587A008F9905 /* TextParser.swift in Sources */,
 				B373C84E2174587A008F9905 /* TTTrackInitTime.m in Sources */,
 				B373C84F2174587A008F9905 /* ArticleMomentDiggManager.m in Sources */,
@@ -21143,7 +21135,7 @@
 				B373C92D2174587A008F9905 /* TGLineCursor.swift in Sources */,
 				B373C92E2174587A008F9905 /* TTDefaultJSONResponseSerializer.m in Sources */,
 				B373C92F2174587A008F9905 /* SuggestionEntities.swift in Sources */,
-				6114DDEA21A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
+				6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */,
 				B373C9302174587A008F9905 /* TTHandleFirstLauchTask.m in Sources */,
 				B373C9312174587A008F9905 /* TTMessageCenterRouter.m in Sources */,
 				B373C9322174587A008F9905 /* TTVVideoDetailViewController.m in Sources */,
@@ -22576,6 +22568,7 @@
 				FEFA5280205FB1A8001F50D8 /* TTSearchHomeSugModel.m in Sources */,
 				3DF363C521A29D9F0097FCB6 /* GlobalPricingVC.swift in Sources */,
 				FEFA5281205FB1A8001F50D8 /* NewsBaseDelegate.m in Sources */,
+				610FF9D621A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */,
 				FE49F26E20674F2E00DE434C /* TTStartupAKLaunchTask.m in Sources */,
 				FEFA5282205FB1A8001F50D8 /* ExploreDetailManager.m in Sources */,
 				FEFA5284205FB1A8001F50D8 /* TTADAppStoreContainerViewModel.m in Sources */,
@@ -22621,6 +22614,7 @@
 				FEFA52B2205FB1A8001F50D8 /* TTDetailModel+videoArticleProtocol.m in Sources */,
 				FEFA52B3205FB1A8001F50D8 /* TTVFeedListNotificationCenter.m in Sources */,
 				B388CC412142652B00653188 /* MineVC.swift in Sources */,
+				B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */,
 				B388CCFF2142652C00653188 /* TextParser.swift in Sources */,
 				FEFA52B4205FB1A8001F50D8 /* TTTrackInitTime.m in Sources */,
 				D50439D52079B8FC00DA4953 /* ArticleMomentDiggManager.m in Sources */,
@@ -22851,7 +22845,7 @@
 				B388CC912142652B00653188 /* TGLineCursor.swift in Sources */,
 				FEFA53BE205FB1A8001F50D8 /* TTDefaultJSONResponseSerializer.m in Sources */,
 				B388CC5D2142652B00653188 /* SuggestionEntities.swift in Sources */,
-				6114DDE921A432960060EBB8 /* FHHouseItemFeedCell.m in Sources */,
+				6114DDE921A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */,
 				FEFA53C0205FB1A8001F50D8 /* TTHandleFirstLauchTask.m in Sources */,
 				D501686D2089EC4B00B8F1C7 /* TTMessageCenterRouter.m in Sources */,
 				FEFA53C1205FB1A8001F50D8 /* TTVVideoDetailViewController.m in Sources */,

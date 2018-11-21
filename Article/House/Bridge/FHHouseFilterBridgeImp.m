@@ -48,9 +48,9 @@
     return [_houseFilterViewModel filterConditionPanel];
 }
 
--(void)resetFilter:(id)viewModel withQueryParams:(NSDictionary * )params
+-(void)resetFilter:(id)viewModel withQueryParams:(NSDictionary * )params updateFilterOnly:(BOOL)updateFilterOnly
 {
-    [_houseFilterViewModel resetFilterConditionWithQueryParams:params];
+    [_houseFilterViewModel resetFilterConditionWithQueryParams:params updateFilterOnly:updateFilterOnly];
 }
 
 -(void)setViewModel:(id)viewModel withDelegate:(id<FHHouseFilterDelegate>)delegate
@@ -68,5 +68,9 @@
     [_houseFilterViewModel closeConditionFilterPanel];
 }
 
+-(NSString *) getNoneFilterQueryParams:(NSDictionary *) params
+{
+    return [_houseFilterViewModel getNoneFilterQueryWithParams:params];
+}
 
 @end

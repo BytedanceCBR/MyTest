@@ -144,7 +144,7 @@
 
 #import "TTExploreLoadMoreTipData.h"
 #import "TTExploreLoadMoreTipCell.h"
-#import "FHHouseItemFeedCell.h"
+#import "FHFeedHouseItemCell.h"
 #import "FHExploreHouseItemData.h"
 
 #define kVideoCategoryID @"video"
@@ -291,7 +291,7 @@ static NSMutableArray *s_reusableCardViews;
     [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
     
     // feed支持房源
-    [[TTCellBridge sharedInstance] registerCellClass:[FHHouseItemFeedCell class] cellViewClass:[FHHouseItemFeedCellView class]];
+    [[TTCellBridge sharedInstance] registerCellClass:[FHFeedHouseItemCell class] cellViewClass:[FHFeedHouseItemCellView class]];
 
 }
 
@@ -488,7 +488,7 @@ static NSMutableArray *s_reusableCardViews;
         case ExploreCellViewTypeHomeHeaderTableViewCell:
             return [FHHomeHeaderTableViewCell class];
         case ExploreCellViewTypeFHHouseItemCell:
-            return [FHHouseItemFeedCell class];
+            return [FHFeedHouseItemCell class];
         default:
             break;
     }

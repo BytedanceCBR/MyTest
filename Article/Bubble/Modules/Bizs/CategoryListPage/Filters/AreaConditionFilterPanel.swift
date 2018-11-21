@@ -160,7 +160,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
         self.dataSources.forEach { $0.storeSelectedState() }
         let selected = self.selectNodePath()
-        self.didSelect?(selected)
+        self.conditionLabelSetter?(selected)
+//        self.didSelect?(selected)
         scrollVisibleCellInScreen()
     }
 
@@ -601,6 +602,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     $0.selectedNodes()
                 }
         return paths ?? []
+    }
+
+    override func selectedNodes() -> [Node] {
+        return selectNodePath()
     }
 
     func layoutWithAniminate(apply: @escaping () -> Void) {
