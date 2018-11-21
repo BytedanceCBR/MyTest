@@ -131,7 +131,6 @@
 
         NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            NSLog(@"%@ - %@", key, [obj class]);
             [commonParams setValue:obj forKey:key];
         }];
 
