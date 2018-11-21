@@ -31,6 +31,11 @@ platform :ios do
     build = get_build_number_from_plist(scheme: "NewsLiteInHouse")
     #build_app(scheme: "NewsLiteInHouse",
 #              workspace: "Article.xcworkspace")
+    update_app_identifier(
+	  xcodeproj: "Article.xcodeproj", 
+	  plist_path: "NewsInHouse/NewsInHouse-Info.plist", # Path to info plist file, relative to xcodeproj
+	  app_identifier: "com.bytedance.fp1" # The App Identifier
+    )
     gym(
       scheme: "NewsLiteInHouse",
       clean: true,
