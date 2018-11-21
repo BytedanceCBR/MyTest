@@ -623,14 +623,14 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
-  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.4):
     - JSONModel
     - TTBaseLib/TTCategory
     - TTBaseLib/TTDeviceHelper
     - TTBaseLib/TTSandBoxHelper
     - TTBaseLib/TTUIResponderHelper
     - TTTracker
-  - TTAppUpdateHelper/TTUpdateView (1.0.3):
+  - TTAppUpdateHelper/TTUpdateView (1.0.4):
     - TTThemed
     - TTUIWidget
   - TTAudio (0.1.4):
@@ -1400,24 +1400,6 @@ CHECKOUT OPTIONS:
   BDAccount:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
-<<<<<<< HEAD
-=======
-  FHCommonUI:
-    :commit: 40d5f463325b2ca7ac46db5317f45e9ad0a0dd43
-    :git: git@code.byted.org:fproject/ios_common_ui.git
-  FHHouseBase:
-    :commit: 8f895653578b162e233f00bab3a56866bcac4bd6
-    :git: git@code.byted.org:fproject/ios_house_base.git
-  FHHouseHome:
-    :commit: 86303fb7462927762988d4df10c771595efc8490
-    :git: git@code.byted.org:fproject/ios_house_home.git
-  FHHouseRent:
-    :commit: 870ae220731074291154ca7062e619396c123dfa
-    :git: git@code.byted.org:fproject/ios_house_rent.git
-  FHMapSearch:
-    :commit: 58b17c19f51d636e1a621cdc71add19d11feea47
-    :git: git@code.byted.org:fproject/ios_map_search.git
->>>>>>> feature/0_4_a
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1458,7 +1440,6 @@ SPEC CHECKSUMS:
   CocoaLumberjack: e7f267c457ef2f7e579085be6d8307281bf797ae
   Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
-<<<<<<< HEAD
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseDetail: dca81d6326acfc43803399629c7c3410f1b2093f
@@ -1466,13 +1447,6 @@ SPEC CHECKSUMS:
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
-=======
-  FHCommonUI: c7b0fb8906149470c54d4ec863cda40183b558aa
-  FHHouseBase: 1d6c06e2b8c131478b262c2275cfe96a0f486b21
-  FHHouseHome: e00a2f7a8b18323aa1431826c02255a8831173ea
-  FHHouseRent: 8e031d9b6465f46da24c20cb1af9dedbf72af778
-  FHMapSearch: 19d421d695f9b97e46244d285bba809a4b388e50
->>>>>>> feature/0_4_a
   FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
   FLEX: b27e70410abfc79bc87de601581581a9cad7126d
   FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
@@ -1508,7 +1482,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
-  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
+  TTAppUpdateHelper: d1a28f4825ef183967a2c2c2025db9abd8ba725f
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
