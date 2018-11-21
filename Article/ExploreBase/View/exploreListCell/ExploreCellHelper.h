@@ -94,6 +94,7 @@ typedef NS_ENUM(NSUInteger, ExploreCellViewType) {
     ExploreCellViewTypeHotNews,                      //置顶热点新闻cell
     ExploreCellViewTypeArticleHotNews,                 //置顶热点新闻卡片cell
     ExploreCellViewTypeLoadmoreTipCell,              // Loadmore加载提示信息
+    ExploreCellViewTypeHomeHeaderTableViewCell,      // 首页推荐频道头部cell
     ExploreCellViewTypeFHHouseItemCell,              // 房源卡片
 
 };
@@ -189,4 +190,13 @@ typedef NS_ENUM(NSUInteger, ExploreCellViewType) {
  */
 + (void)setSourceImgTest:(BOOL)abTest;
 
+/**
+ * 根据类型返回Cell Type
+*/
++ (Class)cellClassFromCellViewType:(ExploreCellViewType)cellViewType data:(id)data;
+
+/**
+ * 根据配置数据计算头部高度
+ */
++ (CGFloat)heightForFHHomeHeaderCellViewType;
 @end

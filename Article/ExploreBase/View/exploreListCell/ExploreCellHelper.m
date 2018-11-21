@@ -57,7 +57,7 @@
 //#import "ExploreArticleSurveyPairCell.h"
 #import "TTHotNewsCell.h"
 #import "ExploreArticleHotNewsCell.h"
-
+#import "FHHomeHeaderTableViewCell.h"
 //cell view
 #import "TTCategoryAddToFirstPageCellView.h"
 //#import "TTMeiNvTitleLargePicHuoShanCellView.h"
@@ -485,6 +485,8 @@ static NSMutableArray *s_reusableCardViews;
             return [ExploreArticleHotNewsCell class];
         case ExploreCellViewTypeLoadmoreTipCell:
             return [TTExploreLoadMoreTipCell class];
+        case ExploreCellViewTypeHomeHeaderTableViewCell:
+            return [FHHomeHeaderTableViewCell class];
         case ExploreCellViewTypeFHHouseItemCell:
             return [FHFeedHouseItemCell class];
         default:
@@ -1142,6 +1144,11 @@ static NSMutableArray *s_reusableCardViews;
     }
     
     return roundf(height * cWidth / width);
+}
+
++ (CGFloat)heightForFHHomeHeaderCellViewType
+{
+    return 300;
 }
 
 + (CGFloat)largeImageWidth:(CGFloat)cellWidth

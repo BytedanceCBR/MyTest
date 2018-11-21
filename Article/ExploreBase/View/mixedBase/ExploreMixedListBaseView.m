@@ -1214,9 +1214,9 @@ TTRefreshViewDelegate
 //    //uploading section + function area section + explore section
     
     if (_fetchListManager.items.count == 0) {
-        return 0;
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells;
     } else {
-        return 2;
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells + 1;
     }
 }
 
@@ -1237,7 +1237,7 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            return 3;
+            return 1;
         }
         return 0;
     }else
@@ -1256,8 +1256,7 @@ TTRefreshViewDelegate
 //    }else {
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-
-        return 44;
+        return [ExploreCellHelper heightForFHHomeHeaderCellViewType];
     }else
     {
         if (indexPath.row < [self listViewMaxModelIndex]) {
@@ -1290,15 +1289,15 @@ TTRefreshViewDelegate
 //    }
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-        //to do
-        UITableViewCell * tableCell = [[UITableViewCell alloc] init];
-        if (indexPath.row == 0) {
-            tableCell.backgroundColor = [UIColor redColor];
-        }else if (indexPath.row == 1) {
-            tableCell.backgroundColor = [UIColor purpleColor];
-        }else
-        {
-            tableCell.backgroundColor = [UIColor blueColor];
+        //首页头部cell
+        NSString *cellIdentifier = NSStringFromClass([ExploreCellHelper cellClassFromCellViewType:ExploreCellViewTypeHomeHeaderTableViewCell data:nil]);
+        id tableCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (tableCell) {
+            return tableCell;
+        }
+        else {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            return [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         }
         return tableCell;
     }
