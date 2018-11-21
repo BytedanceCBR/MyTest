@@ -3552,9 +3552,6 @@
 		D46DA52D21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52E21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52F21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
-		D46DA53021A43B74009D50C7 /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52621A43B74009D50C7 /* FHHomeBannerView.m */; };
-		D46DA53121A43B74009D50C7 /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52621A43B74009D50C7 /* FHHomeBannerView.m */; };
-		D46DA53221A43B74009D50C7 /* FHHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52621A43B74009D50C7 /* FHHomeBannerView.m */; };
 		D481F83E21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
 		D481F83F21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
 		D481F84021A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
@@ -8109,10 +8106,8 @@
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
 		D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
 		D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendView.m; sourceTree = "<group>"; };
-		D46DA52621A43B74009D50C7 /* FHHomeBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeBannerView.m; sourceTree = "<group>"; };
 		D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
 		D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendView.h; sourceTree = "<group>"; };
-		D46DA52921A43B74009D50C7 /* FHHomeBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeBannerView.h; sourceTree = "<group>"; };
 		D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeHeaderTableViewCell.h; sourceTree = "<group>"; };
 		D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeHeaderTableViewCell.m; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
@@ -15652,8 +15647,6 @@
 				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
 				D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */,
 				D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */,
-				D46DA52921A43B74009D50C7 /* FHHomeBannerView.h */,
-				D46DA52621A43B74009D50C7 /* FHHomeBannerView.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -20454,7 +20447,6 @@
 				A97DB9671F1332DE0002B455 /* SSFeedbackManager.m in Sources */,
 				A97DBBC31F1332E30002B455 /* TTUmengTrackStartupTask.m in Sources */,
 				2DB9A5C01F20B01D005E4A06 /* TTAdImpressionTracker.m in Sources */,
-				D46DA53021A43B74009D50C7 /* FHHomeBannerView.m in Sources */,
 				2DB9A5541F20B01C005E4A06 /* TTAdCanvasTextCell.m in Sources */,
 				A97DBC271F1332E40002B455 /* TTCleanDatabaseTask.m in Sources */,
 				2DCDFB871F30B0E200098F4D /* TTPushAlertManager.m in Sources */,
@@ -22164,7 +22156,6 @@
 				B373CD232174587A008F9905 /* SSFeedbackManager.m in Sources */,
 				B373CD242174587A008F9905 /* TTUmengTrackStartupTask.m in Sources */,
 				B373CD252174587A008F9905 /* TTAdImpressionTracker.m in Sources */,
-				D46DA53221A43B74009D50C7 /* FHHomeBannerView.m in Sources */,
 				B373CD262174587A008F9905 /* TTAdCanvasTextCell.m in Sources */,
 				B373CD272174587A008F9905 /* TTCleanDatabaseTask.m in Sources */,
 				B373CD282174587A008F9905 /* TTPushAlertManager.m in Sources */,
@@ -23874,7 +23865,6 @@
 				FEFA5834205FB1A8001F50D8 /* SSFeedbackManager.m in Sources */,
 				FEFA5836205FB1A8001F50D8 /* TTUmengTrackStartupTask.m in Sources */,
 				FEFA5838205FB1A8001F50D8 /* TTAdImpressionTracker.m in Sources */,
-				D46DA53121A43B74009D50C7 /* FHHomeBannerView.m in Sources */,
 				FEFA5839205FB1A8001F50D8 /* TTAdCanvasTextCell.m in Sources */,
 				FEFA583B205FB1A8001F50D8 /* TTCleanDatabaseTask.m in Sources */,
 				FEFA583C205FB1A8001F50D8 /* TTPushAlertManager.m in Sources */,
