@@ -15640,7 +15640,6 @@
 				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
 				D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */,
 				D46DA52921A43B74009D50C7 /* FHHomeBannerView.h */,
-
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -17885,7 +17884,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -19600,7 +19599,6 @@
 				48F838811FA1BC63002E040C /* TSVTabViewController.m in Sources */,
 				2DB9A8B81F33000C005E4A06 /* TTTouchContext.m in Sources */,
 				A97DBC6F1F1332E50002B455 /* TTStartupSerialGroup.m in Sources */,
-				D4F1EABA21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				A97DBB471F1332E20002B455 /* TTOpenInSafariWindow.m in Sources */,
 				06E5DF621AA066A700BDEAD8 /* SSLocationPickerController.m in Sources */,
 				F87694241F31D0D400D59CA5 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -19750,7 +19748,6 @@
 				F87695341F31D0D700D59CA5 /* TTVShareActionsTracker.m in Sources */,
 				ABBEA74C1F334826005DAD27 /* ExploreDetailPhoneLargePicADView.m in Sources */,
 				2DB9A5C41F20B01D005E4A06 /* TTPhotoDetailCellHelper.m in Sources */,
-				D4F1EABF21A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				2DCAD0321DDC237200EBF9CF /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC442142652B00653188 /* AboutViewController.swift in Sources */,
 				6BE022371B215BE700F9E484 /* ExploreWebCellManager.m in Sources */,
@@ -21310,7 +21307,6 @@
 				B373C9EB2174587A008F9905 /* TTOpenInSafariWindow.m in Sources */,
 				B373C9EC2174587A008F9905 /* SSLocationPickerController.m in Sources */,
 				B373C9ED2174587A008F9905 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
-				D4F1EABC21A41878003A3DFE /* FHHomeBannerView.m in Sources */,
 				B373C9EE2174587A008F9905 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				B373C9EF2174587A008F9905 /* TTHeaderView.m in Sources */,
 				B373C9F02174587A008F9905 /* SSADTrackInfoList.m in Sources */,
@@ -21460,7 +21456,6 @@
 				B373CA802174587A008F9905 /* TTPhotoDetailCellHelper.m in Sources */,
 				B373CA812174587A008F9905 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B373CA822174587A008F9905 /* AboutViewController.swift in Sources */,
-				D4F1EAC121A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				B373CA832174587A008F9905 /* ExploreWebCellManager.m in Sources */,
 				B373CA842174587A008F9905 /* TTVFeedListLiveItem.m in Sources */,
 				B373CA852174587A008F9905 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -23020,7 +23015,6 @@
 				FEFA549D205FB1A8001F50D8 /* TTOpenInSafariWindow.m in Sources */,
 				FEFA549E205FB1A8001F50D8 /* SSLocationPickerController.m in Sources */,
 				FEFA549F205FB1A8001F50D8 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
-				D4F1EABB21A41877003A3DFE /* FHHomeBannerView.m in Sources */,
 				FEFA54A2205FB1A8001F50D8 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				FEFA54A4205FB1A8001F50D8 /* TTHeaderView.m in Sources */,
 				FEFA54A6205FB1A8001F50D8 /* SSADTrackInfoList.m in Sources */,
@@ -23170,7 +23164,6 @@
 				FEFA5540205FB1A8001F50D8 /* TTPhotoDetailCellHelper.m in Sources */,
 				FEFA5543205FB1A8001F50D8 /* ExploreVideoDetailPhoneLeftPicADView.m in Sources */,
 				B388CC452142652B00653188 /* AboutViewController.swift in Sources */,
-				D4F1EAC021A418D5003A3DFE /* FHHomeCityTrendView.m in Sources */,
 				FEFA5544205FB1A8001F50D8 /* ExploreWebCellManager.m in Sources */,
 				FEFA5545205FB1A8001F50D8 /* TTVFeedListLiveItem.m in Sources */,
 				FEFA5546205FB1A8001F50D8 /* BDTDefaultHTTPRequestSerializer.m in Sources */,
@@ -24789,7 +24782,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24860,7 +24853,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -24893,7 +24886,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
