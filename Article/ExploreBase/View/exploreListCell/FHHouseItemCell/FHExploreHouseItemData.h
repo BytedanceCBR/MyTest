@@ -9,8 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHSearchHouseDataItemsModel;
+
 @interface FHExploreHouseItemData : ExploreOriginalData
 
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items; // 房源卡片
+@property (nonatomic, copy , nullable) NSString *loadmoreOpenUrl;
+@property (nonatomic, copy , nullable) NSString *imprType;
+@property (nonatomic, copy , nullable) NSString *loadmoreButton;
+@property (nonatomic, copy , nullable) NSString *houseType;
+
+
+- (nullable NSArray<FHSearchHouseDataItemsModel *> *)houseItemList;
+
 @end
+
 
 NS_ASSUME_NONNULL_END
