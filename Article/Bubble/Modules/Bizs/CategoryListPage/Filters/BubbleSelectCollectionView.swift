@@ -599,6 +599,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
 
     var fillPriceInput: (() -> Void)?
 
+    var userInput: [String]?
+
     init(nodes: [Node], headerView: AnyClass) {
         let dataSource = PriceBubbleSelectDataSource(nodes: nodes)
         super.init(
@@ -718,6 +720,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
 
         if self.dataSource.selectedIndexPaths.value.count == 0 {
             if let priceKey = (self.queryKey ?? "price").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                self.userInput = conditions[priceKey] as? [String]
                 fillPriceInput = fillPriceByCondition(priceKey: priceKey, conditions: conditions)
                 if self.priceDataSource()?.inputHeaderView != nil {
                     fillPriceInput?()
@@ -743,7 +746,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
                         dds.inputHeaderView?.priceInputView.upperPriceTextField.text = "\(datas[1] / rate)"
                     }
                     if datas.count > 0 {
-                        self.processUserInputPrice()
+                        self.processUserInputPrice(updateFilterOnly: true)
                     } else {
                         self.didSelect?(self.dataSource.selectedNodes())
                     }
@@ -756,51 +759,99 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
         return self.dataSource as? PriceBubbleSelectDataSource
     }
 
-    func processUserInputPrice() {
-        if let ds = priceDataSource() {
-            let rate = self.dataSource.nodes.first?.rate ?? 1
+    override func selectedNodes() -> [Node] {
+        self.dataSource.storeSelectedState()
+        let selectedNodes = dataSource.selectedNodes()
+        if selectedNodes.count == 0 {
+            // 再试着取一下用户手动输入是否有值
+            let (low, upper) = getUserInputValue()
+            let result = getUserInputPriceNode(low: low, upper: upper)
+            return result
+        } else {
+            return selectedNodes
+        }
+    }
+
+    func getUserInputValue() -> (Int, Int) {
+        let rate = self.dataSource.nodes.first?.rate ?? 1
+        if let ds = priceDataSource(),
+            let inputHeaderView = ds.inputHeaderView {
             let whitespace = NSCharacterSet.whitespacesAndNewlines
-            let theQueryKey = self.queryKey ?? "price"
+            let low = Int(inputHeaderView.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+            let upper = Int(inputHeaderView.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+            return (low, upper)
+        } else {
+            if let userInput = self.userInput,
+                let priceString = userInput.first,
+                let jsonData = priceString.data(using: .utf8),
+                let datas = try? JSONSerialization.jsonObject(with: jsonData) as? [Int] ?? [] {
+                    if datas.count == 1 {
+                        return ((datas.first ?? 0) / rate, 0)
+                    } else if datas.count == 2 {
+                        return (((datas[0] / rate)), ((datas[1] / rate)))
+                    }
+            }
+        }
+        return (0, 0)
+    }
+
+    func processUserInputPrice(updateFilterOnly: Bool = false) {
+        if let ds = priceDataSource() {
+            let whitespace = NSCharacterSet.whitespacesAndNewlines
             let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+            let nodes = getUserInputPriceNode(low: low, upper: upper)
+            if updateFilterOnly {
+                self.conditionLabelSetter?(nodes)
+            } else {
+                self.didSelect?(nodes)
+            }
+        }
 
+    }
+
+    func getUserInputPriceNode(low: Int, upper: Int) -> [Node] {
+
+        if let ds = priceDataSource() {
+            let rate = self.dataSource.nodes.first?.rate ?? 1
+            let theQueryKey = self.queryKey ?? "price"
             if low == 0 && upper == 0 {
                 ds.lowerInput = ""
                 ds.upperInput = ""
-                self.didSelect?([])
-                return
+                return []
             } else if low == 0 {
                 ds.lowerInput = "\(low)"
                 ds.upperInput = "\(upper)"
-                self.didSelect?([Node(
+                return [Node(
                     id: "",
                     label: "\(low)-\(upper)\(getRateTextByRateValue(rate))",
                     externalConfig: "\(theQueryKey)=[\(low * rate),\(upper * rate)]",
                     filterCondition: "[\(low * rate),\(upper * rate)" as Any,
-                    key: "\(theQueryKey)")])
+                    key: "\(theQueryKey)")]
             } else if upper == 0 {
                 ds.lowerInput = "\(low)"
                 ds.upperInput = ""
-                self.didSelect?([Node(
+                return [Node(
                     id: "",
                     label: "\(low)\(getRateTextByRateValue(rate))以上",
                     externalConfig: "\(theQueryKey)=[\(low * rate)]",
                     filterCondition: "[\(low * rate)]" as Any,
-                    key: "\(theQueryKey)")])
+                    key: "\(theQueryKey)")]
             } else {
                 let theLow = low < upper ? low : upper
                 let theUpper = low < upper ? upper : low
                 ds.lowerInput = "\(theLow)"
                 ds.upperInput = "\(theUpper)"
-                self.didSelect?([Node(
+                return [Node(
                     id: "",
                     label: "\(theLow)-\(theUpper)\(getRateTextByRateValue(rate))",
                     externalConfig: "\(theQueryKey)=[\(theLow * rate),\(theUpper * rate)]",
                     filterCondition: "[\(theLow * rate),\(theUpper * rate)" as Any,
-                    key: "\(theQueryKey)")])
+                    key: "\(theQueryKey)")]
             }
+        } else {
+            return []
         }
-
     }
 
 

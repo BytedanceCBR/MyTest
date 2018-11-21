@@ -76,6 +76,7 @@ import RxCocoa
 //                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
             .debounce(0.1, scheduler: MainScheduler.instance)
+            .debug("bindConditionChangeDelegate")
             .subscribe(onNext: { [unowned self] query in
                 self.delegate?.onConditionChanged( query)
             })
@@ -140,7 +141,7 @@ import RxCocoa
                     .forEach({ [unowned self] (e) in
                         let (offset, (item, nodes)) = e
                         item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(
-                            index: offset + 1,
+                            index: offset,
                             reload: reload,
                             item: item,
                             data: nodes)
@@ -161,7 +162,8 @@ import RxCocoa
     
     @objc
     func getConditions() -> String? {
-        return self.conditionFilterViewModel?.searchAndConditionFilterVM.queryCondition.value
+        let queryString = self.conditionFilterViewModel?.searchAndConditionFilterVM.queryCondition.value
+        return queryString
     }
     
     @objc

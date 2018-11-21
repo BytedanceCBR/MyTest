@@ -249,14 +249,14 @@ class ConditionFilterViewModel {
                     index: index,
                     selectedNode: selectedNode,
                     item: item, conditionLabelParser: parseAreaConditionItemLabel,
-                    conditionParser: parseAreaSearchCondition)
+                    conditionParser: parsePriceSearchCondition)
             }
             let panel = constructPriceBubbleSelectCollectionPanelWithContainer(
                     index: index,
                     nodes: configs,
                     container: containerView!,
                     selectedAction)
-            panel.conditionParser = parseAreaSearchCondition
+            panel.conditionParser = parsePriceSearchCondition
             panel.conditionLabelParser = parseAreaConditionItemLabel
             panel.conditionLabelSetter = { (nodes) in
                 setConditionItemTypeByParser(
@@ -390,7 +390,6 @@ class ConditionFilterViewModel {
         item: SearchConditionItem,
         conditionLabelParser: @escaping (String, [Node]) -> ConditionItemType,
         conditionParser: ([Node]) -> (String) -> String) {
-
         var conditions = self.searchAndConditionFilterVM.conditionTracer.value
         conditions[index] = selectedNode
         self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
