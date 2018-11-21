@@ -1,5 +1,5 @@
 //
-//  FHHouseItemFeedCell.h
+//  FHFeedHouseItemCell.h
 //  Article
 //
 //  Created by 张静 on 2018/11/20.
@@ -10,12 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseItemFeedCell : ExploreCellBase
+@interface FHFeedHouseItemCell : ExploreCellBase
 
 
 @end
 
-@interface FHHouseItemFeedCellView : ExploreCellViewBase
+@interface FHFeedHouseItemCellView : ExploreCellViewBase
 
 @property (nonatomic, strong) ExploreOrderedData *orderedData;
 
