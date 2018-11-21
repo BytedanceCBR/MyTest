@@ -173,7 +173,7 @@
 const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
 //const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
 //const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells = 1;
-const NSUInteger ExploreMixedListBaseViewSectionExploreCells = 0;
+const NSUInteger ExploreMixedListBaseViewSectionExploreCells = 1;
 
 void tt_listView_preloadWebRes(Article *article, NSDictionary *rawAdData) {
     if (article) {
@@ -441,7 +441,7 @@ TTRefreshViewDelegate
         _isShowWithScenesEnabled = [SSCommonLogic showWithScensEnabled];
         
         CGRect rect = [self frameForListView];
-        self.listView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height - 0) style:UITableViewStyleGrouped];
+        self.listView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height - 0) style:UITableViewStylePlain];
         self.ttErrorToastView = [ArticleListNotifyBarView addErrorToastViewWithTop:self.ttContentInset.top width:self.width height:[SSCommonLogic articleNotifyBarHeight]];
         self.listView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _listView.delegate = self;
@@ -457,10 +457,10 @@ TTRefreshViewDelegate
         _listView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
         _listView.sectionHeaderHeight = 0;
         _listView.sectionFooterHeight = 0;
-        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
+//        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
         
         if (@available(iOS 11.0, *)) {
-            _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         
         
@@ -1212,12 +1212,11 @@ TTRefreshViewDelegate
 //        return ExploreMixedListBaseViewSectionFunctionAreaCells + 1;
 //    }
 //    //uploading section + function area section + explore section
-//    return ExploreMixedListBaseViewSectionExploreCells + 1;
     
     if (_fetchListManager.items.count == 0) {
-        return 0;
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells;
     } else {
-        return 1;
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells + 1;
     }
 }
 
@@ -1232,20 +1231,20 @@ TTRefreshViewDelegate
 //        NSUInteger count = [[_fetchListManager items] count];
 //        return count;
 //    }
-//    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
-//        if (isEmptyString(_categoryID))
-//        {
-//            return 0;
-//        }
-//        if ([_categoryID isEqualToString:@"f_house_news"]) {
-//            return 3;
-//        }
-//        return 0;
-//    }else
-//    {
+    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
+        if (isEmptyString(_categoryID))
+        {
+            return 0;
+        }
+        if ([_categoryID isEqualToString:@"f_house_news"]) {
+            return 1;
+        }
+        return 0;
+    }else
+    {
         NSUInteger count = [[_fetchListManager items] count];
         return count;
-//    }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1256,11 +1255,10 @@ TTRefreshViewDelegate
 //        return [self heightForFunctionAreaCell];
 //    }else {
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//
-//        return 44;
-//    }else
-//    {
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        return [ExploreCellHelper heightForFHHomeHeaderCellViewType];
+    }else
+    {
         if (indexPath.row < [self listViewMaxModelIndex]) {
             id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
             
@@ -1276,7 +1274,7 @@ TTRefreshViewDelegate
         }
         
         return 44;
-//    }
+    }
     
 //    }
 }
@@ -1290,19 +1288,19 @@ TTRefreshViewDelegate
 //        return [self functionAreaCell];
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//        UITableViewCell * tableCell = [[UITableViewCell alloc] init];
-//        if (indexPath.row == 0) {
-//            tableCell.backgroundColor = [UIColor redColor];
-//        }else if (indexPath.row == 1) {
-//            tableCell.backgroundColor = [UIColor purpleColor];
-//        }else
-//        {
-//            tableCell.backgroundColor = [UIColor blueColor];
-//        }
-//        return tableCell;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //首页头部cell
+        NSString *cellIdentifier = NSStringFromClass([ExploreCellHelper cellClassFromCellViewType:ExploreCellViewTypeHomeHeaderTableViewCell data:nil]);
+        id tableCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (tableCell) {
+            return tableCell;
+        }
+        else {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            return [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        }
+        return tableCell;
+    }
 
     UITableViewCell * tableCell = nil;
     ExploreCellBase *cell = nil;
@@ -1399,12 +1397,12 @@ TTRefreshViewDelegate
 //      return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
 
     NSInteger modelRowIndex = indexPath.row;
     if (_delegate && [_delegate respondsToSelector:@selector(mixListView:didSelectRowAtIndex:)]) {
@@ -1464,12 +1462,12 @@ TTRefreshViewDelegate
 //        return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
@@ -1742,23 +1740,23 @@ TTRefreshViewDelegate
     }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if ([_categoryID isEqualToString:@"f_house_news"]) {
-        FHHomeFeedHeaderView *viewHeader = [[FHHomeFeedHeaderView alloc] init];
-        viewHeader.backgroundColor = [UIColor redColor];
-        return viewHeader;
-    }
-    return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    if ([_categoryID isEqualToString:@"f_house_news"]) {
-        return 300;
-    }
-    return 0;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    if ([_categoryID isEqualToString:@"f_house_news"]) {
+//        FHHomeFeedHeaderView *viewHeader = [[FHHomeFeedHeaderView alloc] init];
+//        viewHeader.backgroundColor = [UIColor redColor];
+//        return viewHeader;
+//    }
+//    return nil;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    if ([_categoryID isEqualToString:@"f_house_news"]) {
+//        return 300;
+//    }
+//    return 0.1;
+//}
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
@@ -1766,12 +1764,12 @@ TTRefreshViewDelegate
 //        return;
 //    }
     
-//    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-//        //to do
-//
-//
-//        return;
-//    }
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
+        return;
+    }
     
     if (self.movieViewCellData && self.movieView) {
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];

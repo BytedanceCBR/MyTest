@@ -342,6 +342,24 @@ static TTFeedValidator *_feedValidator;
             [mutDict setValue:gid forKey:@"uniqueID"];
             [persistents addObject:mutDict];
         }
+        
+        else if (cellType == ExploreOrderedDataCellTypeFHHouse) {
+            if (![[dict allKeys] containsObject:@"id"]) {
+                //判断，如果没有group_id，就废弃这条数据
+                continue;
+            }
+            NSString *gid = [NSString stringWithFormat:@"%@", [dict objectForKey:@"id"]];
+            
+            if ([infoGIDSet containsObject:gid]) {
+                //如果本次返回的数据，已经有包含这个gid 的数据， 则消重
+                continue;
+            }
+            [infoGIDSet addObject:gid];
+            
+            [mutDict setValue:gid forKey:@"uniqueID"];
+            [persistents addObject:mutDict];
+        }
+        
         else if (cellType == ExploreOrderedDataCellTypeSurveyList) {
             if (![[dict allKeys] containsObject:@"id"]) {
                 //判断，如果没有group_id，就废弃这条数据

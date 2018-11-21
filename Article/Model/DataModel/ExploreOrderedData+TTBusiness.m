@@ -69,6 +69,7 @@
 #import "TTADTrackEventLinkModel.h"
 #import "TTExploreLoadMoreTipData.h"
 #import "ExploreOrderedData+TTAd.h"
+#import "FHExploreHouseItemData.h"
 
 #define kPlayerOverTrackUrlList @"playover_track_url_list"
 #define kPlayerEffectiveTrackUrlList @"effective_play_track_url_list"
@@ -552,6 +553,13 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
             object.loadmoreTipData = loadmoreTipData;
         }
             break;
+        case ExploreOrderedDataCellTypeFHHouse:
+        {
+            FHExploreHouseItemData *houseData = [FHExploreHouseItemData updateWithDictionary:dictionary forPrimaryKey:uniqueIDInNumber];
+            object.houseItemsData = houseData;
+        }
+            break;
+            
 //        case ExploreOrderedDataCellTypeSurveyList:
 //        {
 //            SurveyListData *surveyListData = [SurveyListData updateWithDictionary:dictionary forPrimaryKey:uniqueIDInNumber];
@@ -893,6 +901,11 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
         case ExploreOrderedDataCellTypeLoadMoreTip:
         {
             exploreOriginData = self.loadmoreTipData;
+        }
+            break;
+        case ExploreOrderedDataCellTypeFHHouse:
+        {
+            exploreOriginData = self.houseItemsData;
         }
             break;
         case ExploreOrderedDataCellTypeHotNews:
@@ -1566,6 +1579,30 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
     else{
         result = nil;
         objc_setAssociatedObject(self, @selector(loadmoreTipData), result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return result;
+}
+
+
+-(void)setHouseItemsData:(FHExploreHouseItemData *)houseItemsData {
+    
+    objc_setAssociatedObject(self, @selector(houseItemsData), houseItemsData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+    
+-(FHExploreHouseItemData *)houseItemsData {
+    
+    FHExploreHouseItemData *result = objc_getAssociatedObject(self, @selector(houseItemsData));
+    
+    if (self.cellType == ExploreOrderedDataCellTypeFHHouse) {
+        
+        if (!result && self.uniqueID) {
+            result = [FHExploreHouseItemData objectForPrimaryKey:@([self.uniqueID longLongValue])];
+            objc_setAssociatedObject(self, @selector(houseItemsData), result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+    } else {
+     
+        result = nil;
+        objc_setAssociatedObject(self, @selector(houseItemsData), result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return result;
 }

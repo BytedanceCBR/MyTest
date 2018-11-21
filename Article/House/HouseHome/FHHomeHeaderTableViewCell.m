@@ -1,26 +1,16 @@
 //
-//  FHHomeFeedHeaderView.m
+//  FHHomeHeaderTableViewCell.m
 //  Article
 //
-//  Created by 谢飞 on 2018/11/20.
+//  Created by 谢飞 on 2018/11/21.
 //
 
-#import "FHHomeFeedHeaderView.h"
-#import <FHHouseRent.h>
-#import "FHHomeBannerView.h"
-#import "FHHomeCityTrendView.h"
+#import "FHHomeHeaderTableViewCell.h"
 
-@interface FHHomeFeedHeaderView ()
-@property (nonatomic, strong) FHRowsView* rowsView;
-@property (nonatomic, strong) FHHomeBannerView* bannerView;
-@property (nonatomic, strong) FHHomeCityTrendView* trendView;
-@end
+@implementation FHHomeHeaderTableViewCell
 
-@implementation FHHomeFeedHeaderView
-
-- (instancetype)init
-{
-    self = [super init];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.rowsView = [FHRowsView new];
         self.bannerView = [FHHomeBannerView new];
@@ -48,7 +38,7 @@
         make.height.mas_equalTo(100);
     }];
     self.bannerView.backgroundColor = [UIColor purpleColor];
-
+    
     
     [self addSubview:self.trendView];
     [self.trendView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -59,23 +49,16 @@
     self.trendView.backgroundColor = [UIColor blueColor];
 }
 
-//- (void)setHomeModel:(FHHomeModel *)homeModel
-//{
-//    _homeModel = homeModel;
-//    
-//    
-//    
-//    
-//    
-//}
 
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
 }
-*/
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
 
 @end

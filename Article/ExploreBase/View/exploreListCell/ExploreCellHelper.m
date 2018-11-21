@@ -57,7 +57,7 @@
 //#import "ExploreArticleSurveyPairCell.h"
 #import "TTHotNewsCell.h"
 #import "ExploreArticleHotNewsCell.h"
-
+#import "FHHomeHeaderTableViewCell.h"
 //cell view
 #import "TTCategoryAddToFirstPageCellView.h"
 //#import "TTMeiNvTitleLargePicHuoShanCellView.h"
@@ -144,6 +144,8 @@
 
 #import "TTExploreLoadMoreTipData.h"
 #import "TTExploreLoadMoreTipCell.h"
+#import "FHFeedHouseItemCell.h"
+#import "FHExploreHouseItemData.h"
 
 #define kVideoCategoryID @"video"
 #define kVideoShowListDigg @"video_show_list_digg"
@@ -287,6 +289,10 @@ static NSMutableArray *s_reusableCardViews;
     [[TTCellBridge sharedInstance] registerCellClass:[ExploreArticleHotNewsCell class] cellViewClass:[ExploreArticleHotNewsCellView class]];
     
     [[TTCellBridge sharedInstance] registerCellClass:[TTExploreLoadMoreTipCell class] cellViewClass:[TTExploreLoadMoreTipCellView class]];
+    
+    // feed支持房源
+    [[TTCellBridge sharedInstance] registerCellClass:[FHFeedHouseItemCell class] cellViewClass:[FHFeedHouseItemCellView class]];
+
 }
 
 + (void)registerAllCellClassWithTableView:(UITableView *)tableView
@@ -479,6 +485,10 @@ static NSMutableArray *s_reusableCardViews;
             return [ExploreArticleHotNewsCell class];
         case ExploreCellViewTypeLoadmoreTipCell:
             return [TTExploreLoadMoreTipCell class];
+        case ExploreCellViewTypeHomeHeaderTableViewCell:
+            return [FHHomeHeaderTableViewCell class];
+        case ExploreCellViewTypeFHHouseItemCell:
+            return [FHFeedHouseItemCell class];
         default:
             break;
     }
@@ -731,6 +741,7 @@ static NSMutableArray *s_reusableCardViews;
         
         if (cellCls) {
             cellId = NSStringFromClass(cellCls);
+
             if (!isEmptyString(cellId)) {
                 *stop = YES;
             }
@@ -744,7 +755,7 @@ static NSMutableArray *s_reusableCardViews;
             cellId = NSStringFromClass(cellCls);
         }
     }
-    
+
     return cellId;
 }
 
@@ -1049,6 +1060,10 @@ static NSMutableArray *s_reusableCardViews;
         else if ([orderedData.originalData isKindOfClass:[TTExploreLoadMoreTipData class]]) {
             cellViewType = ExploreCellViewTypeLoadmoreTipCell;
         }
+        // add by zjing 房源卡片
+        else if ([orderedData.originalData isKindOfClass:[FHExploreHouseItemData class]]) {
+            cellViewType = ExploreCellViewTypeFHHouseItemCell;
+        }
         else {
             cellViewType = ExploreCellViewTypeNotSupport;
         }
@@ -1129,6 +1144,11 @@ static NSMutableArray *s_reusableCardViews;
     }
     
     return roundf(height * cWidth / width);
+}
+
++ (CGFloat)heightForFHHomeHeaderCellViewType
+{
+    return 300;
 }
 
 + (CGFloat)largeImageWidth:(CGFloat)cellWidth
