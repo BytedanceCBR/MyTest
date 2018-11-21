@@ -20,6 +20,11 @@ platform :ios do
   lane :beta do |options|
     ENV["FASTLANE_PASSWORD"] = options[:itc_password]
     # add actions here: https://docs.fastlane.tools/actions
+   update_app_identifier(
+	  xcodeproj: "Article.xcodeproj", 
+	  plist_path: "NewsInHouse/NewsInHouse-Info.plist", 
+	  app_identifier: "com.bytedance.fp1" # The App Identifier
+    )
     get_certificates           # invokes cert
     get_provisioning_profile   # invokes sigh
     sh "rm -rf #{options[:output_directory]}"
@@ -30,12 +35,7 @@ platform :ios do
     version = get_version_number_from_plist(scheme: "NewsLiteInHouse")
     build = get_build_number_from_plist(scheme: "NewsLiteInHouse")
     #build_app(scheme: "NewsLiteInHouse",
-#              workspace: "Article.xcworkspace")
-    update_app_identifier(
-	  xcodeproj: "Article.xcodeproj", 
-	  plist_path: "NewsInHouse/NewsInHouse-Info.plist", # Path to info plist file, relative to xcodeproj
-	  app_identifier: "com.bytedance.fp1" # The App Identifier
-    )
+#              workspace: "Article.xcworkspace")    
     gym(
       scheme: "NewsLiteInHouse",
       clean: true,
