@@ -65,6 +65,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         result.searchable = true
         return result
     }()
+    
+    lazy var guessYouWantView = GuessYouWantView()
 
     lazy var tableView: UITableView = {
         let result = SuggectionTableView()
@@ -543,6 +545,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             .bind(onNext: { [unowned self] houseType in
 //                self.suggestionHistory.accept(self.suggestionHistoryDataSource.getHistoryByType(houseType: houseType))
                 self.requestHistoryFromRemote(houseType: "\(houseType.rawValue)")
+                self.requestGuessYouWantData()
             })
             .disposed(by: disposeBag)
 
@@ -837,6 +840,16 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 return history
             }
         }
+    }
+    
+    func requestGuessYouWantData()
+    {
+        let houseType = self.houseType.value
+        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        requestGuessYouWant(cityId: cityId ?? 122, houseType: houseType.rawValue).subscribe(onNext: { [unowned self] (response) in
+//                print(response)
+            }, onError: { (error) in
+        }).disposed(by: disposeBag)
     }
 }
 
