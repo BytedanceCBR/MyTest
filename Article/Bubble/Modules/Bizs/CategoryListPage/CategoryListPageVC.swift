@@ -577,9 +577,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     func gotoMapSearch(){
 //        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
 //        return
-        guard let mapSearch = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.mapSearch else {
-            return
-        }
 
         //点击切换埋点
         let catName = pageTypeString()
@@ -594,39 +591,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             elementName = originFrom
         }
         
-        var dict : [String : Any] = [
-            "house_type" : self.houseType.value.rawValue ,
-            "center_longitude" : mapSearch.centerLongitude ?? "" ,
-            "center_latitude" : mapSearch.centerLatitude ?? "" ,
-            "resize_level" : mapSearch.resizeLevel ?? 11 ,
-            "origin_from" : originFrom ,
-            "origin_search_id" : originSearchId ,
-            "element_from" : elementName ,
-            "enter_from" : enterFrom ,
-            "enter_category" : enterCategory ,
-            ]
-        
-        
-        if let openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl {
-            dict["map_open_url"] = openUrl
-        }
-        
-        if let theCondition = self.searchAndConditionFilterVM.queryCondition.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            let url = URL(string: "http://a?\(theCondition)")
-            let obj = TTRoute.shared()?.routeParamObj(with: url)
-            if let query = obj?.queryParams {
-                dict["condition_params"] = query
-            }
-        }
-
-//        if let suggestionParams = self.suggestionParams {
-//            dict["suggestion_params"] = suggestionParams
-//        }
-        
-        guard let configModel = try? FHMapSearchConfigModel(dictionary: dict) else {
-            return
-        }
-                
         let params = TracerParams.momoid() <|>
             toTracerParams(enterFrom, key: "enter_from") <|>
             toTracerParams("click", key: "enter_type") <|>
@@ -647,27 +611,20 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originSearchId, key: "origin_search_id")
         recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
         
-        let controller = FHMapSearchViewController(configModel: configModel)
-
-//        controller.choosedConditionFilter = { [weak self] (conditions,suggestion) in
-//            if let condition = conditions {
-//                self?.conditionFilterViewModel?.setSelectedItem(items: condition)
-//            }
-//            if let sug = suggestion {
-//                self?.suggestionParams = sug
-//            }
-//        }
-        controller.houseListOpenUrlCallback = { [weak self](openurl) in 
-            //TODO: handle callback open url
-            let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openurl))
-            self?.queryParams = routeObj?.queryParams as? [String: Any]
-            if let queryParams = self?.queryParams {
-                self?.conditionFilterViewModel?.setSelectedItem(items: queryParams)
-                self?.conditionFilterViewModel?.pullConditionsFromPanels()
+        if var openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl {
+            
+            if  !openUrl.contains("enter_category") {
+              openUrl = "\(openUrl)&enter_category=\(enterCategory)"
             }
+            
+            guard let url = URL(string: openUrl) else {
+                return
+            }
+            var info = [AnyHashable: Any]()
+            info[OPENURL_CALLBAK] = self
+            let userInfo = TTRouteUserInfo(info: info)
+            TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)            
         }
-        
-        self.navigationController?.pushViewController(controller, animated: true)
         
     }
 
@@ -1060,6 +1017,22 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         recordEvent(key: "house_filter", params: params)
     }
 
+}
+
+extension CategoryListPageVC : FHMapSearchOpenUrlDelegate
+{
+    
+    func handleHouseListCallback(_ openUrl: String) {
+        
+        let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
+        self.queryParams = routeObj?.queryParams as? [String: Any]
+        if let queryParams = self.queryParams {
+            self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
+            self.conditionFilterViewModel?.pullConditionsFromPanels()
+        }
+        
+    }
+    
 }
 
 func houseTypeString(_ houseType: HouseType) -> String {
