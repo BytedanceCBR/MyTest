@@ -765,7 +765,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
         if selectedNodes.count == 0 {
             // 再试着取一下用户手动输入是否有值
             let (low, upper) = getUserInputValue()
-            return getUserInputPriceNode(low: low, upper: upper)
+            let result = getUserInputPriceNode(low: low, upper: upper)
+            return result
         } else {
             return selectedNodes
         }
