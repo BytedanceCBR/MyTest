@@ -275,7 +275,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                     self.navBar.searchInput.becomeFirstResponder()
                     self.hasShowKeyboard = true
                 }
-                self.tableView.isHidden = (self.tableViewModel.combineItems.value.count == 0)
+                self.tableView.isHidden = (self.tableViewModel.combineItems.value.count == 0 && self.tableViewModel.guessYouWantItems.value.count == 0)
             }
             .disposed(by: disposeBag)
     }
@@ -576,25 +576,41 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         houseType
             .bind(onNext: { [unowned self] houseType in
 //                self.suggestionHistory.accept(self.suggestionHistoryDataSource.getHistoryByType(houseType: houseType))
+                self.suggestionHistory.accept([])
                 self.requestHistoryFromRemote(houseType: "\(houseType.rawValue)")
                 self.requestGuessYouWantData()
             })
             .disposed(by: disposeBag)
 
-        suggestions
-                .map { $0.count != 0 }
-                .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
-                .disposed(by: disposeBag)
-
-        suggestions
-                .map {
-                    if $0.count == 0 {
-                        return "历史记录"
-                    }
-                    return ""
+//        suggestions
+//                .map { $0.count != 0 }
+//                .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
+//                .disposed(by: disposeBag)
+//
+//        suggestions
+//                .map {
+//                    if $0.count == 0 {
+//                        return "历史记录"
+//                    }
+//                    return ""
+//                }
+//                .bind(to: sectionHeaderView.label.rx.text)
+//                .disposed(by: disposeBag)
+        
+        suggestionHistory
+            .map { $0.count == 0 }
+            .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        suggestionHistory
+            .map {
+                if $0.count != 0 {
+                    return "历史记录"
                 }
-                .bind(to: sectionHeaderView.label.rx.text)
-                .disposed(by: disposeBag)
+                return ""
+            }
+            .bind(to: sectionHeaderView.label.rx.text)
+            .disposed(by: disposeBag)
 
 
         sectionHeaderView.deleteBtn.rx.tap.bind { [unowned self] void in
@@ -605,8 +621,9 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        let datas = combineItems.value
-        return datas.count > 0 ? 1 : 0
+//        let datas = combineItems.value
+//        return datas.count > 0 ? 1 : 0
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -769,10 +786,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let guessHeight = CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
+        let sectionHeaderHeight = CGFloat (suggestionHistory.value.count > 0 ? 40 : 0)
         if suggestions.value.count > 0 {
             return 0
         }
-        return 40 + guessHeight
+        return sectionHeaderHeight + guessHeight
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
