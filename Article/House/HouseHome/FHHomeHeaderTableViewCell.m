@@ -19,9 +19,6 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.rowsView = [FHRowsView new];
-        self.bannerView = [FHHomeBannerView new];
-        self.trendView = [FHHomeCityTrendView new];
         self.contentTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         self.tableViewDelegate = [[FHHomeTableViewDelegate alloc] init];
         [self setUpViews];
@@ -31,42 +28,16 @@
 
 - (void)setUpViews
 {
-    
     [self addSubview:self.contentTableView];
-     self.contentTableView.backgroundColor = [UIColor blueColor];
+    self.contentTableView.backgroundColor = [UIColor whiteColor];
     [self.contentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
-    
+    _contentTableView.scrollEnabled = NO;
+    self.contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [FHHomeCellHelper registerCells:self.contentTableView];
     
     [FHHomeCellHelper registerDelegate:self.contentTableView andDelegate:self.tableViewDelegate];
-    
-//    [self addSubview:self.rowsView];
-//
-//    [self.rowsView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.right.left.equalTo(self);
-//        make.height.mas_equalTo(100);
-//    }];
-//    self.rowsView.backgroundColor = [UIColor redColor];
-//
-//    [self addSubview:self.bannerView];
-//    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.rowsView.mas_bottom);
-//        make.right.left.equalTo(self);
-//        make.height.mas_equalTo(100);
-//    }];
-//    self.bannerView.backgroundColor = [UIColor purpleColor];
-//
-//
-//    [self addSubview:self.trendView];
-//    [self.trendView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.bannerView.mas_bottom);
-//        make.right.left.equalTo(self);
-//        make.height.mas_equalTo(100);
-//    }];
-//    self.trendView.backgroundColor = [UIColor blueColor];
-    
 }
 
 - (void)refreshUI
@@ -92,7 +63,7 @@
 
 - (void)refreshWithData:(nonnull id)data
 {
-
+    
     
 }
 
@@ -104,7 +75,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 

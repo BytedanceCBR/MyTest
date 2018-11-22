@@ -2501,6 +2501,7 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
 
 - (BOOL)preCellHasBottomPadding{
     if (self.preCellType == ExploreOrderedDataCellTypeLastRead ||
+        self.preCellType == ExploreOrderedDataCellTypeFHHouse ||
         self.preCellType == ExploreOrderedDataCellTypeNull){
         return YES;
     }

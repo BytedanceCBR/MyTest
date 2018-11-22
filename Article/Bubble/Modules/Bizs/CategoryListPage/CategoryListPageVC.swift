@@ -611,12 +611,43 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originSearchId, key: "origin_search_id")
         recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
         
+        /*
+         var dict : [String : Any] = [
+         "house_type" : self.houseType.value.rawValue ,
+         "center_longitude" : mapSearch.centerLongitude ?? "" ,
+         "center_latitude" : mapSearch.centerLatitude ?? "" ,
+         "resize_level" : mapSearch.resizeLevel ?? 11 ,
+         "origin_from" : originFrom ,
+         "origin_search_id" : originSearchId ,
+         "element_from" : elementName ,
+         "enter_from" : enterFrom ,
+         "enter_category" : enterCategory ,
+         ]
+         */
+        
         if var openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl {
             
+            var query = ""
             if  !openUrl.contains("enter_category") {
-              openUrl = "\(openUrl)&enter_category=\(enterCategory)"
+              query = "enter_category=\(enterCategory)"
+            }
+            if !openUrl.contains("origin_from") {
+              query = "\(query)&origin_from=\(originFrom)"
             }
             
+            if !openUrl.contains("origin_search_id") {
+                query = "\(query)&origin_search_id=\(originSearchId)"
+            }
+            if !openUrl.contains("enter_from"){
+                query = "\(query)&enter_from=\(enterFrom)"
+            }
+            if !openUrl.contains("element_from"){
+                query = "\(query)&element_from=\(elementName)"
+            }
+            
+            if query.count > 0 {
+                openUrl = "\(openUrl)&\(query)"
+            }
             guard let url = URL(string: openUrl) else {
                 return
             }
@@ -878,10 +909,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                 let conditions = getNoneFilterConditionString(params: self.queryParams, conditionsKeys: keys)
 
-                print("filter : \(conditions)")
-                print("filter old: \(oldConditions)")
-
-
                 zip(items.0, items.1)
                     .enumerated()
                     .forEach({ [unowned self] (e) in
@@ -893,7 +920,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                             data: nodes)
                     })
                 self.queryString = self.queryString + conditions
-                print(self.queryString)
+//                print(self.queryString)
                 if let queryParams = self.queryParams {
                     self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
                 }

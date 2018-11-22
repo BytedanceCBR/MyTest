@@ -124,6 +124,30 @@
     //改为动态的
     [[TTNetworkManager shareInstance] setCommonParamsblock:^(void) {
         NSMutableDictionary *commonParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
+    
+        /*
+         * 因为feed流要求版本与头条一致，当前为0.x.x 待后面正式后要注意更改对应关系
+         */
+        NSString *curVersion = [TTSandBoxHelper versionName];
+        NSArray<NSString *> *strArray = [curVersion componentsSeparatedByString:@"."];
+        NSInteger version = 0;
+        for (NSInteger i = 0; i < strArray.count; i += 1) {
+            NSString *tmp = strArray[i];
+            version = version * 10 + tmp.integerValue;
+        }
+        version += 600;
+        NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
+        for (NSInteger i = 0; i < 2; i += 1) {
+            NSInteger num = version % 10;
+            version /= 10;
+            NSString *tmp = [NSString stringWithFormat:@"%ld", num];
+            [newStrArray addObject:tmp];
+        }
+        NSString *tmp = [NSString stringWithFormat:@"%ld",version];
+        [newStrArray addObject:tmp];
+        NSString *newVersion = [[newStrArray reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
+        [commonParams setValue:newVersion forKey:@"version_code"];
+        
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];

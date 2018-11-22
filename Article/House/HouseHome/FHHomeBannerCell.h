@@ -7,10 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHomeBaseTableCell.h"
+#import <FHHomeBannerView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeBannerCell : FHHomeBaseTableCell
+
+@property (nonatomic,strong) FHHomeBannerView *bannerView;
 
 @end
 

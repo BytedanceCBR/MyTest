@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeEntrancesCell : FHHomeBaseTableCell
 
-@property (nonatomic,strong) FHRowsView *rowsView;
+@property (nonatomic,strong) FHRowsView *boardView;
 
 @end
 

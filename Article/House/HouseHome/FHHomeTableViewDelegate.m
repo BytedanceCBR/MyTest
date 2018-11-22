@@ -41,7 +41,6 @@
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
     
     FHHomeBaseTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-//    [self configureCell:cell atIndexPath:indexPath];
     [FHHomeCellHelper configureCell:cell withJsonModel:model];
     return cell;
 }
@@ -51,9 +50,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
-    return [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
+    CGFloat height = [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
         [FHHomeCellHelper configureCell:cell withJsonModel:model];
     }];
+    NSLog(@"cell height = %f",height);
+    return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
