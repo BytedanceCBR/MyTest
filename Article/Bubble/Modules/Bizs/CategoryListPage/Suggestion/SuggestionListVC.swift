@@ -526,7 +526,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var guessYouwantBag = DisposeBag()
 
     var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
-    var onSuggestionSelected: ((TTRouteObject?) -> Void)?
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)? // 列表页面点击搜索进入
 
     let houseType: BehaviorRelay<HouseType>
 
@@ -587,6 +587,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         sectionHeaderView.deleteBtn.rx.tap.bind { [unowned self] void in
             self.requestDeleteHistory()
         }.disposed(by: disposeBag)
+        
+        sectionHeaderView.guessView.onGuessYouWantItemClick = {[unowned self] (item:GuessYouWant) in
+            self.guessYouWantItemClick(item: item)
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -704,6 +708,46 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         // 如果调用这里，会造UI栈中存在两个CategoryVC时，同时发起请求
 //        filterConditionResetter?()
 
+    }
+    
+    fileprivate func guessYouWantItemClick(item:GuessYouWant) {
+        if let openUrl = item.openUrl {
+            var jumpUrl = openUrl
+            if let placeholder = item.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                jumpUrl = jumpUrl + "&placeholder=\(placeholder)"
+            }
+            let queryType = self.suggestions.value.count > 0 ? "associate" : "history"
+            
+            var userInput = self.searchInputField?.text ?? "be_null"
+            if userInput.isEmpty {
+                userInput = "be_null"
+            }
+            var houseSearchParams = ["page_type": self.pageTypeString(),
+                                     "query_type": queryType,
+                                     "enter_query": userInput,
+                                     "search_query": item.text ?? "be_null"]
+            
+            if suggestions.value.count == 0 {
+                //如果点击的是历史，就统一都报text
+                houseSearchParams["enter_query"] = item.text ?? "be_null"
+            }
+            var infos: [String: Any] = [:]
+            infos["houseSearch"] = houseSearchParams
+//            if let info = item.info {
+//                infos["suggestion"] = createQueryCondition(info)
+//            }
+            let userInfo = TTRouteUserInfo(info: infos)
+            let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
+            if self.onSuggestionSelected != nil {
+                self.onSuggestionSelected?(routerObj)
+                
+            } else {
+                TTRoute.shared()?.openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
+            }
+            
+            // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
+            dismissVC?()
+        }
     }
 
     fileprivate func pageTypeString() -> String {
