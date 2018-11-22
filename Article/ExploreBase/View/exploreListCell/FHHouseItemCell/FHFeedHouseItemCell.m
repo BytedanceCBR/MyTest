@@ -78,9 +78,9 @@
     NSParameterAssert([data isKindOfClass:[ExploreOrderedData class]]);
     
     self.orderedData = data;
-    if (self.orderedData.houseItemsData.houseItemList.count > 0) {
+    if (self.orderedData.houseItemsData.items.count > 0) {
         
-        self.houseTableView.frame = CGRectMake(0, 0, self.width, 51.0f + 105 * self.orderedData.houseItemsData.houseItemList.count + 74.f);
+        self.houseTableView.frame = CGRectMake(0, 0, self.width, 51.0f + 105 * self.orderedData.houseItemsData.items.count + 74.f);
     }
     [self.viewModel updateWithHouseData:self.orderedData.houseItemsData];
     
@@ -109,10 +109,10 @@
 
 + (CGFloat)heightForData:(ExploreOrderedData *)data cellWidth:(CGFloat)width listType:(ExploreOrderedDataListType)listType {
     
-    if(data.houseItemsData.houseItemList.count < 1) {
+    if(data.houseItemsData.items.count < 1) {
         return 0;
     }
-    return 51.0f + 105 * data.houseItemsData.houseItemList.count + 74.f;
+    return 51.0f + 105 * data.houseItemsData.items.count + 74.f;
 }
 
 
