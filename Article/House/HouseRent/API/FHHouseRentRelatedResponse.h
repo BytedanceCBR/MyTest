@@ -14,15 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-@interface  FHHouseRentRelatedResponseDataItemsLogPbModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, copy , nullable) NSString *groupId;
-
-@end
-
-
 @protocol FHHouseRentRelatedResponseDataItemsHouseImageModel<NSObject>
 
 @end
@@ -67,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHHouseRentRelatedResponseDataItemsModel  : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataItemsLogPbModel *logPb ;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *url;

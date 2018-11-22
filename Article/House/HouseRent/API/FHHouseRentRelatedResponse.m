@@ -103,27 +103,6 @@
 @end
 
 
-@implementation  FHHouseRentRelatedResponseDataItemsLogPbModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"imprId": @"impr_id",
-                           @"groupId": @"group_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHHouseRentRelatedResponseDataModel
 
 + (JSONKeyMapper*)keyMapper
