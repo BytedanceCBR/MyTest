@@ -11,9 +11,7 @@ import RxCocoa
 class FollowUpViewModel {
 
     var disposeBag = DisposeBag()
-
-    var loginDelegate: NIHLoginVCDelegate?
-
+    
     func followIt(
         houseType: HouseType,
         followAction: FollowActionType,
@@ -73,39 +71,10 @@ class FollowUpViewModel {
         }
     }
 
-    fileprivate func displayLogin(onLoginSuccess: @escaping () -> Void) {
-        let loginDelegate = NIHLoginVCDelegate {
-            onLoginSuccess()
-        }
-        self.loginDelegate = loginDelegate
-        let userInfo = TTRouteUserInfo(info: ["delegate": loginDelegate])
-        TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://flogin"), userInfo: userInfo)
-    }
-
     func followThisItem(
         isFollowUpOrCancel: Bool,
         houseId: Int64,
         statusBehavior: BehaviorRelay<Bool>) {
-        if EnvContext.shared.client.accountConfig.userInfo.value == nil {
-            displayLogin(onLoginSuccess: { [unowned self] in
-                if isFollowUpOrCancel {
-                    self.followIt(
-                        houseType: .newHouse,
-                        followAction: .newHouse,
-                        followId: "\(houseId)",
-                        disposeBag: self.disposeBag,
-                        statusBehavior: statusBehavior,
-                        isNeedRecord: false)()
-                } else {
-                    self.cancelFollowIt(
-                        houseType: .newHouse,
-                        followAction: .newHouse,
-                        followId: "\(houseId)",
-                        statusBehavior: statusBehavior,
-                        disposeBag: self.disposeBag)()
-                }
-            })
-        } else {
             if isFollowUpOrCancel {
                 followIt(
                     houseType: .newHouse,
@@ -122,8 +91,6 @@ class FollowUpViewModel {
                     statusBehavior: statusBehavior,
                     disposeBag: disposeBag)()
             }
-        }
-
     }
     
     // MARK: 静默关注房源

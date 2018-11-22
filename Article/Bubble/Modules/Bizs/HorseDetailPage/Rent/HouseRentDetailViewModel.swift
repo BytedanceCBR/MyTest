@@ -15,9 +15,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     var cellFactory: UITableViewCellFactory
 
-    private var relateErshouHouseData = BehaviorRelay<RelatedHouseResponse?>(value: nil)
+    private var relateErshouHouseData = BehaviorRelay<FHHouseRentRelatedResponseModel?>(value: nil)
 
-    private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
+    private var houseInSameNeighborhood = BehaviorRelay<FHRentSameNeighborhoodResponseModel?>(value: nil)
 
     var navVC: UINavigationController?
 
@@ -156,10 +156,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
-        let relatedErshouItems = relateErshouHouseData.value?.data?.items?.map({ (item) -> HouseItemInnerEntity in
-//            var newItem = item
-            return item
-        })
+//        let relatedErshouItems = relateErshouHouseData.value?.data?.items?.map({ (item) -> HouseItemInnerEntity in
+////            var newItem = item
+//            return item
+//        })
+        let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
         let params = TracerParams.momoid()
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
         let result = parseRentReleatedHouseListItemNode(
@@ -172,13 +173,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("numberOfSections \(datas.count)")
         return datas.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if datas.count > section {
-            print("section - \(section) numberOfRowsInSection \(datas[section].items.count)")
             return datas[section].items.count
         } else {
             return 0
@@ -186,9 +185,6 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 13 {
-            print("")
-        }
         switch datas[indexPath.section].type {
         case let .node(identifier):
             let cell = cellFactory.dequeueReusableCell(
@@ -209,27 +205,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func requestReletedData() {
-//        if let neighborhoodId = "1" {
 
+        let task = HouseRentAPI.requestHouseRentRelated("") { (model, error) in
+            self.relateErshouHouseData.accept(model)
+        }
 
-        requestRelatedHouseSearch(houseId: "6580954921640673544")
-            .subscribe(onNext: { [unowned self] response in
-                self.relateErshouHouseData.accept(response)
-            })
-            .disposed(by: disposeBag)
-
-
-
-        //            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_id=\(houseId)&house_type=\(HouseType.secondHandHouse.rawValue)")
-        requestHouseInSameNeighborhoodSearch(neighborhoodId: "6581418262955819268", houseId: "6580954921640673544")
-            .subscribe(onNext: { [unowned self] response in
-                self.houseInSameNeighborhood.accept(response)
-            })
-            .disposed(by: disposeBag)
-
-//        }
-
-        let task = HouseRentAPI.requestHouseRentRelated()
+        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("a", withNeighborhoodId: "a") { (model, error) in
+            self.houseInSameNeighborhood.accept(model)
+        }
     }
 
 }

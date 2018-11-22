@@ -14,7 +14,6 @@ import Reachability
 
 class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
-
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
     private var isFromPush: Bool = false
@@ -27,7 +26,14 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     private var detailPageViewModel: HouseRentDetailViewMode?
 
     var shareParams: TracerParams?
-    let stateControl = HomeHeaderStateControl()
+    private let stateControl = HomeHeaderStateControl()
+
+    private let followUpViewModel: FollowUpViewModel
+
+    private var bottomBarViewModel: FHHouseContactBottomBarViewModel?
+
+    /// 租房关注状态信号量
+    private var follwUpStatus: BehaviorRelay<Bool> = BehaviorRelay(value: false)
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -69,15 +75,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         return label
     }()
 
-
-
     lazy var shareManager: TTShareManager = {
         let re = TTShareManager()
         re.delegate = self
         return re
     }()
-
-
 
     var traceParams = TracerParams.momoid()
 
@@ -113,12 +115,22 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         self.houseRentTracer = HouseRentTracer(pageType: "rent_detail",
                                                houseType: "rent",
                                                cardType: "left_pic")
+        self.followUpViewModel = FollowUpViewModel()
         super.init(nibName: nil, bundle: nil)
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
+    }
+
+    private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
+        if let userInfo = paramObj?.userInfo {
+            self.houseRentTracer.cardType = userInfo.allInfo["card_type"] as? String ?? "be_null"
+            self.houseRentTracer.enterFrom = userInfo.allInfo["enter_from"] as? String ?? "be_null"
+            self.houseRentTracer.elementFrom = userInfo.allInfo["element_from"] as? String ?? "be_null"
+            self.houseRentTracer.rank = userInfo.allInfo["rank"] as? String ?? "be_null"
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -144,10 +156,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         detailPageViewModel = HouseRentDetailViewMode(houseRentTracer: houseRentTracer)
         detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
+
         detailPageViewModel?.registerCell(tableView: tableView)
         detailPageViewModel?.tableView = tableView
+        bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
 
-//        tableView.reloadData()
         detailPageViewModel?.requestReletedData()
         view.bringSubview(toFront: navBar)
     }
@@ -319,7 +332,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
     fileprivate func openSharePanel() {
         var logPB: Any? = nil
-        logPB = self.logPB ?? logPB
+        logPB = self.logPB
         var params = EnvContext.shared.homePageParams <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.logPB ?? logPB, key: "log_pb")

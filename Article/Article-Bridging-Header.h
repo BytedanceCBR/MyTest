@@ -104,5 +104,7 @@
 
 #import "FHHomeConfigManager.h"
 #import "FHNewHouseItemModel.h"
+#import "FHHouseRentRelatedResponse.h"
+#import "FHRentSameNeighborhoodResponse.h"
 
 #endif /* Article_Bridging_Header_h */

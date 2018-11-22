@@ -38,11 +38,15 @@ struct SearchConfigResponseData: Mappable {
     var neighborhoodFilter: [SearchConfigFilterItem]?
     var neighborhoodFilterOrder: [SearchConfigFilterItem]?
 
+    var rentFilter: [SearchConfigFilterItem]?
+    var rentFilterOrder: [SearchConfigFilterItem]?
+
     var saleHistoryFilter: [SearchConfigFilterItem]?
 
     var searchTabCourtFilter: [SearchConfigFilterItem]?
     var searchTabFilter: [SearchConfigFilterItem]?
     var searchTabNeighborHoodFilter: [SearchConfigFilterItem]?
+    var searchTabRentFilter: [SearchConfigFilterItem]?
 
     var abTestVersion: Any?
 
@@ -53,16 +57,22 @@ struct SearchConfigResponseData: Mappable {
     mutating func mapping(map: Map) {
         filter <- map["filter"]
         filterOrder <- map["house_filter_order"]
+
         courtFilter <- map["court_filter"]
         courtFilterOrder <- map["court_filter_order"]
+
         neighborhoodFilter <- map["neighborhood_filter"]
         neighborhoodFilterOrder <- map["neighborhood_filter_order"]
+
+        rentFilter <- map["rent_filter"]
+        rentFilterOrder <- map["rent_filter_order"]
+
         saleHistoryFilter <- map["sale_history_filter"]
 
         searchTabCourtFilter <- map["search_tab_court_filter"]
         searchTabFilter <- map["search_tab_filter"]
         searchTabNeighborHoodFilter <- map["search_tab_neighborhood_filter"]
-
+        searchTabRentFilter <- map["search_tab_rent_filter"]
         abTestVersion <- map["abtest"]
     }
 }
