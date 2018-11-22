@@ -217,7 +217,7 @@ struct GuessYouWantList: Mappable {
 
 struct GuessYouWant: Mappable {
     var text : String?
-    var extinfo:[String:Any]?
+    var extinfo:String?
     var guessSearchId : String?
     var houseType : Int = 0
     var guessSearchType : Int = 0

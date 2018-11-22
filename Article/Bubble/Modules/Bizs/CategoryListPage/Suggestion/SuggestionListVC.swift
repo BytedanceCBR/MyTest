@@ -716,31 +716,22 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             if let placeholder = item.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                 jumpUrl = jumpUrl + "&placeholder=\(placeholder)"
             }
-            let queryType = self.suggestions.value.count > 0 ? "associate" : "history"
+            let queryType = "hot"// 猜你想搜
             
-            var userInput = self.searchInputField?.text ?? "be_null"
-            if userInput.isEmpty {
-                userInput = "be_null"
-            }
-            var houseSearchParams = ["page_type": self.pageTypeString(),
+            let houseSearchParams = ["page_type": self.pageTypeString(),
                                      "query_type": queryType,
-                                     "enter_query": userInput,
+                                     "enter_query": item.text ?? "be_null",
                                      "search_query": item.text ?? "be_null"]
-            
-            if suggestions.value.count == 0 {
-                //如果点击的是历史，就统一都报text
-                houseSearchParams["enter_query"] = item.text ?? "be_null"
-            }
+
             var infos: [String: Any] = [:]
             infos["houseSearch"] = houseSearchParams
-//            if let info = item.info {
-//                infos["suggestion"] = createQueryCondition(info)
-//            }
+            if let info = item.extinfo {
+                infos["suggestion"] = createQueryCondition(info)
+            }
             let userInfo = TTRouteUserInfo(info: infos)
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
             if self.onSuggestionSelected != nil {
                 self.onSuggestionSelected?(routerObj)
-                
             } else {
                 TTRoute.shared()?.openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             }
