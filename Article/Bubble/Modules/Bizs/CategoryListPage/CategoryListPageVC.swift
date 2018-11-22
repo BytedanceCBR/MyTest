@@ -1008,7 +1008,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     // 记录 click_house_search
     fileprivate func recordClickHouseSearch() {
         let params = EnvContext.shared.homePageParams <|>
-            toTracerParams(pageTypeString(), key: "page_type")
+            toTracerParams(pageTypeString(), key: "page_type") <|>
+            toTracerParams("be_null", key: "hot_word")
         recordEvent(key: "click_house_search", params: params)
     }
 
