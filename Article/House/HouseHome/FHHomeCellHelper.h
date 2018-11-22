@@ -51,6 +51,11 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  */
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model;
 
+/**
+ * cell点击route跳转
+ */
+- (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param;
+
 @end 
 
 NS_ASSUME_NONNULL_END

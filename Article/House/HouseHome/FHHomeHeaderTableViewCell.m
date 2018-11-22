@@ -29,7 +29,7 @@
 - (void)setUpViews
 {
     [self addSubview:self.contentTableView];
-    self.contentTableView.backgroundColor = [UIColor blueColor];
+    self.contentTableView.backgroundColor = [UIColor whiteColor];
     [self.contentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];

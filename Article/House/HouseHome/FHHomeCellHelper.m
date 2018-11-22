@@ -15,7 +15,7 @@
 #import "FHHomeConfigManager.h"
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
-
+#import <TTRoute.h>
 @implementation FHHomeCellHelper
 
 +(instancetype)sharedInstance
@@ -92,6 +92,7 @@
     
     for (int i = 0; i < countItems; i++) {
         FHSpringboardIconItemView *itemView = [[FHSpringboardIconItemView alloc] init];
+        itemView.tag = i;
         FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:i];
         itemView.backgroundColor = [UIColor whiteColor];
         if (itemModel.image.count > 0) {
@@ -116,9 +117,46 @@
         [itemsArray addObject:itemView];
     }
     
+    cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
+//        if let logpb = item.logPb as NSDictionary?
+//        {
+//            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+//            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
+//        }
+//
+//
+//        let tracerParams = TracerParams.momoid() <|>
+//        EnvContext.shared.homePageParams <|>
+//        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+//        toTracerParams("maintab", key: "enter_from") <|>
+//        toTracerParams("maintab_icon", key: "element_from") <|>
+//        toTracerParams("click", key: "enter_type")
+//
+//
+//        let parmasMap = tracerParams.paramsGetter([:])
+//        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
+//        if let openUrl = item.openUrl
+//        {
+//            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
+//        }
+        
+        if (model.items.count > clickIndex) {
+            FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
+            if (itemModel.openUrl) {
+                NSURL *url = [NSURL URLWithString:itemModel.openUrl];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }
+        }
+    };
+    
     if (itemsArray.count > 0) {
         [cellEntrance.boardView addItemViews:itemsArray];
     }
+}
+
+- (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param
+{
+    
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
