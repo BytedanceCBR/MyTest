@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeTableViewDelegate : NSObject <UITableViewDelegate,UITableViewDataSource>
+@property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 
 - (instancetype)initWithModels:(NSArray <JSONModel *>*)modelsArray;
 

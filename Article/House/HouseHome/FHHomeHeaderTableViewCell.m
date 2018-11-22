@@ -7,6 +7,12 @@
 
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHHomeCellHelper.h"
+#import "FHHomeTableViewDelegate.h"
+#import "FHHomeConfigManager.h"
+
+@interface FHHomeHeaderTableViewCell()
+@property (nonatomic, strong) FHHomeTableViewDelegate *tableViewDelegate;
+@end
 
 @implementation FHHomeHeaderTableViewCell
 
@@ -17,6 +23,7 @@
         self.bannerView = [FHHomeBannerView new];
         self.trendView = [FHHomeCityTrendView new];
         self.contentTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        self.tableViewDelegate = [[FHHomeTableViewDelegate alloc] init];
         [self setUpViews];
     }
     return self;
@@ -33,6 +40,7 @@
     
     [FHHomeCellHelper registerCells:self.contentTableView];
     
+    [FHHomeCellHelper registerDelegate:self.contentTableView andDelegate:self.tableViewDelegate];
     
 //    [self addSubview:self.rowsView];
 //

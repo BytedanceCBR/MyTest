@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHomeBaseTableCell.h"
+#import "FHHomeTableViewDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,12 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 + (void)registerCells:(UITableView *)tableView;
 
 /**
+ * 根据配置代理
+ */
++ (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate;
+
+
+/**
  * 根据配置数据计算头部高度
  */
 + (CGFloat)heightForFHHomeHeaderCellViewType;
@@ -32,6 +39,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  * 根据配置数据计算头部高度
  */
 + (NSString *)configIdentifier:(JSONModel *)model;
+
 
 /**
  * 根据类型返回Class

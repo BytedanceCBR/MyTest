@@ -14,8 +14,6 @@
 {
 }
 
-@property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
-
 @end
 
 @implementation FHHomeTableViewDelegate
@@ -44,6 +42,7 @@
     
     FHHomeBaseTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 //    [self configureCell:cell atIndexPath:indexPath];
+    [FHHomeCellHelper configureCell:cell withJsonModel:model];
     return cell;
 }
 
@@ -53,7 +52,7 @@
     JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
     return [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
-        
+        [FHHomeCellHelper configureCell:cell withJsonModel:model];
     }];
 }
 
