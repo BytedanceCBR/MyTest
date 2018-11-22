@@ -45,6 +45,7 @@ func parseRentFacilityCellNode() -> () -> TableSectionNode? {
             items: [render],
             selectors: nil,
             tracer:nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: RentFacilityCell.identifier))
     }

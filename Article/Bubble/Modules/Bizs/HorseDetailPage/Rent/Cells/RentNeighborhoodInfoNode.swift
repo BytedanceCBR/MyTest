@@ -15,6 +15,7 @@ func parseRentNeighborhoodInfoNode() -> () -> TableSectionNode? {
             items: [render],
             selectors: nil,
             tracer:nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NeighborhoodInfoCell.identifier))
     }

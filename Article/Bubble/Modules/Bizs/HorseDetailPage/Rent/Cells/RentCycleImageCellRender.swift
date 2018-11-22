@@ -16,6 +16,7 @@ func parseRentHouseCycleImageNode(_ images: [ImageItem]?,
             items: [oneTimeRender(cellRender)],
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: CycleImageCell.identifier))
     }

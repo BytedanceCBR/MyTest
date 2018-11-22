@@ -356,6 +356,7 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
                 items: [render],
                 selectors: nil,
                 tracer: tracers,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NeighborhoodInfoCell.identifier))
     }

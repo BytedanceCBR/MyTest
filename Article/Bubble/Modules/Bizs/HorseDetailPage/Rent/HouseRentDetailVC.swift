@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 import Reachability
 
-class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate {
+class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
 
     fileprivate var pageFrameObv: NSKeyValueObservation?
@@ -93,6 +93,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     var logPB: [String: Any]?
     var searchId: String?
+    var houseRentTracer: HouseRentTracer
 
     var houseSearchParams: TracerParams? {
         didSet {
@@ -109,6 +110,9 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let houseId = HouseRentDetailVC.getHouseId(paramObj?.queryParams)
         self.houseId = Int64(houseId) ?? 0
         self.houseType = .rentHouse
+        self.houseRentTracer = HouseRentTracer(pageType: "rent_detail",
+                                               houseType: "rent",
+                                               cardType: "left_pic")
         super.init(nibName: nil, bundle: nil)
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
@@ -138,9 +142,14 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         setupTableView()
         setupInfoMaskView()
         detailPageViewModel = HouseRentDetailViewMode()
+        detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)
-        tableView.reloadData()
+        detailPageViewModel?.tableView = tableView
+
+//        tableView.reloadData()
+        detailPageViewModel?.requestReletedData()
+        view.bringSubview(toFront: navBar)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -167,6 +176,12 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
         isFromPush = false
 //        self.recordGoDetailSearch()
+    }
+
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.houseRentTracer.recordStayPage()
     }
 
     func resetMapCellIfNeeded() {
@@ -206,7 +221,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             maker.left.right.equalToSuperview()
         }
-        
+
         view.addSubview(bottomStatusBar)
         bottomStatusBar.snp.makeConstraints { maker in
             maker.right.left.equalToSuperview()
@@ -282,6 +297,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tableView.rx.contentOffset
             .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
             .disposed(by: disposeBag)
+
     }
 
     fileprivate func bindShareAction() {

@@ -420,6 +420,7 @@ func parseNeighboorhoodPriceChartNode(_ neighborhoodData: NeighborhoodDetailData
                 items: [oneTimeRender(render)],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FHNeighborhoodChartCell.identifier))
         } else {

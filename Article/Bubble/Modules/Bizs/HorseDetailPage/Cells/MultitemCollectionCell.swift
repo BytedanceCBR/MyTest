@@ -555,6 +555,7 @@ func parseSearchInNeighborhoodNodeCollection(
                 tracer: [elementShowOnceRecord(params: params <|>
                     toTracerParams("old_detail", key: "page_type") <|>
                     toTracerParams("old", key: "house_type"))],
+                sectionTracer: nil,
                 label: "小区房源",
                 type: .node(identifier: MultitemCollectionCell.identifier))
         } else {
@@ -661,6 +662,7 @@ func parseRelatedNeighborhoodCollectionNode(
                     items: [render],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "周边小区",
                     type: .node(identifier: "MultitemCollectionCell-neighborhood"))
         } else {
@@ -838,6 +840,7 @@ func parseRelateCourtCollectionNode(
                     items: [render],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params:params)],
+                    sectionTracer: nil,
                     label: "猜你喜欢",
                     type: .node(identifier: MultitemCollectionCell.identifier))
         } else {
@@ -957,6 +960,7 @@ func parseNewHouseFloorPanCollectionNode(
                 items: [cellRender],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "楼盘户型",
                 type: .node(identifier: "MultitemCollectionCell-floorPan"))
         } else {
@@ -1097,6 +1101,7 @@ func parseSearchInNeighborhoodCollectionNode(
                     items: [render],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "小区房源",
                     type: .node(identifier: MultitemCollectionCell.identifier))
         } else {
@@ -1132,6 +1137,7 @@ func parseNeighborhoodEvaluationCollectionNode(
                     items: [render],
                     selectors: selector != nil ? [selector!] : nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "小区房源",
                     type: .node(identifier: MultitemCollectionEvaluateCell.identifier))
             }else
@@ -1241,6 +1247,7 @@ func parseFloorPanCollectionNode(
                     items: [cellRender],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "楼盘户型",
                     type: .node(identifier: "MultitemCollectionCell-floorPan"))
         } else {

@@ -14,6 +14,7 @@ func parseRentCoreInfoCellNode() -> () -> TableSectionNode? {
             items: [cellRender],
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
     }

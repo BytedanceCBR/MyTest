@@ -186,6 +186,7 @@ func parsePropertyListNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSec
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: PropertyListCell.identifier))
         }else {
@@ -201,7 +202,8 @@ func parseFloorPlanPropertyListNode(_ data: FloorPlanInfoData) -> () -> TableSec
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
-                tracer: nil,
+            tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: PropertyListCell.identifier))
     }
@@ -405,6 +407,7 @@ func parseHouseOutlineListNode(_ ershouHouseData: ErshouHouseData) -> () -> Tabl
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: PropertyListCell.identifier))
         }else {

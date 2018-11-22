@@ -110,6 +110,7 @@ func parseHouseOutlineHeaderNode(
                 items: [cellRender],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: HouseOutlineHeaderCell.identifier))
         }

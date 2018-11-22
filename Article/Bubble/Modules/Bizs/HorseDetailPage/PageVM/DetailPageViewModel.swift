@@ -590,6 +590,7 @@ struct TableSectionNode {
     let items: [TableCellRender]
     var selectors: [TableCellSelectedProcess]? = nil
     var tracer: [ElementRecord]? = nil
+    var sectionTracer: ElementRecord? = nil
     let label: String
     let type: TableCellType
 }
@@ -637,11 +638,25 @@ extension DetailDataParser {
             }
         }
     }
+
+    func join(_ parser: @escaping () -> [TableSectionNode]?) -> DetailDataParser {
+        return DetailDataParser { inputs in
+            if let result = parser() {
+                return self.parser(inputs) + result
+            } else {
+                return self.parser(inputs)
+            }
+        }
+    }
 }
 
 infix operator <-: SequencePrecedence
 
 func <-(chain: DetailDataParser, parser: @escaping () -> TableSectionNode?) -> DetailDataParser {
+    return chain.join(parser)
+}
+
+func <-(chain: DetailDataParser, parser: @escaping () -> [TableSectionNode]?) -> DetailDataParser {
     return chain.join(parser)
 }
 
@@ -683,4 +698,52 @@ func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
         return "be_null"
     }
 }
+
+func combineParser(left: @escaping () -> TableSectionNode?, right: @escaping () -> TableSectionNode?) -> () -> [TableSectionNode]? {
+    return {
+        var result = [TableSectionNode]()
+        if let node = left() {
+            result.append(node)
+        }
+
+        if let node = right() {
+            result.append(node)
+        }
+        return result
+    }
+}
+
+func parseNodeWrapper(preNode: @escaping () -> [TableSectionNode]?,
+                      wrapedNode: @escaping () -> TableSectionNode?) -> () -> [TableSectionNode]? {
+    return {
+        if let wrapped = wrapedNode() {
+            var result = [TableSectionNode]()
+            if let node = preNode() {
+                result.append(contentsOf: node)
+            }
+            result.append(wrapped)
+            return result
+        } else {
+            return []
+        }
+    }
+}
+
+
+func parseNodeWrapper(preNode: @escaping () -> TableSectionNode?,
+                      wrapedNode: @escaping () -> TableSectionNode?) -> () -> [TableSectionNode]? {
+    return {
+        if let wrapped = wrapedNode() {
+            var result = [TableSectionNode]()
+            if let node = preNode() {
+                result.append(node)
+            }
+            result.append(wrapped)
+            return result
+        } else {
+            return []
+        }
+    }
+}
+
 

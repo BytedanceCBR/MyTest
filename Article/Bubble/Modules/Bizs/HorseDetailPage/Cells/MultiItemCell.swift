@@ -367,6 +367,7 @@ func parseRelateCourtNode(
                     items: [render],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params:params)],
+                    sectionTracer: nil,
                     label: "猜你喜欢",
                     type: .node(identifier: MultiItemCell.identifier))
         } else {
@@ -445,6 +446,7 @@ func parseSearchInNeighborhoodNode(
                     items: [render],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "小区房源",
                     type: .node(identifier: MultiItemCell.identifier))
         } else {

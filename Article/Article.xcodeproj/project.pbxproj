@@ -1371,6 +1371,15 @@
 		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD33021A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33121A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33221A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33421A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33521A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33621A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33921A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
+		B32FD33A21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
+		B32FD33B21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -7784,6 +7793,9 @@
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
 		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
 		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
+		B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentDisclaimerCell.swift; sourceTree = "<group>"; };
+		B32FD33321A570EA007B9966 /* HouseRentTracer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseRentTracer.swift; sourceTree = "<group>"; };
+		B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHouseDetailPage.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -14694,9 +14706,11 @@
 		B32FD2F921A3B479007B9966 /* Rent */ = {
 			isa = PBXGroup;
 			children = (
+				B32FD33721A570EF007B9966 /* Tracer */,
 				B32FD2FA21A3B479007B9966 /* Cells */,
 				B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */,
 				B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */,
+				B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */,
 			);
 			path = Rent;
 			sourceTree = "<group>";
@@ -14711,8 +14725,17 @@
 				B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */,
 				B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */,
 				B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */,
+				B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		B32FD33721A570EF007B9966 /* Tracer */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD33321A570EA007B9966 /* HouseRentTracer.swift */,
+			);
+			path = Tracer;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -20240,6 +20263,7 @@
 				2DB9A54C1F20B01C005E4A06 /* TTAdCanvasModel.m in Sources */,
 				6B28469E1DF5407100170DE7 /* TTLayOutUnifyADLargePicCellModel.m in Sources */,
 				3DF3640C21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33921A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				A97DC1221F1333320002B455 /* TTRPay.m in Sources */,
 				A97DBBD31F1332E30002B455 /* TTStartupInterfaceGroup.m in Sources */,
 				067F115B1AE784CB00F56154 /* TTLocationManager.m in Sources */,
@@ -20277,6 +20301,7 @@
 				48E59BD61F9776C8000884C8 /* TTCustomAnimationDelegate.m in Sources */,
 				6B9CA40B1B8EBB780065CD76 /* ArticleVideoPosterView.m in Sources */,
 				2DB9A5EC1F20B01D005E4A06 /* TTAdSiteWebPreloadManager.m in Sources */,
+				B32FD33021A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				3DF3637C21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				472440401F8F43C70037712A /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				A97DC4521F1333630002B455 /* TTProfileViewController+UserLogin.m in Sources */,
@@ -20370,6 +20395,7 @@
 				AB1621F91F500EFA00B4CC0C /* SSCommentInputView.m in Sources */,
 				2DB442A31F711843008E8951 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				6B28468E1DF5407000170DE7 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33421A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				3DF3636121A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				2DB9A5E41F20B01D005E4A06 /* TTSettingADSplashVC.m in Sources */,
 				307D0FE52027065C00DFBC54 /* TTWeChatShare+TTService.m in Sources */,
@@ -21949,6 +21975,7 @@
 				B373CC592174587A008F9905 /* TTRPay.m in Sources */,
 				B373CC5C2174587A008F9905 /* TTStartupInterfaceGroup.m in Sources */,
 				3DF3640E21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33B21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				B373CC5D2174587A008F9905 /* TTLocationManager.m in Sources */,
 				B373CC5E2174587A008F9905 /* ArticleMomentProfileViewController.m in Sources */,
 				B373CC5F2174587A008F9905 /* TTArticleDetailMonitor.m in Sources */,
@@ -21986,6 +22013,7 @@
 				B373CC7C2174587A008F9905 /* ArticleVideoPosterView.m in Sources */,
 				B373CC7D2174587A008F9905 /* TTAdSiteWebPreloadManager.m in Sources */,
 				B373CC7E2174587A008F9905 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
+				B32FD33221A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				B373CC7F2174587A008F9905 /* TTProfileViewController+UserLogin.m in Sources */,
 				3DF3637E21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				B373CC802174587A008F9905 /* TTVVideoTabViewController.m in Sources */,
@@ -22079,6 +22107,7 @@
 				B373CCD62174587A008F9905 /* SSCommentInputView.m in Sources */,
 				B373CCD72174587A008F9905 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				B373CCD82174587A008F9905 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33621A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				B373CCD92174587A008F9905 /* TTSettingADSplashVC.m in Sources */,
 				3DF3636321A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				B373CCDA2174587A008F9905 /* TTWeChatShare+TTService.m in Sources */,
@@ -23658,6 +23687,7 @@
 				FEFA5755205FB1A8001F50D8 /* TTRPay.m in Sources */,
 				FEFA5758205FB1A8001F50D8 /* TTStartupInterfaceGroup.m in Sources */,
 				3DF3640D21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33A21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				FEFA5759205FB1A8001F50D8 /* TTLocationManager.m in Sources */,
 				D507C763206B8AE40072A03E /* ArticleMomentProfileViewController.m in Sources */,
 				FEFA575B205FB1A8001F50D8 /* TTArticleDetailMonitor.m in Sources */,
@@ -23695,6 +23725,7 @@
 				FEFA5779205FB1A8001F50D8 /* ArticleVideoPosterView.m in Sources */,
 				FEFA577A205FB1A8001F50D8 /* TTAdSiteWebPreloadManager.m in Sources */,
 				FEFA577B205FB1A8001F50D8 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
+				B32FD33121A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				FEFA577C205FB1A8001F50D8 /* TTProfileViewController+UserLogin.m in Sources */,
 				3DF3637D21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				FEFA577D205FB1A8001F50D8 /* TTVVideoTabViewController.m in Sources */,
@@ -23788,6 +23819,7 @@
 				FEFA57D8205FB1A8001F50D8 /* SSCommentInputView.m in Sources */,
 				FEFA57D9205FB1A8001F50D8 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				FEFA57DA205FB1A8001F50D8 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33521A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				FEFA57DC205FB1A8001F50D8 /* TTSettingADSplashVC.m in Sources */,
 				3DF3636221A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				FEFA57DD205FB1A8001F50D8 /* TTWeChatShare+TTService.m in Sources */,
