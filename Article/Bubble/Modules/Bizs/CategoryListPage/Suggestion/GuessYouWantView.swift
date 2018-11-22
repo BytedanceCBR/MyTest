@@ -21,6 +21,8 @@ class GuessYouWantView: UIView {
         }
     }
     
+    var onGuessYouWantItemClick: ((GuessYouWant) -> Void)?
+    
     var tempViews:[UIView] = []
     
     lazy var label: UILabel = {
@@ -68,6 +70,7 @@ class GuessYouWantView: UIView {
                 }
                 size.width += 12
                 button.tag = currentIndex
+                button.addTarget(self, action: #selector(buttonClick(btn:)), for: .touchUpInside)
                 if size.width > remainWidth {
                     // 下一行
                     if line >= 2 {
@@ -98,6 +101,16 @@ class GuessYouWantView: UIView {
                 tempViews.append(button)
             }
             currentIndex += 1
+        }
+    }
+    
+    @objc func buttonClick(btn:UIButton) {
+        let tag = btn.tag
+        if tag >= 0 && tag < guessYouWantItems.count {
+            let item = guessYouWantItems[tag]
+            if onGuessYouWantItemClick != nil {
+                onGuessYouWantItemClick!(item)
+            }
         }
     }
 }
