@@ -7,8 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import <FHHouseRent.h>
-#import "FHHomeBannerView.h"
-#import "FHHomeCityTrendView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,9 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UITableView* contentTableView;
 @property (nonatomic, strong) FHRowsView* rowsView;
-@property (nonatomic, strong) FHHomeBannerView* bannerView;
-@property (nonatomic, strong) FHHomeCityTrendView* trendView;
-
 
 - (void)refreshUI;
 
