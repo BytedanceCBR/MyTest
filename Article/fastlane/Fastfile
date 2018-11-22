@@ -20,11 +20,7 @@ platform :ios do
   lane :beta do |options|
     ENV["FASTLANE_PASSWORD"] = options[:itc_password]
     # add actions here: https://docs.fastlane.tools/actions
-   update_app_identifier(
-	  xcodeproj: "Article.xcodeproj", 
-	  plist_path: "NewsInHouse/NewsInHouse-Info.plist", 
-	  app_identifier: "com.bytedance.fp1" # The App Identifier
-    )
+ 
     get_certificates           # invokes cert
     get_provisioning_profile   # invokes sigh
     sh "rm -rf #{options[:output_directory]}"
