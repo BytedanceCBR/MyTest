@@ -63,6 +63,7 @@
 - (void)buildupView {
 
     [self addSubview:self.houseTableView];
+    self.tableView.frame = self.bounds;
     self.headerView = [[FHFeedHouseHeaderView alloc]initWithFrame:CGRectMake(0, 0, self.width, 45 + 6)];
     self.footerView = [[FHFeedHouseFooterView alloc]initWithFrame:CGRectMake(0, 0, self.width, 68 + 6)];
 }

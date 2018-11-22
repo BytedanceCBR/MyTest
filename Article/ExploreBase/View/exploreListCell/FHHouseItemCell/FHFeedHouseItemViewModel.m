@@ -209,7 +209,7 @@
 
                 FHSearchHouseDataItemsModel *item = [[FHSearchHouseDataItemsModel alloc]initWithDictionary:dict error:nil];
                 BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:item isLastCell:isLastCell];
+                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithModel:item isLastCell:isLastCell];
             }
         }
     }

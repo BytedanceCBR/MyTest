@@ -374,11 +374,11 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         let cell = self
         let item = model
         cell.majorTitle.text = model.displayTitle
-//        cell.extendTitle.text = model.displaySubtitle
+        cell.extendTitle.text = model.displayDescription
         cell.isTail = isLastCell
         
         let text = NSMutableAttributedString()
-        if let tags = item.tags as? [FHSearchHouseDataItemsTagsModel] {
+        if let tags = item.tags as? [FHNewHouseItemTagsModel] {
             let  attrTexts = tags.enumerated().map ({ (arg) -> NSAttributedString  in
                 let (offset, element) = arg
                 return createTagAttrString(
@@ -411,21 +411,11 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.areaLabel.snp.updateConstraints { (maker) in
             maker.left.equalToSuperview().offset(-3)
         }
-//        cell.priceLabel.text = item.displayPrice
-//
-//        cell.roomSpaceLabel.text = item.displayPricePerSqm
-//        let houseImags  = item.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
-//        cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-//        if let houseImageTag = item.houseImageTag,
-//            let backgroundColor = houseImageTag.backgroundColor,
-//            let textColor = houseImageTag.textColor {
-//            cell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
-//            cell.imageTopLeftLabel.text = houseImageTag.text
-//            cell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
-//            cell.imageTopLeftLabelBgView.isHidden = false
-//        } else {
-//            cell.imageTopLeftLabelBgView.isHidden = true
-//        }
+        cell.priceLabel.text = item.displayPricePerSqm
+        cell.roomSpaceLabel.text = ""
+        let houseImags  = model.images as? [FHNewHouseItemImagesModel]
+        cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+
         
     }
     
