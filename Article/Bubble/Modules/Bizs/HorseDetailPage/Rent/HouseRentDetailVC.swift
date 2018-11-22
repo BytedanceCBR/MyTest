@@ -141,7 +141,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         setupBottomStatusBar()
         setupTableView()
         setupInfoMaskView()
-        detailPageViewModel = HouseRentDetailViewMode()
+        detailPageViewModel = HouseRentDetailViewMode(houseRentTracer: houseRentTracer)
         detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)

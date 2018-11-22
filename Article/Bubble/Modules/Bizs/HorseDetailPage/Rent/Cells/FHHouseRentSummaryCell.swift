@@ -72,13 +72,18 @@ class FHHouseRentSummaryCell: BaseUITableViewCell {
 }
 
 
-func parseRentSummaryCellNode() -> () -> TableSectionNode? {
+func parseRentSummaryCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
     let render = curry(fillRentSummaryCell)
+    let params = EnvContext.shared.homePageParams <|>
+        toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+        toTracerParams("house_info", key: "element_type") <|>
+        toTracerParams(tracer.pageType, key: "page_type")
+    let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     return {
         return TableSectionNode(
             items: [render],
             selectors: nil,
-            tracer:nil,
+            tracer:[tracerEvaluationRecord],
             sectionTracer: nil,
             label: "",
             type: .node(identifier: FHHouseRentSummaryCell.identifier))

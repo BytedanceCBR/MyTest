@@ -23,13 +23,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     weak var tableView: UITableView?
 
-    var houseRentTracer: HouseRentTracer?
+    var houseRentTracer: HouseRentTracer
 
     private var elementShowIndexPathCache: [IndexPath] = []
     private var sectionShowCache: [Int] = []
 
-    override init() {
+    init(houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
+        self.houseRentTracer = houseRentTracer
         super.init()
         datas = processData()([])
         Observable
@@ -76,6 +77,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 tracer(params)
                 sectionShowCache.append(indexPath.section)
             }
+
+            if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionCell {
+                theCell.hasShowOnScreen = true
+            } else if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionNeighborhoodCell {
+                theCell.hasShowOnScreen = true
+            }
+
         })
 
 
@@ -87,7 +95,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
 //        self.houseRentTracer?.logPb
-        self.houseRentTracer?.recordGoDetail()
+        self.houseRentTracer.recordGoDetail()
 
 
         var infos:[ErshouHouseBaseInfo] = []
@@ -106,7 +114,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let dataParser = DetailDataParser.monoid()
             <- parseRentHouseCycleImageNode(nil, disposeBag: disposeBag)
             <- parseRentNameCellNode()
-            <- parseRentCoreInfoCellNode()
+            <- parseRentCoreInfoCellNode(tracer: houseRentTracer)
             <- parseRentPropertyListCellNode(infos)
             //房屋配置
             <- parseRentHouseFacility()
@@ -124,17 +132,27 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseRentSummaryHeaderCellNode("房屋概况"))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentSummaryCellNode())
+        return parseNodeWrapper(preNode: header, wrapedNode: parseRentSummaryCellNode(tracer: houseRentTracer))
     }
 
     func parseRentHouseFacility() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("房屋配置", adjustBottomSpace: 0))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentFacilityCellNode())
+        return parseNodeWrapper(preNode: header, wrapedNode: parseRentFacilityCellNode(tracer: houseRentTracer))
     }
 
     func parseRentNeighborhoodInfo() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("小区 远洋沁山水", showLoadMore: true, adjustBottomSpace: 0))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentNeighborhoodInfoNode())
+        return parseNodeWrapper(preNode: header, wrapedNode: parseRentNeighborhoodInfoNode(tracer: houseRentTracer))
+    }
+
+    func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
+        let params = TracerParams.momoid()
+        return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
+                                wrapedNode: parseRentSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data,
+                                                                              tracer: houseRentTracer,
+                                                                              traceExtension: params,
+                                                                              navVC: navVC,
+                                                                              tracerParams: params))
     }
 
     func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
@@ -144,22 +162,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         })
         let params = TracerParams.momoid()
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
-        let result = parseErshouHouseListItemNode(
+        let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             traceExtension: params,
             disposeBag: disposeBag,
             tracerParams: params,
             navVC: self.navVC)
         return parseNodeWrapper(preNode: header, wrapedNode: result)
-    }
-
-    func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
-        let params = TracerParams.momoid()
-        return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
-                                wrapedNode: parseSearchInNeighborhoodNodeCollection(houseInSameNeighborhood.value?.data,
-                                                                                    traceExtension: params,
-                                                                                    navVC: navVC,
-                                                                                    tracerParams: params))
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -193,6 +202,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         }
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
+            datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid())
+        }
+    }
+
     func requestReletedData() {
 //        if let neighborhoodId = "1" {
 
@@ -214,6 +229,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
 //        }
 
+        let task = HouseRentAPI.requestHouseRentRelated()
     }
 
 }

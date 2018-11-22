@@ -7,8 +7,13 @@
 
 import Foundation
 
-func parseRentCoreInfoCellNode() -> () -> TableSectionNode? {
+func parseRentCoreInfoCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
     let cellRender = curry(fillRentCoreInfoCell)
+//    let params = EnvContext.shared.homePageParams <|>
+//        toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+//        toTracerParams("house_roommate", key: "element_type") <|>
+//        toTracerParams(tracer.pageType, key: "page_type")
+//    let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     return {
         return TableSectionNode(
             items: [cellRender],

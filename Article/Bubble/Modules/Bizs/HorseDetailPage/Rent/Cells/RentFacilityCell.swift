@@ -38,13 +38,19 @@ class RentFacilityCell: BaseUITableViewCell {
 }
 
 
-func parseRentFacilityCellNode() -> () -> TableSectionNode? {
+func parseRentFacilityCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
     let render = curry(fillRentFacilityCell)
+    let params = EnvContext.shared.homePageParams <|>
+        toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+        toTracerParams("house_facility", key: "element_type") <|>
+        toTracerParams(tracer.pageType, key: "page_type")
+    let tracerEvaluationRecord = elementShowOnceRecord(params: params)
+
     return {
         return TableSectionNode(
             items: [render],
             selectors: nil,
-            tracer:nil,
+            tracer:[tracerEvaluationRecord],
             sectionTracer: nil,
             label: "",
             type: .node(identifier: RentFacilityCell.identifier))

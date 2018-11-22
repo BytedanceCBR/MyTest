@@ -98,6 +98,7 @@
 #import <FHHouseRent/FHHouseRent.h>
 
 #import <FHHouseBase/FHBaseTableViewCell.h>
+#import "HouseRentAPI.h"
 
 
 #endif /* Article_Bridging_Header_h */

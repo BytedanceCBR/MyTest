@@ -451,7 +451,7 @@ extension MultitemCollectionEvaluateCell: UICollectionViewDataSource, UICollecti
     }
 }
 
-fileprivate class FloorPanItemCollectionCell: UICollectionViewCell {
+class FloorPanItemCollectionCell: UICollectionViewCell {
 
     lazy var floorPanItemView: FloorPanItemView = {
         let re = FloorPanItemView()
