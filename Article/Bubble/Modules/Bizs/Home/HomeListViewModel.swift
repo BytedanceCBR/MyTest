@@ -167,7 +167,6 @@ class HomeListViewModel: DetailPageViewModel {
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-                    
                     return
                 }
                 
@@ -241,6 +240,7 @@ class HomeListViewModel: DetailPageViewModel {
         })
             .disposed(by: disposeBag)
         
+        registerPullDownNoti()
     }
     
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
@@ -420,7 +420,11 @@ class HomeListViewModel: DetailPageViewModel {
     
     //第一次请求，继承协议方法
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
-        listDataRequestDisposeBag = DisposeBag()
+        
+         listDataRequestDisposeBag = DisposeBag()
+        
+        // 请求首页搜索器推荐词请求
+        self.requestHomePageRollScreen()
         
         self.houseId = houseId
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
@@ -697,7 +701,33 @@ class HomeListViewModel: DetailPageViewModel {
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
-        
+    }
+    
+    func registerPullDownNoti() {
+        // TTRefreshView+HomePage 进行下拉以及是否是首页b判断
+        NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in
+            if let userInfo = noti.userInfo {
+                if let needPullDownData = userInfo["needPullDownData"] as? Bool {
+                    if needPullDownData {
+                        self?.requestHomePageRollScreen()
+                    }
+                }
+            }
+            }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
+    }
+    
+    func requestHomePageRollScreen()
+    {
+        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        requestHomePageRollScreenData(cityId: cityId ?? 122).subscribe(onNext: {(response) in
+            if let listData = response?.data?.data {
+                let userInfo = ["homePageRollData":listData]
+                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
+            } else {
+                let userInfo = ["homePageRollData":[]]
+                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
+            }
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
     }
     
     func createOneTimeToast() -> (String?) -> Void {

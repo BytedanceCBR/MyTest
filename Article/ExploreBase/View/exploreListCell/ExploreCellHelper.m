@@ -141,6 +141,7 @@
 #import "TSVFeedFollowCell.h"
 //#import "PopularHashtagData.h"
 //#import "TSVFeedStoryCell.h"
+#import "FHHomeCellHelper.h"
 
 #import "TTExploreLoadMoreTipData.h"
 #import "TTExploreLoadMoreTipCell.h"
@@ -1148,7 +1149,7 @@ static NSMutableArray *s_reusableCardViews;
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    return 300;
+    return [FHHomeCellHelper heightForFHHomeHeaderCellViewType];
 }
 
 + (CGFloat)largeImageWidth:(CGFloat)cellWidth

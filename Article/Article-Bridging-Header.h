@@ -92,6 +92,8 @@
 
 #import "HouseRentDetailPageVC.h"
 
+#import "TTRefreshView+HomePage.h"
+
 //for bridge
 #import <FHHouseBase/FHHouseFilterDelegate.h>
 #import <FHHouseBase/FHHouseSingleImageInfoCellBridgeDelegate.h>
@@ -100,5 +102,7 @@
 #import <FHHouseBase/FHBaseTableViewCell.h>
 #import "HouseRentAPI.h"
 
+#import "FHHomeConfigManager.h"
+#import "FHNewHouseItemModel.h"
 
 #endif /* Article_Bridging_Header_h */
