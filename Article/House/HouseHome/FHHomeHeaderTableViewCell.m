@@ -34,6 +34,7 @@
         make.edges.equalTo(self);
     }];
     _contentTableView.scrollEnabled = NO;
+    self.contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [FHHomeCellHelper registerCells:self.contentTableView];
     
     [FHHomeCellHelper registerDelegate:self.contentTableView andDelegate:self.tableViewDelegate];
