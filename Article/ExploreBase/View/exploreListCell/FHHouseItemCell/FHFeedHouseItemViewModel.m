@@ -42,13 +42,12 @@
 -(void)setHeaderView:(FHFeedHouseHeaderView *)headerView {
     
     _headerView = headerView;
-    self.tableView.tableHeaderView = _headerView;
+    
 }
 
 -(void)setFooterView:(FHFeedHouseFooterView *)footerView {
     
     _footerView = footerView;
-    self.tableView.tableFooterView = _footerView;
     [_footerView addTarget:self action:@selector(loadMoreBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
