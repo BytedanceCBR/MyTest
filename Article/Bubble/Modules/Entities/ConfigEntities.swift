@@ -30,6 +30,7 @@ struct GeneralConfigData: Mappable {
     var currentCityId: Int64?
     var currentCityName: String?
     var opData: OpData?
+    var opData2: Any?
     var banners: [Banner]?
     var reviewInfo: ConfigReviewInfo?
     var mapSearch : MapSearch?
@@ -45,6 +46,7 @@ struct GeneralConfigData: Mappable {
         currentCityId <- map["current_city_id"]
         currentCityName <- map["current_city_name"]
         opData <- map["op_data"]
+        opData2 <- map["op_data_2"]
         banners <- map["banners"]
         housetypelist <- map["house_type_list"]
         reviewInfo <- map["review_info"]

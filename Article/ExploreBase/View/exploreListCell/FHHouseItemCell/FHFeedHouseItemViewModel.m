@@ -42,20 +42,19 @@
 -(void)setHeaderView:(FHFeedHouseHeaderView *)headerView {
     
     _headerView = headerView;
-    self.tableView.tableHeaderView = _headerView;
+    
 }
 
 -(void)setFooterView:(FHFeedHouseFooterView *)footerView {
     
     _footerView = footerView;
-    self.tableView.tableFooterView = _footerView;
     [_footerView addTarget:self action:@selector(loadMoreBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(void)updateWithHouseData:(FHExploreHouseItemData *_Nullable)data {
     
     self.houseItemsData = data;
-    
+
     [self.headerView updateTitle: self.houseItemsData.title];
     [self.footerView updateTitle: self.houseItemsData.loadmoreButton];
     [self.tableView reloadData];
@@ -171,46 +170,76 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    if (self.houseItemsData.items.count < 1) {
-        return 0;
+    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
+        if (self.houseItemsData.houseList.count < 1) {
+            return 0;
+        }
+        return 1;
+        
+    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+        if (self.houseItemsData.secondHouseList.count < 1) {
+            return 0;
+        }
+        return 1;
+        
     }
-    return 1;
+    return 0;
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.houseItemsData.items.count;
-    
+    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
+
+        return self.houseItemsData.houseList.count;
+        
+    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+
+        return self.houseItemsData.secondHouseList.count;
+        
+    }
+    return 0;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return 105;
+    if ([self.houseItemsData.houseType isEqualToString:@"1"] || [self.houseItemsData.houseType isEqualToString:@"2"]) {
+        if (indexPath.row == 0) {
+            
+            return 85;
+        }
+        return 105;
+        
+    }
+    return 0;
+
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFeedHouseCellId];
-    if (self.houseItemsData.items.count > 0 && indexPath.row < self.houseItemsData.items.count) {
-        
-        NSDictionary *dict = self.houseItemsData.items[indexPath.row];
-        if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
-            FHNewHouseItemModel *model = [[FHNewHouseItemModel alloc]initWithDictionary:dict error:nil];
-            BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-            SEL sel = @selector(updateWithModel:isLastCell:);
-            if ([cell respondsToSelector:sel]) {
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isLastCell:isLastCell];
-            }
-            
-        }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
-            
-            SEL sel = @selector(updateWithNewHouseModel:isLastCell:);
-            if ([cell respondsToSelector:sel]) {
+    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
 
-                FHSearchHouseDataItemsModel *item = [[FHSearchHouseDataItemsModel alloc]initWithDictionary:dict error:nil];
-                BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:item isLastCell:isLastCell];
+        if (self.houseItemsData.houseList.count > 0 && indexPath.row < self.houseItemsData.houseList.count) {
+            
+            FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
+            BOOL isFirstCell = (indexPath.row == 0);
+            BOOL isLastCell = (indexPath.row == self.houseItemsData.houseList.count - 1);
+            SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
+            if ([cell respondsToSelector:sel]) {
+                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
             }
+        }
+        
+    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+        
+        if (self.houseItemsData.secondHouseList.count > 0 && indexPath.row < self.houseItemsData.secondHouseList.count) {
+            
+            FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
+            BOOL isFirstCell = (indexPath.row == 0);
+            BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
+            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
+            
         }
     }
     return cell;
@@ -227,21 +256,25 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.houseItemsData.items.count > 0 && indexPath.row < self.houseItemsData.items.count) {
-
-        NSDictionary *dict = self.houseItemsData.items[indexPath.row];
-
+    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
         
-        if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
-            FHNewHouseItemModel *model = [[FHNewHouseItemModel alloc]initWithDictionary:dict error:nil];
+        if (self.houseItemsData.houseList.count > 0 && indexPath.row < self.houseItemsData.houseList.count) {
+            
+            FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
             [self showNewHouseDetailPage:model];
 
-        }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+        }
+        
+    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+        
+        if (self.houseItemsData.secondHouseList.count > 0 && indexPath.row < self.houseItemsData.secondHouseList.count) {
             
-            FHSearchHouseDataItemsModel *model = [[FHSearchHouseDataItemsModel alloc]initWithDictionary:dict error:nil];
+            FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
             [self showSecondHouseDetailPage:model];
+
         }
     }
+    
 }
 
 

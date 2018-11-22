@@ -11,7 +11,6 @@
 @interface FHFeedHouseHeaderView ()
 
 @property(nonatomic, strong)UILabel *tipLabel;
-@property(nonatomic, strong)UIView *line;
 
 @end
 
@@ -29,19 +28,8 @@
 
 -(void)setupUI {
     
-    [self addSubview:self.line];
     [self addSubview:self.tipLabel];
-    
-    [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(@6);
-    }];
-    
-    [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(@20);
-        make.top.mas_equalTo(self.line.mas_bottom).mas_offset(20);
-        make.bottom.mas_equalTo(self);
-    }];
+    self.tipLabel.frame = CGRectMake(20, 12, self.width - 20, 31);
 
 }
 
@@ -50,15 +38,6 @@
     self.tipLabel.text = title;
 }
 
--(UIView *)line {
-    
-    if (!_line) {
-        
-        _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor themeGray7];
-    }
-    return _line;
-}
 
 -(UILabel *)tipLabel {
     
@@ -80,7 +59,6 @@
 @property(nonatomic, strong)UILabel *tipLabel;
 @property(nonatomic, strong)UIImageView *rightArrow;
 @property(nonatomic, strong)UIView *line;
-@property(nonatomic, strong)UIView *bottomLine;
 
 @end
 
@@ -101,7 +79,6 @@
     [self addSubview:self.line];
     [self addSubview:self.tipLabel];
     [self addSubview:self.rightArrow];
-    [self addSubview:self.bottomLine];
 
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
@@ -112,18 +89,14 @@
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(@20);
         make.top.mas_equalTo(self.line.mas_bottom);
-        make.height.mas_equalTo(48);
+        make.height.mas_equalTo(47.5);
     }];
     
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(@(-15));
         make.centerY.mas_equalTo(self.tipLabel);
     }];
-    
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(@6);
-    }];
+
 }
 
 -(void)updateTitle:(NSString *)title {
@@ -163,14 +136,5 @@
     return _rightArrow;
 }
 
--(UIView *)bottomLine {
-    
-    if (!_bottomLine) {
-        
-        _bottomLine = [[UIView alloc]init];
-        _bottomLine.backgroundColor = [UIColor themeGray7];
-    }
-    return _bottomLine;
-}
 
 @end

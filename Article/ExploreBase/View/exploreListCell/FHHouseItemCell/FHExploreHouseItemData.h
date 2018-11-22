@@ -22,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 
 
-- (nullable NSArray<FHSearchHouseDataItemsModel *> *)newItemList;
+- (nullable NSArray<FHNewHouseItemModel *> *)houseList;
 
-- (nullable NSArray<FHNewHouseItemModel *> *)secondItemList;
+- (nullable NSArray<FHSearchHouseDataItemsModel *> *)secondHouseList;
 
 
 @end
