@@ -284,6 +284,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
             .filter { $0 == nil || $0 == "" }
             .bind(onNext: { [unowned self] text in
                 self.tableViewModel.suggestions.accept([])
+                self.tableViewModel.searchedStr = ""
             })
             .disposed(by: disposeBag)
 
