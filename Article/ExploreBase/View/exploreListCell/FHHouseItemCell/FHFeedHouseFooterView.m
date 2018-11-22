@@ -29,7 +29,7 @@
 -(void)setupUI {
     
     [self addSubview:self.tipLabel];
-    self.tipLabel.frame = CGRectMake(20, 18, self.width - 20, self.height - 18);
+    self.tipLabel.frame = CGRectMake(20, 12, self.width - 20, 31);
 
 }
 
@@ -59,7 +59,6 @@
 @property(nonatomic, strong)UILabel *tipLabel;
 @property(nonatomic, strong)UIImageView *rightArrow;
 @property(nonatomic, strong)UIView *line;
-//@property(nonatomic, strong)UIView *bottomLine;
 
 @end
 
@@ -80,7 +79,6 @@
     [self addSubview:self.line];
     [self addSubview:self.tipLabel];
     [self addSubview:self.rightArrow];
-//    [self addSubview:self.bottomLine];
 
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
@@ -98,11 +96,7 @@
         make.right.mas_equalTo(@(-15));
         make.centerY.mas_equalTo(self.tipLabel);
     }];
-//
-//    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.left.right.mas_equalTo(0);
-//        make.height.mas_equalTo(@6);
-//    }];
+
 }
 
 -(void)updateTitle:(NSString *)title {
@@ -142,14 +136,5 @@
     return _rightArrow;
 }
 
-//-(UIView *)bottomLine {
-//
-//    if (!_bottomLine) {
-//
-//        _bottomLine = [[UIView alloc]init];
-//        _bottomLine.backgroundColor = [UIColor themeGray7];
-//    }
-//    return _bottomLine;
-//}
 
 @end

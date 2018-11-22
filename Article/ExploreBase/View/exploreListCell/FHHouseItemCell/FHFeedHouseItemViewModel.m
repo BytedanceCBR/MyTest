@@ -183,7 +183,10 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if (indexPath.row == 0) {
+        
+        return 85;
+    }
     return 105;
 }
 
@@ -195,20 +198,22 @@
         NSDictionary *dict = self.houseItemsData.items[indexPath.row];
         if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
             FHNewHouseItemModel *model = [[FHNewHouseItemModel alloc]initWithDictionary:dict error:nil];
+            BOOL isFirstCell = (indexPath.row == 0);
             BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-            SEL sel = @selector(updateWithModel:isLastCell:);
+            SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
             if ([cell respondsToSelector:sel]) {
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isLastCell:isLastCell];
+                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
             }
             
         }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
             
-            SEL sel = @selector(updateWithNewHouseModel:isLastCell:);
+            SEL sel = @selector(updateWithSecondHouseModel:isFirstCell:isLastCell:);
             if ([cell respondsToSelector:sel]) {
 
                 FHSearchHouseDataItemsModel *item = [[FHSearchHouseDataItemsModel alloc]initWithDictionary:dict error:nil];
+                BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithModel:item isLastCell:isLastCell];
+                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
             }
         }
     }

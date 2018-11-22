@@ -72,7 +72,7 @@
 
     [self addSubview:self.topLine];
     self.topLine.frame = CGRectMake(0, 0, self.width, 6);
-    self.headerView = [[FHFeedHouseHeaderView alloc]initWithFrame:CGRectMake(0, self.topLine.bottom, self.width, 48)];
+    self.headerView = [[FHFeedHouseHeaderView alloc]initWithFrame:CGRectMake(0, self.topLine.bottom, self.width, 50)];
     [self addSubview:self.headerView];
     
     [self addSubview:self.houseTableView];
@@ -104,41 +104,6 @@
     return [self orderedData];
 }
 
-
-//- (void)refreshUI
-//{
-//    [super refreshUI];
-//
-//    if (![self.orderedData preCellHasBottomPadding] && [self.orderedData hasTopPadding]) {
-//        CGRect bounds = self.bounds;
-//        bounds.origin.y = - 6;
-//        self.bounds = bounds;
-//        self.topLine.bottom = 0;
-//        self.topLine.width = self.width;
-//        self.topLine.hidden = NO;
-//    } else {
-//        CGRect bounds = self.bounds;
-//        bounds.origin.y = 0;
-//        self.bounds = bounds;
-//        self.topLine.hidden = YES;
-//    }
-//    self.headerView.frame = CGRectMake(0, self.topLine.bottom, self.width, 48);
-//    if (self.orderedData.houseItemsData.items.count > 0) {
-//
-//        self.houseTableView.frame = CGRectMake(0, self.headerView.bottom, self.width, 105 * self.orderedData.houseItemsData.items.count);
-//        self.footerView.frame = CGRectMake(0, self.houseTableView.bottom, self.width, 68);
-//    }
-//
-//    if (![self.orderedData nextCellHasTopPadding] && [self.orderedData hasTopPadding]) {
-//        self.bottomLine.bottom = self.height + self.bounds.origin.y;
-//        self.bottomLine.width = self.width;
-//        self.bottomLine.hidden = NO;
-//    }
-//    else{
-//        self.bottomLine.hidden = YES;
-//    }
-//}
-
 -(void)refreshUI {
 
     [super refreshUI];
@@ -150,11 +115,11 @@
         self.topLine.frame = CGRectMake(0, 0, self.width, 6);
 
     }
-    self.headerView.frame = CGRectMake(0, self.topLine.bottom, self.width, 48);
+    self.headerView.frame = CGRectMake(0, self.topLine.bottom, self.width, 50);
 
     if (self.orderedData.houseItemsData.items.count > 0) {
 
-        self.houseTableView.frame = CGRectMake(0, self.headerView.bottom, self.width, 105 * self.orderedData.houseItemsData.items.count);
+        self.houseTableView.frame = CGRectMake(0, self.headerView.bottom, self.width, 105 * self.orderedData.houseItemsData.items.count - 20.f);
         self.footerView.frame = CGRectMake(0, self.houseTableView.bottom, self.width, 68);
     }
 
@@ -194,7 +159,7 @@
     if(data.houseItemsData.items.count < 1) {
         return 0;
     }
-    CGFloat height = 48.0f + 105 * data.houseItemsData.items.count + 68.f;
+    CGFloat height = 50.0f + 105 * data.houseItemsData.items.count - 20.f + 68.f;
     if (!data.preCellHasBottomPadding) {
         
         height += 6;
@@ -228,6 +193,12 @@
         _houseTableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStylePlain];
         _houseTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _houseTableView.scrollEnabled = false;
+        _houseTableView.estimatedRowHeight = 0;
+        _houseTableView.estimatedSectionHeaderHeight = 0;
+        _houseTableView.estimatedSectionFooterHeight = 0;
+        if (@available(iOS 11.0, *)) {
+            _houseTableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return _houseTableView;
 }
