@@ -132,6 +132,7 @@ class CurrentCitySwitcher {
         }
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
+        
         self.updateSearchCondition(response: searchConfigResponse)
         self.updateGeneralConfig(response: generalConfigRsponse)
     }

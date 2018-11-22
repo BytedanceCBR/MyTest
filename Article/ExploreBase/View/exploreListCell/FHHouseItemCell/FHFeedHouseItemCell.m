@@ -6,9 +6,11 @@
 //
 
 #import "FHFeedHouseItemCell.h"
-#import "TTRoute.h"
 #import "FHExploreHouseItemData.h"
 #import "ExploreOrderedData+TTBusiness.h"
+#import "FHFeedHouseItemViewModel.h"
+#import "FHFeedHouseFooterView.h"
+#import "UIColor+Theme.h"
 
 @implementation FHFeedHouseItemCell
 
@@ -37,9 +39,12 @@
 
 @end
 
-@interface FHFeedHouseItemCellView () <UITableViewDataSource, UITableViewDelegate>
+@interface FHFeedHouseItemCellView ()
 
 @property (nonatomic, strong) UITableView *houseTableView;
+@property(nonatomic , strong) FHFeedHouseHeaderView *headerView;
+@property(nonatomic , strong) FHFeedHouseFooterView *footerView;
+@property (nonatomic, strong) FHFeedHouseItemViewModel *viewModel;
 
 @end
 
@@ -50,25 +55,35 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self buildupView];
+        [self configViewModel];
     }
     return self;
 }
 
 - (void)buildupView {
 
-    // add by zjing for test
-    self.backgroundColor = [UIColor redColor];
-    
     [self addSubview:self.houseTableView];
-    
+    self.headerView = [[FHFeedHouseHeaderView alloc]initWithFrame:CGRectMake(0, 0, self.width, 45 + 6)];
+    self.footerView = [[FHFeedHouseFooterView alloc]initWithFrame:CGRectMake(0, 0, self.width, 68 + 6)];
 }
 
+- (void)configViewModel {
+
+    self.viewModel = [[FHFeedHouseItemViewModel alloc]initWithTableView:self.houseTableView];
+    self.viewModel.headerView = self.headerView;
+    self.viewModel.footerView = self.footerView;
+    
+}
 - (void)refreshWithData:(ExploreOrderedData *)data {
     NSParameterAssert([data isKindOfClass:[ExploreOrderedData class]]);
     
     self.orderedData = data;
-
-    [self.houseTableView reloadData];
+    if (self.orderedData.houseItemsData.items.count > 0) {
+        
+        self.houseTableView.frame = CGRectMake(0, 0, self.width, 51.0f + 105 * self.orderedData.houseItemsData.items.count + 74.f);
+    }
+    [self.viewModel updateWithHouseData:self.orderedData.houseItemsData];
+    
 }
 
 - (void)willAppear {
@@ -93,58 +108,14 @@
 
 
 + (CGFloat)heightForData:(ExploreOrderedData *)data cellWidth:(CGFloat)width listType:(ExploreOrderedDataListType)listType {
-    return 65.0f + 105 * 3 + 48.f;
-}
-
-#pragma mark - tableView dataSource & delegate
-
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    if (self.orderedData.houseItemsData.items.count < 1) {
+    if(data.houseItemsData.items.count < 1) {
         return 0;
     }
-    return 1;
+    return 51.0f + 105 * data.houseItemsData.items.count + 74.f;
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return self.orderedData.houseItemsData.items.count;
-    
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
-    
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//
-//    TTCommentReplyModel *model;
-//    if (indexPath.row < _replyArr.count) {
-//        model = _replyArr[indexPath.row];
-//    }
-//    else {
-//        NSString *moreReplyText = [NSString stringWithFormat:@"查看全部%lld条回复", [_toComment.replyCount longLongValue]];
-//        TTCommentReplyModel *moreReplyModel = [TTCommentReplyModel replyModelWithDict:@{@"user_name":moreReplyText} forCommentID:_toComment.commentID.stringValue];
-//        moreReplyModel.notReplyMsg = YES;
-//        model = moreReplyModel;
-//    }
-//    [cell refreshWithModel:model width:self.width];
-//
-//    __weak typeof(self) wself = self;
-//    [cell handleUserClickActionWithBlock:^(TTCommentReplyModel *replyModel) {
-//        if (wself.replyUserBlock) {
-//            wself.replyUserBlock(replyModel);
-//        }
-//    }];
-    
-    return cell;
-    
-}
 
 #pragma mark - lazy load
 
@@ -153,8 +124,8 @@
     if (!_houseTableView) {
         
         _houseTableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStylePlain];
-        _houseTableView.dataSource = self;
-        _houseTableView.delegate = self;
+        _houseTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _houseTableView.scrollEnabled = false;
     }
     return _houseTableView;
 }
