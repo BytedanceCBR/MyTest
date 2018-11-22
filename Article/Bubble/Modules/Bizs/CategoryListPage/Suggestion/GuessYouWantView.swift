@@ -17,6 +17,7 @@ class GuessYouWantView: UIView {
             self.isHidden = guessYouWantItems.count <= 0
             if guessYouWantItems.count > 0 {
                 reAddViews()
+                label.isHidden = false
             }
         }
     }
@@ -38,6 +39,7 @@ class GuessYouWantView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         label.text = "猜你想搜"
+        label.isHidden = true
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalTo(20)
