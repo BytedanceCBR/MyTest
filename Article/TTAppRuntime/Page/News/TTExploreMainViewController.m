@@ -124,6 +124,7 @@
 //    NSString * baseUrl = [CommonURLSetting baseURL];
     NSString * baseUrl = @"https://i.snssdk.com";
     
+    [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {

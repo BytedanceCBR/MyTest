@@ -10,8 +10,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHExploreHouseItemData;
+@class FHFeedHouseHeaderView;
+@class FHFeedHouseFooterView;
 
 @interface FHFeedHouseItemViewModel : NSObject
+
+@property(nonatomic , weak) FHFeedHouseHeaderView *headerView;
+@property(nonatomic , weak) FHFeedHouseFooterView *footerView;
 
 -(instancetype)initWithTableView:(UITableView *)tableView;
 

@@ -7,10 +7,10 @@
 
 #import "FHExploreHouseItemData.h"
 #import "FHSearchHouseModel.h"
+#import "FHNewHouseItemModel.h"
 
 @interface FHExploreHouseItemData ()
 
-@property (nonatomic, copy , nullable) NSArray<FHSearchHouseDataItemsModel *> *itemList;
 
 @end
 
@@ -31,18 +31,6 @@
         self.loadmoreButton = [raw_data tt_stringValueForKey:@"loadmore_button"];
         self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
 
-        NSMutableArray *mutable = @[].mutableCopy;
-        if (self.items.count > 0) {
-            for (NSDictionary *item in self.items) {
-                
-                FHSearchHouseDataItemsModel *model =  [[FHSearchHouseDataItemsModel alloc]initWithDictionary:item error:nil];
-                if (model != nil) {
-                    [mutable addObject:model];
-                }
-            }
-            self.itemList = mutable;
-        }
-        
     }
 }
 
@@ -78,12 +66,6 @@
         properties = [dict copy];
     }
     return properties;
-}
-
-
-- (nullable NSArray<FHSearchHouseDataItemsModel *> *)houseItemList {
-    
-    return self.itemList;
 }
 
 @end
