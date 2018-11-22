@@ -13,6 +13,7 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import <FHHouseRent/FHSpringboardView.h>
 #import "FHHomeConfigManager.h"
+#import <BDWebImage.h>
 
 @implementation FHHomeCellHelper
 
@@ -31,22 +32,28 @@
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
-
+    
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate
 {
     __block NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-    WeakSelf;
     [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        StrongSelf;
-
+        [modelsArray removeAllObjects];
         if ([x isKindOfClass:[FHConfigDataModel class]]) {
+            FHConfigDataModel * dataModel = (FHConfigDataModel *)x;
+            if (dataModel.opData) {
+                [modelsArray addObject:dataModel.opData];
+            }
             
+            if (dataModel.opData2) {
+                [modelsArray addObject:dataModel.opData2];
+            }
         }
-
-
+        delegate.modelsArray = modelsArray;
+        tableView.delegate = delegate;
+        tableView.dataSource = delegate;
     }];
 }
 
@@ -69,39 +76,45 @@
             break;
         default:
             break;
-    }    
+    }
 }
 
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
 {
     FHHomeEntrancesCell *cellEntrance = cell;
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < 4; i++) {
+    
+    NSInteger countItems = model.items.count;
+    if (countItems > 8) {
+        countItems = 8;
+    }
+    
+    for (int i = 0; i < countItems; i++) {
         FHSpringboardIconItemView *itemView = [[FHSpringboardIconItemView alloc] init];
-        switch (i) {
-            case 0:
-                itemView.backgroundColor = [UIColor redColor];
-                break;
-            case 1:
-                itemView.backgroundColor = [UIColor blueColor];
-                break;
-            case 2:
-                itemView.backgroundColor = [UIColor purpleColor];
-                break;
-            case 3:
-                itemView.backgroundColor = [UIColor orangeColor];
-                break;
-            default:
-                break;
+        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:i];
+        itemView.backgroundColor = [UIColor whiteColor];
+        if (itemModel.image.count > 0) {
+            FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
+            if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
+                [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            }
         }
+        
+        if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
+            itemView.nameLabel.text = itemModel.title;
+        }
+        
         [itemsArray addObject:itemView];
     }
-    [cellEntrance.rowsView addItemViews:itemsArray];
+    
+    if (itemsArray.count > 0) {
+        [cellEntrance.boardView addItemViews:itemsArray];
+    }
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
 {
-
+    
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
@@ -114,7 +127,6 @@
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
         [self fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model];
     }
-    
 }
 
 

@@ -36,8 +36,6 @@
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-//        NSDictionary *dict = dataModel.toDictionary;
-//        NSLog(@"config dict = %@",dict);
         [self.configDataReplay sendNext:dataModel];
     }
 }

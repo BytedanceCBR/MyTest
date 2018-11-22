@@ -9,6 +9,26 @@
 
 @implementation FHHomeEntrancesCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.boardView = [[FHRowsView alloc] initWithRowCount:4];
+        [self setUpSubViews];
+    }
+    return self;
+}
+
+- (void)setUpSubViews
+{
+    [self addSubview:_boardView];
+    _boardView.backgroundColor = [UIColor blackColor];
+    
+    [_boardView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.right.equalTo(self);
+    }];
+
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
