@@ -14,6 +14,7 @@
 #import <FHHouseRent/FHSpringboardView.h>
 #import "FHHomeConfigManager.h"
 #import <BDWebImage.h>
+#import "UIColor+Theme.h"
 
 @implementation FHHomeCellHelper
 
@@ -97,11 +98,19 @@
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                   make.width.height.mas_equalTo(52);
+                }];
             }
         }
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
+            itemView.nameLabel.textColor = [UIColor themeBlue1];
+            itemView.nameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
             itemView.nameLabel.text = itemModel.title;
+            [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
+            }];
         }
         
         [itemsArray addObject:itemView];
