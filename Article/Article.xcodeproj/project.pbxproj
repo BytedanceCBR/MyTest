@@ -3524,7 +3524,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -9060,7 +9060,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -18271,15 +18271,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-f100-checkManifestLockResult.txt",
 			);
@@ -18293,11 +18289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18310,11 +18302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18327,13 +18315,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18425,6 +18409,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
@@ -18506,6 +18491,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
@@ -18589,8 +18575,6 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh",
 				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_ali@2x.png",
@@ -18642,6 +18626,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
@@ -18672,8 +18657,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
@@ -18724,6 +18707,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
@@ -19015,6 +18999,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
@@ -19095,6 +19080,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
