@@ -143,14 +143,6 @@
 
 - (void)didSelectWithContext:(TTFeedCellSelectContext *)context {
     
-//    TTExploreLoadMoreTipData *model = self.orderedData.loadmoreTipData;
-//    if (model == nil || ![model isKindOfClass:[TTExploreLoadMoreTipData class]]) {
-//        return;
-//    }
-//    NSURL *openURL = [NSURL URLWithString:model.openURL];
-//    [[TTRoute sharedRoute] openURLByViewController:openURL userInfo:nil];
-    
-
 }
 
 
