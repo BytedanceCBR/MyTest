@@ -199,7 +199,7 @@
             BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
             SEL sel = @selector(updateWithModel:isLastCell:);
             if ([cell respondsToSelector:sel]) {
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isLastCell:isLastCell];
+//                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isLastCell:isLastCell];
             }
             
         }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
@@ -209,7 +209,7 @@
 
                 FHSearchHouseDataItemsModel *item = [[FHSearchHouseDataItemsModel alloc]initWithDictionary:dict error:nil];
                 BOOL isLastCell = (indexPath.row == self.houseItemsData.items.count - 1);
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:item isLastCell:isLastCell];
+//                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:item isLastCell:isLastCell];
             }
         }
     }

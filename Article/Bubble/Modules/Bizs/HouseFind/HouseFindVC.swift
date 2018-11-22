@@ -32,6 +32,11 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
             result.append(SectionItem(houseType: .newHouse, label: "新房"))
         }
     }
+    if let cfg = config.searchTabRentFilter {
+        if cfg.count > 0 {
+            result.append(SectionItem(houseType: .rentHouse, label: "租房"))
+        }
+    }
     if let cfg = config.searchTabNeighborHoodFilter {
         if cfg.count > 0 {
             result.append(SectionItem(houseType: .neighborhood, label: "小区"))
@@ -126,8 +131,15 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         return re
     }()
 
+    let containerView: UIScrollView = {
+        let re = UIScrollView()
+        return re
+    }()
+
     let disposeBag = DisposeBag()
     fileprivate var contentOffsetDisposeBag : DisposeBag?
+
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -202,8 +214,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func setupViews() {
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
-            maker.left.equalTo(88 * CommonUIStyle.Screen.widthScale)
-            maker.right.equalTo(-88 * CommonUIStyle.Screen.widthScale)
+            maker.left.equalTo(70 * CommonUIStyle.Screen.widthScale)
+            maker.right.equalTo(-70 * CommonUIStyle.Screen.widthScale)
             maker.height.equalTo(28)
             maker.centerX.equalToSuperview()
         }
@@ -611,6 +623,8 @@ fileprivate func searchConfigByHouseType(
         return configData.searchTabCourtFilter ?? []
     case .neighborhood:
         return configData.searchTabNeighborHoodFilter ?? []
+    case .rentHouse:
+        return configData.searchTabRentFilter ?? []
     default:
         return configData.searchTabFilter ?? []
     }
