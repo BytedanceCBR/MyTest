@@ -197,3 +197,40 @@ struct MapSearch : Mappable {
         resizeLevel <- map["resize_level"]
     }
 }
+
+
+struct RentOpItem : Mappable {
+    
+    var id : String?
+    var title : String?
+    
+    var image: [ImageItem] = []
+    
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        
+        id <- map["id"]
+        
+    }
+    
+    
+}
+
+struct RentOpData : Mappable {
+    var opStyle : Int?
+    var items : [RentOpItem]?
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map){
+        opStyle <- map["op_style"]
+        items <- map["items"]
+    }
+}
+
