@@ -18,6 +18,7 @@
 
 @property(nonatomic, strong) UIView *line;
 
+@property(nonatomic, strong) UIControl *rightBtn;
 @property(nonatomic, strong) FHHomeTrendItemView *centerView;
 @property(nonatomic, strong) FHHomeTrendItemView *rightView;
 @property(nonatomic, strong) UIImageView *rightArrow;
@@ -44,11 +45,36 @@
     [self addSubview:self.bgView];
 
     [self addSubview:self.leftView];
+    WeakSelf;
+    self.leftView.btn.hidden = NO;
+    self.leftView.clickedCallback = ^(UIButton *btn) {
+        
+        [wself leftBtnDidClick:btn];
+//        if (wself.clickedLeftCallback) {
+//            wself.clickedLeftCallback(btn);
+//        }
+    };
     [self addSubview:self.line];
+    
+    [self addSubview:self.rightBtn];
+    [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerView];
     [self addSubview:self.rightView];
     [self addSubview:self.rightArrow];
 
+}
+
+-(void)leftBtnDidClick:(UIButton *)btn {
+    
+
+}
+
+
+-(void)rightBtnDidClick:(UIControl *)btn {
+    
+    if (self.clickedRightCallback) {
+        self.clickedRightCallback();
+    }
 }
 
 -(void)updateWithModel:(FHConfigDataCityStatsModel *)model {
@@ -138,6 +164,14 @@
         _line.backgroundColor = [UIColor themeGrayPale];
     }
     return _line;
+}
+
+-(UIControl *)rightBtn {
+    
+    if (!_rightBtn) {
+        _rightBtn = [[UIControl alloc]init];
+    }
+    return _rightBtn;
 }
 
 -(FHHomeTrendItemView *)centerView {

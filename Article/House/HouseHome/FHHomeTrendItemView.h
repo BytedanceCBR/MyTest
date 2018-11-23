@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UILabel *subtitleLabel;
 @property(nonatomic, strong) UIImageView *icon;
 
+@property(nonatomic, strong) UIButton *btn;
+@property (nonatomic, copy) void(^clickedCallback)(UIButton *btn);
+
 @property(nonatomic, assign) CGFloat leftPadding;
 @property(nonatomic, assign) CGFloat rightPadding;
 

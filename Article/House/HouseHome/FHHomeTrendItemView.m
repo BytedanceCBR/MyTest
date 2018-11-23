@@ -26,11 +26,21 @@
     self.rightPadding = 15;
 
     [self addSubview:self.titleLabel];
+    
+    [self addSubview:self.btn];
     [self addSubview:self.subtitleLabel];
     [self addSubview:self.icon];
 
+    [self.btn addTarget:self action:@selector(btnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.btn.hidden = YES;
 }
 
+-(void)btnDidClick:(UIButton *)btn {
+
+    if (self.clickedCallback) {
+        self.clickedCallback(btn);
+    }
+}
 -(void)layoutSubviews {
     
     [super layoutSubviews];
@@ -50,6 +60,16 @@
     [self.icon sizeToFit];
     self.icon.left = self.subtitleLabel.right + 3;
     self.icon.centerY = self.subtitleLabel.centerY;
+    
+    self.btn.left = self.subtitleLabel.left - 2;
+    if (self.icon.width > 0) {
+        
+        self.btn.width = self.icon.right - self.subtitleLabel.left + 8;
+    } else {
+        self.btn.right = self.subtitleLabel.right - self.subtitleLabel.left + 8;
+    }
+    self.btn.top = self.subtitleLabel.top - 1;
+    self.btn.height = self.subtitleLabel.bottom - self.subtitleLabel.top + 2;
     
 }
 
@@ -87,6 +107,20 @@
         _icon = [[UIImageView alloc]init];
     }
     return _icon;
+}
+
+-(UIButton *)btn {
+    
+    if (!_btn) {
+        
+        _btn = [[UIButton alloc]init];
+        _btn.layer.borderWidth = 0.5;
+        _btn.layer.borderColor = [UIColor themeGrayPale].CGColor;
+        _btn.layer.cornerRadius = 2;
+        _btn.layer.masksToBounds = YES;
+        _btn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
+    }
+    return _btn;
 }
 
 @end

@@ -7,7 +7,6 @@
 
 #import "FHHomeCityTrendCell.h"
 
-#import "FHHomeCityTrendView.h"
 #import "FHConfigModel.h"
 
 @interface FHHomeCityTrendCell()
@@ -31,6 +30,10 @@
     self.trendView = [[FHHomeCityTrendView alloc]initWithFrame:self.contentView.bounds];
     [self.contentView addSubview:self.trendView];
 
+//    WeakSelf;
+//    self.trendView.clickedLeftCallback = ^{
+////        wself
+//    };
 }
 
 -(void)updateWithModel:(FHConfigDataCityStatsModel *)model {
