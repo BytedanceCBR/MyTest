@@ -82,6 +82,11 @@ class NIHSearchPanelViewModel: NSObject {
                         break
                     }
                 }
+                let size = self.suspendSearchBar.countryLabel.sizeThatFits(CGSize(width: 200, height: 20))
+                let sizeW = size.width >= 28 ? size.width : 28
+                self.suspendSearchBar.countryLabel.snp.updateConstraints({ (maker) in
+                    maker.width.equalTo(sizeW)
+                })
             })
             .disposed(by: disposeBag)
     }
