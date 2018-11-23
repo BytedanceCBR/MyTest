@@ -88,7 +88,7 @@
     BOOL isNeedAllocNewItems = YES;
     
     //判断是否需要重复创建
-    if (cellEntrance.boardView.currentItems.count * 4 == model.items.count) {
+    if (cellEntrance.boardView.currentItems.count == model.items.count) {
         isNeedAllocNewItems = NO;
     }
     
@@ -129,7 +129,11 @@
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.nameLabel.textColor = [UIColor themeBlue1];
-            itemView.nameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+            if (!font) {
+                font = [UIFont systemFontOfSize:14];
+            }
+            itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
@@ -228,16 +232,24 @@
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.titleLabel.textColor = [UIColor themeBlue1];
-            itemView.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+            if (!font) {
+                font = [UIFont systemFontOfSize:15];
+            }
+            itemView.titleLabel.font = font;
             itemView.titleLabel.text = itemModel.title;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(8);
+                make.top.mas_equalTo(12);
             }];
         }
         
         if (itemModel.descriptionStr && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.subTitleLabel.textColor = [UIColor themeGray3];
-            itemView.subTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+            if (!font) {
+                font = [UIFont systemFontOfSize:10];
+            }
+            itemView.subTitleLabel.font = font;
             itemView.subTitleLabel.text = itemModel.descriptionStr;
         }
         itemView.backgroundColor = [UIColor whiteColor];
