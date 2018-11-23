@@ -90,6 +90,11 @@
     //判断是否需要重复创建
     if (cellEntrance.boardView.currentItems.count == model.items.count) {
         isNeedAllocNewItems = NO;
+    }else
+    {
+        for (UIView *subView in cellEntrance.boardView.subviews) {
+            [subView removeFromSuperview];
+        }
     }
     
     NSInteger countItems = model.items.count;
@@ -98,23 +103,22 @@
     }
     
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < countItems; i++) {
+    for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
             itemView = [[FHSpringboardIconItemView alloc] init];
         }else
         {
-            if ([cellEntrance.boardView.currentItems[i/4] isKindOfClass:[FHSpringboardView class]]) {
-                FHSpringboardView *itemBoradView = (FHSpringboardView *)cellEntrance.boardView.currentItems[i/4];
-                itemView = itemBoradView.currentIconItems[i%4];
+            if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
+                itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
             }else
             {
                 itemView = [[FHSpringboardIconItemView alloc] init];
             }
         }
         
-        itemView.tag = i;
-        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:i];
+        itemView.tag = index;
+        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:index];
         itemView.backgroundColor = [UIColor whiteColor];
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
@@ -202,24 +206,48 @@
         countItems = 8;
     }
     
-    for (int i = 0; i < countItems; i++) {
-        FHHomeBannerItem *itemView = [[FHHomeBannerItem alloc] init];
-        itemView.tag = i;
-        FHConfigDataOpData2ItemsModel *itemModel = [model.items objectAtIndex:i];
+    BOOL isNeedAllocNewItems = YES;
+    
+    //判断是否需要重复创建
+    if (cellBanner.bannerView.currentItems.count == model.items.count) {
+        isNeedAllocNewItems = NO;
+    }else
+    {
+        for (UIView *subView in cellBanner.bannerView.subviews) {
+            [subView removeFromSuperview];
+        }
+    }
+    
+    for (int index = 0; index < countItems; index++) {
+        
+        FHHomeBannerItem *itemView = nil;
+        if (isNeedAllocNewItems) {
+            itemView = [[FHHomeBannerItem alloc] init];
+        }else
+        {
+            if (index < cellBanner.bannerView.currentItems.count && [cellBanner.bannerView.currentItems[index] isKindOfClass:[FHHomeBannerItem class]]) {
+                itemView = cellBanner.bannerView.currentItems[index];
+            }else
+            {
+                itemView = [[FHHomeBannerItem alloc] init];
+            }
+        }
+        itemView.tag = index;
+        FHConfigDataOpData2ItemsModel *itemModel = [model.items objectAtIndex:index];
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (i%2 == 0) {
+            if (index%2 == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
                     make.height.mas_equalTo(60);
                     make.left.mas_equalTo(20);
                 }];
-            }else if (i%2 == 1)
+            }else if (index%2 == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
@@ -253,7 +281,9 @@
             itemView.subTitleLabel.text = itemModel.descriptionStr;
         }
         itemView.backgroundColor = [UIColor whiteColor];
-        [itemsArray addObject:itemView];
+        if (isNeedAllocNewItems) {
+            [itemsArray addObject:itemView];
+        }
     }
     
     cellBanner.bannerView.clickedCallBack = ^(NSInteger clickIndex){
@@ -288,15 +318,15 @@
         }
     };
     
-    if (itemsArray.count > 0) {
+    if (itemsArray.count > 0 && isNeedAllocNewItems) {
         [cellBanner.bannerView addItemViews:itemsArray];
     }
     
-//    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.top.right.equalTo(cellBanner.contentView);
-//        make.height.mas_equalTo(70 * ((countItems + 1)/2));
-//    }];
-//    
+    //    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+    //        make.left.top.right.equalTo(cellBanner.contentView);
+    //        make.height.mas_equalTo(70 * ((countItems + 1)/2));
+    //    }];
+    //
     [cellBanner setNeedsLayout];
     [cellBanner layoutIfNeeded];
 }
