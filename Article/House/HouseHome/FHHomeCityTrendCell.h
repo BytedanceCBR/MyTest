@@ -10,7 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHomeCityTrendView;
+@class FHConfigDataCityStatsModel;
+
 @interface FHHomeCityTrendCell : FHHomeBaseTableCell
+
+@property(nonatomic, strong)FHHomeCityTrendView *trendView;
+
+-(void)updateWithModel:(FHConfigDataCityStatsModel *)model;
 
 @end
 

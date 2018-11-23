@@ -51,6 +51,9 @@
             if (dataModel.opData2.items.count != 0) {
                 [modelsArray addObject:dataModel.opData2];
             }
+            if (dataModel.cityStats.count > 0) {
+                [modelsArray addObject:dataModel.cityStats.firstObject];
+            }
         }
         delegate.modelsArray = modelsArray;
         tableView.delegate = delegate;
@@ -331,6 +334,11 @@
     [cellBanner layoutIfNeeded];
 }
 
++ (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
+    
+    [cell updateWithModel:model];
+}
+
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
 {
     cell.fd_enforceFrameLayout = NO; //
@@ -340,6 +348,11 @@
     
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
         [self fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model];
+    }
+    
+    if ([cell isKindOfClass:[FHHomeCityTrendCell class]] && [model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
+        cell.fd_enforceFrameLayout = YES;
+        [self fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model];
     }
 }
 
@@ -352,6 +365,10 @@
     
     if ([model isKindOfClass:[FHConfigDataOpData2Model class]]) {
         return NSStringFromClass([FHHomeBannerCell class]);
+    }
+    
+    if ([model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
+        return NSStringFromClass([FHHomeCityTrendCell class]);
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);

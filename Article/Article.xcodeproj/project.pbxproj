@@ -760,6 +760,12 @@
 		610FF9E321A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E421A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E521A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
+		611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D921A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DA21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DB21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
 		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
@@ -3530,7 +3536,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -6676,6 +6682,9 @@
 		610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseFooterView.h; sourceTree = "<group>"; };
 		610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseFooterView.m; sourceTree = "<group>"; };
 		610FF9E221A53E25003E8D68 /* feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = feed.xcassets; sourceTree = "<group>"; };
+		611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendItemView.h; sourceTree = "<group>"; };
+		611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendItemView.m; sourceTree = "<group>"; };
+		611339D821A7F94700304DF6 /* home.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = home.xcassets; sourceTree = "<group>"; };
 		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
 		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
@@ -9068,7 +9077,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -15717,6 +15726,7 @@
 		D46DA52321A43B74009D50C7 /* HouseHome */ = {
 			isa = PBXGroup;
 			children = (
+				611339D821A7F94700304DF6 /* home.xcassets */,
 				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
 				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
@@ -15737,6 +15747,8 @@
 				D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */,
 				D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */,
 				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
+				611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */,
+				611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -18059,6 +18071,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
+				611339D921A7F94700304DF6 /* home.xcassets in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				3DF363A321A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
@@ -18143,6 +18156,7 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				B373CEA72174587A008F9905 /* ThirdParty.xcassets in Resources */,
+				611339DB21A7F94700304DF6 /* home.xcassets in Resources */,
 				B373CEA82174587A008F9905 /* TargetLogicSetting.strings in Resources */,
 				3DF363A521A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				B373CEA92174587A008F9905 /* recommend_button_press@2x.png in Resources */,
@@ -18227,6 +18241,7 @@
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FEFA59F2205FB1A8001F50D8 /* ThirdParty.xcassets in Resources */,
+				611339DA21A7F94700304DF6 /* home.xcassets in Resources */,
 				FEFA59F4205FB1A8001F50D8 /* TargetLogicSetting.strings in Resources */,
 				3DF363A421A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				FEFA59F5205FB1A8001F50D8 /* recommend_button_press@2x.png in Resources */,
@@ -20388,6 +20403,7 @@
 				F2820EFA1F3031BB00354708 /* TTHorizontalHuoShanLoadingCell.m in Sources */,
 				FE5CEE0B20510A9E0011B4D7 /* AKRedPacketViewController.m in Sources */,
 				9CB6D4021EB3218B0093B209 /* TTRNBundleDownloader.m in Sources */,
+				611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				48EC03EA173BCACA000B55A8 /* SSPublishProgressView.m in Sources */,
 				6BE0210A1B215BE600F9E484 /* ExploreCellViewBase.m in Sources */,
 				8460FAB41D0FD29800BC4778 /* ExploreDetailAppLeftPicADView.m in Sources */,
@@ -22109,6 +22125,7 @@
 				B373CC6A2174587A008F9905 /* AKRedPacketViewController.m in Sources */,
 				B373CC6B2174587A008F9905 /* TTRNBundleDownloader.m in Sources */,
 				B373CC6C2174587A008F9905 /* SSPublishProgressView.m in Sources */,
+				611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				B373CC6D2174587A008F9905 /* ExploreCellViewBase.m in Sources */,
 				B373CC6E2174587A008F9905 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				B373CC6F2174587A008F9905 /* TTStartupSDKsGroup.m in Sources */,
@@ -23830,6 +23847,7 @@
 				FEFA5768205FB1A8001F50D8 /* AKRedPacketViewController.m in Sources */,
 				FEFA5769205FB1A8001F50D8 /* TTRNBundleDownloader.m in Sources */,
 				FEFA576A205FB1A8001F50D8 /* SSPublishProgressView.m in Sources */,
+				611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				FEFA576D205FB1A8001F50D8 /* ExploreCellViewBase.m in Sources */,
 				FEFA576E205FB1A8001F50D8 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				FEFA576F205FB1A8001F50D8 /* TTStartupSDKsGroup.m in Sources */,
