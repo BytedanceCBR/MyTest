@@ -1410,9 +1410,6 @@
 		B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
-		B32FD35921A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35821A6C9B8007B9966 /* FHFilterRedDotManager.swift */; };
-		B32FD35A21A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35821A6C9B8007B9966 /* FHFilterRedDotManager.swift */; };
-		B32FD35B21A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35821A6C9B8007B9966 /* FHFilterRedDotManager.swift */; };
 		B32FD35D21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
 		B32FD35E21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
 		B32FD35F21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
@@ -3557,7 +3554,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -7868,7 +7865,6 @@
 		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
 		B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRentSameNeighborhoodResponse.m; sourceTree = "<group>"; };
 		B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseContactBottomBarViewModel.swift; sourceTree = "<group>"; };
-		B32FD35821A6C9B8007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
@@ -9107,7 +9103,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -15094,7 +15090,6 @@
 				B388CA832142652900653188 /* MultiColumnTableSelectorPanel.swift */,
 				B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */,
 				B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */,
-				B32FD35821A6C9B8007B9966 /* FHFilterRedDotManager.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -19717,7 +19712,6 @@
 				F87699531F31D6B900D59CA5 /* TTADRefreshManager.m in Sources */,
 				2DB9A5741F20B01D005E4A06 /* TTlayoutLoopInnerPicView.m in Sources */,
 				F876939C1F31D0D300D59CA5 /* TTVFeedItem+TTVConvertToArticle.m in Sources */,
-				B32FD35921A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				ABBEA6BB1F3341CB005DAD27 /* TTVideoPasterADNatantView.m in Sources */,
 				F87693981F31D0D300D59CA5 /* TTVFeedItem+TTVArticleProtocolSupport.m in Sources */,
 				A97DB8FB1F1332DD0002B455 /* TTEditUGCProfileViewModel+Notification.m in Sources */,
@@ -21447,7 +21441,6 @@
 				B373C9AE2174587A008F9905 /* TTVFeedItem+TTVConvertToArticle.m in Sources */,
 				B373C9AF2174587A008F9905 /* TTVideoPasterADNatantView.m in Sources */,
 				B373C9B02174587A008F9905 /* TTVFeedItem+TTVArticleProtocolSupport.m in Sources */,
-				B32FD35B21A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				B373C9B12174587A008F9905 /* TTEditUGCProfileViewModel+Notification.m in Sources */,
 				B373C9B22174587A008F9905 /* SSADEventTracker.m in Sources */,
 				B373C9B32174587A008F9905 /* ExploreSubscribePGCCellView.m in Sources */,
@@ -23177,7 +23170,6 @@
 				FEFA5455205FB1A8001F50D8 /* TTVFeedItem+TTVConvertToArticle.m in Sources */,
 				FEFA5456205FB1A8001F50D8 /* TTVideoPasterADNatantView.m in Sources */,
 				FEFA545B205FB1A8001F50D8 /* TTVFeedItem+TTVArticleProtocolSupport.m in Sources */,
-				B32FD35A21A6C9B8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				FEFA545C205FB1A8001F50D8 /* TTEditUGCProfileViewModel+Notification.m in Sources */,
 				FEFA545D205FB1A8001F50D8 /* SSADEventTracker.m in Sources */,
 				FEFA545E205FB1A8001F50D8 /* ExploreSubscribePGCCellView.m in Sources */,
