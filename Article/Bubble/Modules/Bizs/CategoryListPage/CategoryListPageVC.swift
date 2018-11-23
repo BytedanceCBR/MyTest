@@ -263,15 +263,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         }
 
-        self.tableView.addPullDown(
-            withInitText: "下拉刷新数据",
-            pullText: "松开即可刷新",
-            loadingText: "正在努力加载",
-            noMoreText: "没有更多数据",
-            timeText: "",
-            lastTimeKey: "") { [weak self] in
-                self?.pullAndRefresh()
-        }
+//        self.tableView.addPullDown(
+//            withInitText: "下拉刷新数据",
+//            pullText: "松开即可刷新",
+//            loadingText: "正在努力加载",
+//            noMoreText: "没有更多数据",
+//            timeText: "",
+//            lastTimeKey: "") { [weak self] in
+//                self?.pullAndRefresh()
+//        }
 
         self.errorVM = NHErrorViewModel(
             errorMask:infoMaskView,
@@ -793,11 +793,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.stayTimeParams = self.tracerParams <|> traceStayTime()
     }
 
-    fileprivate func pullAndRefresh() {
-        let filterCondition = searchAndConditionFilterVM.queryCondition.value
-        let query = getQueryCondition(filterCondition: filterCondition)
-        requestData(query: query)
-    }
+//    fileprivate func pullAndRefresh() {
+//        let filterCondition = searchAndConditionFilterVM.queryCondition.value
+//        let query = getQueryCondition(filterCondition: filterCondition)
+//        requestData(query: query)
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
