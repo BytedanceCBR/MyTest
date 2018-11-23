@@ -49,9 +49,14 @@
     self.titleLabel.width = self.width - self.leftPadding - self.rightPadding;
     self.titleLabel.left = self.leftPadding;
     
+    CGFloat leftPadding = 0;
+    if (!self.btn.hidden) {
+        
+        leftPadding = 4;
+    }
     [self.subtitleLabel sizeToFit];
     self.subtitleLabel.top = self.titleLabel.bottom + 3;
-    self.subtitleLabel.left = self.titleLabel.left;
+    self.subtitleLabel.left = self.titleLabel.left + leftPadding;
     if (self.subtitleLabel.width > self.width - 40) {
         
         self.subtitleLabel.width = self.width - 40;
@@ -60,13 +65,13 @@
     [self.icon sizeToFit];
     self.icon.left = self.subtitleLabel.right + 3;
     self.icon.centerY = self.subtitleLabel.centerY;
-    
-    self.btn.left = self.subtitleLabel.left - 2;
+
+    self.btn.left = self.subtitleLabel.left - leftPadding;
     if (self.icon.width > 0) {
         
-        self.btn.width = self.icon.right - self.subtitleLabel.left + 8;
+        self.btn.width = self.icon.right - self.subtitleLabel.left + 2 * leftPadding;
     } else {
-        self.btn.right = self.subtitleLabel.right - self.subtitleLabel.left + 8;
+        self.btn.width = self.subtitleLabel.right - self.subtitleLabel.left + 2 * leftPadding;
     }
     self.btn.top = self.subtitleLabel.top - 1;
     self.btn.height = self.subtitleLabel.bottom - self.subtitleLabel.top + 2;
