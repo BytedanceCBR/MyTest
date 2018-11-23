@@ -517,6 +517,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     let combineItems = BehaviorRelay<[SuggestionItem]>(value: [])
     
     let guessYouWantItems = BehaviorRelay<[GuessYouWant]>(value:[])
+    
+    var suggestionHistoryRecords:[ElementRecord] = []
 
     var highlighted: String?
     
@@ -596,6 +598,20 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         sectionHeaderView.guessView.onGuessYouWantItemClick = {[unowned self] (item:GuessYouWant) in
             self.guessYouWantItemClick(item: item)
         }
+        
+        suggestionHistory.subscribe {[unowned self] (event) in
+            if let elements = event.element {
+                self.suggestionHistoryRecords = elements.enumerated().map({ (arg0) -> ElementRecord in
+                    let (offset, element) = arg0
+                    let pramas = TracerParams.momoid() <|>
+                        toTracerParams(element.text ?? "be_null", key: "word") <|>
+                        toTracerParams(element.id ?? "be_null", key: "history_id") <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams("list", key: "show_type")
+                      return onceRecord(key: "search_history_show", params: pramas)
+                })
+            }
+        }.disposed(by: disposeBag)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -664,6 +680,15 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         //这里做此判断，是否是联想词发起的搜索
         if suggestions.value.count > 0 {
             recordEvent(key: "associate_word_click", params: params.exclude("element_from").exclude("enter_from").exclude("enter_type"))
+        } else {
+            // 搜索历史发起的搜索
+            let element = item
+            let tempPramas = TracerParams.momoid() <|>
+                toTracerParams(element.text ?? "be_null", key: "word") <|>
+                toTracerParams(element.id ?? "be_null", key: "history_id") <|>
+                toTracerParams(indexPath.row, key: "rank") <|>
+                toTracerParams("list", key: "show_type")
+            recordEvent(key: "search_history_click", params: tempPramas)
         }
 
         if let openUrl = item.openUrl {
@@ -797,7 +822,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-
+        if suggestionHistoryRecords.count <= indexPath.row {
+            return
+        }
+        let item = suggestionHistoryRecords[indexPath.row]
+        item(TracerParams.momoid())
     }
 
     func sendQuery(
