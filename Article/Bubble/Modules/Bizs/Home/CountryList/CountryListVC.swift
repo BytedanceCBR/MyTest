@@ -127,9 +127,9 @@ class CountryListVC: BaseViewController {
                 .subscribe(onNext: { geocode in
                     EnvContext.shared.toast.dismissCustomLoadingToast()
                     if geocode != nil {
-                        EnvContext.shared.toast.showToast("定位成功")
+                        EnvContext.shared.toast.showToast("定位成功", isUserInteraction: true)
                     } else {
-                        EnvContext.shared.toast.showToast("定位失败")
+                        EnvContext.shared.toast.showToast("定位失败", isUserInteraction: true)
                     }
                 })
                 .disposed(by: disposeBag)
