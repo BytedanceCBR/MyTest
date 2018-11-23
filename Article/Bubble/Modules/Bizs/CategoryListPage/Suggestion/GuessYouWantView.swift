@@ -55,6 +55,7 @@ class GuessYouWantView: UIView {
         for v in tempViews {
             v.removeFromSuperview()
         }
+        tempViews.removeAll()
         var line:Int = 1
         var lastTopOffset:CGFloat = 50
         var leftView:UIView = self
@@ -101,6 +102,7 @@ class GuessYouWantView: UIView {
                 isFirtItem = false
                 leftView = button
                 tempViews.append(button)
+                trackShowEventData(item: item,rank: button.tag)
             }
             currentIndex += 1
         }
@@ -112,7 +114,42 @@ class GuessYouWantView: UIView {
             let item = guessYouWantItems[tag]
             if onGuessYouWantItemClick != nil {
                 onGuessYouWantItemClick!(item)
+                trackClickEventData(item: item, rank: tag)
             }
+        }
+    }
+    
+    func trackShowEventData(item:GuessYouWant, rank:Int)
+    {
+        let pramas = TracerParams.momoid() <|>
+            toTracerParams(item.text ?? "be_null", key: "word") <|>
+            toTracerParams(item.guessSearchId ?? "be_null", key: "word_id") <|>
+            toTracerParams(wordTypeFor(item.guessSearchType), key: "word_type") <|>
+            toTracerParams(rank, key: "rank")
+        
+        recordEvent(key: "hot_word_show", params: pramas)
+    }
+    
+    func trackClickEventData(item:GuessYouWant, rank:Int) {
+        let pramas = TracerParams.momoid() <|>
+            toTracerParams(item.text ?? "be_null", key: "word") <|>
+            toTracerParams(item.guessSearchId ?? "be_null", key: "word_id") <|>
+            toTracerParams(wordTypeFor(item.guessSearchType), key: "word_type") <|>
+            toTracerParams(rank, key: "rank")
+        
+        recordEvent(key: "hot_word_click", params: pramas)
+    }
+    
+    func wordTypeFor(_ searchType:Int) -> String {
+        switch searchType {
+        case 1:
+            return "operation"
+        case 2:
+            return "hot"
+        case 3:
+            return "history"
+        default:
+            return "be_null"
         }
     }
 }
