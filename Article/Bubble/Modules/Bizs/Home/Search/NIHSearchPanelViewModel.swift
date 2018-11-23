@@ -82,6 +82,11 @@ class NIHSearchPanelViewModel: NSObject {
                         break
                     }
                 }
+                let size = self.suspendSearchBar.countryLabel.sizeThatFits(CGSize(width: 200, height: 20))
+                let sizeW = size.width >= 28 ? size.width : 28
+                self.suspendSearchBar.countryLabel.snp.updateConstraints({ (maker) in
+                    maker.width.equalTo(sizeW)
+                })
             })
             .disposed(by: disposeBag)
     }
@@ -123,7 +128,11 @@ class NIHSearchPanelViewModel: NSObject {
     private func openSearchPanel() {
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
             toTracerParams("maintab_search", key: "origin_from")
-        self.recordClickHouseSearch()
+        var rollText = "be_null"
+        if self.suspendSearchBar.searchTitleIndex >= 0 && self.suspendSearchBar.searchTitleIndex < self.suspendSearchBar.searchTitles.count {
+            rollText = self.suspendSearchBar.searchTitles[self.suspendSearchBar.searchTitleIndex]
+        }
+        self.recordClickHouseSearch(rollText: rollText)
         let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeHome)
 
         let tracerParams = TracerParams.momoid() <|>
@@ -164,9 +173,10 @@ class NIHSearchPanelViewModel: NSObject {
         }
     }
 
-    fileprivate func recordClickHouseSearch() {
+    fileprivate func recordClickHouseSearch(rollText:String = "be_null") {
         let params = EnvContext.shared.homePageParams <|>
-            toTracerParams("maintab", key: "page_type")
+            toTracerParams("maintab", key: "page_type") <|>
+            toTracerParams(rollText, key: "hot_word")
         recordEvent(key: "click_house_search", params: params)
     }
     

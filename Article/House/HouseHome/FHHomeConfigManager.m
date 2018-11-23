@@ -35,8 +35,11 @@
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
-        FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-        [self.configDataReplay sendNext:dataModel];
+        if (![configDict isEqualToDictionary:self.currentDataModel.toDictionary]) {
+            FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
+            [self.configDataReplay sendNext:dataModel];
+            self.currentDataModel = dataModel;
+        }
     }
 }
 

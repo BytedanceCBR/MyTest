@@ -10,9 +10,11 @@ import SnapKit
 import RxCocoa
 import RxSwift
 class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-
+    
     var historyItem = BehaviorRelay<[SearchHistoryResponse.Item]>(value: [])
 
+    var suggestionHistoryRecords:[ElementRecord] = []
+    
     var houseType: HouseType = HouseType.secondHandHouse
 
     private var collectionView: UICollectionView = {
@@ -56,6 +58,20 @@ class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDele
                         animated: false)
                 }
             }).disposed(by: disposeBag)
+        
+        historyItem.subscribe {[unowned self] (event) in
+            if let elements = event.element {
+                self.suggestionHistoryRecords = elements.enumerated().map({ (arg0) -> ElementRecord in
+                    let (offset, element) = arg0
+                    let pramas = TracerParams.momoid() <|>
+                        toTracerParams(element.text ?? "be_null", key: "word") <|>
+                        toTracerParams(element.historyId ?? "be_null", key: "history_id") <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams("slide", key: "show_type")
+                    return onceRecord(key: "search_history_show", params: pramas)
+                })
+            }
+            }.disposed(by: disposeBag)
     }
 
 
@@ -85,6 +101,16 @@ class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = historyItem.value[indexPath.row]
         if let openUrl = item.openUrl {
+            // 搜索历史发起的搜索
+            let element = item
+            let tempPramas = TracerParams.momoid() <|>
+                toTracerParams(element.text ?? "be_null", key: "word") <|>
+                toTracerParams(element.historyId ?? "be_null", key: "history_id") <|>
+                toTracerParams(indexPath.row, key: "rank") <|>
+                toTracerParams("slide", key: "show_type")
+            recordEvent(key: "search_history_click", params: tempPramas)
+            
+            // 跳转传参
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams("findtab_search", key: "origin_from")
             let tracerParams = TracerParams.momoid() <|>
@@ -112,6 +138,14 @@ class HouseFindHistoryCollectionCell: UICollectionViewCell, UICollectionViewDele
             }
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if suggestionHistoryRecords.count <= indexPath.row {
+            return
+        }
+        let item = suggestionHistoryRecords[indexPath.row]
+        item(TracerParams.momoid())
     }
 
 

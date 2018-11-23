@@ -34,6 +34,7 @@
         make.edges.equalTo(self);
     }];
     _contentTableView.scrollEnabled = NO;
+    _contentTableView.estimatedRowHeight = 120;
     self.contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [FHHomeCellHelper registerCells:self.contentTableView];
     

@@ -65,16 +65,15 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         result.searchable = true
         return result
     }()
+    
+    lazy var guessYouWantView = GuessYouWantView()
 
     lazy var tableView: UITableView = {
-        let result = SuggectionTableView()
+        let result = SuggectionTableView(frame: CGRect.zero, style: .grouped)
         result.handleTouch = { [unowned self] in
             self.view.endEditing(true)
         }
-        
-        result.estimatedRowHeight = 0
-        result.estimatedSectionFooterHeight = 0
-        result.estimatedSectionHeaderHeight = 0
+        result.backgroundColor = UIColor.white
 
         result.separatorStyle = .none
         if CommonUIStyle.Screen.isIphoneX {
@@ -111,6 +110,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     var tracerParams = TracerParams.momoid()
     
     var homePageRollData:HomePageRollScreen?
+    
+    var canSearchWithRollData:Bool = false
 
     var stayTimeParams: TracerParams?
 
@@ -140,6 +141,12 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         tableViewModel.tracerParams = self.tracerParams
         self.panBeginAction = { [unowned self] in
             self.navBar.searchInput.resignFirstResponder()
@@ -154,6 +161,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         tableViewModel.dismissVC = { [unowned self] in
             self.dismissSelfVCIfNeeded()
         }
+        
+        tableViewModel.homePageRollData = self.homePageRollData
 
         UIApplication.shared.statusBarStyle = .default
 
@@ -233,10 +242,10 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     func bindDataSourceObv() {
         //绑定列表刷新
         Observable
-            .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory)
+            .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory, tableViewModel.guessYouWantItems)
             .debounce(0.3, scheduler: MainScheduler.instance)
             .map { (e) -> [SuggestionItem] in
-                let (suggestions, history) = e
+                let (suggestions, history, _) = e
                 if suggestions.count > 0 {
                     return suggestions
                 } else {
@@ -249,9 +258,13 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
                     self.navBar.searchInput.becomeFirstResponder()
                     self.hasShowKeyboard = true
                 }
-                self.tableView.isHidden = (self.tableViewModel.combineItems.value.count == 0)
+                self.tableView.isHidden = (self.tableViewModel.combineItems.value.count == 0 && self.tableViewModel.guessYouWantItems.value.count == 0)
             }
             .disposed(by: disposeBag)
+        
+        tableViewModel.suggestionHistory.subscribe {[unowned self] (_) in
+            self.tableView.reloadData()
+        }.disposed(by: disposeBag)
     }
 
     func bindNavBarObv() {
@@ -274,6 +287,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
             .filter { $0 == nil || $0 == "" }
             .bind(onNext: { [unowned self] text in
                 self.tableViewModel.suggestions.accept([])
+                self.tableViewModel.searchedStr = ""
             })
             .disposed(by: disposeBag)
 
@@ -292,6 +306,11 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
             .subscribe(onNext: { [weak self] (type) in
                 self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
+                let size = self?.navBar.searchTypeLabel.sizeThatFits(CGSize(width: 100, height: 20)) ?? CGSize(width: 42, height: 20)
+                self?.navBar.searchTypeLabel.snp.updateConstraints({ (maker) in
+                    maker.width.equalTo(size.width)
+                })
+                self?.canSearchWithRollData = false
                 if let tableView = self?.tableView {
                     if self?.navBar.searchInput.text?.isEmpty == false {
                         self?.tableViewModel.sendQuery(
@@ -331,6 +350,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         stayTimeParams = tracerParams <|> traceStayTime()
         self.tableViewModel.requestHistoryFromRemote(houseType: "\(self.houseType.value.rawValue)")
         if let rollData = homePageRollData {
+            self.canSearchWithRollData = true
             navBar.searchInput.placeholder = rollData.text ?? ""
         }
     }
@@ -376,7 +396,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         var userInputText: String = self.navBar.searchInput.text ?? ""
         
         // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
-        if let rollText = self.homePageRollData?.text {
+        if let rollText = self.homePageRollData?.text, self.canSearchWithRollData == true {
             if userInputText.count <= 0 && rollText.count > 0 {
                 userInputText = rollText
             }
@@ -498,6 +518,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     let suggestionHistory = BehaviorRelay<[SuggestionItem]>(value: [])
     
     let combineItems = BehaviorRelay<[SuggestionItem]>(value: [])
+    
+    let guessYouWantItems = BehaviorRelay<[GuessYouWant]>(value:[])
+    
+    var suggestionHistoryRecords:[ElementRecord] = []
 
     var highlighted: String?
     
@@ -508,9 +532,11 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var sendSuggestionQueryBag = DisposeBag()
 
     var sendHistoryQueryBag = DisposeBag()
+    
+    var guessYouwantBag = DisposeBag()
 
     var onSuggestionItemSelect: ((_ query: String, _ suggestion: String?,_ associationalWord: String?) -> Void)?
-    var onSuggestionSelected: ((TTRouteObject?) -> Void)?
+    var onSuggestionSelected: ((TTRouteObject?) -> Void)? // 列表页面点击搜索进入
 
     let houseType: BehaviorRelay<HouseType>
 
@@ -529,6 +555,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var search = TracerParams.momoid() <|> beNull(key: "search")
 
     var dismissVC: (() -> Void)?
+    
+    var homePageRollData:HomePageRollScreen?
+    
+    var isFirstGuessHeightShow:Bool = true
 
     init(houseType: BehaviorRelay<HouseType>, isFromHome: EnterSuggestionType) {
         self.houseType = houseType
@@ -541,37 +571,54 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 .disposed(by: disposeBag)
         houseType
             .bind(onNext: { [unowned self] houseType in
-//                self.suggestionHistory.accept(self.suggestionHistoryDataSource.getHistoryByType(houseType: houseType))
+                self.suggestionHistory.accept([])
                 self.requestHistoryFromRemote(houseType: "\(houseType.rawValue)")
+                self.requestGuessYouWantData()
             })
             .disposed(by: disposeBag)
 
-        suggestions
-                .map { $0.count != 0 }
-                .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
-                .disposed(by: disposeBag)
-
-        suggestions
-                .map {
-                    if $0.count == 0 {
-                        return "历史记录"
-                    }
-                    return "猜你想搜的"
+        
+        suggestionHistory
+            .map { $0.count == 0 }
+            .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        suggestionHistory
+            .map {
+                if $0.count != 0 {
+                    return "历史记录"
                 }
-                .bind(to: sectionHeaderView.label.rx.text)
-                .disposed(by: disposeBag)
+                return ""
+            }
+            .bind(to: sectionHeaderView.label.rx.text)
+            .disposed(by: disposeBag)
 
 
         sectionHeaderView.deleteBtn.rx.tap.bind { [unowned self] void in
             self.requestDeleteHistory()
-//            self.suggestionHistoryDataSource.cleanHistoryItems(houseType: self.houseType.value)
-//            self.suggestionHistory.accept([])
+        }.disposed(by: disposeBag)
+        
+        sectionHeaderView.guessView.onGuessYouWantItemClick = {[unowned self] (item:GuessYouWant) in
+            self.guessYouWantItemClick(item: item)
+        }
+        
+        suggestionHistory.subscribe {[unowned self] (event) in
+            if let elements = event.element {
+                self.suggestionHistoryRecords = elements.enumerated().map({ (arg0) -> ElementRecord in
+                    let (offset, element) = arg0
+                    let pramas = TracerParams.momoid() <|>
+                        toTracerParams(element.text ?? "be_null", key: "word") <|>
+                        toTracerParams(element.id ?? "be_null", key: "history_id") <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams("list", key: "show_type")
+                      return onceRecord(key: "search_history_show", params: pramas)
+                })
+            }
         }.disposed(by: disposeBag)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        let datas = combineItems.value
-        return datas.count > 0 ? 1 : 0
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -636,6 +683,15 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         //这里做此判断，是否是联想词发起的搜索
         if suggestions.value.count > 0 {
             recordEvent(key: "associate_word_click", params: params.exclude("element_from").exclude("enter_from").exclude("enter_type"))
+        } else {
+            // 搜索历史发起的搜索
+            let element = item
+            let tempPramas = TracerParams.momoid() <|>
+                toTracerParams(element.text ?? "be_null", key: "word") <|>
+                toTracerParams(element.id ?? "be_null", key: "history_id") <|>
+                toTracerParams(indexPath.row, key: "rank") <|>
+                toTracerParams("list", key: "show_type")
+            recordEvent(key: "search_history_click", params: tempPramas)
         }
 
         if let openUrl = item.openUrl {
@@ -686,6 +742,37 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 //        filterConditionResetter?()
 
     }
+    
+    fileprivate func guessYouWantItemClick(item:GuessYouWant) {
+        if let openUrl = item.openUrl {
+            var jumpUrl = openUrl
+            if let placeholder = item.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                jumpUrl = jumpUrl + "&placeholder=\(placeholder)"
+            }
+            let queryType = "hot"// 猜你想搜
+            
+            let houseSearchParams = ["page_type": self.pageTypeString(),
+                                     "query_type": queryType,
+                                     "enter_query": item.text ?? "be_null",
+                                     "search_query": item.text ?? "be_null"]
+
+            var infos: [String: Any] = [:]
+            infos["houseSearch"] = houseSearchParams
+            if let info = item.extinfo {
+                infos["suggestion"] = createQueryCondition(info)
+            }
+            let userInfo = TTRouteUserInfo(info: infos)
+            let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
+            if self.onSuggestionSelected != nil {
+                self.onSuggestionSelected?(routerObj)
+            } else {
+                TTRoute.shared()?.openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
+            }
+            
+            // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
+            dismissVC?()
+        }
+    }
 
     fileprivate func pageTypeString() -> String {
         if isFromHome == EnterSuggestionType.enterSuggestionTypeFindTab {
@@ -718,10 +805,6 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         }
         return sectionHeaderView
     }
-
-//    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableViewAutomaticDimension
-//    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -733,15 +816,20 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let guessHeight:CGFloat = isFirstGuessHeightShow ? 138 : CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
+        let sectionHeaderHeight = CGFloat (suggestionHistory.value.count > 0 ? 40 : 0)
         if suggestions.value.count > 0 {
             return 0
         }
-        return 34
+        return sectionHeaderHeight + guessHeight
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let item = combineItems.value[indexPath.row]
-
+        if suggestionHistoryRecords.count <= indexPath.row {
+            return
+        }
+        let item = suggestionHistoryRecords[indexPath.row]
+        item(TracerParams.momoid())
     }
 
     func sendQuery(
@@ -837,6 +925,45 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 return history
             }
         }
+    }
+    
+    func requestGuessYouWantData()
+    {
+        self.guessYouwantBag = DisposeBag()
+        let houseType = self.houseType.value
+        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        requestGuessYouWant(cityId: cityId ?? 122, houseType: houseType.rawValue).subscribe(onNext: { [unowned self] (response) in
+                self.isFirstGuessHeightShow = false
+                if let data = response?.data?.data , data.count > 0 {
+                    // 把外部传入的搜索词放到第一个位置
+                    var tempData = data
+                    if let text = self.homePageRollData?.text, self.homePageRollData?.houseType == houseType.rawValue {
+                        var index:Int = 0
+                        var tempGuess:GuessYouWant = GuessYouWant(JSON: [:])!
+                        tempGuess.text = text
+                        tempGuess.openUrl = self.homePageRollData?.openUrl
+                        tempGuess.guessSearchId = self.homePageRollData?.guessSearchId
+                        tempGuess.houseType = self.homePageRollData?.houseType ?? 0
+                        for item in data {
+                            if item.text == text {
+                                tempGuess = item
+                                tempData.remove(at: index)
+                                break
+                            }
+                            index += 1
+                        }
+                        tempData.insert(tempGuess, at: 0)
+                    }
+                    //
+                    self.guessYouWantItems.accept(tempData)
+                    self.sectionHeaderView.guessView.guessYouWantItems = tempData
+                } else {
+                    self.guessYouWantItems.accept([])
+                    self.sectionHeaderView.guessView.guessYouWantItems = []
+                }
+            }, onError: {[unowned self] (error) in
+                self.isFirstGuessHeightShow = false
+        }).disposed(by: guessYouwantBag)
     }
 }
 

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHomeConfigManager : NSObject
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
+@property(nonatomic , strong) FHConfigDataModel *currentDataModel;
 
 +(instancetype)sharedInstance;
 
