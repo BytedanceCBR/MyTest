@@ -200,23 +200,22 @@ class HomePageSearchPanel: UIView {
             maker.left.equalToSuperview().offset(15)
             maker.centerY.equalToSuperview()
             maker.height.equalTo(20)
-            maker.width.greaterThanOrEqualTo(28)
+            maker.width.equalTo(28)
         }
         countryLabel.sizeToFit()
 
         addSubview(triangleImage)
         triangleImage.snp.makeConstraints { [unowned countryLabel] maker in
-            maker.left.equalTo(countryLabel.snp.right).offset(4).priority(.high)
-            maker.left.equalToSuperview().offset(47).priority(.medium)
+            maker.left.equalTo(countryLabel.snp.right).offset(8)
             maker.centerY.equalToSuperview()
-            maker.height.width.equalTo(9)
+            maker.height.width.equalTo(10)
         }
     }
 
     private func setupVerticalLine() {
         addSubview(verticalLineView)
         verticalLineView.snp.makeConstraints { maker in
-            maker.left.equalTo(triangleImage.snp.right).offset(12)
+            maker.left.equalTo(triangleImage.snp.right).offset(11)
             maker.centerY.equalToSuperview()
             maker.width.equalTo(1)
             maker.height.equalTo(15)
@@ -250,7 +249,7 @@ class HomePageSearchPanel: UIView {
         categoryPlaceholderLabel.snp.makeConstraints { maker in
             maker.left.equalTo(verticalLineView.snp.right).offset(10)
             maker.height.equalTo(20)
-            maker.right.equalTo(searchIcon.snp.left).offset(-1)
+            maker.right.equalTo(searchIconBackView.snp.left).offset(-2)
             maker.centerY.equalToSuperview()
         }
         
@@ -259,7 +258,7 @@ class HomePageSearchPanel: UIView {
         categoryBgView.snp.makeConstraints { maker in
             maker.left.equalTo(verticalLineView.snp.right).offset(10)
             maker.height.equalTo(38)
-            maker.right.equalTo(searchIcon.snp.left).offset(-1)
+            maker.right.equalTo(searchIconBackView.snp.left).offset(-2)
             maker.centerY.equalToSuperview()
         }
         
