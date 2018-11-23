@@ -222,6 +222,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 return false
             }
         } as? [String: Any]
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
