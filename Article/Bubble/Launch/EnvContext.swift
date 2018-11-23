@@ -58,6 +58,7 @@ import UIKit
     func recordEvent(key: String, params: [String: Any]? = nil) {
         tracer.writeEvent(key, params: params)
     }
+    
 
 }
 

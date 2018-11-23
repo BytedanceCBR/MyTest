@@ -268,6 +268,17 @@ extension Notification.Name {
         return CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
     
+    @objc func appConfig() -> [String: Any]? {
+     
+        return generalBizconfig.appConfig()
+    }
+    
+    @objc func rentOpData() -> [String : Any]? {
+        
+        return generalBizconfig.rentOpData()
+        
+    }
+    
     deinit {
         reachability.stopNotifier()
     }
