@@ -1383,6 +1383,9 @@
 		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD35D21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
+		B32FD35E21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
+		B32FD35F21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -7823,6 +7826,7 @@
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
 		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
 		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
+		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -15011,6 +15015,7 @@
 		B388CA7E2142652900653188 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
+				B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */,
 				B388CA7F2142652900653188 /* PriceListFilterPanel.swift */,
 				B388CA802142652900653188 /* AreaConditionFilterPanel.swift */,
 				B388CA812142652900653188 /* ConditionFilterViewModel.swift */,
@@ -20115,6 +20120,7 @@
 				06CF8D3C1AEF488F005CF053 /* TTFeedValidator.m in Sources */,
 				B388CC3C2142652B00653188 /* MineOptionCell.swift in Sources */,
 				ABBEA64F1F333547005DAD27 /* TTMoviePlayerControlLiveBottomView.m in Sources */,
+				B32FD35D21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				6BE0208C1B215BE600F9E484 /* ExploreActionButton.m in Sources */,
 				FEE3025120590DF000072A34 /* AKShareView.m in Sources */,
 				FE1FC324206922D800664B00 /* ExploreMixedListSuggestionWordsView.m in Sources */,
@@ -21834,6 +21840,7 @@
 				B373CB982174587A008F9905 /* TTMoviePlayerControlLiveBottomView.m in Sources */,
 				B373CB992174587A008F9905 /* ExploreActionButton.m in Sources */,
 				B373CB9A2174587A008F9905 /* AKShareView.m in Sources */,
+				B32FD35F21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				B373CB9B2174587A008F9905 /* ExploreMixedListSuggestionWordsView.m in Sources */,
 				B373CB9C2174587A008F9905 /* TTTabBarCustomMiddleModel.m in Sources */,
 				B373CB9D2174587A008F9905 /* TTSettingMineTabEntry.m in Sources */,
@@ -23553,6 +23560,7 @@
 				FEFA5673205FB1A8001F50D8 /* TTMoviePlayerControlLiveBottomView.m in Sources */,
 				FEFA5675205FB1A8001F50D8 /* ExploreActionButton.m in Sources */,
 				FEFA5676205FB1A8001F50D8 /* AKShareView.m in Sources */,
+				B32FD35E21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */,
 				FE1FC325206922D800664B00 /* ExploreMixedListSuggestionWordsView.m in Sources */,
 				FEFA5678205FB1A8001F50D8 /* TTTabBarCustomMiddleModel.m in Sources */,
 				FEFA5679205FB1A8001F50D8 /* TTSettingMineTabEntry.m in Sources */,
