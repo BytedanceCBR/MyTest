@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.6)
+  - BDALog (0.1.7)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -1230,7 +1230,9 @@ DEPENDENCIES:
   - ReactiveObjC (= 3.0.0)
   - RNCryptor-objc (= 3.0.5)
   - RSSwizzle (= 0.1.0)
-  - SDWebImage (= 4.4.1)
+  - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/GIF (= 4.4.1)
+  - SDWebImage/WebP (= 4.4.1)
   - SSZipArchive (= 1.6.2)
   - TSVToolkit (= 0.1.2)
   - TTABManager (= 0.0.7)
@@ -1426,7 +1428,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 7c9ae5939b17526808824b626057185cbf96c955
+  BDALog: c4719524bcb76adc22abf406b38c3530e420f55b
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1544,6 +1546,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 6c593b2e9985dca07fbfafeac7481f1f3e2c35a6
+PODFILE CHECKSUM: 6417dd91c7487aeef8cabd8d8972e34c2429c8fa
 
 COCOAPODS: 1.4.0

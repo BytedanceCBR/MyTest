@@ -44,11 +44,11 @@
         [modelsArray removeAllObjects];
         if ([x isKindOfClass:[FHConfigDataModel class]]) {
             FHConfigDataModel * dataModel = (FHConfigDataModel *)x;
-            if (dataModel.opData) {
+            if (dataModel.opData.items.count != 0) {
                 [modelsArray addObject:dataModel.opData];
             }
             
-            if (dataModel.opData2) {
+            if (dataModel.opData2.items.count != 0) {
                 [modelsArray addObject:dataModel.opData2];
             }
         }
@@ -212,6 +212,7 @@
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
+                    make.height.mas_equalTo(60);
                     make.left.mas_equalTo(20);
                 }];
             }else if (i%2 == 1)
@@ -219,6 +220,7 @@
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
                     make.top.mas_equalTo(10);
+                    make.height.mas_equalTo(60);
                     make.right.mas_equalTo(-20);
                 }];
             }
@@ -278,11 +280,11 @@
         [cellBanner.bannerView addItemViews:itemsArray];
     }
     
-    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(cellBanner.contentView);
-        make.height.mas_equalTo(100);
-    }];
-    
+//    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.top.right.equalTo(cellBanner.contentView);
+//        make.height.mas_equalTo(70 * ((countItems + 1)/2));
+//    }];
+//    
     [cellBanner setNeedsLayout];
     [cellBanner layoutIfNeeded];
 }

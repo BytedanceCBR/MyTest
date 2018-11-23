@@ -20,11 +20,11 @@
 
 - (void)setUpSubViews
 {
-    [self addSubview:_boardView];
+    [self.contentView addSubview:_boardView];
     _boardView.backgroundColor = [UIColor whiteColor];
     
     [_boardView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.right.equalTo(self);
+        make.left.top.bottom.right.equalTo(self.contentView);
     }];
 
 }
