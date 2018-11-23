@@ -222,6 +222,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 return false
             }
         } as? [String: Any]
+        self.queryParams?["search_id"] = nil
     }
 
     required init?(coder aDecoder: NSCoder) {
