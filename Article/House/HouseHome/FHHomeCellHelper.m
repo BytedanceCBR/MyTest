@@ -55,6 +55,7 @@
         delegate.modelsArray = modelsArray;
         tableView.delegate = delegate;
         tableView.dataSource = delegate;
+        [tableView reloadData];
     }];
 }
 
@@ -83,15 +84,35 @@
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
 {
     FHHomeEntrancesCell *cellEntrance = cell;
-    NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
+    
+    BOOL isNeedAllocNewItems = YES;
+    
+    //判断是否需要重复创建
+    if (cellEntrance.boardView.currentItems.count * 4 == model.items.count) {
+        isNeedAllocNewItems = NO;
+    }
     
     NSInteger countItems = model.items.count;
     if (countItems > 8) {
         countItems = 8;
     }
     
+    NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < countItems; i++) {
-        FHSpringboardIconItemView *itemView = [[FHSpringboardIconItemView alloc] init];
+        FHSpringboardIconItemView *itemView = nil;
+        if (isNeedAllocNewItems) {
+            itemView = [[FHSpringboardIconItemView alloc] init];
+        }else
+        {
+            if ([cellEntrance.boardView.currentItems[i/4] isKindOfClass:[FHSpringboardView class]]) {
+                FHSpringboardView *itemBoradView = (FHSpringboardView *)cellEntrance.boardView.currentItems[i/4];
+                itemView = itemBoradView.currentIconItems[i%4];
+            }else
+            {
+                itemView = [[FHSpringboardIconItemView alloc] init];
+            }
+        }
+        
         itemView.tag = i;
         FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:i];
         itemView.backgroundColor = [UIColor whiteColor];
@@ -100,8 +121,8 @@
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                   make.top.mas_equalTo(20);
-                   make.width.height.mas_equalTo(56);
+                    make.top.mas_equalTo(20);
+                    make.width.height.mas_equalTo(56);
                 }];
             }
         }
@@ -115,31 +136,34 @@
             }];
         }
         
-        [itemsArray addObject:itemView];
+        if (isNeedAllocNewItems)
+        {
+            [itemsArray addObject:itemView];
+        }
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
-//        if let logpb = item.logPb as NSDictionary?
-//        {
-//            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-//            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-//        }
-//
-//
-//        let tracerParams = TracerParams.momoid() <|>
-//        EnvContext.shared.homePageParams <|>
-//        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-//        toTracerParams("maintab", key: "enter_from") <|>
-//        toTracerParams("maintab_icon", key: "element_from") <|>
-//        toTracerParams("click", key: "enter_type")
-//
-//
-//        let parmasMap = tracerParams.paramsGetter([:])
-//        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-//        if let openUrl = item.openUrl
-//        {
-//            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-//        }
+        //        if let logpb = item.logPb as NSDictionary?
+        //        {
+        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
+        //        }
+        //
+        //
+        //        let tracerParams = TracerParams.momoid() <|>
+        //        EnvContext.shared.homePageParams <|>
+        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+        //        toTracerParams("maintab", key: "enter_from") <|>
+        //        toTracerParams("maintab_icon", key: "element_from") <|>
+        //        toTracerParams("click", key: "enter_type")
+        //
+        //
+        //        let parmasMap = tracerParams.paramsGetter([:])
+        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
+        //        if let openUrl = item.openUrl
+        //        {
+        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
+        //        }
         
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
@@ -150,9 +174,13 @@
         }
     };
     
-    if (itemsArray.count > 0) {
+    if (itemsArray.count > 0 && isNeedAllocNewItems) {
         [cellEntrance.boardView addItemViews:itemsArray];
     }
+    
+    [cellEntrance setNeedsLayout];
+    [cellEntrance layoutIfNeeded];
+    
 }
 
 - (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param
@@ -249,6 +277,14 @@
     if (itemsArray.count > 0) {
         [cellBanner.bannerView addItemViews:itemsArray];
     }
+    
+    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.equalTo(cellBanner.contentView);
+        make.height.mas_equalTo(100);
+    }];
+    
+    [cellBanner setNeedsLayout];
+    [cellBanner layoutIfNeeded];
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
