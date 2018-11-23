@@ -303,6 +303,10 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
             .subscribe(onNext: { [weak self] (type) in
                 self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
+                let size = self?.navBar.searchTypeLabel.sizeThatFits(CGSize(width: 100, height: 20)) ?? CGSize(width: 42, height: 20)
+                self?.navBar.searchTypeLabel.snp.updateConstraints({ (maker) in
+                    maker.width.equalTo(size.width)
+                })
                 self?.canSearchWithRollData = false
                 if let tableView = self?.tableView {
                     if self?.navBar.searchInput.text?.isEmpty == false {

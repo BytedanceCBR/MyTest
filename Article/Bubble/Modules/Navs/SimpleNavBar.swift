@@ -356,7 +356,7 @@ class CategorySearchNavBar: UIView {
         searchTypeLabel.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(10)
             maker.centerY.equalToSuperview()
-//            maker.height.equalTo(20)
+            maker.width.equalTo(42)
         }
 //      searchTypeLabel.sizeToFit()
 
