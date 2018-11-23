@@ -72,12 +72,12 @@
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
-        if (dataModel.opData.items.count != 0) {
-            height += (dataModel.opData.items.count/4) * 120;
+        if (dataModel.opData.items.count > 0) {
+            height += ((dataModel.opData.items.count - 1)/4 + 1) * 120;
         }
         
-        if (dataModel.opData2.items.count != 0) {
-            height += (dataModel.opData2.items.count/2) * 70;
+        if (dataModel.opData2.items.count > 0) {
+            height += ((dataModel.opData2.items.count - 1)/2 + 1) * 70;
         }
         if (dataModel.cityStats.count > 0) {
             height += 89;

@@ -24,9 +24,6 @@
     _bannerView.backgroundColor = [UIColor whiteColor];
     
     [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.top.right.equalTo(self.contentView);
-//        make.centerY.equalTo(self.contentView);
-//        make.height.mas_equalTo(70);
         make.edges.mas_equalTo(self.contentView);
     }];
     
