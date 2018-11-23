@@ -34,6 +34,7 @@ struct GeneralConfigData: Mappable {
     var banners: [Banner]?
     var reviewInfo: ConfigReviewInfo?
     var mapSearch : MapSearch?
+    var rentOpData: RentOpData?
     
     init?(map: Map) {
 
@@ -47,6 +48,7 @@ struct GeneralConfigData: Mappable {
         currentCityName <- map["current_city_name"]
         opData <- map["op_data"]
         opData2 <- map["op_data_2"]
+        rentOpData <- map["rent_op_data"]
         banners <- map["banners"]
         housetypelist <- map["house_type_list"]
         reviewInfo <- map["review_info"]
@@ -195,5 +197,45 @@ struct MapSearch : Mappable {
         centerLatitude <- map["center_latitude"]
         centerLongitude <- map["center_longitude"]
         resizeLevel <- map["resize_level"]
+    }
+}
+
+struct RentOpData : Mappable {
+    var opStyle: Int = 1
+    var items: [Item] = []
+
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        opStyle <- map["op_style"]
+        items <- map["items"]
+    }
+
+    struct Item : Mappable {
+        var title: String?
+        var description: String?
+        var image: [ImageItem] = []
+        var openUrl: String?
+        var backgroundColor: String?
+        var textColor: String?
+        var logPb: [String: Any]?
+        var id: String = ""
+
+        init?(map: Map) {
+
+        }
+
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            title <- map["title"]
+            description <- map["description"]
+            image <- map["image"]
+            openUrl <- map["open_url"]
+            backgroundColor <- map["background_color"]
+            textColor <- map["text_color"]
+            logPb <- map["log_pb"]
+        }
     }
 }

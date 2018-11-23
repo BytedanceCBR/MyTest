@@ -31,7 +31,7 @@ class SuggestionItemCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
+            maker.left.equalTo(20)
             maker.top.equalTo(11)
             maker.bottom.equalToSuperview().offset(-11)
         }
@@ -39,7 +39,7 @@ class SuggestionItemCell: UITableViewCell {
         contentView.addSubview(secondaryLabel)
         secondaryLabel.snp.makeConstraints { maker in
             maker.top.equalTo(12)
-            maker.right.equalToSuperview().offset(-15)
+            maker.right.equalToSuperview().offset(-20)
             maker.left.equalTo(label.snp.right).offset(-20)
             maker.width.greaterThanOrEqualTo(63)
         }
@@ -93,7 +93,7 @@ class SuggestionNewHouseItemCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
+            maker.left.equalTo(20)
             maker.top.equalTo(11)
             maker.width.greaterThanOrEqualTo(250)
         }
@@ -101,7 +101,7 @@ class SuggestionNewHouseItemCell: UITableViewCell {
         contentView.addSubview(secondaryLabel)
         secondaryLabel.snp.makeConstraints { maker in
             maker.top.equalTo(12)
-            maker.right.equalToSuperview().offset(-15)
+            maker.right.equalToSuperview().offset(-20)
             maker.left.equalTo(label.snp.right).offset(5).priority(.high)
             maker.width.greaterThanOrEqualTo(63).priority(.high)
         }
@@ -112,7 +112,7 @@ class SuggestionNewHouseItemCell: UITableViewCell {
         
         subLabel.snp.makeConstraints { (maker) in
             maker.top.equalTo(label.snp.bottom).offset(6)
-            maker.left.equalTo(15)
+            maker.left.equalTo(20)
             maker.bottom.equalTo(-13)
             maker.height.equalTo(17)
         }
@@ -125,7 +125,7 @@ class SuggestionNewHouseItemCell: UITableViewCell {
         
         secondarySubLabel.snp.makeConstraints { (maker) in
             maker.centerY.equalTo(subLabel.snp.centerY)
-            maker.right.equalTo(-15)
+            maker.right.equalTo(-20)
             maker.left.equalTo(subLabel.snp.right).offset(5)
 
         }
@@ -141,10 +141,12 @@ class SuggestionNewHouseItemCell: UITableViewCell {
 
 class SuggestionHeaderView: UIView {
 
+    lazy var guessView:GuessYouWantView = GuessYouWantView()
+    
     lazy var label: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(14)
-        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.font = CommonUIStyle.Font.pingFangMedium(14)
+        re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
 
@@ -157,18 +159,25 @@ class SuggestionHeaderView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         backgroundColor = UIColor.white
+        
+        addSubview(guessView)
+        guessView.snp.makeConstraints { (maker) in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(138)
+        }
+        
         addSubview(label)
         label.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.top.equalTo(10)
+            maker.left.equalTo(20)
+            maker.height.equalTo(20)
             maker.bottom.equalTo(-10)
         }
 
         addSubview(deleteBtn)
         deleteBtn.snp.makeConstraints { maker in
             maker.centerY.equalTo(label.snp.centerY)
-            maker.right.equalTo(-15)
-            maker.height.width.equalTo(16)
+            maker.right.equalTo(-20)
+            maker.height.width.equalTo(20)
          }
     }
 
