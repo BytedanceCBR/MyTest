@@ -56,6 +56,12 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  */
 - (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param;
 
+
+/**
+ * 刷新数据
+ */
+- (void)refreshFHHomeTableUI:(UITableView *)tableView;
+
 @end 
 
 NS_ASSUME_NONNULL_END

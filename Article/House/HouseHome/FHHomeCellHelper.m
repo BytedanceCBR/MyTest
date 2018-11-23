@@ -39,32 +39,51 @@
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate
 {
-    __block NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        [modelsArray removeAllObjects];
-        if ([x isKindOfClass:[FHConfigDataModel class]]) {
-            FHConfigDataModel * dataModel = (FHConfigDataModel *)x;
-            if (dataModel.opData.items.count != 0) {
-                [modelsArray addObject:dataModel.opData];
-            }
-            
-            if (dataModel.opData2.items.count != 0) {
-                [modelsArray addObject:dataModel.opData2];
-            }
-            if (dataModel.cityStats.count > 0) {
-                [modelsArray addObject:dataModel.cityStats.firstObject];
-            }
+    tableView.delegate = delegate;
+    tableView.dataSource = delegate;
+}
+- (void)refreshFHHomeTableUI:(UITableView *)tableView
+{
+    NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
+
+    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
+        if (dataModel.opData.items.count != 0) {
+            [modelsArray addObject:dataModel.opData];
         }
-        delegate.modelsArray = modelsArray;
-        tableView.delegate = delegate;
-        tableView.dataSource = delegate;
-        [tableView reloadData];
-    }];
+        
+        if (dataModel.opData2.items.count != 0) {
+            [modelsArray addObject:dataModel.opData2];
+        }
+        if (dataModel.cityStats.count > 0) {
+            [modelsArray addObject:dataModel.cityStats.firstObject];
+        }
+    }
+    
+    if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]]) {
+        ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
+    }
+    [tableView reloadData];
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    return 300;
+    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    CGFloat height = 0;
+    if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
+        
+        if (dataModel.opData.items.count != 0) {
+            height += (dataModel.opData.items.count/4) * 120;
+        }
+        
+        if (dataModel.opData2.items.count != 0) {
+            height += (dataModel.opData2.items.count/2) * 70;
+        }
+        if (dataModel.cityStats.count > 0) {
+            height += 89;
+        }
+    }
+    return height;
 }
 
 + (Class)cellClassFromCellViewType:(FHHomeCellViewType)cellType
@@ -205,10 +224,7 @@
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     
     NSInteger countItems = model.items.count;
-    if (countItems > 8) {
-        countItems = 8;
-    }
-    
+
     BOOL isNeedAllocNewItems = YES;
     
     //判断是否需要重复创建
