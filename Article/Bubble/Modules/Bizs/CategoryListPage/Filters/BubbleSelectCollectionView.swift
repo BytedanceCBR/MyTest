@@ -727,6 +727,12 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
                     fillPriceInput = nil
                 }
             }
+        } else {
+            let ds = priceDataSource()
+            ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+            ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+            ds?.lowerInput = ""
+            ds?.upperInput = ""
         }
     }
 
