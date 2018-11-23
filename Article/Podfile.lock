@@ -1230,7 +1230,9 @@ DEPENDENCIES:
   - ReactiveObjC (= 3.0.0)
   - RNCryptor-objc (= 3.0.5)
   - RSSwizzle (= 0.1.0)
-  - SDWebImage (= 4.4.1)
+  - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/GIF (= 4.4.1)
+  - SDWebImage/WebP (= 4.4.1)
   - SSZipArchive (= 1.6.2)
   - TSVToolkit (= 0.1.2)
   - TTABManager (= 0.0.7)
@@ -1544,6 +1546,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 6c593b2e9985dca07fbfafeac7481f1f3e2c35a6
+PODFILE CHECKSUM: 6417dd91c7487aeef8cabd8d8972e34c2429c8fa
 
 COCOAPODS: 1.4.0
