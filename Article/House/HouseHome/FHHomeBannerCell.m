@@ -12,7 +12,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2 withRowHight:70];
+        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2 withRowHight:10 + [UIScreen mainScreen].bounds.size.width / 375.0f * 60.0];
         [self setUpSubViews];
     }
     return self;

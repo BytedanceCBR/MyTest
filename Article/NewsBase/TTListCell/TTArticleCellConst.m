@@ -191,7 +191,7 @@ inline NSString* kSourceViewImageBorderColor() {
 
 /** 来源字号 */
 inline CGFloat kSourceViewFontSize() {
-    return 10.f;
+    return 12.f;
 }
 
 /** u11来源字号 */

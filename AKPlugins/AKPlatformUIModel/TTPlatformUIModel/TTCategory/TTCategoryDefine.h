@@ -30,6 +30,8 @@
 
 #define kNIHFindHouseCategoryID   @"f_find_house" // 找房频道 add by zjing
 
+#define kNIHFeedHouseMixedCategoryID   @"f_find_news" // 找房频道
+
 /**
  *  对应category的flags字段
  */

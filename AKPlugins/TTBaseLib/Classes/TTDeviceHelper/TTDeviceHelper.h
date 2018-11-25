@@ -80,6 +80,13 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
 + (BOOL)isScreenWidthLarge320;
 
 /**
+ *  对375屏幕的比例
+ *
+ *  @return Yes or No
+ */
++ (CGFloat)scaleToScreen375;
+
+/**
  *  判断设备是iPhone X
  *
  *  @return Yes or No
