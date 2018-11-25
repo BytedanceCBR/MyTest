@@ -16,6 +16,15 @@
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
+
+#define kFHHomeBannerDefaultHeight 60.0
+
+#define kFHHomeIconDefaultHeight 52.0
+
+#define kFHHomeIconRowCount 4
+
+#define kFHHomeBannerRowCount 2
+
 @implementation FHHomeCellHelper
 
 +(instancetype)sharedInstance
@@ -80,11 +89,11 @@
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
         if (dataModel.opData.items.count > 0) {
-            height += ((dataModel.opData.items.count - 1)/4 + 1) * 120;
+            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120;
         }
         
         if (dataModel.opData2.items.count > 0) {
-            height += ((dataModel.opData2.items.count - 1)/2 + 1) * 70;
+            height += ((dataModel.opData2.items.count - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
@@ -161,7 +170,7 @@
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(20);
-                    make.width.height.mas_equalTo(52);
+                    make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
         }
@@ -276,16 +285,16 @@
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
-                    make.height.mas_equalTo(60);
-                    make.left.mas_equalTo(20);
+                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
             }else if (index%2 == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
                     make.top.mas_equalTo(10);
-                    make.height.mas_equalTo(60);
-                    make.right.mas_equalTo(-20);
+                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
                 }];
             }
         }
@@ -311,6 +320,12 @@
             }
             itemView.subTitleLabel.font = font;
             itemView.subTitleLabel.text = itemModel.descriptionStr;
+            
+            if (![TTDeviceHelper isScreenWidthLarge320]) {
+                [itemView.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(-5);
+                }];
+            }
         }
         itemView.backgroundColor = [UIColor whiteColor];
         if (isNeedAllocNewItems) {
@@ -364,7 +379,7 @@
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
-
+    
     [cell updateWithModel:model];
 }
 

@@ -54,6 +54,11 @@ static TTDeviceMode tt_deviceMode;
     return shortSide > 320;
 }
 
++ (CGFloat)scaleToScreen375
+{
+    return [UIScreen mainScreen].bounds.size.width / 375.0f;
+}
+
 + (BOOL)isIpadProDevice {
     CGFloat height = [UIScreen mainScreen].currentMode.size.height;
     CGFloat width = [UIScreen mainScreen].currentMode.size.width;
