@@ -7,6 +7,7 @@
 
 #import "FHHomeTrendItemView.h"
 #import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 @implementation FHHomeTrendItemView
 
@@ -83,7 +84,7 @@
     if (!_titleLabel) {
         
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:18];
+        _titleLabel.font = [UIFont themeFontRegular:18];
         _titleLabel.textColor = [UIColor themeBlack];
         _titleLabel.numberOfLines = 1;
         
@@ -97,7 +98,7 @@
     if (!_subtitleLabel) {
         
         _subtitleLabel = [[UILabel alloc]init];
-        _subtitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+        _subtitleLabel.font = [UIFont themeFontRegular:10];
         _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 1;
         

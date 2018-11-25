@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "FHHomeTrendItemView.h"
 #import "FHConfigModel.h"
+#import "UIFont+House.h"
 
 @interface FHHomeCityTrendView()
 
@@ -50,9 +51,7 @@
     self.leftView.clickedCallback = ^(UIButton *btn) {
         
         [wself leftBtnDidClick:btn];
-//        if (wself.clickedLeftCallback) {
-//            wself.clickedLeftCallback(btn);
-//        }
+
     };
     [self addSubview:self.line];
     
@@ -66,6 +65,9 @@
 
 -(void)leftBtnDidClick:(UIButton *)btn {
     
+    if (self.clickedLeftCallback) {
+        self.clickedLeftCallback(btn);
+    }
 
 }
 
@@ -87,8 +89,8 @@
     
     NSString *priceStr = [NSString stringWithFormat:@"%@ %@",model.pricingPerSqm,model.pricingPerSqmUnit];
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:priceStr];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:18] ? : [UIFont systemFontOfSize:18]} range:[priceStr rangeOfString:model.pricingPerSqm]];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:10] ? : [UIFont systemFontOfSize:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
+    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[priceStr rangeOfString:model.pricingPerSqm]];
+    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
     self.centerView.titleLabel.attributedText = attr;
     
     if (model.monthUp.doubleValue > 0) {
@@ -109,8 +111,8 @@
     
     NSString *numStr = [NSString stringWithFormat:@"%@ %@",model.addedNumToday, model.addedNumTodayUnit];
     NSMutableAttributedString *numAttr = [[NSMutableAttributedString alloc]initWithString:numStr];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:18] ? : [UIFont systemFontOfSize:18]} range:[numStr rangeOfString:model.addedNumToday]];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:10] ? : [UIFont systemFontOfSize:10]} range:[numStr rangeOfString:model.addedNumTodayUnit]];
+    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[numStr rangeOfString:model.addedNumToday]];
+    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[numStr rangeOfString:model.addedNumTodayUnit]];
     
     self.rightView.titleLabel.attributedText = numAttr;
     self.rightView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.addedNumTodayDesc];
