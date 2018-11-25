@@ -364,12 +364,7 @@
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
-    
-    WeakSelf;
-    cell.trendView.clickedRightCallback = ^{
-        
-        
-    };
+
     [cell updateWithModel:model];
 }
 

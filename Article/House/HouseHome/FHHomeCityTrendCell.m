@@ -12,12 +12,14 @@
 #import "UIColor+Theme.h"
 #import "FHHomeTrendBubbleView.h"
 #import <NSTimer+TTNoRetainRef.h>
+#import <TTRoute.h>
 
 @interface FHHomeCityTrendCell()
 
-@property(nonatomic, strong)FHHomeTrendBubbleView *bubbleView;
+@property(nonatomic, strong) FHHomeTrendBubbleView *bubbleView;
 @property (nonatomic, strong) NSTimer *timer;
 
+@property (nonatomic, strong) FHConfigDataCityStatsModel *model;
 @property (nonatomic, assign) BOOL isShowBubble;
 
 @end
@@ -41,7 +43,19 @@
     self.trendView.clickedLeftCallback = ^(UIButton * _Nonnull btn) {
         [wself leftBtnDidClick:btn];
     };
+    self.trendView.clickedRightCallback = ^{
+        [wself rightBtnDidClickWithModel: wself.model];
+    };
     
+}
+
+-(void)rightBtnDidClickWithModel: (FHConfigDataCityStatsModel *)model {
+
+    if (model.openUrl) {
+        
+        NSURL *url = [NSURL URLWithString:model.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 -(void)leftBtnDidClick:(UIButton*)btn {
@@ -80,6 +94,7 @@
 
 -(void)updateWithModel:(FHConfigDataCityStatsModel *)model {
     
+    _model = model;
     [self.trendView updateWithModel:model];
     [self.bubbleView updateTitle:model.cityPriceHint];
     

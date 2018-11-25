@@ -55,11 +55,12 @@
     };
     [self addSubview:self.line];
     
-    [self addSubview:self.rightBtn];
-    [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerView];
     [self addSubview:self.rightView];
     [self addSubview:self.rightArrow];
+
+    [self addSubview:self.rightBtn];
+    [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
 }
 
@@ -155,6 +156,10 @@
     self.centerView.frame = CGRectMake(self.line.right, 0, itemWidth, self.height);
     self.rightView.frame = CGRectMake(self.centerView.right, 0, itemWidth, self.height);
 
+    self.rightBtn.left = self.line.right;
+    self.rightBtn.top = self.centerView.top;
+    self.rightBtn.width = self.width - self.line.right;
+    self.rightBtn.height = self.height - self.centerView.top;
 }
 
 -(UIImageView *)bgView {
