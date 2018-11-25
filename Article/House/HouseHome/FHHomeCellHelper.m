@@ -17,13 +17,13 @@
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
 
-#define kFHHomeBannerDefaultHeight 60.0
+#define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
-#define kFHHomeIconDefaultHeight 52.0
+#define kFHHomeIconDefaultHeight 52.0 //icon高度
 
-#define kFHHomeIconRowCount 4
+#define kFHHomeIconRowCount 4 //每行icon个数
 
-#define kFHHomeBannerRowCount 2
+#define kFHHomeBannerRowCount 2 //每行banner个数
 
 @implementation FHHomeCellHelper
 
@@ -281,14 +281,14 @@
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (index%2 == 0) {
+            if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
                     make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
-            }else if (index%2 == 1)
+            }else if (index%kFHHomeBannerRowCount == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
