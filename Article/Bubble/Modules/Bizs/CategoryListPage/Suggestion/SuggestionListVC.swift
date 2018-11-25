@@ -57,7 +57,7 @@ fileprivate class SuggectionTableView : UITableView {
 }
 
 
-class SuggestionListVC: BaseViewController , UITextFieldDelegate {
+class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitializeProtocol {
 
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
@@ -137,6 +137,44 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    required init(routeParamObj paramObj: TTRouteParamObj?) {
+        
+        let fromHomeType : EnterSuggestionType = (paramObj?.allParams["from_home"] as? EnterSuggestionType) ?? EnterSuggestionType.enterSuggestionTypeHome
+        
+        if let tracerParams = paramObj?.allParams["tracer"] as? [String: Any] {
+            for tkey in tracerParams.keys {
+                self.tracerParams = self.tracerParams <|> toTracerParams( tracerParams[tkey] ?? "", key:tkey)
+            }
+        }
+        
+        if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
+            self.onSuggestionSelected = { [weak sugDelegate](routeObj) in
+                sugDelegate?.suggestionSelected(routeObj)
+            }
+            self.filterConditionResetter = { [weak sugDelegate] in
+                sugDelegate?.resetCondition()
+            }
+        }
+        
+        self.isFromHome = (fromHomeType == .enterSuggestionTypeHome) ? true : false
+        self.fromSource = fromHomeType
+        self.houseType.accept(defaultHoustType(config: EnvContext.shared.client.configCacheSubject.value))
+        
+        if  let houseType = paramObj?.allParams["house_type"] as? HouseType {
+            self.houseType.accept(houseType)
+        }
+        
+        tableViewModel = SuggestionListTableViewModel(
+            houseType: houseType,
+            isFromHome: fromHomeType)
+        
+        super.init(nibName:nil ,bundle : nil)
+        
+        self.navBar.searchable = true
+        
+        
     }
     
     override func viewDidLoad() {
@@ -498,14 +536,16 @@ fileprivate func convertDataToSuggestionItem(data: SearchHistoryResponse.Item) -
 
 func categoryEnterNameByHouseType(houseType: HouseType) -> String {
     switch houseType {
-        case .neighborhood:
-            return "neighborhood_list"
-        case .secondHandHouse:
-            return "old_list"
-        case .newHouse:
-            return "new_list"
-        default:
-            return "be_null"
+    case .neighborhood:
+        return "neighborhood_list"
+    case .secondHandHouse:
+        return "old_list"
+    case .newHouse:
+        return "new_list"
+    case .rentHouse:
+        return "rent_list"
+    default:
+        return "be_null"
     }
 }
 
