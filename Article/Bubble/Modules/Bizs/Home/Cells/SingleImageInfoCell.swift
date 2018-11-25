@@ -21,9 +21,9 @@ class CornerView: UIView {
         super.layoutSubviews()
         let maskPath = UIBezierPath(
             roundedRect: self.bounds,
-            byRoundingCorners: [UIRectCorner.bottomLeft,
+            byRoundingCorners: [UIRectCorner.topLeft,
                                 UIRectCorner.bottomRight],
-            cornerRadii: CGSize(width: 2, height: 2))
+            cornerRadii: CGSize(width: 4, height: 4))
         let layer = CAShapeLayer()
         layer.frame = self.bounds
         layer.path = maskPath.cgPath
@@ -220,15 +220,15 @@ class CornerView: UIView {
 
         contentView.addSubview(imageTopLeftLabelBgView)
         imageTopLeftLabelBgView.snp.makeConstraints { (maker) in
-            maker.left.equalTo(majorImageView.snp.left).offset(6)
+            maker.left.equalTo(majorImageView.snp.left).offset(0)
             maker.top.equalTo(majorImageView.snp.top)
             maker.height.equalTo(16)
         }
 
         imageTopLeftLabelBgView.addSubview(imageTopLeftLabel)
         imageTopLeftLabel.snp.makeConstraints { (maker) in
-            maker.left.equalTo(4)
-            maker.right.equalTo(-4)
+            maker.left.equalTo(9)
+            maker.right.equalTo(-9)
             maker.centerY.equalToSuperview()
         }
 
