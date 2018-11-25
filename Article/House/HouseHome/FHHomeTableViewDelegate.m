@@ -57,8 +57,4 @@
     return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
 @end
