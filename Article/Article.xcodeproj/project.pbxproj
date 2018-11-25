@@ -760,12 +760,21 @@
 		610FF9E321A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E421A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E521A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
+		611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D921A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DA21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DB21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
 		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE821A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDE921A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
+		6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
@@ -6676,10 +6685,15 @@
 		610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseFooterView.h; sourceTree = "<group>"; };
 		610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseFooterView.m; sourceTree = "<group>"; };
 		610FF9E221A53E25003E8D68 /* feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = feed.xcassets; sourceTree = "<group>"; };
+		611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendItemView.h; sourceTree = "<group>"; };
+		611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendItemView.m; sourceTree = "<group>"; };
+		611339D821A7F94700304DF6 /* home.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = home.xcassets; sourceTree = "<group>"; };
 		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
 		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
 		6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemCell.m; sourceTree = "<group>"; };
+		6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendBubbleView.h; sourceTree = "<group>"; };
+		6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendBubbleView.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
@@ -15717,6 +15731,7 @@
 		D46DA52321A43B74009D50C7 /* HouseHome */ = {
 			isa = PBXGroup;
 			children = (
+				611339D821A7F94700304DF6 /* home.xcassets */,
 				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
 				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
@@ -15737,6 +15752,10 @@
 				D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */,
 				D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */,
 				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
+				611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */,
+				611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */,
+				6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */,
+				6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -18059,6 +18078,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
+				611339D921A7F94700304DF6 /* home.xcassets in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				3DF363A321A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
@@ -18143,6 +18163,7 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				B373CEA72174587A008F9905 /* ThirdParty.xcassets in Resources */,
+				611339DB21A7F94700304DF6 /* home.xcassets in Resources */,
 				B373CEA82174587A008F9905 /* TargetLogicSetting.strings in Resources */,
 				3DF363A521A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				B373CEA92174587A008F9905 /* recommend_button_press@2x.png in Resources */,
@@ -18227,6 +18248,7 @@
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FEFA59F2205FB1A8001F50D8 /* ThirdParty.xcassets in Resources */,
+				611339DA21A7F94700304DF6 /* home.xcassets in Resources */,
 				FEFA59F4205FB1A8001F50D8 /* TargetLogicSetting.strings in Resources */,
 				3DF363A421A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				FEFA59F5205FB1A8001F50D8 /* recommend_button_press@2x.png in Resources */,
@@ -18281,15 +18303,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-f100-checkManifestLockResult.txt",
 			);
@@ -18303,11 +18321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18320,11 +18334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18337,13 +18347,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18615,8 +18621,6 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh",
 				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_ali@2x.png",
@@ -18706,8 +18710,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
@@ -19740,6 +19742,7 @@
 				A97DBB971F1332E30002B455 /* TTAppStoreADTask.m in Sources */,
 				D5C5C35C1F31E0AA00031094 /* ResurfaceData.m in Sources */,
 				F87695041F31D0D600D59CA5 /* TTVFeedListVideoTopContainerView.m in Sources */,
+				6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				F87693741F31D0D300D59CA5 /* TTVCommentViewModel.m in Sources */,
 				F87694B01F31D0D600D59CA5 /* TTVLastReadItem.m in Sources */,
 				0C980BC01F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m in Sources */,
@@ -20408,6 +20411,7 @@
 				F2820EFA1F3031BB00354708 /* TTHorizontalHuoShanLoadingCell.m in Sources */,
 				FE5CEE0B20510A9E0011B4D7 /* AKRedPacketViewController.m in Sources */,
 				9CB6D4021EB3218B0093B209 /* TTRNBundleDownloader.m in Sources */,
+				611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				48EC03EA173BCACA000B55A8 /* SSPublishProgressView.m in Sources */,
 				6BE0210A1B215BE600F9E484 /* ExploreCellViewBase.m in Sources */,
 				8460FAB41D0FD29800BC4778 /* ExploreDetailAppLeftPicADView.m in Sources */,
@@ -21461,6 +21465,7 @@
 				B373C9DF2174587A008F9905 /* TTVCommentViewModel.m in Sources */,
 				B373C9E02174587A008F9905 /* TTVLastReadItem.m in Sources */,
 				B373C9E12174587A008F9905 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				B373C9E22174587A008F9905 /* ArticleSearchBaseCell.m in Sources */,
 				B373C9E32174587A008F9905 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				B373C9E42174587A008F9905 /* TTFileManager.m in Sources */,
@@ -22129,6 +22134,7 @@
 				B373CC6A2174587A008F9905 /* AKRedPacketViewController.m in Sources */,
 				B373CC6B2174587A008F9905 /* TTRNBundleDownloader.m in Sources */,
 				B373CC6C2174587A008F9905 /* SSPublishProgressView.m in Sources */,
+				611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				B373CC6D2174587A008F9905 /* ExploreCellViewBase.m in Sources */,
 				B373CC6E2174587A008F9905 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				B373CC6F2174587A008F9905 /* TTStartupSDKsGroup.m in Sources */,
@@ -23182,6 +23188,7 @@
 				FEFA548B205FB1A8001F50D8 /* TTVCommentViewModel.m in Sources */,
 				FEFA548C205FB1A8001F50D8 /* TTVLastReadItem.m in Sources */,
 				FEFA548D205FB1A8001F50D8 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				FEFA548E205FB1A8001F50D8 /* ArticleSearchBaseCell.m in Sources */,
 				FEFA548F205FB1A8001F50D8 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				FEFA5490205FB1A8001F50D8 /* TTFileManager.m in Sources */,
@@ -23850,6 +23857,7 @@
 				FEFA5768205FB1A8001F50D8 /* AKRedPacketViewController.m in Sources */,
 				FEFA5769205FB1A8001F50D8 /* TTRNBundleDownloader.m in Sources */,
 				FEFA576A205FB1A8001F50D8 /* SSPublishProgressView.m in Sources */,
+				611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				FEFA576D205FB1A8001F50D8 /* ExploreCellViewBase.m in Sources */,
 				FEFA576E205FB1A8001F50D8 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				FEFA576F205FB1A8001F50D8 /* TTStartupSDKsGroup.m in Sources */,
@@ -24965,7 +24973,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -25069,8 +25077,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;

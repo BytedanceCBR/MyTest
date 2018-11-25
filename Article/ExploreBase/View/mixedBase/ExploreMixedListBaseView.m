@@ -524,15 +524,19 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-       
         [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
-             if ([_categoryID isEqualToString:@"f_house_news"]) {
-                [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
-             }
+            [self reloadFHHomeHeaderCell];
         }];
     }
     return self;
+}
+
+- (void)reloadFHHomeHeaderCell
+{
+    if ([_categoryID isEqualToString:@"f_house_news"]) {
+        [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)setupSilentFetchTimer
