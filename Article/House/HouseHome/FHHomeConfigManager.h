@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property(nonatomic , strong) FHConfigDataModel *currentDataModel;
+@property(nonatomic , strong) NSDictionary *currentDictionary;
 
 +(instancetype)sharedInstance;
 
