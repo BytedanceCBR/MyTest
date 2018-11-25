@@ -69,14 +69,11 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     lazy var guessYouWantView = GuessYouWantView()
 
     lazy var tableView: UITableView = {
-        let result = SuggectionTableView()
+        let result = SuggectionTableView(frame: CGRect.zero, style: .grouped)
         result.handleTouch = { [unowned self] in
             self.view.endEditing(true)
         }
-        
-        result.estimatedRowHeight = 0
-        result.estimatedSectionFooterHeight = 0
-        result.estimatedSectionHeaderHeight = 0
+        result.backgroundColor = UIColor.white
 
         result.separatorStyle = .none
         if CommonUIStyle.Screen.isIphoneX {
@@ -144,6 +141,12 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         tableViewModel.tracerParams = self.tracerParams
         self.panBeginAction = { [unowned self] in
             self.navBar.searchInput.resignFirstResponder()

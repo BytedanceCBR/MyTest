@@ -193,5 +193,16 @@ class GeneralBizConfig {
             return re
         }
     }
+    
+    func appConfig() -> [String: Any]? {
+        
+        return self.generalCacheSubject.value?.toJSON()
+    }
+    
+    func rentOpData() -> [String : Any]? {
+        
+        //TODO: add rent data
+        return self.generalCacheSubject.value?.rentOpData?.toJSON()
+    }
 
 }
