@@ -772,6 +772,9 @@
 		6114DDE821A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDE921A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
+		6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
@@ -6689,6 +6692,8 @@
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
 		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
 		6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemCell.m; sourceTree = "<group>"; };
+		6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendBubbleView.h; sourceTree = "<group>"; };
+		6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendBubbleView.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
@@ -15749,6 +15754,8 @@
 				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
 				611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */,
 				611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */,
+				6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */,
+				6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -19735,6 +19742,7 @@
 				A97DBB971F1332E30002B455 /* TTAppStoreADTask.m in Sources */,
 				D5C5C35C1F31E0AA00031094 /* ResurfaceData.m in Sources */,
 				F87695041F31D0D600D59CA5 /* TTVFeedListVideoTopContainerView.m in Sources */,
+				6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				F87693741F31D0D300D59CA5 /* TTVCommentViewModel.m in Sources */,
 				F87694B01F31D0D600D59CA5 /* TTVLastReadItem.m in Sources */,
 				0C980BC01F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m in Sources */,
@@ -21457,6 +21465,7 @@
 				B373C9DF2174587A008F9905 /* TTVCommentViewModel.m in Sources */,
 				B373C9E02174587A008F9905 /* TTVLastReadItem.m in Sources */,
 				B373C9E12174587A008F9905 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				B373C9E22174587A008F9905 /* ArticleSearchBaseCell.m in Sources */,
 				B373C9E32174587A008F9905 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				B373C9E42174587A008F9905 /* TTFileManager.m in Sources */,
@@ -23179,6 +23188,7 @@
 				FEFA548B205FB1A8001F50D8 /* TTVCommentViewModel.m in Sources */,
 				FEFA548C205FB1A8001F50D8 /* TTVLastReadItem.m in Sources */,
 				FEFA548D205FB1A8001F50D8 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				FEFA548E205FB1A8001F50D8 /* ArticleSearchBaseCell.m in Sources */,
 				FEFA548F205FB1A8001F50D8 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				FEFA5490205FB1A8001F50D8 /* TTFileManager.m in Sources */,

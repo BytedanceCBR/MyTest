@@ -579,6 +579,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 //        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
 //        return
 
+        self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
+        
         //点击切换埋点
         let catName = pageTypeString()
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"

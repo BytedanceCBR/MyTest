@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "FHHomeTrendItemView.h"
 #import "FHConfigModel.h"
+#import "UIFont+House.h"
 
 @interface FHHomeCityTrendView()
 
@@ -50,22 +51,24 @@
     self.leftView.clickedCallback = ^(UIButton *btn) {
         
         [wself leftBtnDidClick:btn];
-//        if (wself.clickedLeftCallback) {
-//            wself.clickedLeftCallback(btn);
-//        }
+
     };
     [self addSubview:self.line];
     
-    [self addSubview:self.rightBtn];
-    [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.centerView];
     [self addSubview:self.rightView];
     [self addSubview:self.rightArrow];
+
+    [self addSubview:self.rightBtn];
+    [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
 }
 
 -(void)leftBtnDidClick:(UIButton *)btn {
     
+    if (self.clickedLeftCallback) {
+        self.clickedLeftCallback(btn);
+    }
 
 }
 
@@ -87,30 +90,48 @@
     
     NSString *priceStr = [NSString stringWithFormat:@"%@ %@",model.pricingPerSqm,model.pricingPerSqmUnit];
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:priceStr];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:18] ? : [UIFont systemFontOfSize:18]} range:[priceStr rangeOfString:model.pricingPerSqm]];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:10] ? : [UIFont systemFontOfSize:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
+    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[priceStr rangeOfString:model.pricingPerSqm]];
+    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
     self.centerView.titleLabel.attributedText = attr;
     
-    if (model.monthUp.doubleValue > 0) {
+    if (model.monthUp.doubleValue > 0.0001f) {
         self.centerView.icon.image = [UIImage imageNamed:@"home_red_arrow"];
         self.centerView.icon.hidden = NO;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        self.centerView.subtitleLabel.hidden = NO;
+        NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
+        float monthUp = monthUpStr.floatValue;
+        if (fmodf(monthUp * 10, 1) == 0) {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.1f%%",model.pricingPerSqmDesc, monthUp];
+        }else {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, monthUp];
+        }
 
-    }else if (model.monthUp.doubleValue < 0) {
+    }else if (model.monthUp.doubleValue < -0.0001f) {
         self.centerView.icon.image = [UIImage imageNamed:@"home_green_arrow"];
         self.centerView.icon.hidden = NO;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
-        
+        self.centerView.subtitleLabel.hidden = NO;
+        NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
+        float monthUp = monthUpStr.floatValue;
+        if (fmodf(monthUp * 10, 1) == 0) {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.1f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        }else {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        }
+
     }else {
         self.centerView.icon.hidden = YES;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ 持平",model.pricingPerSqmDesc];
+        self.centerView.subtitleLabel.hidden = YES;
 
     }
     
     NSString *numStr = [NSString stringWithFormat:@"%@ %@",model.addedNumToday, model.addedNumTodayUnit];
     NSMutableAttributedString *numAttr = [[NSMutableAttributedString alloc]initWithString:numStr];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:18] ? : [UIFont systemFontOfSize:18]} range:[numStr rangeOfString:model.addedNumToday]];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"PingFangSC-Regular" size:10] ? : [UIFont systemFontOfSize:10]} range:[numStr rangeOfString:model.addedNumTodayUnit]];
+    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[numStr rangeOfString:model.addedNumToday]];
+    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[numStr rangeOfString:model.addedNumTodayUnit]];
     
     self.rightView.titleLabel.attributedText = numAttr;
     self.rightView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.addedNumTodayDesc];
@@ -135,6 +156,10 @@
     self.centerView.frame = CGRectMake(self.line.right, 0, itemWidth, self.height);
     self.rightView.frame = CGRectMake(self.centerView.right, 0, itemWidth, self.height);
 
+    self.rightBtn.left = self.line.right;
+    self.rightBtn.top = self.centerView.top;
+    self.rightBtn.width = self.width - self.line.right;
+    self.rightBtn.height = self.height - self.centerView.top;
 }
 
 -(UIImageView *)bgView {

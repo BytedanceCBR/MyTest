@@ -7,6 +7,7 @@
 
 #import "FHHomeTrendItemView.h"
 #import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 @implementation FHHomeTrendItemView
 
@@ -49,24 +50,29 @@
     self.titleLabel.width = self.width - self.leftPadding - self.rightPadding;
     self.titleLabel.left = self.leftPadding;
     
+    CGFloat leftPadding = 0;
+    if (!self.btn.hidden) {
+        
+        leftPadding = 4;
+    }
     [self.subtitleLabel sizeToFit];
     self.subtitleLabel.top = self.titleLabel.bottom + 3;
-    self.subtitleLabel.left = self.titleLabel.left;
-    if (self.subtitleLabel.width > self.width - 40) {
+    self.subtitleLabel.left = self.titleLabel.left + leftPadding;
+    if (self.subtitleLabel.width > self.width - 30) {
         
-        self.subtitleLabel.width = self.width - 40;
+        self.subtitleLabel.width = self.width - 30;
     }
     
     [self.icon sizeToFit];
     self.icon.left = self.subtitleLabel.right + 3;
     self.icon.centerY = self.subtitleLabel.centerY;
-    
-    self.btn.left = self.subtitleLabel.left - 2;
+
+    self.btn.left = self.subtitleLabel.left - leftPadding;
     if (self.icon.width > 0) {
         
-        self.btn.width = self.icon.right - self.subtitleLabel.left + 8;
+        self.btn.width = self.icon.right - self.subtitleLabel.left + 2 * leftPadding;
     } else {
-        self.btn.right = self.subtitleLabel.right - self.subtitleLabel.left + 8;
+        self.btn.width = self.subtitleLabel.right - self.subtitleLabel.left + 2 * leftPadding;
     }
     self.btn.top = self.subtitleLabel.top - 1;
     self.btn.height = self.subtitleLabel.bottom - self.subtitleLabel.top + 2;
@@ -78,7 +84,7 @@
     if (!_titleLabel) {
         
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:18];
+        _titleLabel.font = [UIFont themeFontRegular:18];
         _titleLabel.textColor = [UIColor themeBlack];
         _titleLabel.numberOfLines = 1;
         
@@ -92,7 +98,7 @@
     if (!_subtitleLabel) {
         
         _subtitleLabel = [[UILabel alloc]init];
-        _subtitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+        _subtitleLabel.font = [UIFont themeFontRegular:10];
         _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 1;
         

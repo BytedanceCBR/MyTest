@@ -56,7 +56,14 @@
             [modelsArray addObject:dataModel.opData2];
         }
         if (dataModel.cityStats.count > 0) {
-            [modelsArray addObject:dataModel.cityStats.firstObject];
+            
+            for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
+                
+                if ([model.houseType isEqualToString:@"2"]) {
+                    [modelsArray addObject:model];
+                    break;
+                }
+            }
         }
     }
     
@@ -80,7 +87,13 @@
             height += ((dataModel.opData2.items.count - 1)/2 + 1) * 70;
         }
         if (dataModel.cityStats.count > 0) {
-            height += 89;
+            for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
+                
+                if ([model.houseType isEqualToString:@"2"]) {
+                    height += 89;
+                    break;
+                }
+            }
         }
     }
     return height;
@@ -351,12 +364,7 @@
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
-    
-    WeakSelf;
-    cell.trendView.clickedRightCallback = ^{
-        
-        
-    };
+
     [cell updateWithModel:model];
 }
 
