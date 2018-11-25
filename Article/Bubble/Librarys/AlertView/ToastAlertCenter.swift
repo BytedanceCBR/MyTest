@@ -22,9 +22,8 @@ import SnapKit
         super.init()
     }
 
-    @objc func showToast(_ message: String, duration: TimeInterval = 1) {
-
-        toastAlert.isUserInteractionEnabled = false
+    @objc func showToast(_ message: String, duration: TimeInterval = 1, isUserInteraction: Bool = false) {
+        toastAlert.isUserInteractionEnabled = isUserInteraction
         UIApplication.shared.keyWindow?.addSubview(toastAlert)
         toastAlert.snp.makeConstraints { maker in
             maker.top.bottom.left.right.equalToSuperview()
@@ -40,8 +39,8 @@ import SnapKit
 
     }
 
-    @objc func showLoadingToast(_ message: String) {
-        toastAlert.isUserInteractionEnabled = false
+    @objc func showLoadingToast(_ message: String,isUserInteraction: Bool = false) {
+        toastAlert.isUserInteractionEnabled = isUserInteraction
         self.dismissToast()
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(toastAlert)

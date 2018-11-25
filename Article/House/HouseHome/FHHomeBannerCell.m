@@ -12,7 +12,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2];
+        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2 withRowHight:70];
         [self setUpSubViews];
     }
     return self;
@@ -20,11 +20,11 @@
 
 - (void)setUpSubViews
 {
-    [self addSubview:_bannerView];
+    [self.contentView addSubview:_bannerView];
     _bannerView.backgroundColor = [UIColor whiteColor];
     
-    [_bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.right.equalTo(self);
+    [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
     }];
     
 }
