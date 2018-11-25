@@ -93,19 +93,37 @@
     [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
     self.centerView.titleLabel.attributedText = attr;
     
-    if (model.monthUp.doubleValue > 0) {
+    if (model.monthUp.doubleValue > 0.0001f) {
         self.centerView.icon.image = [UIImage imageNamed:@"home_red_arrow"];
         self.centerView.icon.hidden = NO;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        self.centerView.subtitleLabel.hidden = NO;
+        NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
+        float monthUp = monthUpStr.floatValue;
+        if (fmodf(monthUp * 10, 1) == 0) {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.1f%%",model.pricingPerSqmDesc, monthUp];
+        }else {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, monthUp];
+        }
 
-    }else if (model.monthUp.doubleValue < 0) {
+    }else if (model.monthUp.doubleValue < -0.0001f) {
         self.centerView.icon.image = [UIImage imageNamed:@"home_green_arrow"];
         self.centerView.icon.hidden = NO;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
-        
+        self.centerView.subtitleLabel.hidden = NO;
+        NSString *monthUpStr = [NSString stringWithFormat:@"%.2f",ABS(model.monthUp.floatValue * 100)];
+        float monthUp = monthUpStr.floatValue;
+        if (fmodf(monthUp * 10, 1) == 0) {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.1f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        }else {
+            
+            self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
+        }
+
     }else {
         self.centerView.icon.hidden = YES;
-        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ 持平",model.pricingPerSqmDesc];
+        self.centerView.subtitleLabel.hidden = YES;
 
     }
     

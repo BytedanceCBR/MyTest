@@ -58,9 +58,9 @@
     [self.subtitleLabel sizeToFit];
     self.subtitleLabel.top = self.titleLabel.bottom + 3;
     self.subtitleLabel.left = self.titleLabel.left + leftPadding;
-    if (self.subtitleLabel.width > self.width - 40) {
+    if (self.subtitleLabel.width > self.width - 30) {
         
-        self.subtitleLabel.width = self.width - 40;
+        self.subtitleLabel.width = self.width - 30;
     }
     
     [self.icon sizeToFit];
