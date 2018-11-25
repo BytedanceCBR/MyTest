@@ -100,6 +100,8 @@
 #import <FHHouseRent/FHHouseRent.h>
 
 #import <FHHouseBase/FHBaseTableViewCell.h>
+#import <FHHouseBase/FHHouseSuggestionDelegate.h>
+
 
 #import "FHHomeConfigManager.h"
 #import "FHNewHouseItemModel.h"
