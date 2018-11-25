@@ -106,5 +106,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHHouseRentRelatedResponse.h"
 #import "FHRentSameNeighborhoodResponse.h"
+#import "FHRentDetailAPI.h"
+#import "FHRentDetailResponse.h"
 
 #endif /* Article_Bridging_Header_h */

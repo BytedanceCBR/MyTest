@@ -15,6 +15,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     var cellFactory: UITableViewCellFactory
 
+    private let detailData = BehaviorRelay<FHRentDetailResponseModel>(value: nil)
+
     private var relateErshouHouseData = BehaviorRelay<FHHouseRentRelatedResponseModel?>(value: nil)
 
     private var houseInSameNeighborhood = BehaviorRelay<FHRentSameNeighborhoodResponseModel?>(value: nil)
@@ -153,6 +155,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                               traceExtension: params,
                                                                               navVC: navVC,
                                                                               tracerParams: params))
+    }
+
+    func requestDetailData() {
+        FHRentDetailAPI.requestRentDetail("") { (model, error) in
+            if model != nil {
+                
+            }
+        }
     }
 
     func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
