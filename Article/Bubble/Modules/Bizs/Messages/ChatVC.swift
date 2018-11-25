@@ -300,7 +300,9 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
                 theCell.rightLabel.text = text2
             }
             if let unreadCount = item.unread, unreadCount > 0 {
-                theCell.unreadRedDotView.isHidden = false
+                theCell.unreadRedDotView.badgeNumber = unreadCount
+            } else {
+                theCell.unreadRedDotView.badgeNumber = TTBadgeNumberHidden
             }
 
             theCell.iconImageView.bd_setImage(with: URL(string: item.icon ?? ""), placeholder: UIImage(named: "default_image"))
@@ -311,8 +313,21 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = datas[indexPath.row]
-
+        var data = datas[indexPath.row]
+        if let msgCount = data.unread, msgCount > 0 {
+            // Tab消息个数减少
+            if let msgTab = TTTabBarManager.shared().tabItems.first(where: { $0.identifier == kFHouseMessageTabKey}), let badgeView = msgTab.ttBadgeView {
+                var tabMsgCount = badgeView.badgeNumber
+                tabMsgCount -= msgCount
+                tabMsgCount = tabMsgCount >= 0 ? tabMsgCount : 0
+                badgeView.badgeNumber = tabMsgCount
+            }
+            // Cell消息个数清零
+            data.unread = 0
+            if let theCell = tableView.cellForRow(at: indexPath) as? ChatCell {
+                theCell.unreadRedDotView.badgeNumber = TTBadgeNumberHidden
+            }
+        }
         if let id = data.id,
             id == "2333",
             let url = data.openUrl,
