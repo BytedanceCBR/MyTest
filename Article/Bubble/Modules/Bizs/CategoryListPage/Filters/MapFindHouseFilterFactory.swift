@@ -62,7 +62,6 @@ import RxCocoa
         self.houseType = houseType
         self.allCondition = allCondition
         super.init()
-        self.allCondition = true
         self.searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: self.filterConditionPanel,
