@@ -943,7 +943,7 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity,
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.courtImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-            
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
         }
         
     }
@@ -995,7 +995,7 @@ func fillHomeNewHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.images?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-            
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
         }
         
     }

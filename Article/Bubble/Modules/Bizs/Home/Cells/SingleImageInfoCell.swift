@@ -104,7 +104,15 @@ class CornerView: UIView {
         label.textColor = hexStringToUIColor(hex: kFHCoralColor)
         return label
     }()
-
+    
+    lazy var originPriceLabel: StrickoutLabel = {
+        let label = StrickoutLabel()
+        label.font = CommonUIStyle.Font.pingFangRegular(12)
+        label.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        label.isHidden = true
+        return label
+    }()
+    
     lazy var roomSpaceLabel: UILabel = {
         let label = UILabel()
         label.font = CommonUIStyle.Font.pingFangRegular(12)
@@ -200,6 +208,7 @@ class CornerView: UIView {
 
         infoPanel.addSubview(priceLabel)
         infoPanel.addSubview(roomSpaceLabel)
+        infoPanel.addSubview(originPriceLabel)
 
         priceLabel.snp.makeConstraints { maker in
             maker.left.equalToSuperview()
@@ -208,14 +217,19 @@ class CornerView: UIView {
             maker.width.lessThanOrEqualTo(130)
         }
         
+        originPriceLabel.snp.makeConstraints { (maker) in
+            maker.left.equalTo(priceLabel.snp.right).offset(6)
+            maker.height.equalTo(17)
+            maker.centerY.equalTo(priceLabel)
+        }
+        
         roomSpaceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         roomSpaceLabel.setContentHuggingPriority(.required, for: .horizontal)
         
         roomSpaceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(priceLabel.snp.right).offset(7)
-            maker.bottom.equalTo(priceLabel.snp.bottom).offset(-2)
-            maker.height.equalTo(19)
-
+            maker.centerY.equalTo(priceLabel)
+            maker.height.equalTo(17)
         }
 
         contentView.addSubview(imageTopLeftLabelBgView)
@@ -231,8 +245,43 @@ class CornerView: UIView {
             maker.right.equalTo(-9)
             maker.centerY.equalToSuperview()
         }
-
-
+    }
+    
+    func updateOriginPriceLabelConstraints(originPriceText:String?)
+    {
+        if let text = originPriceText {
+            var offset:CGFloat = 20
+            if TTDeviceHelper.isScreenWidthLarge320() {
+                originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
+                roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
+                offset = 20
+            } else {
+                originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(10)
+                roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(10)
+                offset = 15
+            }
+            originPriceLabel.isHidden = false
+            originPriceLabel.text = text
+            originPriceLabel.snp.remakeConstraints { (maker) in
+                maker.left.equalTo(priceLabel.snp.right).offset(6)
+                maker.height.equalTo(17)
+                maker.centerY.equalTo(priceLabel)
+            }
+            roomSpaceLabel.snp.remakeConstraints { maker in
+                maker.left.equalTo(originPriceLabel.snp.right).offset(offset)
+                maker.centerY.equalTo(priceLabel)
+                maker.height.equalTo(17)
+            }
+        } else {
+            originPriceLabel.isHidden = true
+            originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
+            roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
+            roomSpaceLabel.snp.remakeConstraints { maker in
+                maker.left.equalTo(priceLabel.snp.right).offset(7)
+                maker.centerY.equalTo(priceLabel)
+                maker.height.equalTo(17)
+            }
+        }
     }
     
     override func prepareForReuse() {
@@ -291,7 +340,7 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell,
     cell.roomSpaceLabel.text = item.baseInfoMap?.pricingPerSqm
     cell.majorImageView.bd_setImage(with: URL(string: item.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
 
-
+    cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
     //新上/降价
 
 }
@@ -379,7 +428,6 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         } else {
             cell.imageTopLeftLabelBgView.isHidden = true
         }
-        
     }
     
     @objc func update(withSecondHouseModel model: FHSearchHouseDataItemsModel, isFirstCell: Bool, isLastCell: Bool) {
@@ -490,9 +538,24 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.roomSpaceLabel.text = ""
         let houseImags  = model.images as? [FHNewHouseItemImagesModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
-        
+        cell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
     
 }
 
+class StrickoutLabel: UILabel {
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        let context = UIGraphicsGetCurrentContext()
+        self.textColor.setStroke()
+
+        context?.setLineWidth(1)
+        let y = self.frame.height / 2
+        context?.move(to: CGPoint(x:0,y:y))
+        
+        let size = self.sizeThatFits(CGSize(width:100,height:17))
+        
+        context?.addLine(to: CGPoint(x:size.width,y:y))
+        context?.strokePath()
+    }
+}
