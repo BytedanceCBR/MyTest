@@ -426,6 +426,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         } else {
             cell.imageTopLeftLabelBgView.isHidden = true
         }
+        cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
     }
     
     @objc func update(withSecondHouseModel model: FHSearchHouseDataItemsModel, isFirstCell: Bool, isLastCell: Bool) {
@@ -486,7 +487,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         } else {
             cell.imageTopLeftLabelBgView.isHidden = true
         }
-        
+        cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
     }
     
     @objc func update(withNewHouseModel model: FHNewHouseItemModel, isFirstCell: Bool,  isLastCell: Bool) {
