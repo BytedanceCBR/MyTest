@@ -107,7 +107,12 @@ class CornerView: UIView {
     
     lazy var originPriceLabel: StrickoutLabel = {
         let label = StrickoutLabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(12)
+        if TTDeviceHelper.isScreenWidthLarge320() {
+            label.font = CommonUIStyle.Font.pingFangRegular(12)
+        } else {
+            label.font = CommonUIStyle.Font.pingFangRegular(10)
+        }
+        
         label.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         label.isHidden = true
         return label
@@ -115,7 +120,11 @@ class CornerView: UIView {
     
     lazy var roomSpaceLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(12)
+        if TTDeviceHelper.isScreenWidthLarge320() {
+            label.font = CommonUIStyle.Font.pingFangRegular(12)
+        } else {
+            label.font = CommonUIStyle.Font.pingFangRegular(10)
+        }
         label.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         return label
     }()
@@ -249,17 +258,8 @@ class CornerView: UIView {
     
     func updateOriginPriceLabelConstraints(originPriceText:String?)
     {
-        if let text = originPriceText {
-            var offset:CGFloat = 20
-            if TTDeviceHelper.isScreenWidthLarge320() {
-                originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
-                roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
-                offset = 20
-            } else {
-                originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(10)
-                roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(10)
-                offset = 15
-            }
+        if let text = originPriceText, text.count > 0 {
+            let offset:CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 20 : 15
             originPriceLabel.isHidden = false
             originPriceLabel.text = text
             originPriceLabel.snp.remakeConstraints { (maker) in
@@ -274,8 +274,6 @@ class CornerView: UIView {
             }
         } else {
             originPriceLabel.isHidden = true
-            originPriceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
-            roomSpaceLabel.font = CommonUIStyle.Font.pingFangRegular(12)
             roomSpaceLabel.snp.remakeConstraints { maker in
                 maker.left.equalTo(priceLabel.snp.right).offset(7)
                 maker.centerY.equalTo(priceLabel)
