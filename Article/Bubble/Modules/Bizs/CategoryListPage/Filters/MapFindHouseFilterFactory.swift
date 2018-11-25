@@ -69,6 +69,9 @@ import RxCocoa
             searchAndConditionFilterVM: searchAndConditionFilterVM!)
         self.resetConditionData()
         self.bindConditionChangeDelegate()
+        self.conditionFilterViewModel?.conditionPanelWillDisplay = { [weak self] in
+            self?.delegate?.onConditionWillPanelDisplay()
+        }
     }
 
     func bindConditionChangeDelegate() {
