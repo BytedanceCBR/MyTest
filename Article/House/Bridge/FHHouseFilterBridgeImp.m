@@ -73,4 +73,9 @@
     return [_houseFilterViewModel getNoneFilterQueryWithParams:params];
 }
 
+-(void)clearSortCondition
+{
+        [_houseFilterViewModel cleanSortCondition];
+}
+
 @end

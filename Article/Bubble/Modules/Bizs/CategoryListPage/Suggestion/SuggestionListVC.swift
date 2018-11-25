@@ -149,22 +149,35 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
             }
         }
         
-        if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
-            self.onSuggestionSelected = { [weak sugDelegate](routeObj) in
-                sugDelegate?.suggestionSelected(routeObj)
-            }
-            self.filterConditionResetter = { [weak sugDelegate] in
-                sugDelegate?.resetCondition()
-            }
-        }
-        
         self.isFromHome = (fromHomeType == .enterSuggestionTypeHome) ? true : false
         self.fromSource = fromHomeType
         self.houseType.accept(defaultHoustType(config: EnvContext.shared.client.configCacheSubject.value))
         
-        if  let houseType = paramObj?.allParams["house_type"] as? HouseType {
+        let ht = paramObj?.allParams["house_type"]
+        
+        if let houseType = ht as? HouseType {
             self.houseType.accept(houseType)
+        }else if let htype = ht as? Int{
+            
+            var eHouseType : HouseType? = nil
+            switch htype {
+            case HouseType.newHouse.rawValue:
+                eHouseType = HouseType.newHouse
+            case HouseType.secondHandHouse.rawValue:
+                eHouseType = HouseType.secondHandHouse
+            case HouseType.rentHouse.rawValue:
+                eHouseType = HouseType.rentHouse
+            case HouseType.neighborhood.rawValue:
+                eHouseType = HouseType.neighborhood
+            default:
+                eHouseType = nil
+            }
+
+            if let etype = eHouseType {
+                self.houseType.accept(etype)
+            }
         }
+        
         
         tableViewModel = SuggestionListTableViewModel(
             houseType: houseType,
@@ -174,7 +187,23 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         
         self.navBar.searchable = true
         
-        
+        if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
+            if let _ = sugDelegate.suggestionSelected  {
+                self.onSuggestionSelected = { [weak sugDelegate,weak self](routeObj) in
+                    sugDelegate?.suggestionSelected?(routeObj)
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            self.filterConditionResetter = { [weak sugDelegate] in
+                sugDelegate?.resetCondition()
+            }
+            
+            self.navBar.backBtn.rx.tap
+                .subscribe(onNext: { [weak self , weak sugDelegate] void in
+                    sugDelegate?.backAction(self)
+                })
+                .disposed(by: self.disposeBag)
+        }        
     }
     
     override func viewDidLoad() {

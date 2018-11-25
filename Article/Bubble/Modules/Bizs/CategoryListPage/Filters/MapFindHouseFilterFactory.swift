@@ -182,6 +182,11 @@ import RxCocoa
     func getNoneFilterQuery( params: [String: Any]?) -> String {
         return getNoneFilterConditionString(params: params, conditionsKeys: self.allKeys)
     }
+    
+    @objc
+    func cleanSortCondition() {
+        self.conditionFilterViewModel?.cleanSortCondition()
+    }
 
     func allKeysFromNodes(nodes: [Node]) -> Set<String> {
         return nodes.reduce([], { (result, node) -> Set<String> in
