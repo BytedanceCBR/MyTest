@@ -45,7 +45,7 @@
 - (void)refreshFHHomeTableUI:(UITableView *)tableView
 {
     NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-
+    
     FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
@@ -148,7 +148,7 @@
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(20);
-                    make.width.height.mas_equalTo(56);
+                    make.width.height.mas_equalTo(52);
                 }];
             }
         }
@@ -224,7 +224,7 @@
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     
     NSInteger countItems = model.items.count;
-
+    
     BOOL isNeedAllocNewItems = YES;
     
     //判断是否需要重复创建
