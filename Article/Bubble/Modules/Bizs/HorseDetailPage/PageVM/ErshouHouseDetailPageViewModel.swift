@@ -873,6 +873,7 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
         } else {
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
+        theCell.updateOriginPriceLabelConstraints(originPriceText: data.originPrice)
     }
 }
 
@@ -1118,7 +1119,7 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
 
 
         theCell.majorImageView.bd_setImage(with: URL(string: data.images.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+        theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
 }
 
