@@ -70,8 +70,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
     lazy var tableView: UITableView = {
         let result = SuggectionTableView(frame: CGRect.zero, style: .grouped)
-        result.handleTouch = { [unowned self] in
-            self.view.endEditing(true)
+        result.handleTouch = { [weak self] in
+            self?.view.endEditing(true)
         }
         result.backgroundColor = UIColor.white
 

@@ -16,7 +16,7 @@
 
 @implementation FHHouseFilterBridgeImp
 
--(id)filterViewModelWithType:(FHHouseType)houseType
+-(id)filterViewModelWithType:(FHHouseType)houseType showAllCondition:(BOOL)showAllCondition
 {
     HouseType ht = HouseTypeSecondHandHouse;
     switch (houseType) {
@@ -34,7 +34,7 @@
     }
     
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:NO];
+    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:showAllCondition];
     return _houseFilterViewModel;
 }
 
