@@ -1,0 +1,144 @@
+{
+	"data": {
+		"id": "6627717945684393997",
+		"house_image": [{
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8EQy1eFla5PaW"
+		}, {
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8EQyo8DToKNav"
+		}, {
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8EQzZzFBlPuon"
+		}, {
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8ER0GwG1UwP03"
+		}],
+		"title": "这是一套超靠谱房源！精装两居家具装修都好 后现代城近苹果社区",
+		"subtitle": "精装修",
+		"pricing": 900000,
+		"core_info": [{
+			"attr": "押一付三",
+			"value": "9000元/月"
+		}, {
+			"attr": "房型",
+			"value": "2室1厅"
+		}, {
+			"attr": "面积",
+			"value": "9000平"
+		}],
+		"base_info": [{
+			"attr": "入住",
+			"value": "2018-11-23",
+			"is_single": false
+		}, {
+			"attr": "发布",
+			"value": "2018-11-23",
+			"is_single": false
+		}, {
+			"attr": "朝向",
+			"value": "南北",
+			"is_single": false
+		}, {
+			"attr": "楼层",
+			"value": "/",
+			"is_single": false
+		}, {
+			"attr": "装修",
+			"value": "0000.00.00",
+			"is_single": false
+		}, {
+			"attr": "电梯",
+			"value": "-",
+			"is_single": false
+		}],
+		"facilities": [{
+			"id": "3",
+			"name": "沙发",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "5",
+			"name": "床",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "7",
+			"name": "空调",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "9",
+			"name": "衣柜",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "1",
+			"name": "宽带",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "2",
+			"name": "电视",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "4",
+			"name": "洗衣机",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "6",
+			"name": "冰箱",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "8",
+			"name": "暖气",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "10",
+			"name": "热水器",
+			"icon_url": "",
+			"enabled": true
+		}],
+		"house_overview": [{
+			"title": "",
+			"content": "房屋优势：邻地铁,配套齐全,精装修\n房源亮点！可押一付一！1.[经典户型]：宽敞明亮业主自住家具保养好超有格调空间十足2.[周边配套]：周边配套大成国际购物中心，合生汇，四大银行，全室便利店，新菜篮子，美食一条街等等3.[小区环境]：24晓时保安安全又放心！我是置业顾.问蔡佳银，从事房地产经纪行业5年，主要服务【大望路双井九龙山珠江帝景东方雅苑风度柏林金港国际易构空间后现代城时代国际首城国际乐成豪丽苹果社区禧福汇金茂府金都杭城沿海赛洛城富力城等小区"
+		}],
+		"disclaimer": {
+			"text": "免责声明：页面所示房源图片及其他信息仅供参考，租房时请以房本信息为准。"
+		},
+		"log_pb": {
+			"impr_id": "2018112518214301000811803031813"
+		},
+		"neighborhood_info": {
+			"id": "6581413717366276360",
+			"name": "后现代城A区",
+			"pricing_per_sqm": "¥73349/㎡",
+			"pricing_per_sqm_v": 7334900,
+			"month_up": 0.0032,
+			"address": "百子湾路",
+			"gaode_lng": "116.4871953395",
+			"gaode_lat": "39.9000417702",
+			"gaode_image_url": "https://p1.pstatp.com/origin/f100-gaode-static/c93d8215921f3c1dfbdc428bc8231bb0",
+			"district_id": 123,
+			"area_id": 164,
+			"district_name": "朝阳",
+			"area_name": "大望路",
+			"status": 0,
+			"log_pb": {
+				"group_id": "6581413717366276360",
+				"impr_id": "2018112518214301000811803031813",
+				"search_id": "2018112518214301000811803031813"
+			}
+		}
+	},
+	"message": "success",
+	"status": 0
+}
