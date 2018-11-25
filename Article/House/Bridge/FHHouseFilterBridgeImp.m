@@ -34,7 +34,7 @@
     }
     
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht];
+    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:NO];
     return _houseFilterViewModel;
 }
 
