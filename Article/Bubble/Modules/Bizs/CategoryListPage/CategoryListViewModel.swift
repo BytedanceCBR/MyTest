@@ -181,7 +181,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.oneTimeToast?(response?.data?.refreshTip)
                     self.houseSearchRecorder?(response?.data?.searchId)
                     if let data = response?.data {
-//                        self.houseListOpenUrl = data.houseListOpenUrl
+                        self.houseListOpenUrl = data.houseListOpenUrl
 
                         self.originSearchId = data.searchId
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -328,7 +328,7 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.oneTimeToast?(response?.data?.refreshTip)
                     if let data = response?.data {
                         self.houseSearchRecorder?(response?.data?.searchId)
-//                        self.houseListOpenUrl = data.houseListOpenUrl
+                        self.houseListOpenUrl = data.houseListOpenUrl
                         self.originSearchId = data.searchId
 
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
