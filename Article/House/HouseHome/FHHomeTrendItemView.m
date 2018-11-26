@@ -25,11 +25,11 @@
     
     if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
 
-        self.leftPadding = 10;
-        self.rightPadding = 10;
+        self.leftPadding = 0;
+        self.rightPadding = 0;
     }else {
-        self.leftPadding = 15;
-        self.rightPadding = 15;
+        self.leftPadding = 0;
+        self.rightPadding = 5;
     }
 
     [self addSubview:self.titleLabel];

@@ -46,11 +46,13 @@
 
 @interface FHFeedHouseItemCellView ()
 
+@property(nonatomic, strong)UIView *topView;
 @property(nonatomic, strong)UIView *topLine;
 @property(nonatomic , strong) FHFeedHouseHeaderView *headerView;
 @property (nonatomic, strong) UITableView *houseTableView;
 @property(nonatomic , strong) FHFeedHouseFooterView *footerView;
 @property(nonatomic, strong)UIView *bottomLine;
+@property(nonatomic, strong)UIView *bottomView;
 
 @property (nonatomic, strong) FHFeedHouseItemViewModel *viewModel;
 
@@ -70,6 +72,7 @@
 
 - (void)buildupView {
 
+    [self addSubview:self.topView];
     [self addSubview:self.topLine];
     self.topLine.frame = CGRectMake(0, 0, self.width, 6);
     self.headerView = [[FHFeedHouseHeaderView alloc]initWithFrame:CGRectMake(0, self.topLine.bottom, self.width, 50)];
@@ -82,7 +85,8 @@
 
     [self addSubview:self.bottomLine];
     self.bottomLine.frame = CGRectMake(0, self.footerView.bottom, self.width, 6);
-    
+    [self addSubview:self.bottomView];
+
 }
 
 - (void)configViewModel {
@@ -108,11 +112,24 @@
 
     [super refreshUI];
 
-    if (self.orderedData.preCellHasBottomPadding) {
+    if (self.orderedData.preCellType == ExploreOrderedDataCellTypeFHHouse || self.orderedData.preCellType == ExploreOrderedDataCellTypeNull) {
+        
+        self.topView.frame = CGRectMake(0, 0, self.width, 0);
+        self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 6);
+
+    }
+//    else if (self.orderedData.preCellType == ExploreOrderedDataCellTypeNull) {
+//
+//
+//    }
+    else if (self.orderedData.preCellHasBottomPadding) {
 
         self.topLine.frame = CGRectMake(0, 0, self.width, 0);
+        self.topView.frame = CGRectMake(0, 0, self.width, 0);
+
     }else {
-        self.topLine.frame = CGRectMake(0, 0, self.width, 6);
+        self.topView.frame = CGRectMake(0, 0, self.width, 10);
+        self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 6);
 
     }
     self.headerView.frame = CGRectMake(0, self.topLine.bottom, self.width, 50);
@@ -123,11 +140,19 @@
         self.footerView.frame = CGRectMake(0, self.houseTableView.bottom, self.width, 68);
     }
 
-    if (self.orderedData.nextCellHasTopPadding) {
+    if (self.orderedData.nextCellType == ExploreOrderedDataCellTypeFHHouse || self.orderedData.nextCellType == ExploreOrderedDataCellTypeLastRead) {
 
         self.bottomLine.frame = CGRectMake(0, self.footerView.bottom, self.width, 0);
+        self.bottomView.frame = CGRectMake(0, self.bottomLine.bottom, self.width, 0);
+        
+    }else if (self.orderedData.nextCellHasTopPadding) {
+
+        self.bottomLine.frame = CGRectMake(0, self.footerView.bottom, self.width, 0);
+        self.bottomView.frame = CGRectMake(0, self.bottomLine.bottom, self.width, 10);
+
     }else {
         self.bottomLine.frame = CGRectMake(0, self.footerView.bottom, self.width, 6);
+        self.bottomView.frame = CGRectMake(0, self.bottomLine.bottom, self.width, 10);
 
     }
 
@@ -152,21 +177,41 @@
         return 0;
     }
     CGFloat height = 50.0f + 105 * data.houseItemsData.items.count - 20.f + 68.f;
-    if (!data.preCellHasBottomPadding) {
+    if (data.preCellType == ExploreOrderedDataCellTypeFHHouse || data.preCellType == ExploreOrderedDataCellTypeNull) {
         
         height += 6;
+
+    }else if (data.preCellHasBottomPadding) {
+
+    }else {
+        height += 16;
     }
-    if (!data.nextCellHasTopPadding) {
+    
+    if (data.nextCellType == ExploreOrderedDataCellTypeFHHouse || data.nextCellType == ExploreOrderedDataCellTypeLastRead) {
         
-        height += 6;
+        
+    }else if (data.nextCellHasTopPadding) {
+        height += 10;
+
+    }else {
+        height += 16;
     }
+
     return height;
 }
 
 
 
 #pragma mark - lazy load
-
+-(UIView *)topView{
+    
+    if (!_topView) {
+        
+        _topView = [[UIView alloc]init];
+        _topView.backgroundColor = [UIColor whiteColor];
+    }
+    return _topView;
+}
 
 -(UIView *)topLine{
     
@@ -203,6 +248,16 @@
         _bottomLine.backgroundColor = [UIColor themeGray7];
     }
     return _bottomLine;
+}
+
+-(UIView *)bottomView{
+    
+    if (!_bottomView) {
+        
+        _bottomView = [[UIView alloc]init];
+        _bottomView.backgroundColor = [UIColor whiteColor];
+    }
+    return _bottomView;
 }
 
 @end
