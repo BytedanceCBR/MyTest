@@ -95,14 +95,22 @@
         if (dataModel.opData2.items.count > 0) {
             height += ((dataModel.opData2.items.count - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
                 if ([model.houseType isEqualToString:@"2"]) {
-                    height += 89;
+                    hasCity = YES;
                     break;
                 }
             }
+            if (hasCity) {
+                height += 89;
+            }else {
+                height += 10;
+            }
+        }else {
+            height += 10;
         }
     }
     return height;
