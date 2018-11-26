@@ -164,8 +164,6 @@
 #import "TTVVideoDetailViewController.h"
 #import "FHHomeConfigManager.h"
 
-#import "FHHomeFeedHeaderView.h"
-
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
 #define kMaxLastReadLookupInterval      (24 * 60 * 60 * 1000)  //毫秒
@@ -1757,24 +1755,6 @@ TTRefreshViewDelegate
         }
     }
 }
-
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    if ([_categoryID isEqualToString:@"f_house_news"]) {
-//        FHHomeFeedHeaderView *viewHeader = [[FHHomeFeedHeaderView alloc] init];
-//        viewHeader.backgroundColor = [UIColor redColor];
-//        return viewHeader;
-//    }
-//    return nil;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    if ([_categoryID isEqualToString:@"f_house_news"]) {
-//        return 300;
-//    }
-//    return 0.1;
-//}
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {

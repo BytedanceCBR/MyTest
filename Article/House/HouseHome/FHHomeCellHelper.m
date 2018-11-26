@@ -46,7 +46,7 @@
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
 
-+ (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate
++ (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
 {
     tableView.delegate = delegate;
     tableView.dataSource = delegate;
