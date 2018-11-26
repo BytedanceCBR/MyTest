@@ -68,7 +68,8 @@
         
         self.subtitleLabel.width = self.width - self.leftPadding - self.rightPadding;
     }
-    
+    [self.subtitleLabel sizeToFit];
+
     [self.icon sizeToFit];
     self.icon.left = self.subtitleLabel.right + 3;
     self.icon.centerY = self.subtitleLabel.centerY;

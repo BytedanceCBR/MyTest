@@ -135,7 +135,8 @@
             
             self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
         }
-
+        [self.centerView.subtitleLabel sizeToFit];
+        [self.centerView.icon sizeToFit];
     }else {
         self.centerView.icon.hidden = YES;
         self.centerView.subtitleLabel.hidden = YES;
