@@ -93,10 +93,13 @@ class CategorySectionView: UIView {
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
-                let resultArray = housetypelistV.map{
-                    Int($0) == 1 ? "新房" : (Int($0) == 2 ? "二手房" : "")
+                var houseTypeTest = housetypelistV
+                houseTypeTest.append(3)
+                
+                let resultArray = houseTypeTest.map{
+                    matchHouseTypeName(houseTypeV: HouseType(rawValue: Int($0)))
                     }.filter{ $0 != ""}
-               self?.sectionTitleArray = resultArray.count == 0 ? [""] : resultArray
+                self?.sectionTitleArray = resultArray.count == 0 ? [""] : resultArray as! [String]
                 
                 //切换城市默认触发信号
                if let defaulType = housetypelistV.first,let typeValue = HouseType(rawValue: defaulType)
@@ -126,4 +129,9 @@ class CategorySectionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+}
+
+func matchHouseTypeName(houseTypeV: HouseType?) -> String
+{
+    return houseTypeV?.stringValue() ?? ""
 }
