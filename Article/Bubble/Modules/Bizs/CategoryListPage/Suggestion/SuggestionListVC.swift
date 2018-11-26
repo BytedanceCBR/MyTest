@@ -888,7 +888,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         let guessHeight:CGFloat = isFirstGuessHeightShow ? 138 : CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
         let sectionHeaderHeight = CGFloat (suggestionHistory.value.count > 0 ? 40 : 0)
         if suggestions.value.count > 0 {
-            return 0
+            return CGFloat.leastNormalMagnitude
         }
         return sectionHeaderHeight + guessHeight
     }
