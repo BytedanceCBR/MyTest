@@ -297,7 +297,6 @@ class HomeViewController: BaseViewController {
         self.errorVM.onRequestViewDidLoad()
 
         EnvContext.shared.client.loadSearchCondition()
-        
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -338,6 +337,8 @@ class HomeViewController: BaseViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(550)) {
             UIApplication.shared.isStatusBarHidden = false
         }
+        
+        self.detailPageViewModel?.homeViewControllerWillAppear()
     }
 
     override var prefersStatusBarHidden: Bool {

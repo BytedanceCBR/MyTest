@@ -16,6 +16,15 @@
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
+
+#define kFHHomeBannerDefaultHeight 60.0
+
+#define kFHHomeIconDefaultHeight 52.0
+
+#define kFHHomeIconRowCount 4
+
+#define kFHHomeBannerRowCount 2
+
 @implementation FHHomeCellHelper
 
 +(instancetype)sharedInstance
@@ -39,28 +48,64 @@
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate
 {
-    __block NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        [modelsArray removeAllObjects];
-        if ([x isKindOfClass:[FHConfigDataModel class]]) {
-            FHConfigDataModel * dataModel = (FHConfigDataModel *)x;
-            if (dataModel.opData) {
-                [modelsArray addObject:dataModel.opData];
-            }
+    tableView.delegate = delegate;
+    tableView.dataSource = delegate;
+}
+- (void)refreshFHHomeTableUI:(UITableView *)tableView
+{
+    NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
+    
+    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
+        if (dataModel.opData.items.count != 0) {
+            [modelsArray addObject:dataModel.opData];
+        }
+        
+        if (dataModel.opData2.items.count != 0) {
+            [modelsArray addObject:dataModel.opData2];
+        }
+        if (dataModel.cityStats.count > 0) {
             
-            if (dataModel.opData2) {
-                [modelsArray addObject:dataModel.opData2];
+            for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
+                
+                if ([model.houseType isEqualToString:@"2"]) {
+                    [modelsArray addObject:model];
+                    break;
+                }
             }
         }
-        delegate.modelsArray = modelsArray;
-        tableView.delegate = delegate;
-        tableView.dataSource = delegate;
-    }];
+    }
+    
+    if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]]) {
+        ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
+    }
+    [tableView reloadData];
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    return 300;
+    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    CGFloat height = 0;
+    if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
+        
+        if (dataModel.opData.items.count > 0) {
+            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120;
+        }
+        
+        if (dataModel.opData2.items.count > 0) {
+            height += ((dataModel.opData2.items.count - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+        }
+        if (dataModel.cityStats.count > 0) {
+            for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
+                
+                if ([model.houseType isEqualToString:@"2"]) {
+                    height += 89;
+                    break;
+                }
+            }
+        }
+    }
+    return height;
 }
 
 + (Class)cellClassFromCellViewType:(FHHomeCellViewType)cellType
@@ -83,63 +128,94 @@
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
 {
     FHHomeEntrancesCell *cellEntrance = cell;
-    NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
+    
+    BOOL isNeedAllocNewItems = YES;
+    
+    //判断是否需要重复创建
+    if (cellEntrance.boardView.currentItems.count == model.items.count) {
+        isNeedAllocNewItems = NO;
+    }else
+    {
+        for (UIView *subView in cellEntrance.boardView.subviews) {
+            [subView removeFromSuperview];
+        }
+    }
     
     NSInteger countItems = model.items.count;
     if (countItems > 8) {
         countItems = 8;
     }
     
-    for (int i = 0; i < countItems; i++) {
-        FHSpringboardIconItemView *itemView = [[FHSpringboardIconItemView alloc] init];
-        itemView.tag = i;
-        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:i];
+    NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
+    for (int index = 0; index < countItems; index++) {
+        FHSpringboardIconItemView *itemView = nil;
+        if (isNeedAllocNewItems) {
+            itemView = [[FHSpringboardIconItemView alloc] init];
+        }else
+        {
+            if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
+                itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
+            }else
+            {
+                itemView = [[FHSpringboardIconItemView alloc] init];
+            }
+        }
+        
+        itemView.tag = index;
+        FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:index];
         itemView.backgroundColor = [UIColor whiteColor];
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                   make.top.mas_equalTo(20);
-                   make.width.height.mas_equalTo(56);
+                    make.top.mas_equalTo(20);
+                    make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
         }
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.nameLabel.textColor = [UIColor themeBlue1];
-            itemView.nameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+            if (!font) {
+                font = [UIFont systemFontOfSize:14];
+            }
+            itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
             }];
         }
         
-        [itemsArray addObject:itemView];
+        if (isNeedAllocNewItems)
+        {
+            [itemsArray addObject:itemView];
+        }
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
-//        if let logpb = item.logPb as NSDictionary?
-//        {
-//            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-//            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-//        }
-//
-//
-//        let tracerParams = TracerParams.momoid() <|>
-//        EnvContext.shared.homePageParams <|>
-//        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-//        toTracerParams("maintab", key: "enter_from") <|>
-//        toTracerParams("maintab_icon", key: "element_from") <|>
-//        toTracerParams("click", key: "enter_type")
-//
-//
-//        let parmasMap = tracerParams.paramsGetter([:])
-//        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-//        if let openUrl = item.openUrl
-//        {
-//            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-//        }
+        //        if let logpb = item.logPb as NSDictionary?
+        //        {
+        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
+        //        }
+        //
+        //
+        //        let tracerParams = TracerParams.momoid() <|>
+        //        EnvContext.shared.homePageParams <|>
+        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+        //        toTracerParams("maintab", key: "enter_from") <|>
+        //        toTracerParams("maintab_icon", key: "element_from") <|>
+        //        toTracerParams("click", key: "enter_type")
+        //
+        //
+        //        let parmasMap = tracerParams.paramsGetter([:])
+        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
+        //        if let openUrl = item.openUrl
+        //        {
+        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
+        //        }
         
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
@@ -150,9 +226,13 @@
         }
     };
     
-    if (itemsArray.count > 0) {
+    if (itemsArray.count > 0 && isNeedAllocNewItems) {
         [cellEntrance.boardView addItemViews:itemsArray];
     }
+    
+    [cellEntrance setNeedsLayout];
+    [cellEntrance layoutIfNeeded];
+    
 }
 
 - (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param
@@ -166,52 +246,91 @@
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     
     NSInteger countItems = model.items.count;
-    if (countItems > 8) {
-        countItems = 8;
+    
+    BOOL isNeedAllocNewItems = YES;
+    
+    //判断是否需要重复创建
+    if (cellBanner.bannerView.currentItems.count == model.items.count) {
+        isNeedAllocNewItems = NO;
+    }else
+    {
+        for (UIView *subView in cellBanner.bannerView.subviews) {
+            [subView removeFromSuperview];
+        }
     }
     
-    for (int i = 0; i < countItems; i++) {
-        FHHomeBannerItem *itemView = [[FHHomeBannerItem alloc] init];
-        itemView.tag = i;
-        FHConfigDataOpData2ItemsModel *itemModel = [model.items objectAtIndex:i];
+    for (int index = 0; index < countItems; index++) {
+        
+        FHHomeBannerItem *itemView = nil;
+        if (isNeedAllocNewItems) {
+            itemView = [[FHHomeBannerItem alloc] init];
+        }else
+        {
+            if (index < cellBanner.bannerView.currentItems.count && [cellBanner.bannerView.currentItems[index] isKindOfClass:[FHHomeBannerItem class]]) {
+                itemView = cellBanner.bannerView.currentItems[index];
+            }else
+            {
+                itemView = [[FHHomeBannerItem alloc] init];
+            }
+        }
+        itemView.tag = index;
+        FHConfigDataOpData2ItemsModel *itemModel = [model.items objectAtIndex:index];
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (i%2 == 0) {
+            if (index%2 == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
-                    make.left.mas_equalTo(20);
+                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
-            }else if (i%2 == 1)
+            }else if (index%2 == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
                     make.top.mas_equalTo(10);
-                    make.right.mas_equalTo(-20);
+                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
                 }];
             }
         }
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.titleLabel.textColor = [UIColor themeBlue1];
-            itemView.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+            if (!font) {
+                font = [UIFont systemFontOfSize:15];
+            }
+            itemView.titleLabel.font = font;
             itemView.titleLabel.text = itemModel.title;
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(8);
+                make.top.mas_equalTo(12);
             }];
         }
         
         if (itemModel.descriptionStr && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.subTitleLabel.textColor = [UIColor themeGray3];
-            itemView.subTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+            if (!font) {
+                font = [UIFont systemFontOfSize:10];
+            }
+            itemView.subTitleLabel.font = font;
             itemView.subTitleLabel.text = itemModel.descriptionStr;
+            
+            if (![TTDeviceHelper isScreenWidthLarge320]) {
+                [itemView.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(-5);
+                }];
+            }
         }
         itemView.backgroundColor = [UIColor whiteColor];
-        [itemsArray addObject:itemView];
+        if (isNeedAllocNewItems) {
+            [itemsArray addObject:itemView];
+        }
     }
     
     cellBanner.bannerView.clickedCallBack = ^(NSInteger clickIndex){
@@ -246,9 +365,22 @@
         }
     };
     
-    if (itemsArray.count > 0) {
+    if (itemsArray.count > 0 && isNeedAllocNewItems) {
         [cellBanner.bannerView addItemViews:itemsArray];
     }
+    
+    //    [cellBanner.bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+    //        make.left.top.right.equalTo(cellBanner.contentView);
+    //        make.height.mas_equalTo(70 * ((countItems + 1)/2));
+    //    }];
+    //
+    [cellBanner setNeedsLayout];
+    [cellBanner layoutIfNeeded];
+}
+
++ (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
+    
+    [cell updateWithModel:model];
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
@@ -261,6 +393,11 @@
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
         [self fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model];
     }
+    
+    if ([cell isKindOfClass:[FHHomeCityTrendCell class]] && [model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
+        cell.fd_enforceFrameLayout = YES;
+        [self fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model];
+    }
 }
 
 
@@ -272,6 +409,10 @@
     
     if ([model isKindOfClass:[FHConfigDataOpData2Model class]]) {
         return NSStringFromClass([FHHomeBannerCell class]);
+    }
+    
+    if ([model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
+        return NSStringFromClass([FHHomeCityTrendCell class]);
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);

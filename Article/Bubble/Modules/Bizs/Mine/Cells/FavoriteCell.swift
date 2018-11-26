@@ -325,7 +325,7 @@ fileprivate class SpringBroadItemView: UIView {
 
         addSubview(IconView)
         IconView.snp.makeConstraints { maker in
-            maker.width.height.equalTo(52)
+            maker.width.height.equalTo(52 * UIScreen.main.bounds.width / 375.0)
             maker.centerX.equalToSuperview()
             maker.top.equalTo(20)
         }

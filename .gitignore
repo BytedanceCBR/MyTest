@@ -85,3 +85,5 @@ Frameworks/rust/Release/*
 
 
 *.swift.swp
+
+Article/Config/revision.h
