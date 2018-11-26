@@ -34,6 +34,7 @@ struct NeighborhoodItemEntity: Mappable {
     var refreshTip: String?
     var searchId: String?
     var logPB: [String: Any]?
+    var houseListOpenUrl: String?
 
     init?(map: Map) {
     }
@@ -45,6 +46,7 @@ struct NeighborhoodItemEntity: Mappable {
         refreshTip <- map["refresh_tip"]
         searchId <- map["search_id"]
         logPB <- map["log_pb"]
+        houseListOpenUrl <- map["house_list_open_url"]
     }
 }
 

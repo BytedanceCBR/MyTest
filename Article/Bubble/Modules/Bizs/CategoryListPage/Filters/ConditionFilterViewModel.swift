@@ -147,14 +147,19 @@ class ConditionFilterViewModel {
     }
 
     func pullConditionsFromPanels(udpateFilterOnly: Bool = false) {
-        conditionItemViews.enumerated().forEach { [unowned self] (e) in
-            let (index, ele) = e
-            if let conditionParser = ele.value.conditionParser {
-                let selectedNode = ele.value.selectedNodes()
-                self.searchAndConditionFilterVM.addCondition(index: index,
-                                                             udpateFilterOnly: udpateFilterOnly,
-                                                             condition: conditionParser(selectedNode))
-            }
+        conditionItemViews
+            .sorted(by: { (left, right) -> Bool in
+                left.key < right.key
+            })
+            .enumerated()
+            .forEach { [unowned self] (e) in
+                let (index, ele) = e
+                if let conditionParser = ele.value.conditionParser {
+                    let selectedNode = ele.value.selectedNodes()
+                    self.searchAndConditionFilterVM.addCondition(index: index,
+                                                                 udpateFilterOnly: udpateFilterOnly,
+                                                                 condition: conditionParser(selectedNode))
+                }
         }
     }
 
