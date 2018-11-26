@@ -917,6 +917,12 @@
 		760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
 		760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
 		760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74521ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
+		760CF74621ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
+		760CF74721ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
+		760CF74A21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
+		760CF74B21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
+		760CF74C21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
 		764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
@@ -3551,7 +3557,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -6938,6 +6944,10 @@
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
 		760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChangeHistoryCell.swift; sourceTree = "<group>"; };
+		760CF74321ABE7DE0006BE07 /* FHWebviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHWebviewViewController.h; sourceTree = "<group>"; };
+		760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHWebviewViewController.m; sourceTree = "<group>"; };
+		760CF74821ABE82E0006BE07 /* FHWebviewViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHWebviewViewModel.h; sourceTree = "<group>"; };
+		760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHWebviewViewModel.m; sourceTree = "<group>"; };
 		764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageRollScreenEntitys.swift; sourceTree = "<group>"; };
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
@@ -9093,7 +9103,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10703,6 +10713,7 @@
 				D46DA52321A43B74009D50C7 /* HouseHome */,
 				B32FD2C921A26E2D007B9966 /* HouseRent */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
+				760CF74221ABE7A00006BE07 /* WebView */,
 			);
 			path = House;
 			sourceTree = "<group>";
@@ -12440,6 +12451,17 @@
 				C3338E341F7BC1AF00B781BE /* TTAdFullScreenVideoBottomActionView.m */,
 			);
 			path = FullScreenVideo;
+			sourceTree = "<group>";
+		};
+		760CF74221ABE7A00006BE07 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				760CF74321ABE7DE0006BE07 /* FHWebviewViewController.h */,
+				760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */,
+				760CF74821ABE82E0006BE07 /* FHWebviewViewModel.h */,
+				760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 		764A56CD21A53AE600C0A8B2 /* TTRefreshView+HomePage */ = {
@@ -20266,6 +20288,7 @@
 				A97DBC2F1F1332E40002B455 /* TTCrashAttemptFixTask.m in Sources */,
 				A97DC10E1F1333320002B455 /* TTRGallery.m in Sources */,
 				D481F84821A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
+				760CF74A21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				B388CC7C2142652B00653188 /* ANRMonitor.swift in Sources */,
 				06E69A541B0ADD7C00A3EDCA /* STStringTokenizer.m in Sources */,
 				D09F07A91D944D5000B586B9 /* ExploreCollectionCellView.m in Sources */,
@@ -20906,6 +20929,7 @@
 				2D1454A320207FF7006143F8 /* TTAdSplashMediator.m in Sources */,
 				F87696341F31D0D900D59CA5 /* TTVLabelSegmentedControl.m in Sources */,
 				D0EAC2331E0ADD26007EB2AA /* TTSearchSugModel.m in Sources */,
+				760CF74521ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				A97DC3E21F1333620002B455 /* TTNewFollowingResponseModel.m in Sources */,
 				6B2845B11DF5402100170DE7 /* HuoShan.m in Sources */,
 				06D6DF6C1A691C5100375035 /* SSCheckbox.m in Sources */,
@@ -21992,6 +22016,7 @@
 				B373CBD22174587A008F9905 /* ANRMonitor.swift in Sources */,
 				B373CBD32174587A008F9905 /* STStringTokenizer.m in Sources */,
 				D481F84A21A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
+				760CF74C21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				B373CBD42174587A008F9905 /* ExploreCollectionCellView.m in Sources */,
 				B373CBD52174587A008F9905 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				B32FD31C21A3DE1B007B9966 /* RentFacilityCell.swift in Sources */,
@@ -22632,6 +22657,7 @@
 				B373CE362174587A008F9905 /* TTVLabelSegmentedControl.m in Sources */,
 				B373CE372174587A008F9905 /* TTSearchSugModel.m in Sources */,
 				B373CE382174587A008F9905 /* TTNewFollowingResponseModel.m in Sources */,
+				760CF74721ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				B373CE392174587A008F9905 /* HuoShan.m in Sources */,
 				B373CE3A2174587A008F9905 /* SSCheckbox.m in Sources */,
 				B373CE3B2174587A008F9905 /* TTDetailNatantVideoInfoViewModel.m in Sources */,
@@ -23718,6 +23744,7 @@
 				B388CC7D2142652B00653188 /* ANRMonitor.swift in Sources */,
 				FEFA56B8205FB1A8001F50D8 /* STStringTokenizer.m in Sources */,
 				D481F84921A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
+				760CF74B21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				FEFA56BA205FB1A8001F50D8 /* ExploreCollectionCellView.m in Sources */,
 				FEFA56BB205FB1A8001F50D8 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				B32FD31B21A3DE1B007B9966 /* RentFacilityCell.swift in Sources */,
@@ -24358,6 +24385,7 @@
 				FEFA596E205FB1A8001F50D8 /* TTVLabelSegmentedControl.m in Sources */,
 				FEFA5970205FB1A8001F50D8 /* TTSearchSugModel.m in Sources */,
 				FEFA5971205FB1A8001F50D8 /* TTNewFollowingResponseModel.m in Sources */,
+				760CF74621ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				FEFA5972205FB1A8001F50D8 /* HuoShan.m in Sources */,
 				FEFA5973205FB1A8001F50D8 /* SSCheckbox.m in Sources */,
 				FEFA5974205FB1A8001F50D8 /* TTDetailNatantVideoInfoViewModel.m in Sources */,
