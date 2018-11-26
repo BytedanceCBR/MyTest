@@ -149,7 +149,7 @@ class ConditionFilterViewModel {
     func pullConditionsFromPanels(udpateFilterOnly: Bool = false) {
         conditionItemViews
             .sorted(by: { (left, right) -> Bool in
-                left.key > right.key
+                left.key < right.key
             })
             .enumerated()
             .forEach { [unowned self] (e) in
