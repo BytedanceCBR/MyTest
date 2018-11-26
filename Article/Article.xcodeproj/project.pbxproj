@@ -3573,9 +3573,6 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
 		D46DA52D21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52E21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52F21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
@@ -8165,9 +8162,7 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
 		D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendView.m; sourceTree = "<group>"; };
-		D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
 		D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendView.h; sourceTree = "<group>"; };
 		D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeHeaderTableViewCell.h; sourceTree = "<group>"; };
 		D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeHeaderTableViewCell.m; sourceTree = "<group>"; };
@@ -15732,8 +15727,6 @@
 			isa = PBXGroup;
 			children = (
 				611339D821A7F94700304DF6 /* home.xcassets */,
-				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
-				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
 				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
 				D481F85021A5644A007A6DE7 /* FHHomeEntrancesCell.h */,
@@ -20613,7 +20606,6 @@
 				A97DBB831F1332E20002B455 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC462142652B00653188 /* BizError.swift in Sources */,
 				ABBEA6A91F334103005DAD27 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				06C518431AAC488400C2B2E3 /* SimplePing.m in Sources */,
 				F87693F41F31D0D400D59CA5 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -22336,7 +22328,6 @@
 				B373CD2E2174587A008F9905 /* TTMemoryMonitorTask.m in Sources */,
 				B373CD302174587A008F9905 /* BizError.swift in Sources */,
 				B373CD312174587A008F9905 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				B373CD322174587A008F9905 /* SimplePing.m in Sources */,
 				B373CD332174587A008F9905 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				B373CD342174587A008F9905 /* FHDemanderTrackerManager.m in Sources */,
@@ -24059,7 +24050,6 @@
 				FEFA5841205FB1A8001F50D8 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC472142652B00653188 /* BizError.swift in Sources */,
 				FEFA5842205FB1A8001F50D8 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				FEFA5844205FB1A8001F50D8 /* SimplePing.m in Sources */,
 				FEFA5845205FB1A8001F50D8 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F12152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,

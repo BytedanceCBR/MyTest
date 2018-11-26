@@ -195,33 +195,21 @@
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
-        //        if let logpb = item.logPb as NSDictionary?
-        //        {
-        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-        //        }
-        //
-        //
-        //        let tracerParams = TracerParams.momoid() <|>
-        //        EnvContext.shared.homePageParams <|>
-        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-        //        toTracerParams("maintab", key: "enter_from") <|>
-        //        toTracerParams("maintab_icon", key: "element_from") <|>
-        //        toTracerParams("click", key: "enter_type")
-        //
-        //
-        //        let parmasMap = tracerParams.paramsGetter([:])
-        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-        //        if let openUrl = item.openUrl
-        //        {
-        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-        //        }
-        
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
+            
+            NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
+            [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+            [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            
             if (itemModel.openUrl) {
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
@@ -334,33 +322,21 @@
     }
     
     cellBanner.bannerView.clickedCallBack = ^(NSInteger clickIndex){
-        //        if let logpb = item.logPb as NSDictionary?
-        //        {
-        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-        //        }
-        //
-        //
-        //        let tracerParams = TracerParams.momoid() <|>
-        //        EnvContext.shared.homePageParams <|>
-        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-        //        toTracerParams("maintab", key: "enter_from") <|>
-        //        toTracerParams("maintab_icon", key: "element_from") <|>
-        //        toTracerParams("click", key: "enter_type")
-        //
-        //
-        //        let parmasMap = tracerParams.paramsGetter([:])
-        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-        //        if let openUrl = item.openUrl
-        //        {
-        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-        //        }
-        
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
+            
+            NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
+            [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+            [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            
             if (itemModel.openUrl) {
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
