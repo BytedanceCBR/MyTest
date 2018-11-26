@@ -8,8 +8,9 @@
 import Foundation
 
 
-func parseRentNeighborhoodInfoNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
-    let render = curry(fillRentNeighborhoodInfoCell)
+func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
+                                   tracer: HouseRentTracer) -> () -> TableSectionNode? {
+    let render = curry(fillRentNeighborhoodInfoCell)(model?.data?.neighborhoodInfo)
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("neighborhood_detail", key: "element_type") <|>
@@ -26,7 +27,7 @@ func parseRentNeighborhoodInfoNode(tracer: HouseRentTracer) -> () -> TableSectio
     }
 }
 
-func fillRentNeighborhoodInfoCell(cell: BaseUITableViewCell) {
+func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeighborhoodInfoModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? NeighborhoodInfoCell {
         theCell.starsContainer.isHidden = false
         theCell.starsContainer.updateStarsCount(scoreValue: 50)

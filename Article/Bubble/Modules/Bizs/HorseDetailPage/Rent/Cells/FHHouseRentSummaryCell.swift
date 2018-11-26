@@ -72,8 +72,14 @@ class FHHouseRentSummaryCell: BaseUITableViewCell {
 }
 
 
-func parseRentSummaryCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
-    let render = curry(fillRentSummaryCell)
+func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
+                              tracer: HouseRentTracer) -> () -> TableSectionNode? {
+
+    let houseOverview: [FHRentDetailResponseDataHouseOverviewModel]? = model?.data?.houseOverview as? [FHRentDetailResponseDataHouseOverviewModel]
+    let renders = houseOverview?.map({ (model) -> ((BaseUITableViewCell) -> Void) in
+        curry(fillRentSummaryCell)(model)
+    })
+//    let render = curry(fillRentSummaryCell)
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_info", key: "element_type") <|>
@@ -81,7 +87,7 @@ func parseRentSummaryCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     return {
         return TableSectionNode(
-            items: [render],
+            items: renders ?? [],
             selectors: nil,
             tracer:[tracerEvaluationRecord],
             sectionTracer: nil,
@@ -90,10 +96,10 @@ func parseRentSummaryCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode
     }
 }
 
-func fillRentSummaryCell(cell: BaseUITableViewCell) {
+func fillRentSummaryCell(model: FHRentDetailResponseDataHouseOverviewModel, cell: BaseUITableViewCell) {
     if let theCell = cell as? FHHouseRentSummaryCell {
-        theCell.titleView.text = "核心卖点"
-        theCell.contentLabel.text = "本房源为宽敞大一居，可改造空间大。朝南，房子光线充足，即使在冬天，阳光能照射到房间的深处，让房间亮堂温暖。全屋业主精心装修，对房子装修没有特别要求的可以拎包入住。高层，视野开阔，采光效果好，受外界噪音干扰小。有电梯，方便快捷，居住环境佳。"
+        theCell.titleView.text = model.title
+        theCell.contentLabel.text = model.content
     }
 }
 

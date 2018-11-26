@@ -99,19 +99,19 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         self.houseRentTracer.recordGoDetail()
 
 
-        var infos:[ErshouHouseBaseInfo] = []
-        var info = ErshouHouseBaseInfo(attr: "入住", value: "2018.07.12", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "发布", value: "2018.07.09", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "朝向", value: "南北", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "楼层", value: "高楼层/共23层", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "装修", value: "精装修", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "电梯", value: "有", isSingle: false)
-        infos.append(info)
+        let infos:[ErshouHouseBaseInfo] = getRentPropertyList(data: detailData.value?.data)
+//        var info = ErshouHouseBaseInfo(attr: "入住", value: "2018.07.12", isSingle: false)
+//        infos.append(info)
+//        info = ErshouHouseBaseInfo(attr: "发布", value: "2018.07.09", isSingle: false)
+//        infos.append(info)
+//        info = ErshouHouseBaseInfo(attr: "朝向", value: "南北", isSingle: false)
+//        infos.append(info)
+//        info = ErshouHouseBaseInfo(attr: "楼层", value: "高楼层/共23层", isSingle: false)
+//        infos.append(info)
+//        info = ErshouHouseBaseInfo(attr: "装修", value: "精装修", isSingle: false)
+//        infos.append(info)
+//        info = ErshouHouseBaseInfo(attr: "电梯", value: "有", isSingle: false)
+//        infos.append(info)
         let dataParser = DetailDataParser.monoid()
             <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
                                             disposeBag: disposeBag)
@@ -133,19 +133,36 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         return dataParser.parser
     }
 
+    fileprivate func getRentPropertyList(data: FHRentDetailResponseDataModel?) -> [ErshouHouseBaseInfo] {
+        if let baseInfos = data?.baseInfo as? [FHRentDetailResponseDataBaseInfoModel] {
+            return baseInfos.map({ (item) -> ErshouHouseBaseInfo in
+                ErshouHouseBaseInfo(attr: item.attr, value: item.value, isSingle: item.isSingle)
+            })
+        } else {
+            return []
+        }
+    }
+
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseRentSummaryHeaderCellNode("房屋概况"))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentSummaryCellNode(tracer: houseRentTracer))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentSummaryCellNode(model: detailData.value,
+                                                                     tracer: houseRentTracer))
     }
 
     func parseRentHouseFacility() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("房屋配置", adjustBottomSpace: 0))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentFacilityCellNode(tracer: houseRentTracer))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentFacilityCellNode(model: detailData.value,
+                                                                      tracer: houseRentTracer))
     }
 
     func parseRentNeighborhoodInfo() -> () -> [TableSectionNode]? {
-        let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("小区 远洋沁山水", showLoadMore: true, adjustBottomSpace: 0))
-        return parseNodeWrapper(preNode: header, wrapedNode: parseRentNeighborhoodInfoNode(tracer: houseRentTracer))
+        let title = detailData.value?.data?.neighborhoodInfo?.name
+        let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("小区 \(title ?? "")", showLoadMore: true, adjustBottomSpace: 0))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentNeighborhoodInfoNode(model: detailData.value,
+                                                                          tracer: houseRentTracer))
     }
 
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {

@@ -38,8 +38,10 @@ class RentFacilityCell: BaseUITableViewCell {
 }
 
 
-func parseRentFacilityCellNode(tracer: HouseRentTracer) -> () -> TableSectionNode? {
-    let render = curry(fillRentFacilityCell)
+func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
+                               tracer: HouseRentTracer) -> () -> TableSectionNode? {
+    let facilities = model?.data?.facilities as? [FHRentDetailResponseDataFacilitiesModel]
+    let render = curry(fillRentFacilityCell)(facilities)
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_facility", key: "element_type") <|>
@@ -57,49 +59,17 @@ func parseRentFacilityCellNode(tracer: HouseRentTracer) -> () -> TableSectionNod
     }
 }
 
-func fillRentFacilityCell(cell: BaseUITableViewCell) {
+func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?, cell: BaseUITableViewCell) {
     if let theCell = cell as? RentFacilityCell {
-        var items: [FHHouseRentFacilityItemView] = []
-        var itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
-        itemView = FHHouseRentFacilityItemView()
-        itemView.label.text = "床";
-        itemView.iconView.image = UIImage(named: "bed")
-        items.append(itemView)
+
+        let items: [FHHouseRentFacilityItemView] = facilities?.map({ (model) -> FHHouseRentFacilityItemView in
+            let re = FHHouseRentFacilityItemView()
+            re.label.text = model.name
+            if let url = model.iconUrl {
+                re.iconView.bd_setImage(with: URL(string: url))
+            }
+            return re
+        }) ?? []
         theCell.facilityItemView.add(items)
     }
 }
