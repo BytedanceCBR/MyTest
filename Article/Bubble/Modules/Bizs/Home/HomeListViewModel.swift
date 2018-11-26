@@ -527,7 +527,7 @@ class HomeListViewModel: DetailPageViewModel {
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
             
-            let requestId = self.itemsSearchIdCache[matchHouseTypeName(houseTypeV: typeValue)]
+            let requestId = self.itemsSearchIdCache[matchHouseTypeName(houseTypeV: typeValue)] ?? ""
        
             let offsetRequest = self.itemsDataCache[matchHouseTypeName(houseTypeV: typeValue)]?.count ?? 0
             
@@ -589,9 +589,9 @@ class HomeListViewModel: DetailPageViewModel {
                             
                             if items.count > 0
                             {
-                                var currentItems = self.itemsDataCache[houstTypeKey]
+                                var currentItems = self.itemsDataCache[houstTypeKey] ?? []
                                 
-                                currentItems?.append(contentsOf: items)
+                                currentItems.append(contentsOf: items)
                                 
                                 self.itemsDataCache.updateValue(currentItems ?? [], forKey: houstTypeKey)
                             }
