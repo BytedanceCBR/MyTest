@@ -43,20 +43,12 @@
     self.trendView.clickedLeftCallback = ^(UIButton * _Nonnull btn) {
         [wself leftBtnDidClick:btn];
     };
-    self.trendView.clickedRightCallback = ^{
-        [wself rightBtnDidClickWithModel: wself.model];
-    };
+//    self.trendView.clickedRightCallback = ^{
+//        [wself rightBtnDidClickWithModel: wself.model];
+//    };
     
 }
 
--(void)rightBtnDidClickWithModel: (FHConfigDataCityStatsModel *)model {
-
-    if (model.openUrl) {
-        
-        NSURL *url = [NSURL URLWithString:model.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-    }
-}
 
 -(void)leftBtnDidClick:(UIButton*)btn {
 

@@ -16,6 +16,7 @@
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
+#import "FHUserTracker.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -364,7 +365,17 @@
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
     
+    WeakSelf;
     [cell updateWithModel:model];
+    cell.trendView.clickedRightCallback = ^{
+        
+        if (model.openUrl) {
+            
+            NSURL *url = [NSURL URLWithString:model.openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+        [wself addHomeCityMarketClickLog];
+    };
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
@@ -400,6 +411,22 @@
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);
+}
+
+#pragma mark 埋点
++(void)addHomeCityMarketShowLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"page_type"] = @"maintab";
+    [FHUserTracker writeEvent:@"city_market_show" params:param];
+}
+
+
++(void)addHomeCityMarketClickLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"page_type"] = @"maintab";
+    [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
 
 @end
