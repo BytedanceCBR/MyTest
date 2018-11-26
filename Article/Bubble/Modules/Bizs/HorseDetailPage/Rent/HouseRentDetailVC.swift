@@ -160,7 +160,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         detailPageViewModel?.registerCell(tableView: tableView)
         detailPageViewModel?.tableView = tableView
         bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
-
+        detailPageViewModel?.requestDetailData()
         detailPageViewModel?.requestReletedData()
         view.bringSubview(toFront: navBar)
     }

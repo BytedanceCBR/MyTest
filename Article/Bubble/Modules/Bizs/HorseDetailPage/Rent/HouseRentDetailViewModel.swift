@@ -15,7 +15,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     var cellFactory: UITableViewCellFactory
 
-    private let detailData = BehaviorRelay<FHRentDetailResponseModel>(value: nil)
+    private let detailData = BehaviorRelay<FHRentDetailResponseModel?>(value: nil)
 
     private var relateErshouHouseData = BehaviorRelay<FHHouseRentRelatedResponseModel?>(value: nil)
 
@@ -36,8 +36,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         super.init()
         datas = processData()([])
         Observable
-            .combineLatest(houseInSameNeighborhood, relateErshouHouseData)
-//            .combineLatest(relateErshouHouseData)
+            .combineLatest(detailData, houseInSameNeighborhood, relateErshouHouseData)
             .subscribe(onNext: { [weak self] (_) in
                 if let result = self?.processData()([]) {
 
@@ -114,9 +113,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         info = ErshouHouseBaseInfo(attr: "电梯", value: "有", isSingle: false)
         infos.append(info)
         let dataParser = DetailDataParser.monoid()
-            <- parseRentHouseCycleImageNode(nil, disposeBag: disposeBag)
-            <- parseRentNameCellNode()
-            <- parseRentCoreInfoCellNode(tracer: houseRentTracer)
+            <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
+                                            disposeBag: disposeBag)
+            <- parseRentNameCellNode(model: detailData.value?.data)
+            <- parseRentCoreInfoCellNode(model: detailData.value?.data,
+                                         tracer: houseRentTracer)
             <- parseRentPropertyListCellNode(infos)
             //房屋配置
             <- parseRentHouseFacility()
@@ -155,14 +156,6 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                               traceExtension: params,
                                                                               navVC: navVC,
                                                                               tracerParams: params))
-    }
-
-    func requestDetailData() {
-        FHRentDetailAPI.requestRentDetail("") { (model, error) in
-            if model != nil {
-                
-            }
-        }
     }
 
     func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
@@ -211,6 +204,15 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if datas[indexPath.section].selectors?.isEmpty ?? true == false {
             datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid())
+        }
+    }
+
+    func requestDetailData() {
+        let task = FHRentDetailAPI.requestRentDetail("") { (model, error) in
+            if model != nil {
+                print("requestDetailData: \(model)")
+                self.detailData.accept(model)
+            }
         }
     }
 

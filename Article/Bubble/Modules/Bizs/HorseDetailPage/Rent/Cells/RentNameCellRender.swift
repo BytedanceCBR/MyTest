@@ -8,8 +8,8 @@
 import Foundation
 
 
-func parseRentNameCellNode() -> () -> TableSectionNode? {
-    let cellRender = oneTimeRender(curry(fillRentNameCell))
+func parseRentNameCellNode(model: FHRentDetailResponseDataModel?) -> () -> TableSectionNode? {
+    let cellRender = oneTimeRender(curry(fillRentNameCell)(model))
     return {
         return TableSectionNode(
             items: [cellRender],
@@ -21,12 +21,12 @@ func parseRentNameCellNode() -> () -> TableSectionNode? {
     }
 }
 
-func fillRentNameCell(cell: BaseUITableViewCell) -> Void {
+func fillRentNameCell(model: FHRentDetailResponseDataModel?, cell: BaseUITableViewCell) -> Void {
     guard let theCell = cell as? NewHouseNameCell else {
         return
     }
     theCell.bottomLine.isHidden = true
-    theCell.nameLabel.text = "合租 | 西三旗 富力桃园 2室1厅"
+    theCell.nameLabel.text = model?.title
     let tags:[NSAttributedString] = ["新上", "立刻入住"].map({ (item) -> NSAttributedString in
         createTagAttributeTextNormal(content: item)
     })
