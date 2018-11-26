@@ -93,6 +93,8 @@ class ConditionFilterViewModel {
 
     let disposeBag = DisposeBag()
 
+    var conditionPanelWillDisplay: (() -> Void)?
+
     weak var sortPanelView: SortConditionPanel? {
         didSet {
             sortPanelView?.didSelect = { [weak self] node in
@@ -353,6 +355,7 @@ class ConditionFilterViewModel {
             currentDisplayItem.isHidden = true
         }
         if !panel.isDisplay {
+            conditionPanelWillDisplay?()
             self.conditionPanelView?.isHidden = false
             panel.isHidden = false
             panel.onDisplay()
