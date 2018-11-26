@@ -315,6 +315,15 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D2D377D21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D377E21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D377F21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D378121ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378221ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378321ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378521ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
+		3D2D378621ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
+		3D2D378721ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
 		3D2D488321A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488421A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488521A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
@@ -6210,6 +6219,9 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentHouseEntityAPI.swift; sourceTree = "<group>"; };
+		3D2D378021ABE371002AC330 /* SearchRentEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRentEntity.swift; sourceTree = "<group>"; };
+		3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryRentListViewModel.swift; sourceTree = "<group>"; };
 		3D2D487F21A28E590011A0EC /* FHHouseFilterBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseFilterBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488021A28E590011A0EC /* FHHouseEvnContextBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseEvnContextBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseFilterBridgeImp.m; sourceTree = "<group>"; };
@@ -14900,6 +14912,7 @@
 				B388CA002142652900653188 /* NeighborhoodDetailEntitiesApi.swift */,
 				B388CA012142652900653188 /* SearchAPI.swift */,
 				B388CA022142652900653188 /* HouseDetailAPI.swift */,
+				3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -15026,6 +15039,7 @@
 				B388CA8B2142652900653188 /* CategoryListViewModel.swift */,
 				B388CA8C2142652900653188 /* SearchFilterPanel.swift */,
 				B388CA8D2142652900653188 /* CategoryListPageVC.swift */,
+				3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */,
 			);
 			path = CategoryListPage;
 			sourceTree = "<group>";
@@ -15121,6 +15135,7 @@
 				B388CAAD2142652900653188 /* ErshouHouseDetailEntities.swift */,
 				B388CAAE2142652900653188 /* CourtItemEntity.swift */,
 				764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */,
+				3D2D378021ABE371002AC330 /* SearchRentEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -19627,6 +19642,7 @@
 				ABBEA7221F3346F1005DAD27 /* TTSettingMineTabGroup.m in Sources */,
 				6B93FFFB1EC9D8C3004DAC82 /* TTFeedCollectionViewController.m in Sources */,
 				D50439AD2079B89A00DA4953 /* ArticleMomentModel.m in Sources */,
+				3D2D377D21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				A97DBC371F1332E40002B455 /* TTHandleAPNSTask.m in Sources */,
 				2BB928941FD027DD004ADDB0 /* TSVCardTopInfoViewModel.m in Sources */,
 				AB1621E11F500EFA00B4CC0C /* README.md in Sources */,
@@ -20195,6 +20211,7 @@
 				FE1FC324206922D800664B00 /* ExploreMixedListSuggestionWordsView.m in Sources */,
 				0A3649D620037FA20059ED25 /* TTTabBarCustomMiddleModel.m in Sources */,
 				0AE08A3C1DC98E2A00DBFA53 /* TTSettingMineTabEntry.m in Sources */,
+				3D2D378521ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				438F9ECF1F94B8DF0050F83E /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				A97DC5381F134C020002B455 /* TTPhotoDetailViewModel.m in Sources */,
 				6BD9025E1DB873970072138C /* TTRNWebViewManager.m in Sources */,
@@ -20431,6 +20448,7 @@
 				6B9CA40B1B8EBB780065CD76 /* ArticleVideoPosterView.m in Sources */,
 				2DB9A5EC1F20B01D005E4A06 /* TTAdSiteWebPreloadManager.m in Sources */,
 				3DF3637C21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
+				3D2D378121ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				472440401F8F43C70037712A /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				A97DC4521F1333630002B455 /* TTProfileViewController+UserLogin.m in Sources */,
 				F87695801F31D0D700D59CA5 /* TTVVideoTabViewController.m in Sources */,
@@ -21350,6 +21368,7 @@
 				B373C96F2174587A008F9905 /* TTHandleAPNSTask.m in Sources */,
 				B373C9702174587A008F9905 /* TSVCardTopInfoViewModel.m in Sources */,
 				B373C9712174587A008F9905 /* README.md in Sources */,
+				3D2D377F21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				B373C9722174587A008F9905 /* TTAccountLoginAlertViewGuide.m in Sources */,
 				B373C9732174587A008F9905 /* ArticleSearchSuggestionView.m in Sources */,
 				B373C9742174587A008F9905 /* TSVActivityBannerCollectionViewCell.m in Sources */,
@@ -21918,6 +21937,7 @@
 				B373CB9D2174587A008F9905 /* TTSettingMineTabEntry.m in Sources */,
 				B373CB9E2174587A008F9905 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				B373CB9F2174587A008F9905 /* TTPhotoDetailViewModel.m in Sources */,
+				3D2D378721ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				B373CBA02174587A008F9905 /* TTRNWebViewManager.m in Sources */,
 				B373CBA12174587A008F9905 /* TTAdCanvasVideoBottomView.m in Sources */,
 				B373CBA22174587A008F9905 /* TTRNPanoramaViewManager.m in Sources */,
@@ -22154,6 +22174,7 @@
 				B373CC7D2174587A008F9905 /* TTAdSiteWebPreloadManager.m in Sources */,
 				B373CC7E2174587A008F9905 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				B373CC7F2174587A008F9905 /* TTProfileViewController+UserLogin.m in Sources */,
+				3D2D378321ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637E21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				B373CC802174587A008F9905 /* TTVVideoTabViewController.m in Sources */,
 				B373CC812174587A008F9905 /* TTVReportAction.m in Sources */,
@@ -23073,6 +23094,7 @@
 				FEFA5403205FB1A8001F50D8 /* TTHandleAPNSTask.m in Sources */,
 				FEFA5404205FB1A8001F50D8 /* TSVCardTopInfoViewModel.m in Sources */,
 				FEFA5407205FB1A8001F50D8 /* README.md in Sources */,
+				3D2D377E21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				FEFA5408205FB1A8001F50D8 /* TTAccountLoginAlertViewGuide.m in Sources */,
 				FEFA5409205FB1A8001F50D8 /* ArticleSearchSuggestionView.m in Sources */,
 				FEFA540A205FB1A8001F50D8 /* TSVActivityBannerCollectionViewCell.m in Sources */,
@@ -23641,6 +23663,7 @@
 				FEFA5679205FB1A8001F50D8 /* TTSettingMineTabEntry.m in Sources */,
 				FEFA567A205FB1A8001F50D8 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				FEFA567B205FB1A8001F50D8 /* TTPhotoDetailViewModel.m in Sources */,
+				3D2D378621ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				FEFA567D205FB1A8001F50D8 /* TTRNWebViewManager.m in Sources */,
 				FEFA567E205FB1A8001F50D8 /* TTAdCanvasVideoBottomView.m in Sources */,
 				FEFA567F205FB1A8001F50D8 /* TTRNPanoramaViewManager.m in Sources */,
@@ -23877,6 +23900,7 @@
 				FEFA577A205FB1A8001F50D8 /* TTAdSiteWebPreloadManager.m in Sources */,
 				FEFA577B205FB1A8001F50D8 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				FEFA577C205FB1A8001F50D8 /* TTProfileViewController+UserLogin.m in Sources */,
+				3D2D378221ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637D21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				FEFA577D205FB1A8001F50D8 /* TTVVideoTabViewController.m in Sources */,
 				FEFA5780205FB1A8001F50D8 /* TTVReportAction.m in Sources */,

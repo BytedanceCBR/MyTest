@@ -938,7 +938,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     /// 调整逻辑，每次请求后，从服务器获取listUrl填充Filter过滤器
     func resetFilterConditionByRequestData(openUrl: String) {
-        let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
+        guard let url = URL(string: openUrl) else {
+            return
+        }
+        let routeObj = TTRoute.shared()?.routeParamObj(with:url)
         self.allParams = routeObj?.allParams as? [String: Any]
         if let queryParams = self.allParams {
             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
