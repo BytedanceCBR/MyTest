@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 /**
  * 根据配置代理
  */
-+ (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate;
++ (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate;
 
 
 /**
