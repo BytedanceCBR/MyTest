@@ -149,6 +149,8 @@ class CategoryListViewModel: DetailPageViewModel {
             requestNewHouseList(query: query, condition: condition, needEncode: needEncode)
         case .secondHandHouse:
             requestErshouHouseList(query: query, condition: condition, needEncode: needEncode)
+        case .rentHouse:
+            requestRentHouseList(query: query, condition: condition, needEncode: needEncode)
         default:
             requestNeigborhoodList(query: query, condition: condition, needEncode: needEncode)
         }
@@ -371,6 +373,82 @@ class CategoryListViewModel: DetailPageViewModel {
         pageableLoader?()
     }
 
+    func requestRentHouseList(
+        query: String,
+        condition: String?,
+        needEncode: Bool = true) {
+        self.requestDisposeBag = DisposeBag()
+        
+        let loader = pageRequestRentSearch(
+            query: query,
+            suggestionParams: condition ?? "",
+            needEncode: needEncode)
+        
+        oneTimeToast = createOneTimeToast()
+        let cleanDataOnce = once(apply: { [weak self] in
+            self?.cleanData()
+        })
+        
+        let dataReloader = reloadData()
+        var hasRecordSearch = false
+        pageableLoader = { [unowned self] in
+            loader()
+                .map { [unowned self] response -> (Bool, [TableRowNode]) in
+                    cleanDataOnce()
+                    self.oneTimeToast?(response?.data?.refreshTip)
+                    if hasRecordSearch == false {
+                        self.houseSearchRecorder?(response?.data?.searchId)
+                        hasRecordSearch = true
+                    }
+                    
+                    if let data = response?.data {
+                        self.mapFindHouseOpenUrl = data.mapFindHouseOpenUrl
+                        self.houseListOpenUrl = data.houseListOpenUrl
+                        self.originSearchId = data.searchId
+                        
+                        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                            toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
+                        
+                        let theDatas = data.items?.map({ (item) -> RentInnerItemEntity in
+                            var newItem = item
+//                            newItem.fhSearchId = data.searchId
+                            return newItem
+                        })
+                        
+                        var houseSearch: TracerParams? = nil
+                        if let hs = self.houseSearch {
+                            var hs = hs
+                            hs["time"] = self.time
+                            hs["offset"] = self.offset
+                            hs["limit"] = self.limit
+                            houseSearch = paramsOfMap(hs)
+                        }
+                        
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("old_list", key: "enter_from") <|>
+                            toTracerParams("be_null", key: "element_from") <|>
+                            toTracerParams("old_list", key: "page_type") <|>
+                            beNull(key: "element_type")
+                        self.offset = self.offset + (data.items?.count ?? 0)
+                        return (response?.data?.hasMore ?? false,
+                                parseRentHouseListRowItemNode(
+                                    theDatas,
+                                    traceParams: params,
+                                    disposeBag: self.disposeBag,
+                                    houseSearchParams: houseSearch,
+                                    navVC: self.navVC))
+                    } else {
+                        return (response?.data?.hasMore ?? false, [])
+                    }
+                }
+                .subscribe(
+                    onNext: dataReloader,
+                    onError: self.processError())
+                .disposed(by: self.requestDisposeBag)
+        }
+        pageableLoader?()
+    }
+    
 
     func requestFavoriteData(houseType: HouseType) {
 
