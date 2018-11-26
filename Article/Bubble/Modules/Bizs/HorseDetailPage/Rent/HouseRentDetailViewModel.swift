@@ -34,9 +34,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         cellFactory = getHouseDetailCellFactory()
         self.houseRentTracer = houseRentTracer
         super.init()
-        datas = processData()([])
         Observable
             .combineLatest(detailData, houseInSameNeighborhood, relateErshouHouseData)
+            .filter { $0.0 != nil }
             .subscribe(onNext: { [weak self] (_) in
                 if let result = self?.processData()([]) {
 
@@ -129,7 +129,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             <- parseRentSearchInNeighborhoodNodeCollection()
             // 周边房源
             <- parseRentErshouHouseListItemNode()
-            <- parseRentDisclaimerCellNode()
+            <- parseRentDisclaimerCellNode(model: detailData.value?.data)
         return dataParser.parser
     }
 
@@ -144,7 +144,16 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
-        let header = combineParser(left: parseFlineNode(), right: parseRentSummaryHeaderCellNode("房屋概况"))
+        let action: () -> Void = { [weak self] in
+            if let url = self?.detailData.value?.data?.reportUrl {
+                self?.jumpToReportPage(url: url)
+            } else {
+                let houseId = self?.detailData.value?.data?.id ?? ""
+                self?.jumpToReportPage(url: "fschema://webview?url=http://i.haoduofangs.com/f100/client/feedback&house_id=\(houseId)&title=aaaa")
+            }
+        }
+        let header = combineParser(left: parseFlineNode(),
+                                   right: parseRentSummaryHeaderCellNode("房屋概况", reportAction: action))
         return parseNodeWrapper(preNode: header,
                                 wrapedNode: parseRentSummaryCellNode(model: detailData.value,
                                                                      tracer: houseRentTracer))
@@ -159,7 +168,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func parseRentNeighborhoodInfo() -> () -> [TableSectionNode]? {
         let title = detailData.value?.data?.neighborhoodInfo?.name
-        let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("小区 \(title ?? "")", showLoadMore: true, adjustBottomSpace: 0))
+        let process: TableCellSelectedProcess = { [weak self] (params) in
+            if let neighborhoodId = self?.detailData.value?.data?.neighborhoodInfo?.id {
+                self?.jumpToNeighborhoodDetailPage(neighborhoodId: neighborhoodId)
+            }
+        }
+        let header = combineParser(left: parseFlineNode(),
+                                   right: parseHeaderNode("小区 \(title ?? "")", showLoadMore: true, adjustBottomSpace: 0, process: process))
         return parseNodeWrapper(preNode: header,
                                 wrapedNode: parseRentNeighborhoodInfoNode(model: detailData.value,
                                                                           tracer: houseRentTracer))
@@ -190,6 +205,15 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             tracerParams: params,
             navVC: self.navVC)
         return parseNodeWrapper(preNode: header, wrapedNode: result)
+    }
+
+    fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"))
+
+    }
+
+    fileprivate func jumpToReportPage(url: String) {
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -225,22 +249,22 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func requestDetailData() {
-        let task = FHRentDetailAPI.requestRentDetail("") { (model, error) in
+        let task = FHRentDetailAPI.requestRentDetail("") { [weak self] (model, error) in
             if model != nil {
-                print("requestDetailData: \(model)")
-                self.detailData.accept(model)
+                self?.detailData.accept(model)
             }
+            self?.requestReletedData()
         }
     }
 
     func requestReletedData() {
 
-        let task = HouseRentAPI.requestHouseRentRelated("") { (model, error) in
-            self.relateErshouHouseData.accept(model)
+        let task = HouseRentAPI.requestHouseRentRelated("") { [weak self] (model, error) in
+            self?.relateErshouHouseData.accept(model)
         }
 
-        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("a", withNeighborhoodId: "a") { (model, error) in
-            self.houseInSameNeighborhood.accept(model)
+        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("a", withNeighborhoodId: "a") { [weak self] (model, error) in
+            self?.houseInSameNeighborhood.accept(model)
         }
     }
 

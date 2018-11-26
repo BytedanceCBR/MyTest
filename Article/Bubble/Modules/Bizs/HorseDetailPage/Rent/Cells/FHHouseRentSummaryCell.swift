@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 class FHHouseRentSummaryCell: BaseUITableViewCell {
 
     lazy var titleView: UILabel = {
@@ -126,6 +127,10 @@ class FHHouseRentSummaryHeaderCell: BaseUITableViewCell {
         return re
     }()
 
+    let disposeBag = DisposeBag()
+
+    var reportAction: (() -> Void)?
+
     open override class var identifier: String {
         return "rentSummaryHeaderCell"
     }
@@ -163,12 +168,18 @@ class FHHouseRentSummaryHeaderCell: BaseUITableViewCell {
             make.centerY.equalTo(label)
             make.height.equalTo(17)
         }
+
+        reportBtn.rx.tap
+            .bind { [weak self] void in
+                self?.reportAction?()
+            }.disposed(by: disposeBag)
     }
 }
 
 
-func parseRentSummaryHeaderCellNode(_ label: String) -> () -> TableSectionNode? {
-    let render = curry(fillRentSummaryHeaderCell)(label)
+func parseRentSummaryHeaderCellNode(_ label: String,
+                                    reportAction: (() -> Void)?) -> () -> TableSectionNode? {
+    let render = curry(fillRentSummaryHeaderCell)(label)(reportAction)
     return {
         return TableSectionNode(
             items: [render],
@@ -181,9 +192,10 @@ func parseRentSummaryHeaderCellNode(_ label: String) -> () -> TableSectionNode? 
 }
 
 func fillRentSummaryHeaderCell(label: String,
+                               reportAction: (() -> Void)?,
                                cell: BaseUITableViewCell) {
     if let theCell = cell as? FHHouseRentSummaryHeaderCell {
         theCell.label.text = label
-
+        theCell.reportAction = reportAction
     }
 }

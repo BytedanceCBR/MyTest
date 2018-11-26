@@ -156,12 +156,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         detailPageViewModel = HouseRentDetailViewMode(houseRentTracer: houseRentTracer)
         detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
-
+        self.tableView.delegate = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)
         detailPageViewModel?.tableView = tableView
         bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
         detailPageViewModel?.requestDetailData()
-        detailPageViewModel?.requestReletedData()
+//        detailPageViewModel?.requestReletedData()
         view.bringSubview(toFront: navBar)
     }
 

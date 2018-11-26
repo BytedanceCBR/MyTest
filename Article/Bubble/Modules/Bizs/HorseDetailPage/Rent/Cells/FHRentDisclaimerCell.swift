@@ -70,11 +70,33 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.bottom.equalTo(-14)
         }
     }
+
+    func hiddenOwnerLabel() {
+        ownerLabel.isHidden = true
+        contactIcon.isHidden = true
+        disclaimerContent.snp.remakeConstraints { (make) in
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+            make.top.equalTo(14)
+            make.bottom.equalTo(-14)
+        }
+    }
+
+    func displayOwnerLabel() {
+        ownerLabel.isHidden = false
+        contactIcon.isHidden = false
+        disclaimerContent.snp.remakeConstraints { (make) in
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+            make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+            make.bottom.equalTo(-14)
+        }
+    }
 }
 
 
-func parseRentDisclaimerCellNode() -> () -> TableSectionNode? {
-    let render = curry(fillRentDisclaimerCell)
+func parseRentDisclaimerCellNode(model: FHRentDetailResponseDataModel?) -> () -> TableSectionNode? {
+    let render = curry(fillRentDisclaimerCell)(model)
     return {
         return TableSectionNode(
             items: [render],
@@ -86,9 +108,17 @@ func parseRentDisclaimerCellNode() -> () -> TableSectionNode? {
     }
 }
 
-func fillRentDisclaimerCell(cell: BaseUITableViewCell) {
+func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? FHRentDisclaimerCell {
-        theCell.ownerLabel.text = "房屋负责人：李小强"
+        if let contact = model?.contact,
+            let realtorName = contact.realtorName,
+            !realtorName.isEmpty {
+            theCell.displayOwnerLabel()
+            theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
+        } else {
+            theCell.hiddenOwnerLabel()
+        }
+
         theCell.disclaimerContent.text = "免责声明：房源所示图片及其他信息仅供参考，租房时请以房本信息为准。"
     }
 }

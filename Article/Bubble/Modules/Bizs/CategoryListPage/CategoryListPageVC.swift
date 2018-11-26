@@ -971,6 +971,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.popupMenuView = nil
             }
             return result
+
         }
         popupMenuView = PopupMenuView(targetView: navBar.searchTypeBtn, menus: popupMenuItems)
         view.addSubview(popupMenuView!)

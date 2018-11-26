@@ -35,8 +35,23 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
         } else {
             theCell.starsContainer.isHidden = true
         }
+        theCell.nameValue.text = neighborhoodInfo?.areaName
         theCell.starsContainer.snp.updateConstraints { maker in
             maker.height.equalTo(50)
+        }
+        theCell.neighborhoodId = neighborhoodInfo?.id
+        theCell.name = neighborhoodInfo?.name
+        if let detailUrl = neighborhoodInfo?.evaluationInfo?.detailUrl {
+            theCell.detailUrl = detailUrl
+            theCell.bgView.isHidden = false
+        } else {
+            theCell.bgView.isHidden = true
+        }
+        if let lat = neighborhoodInfo?.gaodeLat,
+            let lng = neighborhoodInfo?.gaodeLng {
+            theCell.setLocation(lat: lat, lng: lng)
+            theCell.lat = lat
+            theCell.lng = lng
         }
     }
 }

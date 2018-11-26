@@ -111,10 +111,21 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     
     let disposeBag = DisposeBag()
     
-    var data: NeighborhoodInfo?
+    var data: NeighborhoodInfo? {
+        didSet {
+            self.detailUrl = data?.evaluationInfo?.detailUrl
+            self.name = data?.name
+            self.lat = data?.gaodeLat
+            self.lng = data?.gaodeLng
+        }
+    }
     var logPB: [String: Any]?
     var neighborhoodId:String?
     var centerPoint: CLLocationCoordinate2D?
+    var detailUrl: String?
+    var name: String?
+    var lat: String?
+    var lng: String?
 
     func setLocation(lat: String, lng: String) {
         if let theLat = Double(lat), let theLng = Double(lng) {
@@ -240,7 +251,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         let evaluateGest = UITapGestureRecognizer()
         evaluateGest.rx.event
             .subscribe(onNext: { [unowned self] (_) in
-                if let urlStr = self.data?.evaluationInfo?.detailUrl {
+                if let urlStr = self.detailUrl {
                     openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: self.tracerParams, disposeBag: self.disposeBag)(TracerParams.momoid())
                 }
             })
@@ -252,8 +263,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         mapImageView.isUserInteractionEnabled = true
         
         let selector = { [unowned self] in
-            if let lat = self.data?.gaodeLat,
-                let lng = self.data?.gaodeLng {
+            if let lat = self.lat,
+                let lng = self.lng {
                 let theParams = TracerParams.momoid() <|>
                     toTracerParams("map", key: "click_type") <|>
                     toTracerParams("old_detail", key: "enter_from") <|>
@@ -267,7 +278,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                     navVC: self.navVC,
                     lat: lat,
                     lng: lng,
-                    title: self.data?.name ?? "",
+                    title: self.name ?? "",
                     clickMapParams: clickParams,
                     traceParams: theParams,
                     disposeBag: self.disposeBag)(TracerParams.momoid())
