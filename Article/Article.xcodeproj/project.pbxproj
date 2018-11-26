@@ -905,6 +905,9 @@
 		70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */; };
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
+		760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
 		764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
@@ -6922,6 +6925,7 @@
 		70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAdFullScreenVideoViewModel.m; sourceTree = "<group>"; };
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
+		760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChangeHistoryCell.swift; sourceTree = "<group>"; };
 		764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageRollScreenEntitys.swift; sourceTree = "<group>"; };
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
@@ -10769,6 +10773,7 @@
 				3DF3631E21A29D9E0097FCB6 /* PropertyListCell.swift */,
 				3DF3631F21A29D9E0097FCB6 /* MultitemCollectionCell.swift */,
 				3DF3632021A29D9E0097FCB6 /* GlobalPricingCell.swift */,
+				760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -20419,6 +20424,7 @@
 				4824DE171F569F15001D589A /* TSVShortVideoProfileFetchManager.m in Sources */,
 				B388CCD42142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				6B2845E11DF5402100170DE7 /* RNData.m in Sources */,
+				760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				D5041F4F205802A400BAEE7F /* AKMinePhotoCarouselEntry.m in Sources */,
 				3DF3640021A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */,
@@ -22141,6 +22147,7 @@
 				B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */,
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640221A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
@@ -23863,6 +23870,7 @@
 				B388CCD52142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640121A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
