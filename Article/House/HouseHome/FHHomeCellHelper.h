@@ -62,6 +62,11 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  */
 - (void)refreshFHHomeTableUI:(UITableView *)tableView;
 
+/**
+ * 处理cell展示的埋点
+ */
++ (void)handleCellShowLogWithModel:(JSONModel *)model;
+
 @end 
 
 NS_ASSUME_NONNULL_END

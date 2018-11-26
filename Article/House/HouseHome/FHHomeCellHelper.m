@@ -26,7 +26,16 @@
 
 #define kFHHomeBannerRowCount 2 //每行banner个数
 
+static NSMutableArray  * _Nullable identifierArr;
+
+@interface FHHomeCellHelper ()
+
+@property(nonatomic , strong) FHConfigDataModel *dataModel;
+
+@end
+
 @implementation FHHomeCellHelper
+
 
 +(instancetype)sharedInstance
 {
@@ -80,7 +89,15 @@
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
     }
+    
+    if (self.dataModel != dataModel) {
+        
+        [identifierArr removeAllObjects];
+    }
+    
     [tableView reloadData];
+    self.dataModel = dataModel;
+
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
@@ -369,9 +386,9 @@
     [cell updateWithModel:model];
     cell.trendView.clickedRightCallback = ^{
         
-        if (model.openUrl) {
+        if (model.mapOpenUrl) {
             
-            NSURL *url = [NSURL URLWithString:model.openUrl];
+            NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
         [wself addHomeCityMarketClickLog];
@@ -414,7 +431,25 @@
 }
 
 #pragma mark 埋点
-+(void)addHomeCityMarketShowLog
+
++ (void)handleCellShowLogWithModel:(JSONModel *)model
+{
+    NSString *identifier = [self configIdentifier:model];
+    if (!identifierArr) {
+        
+        identifierArr = @[].mutableCopy;
+    }
+    if (![identifierArr containsObject:identifier]) {
+        
+        [identifierArr addObject:identifier];
+        if ([identifier isEqualToString:NSStringFromClass([FHHomeCityTrendCell class])]) {
+            
+            [self addHomeCityMarketShowLog];
+        }
+    }
+    
+}
++ (void)addHomeCityMarketShowLog
 {
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"page_type"] = @"maintab";
