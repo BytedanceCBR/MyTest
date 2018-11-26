@@ -29,8 +29,12 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
 
 func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeighborhoodInfoModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? NeighborhoodInfoCell {
-        theCell.starsContainer.isHidden = false
-        theCell.starsContainer.updateStarsCount(scoreValue: 50)
+        if let evaluationInfo = neighborhoodInfo?.evaluationInfo {
+            theCell.starsContainer.isHidden = false
+            theCell.starsContainer.updateStarsCount(scoreValue: evaluationInfo.totalScore)
+        } else {
+            theCell.starsContainer.isHidden = true
+        }
         theCell.starsContainer.snp.updateConstraints { maker in
             maker.height.equalTo(50)
         }
