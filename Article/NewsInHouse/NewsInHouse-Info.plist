@@ -182,7 +182,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.6.2.1</string>
+	<string>6.6.2.3</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
