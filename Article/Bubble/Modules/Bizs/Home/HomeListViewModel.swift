@@ -71,10 +71,6 @@ class HomeListViewModel: DetailPageViewModel {
     var originSearchId: String?
     var originFrom: String?
     
-    var searchIdNews: String?
-    
-    var searchIdSecond: String?
-    
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
@@ -95,16 +91,14 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategorySwitch: Bool = true
     
-//    var itemsSecondHouse: [HouseItemInnerEntity]? = [] //二手房数据缓存,for切换
-    
-//    var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
-    
     var itemsRentHouse: [HouseItemInnerEntity]? = [] //租房数据缓存,for切换
     
-    var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //数据缓存
+    var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //列表数据缓存
+    
+    var itemsSearchIdCache: [String : String] = [:] //searchid缓存
     
     var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
-
+    
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
     
     var reloadFromType: TTReloadType?
@@ -144,11 +138,11 @@ class HomeListViewModel: DetailPageViewModel {
                 var origin_from = "be_null"
                 if index == .newHouse {
                     origin_from = "new_list"
-                    self?.originSearchId = self?.searchIdNews
                 }else if index == .secondHandHouse {
                     origin_from = "old_list"
-                    self?.originSearchId = self?.searchIdSecond
                 }
+                
+                self?.originSearchId = self?.itemsSearchIdCache[matchHouseTypeName(houseTypeV: index)]
                 
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                     toTracerParams(self?.originSearchId ?? "be_null", key: "origin_search_id")
@@ -166,35 +160,11 @@ class HomeListViewModel: DetailPageViewModel {
                 if itemsCountV == 0
                 {
                     self?.showDefaultLoadTable()
-
+                    
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
                 }
-                
-//                if index == .newHouse && self?.itemsNewHouse?.count == 0
-//                {
-//                    //首次切换，先显示默认
-//                    self?.showDefaultLoadTable()
-//
-//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
-//                    //如果没有数据缓存，则去请求第一页 （新房）
-//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-//                    return
-//                }
-//
-//                if index == .secondHandHouse && self?.itemsSecondHouse?.count == 0
-//                {
-//                    //首次切换，先显示默认
-//                    self?.showDefaultLoadTable()
-//
-//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
-//                    //如果没有数据缓存，则去请求第一页 （二手房）
-//
-//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-//                    return
-//                }
-                
                 self?.reloadDataChange(dataType: index)
                 
             }).disposed(by: self.disposeBagHouse)
@@ -204,18 +174,7 @@ class HomeListViewModel: DetailPageViewModel {
         tableView.tt_addDefaultPullDownRefresh { [weak self] in
             self?.resetHomeRecommendState()
             
-            if let houseType = self?.dataSource?.categoryView.houseTypeRelay.value
-            {
-                if houseType == .newHouse
-                {
-                    self?.searchIdNews = nil
-                }
-                
-                if houseType == .secondHandHouse
-                {
-                    self?.searchIdSecond = nil
-                }
-            }
+            self?.itemsSearchIdCache.removeAll()
             
             self?.requestHomeRecommendData(pullType: .pullDownType, reloadFromType: self?.reloadFromType) // 下拉刷新
         }
@@ -484,17 +443,17 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            self.searchIdNews = response?.data?.searchId
-
                             let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
-
-                            self.itemsDataCache[matchHouseTypeName(houseTypeV: houseTypeValue)]?.removeAll()
                             
-                            self.itemsDataCache.updateValue(items, forKey: matchHouseTypeName(houseTypeV: houseTypeValue))
+                            self.itemsDataCache[houstTypeKey]?.removeAll()
+                            
+                            self.itemsDataCache.updateValue(items, forKey: houstTypeKey)
+                            
+                            self.itemsSearchIdCache.updateValue(response?.data?.searchId ?? "", forKey: houstTypeKey)
                             
                             if let hasMore = response?.data?.hasMore
                             {
-                                self.isItemsHasMoreCache.updateValue(hasMore, forKey: matchHouseTypeName(houseTypeV: houseTypeValue))
+                                self.isItemsHasMoreCache.updateValue(hasMore, forKey: houstTypeKey)
                             }
                             
                             return self.generateSectionNode(items: self.itemsDataCache[houstTypeKey])
@@ -568,15 +527,8 @@ class HomeListViewModel: DetailPageViewModel {
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
             
-            var requestId = searchIdNews
-            if typeValue == .newHouse
-            {
-                requestId = searchIdNews
-            }else
-            {
-                requestId = searchIdSecond
-            }
-            
+            let requestId = self.itemsSearchIdCache[matchHouseTypeName(houseTypeV: typeValue)]
+       
             let offsetRequest = self.itemsDataCache[matchHouseTypeName(houseTypeV: typeValue)]?.count ?? 0
             
             requestHouseRecommend(cityId: cityId ?? 122,
@@ -632,8 +584,7 @@ class HomeListViewModel: DetailPageViewModel {
                     if let items = response?.data?.items {
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            self.searchIdNews = response?.data?.searchId
-                            
+
                             let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
                             
                             if items.count > 0
@@ -644,6 +595,8 @@ class HomeListViewModel: DetailPageViewModel {
                                 
                                 self.itemsDataCache.updateValue(currentItems ?? [], forKey: houstTypeKey)
                             }
+                         
+                            self.itemsSearchIdCache.updateValue(response?.data?.searchId ?? "", forKey: houstTypeKey)
                             
                             if let hasMore = response?.data?.hasMore
                             {
@@ -1030,7 +983,6 @@ func openNeighborhoodDetailPage(
             provider: getNeighborhoodDetailPageViewModel())
         detailPage.logPB = logPB
         detailPage.houseSearchParams = houseSearchParams
-        let traceDict = tracerParams.paramsGetter([:])
         
         if let sameNeighborhoodFollowUp = sameNeighborhoodFollowUp {
             detailPage.sameNeighborhoodFollowUp.bind(to: sameNeighborhoodFollowUp).disposed(by: disposeBag)
@@ -1038,9 +990,6 @@ func openNeighborhoodDetailPage(
         detailPage.traceParams = EnvContext.shared.homePageParams <|>
             tracerParams <|>
         theParams
-        
-        //            <|>
-        //            toTracerParams(traceDict["page_type"] ?? "be_null", key: "enter_from")
         
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
