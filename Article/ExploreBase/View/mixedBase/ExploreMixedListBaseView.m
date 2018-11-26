@@ -1522,22 +1522,24 @@ TTRefreshViewDelegate
                 
                 [TTTracker eventV3:@"client_show" params:dictTraceParams];
                 
-                return;
+            }else {
+                
+                [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                
+                [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                
+                [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                
+                [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                
+                [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                
+                [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                
+                [_cellIdDict setObject:@"" forKey:obj.itemID];
+                
             }
             
-            [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
-            
-            [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
-
-            [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
-
-            [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
-
-            [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
-            
-            [TTTracker eventV3:@"client_show" params:dictTraceParams];
-            
-            [_cellIdDict setObject:@"" forKey:obj.itemID];
         }else
         {
             NSLog(@"xx index.row = %ld",indexPath.row);
