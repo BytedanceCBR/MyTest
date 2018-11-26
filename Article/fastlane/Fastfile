@@ -28,11 +28,11 @@ platform :ios do
       scheme: "NewsLiteInHouse",
       build_number: options[:build_number]
     )
-    update_app_identifier(
-	  xcodeproj: "Article.xcodeproj", 
-	  plist_path: "NewsInHouse/NewsInHouse-Info.plist",
-	  app_identifier: "com.bytedance.fp1" # The App Identifier
-    )
+#    update_app_identifier(
+#	  xcodeproj: "Article.xcodeproj", 
+#	  plist_path: "NewsInHouse/NewsInHouse-Info.plist",
+#	  app_identifier: "com.bytedance.fp1" # The App Identifier
+#    )
 #    update_project_team(
 #	  path: "Article.xcodeproj",
 #	  teamid: "X46375UBYG"
