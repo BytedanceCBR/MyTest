@@ -17,13 +17,13 @@
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
 
-#define kFHHomeBannerDefaultHeight 60.0
+#define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
-#define kFHHomeIconDefaultHeight 52.0
+#define kFHHomeIconDefaultHeight 52.0 //icon高度
 
-#define kFHHomeIconRowCount 4
+#define kFHHomeIconRowCount 4 //每行icon个数
 
-#define kFHHomeBannerRowCount 2
+#define kFHHomeBannerRowCount 2 //每行banner个数
 
 @implementation FHHomeCellHelper
 
@@ -46,7 +46,7 @@
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
 
-+ (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate
++ (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
 {
     tableView.delegate = delegate;
     tableView.dataSource = delegate;
@@ -95,14 +95,22 @@
         if (dataModel.opData2.items.count > 0) {
             height += ((dataModel.opData2.items.count - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
                 if ([model.houseType isEqualToString:@"2"]) {
-                    height += 89;
+                    hasCity = YES;
                     break;
                 }
             }
+            if (hasCity) {
+                height += 89;
+            }else {
+                height += 10;
+            }
+        }else {
+            height += 10;
         }
     }
     return height;
@@ -195,33 +203,21 @@
     }
     
     cellEntrance.boardView.clickedCallBack = ^(NSInteger clickIndex){
-        //        if let logpb = item.logPb as NSDictionary?
-        //        {
-        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-        //        }
-        //
-        //
-        //        let tracerParams = TracerParams.momoid() <|>
-        //        EnvContext.shared.homePageParams <|>
-        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-        //        toTracerParams("maintab", key: "enter_from") <|>
-        //        toTracerParams("maintab_icon", key: "element_from") <|>
-        //        toTracerParams("click", key: "enter_type")
-        //
-        //
-        //        let parmasMap = tracerParams.paramsGetter([:])
-        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-        //        if let openUrl = item.openUrl
-        //        {
-        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-        //        }
-        
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
+            
+            NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
+            [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+            [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            
             if (itemModel.openUrl) {
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };
@@ -281,14 +277,14 @@
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (index%2 == 0) {
+            if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
                     make.top.mas_equalTo(10);
                     make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
-            }else if (index%2 == 1)
+            }else if (index%kFHHomeBannerRowCount == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
@@ -334,33 +330,21 @@
     }
     
     cellBanner.bannerView.clickedCallBack = ^(NSInteger clickIndex){
-        //        if let logpb = item.logPb as NSDictionary?
-        //        {
-        //            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-        //            toTracerParams(logpb["origin_from"] ?? "be_null", key: "origin_from")
-        //        }
-        //
-        //
-        //        let tracerParams = TracerParams.momoid() <|>
-        //        EnvContext.shared.homePageParams <|>
-        //        toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-        //        toTracerParams("maintab", key: "enter_from") <|>
-        //        toTracerParams("maintab_icon", key: "element_from") <|>
-        //        toTracerParams("click", key: "enter_type")
-        //
-        //
-        //        let parmasMap = tracerParams.paramsGetter([:])
-        //        let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
-        //        if let openUrl = item.openUrl
-        //        {
-        //            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
-        //        }
-        
         if (model.items.count > clickIndex) {
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
+            
+            NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
+            [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+            [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            
             if (itemModel.openUrl) {
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
         }
     };

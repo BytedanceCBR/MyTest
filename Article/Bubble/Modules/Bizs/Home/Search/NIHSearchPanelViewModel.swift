@@ -9,10 +9,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension Notification.Name {
-    static let homePageRollScreenKey = Notification.Name("kHomePageRollScreen_Noti_Key")
-}
-
 class NIHSearchPanelViewModel: NSObject {
     
     var suspendSearchBar: HomePageSearchPanel
@@ -20,6 +16,10 @@ class NIHSearchPanelViewModel: NSObject {
     var baseVC: UIViewController
     
     let disposeBag = DisposeBag()
+    
+    var listDataRequestDisposeBag = DisposeBag()
+    
+    var currentCityName:String = ""
 
     var showLoadingAlert: ((String) -> Void)?
     var dismissLoadingAlert: (() -> Void)?
@@ -34,6 +34,11 @@ class NIHSearchPanelViewModel: NSObject {
         
         searchLocation()
         bindSearchEvent()
+        
+        registerPullDownNoti()
+        registerChangeCity()
+        
+        EnvContext.shared.client.generalBizconfig.load()
     }
     
     private func bindSearchEvent() {
@@ -43,20 +48,6 @@ class NIHSearchPanelViewModel: NSObject {
         suspendSearchBar.searchBtn.rx.tap
             .subscribe(onNext: openSearchPanel)
             .disposed(by: disposeBag)
-        NotificationCenter.default.rx.notification(.homePageRollScreenKey).subscribe(onNext: {[weak self] (noti) in
-            if let userInfo = noti.userInfo {
-                if let listData = userInfo["homePageRollData"] as? [HomePageRollScreen] {
-                    self?.homePageRollScreen = listData
-                    var searchTitles:[String] = []
-                    for item in listData {
-                        if let contentText = item.text {
-                            searchTitles.append(contentText)
-                        }
-                    }
-                    self?.suspendSearchBar.searchTitles = searchTitles
-                }
-            }
-        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
     }
     
     private func searchLocation()
@@ -212,4 +203,49 @@ class NIHSearchPanelViewModel: NSObject {
             .disposed(by: disposeBag)
     }
     
+    func registerPullDownNoti() {
+        // TTRefreshView+HomePage 进行下拉以及是否是首页判断
+        NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in
+            if let userInfo = noti.userInfo {
+                if let needPullDownData = userInfo["needPullDownData"] as? Bool {
+                    if needPullDownData {
+                        self?.requestHomePageRollScreen()
+                    }
+                }
+            }
+            }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
+    }
+    
+    func registerChangeCity()
+    {
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.8, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+            if let cityName = data?.currentCityName {
+                if cityName != self?.currentCityName {
+                    self?.requestHomePageRollScreen()
+                    self?.currentCityName = cityName
+                }
+            }
+        })
+            .disposed(by: disposeBag)
+    }
+    
+    func requestHomePageRollScreen()
+    {
+        listDataRequestDisposeBag = DisposeBag()
+        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        requestHomePageRollScreenData(cityId: cityId ?? 122).subscribe(onNext: {[weak self](response) in
+            var listData:[HomePageRollScreen] = []
+            if let tempListData = response?.data?.data {
+                listData = tempListData
+            }
+            self?.homePageRollScreen = listData
+            var searchTitles:[String] = []
+            for item in listData {
+                if let contentText = item.text {
+                    searchTitles.append(contentText)
+                }
+            }
+            self?.suspendSearchBar.searchTitles = searchTitles
+        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
+    }
 }

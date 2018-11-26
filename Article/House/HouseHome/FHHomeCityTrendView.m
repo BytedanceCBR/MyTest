@@ -11,6 +11,7 @@
 #import "FHConfigModel.h"
 #import "UIFont+House.h"
 
+
 @interface FHHomeCityTrendView()
 
 @property(nonatomic, strong) UIImageView *bgView;
@@ -85,13 +86,29 @@
     self.leftView.titleLabel.text = [NSString stringWithFormat:@"%@%@",model.cityName,model.cityTitleDesc];
     self.leftView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.cityDetailDesc];
     self.leftView.icon.image = [UIImage imageNamed:@"home_setting-arrow"];
-    self.leftView.leftPadding = 20;
-    self.leftView.rightPadding = 10;
+    self.leftView.leftPadding = 20 * WIDTHSCALE;
+    self.leftView.rightPadding = 10 * WIDTHSCALE;
     
+    CGFloat largeFontSize = 18.f;
+    CGFloat smallFontSize = 10.f;
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+        
+        largeFontSize = 16.f;
+        smallFontSize = 9.f;
+    }
+
+    UIFont *largeFont = [UIFont themeFontRegular:largeFontSize];
+    UIFont *smallFont = [UIFont themeFontRegular:smallFontSize];
+
+    self.leftView.titleLabel.font = largeFont;
+    self.leftView.subtitleLabel.font = smallFont;
+    [self.leftView.titleLabel sizeToFit];
+    [self.leftView.subtitleLabel sizeToFit];
+
     NSString *priceStr = [NSString stringWithFormat:@"%@ %@",model.pricingPerSqm,model.pricingPerSqmUnit];
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc]initWithString:priceStr];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[priceStr rangeOfString:model.pricingPerSqm]];
-    [attr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
+    [attr addAttributes:@{NSFontAttributeName: largeFont} range:[priceStr rangeOfString:model.pricingPerSqm]];
+    [attr addAttributes:@{NSFontAttributeName: smallFont} range:[priceStr rangeOfString:model.pricingPerSqmUnit]];
     self.centerView.titleLabel.attributedText = attr;
     
     if (model.monthUp.doubleValue > 0.0001f) {
@@ -121,21 +138,28 @@
             
             self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@ %.2f%%",model.pricingPerSqmDesc, ABS(model.monthUp.doubleValue * 100)];
         }
-
+        [self.centerView.subtitleLabel sizeToFit];
+        [self.centerView.icon sizeToFit];
     }else {
         self.centerView.icon.hidden = YES;
         self.centerView.subtitleLabel.hidden = YES;
 
     }
     
+    [self.centerView.titleLabel sizeToFit];
+    [self.centerView.subtitleLabel sizeToFit];
+    [self.centerView.icon sizeToFit];
+
     NSString *numStr = [NSString stringWithFormat:@"%@ %@",model.addedNumToday, model.addedNumTodayUnit];
     NSMutableAttributedString *numAttr = [[NSMutableAttributedString alloc]initWithString:numStr];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:18]} range:[numStr rangeOfString:model.addedNumToday]];
-    [numAttr addAttributes:@{NSFontAttributeName: [UIFont themeFontRegular:10]} range:[numStr rangeOfString:model.addedNumTodayUnit]];
+    [numAttr addAttributes:@{NSFontAttributeName: largeFont} range:[numStr rangeOfString:model.addedNumToday]];
+    [numAttr addAttributes:@{NSFontAttributeName: smallFont} range:[numStr rangeOfString:model.addedNumTodayUnit]];
     
     self.rightView.titleLabel.attributedText = numAttr;
     self.rightView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.addedNumTodayDesc];
-    
+    [self.rightView.titleLabel sizeToFit];
+    [self.rightView.subtitleLabel sizeToFit];
+
 }
 -(void)layoutSubviews {
     
@@ -143,17 +167,21 @@
     
     self.bgView.frame = self.bounds;
     
-    self.leftView.frame = CGRectMake(0, 0, 120, self.height);
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+        self.leftView.frame = CGRectMake(0, 0, 100, self.height);
+    }else {
+        self.leftView.frame = CGRectMake(0, 0, 120, self.height);
+    }
     self.line.size = CGSizeMake(1, 38);
     self.line.left = self.leftView.right;
     self.line.centerY = self.leftView.centerY;
     
-    self.rightArrow.size = CGSizeMake(18, 18);
+    self.rightArrow.size = CGSizeMake(18 * WIDTHSCALE, 18 * WIDTHSCALE);
     self.rightArrow.left = self.width - 15 - self.rightArrow.width;
     self.rightArrow.centerY = self.leftView.centerY;
     
-    CGFloat itemWidth = (self.rightArrow.left - self.line.right - 20) / 2;
-    self.centerView.frame = CGRectMake(self.line.right, 0, itemWidth, self.height);
+    CGFloat itemWidth = (self.rightArrow.left - self.line.right - 15) / 2;
+    self.centerView.frame = CGRectMake(self.line.right + 15, 0, itemWidth, self.height);
     self.rightView.frame = CGRectMake(self.centerView.right, 0, itemWidth, self.height);
 
     self.rightBtn.left = self.line.right;

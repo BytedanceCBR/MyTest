@@ -23,8 +23,14 @@
 
 -(void)setupUI {
     
-    self.leftPadding = 15;
-    self.rightPadding = 15;
+    if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen]) {
+
+        self.leftPadding = 0;
+        self.rightPadding = 0;
+    }else {
+        self.leftPadding = 0;
+        self.rightPadding = 5;
+    }
 
     [self addSubview:self.titleLabel];
     
@@ -58,11 +64,12 @@
     [self.subtitleLabel sizeToFit];
     self.subtitleLabel.top = self.titleLabel.bottom + 3;
     self.subtitleLabel.left = self.titleLabel.left + leftPadding;
-    if (self.subtitleLabel.width > self.width - 30) {
+    if (self.subtitleLabel.width > self.width - self.leftPadding - self.rightPadding) {
         
-        self.subtitleLabel.width = self.width - 30;
+        self.subtitleLabel.width = self.width - self.leftPadding - self.rightPadding;
     }
-    
+    [self.subtitleLabel sizeToFit];
+
     [self.icon sizeToFit];
     self.icon.left = self.subtitleLabel.right + 3;
     self.icon.centerY = self.subtitleLabel.centerY;

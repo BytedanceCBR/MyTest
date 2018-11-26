@@ -914,6 +914,9 @@
 		70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */; };
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
+		760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
 		764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
@@ -3548,7 +3551,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -3582,9 +3585,6 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
 		D46DA52D21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52E21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52F21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
@@ -6937,6 +6937,7 @@
 		70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAdFullScreenVideoViewModel.m; sourceTree = "<group>"; };
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
+		760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChangeHistoryCell.swift; sourceTree = "<group>"; };
 		764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageRollScreenEntitys.swift; sourceTree = "<group>"; };
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
@@ -8177,9 +8178,7 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
 		D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendView.m; sourceTree = "<group>"; };
-		D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
 		D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendView.h; sourceTree = "<group>"; };
 		D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeHeaderTableViewCell.h; sourceTree = "<group>"; };
 		D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeHeaderTableViewCell.m; sourceTree = "<group>"; };
@@ -9094,7 +9093,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10786,6 +10785,7 @@
 				3DF3631E21A29D9E0097FCB6 /* PropertyListCell.swift */,
 				3DF3631F21A29D9E0097FCB6 /* MultitemCollectionCell.swift */,
 				3DF3632021A29D9E0097FCB6 /* GlobalPricingCell.swift */,
+				760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -15747,8 +15747,6 @@
 			isa = PBXGroup;
 			children = (
 				611339D821A7F94700304DF6 /* home.xcassets */,
-				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
-				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
 				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
 				D481F85021A5644A007A6DE7 /* FHHomeEntrancesCell.h */,
@@ -17900,9 +17898,9 @@
 				48BDA8181A39559900A52B42 /* ShellScript */,
 				4A2FCD521F175F68006ED130 /* Run Script - Fix Copy Pods Resources Script  */,
 				ACB642401DC0C37500F31B94 /* Embed Watch Content */,
-				5F7FC079373F7D8CA8B338F4 /* [CP] Embed Pods Frameworks */,
 				FEE92B402C46778071F5AA19 /* [CP] Copy Pods Resources */,
 				B388CD10214266ED00653188 /* ShellScript */,
+				A35F4A1A833F680CA04D9D77 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -17928,9 +17926,9 @@
 				B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */,
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				B373CF0C2174587A008F9905 /* ShellScript */,
-				3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */,
 				8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */,
 				3D396439219ACED0002E9010 /* ShellScript */,
+				44F25DC328F9D28F7D081E83 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -17955,10 +17953,10 @@
 				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
-				8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */,
 				5EC0BBC33EF7FD6E06D77572 /* [CP] Copy Pods Resources */,
 				B3BDFA9721460B9700C948FC /* ShellScript */,
 				3D39643A219ACF07002E9010 /* ShellScript */,
+				7F2EB9D9CE8F0E6CDF6BAA8D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -18012,11 +18010,11 @@
 						};
 					};
 					B373C7F92174587A008F9905 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -18357,7 +18355,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
-		3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */ = {
+		44F25DC328F9D28F7D081E83 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -18588,21 +18586,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5F7FC079373F7D8CA8B338F4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6B66AE861D11833100F57F45 /* Run Script - delete revision */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -18630,6 +18613,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h";
+		};
+		7F2EB9D9CE8F0E6CDF6BAA8D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -18817,7 +18815,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */ = {
+		A35F4A1A833F680CA04D9D77 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -18829,7 +18827,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A46A8E1EEFD156C1E092FD50 /* [CP] Check Pods Manifest.lock */ = {
@@ -20486,6 +20484,7 @@
 				4824DE171F569F15001D589A /* TSVShortVideoProfileFetchManager.m in Sources */,
 				B388CCD42142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				6B2845E11DF5402100170DE7 /* RNData.m in Sources */,
+				760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				D5041F4F205802A400BAEE7F /* AKMinePhotoCarouselEntry.m in Sources */,
 				3DF3640021A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */,
@@ -20631,7 +20630,6 @@
 				A97DBB831F1332E20002B455 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC462142652B00653188 /* BizError.swift in Sources */,
 				ABBEA6A91F334103005DAD27 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				06C518431AAC488400C2B2E3 /* SimplePing.m in Sources */,
 				F87693F41F31D0D400D59CA5 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -22212,6 +22210,7 @@
 				B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */,
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640221A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
@@ -22357,7 +22356,6 @@
 				B373CD2E2174587A008F9905 /* TTMemoryMonitorTask.m in Sources */,
 				B373CD302174587A008F9905 /* BizError.swift in Sources */,
 				B373CD312174587A008F9905 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				B373CD322174587A008F9905 /* SimplePing.m in Sources */,
 				B373CD332174587A008F9905 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				B373CD342174587A008F9905 /* FHDemanderTrackerManager.m in Sources */,
@@ -23938,6 +23936,7 @@
 				B388CCD52142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640121A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
@@ -24083,7 +24082,6 @@
 				FEFA5841205FB1A8001F50D8 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC472142652B00653188 /* BizError.swift in Sources */,
 				FEFA5842205FB1A8001F50D8 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				FEFA5844205FB1A8001F50D8 /* SimplePing.m in Sources */,
 				FEFA5845205FB1A8001F50D8 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F12152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -24792,7 +24790,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24893,7 +24891,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -24997,12 +24995,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -25073,7 +25071,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -25101,12 +25099,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -25185,7 +25183,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

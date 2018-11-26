@@ -95,14 +95,16 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategorySwitch: Bool = true
     
-    var isNewHouseHasMore: Bool = false //新房hasmore，一个tableview区分状态
+//    var itemsSecondHouse: [HouseItemInnerEntity]? = [] //二手房数据缓存,for切换
     
-    var isSecondHouseHasMore: Bool = false //二手房hasmore，一个tableview区分状态
+//    var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
     
-    var itemsSecondHouse: [HouseItemInnerEntity]? = [] //二手房数据缓存,for切换
+    var itemsRentHouse: [HouseItemInnerEntity]? = [] //租房数据缓存,for切换
     
-    var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
+    var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //数据缓存
     
+    var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
+
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
     
     var reloadFromType: TTReloadType?
@@ -159,28 +161,39 @@ class HomeListViewModel: DetailPageViewModel {
                     EnvContext.shared.toast.showToast("网络异常")
                     return
                 }
-                if index == .newHouse && self?.itemsNewHouse?.count == 0
+                
+                let itemsCountV = self?.itemsDataCache[matchHouseTypeName(houseTypeV: index)]?.count ?? 0
+                if itemsCountV == 0
                 {
-                    //首次切换，先显示默认
                     self?.showDefaultLoadTable()
-                    
+
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-                    return
                 }
                 
-                if index == .secondHandHouse && self?.itemsSecondHouse?.count == 0
-                {
-                    //首次切换，先显示默认
-                    self?.showDefaultLoadTable()
-                    
-                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
-                    //如果没有数据缓存，则去请求第一页 （二手房）
-                    
-                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-                    return
-                }
+//                if index == .newHouse && self?.itemsNewHouse?.count == 0
+//                {
+//                    //首次切换，先显示默认
+//                    self?.showDefaultLoadTable()
+//
+//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
+//                    //如果没有数据缓存，则去请求第一页 （新房）
+//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
+//                    return
+//                }
+//
+//                if index == .secondHandHouse && self?.itemsSecondHouse?.count == 0
+//                {
+//                    //首次切换，先显示默认
+//                    self?.showDefaultLoadTable()
+//
+//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
+//                    //如果没有数据缓存，则去请求第一页 （二手房）
+//
+//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
+//                    return
+//                }
                 
                 self?.reloadDataChange(dataType: index)
                 
@@ -239,8 +252,6 @@ class HomeListViewModel: DetailPageViewModel {
             
         })
             .disposed(by: disposeBag)
-        
-        registerPullDownNoti()
     }
     
     func homeViewControllerWillAppear()
@@ -283,7 +294,7 @@ class HomeListViewModel: DetailPageViewModel {
     
     func reloadDataChange(dataType: HouseType?)
     {
-        if let dataItems = dataType == .newHouse ? itemsNewHouse : itemsSecondHouse
+        if let dataItems = itemsDataCache[matchHouseTypeName(houseTypeV: dataType)]
         {
             isNeedUpdateSpringBoard = false //纯切换推荐数据源，不需要更新board
             let datas = generateSectionNode(items: dataItems)
@@ -306,21 +317,18 @@ class HomeListViewModel: DetailPageViewModel {
     }
     
     func getHasMore() -> Bool {
-        if self.dataSource?.categoryView.houseTypeRelay.value == .newHouse
+        if let houseTypeV = self.dataSource?.categoryView.houseTypeRelay.value
         {
-            return isNewHouseHasMore
-        }else {
-            return isSecondHouseHasMore
+            return self.isItemsHasMoreCache[matchHouseTypeName(houseTypeV: houseTypeV)] ?? false
         }
+        return false
     }
     //重置数据
     func resetHomeRecommendState()
     {
         self.isNeedUpdateSpringBoard = true
-        self.itemsSecondHouse?.removeAll()
-        self.itemsNewHouse?.removeAll()
-        self.isSecondHouseHasMore = false
-        self.isNewHouseHasMore = false
+        self.itemsDataCache.removeAll()
+        self.isItemsHasMoreCache.removeAll()
     }
     
     //生成默认加载图
@@ -428,9 +436,6 @@ class HomeListViewModel: DetailPageViewModel {
         
         listDataRequestDisposeBag = DisposeBag()
         
-        // 请求首页搜索器推荐词请求
-        self.requestHomePageRollScreen()
-        
         self.houseId = houseId
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
@@ -479,28 +484,20 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            if houseTypeValue == HouseType.newHouse, typeValue == .newHouse
+                            self.searchIdNews = response?.data?.searchId
+
+                            let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
+
+                            self.itemsDataCache[matchHouseTypeName(houseTypeV: houseTypeValue)]?.removeAll()
+                            
+                            self.itemsDataCache.updateValue(items, forKey: matchHouseTypeName(houseTypeV: houseTypeValue))
+                            
+                            if let hasMore = response?.data?.hasMore
                             {
-                                self.searchIdNews = response?.data?.searchId
-                                self.itemsNewHouse?.removeAll() //第一次请求清除相应缓存
-                                self.itemsNewHouse?.append(contentsOf: items)
-                                if let hasMore = response?.data?.hasMore
-                                {
-                                    self.isNewHouseHasMore = hasMore
-                                }
-                                return self.generateSectionNode(items: self.itemsNewHouse)
-                            } else if houseTypeValue == HouseType.secondHandHouse, typeValue == .secondHandHouse
-                            {
-                                self.searchIdSecond = response?.data?.searchId
-                                self.itemsSecondHouse?.removeAll() //第一次请求清除相应缓存
-                                self.itemsSecondHouse?.append(contentsOf: items)
-                                if let hasMore = response?.data?.hasMore
-                                {
-                                    self.isSecondHouseHasMore = hasMore
-                                }
-                                
-                                return self.generateSectionNode(items: self.itemsSecondHouse)
+                                self.isItemsHasMoreCache.updateValue(hasMore, forKey: matchHouseTypeName(houseTypeV: houseTypeValue))
                             }
+                            
+                            return self.generateSectionNode(items: self.itemsDataCache[houstTypeKey])
                         }
                     }
                     return [] //条件不符合返回空数组
@@ -580,9 +577,11 @@ class HomeListViewModel: DetailPageViewModel {
                 requestId = searchIdSecond
             }
             
+            let offsetRequest = self.itemsDataCache[matchHouseTypeName(houseTypeV: typeValue)]?.count ?? 0
+            
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
-                                  offset: (typeValue == .newHouse ? self.itemsNewHouse?.count : self.itemsSecondHouse?.count) ?? 0,
+                                  offset: offsetRequest,
                                   searchId: requestId,
                                   count: (houseId == -1 ? 20 : 20))
                 
@@ -628,43 +627,30 @@ class HomeListViewModel: DetailPageViewModel {
                         recordEvent(key: TraceEventName.category_refresh, params: params)
                         self.reloadFromType = nil
                         self.enterType = nil
-                        
                     }
                     
                     if let items = response?.data?.items {
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-                            if houseTypeValue == HouseType.newHouse
+                            self.searchIdNews = response?.data?.searchId
+                            
+                            let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
+                            
+                            if items.count > 0
                             {
-                                self.itemsNewHouse?.append(contentsOf: items)
-                                self.searchIdNews = response?.data?.searchId
-                                if let hasMore = response?.data?.hasMore
-                                {
-                                    if items.count != 0
-                                    {
-                                        self.isNewHouseHasMore = hasMore
-                                    }else
-                                    {
-                                        self.isNewHouseHasMore = false
-                                    }
-                                }
-                                return self.generateSectionNode(items: self.itemsNewHouse)
-                            } else if houseTypeValue == HouseType.secondHandHouse
-                            {
-                                self.itemsSecondHouse?.append(contentsOf: items)
-                                self.searchIdSecond = response?.data?.searchId
-                                if let hasMore = response?.data?.hasMore
-                                {
-                                    if items.count != 0
-                                    {
-                                        self.isSecondHouseHasMore = hasMore
-                                    }else
-                                    {
-                                        self.isSecondHouseHasMore = false
-                                    }
-                                }
-                                return self.generateSectionNode(items: self.itemsSecondHouse)
+                                var currentItems = self.itemsDataCache[houstTypeKey]
+                                
+                                currentItems?.append(contentsOf: items)
+                                
+                                self.itemsDataCache.updateValue(currentItems ?? [], forKey: houstTypeKey)
                             }
+                            
+                            if let hasMore = response?.data?.hasMore
+                            {
+                                self.isItemsHasMoreCache.updateValue(hasMore, forKey: houstTypeKey)
+                            }
+                            
+                            return self.generateSectionNode(items: self.itemsDataCache[houstTypeKey])
                         }
                     }
                     return [] //条件不符合返回空数组
@@ -709,33 +695,6 @@ class HomeListViewModel: DetailPageViewModel {
                 })
                 .disposed(by: listDataRequestDisposeBag)
         }
-    }
-    
-    func registerPullDownNoti() {
-        // TTRefreshView+HomePage 进行下拉以及是否是首页b判断
-        NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in
-            if let userInfo = noti.userInfo {
-                if let needPullDownData = userInfo["needPullDownData"] as? Bool {
-                    if needPullDownData {
-                        self?.requestHomePageRollScreen()
-                    }
-                }
-            }
-            }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
-    }
-    
-    func requestHomePageRollScreen()
-    {
-        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
-        requestHomePageRollScreenData(cityId: cityId ?? 122).subscribe(onNext: {(response) in
-            if let listData = response?.data?.data {
-                let userInfo = ["homePageRollData":listData]
-                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
-            } else {
-                let userInfo = ["homePageRollData":[]]
-                NotificationCenter.default.post(name: .homePageRollScreenKey, object: nil, userInfo: userInfo)
-            }
-        }, onError: nil, onCompleted: nil, onDisposed: nil).disposed(by: listDataRequestDisposeBag)
     }
     
     func createOneTimeToast() -> (String?) -> Void {

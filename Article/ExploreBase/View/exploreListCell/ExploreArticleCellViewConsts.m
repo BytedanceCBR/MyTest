@@ -67,26 +67,26 @@ inline CGFloat cellBottomPaddingWithPic() {
 /** view左边距 */
 inline CGFloat cellLeftPadding() {
     if ([TTDeviceHelper isPadDevice]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 15.f;
+        return 20.f;
     } else {
-        return 15.f;
+        return 20.f;
     }
 }
 
 /** view右边距 */
 inline CGFloat cellRightPadding() {
     if ([TTDeviceHelper isPadDevice]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 15.f;
+        return 20.f;
     } else {
-        return 15.f;
+        return 20.f;
     }
 }
 

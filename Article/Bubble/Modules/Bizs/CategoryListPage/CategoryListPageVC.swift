@@ -916,6 +916,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     .enumerated()
                     .forEach({ [unowned self] (e) in
                         let (offset, (item, nodes)) = e
+//                        self.conditionFilterViewModel?.conditionItemViews.removeAll()
                         item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(
                             index: offset,
                             reload: reload,
