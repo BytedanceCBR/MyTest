@@ -155,7 +155,8 @@
     [traceParams setValue:self.viewModel.articleInfoManager.detailModel.originalGroupID forKey:@"from_gid"];
     [traceParams setValue:self.viewModel.articleInfoManager.detailModel.logPb forKey:@"log_pb"];
     [traceParams setValue:@"related" forKey:@"category_name"];
-    
+    [traceParams setValue:@"be_null" forKey:@"cell_type"];
+
     [TTTracker eventV3:@"client_show" params:traceParams];
 }
 

@@ -32,9 +32,8 @@
         self.imprType = [raw_data tt_stringValueForKey:@"impr_type"];
         self.loadmoreButton = [raw_data tt_stringValueForKey:@"loadmore_button"];
         self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
+        if (self.houseType.integerValue == FHHouseTypeNewHouse) {
 
-        if ([self.houseType isEqualToString:@"1"]) {
-            
             NSMutableArray *mutable = @[].mutableCopy;
             for (NSDictionary *dict in self.items) {
                 
@@ -46,8 +45,8 @@
             }
             self.itemList = mutable;
             
-        }else if ([self.houseType isEqualToString:@"2"]) {
-            
+        }else if (self.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+
             NSMutableArray *mutable = @[].mutableCopy;
             for (NSDictionary *dict in self.items) {
                 
@@ -66,8 +65,8 @@
 -(void)setItems:(NSArray<NSDictionary *> *)items {
     
     _items = items;
-    if ([self.houseType isEqualToString:@"1"]) {
-        
+    if (self.houseType.integerValue == FHHouseTypeNewHouse) {
+
         NSMutableArray *mutable = @[].mutableCopy;
         for (NSDictionary *dict in self.items) {
             
@@ -79,8 +78,8 @@
         }
         self.itemList = mutable;
         
-    }else if ([self.houseType isEqualToString:@"2"]) {
-        
+    }else if (self.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+
         NSMutableArray *mutable = @[].mutableCopy;
         for (NSDictionary *dict in self.items) {
             
@@ -132,8 +131,8 @@
 -(NSArray<FHNewHouseItemModel *> *)houseList {
     
     if (!self.itemList) {
-        if ([self.houseType isEqualToString:@"1"]) {
-            
+        if (self.houseType.integerValue == FHHouseTypeNewHouse) {
+
             NSMutableArray *mutable = @[].mutableCopy;
             for (NSDictionary *dict in self.items) {
                 
@@ -153,8 +152,8 @@
 -(NSArray<FHSearchHouseDataItemsModel *> *)secondHouseList {
     
     if (!self.secondItemList) {
-        if ([self.houseType isEqualToString:@"2"]) {
-            
+        if (self.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+
             NSMutableArray *mutable = @[].mutableCopy;
             for (NSDictionary *dict in self.items) {
                 

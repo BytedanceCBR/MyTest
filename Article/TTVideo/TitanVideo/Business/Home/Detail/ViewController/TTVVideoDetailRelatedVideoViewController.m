@@ -296,7 +296,7 @@
                         }
                     }
                 }
-                
+                [traceParams setValue: @"be_null" forKey:@"cell_type"];
                 [TTTracker eventV3:@"client_show" params:traceParams];
 
                 [self.traceIdDict setObject:@"" forKey:itemId];
