@@ -792,7 +792,8 @@
     
     [traceParams setValue:dictTraceData.categoryID forKey:@"category_name"];
     [traceParams setValue:dictTraceData.groupSource forKey:@"group_source"];
-    
+    [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
+
     [TTTracker eventV3:@"client_show" params:traceParams];
 }
 
