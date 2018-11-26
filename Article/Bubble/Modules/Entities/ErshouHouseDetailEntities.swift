@@ -74,6 +74,37 @@ struct Disclaimer: Mappable {
     }
 }
 
+struct PriceChangeHistory: Mappable {
+    
+    var detailUrl: String?
+    var priceChangeDesc: String?
+    var history:[ChangeHistory]?
+
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        detailUrl <- map["detail_url"]
+        priceChangeDesc <- map["price_change_desc"]
+        history <- map["history"]
+    }
+    
+    struct ChangeHistory: Mappable {
+        var dateStr: String?
+        var changeDesc: String?
+        
+        init?(map: Map) {
+            
+        }
+        
+        mutating func mapping(map: Map) {
+            dateStr <- map["date_str"]
+            changeDesc <- map["change_desc"]
+        }
+    }
+}
+
 struct ErshouHouseData: Mappable {
     
     var id: String?
@@ -97,7 +128,8 @@ struct ErshouHouseData: Mappable {
     
     var contact: FHHouseDetailContact?
     var status: Int? // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
- 
+    
+    var priceChangeHistory:PriceChangeHistory?
 
     init?(map: Map) {
         
@@ -123,7 +155,7 @@ struct ErshouHouseData: Mappable {
         logPB <- map["log_pb"]
         status <- map["status"]
         outLineOverreview <- map["house_overreview"]
-
+        priceChangeHistory <- map["price_change_history"]
     }
 }
 
