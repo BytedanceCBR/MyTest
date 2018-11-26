@@ -243,9 +243,13 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     }
                 }
             }
-
-//        if needShowThirdList {
+        if dataSources[2].nodes.count > 0 {
             self.displayExtendValue()
+        } else {
+            self.displayNormalCondition()
+        }
+//        if needShowThirdList {
+//            self.displayExtendValue()
 //        }
 //        let thirdTable = self.tableViews[2]
 //        let thirdDs = self.dataSources[2]
