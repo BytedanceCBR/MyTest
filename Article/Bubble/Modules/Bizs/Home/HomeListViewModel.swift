@@ -95,16 +95,16 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategorySwitch: Bool = true
     
-//    var itemsSecondHouse: [HouseItemInnerEntity]? = [] //二手房数据缓存,for切换
+    //    var itemsSecondHouse: [HouseItemInnerEntity]? = [] //二手房数据缓存,for切换
     
-//    var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
+    //    var itemsNewHouse: [HouseItemInnerEntity]? = [] //新房数据缓存,for切换
     
     var itemsRentHouse: [HouseItemInnerEntity]? = [] //租房数据缓存,for切换
     
     var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //数据缓存
     
     var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
-
+    
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
     
     var reloadFromType: TTReloadType?
@@ -166,35 +166,11 @@ class HomeListViewModel: DetailPageViewModel {
                 if itemsCountV == 0
                 {
                     self?.showDefaultLoadTable()
-
+                    
                     self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
                     //如果没有数据缓存，则去请求第一页 （新房）
                     self?.requestData(houseId: -1, logPB:nil, showLoading: true)
                 }
-                
-//                if index == .newHouse && self?.itemsNewHouse?.count == 0
-//                {
-//                    //首次切换，先显示默认
-//                    self?.showDefaultLoadTable()
-//
-//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
-//                    //如果没有数据缓存，则去请求第一页 （新房）
-//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-//                    return
-//                }
-//
-//                if index == .secondHandHouse && self?.itemsSecondHouse?.count == 0
-//                {
-//                    //首次切换，先显示默认
-//                    self?.showDefaultLoadTable()
-//
-//                    self?.dataSource?.categoryView.segmentedControl.touchEnabled = false
-//                    //如果没有数据缓存，则去请求第一页 （二手房）
-//
-//                    self?.requestData(houseId: -1, logPB:nil, showLoading: true)
-//                    return
-//                }
-                
                 self?.reloadDataChange(dataType: index)
                 
             }).disposed(by: self.disposeBagHouse)
@@ -490,9 +466,9 @@ class HomeListViewModel: DetailPageViewModel {
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
                             self.searchIdNews = response?.data?.searchId
-
+                            
                             let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
-
+                            
                             self.itemsDataCache[matchHouseTypeName(houseTypeV: houseTypeValue)]?.removeAll()
                             
                             self.itemsDataCache.updateValue(items, forKey: matchHouseTypeName(houseTypeV: houseTypeValue))
@@ -1062,7 +1038,6 @@ func openNeighborhoodDetailPage(
             provider: getNeighborhoodDetailPageViewModel())
         detailPage.logPB = logPB
         detailPage.houseSearchParams = houseSearchParams
-        let traceDict = tracerParams.paramsGetter([:])
         
         if let sameNeighborhoodFollowUp = sameNeighborhoodFollowUp {
             detailPage.sameNeighborhoodFollowUp.bind(to: sameNeighborhoodFollowUp).disposed(by: disposeBag)
@@ -1070,9 +1045,6 @@ func openNeighborhoodDetailPage(
         detailPage.traceParams = EnvContext.shared.homePageParams <|>
             tracerParams <|>
         theParams
-        
-        //            <|>
-        //            toTracerParams(traceDict["page_type"] ?? "be_null", key: "enter_from")
         
         detailPage.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
