@@ -90,9 +90,10 @@ func parsePriceChangeHistoryNode(_ ershouHouseData: ErshouHouseData) -> () -> Ta
             return nil
         }
         let cellRender = curry(fillPriceChangeHistoryCell)(ershouHouseData)
+        let selectors = openPriceChangeHistoryPage(priceChangeHistory: ershouHouseData.priceChangeHistory,houseId:ershouHouseData.id ?? "0", tracerParams: TracerParams.momoid(), navVC: nil)
         return TableSectionNode(
             items: [cellRender],
-            selectors: nil,
+            selectors: [selectors],
             tracer: nil,
             label: "",
             type: .node(identifier: PriceChangeHistoryCell.identifier))
@@ -104,4 +105,20 @@ func fillPriceChangeHistoryCell(_ ershouHouseData: ErshouHouseData, cell: BaseUI
         return
     }
     theCell.infoLabel.text = ershouHouseData.priceChangeHistory?.priceChangeDesc
+}
+
+func openPriceChangeHistoryPage(
+    priceChangeHistory:PriceChangeHistory?,
+    houseId:String,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> (TracerParams) -> Void {
+    return { (theTracerParams) in
+        if let pushUrl = priceChangeHistory?.detailUrl, pushUrl.count > 0 {
+            let data = priceChangeHistory?.history?.toJSONString() ?? ""
+            let userInfo = TTRouteUserInfo(info: ["house_id":houseId,"history": data, "title": "123"])
+            if let url = "\(EnvContext.networkConfig.host)\(pushUrl)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"), userInfo: userInfo)
+            }
+        }
+    }
 }
