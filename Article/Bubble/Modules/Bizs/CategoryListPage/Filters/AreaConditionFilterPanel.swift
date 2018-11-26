@@ -682,6 +682,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
             if selectedIndexPaths.count == 0 && indexPath.row == 0 {
                 setCellSelected(true, cell: theCell)
             }
+//            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
+//                theCell.redDot.isHidden = false
+//            } else {
+//                theCell.redDot.isHidden = true
+//            }
+            theCell.redDot.isHidden = true
 
             return theCell
         } else {
@@ -714,7 +720,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
                 nodes[$0.row].isEmpty == 0
             }
         }
-
+        FHFilterRedDotManager.shared.selectFilterItem(key: node.key)
 
         if !selectedIndexPaths.contains(indexPath) {
             if selectedIndexPaths.count >= 20 {

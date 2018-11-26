@@ -33,6 +33,10 @@ platform :ios do
 	  plist_path: "NewsInHouse/NewsInHouse-Info.plist",
 	  app_identifier: "com.bytedance.fp1" # The App Identifier
     )
+    update_project_team(
+	  path: "Article.xcodeproj",
+	  teamid: "X46375UBYG"
+    )
     version = get_version_number_from_plist(scheme: "NewsLiteInHouse")
     build = get_build_number_from_plist(scheme: "NewsLiteInHouse")
     #build_app(scheme: "NewsLiteInHouse",

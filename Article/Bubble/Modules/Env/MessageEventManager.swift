@@ -85,33 +85,22 @@ class MessageEventManager: NSObject {
         requestUserUnread(query:"")
                 .subscribe(onNext: { [unowned self] (responsed) in
                     if let responseData = responsed?.data?.unread {
-                        var isUnRead = false
+                        var unreadCount:Int = 0
                         responseData.forEach {
                             if let unread = $0.unread
                             {
-                                if unread > 0
-                                {
-                                    isUnRead = true
-                                }
+                                unreadCount += unread
                             }
                         }
-                        if isUnRead {
-                            if let messageBarItem = self.messageTab()
-                            {
-                                if messageBarItem.state != TTTabBarItemState.init(rawValue: 2)
-                                {
-                                    if let badgeView = messageBarItem.ttBadgeView {
-                                        badgeView.badgeNumber = TTBadgeNumberPoint
-                                    }
-                                }
-                            }
-                        } else {
-                            if let badgeView = self.messageTab()?.ttBadgeView {
+                        if let badgeView = self.messageTab()?.ttBadgeView {
+                            if unreadCount > 0 {
+                                badgeView.badgeNumber = unreadCount
+                            } else {
                                 badgeView.badgeNumber = TTBadgeNumberHidden
                             }
                         }
                     }
-                }, onError: { [unowned self] (error) in
+                }, onError: { (error) in
 
                 })
                 .disposed(by: disposeBag)

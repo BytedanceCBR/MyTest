@@ -587,7 +587,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             toTracerParams("findtab_search", key: "origin_from") <|>
             beNull(key: "origin_search_id")
         let params = EnvContext.shared.homePageParams <|>
-            toTracerParams(pageTypeString(), key: "page_type")
+            toTracerParams(pageTypeString(), key: "page_type") <|>
+        toTracerParams("be_null", key: "hot_word")
         recordEvent(key: "click_house_search", params: params)
     }
 

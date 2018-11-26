@@ -243,6 +243,14 @@ class HomeListViewModel: DetailPageViewModel {
         registerPullDownNoti()
     }
     
+    func homeViewControllerWillAppear()
+    {
+        let categoryStartName = SSCommonLogic.feedStartCategory()
+        if isFirstEnterCategory && categoryStartName != "f_find_house" {
+            EnvContext.shared.client.generalBizconfig.load()
+        }
+    }
+    
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
         
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
@@ -404,24 +412,21 @@ class HomeListViewModel: DetailPageViewModel {
         
         
         let traceDict = params.paramsGetter([:])
-        let categoryStartName = SSCommonLogic.feedStartCategory()
+        //      let categoryStartName = SSCommonLogic.feedStartCategory()
         
         if isWithStayTimeV
         {
             recordEvent(key: "stay_category", params: traceDict)
         }else
         {
-            if !self.isFirstEnterCategory && categoryStartName == "f_find_house"
-            {
-                recordEvent(key: "enter_category", params: traceDict)
-            }
+            recordEvent(key: "enter_category", params: traceDict)
         }
     }
     
     //第一次请求，继承协议方法
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         
-         listDataRequestDisposeBag = DisposeBag()
+        listDataRequestDisposeBag = DisposeBag()
         
         // 请求首页搜索器推荐词请求
         self.requestHomePageRollScreen()
@@ -505,6 +510,9 @@ class HomeListViewModel: DetailPageViewModel {
                         dataSource.datas = response
                         dataSource.recordIndexCache = []
                         self.tableView?.reloadData()
+                    }else
+                    {
+                        self.onSuccess?(.requestSuccessTypeNoData)
                     }
                     self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     self.dataSource?.categoryView.segmentedControl.touchEnabled = true
@@ -943,7 +951,7 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity,
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.courtImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-            
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
         }
         
     }
@@ -995,7 +1003,7 @@ func fillHomeNewHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool
             theCell.priceLabel.text = data.displayPricePerSqm
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.images?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-            
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
         }
         
     }

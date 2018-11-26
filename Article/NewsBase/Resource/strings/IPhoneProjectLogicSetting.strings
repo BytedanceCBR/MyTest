@@ -82,3 +82,5 @@
 
 // map search
 "mapfind_house"        = "FHMapSearchViewController";
+
+"renthouse_main"  =  "FHHouseRentHomeVC";

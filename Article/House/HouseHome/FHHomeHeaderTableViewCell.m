@@ -34,6 +34,7 @@
         make.edges.equalTo(self);
     }];
     _contentTableView.scrollEnabled = NO;
+    _contentTableView.estimatedRowHeight = 120;
     self.contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [FHHomeCellHelper registerCells:self.contentTableView];
     
@@ -42,23 +43,7 @@
 
 - (void)refreshUI
 {
-    NSInteger num = arc4random()%4;
-    switch (num) {
-        case 0:
-            self.contentTableView.backgroundColor = [UIColor redColor];
-            break;
-        case 1:
-            self.contentTableView.backgroundColor = [UIColor blueColor];
-            break;
-        case 2:
-            self.contentTableView.backgroundColor = [UIColor purpleColor];
-            break;
-        case 3:
-            self.contentTableView.backgroundColor = [UIColor orangeColor];
-            break;
-        default:
-            break;
-    }
+    [[FHHomeCellHelper sharedInstance] refreshFHHomeTableUI:_contentTableView];
 }
 
 - (void)refreshWithData:(nonnull id)data
