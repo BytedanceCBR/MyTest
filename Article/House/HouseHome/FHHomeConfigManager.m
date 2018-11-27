@@ -6,6 +6,14 @@
 //
 
 #import "FHHomeConfigManager.h"
+#import <TTRoute.h>
+#import <TTArticleCategoryManager.h>
+
+@interface FHHomeConfigManager()
+
+@property (nonatomic,assign)BOOL isNeedTriggerPullDownUpdate;
+
+@end
 
 @implementation FHHomeConfigManager
 
@@ -42,6 +50,24 @@
             [self.configDataReplay sendNext:dataModel];
         }
     }
+}
+
+- (void)openCategoryFeedStart
+{
+    NSString * categoryStartName = [SSCommonLogic feedStartCategory];
+    
+    if ([categoryStartName isEqualToString:[TTArticleCategoryManager currentSelectedCategoryID]]) {
+        self.isNeedTriggerPullDownUpdate = NO;
+    }else
+    {
+        self.isNeedTriggerPullDownUpdate = YES;
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *openUrl = [NSString stringWithFormat:@"snssdk1370://category_feed?category=%@",categoryStartName];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:nil];                });
+    });
 }
 
 - (void)updateConfigDataFromCache

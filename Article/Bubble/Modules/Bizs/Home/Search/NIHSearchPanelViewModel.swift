@@ -97,7 +97,7 @@ class NIHSearchPanelViewModel: NSObject {
                         case .onFinishedRequestFilterConfig:
                             EnvContext.shared.toast.dismissToast()
                             self.baseVC.navigationController?.popViewController(animated: true)
-
+                            FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
                             return
                         case .onError:
                             DispatchQueue.main

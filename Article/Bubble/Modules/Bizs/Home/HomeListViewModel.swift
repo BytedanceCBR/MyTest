@@ -406,7 +406,10 @@ class HomeListViewModel: DetailPageViewModel {
                 origin_from = "new_list"
             }else if typeValue == .secondHandHouse {
                 origin_from = "old_list"
+            }else if typeValue == .secondHandHouse {
+                origin_from = "rent_list"
             }
+            
             self.originFrom = origin_from
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(origin_from, key: "origin_from")
