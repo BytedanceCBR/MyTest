@@ -344,7 +344,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
-                <- parsePriceChangeHistoryNode(data)
+                <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
                 <- parsePropertyListNode(data)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
