@@ -14,11 +14,11 @@
 #import "TTRWebViewProgressView.h"
 #import "SSNavigationBar.h"
 
-@interface FHWebviewViewController ()<TTRouteInitializeProtocol>
+@interface FHWebviewViewController ()<TTRouteInitializeProtocol, TTRWebViewDelegate>
 
 @property (nonatomic, strong) FHWebviewViewModel *viewModel;
 @property (nonatomic, strong) TTRouteUserInfo *userInfo;
-@property(nonatomic , copy) NSString *url;
+@property (nonatomic, copy)   NSString *url;
 
 @end
 
@@ -76,7 +76,7 @@
     
     // 加载url
     NSURL *u = [NSURL URLWithString:self.url];
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:u];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:u];
     [self.webview ttr_loadRequest:request];
 }
 
@@ -87,5 +87,16 @@
 
 #pragma mark - TTRWebViewDelegate
 
+- (void)webViewDidStartLoad:(UIView<TTRWebView> *)webView {
+    
+}
+
+- (void)webViewDidFinishLoad:(UIView<TTRWebView> *)webView {
+    
+}
+
+- (void)webView:(UIView<TTRWebView> *)webView didFailLoadWithError:(NSError *)error {
+    
+}
 
 @end
