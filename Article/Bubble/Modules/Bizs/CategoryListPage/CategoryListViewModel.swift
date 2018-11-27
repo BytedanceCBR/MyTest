@@ -182,7 +182,10 @@ class CategoryListViewModel: DetailPageViewModel {
                     self.houseSearchRecorder?(response?.data?.searchId)
                     if let data = response?.data {
                         self.houseListOpenUrl = data.houseListOpenUrl
-
+                        if let logpb = response?.data?.items?.first?.logPB
+                        {
+                            self.logPB = logpb
+                        }
                         self.originSearchId = data.searchId
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -261,6 +264,10 @@ class CategoryListViewModel: DetailPageViewModel {
                             self.mapFindHouseOpenUrl = data.mapFindHouseOpenUrl
                             self.houseListOpenUrl = data.houseListOpenUrl
                             self.originSearchId = data.searchId
+                            if let logpb = response?.data?.items?.first?.logPB
+                            {
+                                self.logPB = logpb
+                            }
 
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -330,7 +337,10 @@ class CategoryListViewModel: DetailPageViewModel {
                         self.houseSearchRecorder?(response?.data?.searchId)
                         self.houseListOpenUrl = data.houseListOpenUrl
                         self.originSearchId = data.searchId
-
+                        if let logpb = response?.data?.items?.first?.logPB
+                        {
+                            self.logPB = logpb
+                        }
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -405,7 +415,10 @@ class CategoryListViewModel: DetailPageViewModel {
                         self.mapFindHouseOpenUrl = data.mapFindHouseOpenUrl
                         self.houseListOpenUrl = data.houseListOpenUrl
                         self.originSearchId = data.searchId
-                        
+                        if let logpb = response?.data?.items?.first?.logPB
+                        {
+                            self.logPB = logpb
+                        }
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                         
@@ -472,7 +485,10 @@ class CategoryListViewModel: DetailPageViewModel {
                         if let data = response?.data {
 
                             self.originSearchId = data.searchId
-
+                            if let logpb = response?.data?.items.first?.logPB
+                            {
+                                self.logPB = logpb
+                            }
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                             self.favoriteHasMore = data.hasMore ?? false
