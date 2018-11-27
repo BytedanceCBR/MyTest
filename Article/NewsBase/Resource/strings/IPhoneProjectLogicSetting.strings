@@ -86,5 +86,6 @@
 "mapfind_rent"         = "FHMapSearchViewController";
 
 "renthouse_main"  =  "FHHouseRentHomeVC";
+"rent_main"  =  "FHHouseRentHomeVC";
 
 "webview_oc"           = "FHWebviewViewController";
