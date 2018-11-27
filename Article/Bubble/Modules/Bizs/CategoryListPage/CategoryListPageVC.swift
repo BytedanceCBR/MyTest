@@ -702,8 +702,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             if self?.hasRecordEnterCategory ?? true == false,
                 let tracerParams = self?.tracerParams {
 
-                let params = tracerParams <|> EnvContext.shared.homePageParams <|>
+                var params = tracerParams <|> EnvContext.shared.homePageParams <|>
                 toTracerParams(self?.categoryListViewModel?.originSearchId ?? "be_null", key: "search_id")
+                if let logpb = self?.categoryListViewModel?.logPB
+                {
+                    params = params <|>
+                        toTracerParams(logpb, key: "log_pb")
+                }
 
                 recordEvent(key: TraceEventName.enter_category, params: params)
                 self?.hasRecordEnterCategory = true
