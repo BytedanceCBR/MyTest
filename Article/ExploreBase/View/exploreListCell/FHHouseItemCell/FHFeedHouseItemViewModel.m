@@ -13,6 +13,8 @@
 #import "TTRoute.h"
 #import "FHSearchHouseModel.h"
 #import "FHNewHouseItemModel.h"
+#import "FHUserTracker.h"
+#import "FHHouseBridgeManager.h"
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
 
@@ -22,9 +24,19 @@
 
 @property(nonatomic, strong)FHExploreHouseItemData *houseItemsData;
 
+@property(nonatomic, strong)NSMutableArray *cacheArray;
+
 @end
 
 @implementation FHFeedHouseItemViewModel
+
+-(NSMutableArray *)cacheArray {
+    
+    if (!_cacheArray) {
+        _cacheArray = @[].mutableCopy;
+    }
+    return _cacheArray;
+}
 
 -(instancetype)initWithTableView:(UITableView *)tableView {
     
@@ -53,11 +65,15 @@
 
 -(void)updateWithHouseData:(FHExploreHouseItemData *_Nullable)data {
     
+    if (data != self.houseItemsData) {
+        [self.cacheArray removeAllObjects];
+    }
     self.houseItemsData = data;
 
     [self.headerView updateTitle: self.houseItemsData.title];
     [self.footerView updateTitle: self.houseItemsData.loadmoreButton];
     [self.tableView reloadData];
+
 }
 
 -(void)configTableView {
@@ -76,6 +92,13 @@
     
     if (self.houseItemsData.loadmoreOpenUrl.length > 0) {
         
+            // logpb处理
+        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+        [contextBridge setTraceValue:@"mixlist_loadmore" forKey:@"origin_from"];
+        
+        NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+        [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
+
         NSURL *url =[NSURL URLWithString:self.houseItemsData.loadmoreOpenUrl];
         TTRouteUserInfo *userInfo = nil;
 //        if (neighborModel.logPb) {
@@ -100,6 +123,12 @@
 
 -(void)showNewHouseDetailPage:(FHNewHouseItemModel *)houseModel
 {
+        // logpb处理
+    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+    [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
+
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?court_id=%@",houseModel.houseId];
 
     TTRouteUserInfo *userInfo = nil;
@@ -134,6 +163,12 @@
 
 -(void)showSecondHouseDetailPage:(FHSearchHouseDataItemsModel *)houseModel
 {
+        // logpb处理
+    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+    [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
+
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",houseModel.hid];
     
     TTRouteUserInfo *userInfo = nil;
@@ -166,17 +201,47 @@
     }
 }
 
+-(void)addHouseShowLogWithIndexPath:(NSIndexPath *)indexPath {
+    
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+        
+        param[@"house_type"] = @"new";
+        FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
+        // logpb处理
+        param[@"log_pb"] = model.logPb ? : @"be_null";
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+        
+        param[@"house_type"] = @"old";
+        FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
+        // logpb处理
+        param[@"log_pb"] = model.logPb ? : @"be_null";
+    }
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"element_type"] = @"mix_list";
+    param[@"rank"] = @(indexPath.row);
+
+    param[@"origin_from"] = @"mix_list";
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+
+    [FHUserTracker writeEvent:@"house_show" params:param];
+    
+}
+
 #pragma mark - tableView dataSource & delegate
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         if (self.houseItemsData.houseList.count < 1) {
             return 0;
         }
         return 1;
         
-    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
         if (self.houseItemsData.secondHouseList.count < 1) {
             return 0;
         }
@@ -189,11 +254,11 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
 
         return self.houseItemsData.houseList.count;
         
-    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
 
         return self.houseItemsData.secondHouseList.count;
         
@@ -203,7 +268,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if ([self.houseItemsData.houseType isEqualToString:@"1"] || [self.houseItemsData.houseType isEqualToString:@"2"]) {
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
         if (indexPath.row == 0) {
             
             return 85;
@@ -218,7 +283,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFeedHouseCellId];
-    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
 
         if (self.houseItemsData.houseList.count > 0 && indexPath.row < self.houseItemsData.houseList.count) {
             
@@ -231,8 +296,8 @@
             }
         }
         
-    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
-        
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+
         if (self.houseItemsData.secondHouseList.count > 0 && indexPath.row < self.houseItemsData.secondHouseList.count) {
             
             FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
@@ -243,6 +308,28 @@
         }
     }
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+
+        FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
+        if (![self.cacheArray containsObject:model.houseId]) {
+            
+            [self.cacheArray addObject:model.houseId];
+            [self addHouseShowLogWithIndexPath:indexPath];
+        }
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+        
+        FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
+        if (![self.cacheArray containsObject:model.hid]) {
+
+            [self.cacheArray addObject:model.hid];
+            [self addHouseShowLogWithIndexPath:indexPath];
+        }
+    }
+    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -256,8 +343,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.houseItemsData.houseType isEqualToString:@"1"]) {
-        
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+
         if (self.houseItemsData.houseList.count > 0 && indexPath.row < self.houseItemsData.houseList.count) {
             
             FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
@@ -265,8 +352,8 @@
 
         }
         
-    }else if ([self.houseItemsData.houseType isEqualToString:@"2"]) {
-        
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+
         if (self.houseItemsData.secondHouseList.count > 0 && indexPath.row < self.houseItemsData.secondHouseList.count) {
             
             FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];

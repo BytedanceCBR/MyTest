@@ -17,6 +17,7 @@
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
+#import "FHHouseBridgeManager.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -78,7 +79,7 @@ static NSMutableArray  * _Nullable identifierArr;
             
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
-                if ([model.houseType isEqualToString:@"2"]) {
+                if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
                     [modelsArray addObject:model];
                     break;
                 }
@@ -117,7 +118,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
-                if ([model.houseType isEqualToString:@"2"]) {
+                if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
                     hasCity = YES;
                     break;
                 }
@@ -234,6 +235,7 @@ static NSMutableArray  * _Nullable identifierArr;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
             if (itemModel.openUrl) {
+                
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
@@ -386,6 +388,11 @@ static NSMutableArray  * _Nullable identifierArr;
     [cell updateWithModel:model];
     cell.trendView.clickedRightCallback = ^{
         
+            // logpb处理
+        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
+        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+
         if (model.mapOpenUrl) {
             
             NSURL *url = [NSURL URLWithString:model.mapOpenUrl];

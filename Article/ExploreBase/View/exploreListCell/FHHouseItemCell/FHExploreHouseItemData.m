@@ -26,12 +26,14 @@
     NSDictionary *raw_data = [dictionary tt_dictionaryValueForKey:@"raw_data"];
     if (raw_data != nil) {
         
+
         self.title = [raw_data tt_stringValueForKey:@"title"];
         self.items = [raw_data tt_arrayValueForKey:@"items"];
         self.loadmoreOpenUrl = [raw_data tt_stringValueForKey:@"loadmore_open_url"];
         self.imprType = [raw_data tt_stringValueForKey:@"impr_type"];
         self.loadmoreButton = [raw_data tt_stringValueForKey:@"loadmore_button"];
         self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
+        self.logPb = [raw_data tt_dictionaryValueForKey:@"log_pb"];
         if (self.houseType.integerValue == FHHouseTypeNewHouse) {
 
             NSMutableArray *mutable = @[].mutableCopy;
@@ -105,6 +107,7 @@
                                                             @"loadmoreOpenUrl",
                                                             @"imprType",
                                                             @"loadmoreButton",
+                                                            @"logPb",
                                                             @"houseType"]];
     };
     return properties;
@@ -121,6 +124,7 @@
                                          @"loadmoreOpenUrl":@"loadmore_open_url",
                                          @"imprType":@"impr_type",
                                          @"loadmoreButton":@"loadmore_button",
+                                         @"logPb":@"log_pb",
                                          @"houseType":@"house_type"
                                          }];
         properties = [dict copy];
