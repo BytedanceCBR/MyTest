@@ -121,8 +121,11 @@
     }
 }
 
--(void)showNewHouseDetailPage:(FHNewHouseItemModel *)houseModel
+-(void)showNewHouseDetailPage:(NSIndexPath *)indexPath
 {
+    
+    FHNewHouseItemModel *houseModel = self.houseItemsData.houseList[indexPath.row];
+
         // logpb处理
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
@@ -132,28 +135,28 @@
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?court_id=%@",houseModel.houseId];
 
     TTRouteUserInfo *userInfo = nil;
-//    if (houseModel.logPb) {
-//        NSString *groupId = neighborModel.logPb.groupId;
-//        NSString *imprId = neighborModel.logPb.imprId;
-//        NSString *searchId = neighborModel.logPb.searchId;
-//        if (groupId) {
-//            [strUrl appendFormat:@"&group_id=%@",groupId];
-//        }
-//        if (imprId) {
-//            [strUrl appendFormat:@"&impr_id=%@",imprId];
-//        }
-//        if (searchId) {
-//            [strUrl appendFormat:@"&search_id=%@",searchId];
-//        }
-//        NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
-//        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-//    }
-//    if (self.configModel.originFrom) {
-//        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
-//    }
-//    if (_configModel.originSearchId) {
-//        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
-//    }
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"house_type"] = @"new";
+    param[@"log_pb"] = houseModel.logPb ? : @"be_null";
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"enter_from"] = @"maintab";
+    param[@"element_type"] = @"mix_list";
+    param[@"rank"] = @(indexPath.row);
+    
+    param[@"origin_from"] = @"mix_list";
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+    
+    if (houseModel.logPb.count > 0) {
+        
+        param[@"search_id"] = houseModel.logPb[@"search_id"] ? : @"be_null";
+    }
+    if (houseModel.logPb) {
+        
+        param[@"log_pb"] = houseModel.logPb;
+        
+    }
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
     if (strUrl.length  > 0) {
         
         NSURL *url =[NSURL URLWithString:strUrl];
@@ -161,8 +164,10 @@
     }
 }
 
--(void)showSecondHouseDetailPage:(FHSearchHouseDataItemsModel *)houseModel
+-(void)showSecondHouseDetailPage:(NSIndexPath *)indexPath
 {
+    
+    FHSearchHouseDataItemsModel *houseModel = self.houseItemsData.secondHouseList[indexPath.row];
         // logpb处理
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
@@ -172,28 +177,28 @@
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",houseModel.hid];
     
     TTRouteUserInfo *userInfo = nil;
-    //    if (houseModel.logPb) {
-    //        NSString *groupId = neighborModel.logPb.groupId;
-    //        NSString *imprId = neighborModel.logPb.imprId;
-    //        NSString *searchId = neighborModel.logPb.searchId;
-    //        if (groupId) {
-    //            [strUrl appendFormat:@"&group_id=%@",groupId];
-    //        }
-    //        if (imprId) {
-    //            [strUrl appendFormat:@"&impr_id=%@",imprId];
-    //        }
-    //        if (searchId) {
-    //            [strUrl appendFormat:@"&search_id=%@",searchId];
-    //        }
-    //        NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
-    //        userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-    //    }
-    //    if (self.configModel.originFrom) {
-    //        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
-    //    }
-    //    if (_configModel.originSearchId) {
-    //        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
-    //    }
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"house_type"] = @"old";
+    param[@"log_pb"] = houseModel.logPb ? : @"be_null";
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"enter_from"] = @"maintab";
+    param[@"element_type"] = @"mix_list";
+    param[@"rank"] = @(indexPath.row);
+    
+    if (houseModel.logPb.count > 0) {
+        
+        param[@"search_id"] = houseModel.logPb[@"search_id"] ? : @"be_null";
+    }
+    param[@"origin_from"] = @"mix_list";
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+
+    if (houseModel.logPb) {
+        
+        param[@"log_pb"] = houseModel.logPb;
+
+    }
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
     if (strUrl.length  > 0) {
         
         NSURL *url =[NSURL URLWithString:strUrl];
@@ -347,8 +352,7 @@
 
         if (self.houseItemsData.houseList.count > 0 && indexPath.row < self.houseItemsData.houseList.count) {
             
-            FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
-            [self showNewHouseDetailPage:model];
+            [self showNewHouseDetailPage:indexPath];
 
         }
         
@@ -356,8 +360,7 @@
 
         if (self.houseItemsData.secondHouseList.count > 0 && indexPath.row < self.houseItemsData.secondHouseList.count) {
             
-            FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
-            [self showSecondHouseDetailPage:model];
+            [self showSecondHouseDetailPage:indexPath];
 
         }
     }
