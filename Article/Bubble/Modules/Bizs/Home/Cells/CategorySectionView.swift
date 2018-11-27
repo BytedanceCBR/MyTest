@@ -93,8 +93,7 @@ class CategorySectionView: UIView {
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
-                var houseTypeTest = housetypelistV
-                houseTypeTest.append(3)
+                let houseTypeTest = housetypelistV
                 
                 let resultArray = houseTypeTest.map{
                     matchHouseTypeName(houseTypeV: HouseType(rawValue: Int($0)))
