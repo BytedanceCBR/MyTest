@@ -16,6 +16,7 @@
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
+#import "FHUserTracker.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -25,7 +26,16 @@
 
 #define kFHHomeBannerRowCount 2 //每行banner个数
 
+static NSMutableArray  * _Nullable identifierArr;
+
+@interface FHHomeCellHelper ()
+
+@property(nonatomic , strong) FHConfigDataModel *dataModel;
+
+@end
+
 @implementation FHHomeCellHelper
+
 
 +(instancetype)sharedInstance
 {
@@ -79,7 +89,15 @@
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
     }
+    
+    if (self.dataModel != dataModel) {
+        
+        [identifierArr removeAllObjects];
+    }
+    
     [tableView reloadData];
+    self.dataModel = dataModel;
+
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
@@ -364,7 +382,17 @@
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
     
+    WeakSelf;
     [cell updateWithModel:model];
+    cell.trendView.clickedRightCallback = ^{
+        
+        if (model.mapOpenUrl) {
+            
+            NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+        [wself addHomeCityMarketClickLog];
+    };
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
@@ -400,6 +428,40 @@
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);
+}
+
+#pragma mark 埋点
+
++ (void)handleCellShowLogWithModel:(JSONModel *)model
+{
+    NSString *identifier = [self configIdentifier:model];
+    if (!identifierArr) {
+        
+        identifierArr = @[].mutableCopy;
+    }
+    if (![identifierArr containsObject:identifier]) {
+        
+        [identifierArr addObject:identifier];
+        if ([identifier isEqualToString:NSStringFromClass([FHHomeCityTrendCell class])]) {
+            
+            [self addHomeCityMarketShowLog];
+        }
+    }
+    
+}
++ (void)addHomeCityMarketShowLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"page_type"] = @"maintab";
+    [FHUserTracker writeEvent:@"city_market_show" params:param];
+}
+
+
++(void)addHomeCityMarketClickLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"page_type"] = @"maintab";
+    [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
 
 @end

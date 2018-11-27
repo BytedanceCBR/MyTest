@@ -251,7 +251,7 @@ struct CourtItemEntity: Mappable {
     var hasMore: Bool = false
     var searchId: String?
     var total: Int64?
-
+    var houseListOpenUrl: String?
     init?(map: Map) {
     }
     
@@ -261,6 +261,7 @@ struct CourtItemEntity: Mappable {
         searchId <- map["search_id"]
         hasMore <- map["has_more"]
         total <- map["total"]
+        houseListOpenUrl <- map["house_list_open_url"]
     }
 }
 

@@ -31,7 +31,7 @@ class CategorySectionView: UIView {
     lazy var segmentedControl: FWSegmentedControl = {
         let re = FWSegmentedControl.segmentedWith(
             scType: SCType.text,
-            scWidthStyle: SCWidthStyle.fixed,
+            scWidthStyle: SCWidthStyle.dynamicFixedSuper,
             sectionTitleArray: nil,
             sectionImageArray: nil,
             sectionSelectedImageArray: nil,
@@ -40,7 +40,7 @@ class CategorySectionView: UIView {
         re.sectionTitleArray = sectionTitleArray
         re.selectionIndicatorColor = .clear
         re.scSelectionIndicatorStyle = .fullWidthStripe
-        re.scWidthStyle = .fixed
+        re.scWidthStyle = .dynamicFixedSuper
 //        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#979fac")]
