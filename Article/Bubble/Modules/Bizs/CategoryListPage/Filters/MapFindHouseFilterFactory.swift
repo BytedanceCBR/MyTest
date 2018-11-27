@@ -107,7 +107,6 @@ import RxCocoa
     func resetConditionData() {
         Observable
             .zip(houseTypeState, EnvContext.shared.client.configCacheSubject)
-            .debug()
             .filter { (e) in
                 let (_, config) = e
                 return config != nil
