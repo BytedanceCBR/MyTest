@@ -1021,6 +1021,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                             }
                             index += 1
                         }
+                        // 猜你想搜：第一行展示长度大于第二行-逻辑
+                        tempData = self.sectionHeaderView.guessView.firstLineGreaterThanSecond(firstText: tempGuess.text ?? "", array: tempData)
                         tempData.insert(tempGuess, at: 0)
                     }
                     //
