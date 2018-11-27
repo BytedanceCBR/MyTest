@@ -315,6 +315,15 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D2D377D21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D377E21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D377F21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */; };
+		3D2D378121ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378221ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378321ABE371002AC330 /* SearchRentEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378021ABE371002AC330 /* SearchRentEntity.swift */; };
+		3D2D378521ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
+		3D2D378621ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
+		3D2D378721ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */; };
 		3D2D488321A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488421A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488521A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
@@ -760,12 +769,21 @@
 		610FF9E321A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E421A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
 		610FF9E521A53E25003E8D68 /* feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610FF9E221A53E25003E8D68 /* feed.xcassets */; };
+		611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */; };
+		611339D921A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DA21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
+		611339DB21A7F94700304DF6 /* home.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611339D821A7F94700304DF6 /* home.xcassets */; };
 		6114DDE321A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE421A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE521A432600060EBB8 /* FHExploreHouseItemData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */; };
 		6114DDE821A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDE921A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
+		6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
+		6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
@@ -896,6 +914,9 @@
 		70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */; };
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
+		760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
+		760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
 		764A56CA21A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CB21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
 		764A56CC21A4196D00C0A8B2 /* HomePageRollScreenEntitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */; };
@@ -3594,9 +3615,6 @@
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
-		D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */; };
 		D46DA52D21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52E21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
 		D46DA52F21A43B74009D50C7 /* FHHomeCityTrendView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */; };
@@ -6231,6 +6249,9 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentHouseEntityAPI.swift; sourceTree = "<group>"; };
+		3D2D378021ABE371002AC330 /* SearchRentEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchRentEntity.swift; sourceTree = "<group>"; };
+		3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryRentListViewModel.swift; sourceTree = "<group>"; };
 		3D2D487F21A28E590011A0EC /* FHHouseFilterBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseFilterBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488021A28E590011A0EC /* FHHouseEvnContextBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseEvnContextBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseFilterBridgeImp.m; sourceTree = "<group>"; };
@@ -6706,10 +6727,15 @@
 		610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseFooterView.h; sourceTree = "<group>"; };
 		610FF9DE21A53C70003E8D68 /* FHFeedHouseFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseFooterView.m; sourceTree = "<group>"; };
 		610FF9E221A53E25003E8D68 /* feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = feed.xcassets; sourceTree = "<group>"; };
+		611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendItemView.h; sourceTree = "<group>"; };
+		611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendItemView.m; sourceTree = "<group>"; };
+		611339D821A7F94700304DF6 /* home.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = home.xcassets; sourceTree = "<group>"; };
 		6114DDE121A432600060EBB8 /* FHExploreHouseItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHExploreHouseItemData.h; sourceTree = "<group>"; };
 		6114DDE221A432600060EBB8 /* FHExploreHouseItemData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHExploreHouseItemData.m; sourceTree = "<group>"; };
 		6114DDE621A432960060EBB8 /* FHFeedHouseItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemCell.h; sourceTree = "<group>"; };
 		6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemCell.m; sourceTree = "<group>"; };
+		6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendBubbleView.h; sourceTree = "<group>"; };
+		6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendBubbleView.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
@@ -6941,6 +6967,7 @@
 		70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAdFullScreenVideoViewModel.m; sourceTree = "<group>"; };
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
+		760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChangeHistoryCell.swift; sourceTree = "<group>"; };
 		764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageRollScreenEntitys.swift; sourceTree = "<group>"; };
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
@@ -8194,9 +8221,7 @@
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeFeedHeaderView.m; sourceTree = "<group>"; };
 		D46DA52521A43B74009D50C7 /* FHHomeCityTrendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHomeCityTrendView.m; sourceTree = "<group>"; };
-		D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeFeedHeaderView.h; sourceTree = "<group>"; };
 		D46DA52821A43B74009D50C7 /* FHHomeCityTrendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHomeCityTrendView.h; sourceTree = "<group>"; };
 		D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeHeaderTableViewCell.h; sourceTree = "<group>"; };
 		D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeHeaderTableViewCell.m; sourceTree = "<group>"; };
@@ -10803,6 +10828,7 @@
 				3DF3631E21A29D9E0097FCB6 /* PropertyListCell.swift */,
 				3DF3631F21A29D9E0097FCB6 /* MultitemCollectionCell.swift */,
 				3DF3632021A29D9E0097FCB6 /* GlobalPricingCell.swift */,
+				760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -14957,6 +14983,7 @@
 				B388CA002142652900653188 /* NeighborhoodDetailEntitiesApi.swift */,
 				B388CA012142652900653188 /* SearchAPI.swift */,
 				B388CA022142652900653188 /* HouseDetailAPI.swift */,
+				3D2D377C21ABE367002AC330 /* RentHouseEntityAPI.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -15083,6 +15110,7 @@
 				B388CA8B2142652900653188 /* CategoryListViewModel.swift */,
 				B388CA8C2142652900653188 /* SearchFilterPanel.swift */,
 				B388CA8D2142652900653188 /* CategoryListPageVC.swift */,
+				3D2D378421ABE3A9002AC330 /* CategoryRentListViewModel.swift */,
 			);
 			path = CategoryListPage;
 			sourceTree = "<group>";
@@ -15178,6 +15206,7 @@
 				B388CAAD2142652900653188 /* ErshouHouseDetailEntities.swift */,
 				B388CAAE2142652900653188 /* CourtItemEntity.swift */,
 				764A56C921A4196C00C0A8B2 /* HomePageRollScreenEntitys.swift */,
+				3D2D378021ABE371002AC330 /* SearchRentEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -15789,8 +15818,7 @@
 		D46DA52321A43B74009D50C7 /* HouseHome */ = {
 			isa = PBXGroup;
 			children = (
-				D46DA52721A43B74009D50C7 /* FHHomeFeedHeaderView.h */,
-				D46DA52421A43B74009D50C7 /* FHHomeFeedHeaderView.m */,
+				611339D821A7F94700304DF6 /* home.xcassets */,
 				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
 				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
 				D481F85021A5644A007A6DE7 /* FHHomeEntrancesCell.h */,
@@ -15809,6 +15837,10 @@
 				D481F87E21A56B77007A6DE7 /* FHHomeBaseTableCell.m */,
 				D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */,
 				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
+				611339D321A7F42800304DF6 /* FHHomeTrendItemView.h */,
+				611339D421A7F42800304DF6 /* FHHomeTrendItemView.m */,
+				6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */,
+				6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -17938,9 +17970,9 @@
 				48BDA8181A39559900A52B42 /* ShellScript */,
 				4A2FCD521F175F68006ED130 /* Run Script - Fix Copy Pods Resources Script  */,
 				ACB642401DC0C37500F31B94 /* Embed Watch Content */,
-				5F7FC079373F7D8CA8B338F4 /* [CP] Embed Pods Frameworks */,
 				FEE92B402C46778071F5AA19 /* [CP] Copy Pods Resources */,
 				B388CD10214266ED00653188 /* ShellScript */,
+				A35F4A1A833F680CA04D9D77 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -17966,9 +17998,9 @@
 				B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */,
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				B373CF0C2174587A008F9905 /* ShellScript */,
-				3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */,
 				8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */,
 				3D396439219ACED0002E9010 /* ShellScript */,
+				44F25DC328F9D28F7D081E83 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -17993,10 +18025,10 @@
 				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
-				8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */,
 				5EC0BBC33EF7FD6E06D77572 /* [CP] Copy Pods Resources */,
 				B3BDFA9721460B9700C948FC /* ShellScript */,
 				3D39643A219ACF07002E9010 /* ShellScript */,
+				7F2EB9D9CE8F0E6CDF6BAA8D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -18050,7 +18082,7 @@
 						};
 					};
 					B373C7F92174587A008F9905 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
@@ -18131,6 +18163,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
 				FE5CEE25205679A10011B4D7 /* ThirdParty.xcassets in Resources */,
+				611339D921A7F94700304DF6 /* home.xcassets in Resources */,
 				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
 				3DF363A321A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				D046AB961BB024E50042210A /* recommend_button_press@2x.png in Resources */,
@@ -18215,6 +18248,7 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				B373CEA72174587A008F9905 /* ThirdParty.xcassets in Resources */,
+				611339DB21A7F94700304DF6 /* home.xcassets in Resources */,
 				B373CEA82174587A008F9905 /* TargetLogicSetting.strings in Resources */,
 				3DF363A521A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				B373CEA92174587A008F9905 /* recommend_button_press@2x.png in Resources */,
@@ -18299,6 +18333,7 @@
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FEFA59F2205FB1A8001F50D8 /* ThirdParty.xcassets in Resources */,
+				611339DA21A7F94700304DF6 /* home.xcassets in Resources */,
 				FEFA59F4205FB1A8001F50D8 /* TargetLogicSetting.strings in Resources */,
 				3DF363A421A29D9F0097FCB6 /* ErshouPriceMarkerView.xib in Resources */,
 				FEFA59F5205FB1A8001F50D8 /* recommend_button_press@2x.png in Resources */,
@@ -18353,15 +18388,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-f100-checkManifestLockResult.txt",
 			);
@@ -18375,11 +18406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18392,11 +18419,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -18404,18 +18427,14 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
 		};
-		3FC391E0334CD980DEA32046 /* [CP] Embed Pods Frameworks */ = {
+		44F25DC328F9D28F7D081E83 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18639,21 +18658,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5F7FC079373F7D8CA8B338F4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6B66AE861D11833100F57F45 /* Run Script - delete revision */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -18682,12 +18686,25 @@
 			shellPath = /bin/sh;
 			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h";
 		};
-		8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */ = {
+		7F2EB9D9CE8F0E6CDF6BAA8D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh",
@@ -18778,8 +18795,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
@@ -18872,7 +18887,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8E941A52790DEA3D95533412 /* [CP] Embed Pods Frameworks */ = {
+		A35F4A1A833F680CA04D9D77 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -18884,7 +18899,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A46A8E1EEFD156C1E092FD50 /* [CP] Check Pods Manifest.lock */ = {
@@ -19701,6 +19716,7 @@
 				ABBEA7221F3346F1005DAD27 /* TTSettingMineTabGroup.m in Sources */,
 				6B93FFFB1EC9D8C3004DAC82 /* TTFeedCollectionViewController.m in Sources */,
 				D50439AD2079B89A00DA4953 /* ArticleMomentModel.m in Sources */,
+				3D2D377D21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				A97DBC371F1332E40002B455 /* TTHandleAPNSTask.m in Sources */,
 				2BB928941FD027DD004ADDB0 /* TSVCardTopInfoViewModel.m in Sources */,
 				AB1621E11F500EFA00B4CC0C /* README.md in Sources */,
@@ -19814,6 +19830,7 @@
 				A97DBB971F1332E30002B455 /* TTAppStoreADTask.m in Sources */,
 				D5C5C35C1F31E0AA00031094 /* ResurfaceData.m in Sources */,
 				F87695041F31D0D600D59CA5 /* TTVFeedListVideoTopContainerView.m in Sources */,
+				6116AF6621A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				F87693741F31D0D300D59CA5 /* TTVCommentViewModel.m in Sources */,
 				F87694B01F31D0D600D59CA5 /* TTVLastReadItem.m in Sources */,
 				0C980BC01F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m in Sources */,
@@ -20270,6 +20287,7 @@
 				FE1FC324206922D800664B00 /* ExploreMixedListSuggestionWordsView.m in Sources */,
 				0A3649D620037FA20059ED25 /* TTTabBarCustomMiddleModel.m in Sources */,
 				0AE08A3C1DC98E2A00DBFA53 /* TTSettingMineTabEntry.m in Sources */,
+				3D2D378521ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				438F9ECF1F94B8DF0050F83E /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				A97DC5381F134C020002B455 /* TTPhotoDetailViewModel.m in Sources */,
 				6BD9025E1DB873970072138C /* TTRNWebViewManager.m in Sources */,
@@ -20485,6 +20503,7 @@
 				F2820EFA1F3031BB00354708 /* TTHorizontalHuoShanLoadingCell.m in Sources */,
 				FE5CEE0B20510A9E0011B4D7 /* AKRedPacketViewController.m in Sources */,
 				9CB6D4021EB3218B0093B209 /* TTRNBundleDownloader.m in Sources */,
+				611339D521A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				48EC03EA173BCACA000B55A8 /* SSPublishProgressView.m in Sources */,
 				6BE0210A1B215BE600F9E484 /* ExploreCellViewBase.m in Sources */,
 				8460FAB41D0FD29800BC4778 /* ExploreDetailAppLeftPicADView.m in Sources */,
@@ -20507,6 +20526,7 @@
 				2DB9A5EC1F20B01D005E4A06 /* TTAdSiteWebPreloadManager.m in Sources */,
 				B32FD33021A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				3DF3637C21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
+				3D2D378121ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				472440401F8F43C70037712A /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				A97DC4521F1333630002B455 /* TTProfileViewController+UserLogin.m in Sources */,
 				F87695801F31D0D700D59CA5 /* TTVVideoTabViewController.m in Sources */,
@@ -20542,6 +20562,7 @@
 				4824DE171F569F15001D589A /* TSVShortVideoProfileFetchManager.m in Sources */,
 				B388CCD42142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				6B2845E11DF5402100170DE7 /* RNData.m in Sources */,
+				760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				D5041F4F205802A400BAEE7F /* AKMinePhotoCarouselEntry.m in Sources */,
 				3DF3640021A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */,
@@ -20689,7 +20710,6 @@
 				A97DBB831F1332E20002B455 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC462142652B00653188 /* BizError.swift in Sources */,
 				ABBEA6A91F334103005DAD27 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52A21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				06C518431AAC488400C2B2E3 /* SimplePing.m in Sources */,
 				F87693F41F31D0D400D59CA5 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -21433,6 +21453,7 @@
 				B373C96F2174587A008F9905 /* TTHandleAPNSTask.m in Sources */,
 				B373C9702174587A008F9905 /* TSVCardTopInfoViewModel.m in Sources */,
 				B373C9712174587A008F9905 /* README.md in Sources */,
+				3D2D377F21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				B373C9722174587A008F9905 /* TTAccountLoginAlertViewGuide.m in Sources */,
 				B373C9732174587A008F9905 /* ArticleSearchSuggestionView.m in Sources */,
 				B373C9742174587A008F9905 /* TSVActivityBannerCollectionViewCell.m in Sources */,
@@ -21546,6 +21567,7 @@
 				B373C9DF2174587A008F9905 /* TTVCommentViewModel.m in Sources */,
 				B373C9E02174587A008F9905 /* TTVLastReadItem.m in Sources */,
 				B373C9E12174587A008F9905 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				B373C9E22174587A008F9905 /* ArticleSearchBaseCell.m in Sources */,
 				B373C9E32174587A008F9905 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				B373C9E42174587A008F9905 /* TTFileManager.m in Sources */,
@@ -22002,6 +22024,7 @@
 				B373CB9D2174587A008F9905 /* TTSettingMineTabEntry.m in Sources */,
 				B373CB9E2174587A008F9905 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				B373CB9F2174587A008F9905 /* TTPhotoDetailViewModel.m in Sources */,
+				3D2D378721ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				B373CBA02174587A008F9905 /* TTRNWebViewManager.m in Sources */,
 				B373CBA12174587A008F9905 /* TTAdCanvasVideoBottomView.m in Sources */,
 				B373CBA22174587A008F9905 /* TTRNPanoramaViewManager.m in Sources */,
@@ -22217,6 +22240,7 @@
 				B373CC6A2174587A008F9905 /* AKRedPacketViewController.m in Sources */,
 				B373CC6B2174587A008F9905 /* TTRNBundleDownloader.m in Sources */,
 				B373CC6C2174587A008F9905 /* SSPublishProgressView.m in Sources */,
+				611339D721A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				B373CC6D2174587A008F9905 /* ExploreCellViewBase.m in Sources */,
 				B373CC6E2174587A008F9905 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				B373CC6F2174587A008F9905 /* TTStartupSDKsGroup.m in Sources */,
@@ -22239,6 +22263,7 @@
 				B373CC7E2174587A008F9905 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				B32FD33221A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				B373CC7F2174587A008F9905 /* TTProfileViewController+UserLogin.m in Sources */,
+				3D2D378321ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637E21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				B373CC802174587A008F9905 /* TTVVideoTabViewController.m in Sources */,
 				B373CC812174587A008F9905 /* TTVReportAction.m in Sources */,
@@ -22274,6 +22299,7 @@
 				B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */,
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640221A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
@@ -22420,7 +22446,6 @@
 				B373CD2E2174587A008F9905 /* TTMemoryMonitorTask.m in Sources */,
 				B373CD302174587A008F9905 /* BizError.swift in Sources */,
 				B373CD312174587A008F9905 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52C21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				B373CD322174587A008F9905 /* SimplePing.m in Sources */,
 				B373CD332174587A008F9905 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				B373CD342174587A008F9905 /* FHDemanderTrackerManager.m in Sources */,
@@ -23164,6 +23189,7 @@
 				FEFA5403205FB1A8001F50D8 /* TTHandleAPNSTask.m in Sources */,
 				FEFA5404205FB1A8001F50D8 /* TSVCardTopInfoViewModel.m in Sources */,
 				FEFA5407205FB1A8001F50D8 /* README.md in Sources */,
+				3D2D377E21ABE368002AC330 /* RentHouseEntityAPI.swift in Sources */,
 				FEFA5408205FB1A8001F50D8 /* TTAccountLoginAlertViewGuide.m in Sources */,
 				FEFA5409205FB1A8001F50D8 /* ArticleSearchSuggestionView.m in Sources */,
 				FEFA540A205FB1A8001F50D8 /* TSVActivityBannerCollectionViewCell.m in Sources */,
@@ -23277,6 +23303,7 @@
 				FEFA548B205FB1A8001F50D8 /* TTVCommentViewModel.m in Sources */,
 				FEFA548C205FB1A8001F50D8 /* TTVLastReadItem.m in Sources */,
 				FEFA548D205FB1A8001F50D8 /* TTOpenURLFeedBackLogTask.m in Sources */,
+				6116AF6721A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */,
 				FEFA548E205FB1A8001F50D8 /* ArticleSearchBaseCell.m in Sources */,
 				FEFA548F205FB1A8001F50D8 /* Article+TTVArticleProtocolSupport.m in Sources */,
 				FEFA5490205FB1A8001F50D8 /* TTFileManager.m in Sources */,
@@ -23733,6 +23760,7 @@
 				FEFA5679205FB1A8001F50D8 /* TTSettingMineTabEntry.m in Sources */,
 				FEFA567A205FB1A8001F50D8 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				FEFA567B205FB1A8001F50D8 /* TTPhotoDetailViewModel.m in Sources */,
+				3D2D378621ABE3AA002AC330 /* CategoryRentListViewModel.swift in Sources */,
 				FEFA567D205FB1A8001F50D8 /* TTRNWebViewManager.m in Sources */,
 				FEFA567E205FB1A8001F50D8 /* TTAdCanvasVideoBottomView.m in Sources */,
 				FEFA567F205FB1A8001F50D8 /* TTRNPanoramaViewManager.m in Sources */,
@@ -23948,6 +23976,7 @@
 				FEFA5768205FB1A8001F50D8 /* AKRedPacketViewController.m in Sources */,
 				FEFA5769205FB1A8001F50D8 /* TTRNBundleDownloader.m in Sources */,
 				FEFA576A205FB1A8001F50D8 /* SSPublishProgressView.m in Sources */,
+				611339D621A7F42800304DF6 /* FHHomeTrendItemView.m in Sources */,
 				FEFA576D205FB1A8001F50D8 /* ExploreCellViewBase.m in Sources */,
 				FEFA576E205FB1A8001F50D8 /* ExploreDetailAppLeftPicADView.m in Sources */,
 				FEFA576F205FB1A8001F50D8 /* TTStartupSDKsGroup.m in Sources */,
@@ -23970,6 +23999,7 @@
 				FEFA577B205FB1A8001F50D8 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
 				B32FD33121A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				FEFA577C205FB1A8001F50D8 /* TTProfileViewController+UserLogin.m in Sources */,
+				3D2D378221ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637D21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				FEFA577D205FB1A8001F50D8 /* TTVVideoTabViewController.m in Sources */,
 				FEFA5780205FB1A8001F50D8 /* TTVReportAction.m in Sources */,
@@ -24005,6 +24035,7 @@
 				B388CCD52142652C00653188 /* TGSquareGridPulse.swift in Sources */,
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
+				760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640121A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
@@ -24151,7 +24182,6 @@
 				FEFA5841205FB1A8001F50D8 /* TTMemoryMonitorTask.m in Sources */,
 				B388CC472142652B00653188 /* BizError.swift in Sources */,
 				FEFA5842205FB1A8001F50D8 /* TTPersonalHomeFollowButton.m in Sources */,
-				D46DA52B21A43B74009D50C7 /* FHHomeFeedHeaderView.m in Sources */,
 				FEFA5844205FB1A8001F50D8 /* SimplePing.m in Sources */,
 				FEFA5845205FB1A8001F50D8 /* TTVVideoDetailContainerScrollView.m in Sources */,
 				61A446F12152906C0072B46E /* FHDemanderTrackerManager.m in Sources */,
@@ -24862,7 +24892,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24963,7 +24993,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",

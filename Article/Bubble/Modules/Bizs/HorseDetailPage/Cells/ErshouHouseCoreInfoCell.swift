@@ -250,6 +250,7 @@ func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, disposeBag: Dis
             }).disposed(by: disposeBag)
             
             if info.value == "暂无" || info.value == "0套" {
+                re.valueDataLabel.valueLabel.text = "暂无"
                 re.valueDataLabel.isEnabled = false
                 re.isEnabled = false
             } else {

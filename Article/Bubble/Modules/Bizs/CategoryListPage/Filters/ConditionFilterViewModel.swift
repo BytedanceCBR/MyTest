@@ -89,9 +89,11 @@ class ConditionFilterViewModel {
         []
     }()
 
-    var conditionItemViews: [BaseConditionPanelView] = []
+    var conditionItemViews: [Int: BaseConditionPanelView] = [:]
 
     let disposeBag = DisposeBag()
+
+    var conditionPanelWillDisplay: (() -> Void)?
 
     weak var sortPanelView: SortConditionPanel? {
         didSet {
@@ -141,18 +143,23 @@ class ConditionFilterViewModel {
     }
 
     func setSelectedItem(items: [String: Any]) {
-        conditionItemViews.forEach { $0.setSelectedConditions(conditions: items) }
+        conditionItemViews.forEach { $0.value.setSelectedConditions(conditions: items) }
     }
 
     func pullConditionsFromPanels(udpateFilterOnly: Bool = false) {
-        conditionItemViews.enumerated().forEach { [unowned self] (e) in
-            let (index, panel) = e
-            if let conditionParser = panel.conditionParser {
-                let selectedNode = panel.selectedNodes()
-                self.searchAndConditionFilterVM.addCondition(index: index,
-                                                             udpateFilterOnly: udpateFilterOnly,
-                                                             condition: conditionParser(selectedNode))
-            }
+        conditionItemViews
+            .sorted(by: { (left, right) -> Bool in
+                left.key < right.key
+            })
+            .enumerated()
+            .forEach { [unowned self] (e) in
+                let (index, ele) = e
+                if let conditionParser = ele.value.conditionParser {
+                    let selectedNode = ele.value.selectedNodes()
+                    self.searchAndConditionFilterVM.addCondition(index: index,
+                                                                 udpateFilterOnly: udpateFilterOnly,
+                                                                 condition: conditionParser(selectedNode))
+                }
         }
     }
 
@@ -230,7 +237,7 @@ class ConditionFilterViewModel {
                         parseAreaConditionItemLabel(label: categoryName, nodePath: nodes)
                 })(nodes)
             }
-            conditionItemViews.append(panel)
+            conditionItemViews[index] = panel
 
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
@@ -266,7 +273,7 @@ class ConditionFilterViewModel {
                         parseAreaConditionItemLabel(label: categoryName, nodePath: nodes)
                 })(nodes)
             }
-            conditionItemViews.append(panel)
+            conditionItemViews[index] = panel
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
                     self?.onOpenConditionPanel(panel: panel, index: index)
@@ -301,7 +308,7 @@ class ConditionFilterViewModel {
                         parseHorseTypeConditionItemLabel(label: categoryName, nodePath: nodes)
                 })(nodes)
             }
-            conditionItemViews.append(panel)
+            conditionItemViews[index] = panel
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
                     self?.onOpenConditionPanel(panel: panel, index: index)
@@ -336,7 +343,7 @@ class ConditionFilterViewModel {
                         parseMoreConditionItemLabel(label: categoryName, nodePath: nodes)
                 })(nodes)
             }
-            conditionItemViews.append(panel)
+            conditionItemViews[index] = panel
             return { [weak self, weak panel] (index) in
                 if let panel = panel {
                     self?.onOpenConditionPanel(panel: panel, index: index)
@@ -347,12 +354,14 @@ class ConditionFilterViewModel {
 
     func onOpenConditionPanel(panel: BaseConditionPanelView, index: Int) {
         self.resetAllSearchFilterPanelState()
-        let currentDisplayItem = self.conditionItemViews.first(where: { $0.isDisplay })
-        if let currentDisplayItem = currentDisplayItem, currentDisplayItem != panel {
+        let currentDisplayItem = self.conditionItemViews.first(where: { $0.value.isDisplay })?.value
+        if let currentDisplayItem = currentDisplayItem,
+            currentDisplayItem != panel {
             currentDisplayItem.onDismiss()
             currentDisplayItem.isHidden = true
         }
         if !panel.isDisplay {
+            conditionPanelWillDisplay?()
             self.conditionPanelView?.isHidden = false
             panel.isHidden = false
             panel.onDisplay()
@@ -404,7 +413,7 @@ class ConditionFilterViewModel {
     }
 
     func closeConditionFilterPanel(index: Int) {
-        if let view  = self.conditionItemViews.first(where: { $0.isDisplay }) {
+        if let view  = self.conditionItemViews.first(where: { $0.value.isDisplay })?.value {
             view.onDismiss()
             view.isHidden = true
         }

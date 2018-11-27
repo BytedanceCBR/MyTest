@@ -222,7 +222,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 return false
             }
         } as? [String: Any]
-        
+        self.queryParams?["search_id"] = nil
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -264,15 +264,15 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         }
 
-        self.tableView.addPullDown(
-            withInitText: "下拉刷新数据",
-            pullText: "松开即可刷新",
-            loadingText: "正在努力加载",
-            noMoreText: "没有更多数据",
-            timeText: "",
-            lastTimeKey: "") { [weak self] in
-                self?.pullAndRefresh()
-        }
+//        self.tableView.addPullDown(
+//            withInitText: "下拉刷新数据",
+//            pullText: "松开即可刷新",
+//            loadingText: "正在努力加载",
+//            noMoreText: "没有更多数据",
+//            timeText: "",
+//            lastTimeKey: "") { [weak self] in
+//                self?.pullAndRefresh()
+//        }
 
         self.errorVM = NHErrorViewModel(
             errorMask:infoMaskView,
@@ -579,6 +579,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
         return
 
+        self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
+        
         //点击切换埋点
         let catName = pageTypeString()
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
@@ -794,11 +796,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.stayTimeParams = self.tracerParams <|> traceStayTime()
     }
 
-    fileprivate func pullAndRefresh() {
-        let filterCondition = searchAndConditionFilterVM.queryCondition.value
-        let query = getQueryCondition(filterCondition: filterCondition)
-        requestData(query: query)
-    }
+//    fileprivate func pullAndRefresh() {
+//        let filterCondition = searchAndConditionFilterVM.queryCondition.value
+//        let query = getQueryCondition(filterCondition: filterCondition)
+//        requestData(query: query)
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -914,6 +916,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     .enumerated()
                     .forEach({ [unowned self] (e) in
                         let (offset, (item, nodes)) = e
+//                        self.conditionFilterViewModel?.conditionItemViews.removeAll()
                         item.onClick = self.conditionFilterViewModel?.initSearchConditionItemPanel(
                             index: offset,
                             reload: reload,
@@ -935,7 +938,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     /// 调整逻辑，每次请求后，从服务器获取listUrl填充Filter过滤器
     func resetFilterConditionByRequestData(openUrl: String) {
-        let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
+        guard let url = URL(string: openUrl) else {
+            return
+        }
+        let routeObj = TTRoute.shared()?.routeParamObj(with:url)
         self.allParams = routeObj?.allParams as? [String: Any]
         if let queryParams = self.allParams {
             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)

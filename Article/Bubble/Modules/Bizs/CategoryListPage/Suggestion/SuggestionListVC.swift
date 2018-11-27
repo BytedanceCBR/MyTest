@@ -57,7 +57,7 @@ fileprivate class SuggectionTableView : UITableView {
 }
 
 
-class SuggestionListVC: BaseViewController , UITextFieldDelegate {
+class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitializeProtocol {
 
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
@@ -69,14 +69,11 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
     lazy var guessYouWantView = GuessYouWantView()
 
     lazy var tableView: UITableView = {
-        let result = SuggectionTableView()
-        result.handleTouch = { [unowned self] in
-            self.view.endEditing(true)
+        let result = SuggectionTableView(frame: CGRect.zero, style: .grouped)
+        result.handleTouch = { [weak self] in
+            self?.view.endEditing(true)
         }
-        
-        result.estimatedRowHeight = 0
-        result.estimatedSectionFooterHeight = 0
-        result.estimatedSectionHeaderHeight = 0
+        result.backgroundColor = UIColor.white
 
         result.separatorStyle = .none
         if CommonUIStyle.Screen.isIphoneX {
@@ -142,8 +139,81 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    required init(routeParamObj paramObj: TTRouteParamObj?) {
+        
+        let fromHomeType : EnterSuggestionType = (paramObj?.allParams["from_home"] as? EnterSuggestionType) ?? EnterSuggestionType.enterSuggestionTypeHome
+        
+        if let tracerParams = paramObj?.allParams["tracer"] as? [String: Any] {
+            for tkey in tracerParams.keys {
+                self.tracerParams = self.tracerParams <|> toTracerParams( tracerParams[tkey] ?? "", key:tkey)
+            }
+        }
+        
+        self.isFromHome = (fromHomeType == .enterSuggestionTypeHome) ? true : false
+        self.fromSource = fromHomeType
+        self.houseType.accept(defaultHoustType(config: EnvContext.shared.client.configCacheSubject.value))
+        
+        let ht = paramObj?.allParams["house_type"]
+        
+        if let houseType = ht as? HouseType {
+            self.houseType.accept(houseType)
+        }else if let htype = ht as? Int{
+            
+            var eHouseType : HouseType? = nil
+            switch htype {
+            case HouseType.newHouse.rawValue:
+                eHouseType = HouseType.newHouse
+            case HouseType.secondHandHouse.rawValue:
+                eHouseType = HouseType.secondHandHouse
+            case HouseType.rentHouse.rawValue:
+                eHouseType = HouseType.rentHouse
+            case HouseType.neighborhood.rawValue:
+                eHouseType = HouseType.neighborhood
+            default:
+                eHouseType = nil
+            }
+
+            if let etype = eHouseType {
+                self.houseType.accept(etype)
+            }
+        }
+        
+        
+        tableViewModel = SuggestionListTableViewModel(
+            houseType: houseType,
+            isFromHome: fromHomeType)
+        
+        super.init(nibName:nil ,bundle : nil)
+        
+        self.navBar.searchable = true
+        
+        if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
+            if let _ = sugDelegate.suggestionSelected  {
+                self.onSuggestionSelected = { [weak sugDelegate,weak self](routeObj) in
+                    sugDelegate?.suggestionSelected?(routeObj)
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+            self.filterConditionResetter = { [weak sugDelegate] in
+                sugDelegate?.resetCondition()
+            }
+            
+            self.navBar.backBtn.rx.tap
+                .subscribe(onNext: { [weak self , weak sugDelegate] void in
+                    sugDelegate?.backAction(self)
+                })
+                .disposed(by: self.disposeBag)
+        }        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         tableViewModel.tracerParams = self.tracerParams
         self.panBeginAction = { [unowned self] in
             self.navBar.searchInput.resignFirstResponder()
@@ -495,14 +565,16 @@ fileprivate func convertDataToSuggestionItem(data: SearchHistoryResponse.Item) -
 
 func categoryEnterNameByHouseType(houseType: HouseType) -> String {
     switch houseType {
-        case .neighborhood:
-            return "neighborhood_list"
-        case .secondHandHouse:
-            return "old_list"
-        case .newHouse:
-            return "new_list"
-        default:
-            return "be_null"
+    case .neighborhood:
+        return "neighborhood_list"
+    case .secondHandHouse:
+        return "old_list"
+    case .newHouse:
+        return "new_list"
+    case .rentHouse:
+        return "rent_list"
+    default:
+        return "be_null"
     }
 }
 

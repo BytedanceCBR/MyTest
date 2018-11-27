@@ -14,9 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHomeConfigManager : NSObject
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
+@property(nonatomic , strong) FHConfigDataModel *currentDataModel;
+@property(nonatomic , strong) NSDictionary *currentDictionary;
 
 +(instancetype)sharedInstance;
-
+//从原有数据源接收数据
 - (void)acceptConfigDictionary:(NSDictionary *)configDict;
 
 - (void)currentNeedRequestConfig:(NSString *)cityId cityGeoCode:(NSString *)cityCode lat:(double)latValue lon:(double)lonValue cityName:(NSString *)cityName;

@@ -9,8 +9,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 @objc class MapFindHouseFilterFactory: NSObject {
-    @objc func createFilterPanelViewModel(houseType: HouseType) -> HouseFilterViewModel {
-        return HouseFilterViewModel(houseType: houseType)
+    @objc func createFilterPanelViewModel(houseType: HouseType,  allCondition: Bool) -> HouseFilterViewModel {
+        return HouseFilterViewModel(houseType: houseType, allCondition: allCondition)
     }
 }
 
@@ -56,8 +56,11 @@ import RxCocoa
         return re
     }()
 
-    init(houseType: HouseType) {
+    private var allCondition = false
+
+    init(houseType: HouseType, allCondition: Bool) {
         self.houseType = houseType
+        self.allCondition = allCondition
         super.init()
         self.searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
         self.conditionFilterViewModel = ConditionFilterViewModel(
@@ -66,6 +69,9 @@ import RxCocoa
             searchAndConditionFilterVM: searchAndConditionFilterVM!)
         self.resetConditionData()
         self.bindConditionChangeDelegate()
+        self.conditionFilterViewModel?.conditionPanelWillDisplay = { [weak self] in
+            self?.delegate?.onConditionWillPanelDisplay()
+        }
     }
 
     func bindConditionChangeDelegate() {
@@ -76,44 +82,45 @@ import RxCocoa
 //                return "house_type=\(self.houseTypeState.value.rawValue)" + result// + self.queryString
             }
             .debounce(0.1, scheduler: MainScheduler.instance)
-            .debug("bindConditionChangeDelegate")
             .subscribe(onNext: { [unowned self] query in
                 self.delegate?.onConditionChanged( query)
             })
             .disposed(by: disposeBag)
     }
 
+    func configByHouseType(houseType: HouseType, configs: SearchConfigResponseData?) -> [SearchConfigFilterItem]? {
+        if let configs = configs {
+            switch houseType {
+            case HouseType.newHouse:
+                return configs.courtFilter
+            case HouseType.secondHandHouse:
+                return configs.filter
+            case HouseType.neighborhood:
+                return configs.neighborhoodFilter
+            default:
+                return configs.filter
+            }
+        } else {
+            return nil
+        }
+    }
+
     func resetConditionData() {
         Observable
             .zip(houseTypeState, EnvContext.shared.client.configCacheSubject)
-            //            .debug("resetConditionData")
             .filter { (e) in
                 let (_, config) = e
-                //                assert(config != nil)
                 return config != nil
             }
             .map { [unowned self] (e) -> ( [SearchConfigFilterItem]?) in
                 let (type, config) = e
                 self.searchAndConditionFilterVM?.pageType = houseTypeString(type)
-
-                switch type {
-                case HouseType.newHouse:
-                    return config?.courtFilter
-                case HouseType.secondHandHouse:
-                    return config?.filter
-                case HouseType.neighborhood:
-                    return config?.neighborhoodFilter
-                default:
-                    return config?.filter
-                }
-
+                return self.configByHouseType(houseType: type, configs: config)
             }
             .map { items in //
-                let filteredItems = items?.filter { $0.text != "区域" }
+                let filteredItems = items?.filter { $0.text != "区域" || self.allCondition}
 
                 let result: [SearchConditionItem] = filteredItems?
-                    // TODO: 暂时使用text过滤区域
-                    .filter { $0.text != "区域" }
                     .map(transferSearchConfigFilterItemTo) ?? []
                 let panelData: [[Node]] = filteredItems?.map {
                     if let options = $0.options {
@@ -174,6 +181,11 @@ import RxCocoa
     @objc
     func getNoneFilterQuery( params: [String: Any]?) -> String {
         return getNoneFilterConditionString(params: params, conditionsKeys: self.allKeys)
+    }
+    
+    @objc
+    func cleanSortCondition() {
+        self.conditionFilterViewModel?.cleanSortCondition()
     }
 
     func allKeysFromNodes(nodes: [Node]) -> Set<String> {

@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 /**
  * 根据配置代理
  */
-+ (void)registerDelegate:(UITableView *)tableView andDelegate:(FHHomeTableViewDelegate *)delegate;
++ (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate;
 
 
 /**
@@ -55,6 +55,12 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  * cell点击route跳转
  */
 - (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param;
+
+
+/**
+ * 刷新数据
+ */
+- (void)refreshFHHomeTableUI:(UITableView *)tableView;
 
 @end 
 

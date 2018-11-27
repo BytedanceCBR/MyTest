@@ -667,9 +667,15 @@ TTFeedCollectionCellDelegate>
             
             // add by zjing 默认展示找房频道
             startCategory = [SSCommonLogic feedStartCategory];
+            
+//            if (!startCategory) {
+//                startCategory = kNIHFindHouseCategoryID;
+//            }
             if (!startCategory) {
-                startCategory = kNIHFindHouseCategoryID;
+                startCategory = kNIHFeedHouseMixedCategoryID;
             }
+            
+            
             
             if (startCategory) {
                 for (int i = 0; i < _pageCategories.count; ++i) {

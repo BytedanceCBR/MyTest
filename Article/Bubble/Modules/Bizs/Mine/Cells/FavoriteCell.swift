@@ -214,7 +214,7 @@ class SpringBroadCell: BaseUITableViewCell {
         headView.snp.makeConstraints { maker in
             maker.left.right.bottom.top.equalToSuperview()
             maker.width.equalTo(UIScreen.main.bounds.width)
-            maker.height.equalTo(100) //为了默认图cell的位置偏移
+            maker.height.equalTo(48 + 52 * CommonUIStyle.Screen.widthScale) //为了默认图cell的位置偏移
         }
     }
 
@@ -272,7 +272,7 @@ class SpringBroadCell: BaseUITableViewCell {
                         maker.top.equalToSuperview()//4个一行，计算一共多少行数，纵向排版
                         maker.left.equalTo(Int(index%4) * Int(UIScreen.main.bounds.width/4 + 1)) //计算列数，横向排版
                         maker.width.equalTo(UIScreen.main.bounds.width/4)
-                        maker.height.equalTo(100)
+                        maker.height.equalTo(48 + 52 *  CommonUIStyle.Screen.widthScale)
                         if items.count < 5
                         {
                             maker.bottom.equalToSuperview()
@@ -284,7 +284,7 @@ class SpringBroadCell: BaseUITableViewCell {
                         maker.top.equalToSuperview().offset(100)
                         maker.left.equalTo(Int(index%4) * Int(UIScreen.main.bounds.width/4)) //计算列数，横向排版
                         maker.width.equalTo(UIScreen.main.bounds.width/4)
-                        maker.height.equalTo(100)
+                        maker.height.equalTo(48 + 52 *  CommonUIStyle.Screen.widthScale)
                         maker.bottom.equalToSuperview()
                     }
                 }
@@ -292,7 +292,7 @@ class SpringBroadCell: BaseUITableViewCell {
             }
             
             headView.snp.updateConstraints{ maker in
-                maker.height.equalTo(100 * (items.count > 4 ? 2 : 1) ) //按照行数撑开高度
+                maker.height.equalTo(48 + 52 * (items.count > 4 ? 2 : 1) *  CommonUIStyle.Screen.widthScale) //按照行数撑开高度
             }
             
             setNeedsLayout()
@@ -330,7 +330,7 @@ fileprivate class SpringBroadItemView: UIView {
 
         addSubview(IconView)
         IconView.snp.makeConstraints { maker in
-            maker.width.height.equalTo(52)
+            maker.width.height.equalTo(52 *  CommonUIStyle.Screen.widthScale)
             maker.centerX.equalToSuperview()
             maker.top.equalTo(20)
         }

@@ -371,7 +371,7 @@ class CategorySearchNavBar: UIView {
 
         searchAreaPanel.addSubview(verticalLineView)
         verticalLineView.snp.makeConstraints { maker in
-            maker.width.equalTo(2)
+            maker.width.equalTo(1)
             maker.height.equalTo(15)
             maker.centerY.equalToSuperview()
             maker.left.equalTo(triangleImage.snp.right).offset(10)

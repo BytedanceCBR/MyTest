@@ -52,4 +52,19 @@
     return [[[EnvContext shared] client] currentLocation];
 }
 
+-(NSDictionary *_Nullable)appConfig
+{
+    return [[[EnvContext shared]client] appConfig];
+}
+
+-(NSDictionary *)appConfigRentOpData
+{
+    return [[[EnvContext shared]client] rentOpData];
+}
+
+-(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view
+{
+    return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
+}
+
 @end

@@ -90,7 +90,7 @@ extension Notification.Name {
                 }).disposed(by: disposeBag)
         
         
-        generalBizconfig.generalCacheSubject.skip(1).throttle(0.5, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+        generalBizconfig.generalCacheSubject.skip(1).throttle(1, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let dictValue = data?.toJSON()
             {
                 FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
@@ -266,6 +266,17 @@ extension Notification.Name {
             return location.coordinate
         }
         return CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    }
+    
+    @objc func appConfig() -> [String: Any]? {
+     
+        return generalBizconfig.appConfig()
+    }
+    
+    @objc func rentOpData() -> [String : Any]? {
+        
+        return generalBizconfig.rentOpData()
+        
     }
     
     deinit {

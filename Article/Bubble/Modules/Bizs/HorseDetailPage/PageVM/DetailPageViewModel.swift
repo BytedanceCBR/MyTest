@@ -668,6 +668,8 @@ func pageTypeString(_ houseType: HouseType) -> String {
         return "neighborhood_detail"
     case .secondHandHouse:
         return "old_detail"
+    case .rentHouse:
+        return "rent_detail"
     default:
         return "be_null"
     }
@@ -681,6 +683,8 @@ func enterFromByHouseType(houseType: HouseType) -> String {
         return "old_detail"
     case .neighborhood:
         return "neighborhood_detail"
+    case .rentHouse:
+        return "rent_detail"
     default:
         return "be_null"
     }
@@ -694,6 +698,8 @@ func gethouseTypeSendPhoneFromStr(houseType: HouseType) -> String {
         return "app_oldhouse"
     case .neighborhood:
         return "app_neighbourhood"
+    case .rentHouse:
+        return "app_rent"
     default:
         return "be_null"
     }

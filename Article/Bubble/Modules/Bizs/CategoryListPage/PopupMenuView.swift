@@ -52,7 +52,7 @@ class PopupMenuView: UIControl {
         popMenuContainer.snp.makeConstraints { maker in
             maker.top.equalTo(frame.maxY)
             maker.left.equalTo(frame.minX)
-            maker.width.equalTo(68)
+            maker.width.equalTo(80)
         }
 
         let itemViews = menus.map { item -> PopupMenuItemView in

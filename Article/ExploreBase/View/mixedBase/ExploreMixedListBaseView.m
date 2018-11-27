@@ -164,8 +164,6 @@
 #import "TTVVideoDetailViewController.h"
 #import "FHHomeConfigManager.h"
 
-#import "FHHomeFeedHeaderView.h"
-
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
 #define kMaxLastReadLookupInterval      (24 * 60 * 60 * 1000)  //毫秒
@@ -524,15 +522,19 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-       
         [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
-             if ([_categoryID isEqualToString:@"f_house_news"]) {
-                [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
-             }
+            [self reloadFHHomeHeaderCell];
         }];
     }
     return self;
+}
+
+- (void)reloadFHHomeHeaderCell
+{
+    if ([_categoryID isEqualToString:@"f_house_news"]) {
+        [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)setupSilentFetchTimer
@@ -1520,22 +1522,24 @@ TTRefreshViewDelegate
                 
                 [TTTracker eventV3:@"client_show" params:dictTraceParams];
                 
-                return;
+            }else {
+                
+                [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                
+                [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                
+                [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                
+                [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                
+                [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                
+                [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                
+                [_cellIdDict setObject:@"" forKey:obj.itemID];
+                
             }
             
-            [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
-            
-            [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
-
-            [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
-
-            [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
-
-            [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
-            
-            [TTTracker eventV3:@"client_show" params:dictTraceParams];
-            
-            [_cellIdDict setObject:@"" forKey:obj.itemID];
         }else
         {
             NSLog(@"xx index.row = %ld",indexPath.row);
@@ -1753,24 +1757,6 @@ TTRefreshViewDelegate
         }
     }
 }
-
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    if ([_categoryID isEqualToString:@"f_house_news"]) {
-//        FHHomeFeedHeaderView *viewHeader = [[FHHomeFeedHeaderView alloc] init];
-//        viewHeader.backgroundColor = [UIColor redColor];
-//        return viewHeader;
-//    }
-//    return nil;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    if ([_categoryID isEqualToString:@"f_house_news"]) {
-//        return 300;
-//    }
-//    return 0.1;
-//}
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {

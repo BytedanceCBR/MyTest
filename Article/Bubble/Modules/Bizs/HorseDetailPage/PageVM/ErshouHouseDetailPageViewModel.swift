@@ -343,7 +343,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
-//                <- parseFMarginLineNode(0.5, bgColor: hexStringToUIColor(hex: kFHSilver2Color), left: 20, right: -20)
+                <- parsePriceChangeHistoryNode(data)
                 <- parsePropertyListNode(data)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
@@ -874,6 +874,7 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
         } else {
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
+        theCell.updateOriginPriceLabelConstraints(originPriceText: data.originPrice)
     }
 }
 
@@ -1119,7 +1120,7 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
 
 
         theCell.majorImageView.bd_setImage(with: URL(string: data.images.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-
+        theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
 }
 

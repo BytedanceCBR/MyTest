@@ -50,10 +50,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
-    CGFloat height = [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
+    [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
         [FHHomeCellHelper configureCell:cell withJsonModel:model];
     }];
-    NSLog(@"cell height = %f",height);
     return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
 }
 
@@ -61,4 +60,8 @@
     
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
 @end

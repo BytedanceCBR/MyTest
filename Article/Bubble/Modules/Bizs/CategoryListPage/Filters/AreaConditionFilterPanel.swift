@@ -682,12 +682,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
             if selectedIndexPaths.count == 0 && indexPath.row == 0 {
                 setCellSelected(true, cell: theCell)
             }
-            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
-                theCell.redDot.isHidden = false
-            } else {
-                theCell.redDot.isHidden = true
-            }
-
+//            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
+//                theCell.redDot.isHidden = false
+//            } else {
+//                theCell.redDot.isHidden = true
+//            }
+            theCell.redDot.isHidden = true
 
             if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
                 theCell.redDot.isHidden = false

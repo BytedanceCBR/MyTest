@@ -48,11 +48,9 @@ class ChatCell: BaseUITableViewCell {
         return re
     }()
 
-    lazy var unreadRedDotView: UIView = {
-        let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: "#ff5b4c")
-        re.layer.cornerRadius = 4
-        re.isHidden = true
+    lazy var unreadRedDotView: TTBadgeNumberView = {
+        let re = TTBadgeNumberView()
+        re.badgeViewStyle = UInt(TTBadgeNumberViewStyle.defaultWithBorder.rawValue)
         return re
     }()
     
@@ -94,7 +92,6 @@ class ChatCell: BaseUITableViewCell {
         
         contentView.addSubview(unreadRedDotView)
         unreadRedDotView.snp.makeConstraints { maker in
-            maker.width.height.equalTo(8)
             maker.right.top.equalTo(iconImageView)
         }
 
@@ -102,7 +99,7 @@ class ChatCell: BaseUITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        unreadRedDotView.isHidden = true
+        unreadRedDotView.badgeNumber = TTBadgeNumberHidden
     }
 
     required init?(coder aDecoder: NSCoder) {
