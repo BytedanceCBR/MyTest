@@ -576,9 +576,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
     
     func gotoMapSearch(){
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
-        return
-
+//        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
+        
         self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
         
         //点击切换埋点

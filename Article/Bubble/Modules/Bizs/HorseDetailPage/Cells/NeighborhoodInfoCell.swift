@@ -274,14 +274,15 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                 
                 let clickParams = theParams <|>
                     toTracerParams("map", key: "click_type")
-                openMapPage(
-                    navVC: self.navVC,
-                    lat: lat,
-                    lng: lng,
-                    title: self.name ?? "",
-                    clickMapParams: clickParams,
-                    traceParams: theParams,
-                    disposeBag: self.disposeBag)(TracerParams.momoid())
+
+                let userInfo = TTRouteUserInfo(info: ["tracer": theParams.paramsGetter([:])])
+                //fschema://fh_house_detail_map
+                recordEvent(key: "click_map", params: clickParams)
+                let jumpUrl = "fschema://fh_house_detail_map?lat=\(lat)&lng=\(lng)&title=\(self.name ?? "")"
+                if let thrUrl = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    TTRoute.shared()?.openURL(byViewController: URL(string: thrUrl),
+                                              userInfo: userInfo)
+                }
             }
         }
         
@@ -324,6 +325,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+
+    func schoolLabelIsHidden(isHidden: Bool) {
+        schoolKey.isHidden = isHidden
+        schoolLabel.isHidden = isHidden
+        if isHidden {
+            mapImageView.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.top.equalTo(nameKey.snp.bottom).offset(20)
+            }
+        } else {
+            mapImageView.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.top.equalTo(schoolKey.snp.bottom).offset(20)
+            }
+        }
     }
 }
 

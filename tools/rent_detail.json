@@ -1,55 +1,63 @@
 {
 	"data": {
-		"id": "6627717945684393997",
+		"id": "6628064041916973064",
 		"house_image": [{
 			"name": "0",
 			"type": 0,
-			"url": "https://p3.pstatp.com/large/f100-image/R8EQy1eFla5PaW"
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4Ysj3Ur8jUQ"
 		}, {
 			"name": "0",
 			"type": 0,
-			"url": "https://p3.pstatp.com/large/f100-image/R8EQyo8DToKNav"
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4ZhJ2RMNxsI"
 		}, {
 			"name": "0",
 			"type": 0,
-			"url": "https://p3.pstatp.com/large/f100-image/R8EQzZzFBlPuon"
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4ZBy5ikWSau"
 		}, {
 			"name": "0",
 			"type": 0,
-			"url": "https://p3.pstatp.com/large/f100-image/R8ER0GwG1UwP03"
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4ZNB5NElwSh"
+		}, {
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4Z3R2J5PWpJ"
+		}, {
+			"name": "0",
+			"type": 0,
+			"url": "https://p3.pstatp.com/large/f100-image/R8E4ZXzH8ahQ9T"
 		}],
-		"title": "这是一套超靠谱房源！精装两居家具装修都好 后现代城近苹果社区",
-		"subtitle": "精装修",
-		"pricing": 900000,
+		"title": "后现代城 精装开间 周边配套齐全 临近大郊亭地铁 随时看房",
+		"subtitle": "新上·精装修·配套齐全",
+		"pricing": "6300元/月",
 		"core_info": [{
-			"attr": "押一付三",
-			"value": "9000元/月"
+			"attr": "押一付一",
+			"value": "6300元/月"
 		}, {
 			"attr": "房型",
-			"value": "2室1厅"
+			"value": "1室1厅"
 		}, {
 			"attr": "面积",
-			"value": "9000平"
+			"value": "56.00平"
 		}],
 		"base_info": [{
 			"attr": "入住",
-			"value": "2018-11-23",
+			"value": "2018-11-26",
 			"is_single": false
 		}, {
 			"attr": "发布",
-			"value": "2018-11-23",
+			"value": "2018-11-26",
 			"is_single": false
 		}, {
 			"attr": "朝向",
-			"value": "南北",
+			"value": "东南",
 			"is_single": false
 		}, {
 			"attr": "楼层",
-			"value": "/",
+			"value": "低楼层",
 			"is_single": false
 		}, {
 			"attr": "装修",
-			"value": "0000.00.00",
+			"value": "精装修",
 			"is_single": false
 		}, {
 			"attr": "电梯",
@@ -57,8 +65,18 @@
 			"is_single": false
 		}],
 		"facilities": [{
-			"id": "3",
-			"name": "沙发",
+			"id": "9",
+			"name": "衣柜",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "1",
+			"name": "宽带",
+			"icon_url": "https://sf3-ttcdn-tos.pstatp.com/img/mosaic-legacy/d280000bec543fca58c7~cs_560x400.jpg",
+			"enabled": true
+		}, {
+			"id": "4",
+			"name": "洗衣机",
 			"icon_url": "",
 			"enabled": true
 		}, {
@@ -67,33 +85,13 @@
 			"icon_url": "",
 			"enabled": true
 		}, {
-			"id": "7",
-			"name": "空调",
-			"icon_url": "",
-			"enabled": true
-		}, {
-			"id": "9",
-			"name": "衣柜",
-			"icon_url": "",
-			"enabled": true
-		}, {
-			"id": "1",
-			"name": "宽带",
-			"icon_url": "",
-			"enabled": true
-		}, {
-			"id": "2",
-			"name": "电视",
-			"icon_url": "",
-			"enabled": true
-		}, {
-			"id": "4",
-			"name": "洗衣机",
-			"icon_url": "",
-			"enabled": true
-		}, {
 			"id": "6",
 			"name": "冰箱",
+			"icon_url": "",
+			"enabled": true
+		}, {
+			"id": "7",
+			"name": "空调",
 			"icon_url": "",
 			"enabled": true
 		}, {
@@ -106,16 +104,26 @@
 			"name": "热水器",
 			"icon_url": "",
 			"enabled": true
+		}, {
+			"id": "2",
+			"name": "电视",
+			"icon_url": "http://img.58cdn.com.cn/logo/m58/40_40/logo.png",
+			"enabled": true
+		}, {
+			"id": "3",
+			"name": "沙发",
+			"icon_url": "",
+			"enabled": true
 		}],
 		"house_overview": [{
 			"title": "",
-			"content": "房屋优势：邻地铁,配套齐全,精装修\n房源亮点！可押一付一！1.[经典户型]：宽敞明亮业主自住家具保养好超有格调空间十足2.[周边配套]：周边配套大成国际购物中心，合生汇，四大银行，全室便利店，新菜篮子，美食一条街等等3.[小区环境]：24晓时保安安全又放心！我是置业顾.问蔡佳银，从事房地产经纪行业5年，主要服务【大望路双井九龙山珠江帝景东方雅苑风度柏林金港国际易构空间后现代城时代国际首城国际乐成豪丽苹果社区禧福汇金茂府金都杭城沿海赛洛城富力城等小区"
+			"content": "房屋优势：邻地铁,配套齐全,精装修\n1号线大望路站，7号线大郊亭站，公交直达小区门口581路31路439路专113路专87路等多线路，方便您的出行。"
 		}],
 		"disclaimer": {
 			"text": "免责声明：页面所示房源图片及其他信息仅供参考，租房时请以房本信息为准。"
 		},
 		"log_pb": {
-			"impr_id": "2018112518214301000811803031813"
+			"impr_id": "2018112712430401000811803021497"
 		},
 		"neighborhood_info": {
 			"id": "6581413717366276360",
@@ -132,12 +140,51 @@
 			"district_name": "朝阳",
 			"area_name": "大望路",
 			"status": 0,
+			"evaluation_info": {
+				"total_score": 37,
+				"sub_scores": [{
+					"score_name": "交通",
+					"score_value": 36,
+					"score_level": 1,
+					"content": "1、小区地理位置优越，周围交通便捷，居民出行十分方便，距离小区大约750米的大郊亭地铁站就可以乘坐地铁7号线直达九龙山、欢乐谷景区等地。"
+				}, {
+					"score_name": "硬件",
+					"score_value": 45,
+					"score_level": 1,
+					"content": "小区绿化率较高，达到33%，环境优美，内部有面积较大的绿化带，里面郁郁葱葱的大树和灌木错落有致，形成了一个小型氧吧，可以改善空气质量，有利于老人和小孩的身心健康，是居民夏天散步乘凉的好去处。小区内时常可以看见老人们三五成群的聚在一起进行棋牌活动，在大树的环绕下形成一副怡然自得的画面。"
+				}, {
+					"score_name": "生活",
+					"score_value": 38,
+					"score_level": 1,
+					"content": "小区周边生活服务配套较为完整，银行、菜场都有分布，可以满足居民的日常生活需要。"
+				}, {
+					"score_name": "物业",
+					"score_value": 31,
+					"score_level": 1,
+					"content": "小区内日常配备有多个保安人员，全天24小时都有保安进行治安管理，每天按时进行巡逻。小区与110联网，遇到任何突发情况，都可以及时妥善处理。每栋楼都设有门禁，均需要输入密码才能进入，可以保障小区居民安全稳定的居住环境。"
+				}],
+				"detail_url": "",
+				"content": ""
+			},
 			"log_pb": {
 				"group_id": "6581413717366276360",
-				"impr_id": "2018112518214301000811803031813",
-				"search_id": "2018112518214301000811803031813"
+				"impr_id": "2018112712430401000811803021497",
+				"search_id": "2018112712430401000811803021497"
 			}
-		}
+		},
+		"user_status": {
+			"house_sub_status": 0,
+			"pricing_sub_stauts": 0
+		},
+		"status": 0,
+		"share_info": {
+			"cover_image": "hello",
+			"description": "",
+			"is_video": 0,
+			"share_url": "https://m.haoduofangs.com/bj/ershoufang/6628064041916973064.html?from=share",
+			"title": "后现代城 精装开间 周边配套齐全 临近大郊亭地铁 随时看房"
+		},
+		"camplaint_url": "http://where.is.complaint/page?"
 	},
 	"message": "success",
 	"status": 0

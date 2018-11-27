@@ -32,8 +32,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
     private var bottomBarViewModel: FHHouseContactBottomBarViewModel?
 
-    /// 租房关注状态信号量
-    private var follwUpStatus: BehaviorRelay<Bool> = BehaviorRelay(value: false)
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -153,16 +151,72 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         setupBottomStatusBar()
         setupTableView()
         setupInfoMaskView()
-        detailPageViewModel = HouseRentDetailViewMode(houseRentTracer: houseRentTracer)
+        detailPageViewModel = HouseRentDetailViewMode(houseId: houseId,
+                                                      houseRentTracer: houseRentTracer)
+        bindFollowUp()
         detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
         self.tableView.delegate = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)
         detailPageViewModel?.tableView = tableView
         bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
+
+        //触发请求数据
         detailPageViewModel?.requestDetailData()
-//        detailPageViewModel?.requestReletedData()
         view.bringSubview(toFront: navBar)
+    }
+
+    fileprivate func bindFollowUp() {
+        if let detailPageViewModel = self.detailPageViewModel {
+            //绑定关注按钮点击事件
+            navBar.rightBtn.rx.tap
+                .bind(onNext:  { [weak detailPageViewModel, unowned self] in
+
+//                    var tracerParams = EnvContext.shared.homePageParams
+//                    if let params = detailPageViewModel.goDetailTraceParam {
+//                        tracerParams = tracerParams <|> params
+//                            .exclude("house_type")
+//                            .exclude("element_type")
+//                            .exclude("maintab_search")
+//                            .exclude("search")
+//                            .exclude("filter")
+//                    }
+//                    tracerParams = tracerParams <|>
+//                        toTracerParams(pageTypeString(detailPageViewModel.houseType ?? .newHouse), key: "page_type")
+                    if let theDetailModel = detailPageViewModel {
+                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: true,
+                                                              houseId: self.houseId,
+                                                              houseType: .rentHouse,
+                                                              followAction: .rentHouse,
+                                                              statusBehavior: theDetailModel.follwUpStatus)
+                    }
+//                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
+                })
+                .disposed(by: disposeBag)
+            //绑定关注状态回调
+            detailPageViewModel.follwUpStatus
+                .filter { (result) -> Bool in
+                    if case .success(_) = result {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                .map { [weak self] (result) -> Bool in
+                    if case let .success(status) = result {
+                        if !status && self?.stateControl.state != .suspend
+                        {
+                            self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
+                        }
+                        return status
+                    } else {
+                        return false
+                    }
+                }
+                .bind(to: navBar.rightBtn.rx.isSelected)
+                .disposed(by: disposeBag)
+
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

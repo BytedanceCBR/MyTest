@@ -51,9 +51,9 @@
 
 -(void)rightBtnDidClickWithModel: (FHConfigDataCityStatsModel *)model {
 
-    if (model.openUrl) {
+    if (model.mapOpenUrl) {
         
-        NSURL *url = [NSURL URLWithString:model.openUrl];
+        NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }

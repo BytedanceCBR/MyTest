@@ -53,5 +53,11 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
             theCell.lat = lat
             theCell.lng = lng
         }
+        if let schoolName = neighborhoodInfo?.schoolInfo?.schoolName {
+            theCell.schoolLabel.text = schoolName
+            theCell.schoolLabelIsHidden(isHidden: false)
+        } else {
+            theCell.schoolLabelIsHidden(isHidden: true)
+        }
     }
 }

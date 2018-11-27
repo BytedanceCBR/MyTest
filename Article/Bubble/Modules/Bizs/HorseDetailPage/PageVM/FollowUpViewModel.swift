@@ -11,6 +11,38 @@ import RxCocoa
 class FollowUpViewModel {
 
     var disposeBag = DisposeBag()
+
+    func followIt(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
+        disposeBag: DisposeBag,
+        statusBehavior: BehaviorRelay<Result<Bool>>,
+        isNeedRecord: Bool = true) -> () -> Void {
+        return {
+            requestFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .subscribe(onNext: { response in
+                    if response?.status ?? 1 == 0 {
+                        if response?.data?.followStatus ?? 0 == 0 {
+                            EnvContext.shared.toast.showToast("关注成功")
+                        } else {
+                            EnvContext.shared.toast.showToast("已经关注")
+                        }
+                        NotificationCenter.default.post(name: .followUpDidChange, object: nil)
+                        statusBehavior.accept(.success(true))
+                    } else {
+                        //                        self?.followStatus.accept(.success(false))
+                        //                        assertionFailure()
+                    }
+                }, onError: { error in
+                    EnvContext.shared.toast.showToast("关注失败")
+                })
+                .disposed(by: disposeBag)
+        }
+    }
     
     func followIt(
         houseType: HouseType,
@@ -48,6 +80,33 @@ class FollowUpViewModel {
         houseType: HouseType,
         followAction: FollowActionType,
         followId: String,
+        statusBehavior: BehaviorRelay<Result<Bool>>,
+        disposeBag: DisposeBag) -> () -> Void {
+        return {
+            requestCancelFollow(
+                houseType: houseType,
+                followId: followId,
+                actionType: followAction)
+                .subscribe(onNext: { response in
+                    if response?.status ?? 1 == 0 {
+                        EnvContext.shared.toast.dismissToast()
+                        statusBehavior.accept(.success(false))
+                        EnvContext.shared.toast.showToast("取关成功")
+                        NotificationCenter.default.post(name: .followUpDidChange, object: nil)
+                    } else {
+                        assertionFailure()
+                    }
+                }, onError: { error in
+                    EnvContext.shared.toast.showToast("取消关注失败")
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+
+    func cancelFollowIt(
+        houseType: HouseType,
+        followAction: FollowActionType,
+        followId: String,
         statusBehavior: BehaviorRelay<Bool>,
         disposeBag: DisposeBag) -> () -> Void {
         return {
@@ -74,19 +133,45 @@ class FollowUpViewModel {
     func followThisItem(
         isFollowUpOrCancel: Bool,
         houseId: Int64,
+        houseType: HouseType = .secondHandHouse,
+        followAction: FollowActionType = .ershouHouse,
+        statusBehavior: BehaviorRelay<Result<Bool>>) {
+        if isFollowUpOrCancel {
+            followIt(
+                houseType: houseType,
+                followAction: followAction,
+                followId: "\(houseId)",
+                disposeBag: disposeBag,
+                statusBehavior: statusBehavior,
+                isNeedRecord: false)()
+        } else {
+            cancelFollowIt(
+                houseType: houseType,
+                followAction: followAction,
+                followId: "\(houseId)",
+                statusBehavior: statusBehavior,
+                disposeBag: disposeBag)()
+        }
+    }
+
+    func followThisItem(
+        isFollowUpOrCancel: Bool,
+        houseId: Int64,
+        houseType: HouseType = .secondHandHouse,
+        followAction: FollowActionType = .ershouHouse,
         statusBehavior: BehaviorRelay<Bool>) {
             if isFollowUpOrCancel {
                 followIt(
-                    houseType: .newHouse,
-                    followAction: .newHouse,
+                    houseType: houseType,
+                    followAction: followAction,
                     followId: "\(houseId)",
                     disposeBag: disposeBag,
                     statusBehavior: statusBehavior,
                     isNeedRecord: false)()
             } else {
                 cancelFollowIt(
-                    houseType: .newHouse,
-                    followAction: .newHouse,
+                    houseType: houseType,
+                    followAction: followAction,
                     followId: "\(houseId)",
                     statusBehavior: statusBehavior,
                     disposeBag: disposeBag)()

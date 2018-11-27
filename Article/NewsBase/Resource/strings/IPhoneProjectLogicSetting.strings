@@ -22,7 +22,7 @@
 "house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
 "neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
 "fh_webview"            = "_TtC6Bubble19FHWebViewController";
-
+"fh_house_detail_map"   = "_TtC6Bubble12LBSMapPageVC";
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";
 "profile"               = "ArticleMomentProfileViewController";

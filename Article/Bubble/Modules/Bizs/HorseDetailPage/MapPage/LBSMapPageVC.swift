@@ -18,7 +18,7 @@ enum OpenMapType: Int {
     case autoMatchType = 2 //根据文本自动过滤
 }
 
-class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
+class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, TTRouteInitializeProtocol {
 
     lazy var search: AMapSearchAPI = {
         let re = AMapSearchAPI()
@@ -68,6 +68,35 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate {
     init(centerPointName: String) {
         self.centerPointName = centerPointName
         super.init(nibName: nil, bundle: nil)
+    }
+
+    required init(routeParamObj paramObj: TTRouteParamObj?) {
+        if let centerPointName = paramObj?.queryParams["title"] as? String {
+            self.centerPointName = centerPointName
+        } else {
+            self.centerPointName = ""
+        }
+        super.init(nibName: nil, bundle: nil)
+        self.navBar.backBtn.rx.tap
+            .bind { [unowned self] void in
+                self.navigationController?.popViewController(animated: true)
+            }.disposed(by: disposeBag)
+
+
+        if let lat = paramObj?.queryParams["lat"] as? String,
+            let lng = paramObj?.queryParams["lng"] as? String{
+            self.centerPointStr.accept((lat, lng))
+        }
+        if let params = paramObj?.userInfo.allInfo["tracer"] as? [String : Any] {
+            self.tracerParams = TracerParams.momoid() <|>
+                mapTracerParams(params)
+        }
+
+        self.fromLogPb = paramObj?.userInfo.allInfo["log_pb"]
+
+        if let searchCategory = paramObj?.allParams["search_category"] as? String {
+            self.searchCategory.accept(searchCategory)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -30,8 +30,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     private var elementShowIndexPathCache: [IndexPath] = []
     private var sectionShowCache: [Int] = []
 
-    init(houseRentTracer: HouseRentTracer) {
+    private let houseId: Int64
+
+    let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
+
+    init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
+        self.houseId = houseId
         self.houseRentTracer = houseRentTracer
         super.init()
         Observable
@@ -100,18 +105,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
 
         let infos:[ErshouHouseBaseInfo] = getRentPropertyList(data: detailData.value?.data)
-//        var info = ErshouHouseBaseInfo(attr: "入住", value: "2018.07.12", isSingle: false)
-//        infos.append(info)
-//        info = ErshouHouseBaseInfo(attr: "发布", value: "2018.07.09", isSingle: false)
-//        infos.append(info)
-//        info = ErshouHouseBaseInfo(attr: "朝向", value: "南北", isSingle: false)
-//        infos.append(info)
-//        info = ErshouHouseBaseInfo(attr: "楼层", value: "高楼层/共23层", isSingle: false)
-//        infos.append(info)
-//        info = ErshouHouseBaseInfo(attr: "装修", value: "精装修", isSingle: false)
-//        infos.append(info)
-//        info = ErshouHouseBaseInfo(attr: "电梯", value: "有", isSingle: false)
-//        infos.append(info)
+
         let dataParser = DetailDataParser.monoid()
             <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
                                             disposeBag: disposeBag)
@@ -249,9 +243,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func requestDetailData() {
-        let task = FHRentDetailAPI.requestRentDetail("") { [weak self] (model, error) in
+        let task = FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil {
                 self?.detailData.accept(model)
+                if let status = model?.data?.userStatus {
+                    self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
+                }
             }
             self?.requestReletedData()
         }
@@ -259,11 +256,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func requestReletedData() {
 
-        let task = HouseRentAPI.requestHouseRentRelated("") { [weak self] (model, error) in
+        let task = HouseRentAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
             self?.relateErshouHouseData.accept(model)
         }
 
-        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("a", withNeighborhoodId: "a") { [weak self] (model, error) in
+        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
             self?.houseInSameNeighborhood.accept(model)
         }
     }

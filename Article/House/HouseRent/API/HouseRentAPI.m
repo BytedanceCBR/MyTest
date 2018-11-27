@@ -17,11 +17,10 @@
     NSString* url = @"https://i.haoduofangs.com/f100/api/related_rent";
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"house_id": @"1111"}
+            params:@{@"house_id": rentId}
             method:@"GET"
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
-                NSLog(@"%@", obj);
                 FHHouseRentRelatedResponseModel* model = nil;
                 if (!error) {
                     model = [[FHHouseRentRelatedResponseModel alloc] initWithData:obj error:&error];
@@ -42,11 +41,12 @@
     NSString* url = @"https://i.haoduofangs.com/f100/api/same_neighborhood_rent";
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"house_id": @"1111"}
+            params:@{@"house_id": rentId,
+//                     @"neighborhood_id": neighborhoodId,
+                     }
             method:@"GET"
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
-                NSLog(@"%@", obj);
                 FHRentSameNeighborhoodResponseModel* model = nil;
                 if (!error) {
                     model = [[FHRentSameNeighborhoodResponseModel alloc] initWithData:obj error:&error];
