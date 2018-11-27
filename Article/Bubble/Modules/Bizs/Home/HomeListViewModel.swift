@@ -91,8 +91,6 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategorySwitch: Bool = true
     
-    var itemsRentHouse: [HouseItemInnerEntity]? = [] //租房数据缓存,for切换
-    
     var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //列表数据缓存
     
     var itemsSearchIdCache: [String : String] = [:] //searchid缓存
@@ -316,8 +314,6 @@ class HomeListViewModel: DetailPageViewModel {
             toTracerParams("left_pic", key: "card_type")
         
         if let dataItems = items{
-            let isShowNewHouse = self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse
-            
             let theDataItems = dataItems.map {[weak self] (item) -> HouseItemInnerEntity in
                 var newItem = item
                 newItem.fhSearchId = self?.originSearchId
@@ -326,14 +322,17 @@ class HomeListViewModel: DetailPageViewModel {
             let dataParser = DetailDataParser.monoid()
                 <- parseSpringboardNode(entrys ?? [],isNeedUpdateBoard: isNeedUpdateSpringBoard, disposeBag: self.disposeBag, navVC: self.navVC)
                 <- parseErshouHouseListItemNode(
-                    !isShowNewHouse ? theDataItems : [],
+                    self.dataSource?.categoryView.houseTypeRelay.value == HouseType.secondHandHouse ? theDataItems : [],
                     disposeBag: self.disposeBag,
                     tracerParams: homeCommonParams <|> toTracerParams("old", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                     navVC: self.navVC)
-                <- parseHomeNewHouseListItemNode(isShowNewHouse ? theDataItems : [],
+                <- parseHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
                                                  disposeBag: self.disposeBag,
                                                  tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                  navVC: self.navVC)
+                <- parseFHHomeRentHouseListRowItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.rentHouse ? theDataItems : [],
+                                                       disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
+                                                       navVC: self.navVC)
             return dataParser.parser([])
         } else {
             return []
@@ -531,7 +530,7 @@ class HomeListViewModel: DetailPageViewModel {
         {
             
             let requestId = self.itemsSearchIdCache[matchHouseTypeName(houseTypeV: typeValue)] ?? ""
-       
+            
             let offsetRequest = self.itemsDataCache[matchHouseTypeName(houseTypeV: typeValue)]?.count ?? 0
             
             requestHouseRecommend(cityId: cityId ?? 122,
@@ -587,7 +586,7 @@ class HomeListViewModel: DetailPageViewModel {
                     if let items = response?.data?.items {
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value
                         {
-
+                            
                             let houstTypeKey = matchHouseTypeName(houseTypeV: houseTypeValue)
                             
                             if items.count > 0
@@ -598,7 +597,7 @@ class HomeListViewModel: DetailPageViewModel {
                                 
                                 self.itemsDataCache.updateValue(currentItems ?? [], forKey: houstTypeKey)
                             }
-                         
+                            
                             self.itemsSearchIdCache.updateValue(response?.data?.searchId ?? "", forKey: houstTypeKey)
                             
                             if let hasMore = response?.data?.hasMore
@@ -1002,6 +1001,158 @@ func openNeighborhoodDetailPage(
         navVC?.pushViewController(detailPage, animated: true)
     }
 }
+
+func parseFHHomeRentHouseListRowItemNode(
+    _ items: [HouseItemInnerEntity]?,
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
+    
+    return {
+        let selectors = items?
+            .filter { $0.id != nil }
+            .enumerated()
+            .map { (e) -> (TracerParams) -> Void in
+                let (offset, item) = e
+                return openNewHouseDetailPage(
+                    houseId: Int64(item.id ?? "")!,
+                    logPB: item.logPB ?? [:],
+                    disposeBag: disposeBag,
+                    tracerParams: tracerParams <|>
+                        toTracerParams(offset, key: "rank") <|>
+                        toTracerParams("maintab", key: "enter_from") <|>
+                        toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                    navVC:navVC)
+        }
+        
+        
+        let records = items?
+            .filter { $0.id != nil }
+            .enumerated()
+            .map { (e) -> ElementRecord in
+                let (offset, item) = e
+                let theParams = tracerParams <|>
+                    toTracerParams(offset, key: "rank") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+        }
+        
+        let count = items?.count ?? 0
+        
+        if let renders = items?.enumerated().map({(index, item) in
+            items?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(true) : curry(fillFHHomeRentHouseListitemCell)(item)(index == count - 1)
+            
+        }), let selectors = selectors {
+            return TableSectionNode(
+                items: renders,
+                selectors: selectors,
+                tracer: records,
+                label: "",
+                type: .node(identifier:items?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
+        } else {
+            return nil
+        }
+    }
+}
+
+func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool = false) -> ((BaseUITableViewCell) -> Void) {
+    
+    let text = NSMutableAttributedString()
+    let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
+        createTagAttrString(
+            item.content,
+            isFirst: offset == 0,
+            textColor: hexStringToUIColor(hex: item.textColor),
+            backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+    })
+    
+    var height: CGFloat = 0
+    attrTexts?.enumerated().forEach({ (e) in
+        let (offset, tag) = e
+        
+        text.append(tag)
+        
+        let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 170, height: CGFloat.greatestFiniteMagnitude), text: text)
+        let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+        if lineHeight > height {
+            if offset != 0 {
+                text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+            }
+            if offset == 0 {
+                height = lineHeight
+            }
+        }
+    })
+    
+    
+    return { cell in
+        
+        if let theCell = cell as? SingleImageInfoCell {
+
+            theCell.majorTitle.text = data.title
+            theCell.extendTitle.text = data.subtitle
+            theCell.isTail = isLastCell
+            
+            let text = NSMutableAttributedString()
+            let attrTexts = data.rentTags?.enumerated().map({ (offset, item) -> NSAttributedString in
+                return createTagAttrString(
+                    item.text,
+                    isFirst: offset == 0,
+                    textColor: hexStringToUIColor(hex: item.textColor),
+                    backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
+            })
+            
+            var height: CGFloat = 0
+            attrTexts?.enumerated().forEach({ (e) in
+                let (offset, tag) = e
+                
+                text.append(tag)
+                
+                let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 170, height: CGFloat.greatestFiniteMagnitude), text: text)
+                let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+                if lineHeight > height {
+                    if offset != 0 {
+                        text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                    }
+                    if offset == 0 {
+                        height = lineHeight
+                    }
+                }
+            })
+            
+            theCell.areaLabel.attributedText = text
+            theCell.areaLabel.snp.updateConstraints { (maker) in
+                
+                maker.left.equalToSuperview().offset(-3)
+            }
+            
+            theCell.priceLabel.text = data.pricing
+            theCell.roomSpaceLabel.text = nil  //data.displayPricePerSqm
+            theCell.majorImageView.bd_setImage(with: URL(string: data.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+            if let houseImageTag = data.houseImageTag,
+                let backgroundColor = houseImageTag.backgroundColor,
+                let textColor = houseImageTag.textColor {
+                theCell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+                theCell.imageTopLeftLabel.text = houseImageTag.text
+                theCell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+                theCell.imageTopLeftLabelBgView.isHidden = false
+            } else {
+                theCell.imageTopLeftLabelBgView.isHidden = true
+            }
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil )
+            
+            
+        }
+        
+    }
+}
+
+
 
 
 class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTracer {

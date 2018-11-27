@@ -67,16 +67,22 @@ class CategorySectionView: UIView {
         segmentedControl.indexChangeBlock = {[weak self] index in
             if let titleArray = self?.sectionTitleArray
             {
-                if titleArray[index] == "二手房"
+                if titleArray[index] == HouseType.secondHandHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.secondHandHouse)
                     recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|> toTracerParams("old", key: "click_type"))
 
-                }else if titleArray[index] == "新房"
+                }else if titleArray[index] == HouseType.newHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.newHouse)
                     recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|> 
                         toTracerParams("new", key: "click_type"))
+                }
+                else if titleArray[index] == HouseType.rentHouse.stringValue()
+                {
+                    self?.houseTypeRelay.accept(.rentHouse)
+                    recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|>
+                        toTracerParams("rent", key: "click_type"))
                 }
             }
         }
