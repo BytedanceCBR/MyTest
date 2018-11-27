@@ -830,7 +830,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
                 ds.upperInput = "\(upper)"
                 return [Node(
                     id: "",
-                    label: "以下-\(upper)\(getRateTextByRateValue(rate))",
+                    label: "\(upper)\(getRateTextByRateValue(rate))以下",
                     externalConfig: "\(theQueryKey)=[\(low * rate),\(upper * rate)]",
                     filterCondition: "[\(low * rate),\(upper * rate)" as Any,
                     key: "\(theQueryKey)")]

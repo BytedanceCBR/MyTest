@@ -161,7 +161,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.associationalWord = associationalWord
         super.init(nibName: nil, bundle: nil)
         self.navBar.mapBtn.rx.tap
-            .debounce(0.1, scheduler: MainScheduler.instance)
+            .debounce(0.5, scheduler: MainScheduler.instance)
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
@@ -188,7 +188,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
         self.navBar.mapBtn.rx.tap
-            .debounce(0.1, scheduler: MainScheduler.instance)
+            .debounce(0.3, scheduler: MainScheduler.instance)
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
@@ -576,9 +576,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
     
     func gotoMapSearch(){
-//        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
-//        return
-
+        
+        guard var openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl  else {
+            return
+        }
+        
+        self.navBar.mapBtn.isEnabled = false
+        
         self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
         
         //点击切换埋点
@@ -628,38 +632,39 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
          ]
          */
         
-        if var openUrl = self.categoryListViewModel?.mapFindHouseOpenUrl {
-            
-            var query = ""
-            if  !openUrl.contains("enter_category") {
-              query = "enter_category=\(enterCategory)"
-            }
-            if !openUrl.contains("origin_from") {
-              query = "\(query)&origin_from=\(originFrom)"
-            }
-            
-            if !openUrl.contains("origin_search_id") {
-                query = "\(query)&origin_search_id=\(originSearchId)"
-            }
-            if !openUrl.contains("enter_from"){
-                query = "\(query)&enter_from=\(enterFrom)"
-            }
-            if !openUrl.contains("element_from"){
-                query = "\(query)&element_from=\(elementName)"
-            }
-            
-            if query.count > 0 {
-                openUrl = "\(openUrl)&\(query)"
-            }
-            guard let url = URL(string: openUrl) else {
-                return
-            }
-            var info = [AnyHashable: Any]()
-            info[OPENURL_CALLBAK] = self
-            let userInfo = TTRouteUserInfo(info: info)
-            TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)            
+        
+        
+        var query = ""
+        if  !openUrl.contains("enter_category") {
+            query = "enter_category=\(enterCategory)"
+        }
+        if !openUrl.contains("origin_from") {
+            query = "\(query)&origin_from=\(originFrom)"
         }
         
+        if !openUrl.contains("origin_search_id") {
+            query = "\(query)&origin_search_id=\(originSearchId)"
+        }
+        if !openUrl.contains("enter_from"){
+            query = "\(query)&enter_from=\(enterFrom)"
+        }
+        if !openUrl.contains("element_from"){
+            query = "\(query)&element_from=\(elementName)"
+        }
+        
+        if query.count > 0 {
+            openUrl = "\(openUrl)&\(query)"
+        }
+        guard let url = URL(string: openUrl) else {
+            self.navBar.mapBtn.isEnabled = true
+            return
+        }
+        var info = [AnyHashable: Any]()
+        info[OPENURL_CALLBAK] = self
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
+        
+        self.navBar.mapBtn.isEnabled = true
     }
 
     override func viewDidLayoutSubviews() {

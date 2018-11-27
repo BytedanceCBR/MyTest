@@ -212,6 +212,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                         }
                     })
         }
+
+        if dataSources[1].selectedNodes().count > 0,
+            dataSources[2].nodes.count > 0 {
+            self.displayExtendValue()
+        }
     }
 
     func stringValueOfAny(_ value: Any) -> String {
@@ -228,6 +233,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     fileprivate func choiceLastSectionSelection(conditions: [String : Any], conditionStrArray: [String], nodes: [Node]) {
         dataSources[2].selectedIndexPaths.removeAll()
+        dataSources[2].nodes = nodes
         nodes
             .filter { $0.isEmpty != 1 }
             .enumerated()
@@ -235,7 +241,6 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 let key = getEncodingString("\(item.key)")
                 if let _ = conditions[key],
                     let filterCondition = item.filterCondition {
-                    dataSources[2].nodes = nodes
                     let comparedCondition = "\(key)=\(stringValueOfAny(filterCondition))"
                     if conditionStrArray.contains(comparedCondition) {
 //                        print(comparedCondition)
@@ -243,11 +248,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     }
                 }
             }
-        if dataSources[2].nodes.count > 0 {
-            self.displayExtendValue()
-        } else {
-            self.displayNormalCondition()
-        }
+
+//        else
+//        {
+//            self.displayNormalCondition()
+//        }
 //        if needShowThirdList {
 //            self.displayExtendValue()
 //        }
