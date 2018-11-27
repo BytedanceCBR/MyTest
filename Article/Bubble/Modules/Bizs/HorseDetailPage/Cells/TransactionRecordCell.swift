@@ -123,7 +123,8 @@ func parseTransactionRecordNode(_ datas: [TotalSalesInnerItem]?, traceExtension:
                 return TableSectionNode(
                     items: renders,
                     selectors: nil,
-                        tracer: [elementShowOnceRecord(params: params)],
+                    tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "",
                     type: .node(identifier: TransactionRecordCell.identifier))
             }

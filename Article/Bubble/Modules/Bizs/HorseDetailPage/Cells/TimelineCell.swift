@@ -192,6 +192,7 @@ func parseTimelineNode(_ newHouseData: NewHouseData, traceExt: TracerParams = Tr
                 items: renders ?? [],
                 selectors: selectors,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "楼盘动态",
                 type: .node(identifier: TimelineCell.identifier))
             

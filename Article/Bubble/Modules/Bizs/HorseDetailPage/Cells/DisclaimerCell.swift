@@ -66,7 +66,8 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
-                tracer: nil,
+            tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: DisclaimerCell.identifier))
     }
@@ -78,7 +79,8 @@ func parseDisclaimerNode() -> () -> TableSectionNode? {
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
-                tracer: nil,
+            tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: DisclaimerCell.identifier))
     }
@@ -91,7 +93,8 @@ func parseDisclaimerNode(_ newHouseData: NewHouseData) -> () -> TableSectionNode
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
-                tracer: nil,
+            tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: DisclaimerCell.identifier))
     }

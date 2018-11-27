@@ -153,6 +153,7 @@ func parsePriceRangeNode(_ priceRank: HousePriceRank?, traceExtension: TracerPar
                 items: [cellRender],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FHDetailSuggestTipCell.identifier))
             

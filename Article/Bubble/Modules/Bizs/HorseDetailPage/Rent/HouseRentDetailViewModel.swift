@@ -8,18 +8,95 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDelegate {
+class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDelegate, TableViewTracer {
     var datas: [TableSectionNode] = []
 
     var disposeBag = DisposeBag()
 
     var cellFactory: UITableViewCellFactory
 
+    private let detailData = BehaviorRelay<FHRentDetailResponseModel?>(value: nil)
 
-    override init() {
+    private var relateErshouHouseData = BehaviorRelay<FHHouseRentRelatedResponseModel?>(value: nil)
+
+    private var houseInSameNeighborhood = BehaviorRelay<FHRentSameNeighborhoodResponseModel?>(value: nil)
+
+    var navVC: UINavigationController?
+
+    weak var tableView: UITableView?
+
+    var houseRentTracer: HouseRentTracer
+
+    private var elementShowIndexPathCache: [IndexPath] = []
+    private var sectionShowCache: [Int] = []
+
+    private let houseId: Int64
+
+    private var shareInfo: FHRentDetailResponseDataShareInfoModel?
+
+    let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
+
+    private var groupId: String = ""
+
+    init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
+        self.houseId = houseId
+        self.houseRentTracer = houseRentTracer
         super.init()
-        datas = processData()([])
+        Observable
+            .combineLatest(detailData, houseInSameNeighborhood, relateErshouHouseData)
+            .filter { $0.0 != nil }
+            .subscribe(onNext: { [weak self] (_) in
+                if let result = self?.processData()([]) {
+
+                    self?.datas = result
+                    self?.tableView?.reloadData()
+                    DispatchQueue.main.async {
+                        if let tableView = self?.tableView, let datas = self?.datas {
+                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                            self?.bindTableScrollingTrace()
+                        }
+                    }
+
+                }
+            }).disposed(by: disposeBag)
+    }
+
+    func bindTableScrollingTrace() {
+        self.tableView?.rx.didScroll
+            .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
+            .bind { [weak self, weak tableView] void in
+                self?.traceDisplayCell(tableView: tableView, datas: self?.datas ?? [])
+            }.disposed(by: disposeBag)
+    }
+
+    func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
+        let indexPaths = tableView?.indexPathsForVisibleRows
+        let params = EnvContext.shared.homePageParams
+        indexPaths?.forEach({ (indexPath) in
+            if !elementShowIndexPathCache.contains(indexPath) {
+                self.callTracer(
+                    tracer: datas[indexPath.section].tracer,
+                    atIndexPath: indexPath,
+                    traceParams: params)
+                elementShowIndexPathCache.append(indexPath)
+            }
+
+            if !sectionShowCache.contains(indexPath.section),
+                let tracer = datas[indexPath.section].sectionTracer {
+                tracer(params)
+                sectionShowCache.append(indexPath.section)
+            }
+
+            if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionCell {
+                theCell.hasShowOnScreen = true
+            } else if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionNeighborhoodCell {
+                theCell.hasShowOnScreen = true
+            }
+
+        })
+
+
     }
 
     func registerCell(tableView: UITableView) {
@@ -27,29 +104,145 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     fileprivate func processData() -> ([TableSectionNode]) -> [TableSectionNode] {
+//        self.houseRentTracer?.logPb
+        self.houseRentTracer.recordGoDetail()
 
-        var infos:[ErshouHouseBaseInfo] = []
-        var info = ErshouHouseBaseInfo(attr: "入住", value: "2018.07.12", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "发布", value: "2018.07.09", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "朝向", value: "南北", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "楼层", value: "高楼层/共23层", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "装修", value: "精装修", isSingle: false)
-        infos.append(info)
-        info = ErshouHouseBaseInfo(attr: "电梯", value: "有", isSingle: false)
-        infos.append(info)
+
+        let infos:[ErshouHouseBaseInfo] = getRentPropertyList(data: detailData.value?.data)
 
         let dataParser = DetailDataParser.monoid()
-            <- parseRentHouseCycleImageNode(nil, disposeBag: disposeBag)
-            <- parseRentNameCellNode()
-            <- parseRentCoreInfoCellNode()
+            <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
+                                            disposeBag: disposeBag)
+            <- parseRentNameCellNode(model: detailData.value?.data)
+            <- parseRentCoreInfoCellNode(model: detailData.value?.data,
+                                         tracer: houseRentTracer)
             <- parseRentPropertyListCellNode(infos)
-            <- parseRentFacilityCellNode()
-            <- parseRentNeighborhoodInfoNode()
+            //房屋配置
+            <- parseRentHouseFacility()
+            //房屋概况
+            <- parseRentHouseSummarySection()
+            // 小区测评
+            <- parseRentNeighborhoodInfo()
+            // 同小区房源
+            <- parseRentSearchInNeighborhoodNodeCollection()
+            // 周边房源
+            <- parseRentErshouHouseListItemNode()
+            <- parseRentDisclaimerCellNode(model: detailData.value?.data)
         return dataParser.parser
+    }
+
+    fileprivate func getRentPropertyList(data: FHRentDetailResponseDataModel?) -> [ErshouHouseBaseInfo] {
+        if let baseInfos = data?.baseInfo as? [FHRentDetailResponseDataBaseInfoModel] {
+            return baseInfos.map({ (item) -> ErshouHouseBaseInfo in
+                ErshouHouseBaseInfo(attr: item.attr, value: item.value, isSingle: item.isSingle)
+            })
+        } else {
+            return []
+        }
+    }
+
+
+    /// 房屋概况组件
+    ///
+    /// - Returns:
+    func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
+        let action: () -> Void = { [weak self] in
+            if let url = self?.detailData.value?.data?.reportUrl {
+                self?.jumpToReportPage(url: url)
+            } else {
+                let houseId = self?.detailData.value?.data?.id ?? ""
+                self?.jumpToReportPage(url: "fschema://webview?url=http://i.haoduofangs.com/f100/client/feedback&house_id=\(houseId)&title=aaaa")
+            }
+        }
+        let header = combineParser(left: parseFlineNode(),
+                                   right: parseRentSummaryHeaderCellNode("房屋概况", reportAction: action))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentSummaryCellNode(model: detailData.value,
+                                                                     tracer: houseRentTracer))
+    }
+
+    /// 房屋配置
+    ///
+    /// - Returns:
+    func parseRentHouseFacility() -> () -> [TableSectionNode]? {
+        let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("房屋配置", adjustBottomSpace: 0))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentFacilityCellNode(model: detailData.value,
+                                                                      tracer: houseRentTracer))
+    }
+
+    /// 小区测评
+    ///
+    /// - Returns:
+    func parseRentNeighborhoodInfo() -> () -> [TableSectionNode]? {
+        let title = detailData.value?.data?.neighborhoodInfo?.name
+        let process: TableCellSelectedProcess = { [weak self] (params) in
+            if let neighborhoodId = self?.detailData.value?.data?.neighborhoodInfo?.id {
+                self?.jumpToNeighborhoodDetailPage(neighborhoodId: neighborhoodId)
+            }
+        }
+        let header = combineParser(left: parseFlineNode(),
+                                   right: parseHeaderNode("小区 \(title ?? "")", showLoadMore: true, adjustBottomSpace: 0, process: process))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseRentNeighborhoodInfoNode(model: detailData.value,
+                                                                          tracer: houseRentTracer))
+    }
+
+    /// 同小区房源
+    ///
+    /// - Returns:
+    func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
+        let params = TracerParams.momoid()
+        return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
+                                wrapedNode: parseRentSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data,
+                                                                              tracer: houseRentTracer,
+                                                                              traceExtension: params,
+                                                                              navVC: navVC,
+                                                                              tracerParams: params))
+    }
+
+    /// 相关租房
+    ///
+    /// - Returns:
+    func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
+//        let relatedErshouItems = relateErshouHouseData.value?.data?.items?.map({ (item) -> HouseItemInnerEntity in
+////            var newItem = item
+//            return item
+//        })
+        let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
+        let params = TracerParams.momoid()
+        let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
+        let result = parseRentReleatedHouseListItemNode(
+            relatedErshouItems,
+            traceExtension: params,
+            disposeBag: disposeBag,
+            tracerParams: params,
+            navVC: self.navVC)
+        return parseNodeWrapper(preNode: header, wrapedNode: result)
+    }
+
+    /// 跳转到小区详情页
+    ///
+    /// - Parameter neighborhoodId: 小区id
+    fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
+        let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
+        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let detailModel = self.detailData.value {
+            let pageData = ["data": detailModel.data?.toDictionary(),
+                            "code": "1"] as [String : Any]
+            let jsParams = ["requestPageData": pageData]
+
+            TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
+        }
+
+
+    }
+
+    /// 跳转到投诉页面
+    ///
+    /// - Parameter url: reportUrl
+    fileprivate func jumpToReportPage(url: String) {
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,4 +271,60 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         }
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if datas[indexPath.section].selectors?.isEmpty ?? true == false {
+            datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid())
+        }
+    }
+
+    func requestDetailData() {
+        let task = FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
+            if model != nil {
+                self?.detailData.accept(model)
+                if let status = model?.data?.userStatus {
+                    self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
+                }
+                self?.shareInfo = model?.data?.shareInfo
+            }
+            self?.requestReletedData()
+        }
+    }
+
+    func requestReletedData() {
+
+        let task = HouseRentAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
+            self?.relateErshouHouseData.accept(model)
+        }
+
+        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
+            self?.houseInSameNeighborhood.accept(model)
+        }
+    }
+
+    func getShareItem() -> ShareItem {
+        var shareimage: UIImage? = nil
+        if let shareImageUrl = shareInfo?.coverImage {
+            shareimage = BDImageCache.shared().imageFromDiskCache(forKey: shareImageUrl)
+        }
+
+        if let shareInfo = shareInfo {
+            return ShareItem(
+                title: shareInfo.title ?? "",
+                desc: shareInfo.desc ?? "",
+                webPageUrl: shareInfo.shareUrl ?? "",
+                thumbImage: shareimage ?? #imageLiteral(resourceName: "default_image"),
+                shareType: TTShareType.webPage,
+                groupId: groupId)
+        } else {
+            return ShareItem(
+                title: "",
+                desc: "",
+                webPageUrl: "",
+                thumbImage: #imageLiteral(resourceName: "icon-bus"),
+                shareType: TTShareType.webPage,
+                groupId: "")
+        }
+    }
+
 }
+

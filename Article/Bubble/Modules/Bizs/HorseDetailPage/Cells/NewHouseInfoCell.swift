@@ -331,6 +331,7 @@ func parseNewHouseCoreInfoNode(
             items: [oneTimeRender(cellRender)],
             selectors: nil,
             tracer: [record],
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NewHouseInfoCell.identifier))
     }

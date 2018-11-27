@@ -158,7 +158,6 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                     tracer: datas[indexPath.section].tracer,
                     atIndexPath: indexPath,
                     traceParams: params)
-//                print("callTracer: \(indexPath)")
                 recordRowIndex.insert(indexPath)
             }
 
@@ -701,6 +700,7 @@ func parseErshouHouseListItemNode(
                 items: renders,
                 selectors: selectors,
                 tracer: records,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier:data?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
         } else {
@@ -743,6 +743,7 @@ func parseErshouHouseListItemNode(
                 items: renders,
                 selectors: selectors,
                 tracer: [elementShowOnceRecord(params:paramsElement)],
+                sectionTracer: nil,
                 label: data?.title ?? "精选好房",
                 type: .node(identifier: SingleImageInfoCell.identifier))
         } else {

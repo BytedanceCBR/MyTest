@@ -92,6 +92,7 @@ func parseHousePlaceholderNode(nodeCount: Int = 5) -> () -> TableSectionNode? {
             items: defaultItems,
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "placeholder",
             type: .node(identifier: FHPlaceholderCell.identifier))
     }

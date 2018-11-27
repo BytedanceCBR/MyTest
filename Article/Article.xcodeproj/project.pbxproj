@@ -1413,9 +1413,39 @@
 		B32FD32C21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32D21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
 		B32FD32E21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */; };
+		B32FD33021A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33121A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33221A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */; };
+		B32FD33421A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33521A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33621A570EA007B9966 /* HouseRentTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33321A570EA007B9966 /* HouseRentTracer.swift */; };
+		B32FD33921A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
+		B32FD33A21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
+		B32FD33B21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */; };
+		B32FD33D21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */; };
+		B32FD33E21A65D85007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */; };
+		B32FD33F21A65D85007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */; };
+		B32FD34121A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
+		B32FD34221A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
+		B32FD34321A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
+		B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
+		B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
+		B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
+		B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
+		B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
+		B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
+		B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
+		B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
+		B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
+		B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
+		B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
+		B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35D21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
 		B32FD35E21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
 		B32FD35F21A6E4C8007B9966 /* FHFilterRedDotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */; };
+		B32FD36121AA84A3007B9966 /* HouseFindPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */; };
+		B32FD36221AA8553007B9966 /* HouseFindPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */; };
+		B32FD36321AA8554007B9966 /* HouseFindPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */; };
 		B362E6F12152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F22152614400BD4DF1 /* HouseFindSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */; };
 		B362E6F4215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */; };
@@ -3521,6 +3551,7 @@
 		B3BDFAA121460CB800C948FC /* JXPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD08214266B700653188 /* JXPhotoBrowser.framework */; };
 		B3BDFAA221460CBD00C948FC /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD06214266B200653188 /* Charts.framework */; };
 		B3BDFAA421460CCD00C948FC /* libMJRefresh.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3BDFAA321460CCD00C948FC /* libMJRefresh.a */; };
+		B3C18BBC21AD3282005CF234 /* FHHouseShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */; };
 		C2036D7E1F288E5300ECFA51 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		C212227E1F4F0CF00036101E /* TTShortVideoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BB79DA1F4578CB002C2EEF /* TTShortVideoHelper.m */; };
 		C22374101F5428E50005E844 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
@@ -3557,7 +3588,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -7867,7 +7898,20 @@
 		B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HouseRentDetailVC.swift; sourceTree = "<group>"; };
 		B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentFacilityCell.swift; sourceTree = "<group>"; };
 		B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseRentSummaryCell.swift; sourceTree = "<group>"; };
+		B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentDisclaimerCell.swift; sourceTree = "<group>"; };
+		B32FD33321A570EA007B9966 /* HouseRentTracer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseRentTracer.swift; sourceTree = "<group>"; };
+		B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHouseDetailPage.swift; sourceTree = "<group>"; };
+		B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentSearchInNeighborhoodCellRender.swift; sourceTree = "<group>"; };
+		B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentReleatedHouseCellRender.swift; sourceTree = "<group>"; };
+		B32FD34521A67A51007B9966 /* HouseRentAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentAPI.h; sourceTree = "<group>"; };
+		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; };
+		B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRelatedResponse.h; sourceTree = "<group>"; };
+		B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRelatedResponse.m; sourceTree = "<group>"; };
+		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
+		B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRentSameNeighborhoodResponse.m; sourceTree = "<group>"; };
+		B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseContactBottomBarViewModel.swift; sourceTree = "<group>"; };
 		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
+		B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindPageControl.swift; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -8068,6 +8112,7 @@
 		B3BDFA9821460C8100C948FC /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		B3BDFA9B21460C9000C948FC /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = Carthage/Build/iOS/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
 		B3BDFAA321460CCD00C948FC /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseShareViewModel.swift; sourceTree = "<group>"; };
 		B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.release.xcconfig"; sourceTree = "<group>"; };
 		C0B392A9E342CCCDCA90EB90 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		C2036D7C1F288E5300ECFA51 /* TTQQSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTQQSDKRegister.h; sourceTree = "<group>"; };
@@ -9103,7 +9148,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -14788,6 +14833,7 @@
 		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
 			isa = PBXGroup;
 			children = (
+				B32FD34421A67A33007B9966 /* API */,
 				B32FD2CA21A26E37007B9966 /* Detail */,
 			);
 			path = HouseRent;
@@ -14815,9 +14861,13 @@
 		B32FD2F921A3B479007B9966 /* Rent */ = {
 			isa = PBXGroup;
 			children = (
+				B32FD33721A570EF007B9966 /* Tracer */,
 				B32FD2FA21A3B479007B9966 /* Cells */,
 				B32FD30021A3B479007B9966 /* HouseRentDetailViewModel.swift */,
 				B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */,
+				B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */,
+				B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */,
+				B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */,
 			);
 			path = Rent;
 			sourceTree = "<group>";
@@ -14832,8 +14882,32 @@
 				B32FD2FF21A3B479007B9966 /* RentNeighborhoodInfoNode.swift */,
 				B32FD31921A3DB51007B9966 /* RentFacilityCell.swift */,
 				B32FD32B21A3E6C0007B9966 /* FHHouseRentSummaryCell.swift */,
+				B32FD32F21A55C7B007B9966 /* FHRentDisclaimerCell.swift */,
+				B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */,
+				B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		B32FD33721A570EF007B9966 /* Tracer */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD33321A570EA007B9966 /* HouseRentTracer.swift */,
+			);
+			path = Tracer;
+			sourceTree = "<group>";
+		};
+		B32FD34421A67A33007B9966 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD34521A67A51007B9966 /* HouseRentAPI.h */,
+				B32FD34621A67A51007B9966 /* HouseRentAPI.m */,
+				B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */,
+				B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */,
+				B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */,
+				B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -15396,6 +15470,7 @@
 				B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */,
 				B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */,
 				B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */,
+				B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */,
 			);
 			path = HouseFind;
 			sourceTree = "<group>";
@@ -18032,7 +18107,7 @@
 						};
 					};
 					B373C7F92174587A008F9905 = {
-						DevelopmentTeam = X46375UBYG;
+						DevelopmentTeam = J3249442BT;
 						ProvisioningStyle = Automatic;
 					};
 					FEFA5259205FB1A8001F50D8 = {
@@ -18486,14 +18561,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18575,14 +18643,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18717,14 +18778,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18805,14 +18859,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -19104,14 +19151,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
 				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/app_update_night@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon@3x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@2x.png",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/close_icon_night@3x.png",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -19192,14 +19232,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/app_update_night@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close_icon_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -19428,6 +19461,7 @@
 				471954BC1F9F294C00B397E7 /* TTVDetailRelatedRecommendCellViewModel.m in Sources */,
 				D09459DC1CC9024B002D447F /* TTArticleCardCellViewHeaderView.m in Sources */,
 				B388CC1E2142652B00653188 /* BubbleSelectCollectionView.swift in Sources */,
+				B32FD36121AA84A3007B9966 /* HouseFindPageControl.swift in Sources */,
 				0AE08A421DC9951300DBFA53 /* TTSettingGeneralGroup.m in Sources */,
 				2D2557C71E8271CE00FF96A7 /* ExploreMoviePlayerController.m in Sources */,
 				D5041F4D205802A400BAEE7F /* AKImageAlertView.m in Sources */,
@@ -19438,6 +19472,7 @@
 				A97DB9A71F1332DE0002B455 /* TTHistoryViewController.m in Sources */,
 				FEF8A5A51FCE9C7B00FCE0EC /* TTInterfaceTipBaseModel.m in Sources */,
 				F87696401F31D0D900D59CA5 /* TTVSegmentedPageViewController.m in Sources */,
+				B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D621A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				486F87391A21BBC200F5AE99 /* ExploreAddEntryListCell.m in Sources */,
 				6B28469A1DF5407100170DE7 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -19453,6 +19488,7 @@
 				43538E5D1F98D6B100F6B6FF /* TTVPlayerTipRelatedFinishedForward.m in Sources */,
 				2DB9A5DC1F20B01D005E4A06 /* SSADSplashView.m in Sources */,
 				F87695241F31D0D600D59CA5 /* TTVMoreAction.m in Sources */,
+				B3C18BBC21AD3282005CF234 /* FHHouseShareViewModel.swift in Sources */,
 				4883308319F9177D0004419A /* ExploreDetailnatantActionButton.m in Sources */,
 				0A2948B51FA337A800CB0E9D /* TTWebImageHEIFCoder.m in Sources */,
 				48884DF31FAB52490067C98A /* TSVCategoryContainerViewController.m in Sources */,
@@ -20113,6 +20149,7 @@
 				2D3317511F305308009D2936 /* NewAuthorityView.m in Sources */,
 				3F765B1A16DB563F0037C3E3 /* ArticleGetLocalDataOperation.m in Sources */,
 				FEB87A981F6A3000005D3EEC /* ExploreDetailSaveImageManager.m in Sources */,
+				B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */,
 				FEE3022C2058D61100072A34 /* TTArticleDetailViewController+AKReadBonus.m in Sources */,
 				438F9E271F94B8DD0050F83E /* TTVADInfo+ActionTitle.m in Sources */,
 				D5041EFA2058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m in Sources */,
@@ -20191,6 +20228,7 @@
 				D09459E21CC9033A002D447F /* TTArticleCardCellViewFooterView.m in Sources */,
 				F87695A81F31D0D700D59CA5 /* TTVReplyViewModel.m in Sources */,
 				8851EDE61F14E52B000E76C2 /* TTNetwork.m in Sources */,
+				B32FD34121A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */,
 				B388CB2C2142652A00653188 /* CommonUIStyle.swift in Sources */,
 				F876965C1F31D0D900D59CA5 /* UIView+TTVHitTestExtensions.m in Sources */,
 				6B2845B91DF5402100170DE7 /* LastRead.m in Sources */,
@@ -20431,6 +20469,7 @@
 				2DB9A54C1F20B01C005E4A06 /* TTAdCanvasModel.m in Sources */,
 				6B28469E1DF5407100170DE7 /* TTLayOutUnifyADLargePicCellModel.m in Sources */,
 				3DF3640C21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33921A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				A97DC1221F1333320002B455 /* TTRPay.m in Sources */,
 				A97DBBD31F1332E30002B455 /* TTStartupInterfaceGroup.m in Sources */,
 				067F115B1AE784CB00F56154 /* TTLocationManager.m in Sources */,
@@ -20470,6 +20509,7 @@
 				48E59BD61F9776C8000884C8 /* TTCustomAnimationDelegate.m in Sources */,
 				6B9CA40B1B8EBB780065CD76 /* ArticleVideoPosterView.m in Sources */,
 				2DB9A5EC1F20B01D005E4A06 /* TTAdSiteWebPreloadManager.m in Sources */,
+				B32FD33021A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				3DF3637C21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
 				3D2D378121ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				472440401F8F43C70037712A /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
@@ -20563,8 +20603,10 @@
 				ABCF5F7F1F332AF500EE0975 /* ExploreArticleCellView.m in Sources */,
 				B388CC242142652B00653188 /* SearchAndConditionFilterViewModel.swift in Sources */,
 				AB1621F91F500EFA00B4CC0C /* SSCommentInputView.m in Sources */,
+				B32FD33D21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */,
 				2DB442A31F711843008E8951 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				6B28468E1DF5407000170DE7 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33421A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				3DF3636121A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				2DB9A5E41F20B01D005E4A06 /* TTSettingADSplashVC.m in Sources */,
 				307D0FE52027065C00DFBC54 /* TTWeChatShare+TTService.m in Sources */,
@@ -20843,6 +20885,7 @@
 				A97DC0821F1333310002B455 /* NewsDetailConstant.m in Sources */,
 				3DF363F421A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
 				485782AF1EE953F900307CEF /* TTFeedCollectionHTSListCell.m in Sources */,
+				B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				2D24F7E01E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				A97DC48A1F1333640002B455 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				2DCAD01A1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -20912,6 +20955,7 @@
 				1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */,
 				48A7A8ED1FD1223700070FDD /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7A2142652B00653188 /* FPSMonitor.swift in Sources */,
+				B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				9CBCA9D51F67812B00C518C3 /* TTRNCellManager.m in Sources */,
 				A9AFABA51F0E432B00C1E28D /* TTFastCoding.m in Sources */,
 				B388CCBE2142652C00653188 /* TGPacman.swift in Sources */,
@@ -21156,6 +21200,7 @@
 				B373C8862174587A008F9905 /* TTArticleCardCellViewHeaderView.m in Sources */,
 				B373C8872174587A008F9905 /* BubbleSelectCollectionView.swift in Sources */,
 				B373C8882174587A008F9905 /* TTSettingGeneralGroup.m in Sources */,
+				B32FD36321AA8554007B9966 /* HouseFindPageControl.swift in Sources */,
 				B373C8892174587A008F9905 /* ExploreMoviePlayerController.m in Sources */,
 				B373C88B2174587A008F9905 /* AKImageAlertView.m in Sources */,
 				B373C88C2174587A008F9905 /* SimpleNavBar.swift in Sources */,
@@ -21166,6 +21211,7 @@
 				B373C8912174587A008F9905 /* TTInterfaceTipBaseModel.m in Sources */,
 				B373C8922174587A008F9905 /* TTVSegmentedPageViewController.m in Sources */,
 				B373C8932174587A008F9905 /* ExploreAddEntryListCell.m in Sources */,
+				B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D821A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				B373C8942174587A008F9905 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
 				B373C8952174587A008F9905 /* PSPDFUIKitMainThreadGuard.m in Sources */,
@@ -21224,6 +21270,7 @@
 				B373C8CA2174587A008F9905 /* AccountAPI.swift in Sources */,
 				B373C8CB2174587A008F9905 /* TTMessageNotificationNormalCell.m in Sources */,
 				B373C8CC2174587A008F9905 /* NewFeedbackAlertManager.m in Sources */,
+				B32FD33E21A65D85007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */,
 				B373C8CD2174587A008F9905 /* TTVideoPasterADViewController.m in Sources */,
 				3DF3635A21A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */,
 				B373C8CE2174587A008F9905 /* TTVVideoPlayerModel.m in Sources */,
@@ -21840,6 +21887,7 @@
 				B373CB252174587A008F9905 /* ExploreDetailSaveImageManager.m in Sources */,
 				B373CB262174587A008F9905 /* TTArticleDetailViewController+AKReadBonus.m in Sources */,
 				B373CB272174587A008F9905 /* TTVADInfo+ActionTitle.m in Sources */,
+				B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */,
 				B373CB282174587A008F9905 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				B373CB292174587A008F9905 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				B373CB2A2174587A008F9905 /* TTSettingMineTabManager.m in Sources */,
@@ -21918,6 +21966,7 @@
 				B373CB722174587A008F9905 /* TTVReplyViewModel.m in Sources */,
 				B373CB732174587A008F9905 /* TTNetwork.m in Sources */,
 				B373CB742174587A008F9905 /* CommonUIStyle.swift in Sources */,
+				B32FD34321A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */,
 				B373CB752174587A008F9905 /* UIView+TTVHitTestExtensions.m in Sources */,
 				B373CB762174587A008F9905 /* LastRead.m in Sources */,
 				B373CB772174587A008F9905 /* TTMoviePlayerControlFinishShareAction.m in Sources */,
@@ -22159,6 +22208,7 @@
 				B373CC592174587A008F9905 /* TTRPay.m in Sources */,
 				B373CC5C2174587A008F9905 /* TTStartupInterfaceGroup.m in Sources */,
 				3DF3640E21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33B21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				B373CC5D2174587A008F9905 /* TTLocationManager.m in Sources */,
 				B373CC5E2174587A008F9905 /* ArticleMomentProfileViewController.m in Sources */,
 				B373CC5F2174587A008F9905 /* TTArticleDetailMonitor.m in Sources */,
@@ -22198,6 +22248,7 @@
 				B373CC7C2174587A008F9905 /* ArticleVideoPosterView.m in Sources */,
 				B373CC7D2174587A008F9905 /* TTAdSiteWebPreloadManager.m in Sources */,
 				B373CC7E2174587A008F9905 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
+				B32FD33221A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				B373CC7F2174587A008F9905 /* TTProfileViewController+UserLogin.m in Sources */,
 				3D2D378321ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637E21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
@@ -22293,6 +22344,7 @@
 				B373CCD62174587A008F9905 /* SSCommentInputView.m in Sources */,
 				B373CCD72174587A008F9905 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				B373CCD82174587A008F9905 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33621A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				B373CCD92174587A008F9905 /* TTSettingADSplashVC.m in Sources */,
 				3DF3636321A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				B373CCDA2174587A008F9905 /* TTWeChatShare+TTService.m in Sources */,
@@ -22571,6 +22623,7 @@
 				3DF3641721A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				B373CDE32174587A008F9905 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F621A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
+				B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				B373CDE42174587A008F9905 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				B373CDE52174587A008F9905 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				B373CDE62174587A008F9905 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -22640,6 +22693,7 @@
 				B373CE242174587A008F9905 /* TSVActivityBannerOriginalData.m in Sources */,
 				B373CE252174587A008F9905 /* FPSMonitor.swift in Sources */,
 				B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */,
+				B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				B373CE272174587A008F9905 /* TTFastCoding.m in Sources */,
 				B373CE282174587A008F9905 /* TGPacman.swift in Sources */,
 				B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -22884,6 +22938,7 @@
 				FEFA52FB205FB1A8001F50D8 /* TTArticleCardCellViewHeaderView.m in Sources */,
 				B388CC1F2142652B00653188 /* BubbleSelectCollectionView.swift in Sources */,
 				FEFA52FD205FB1A8001F50D8 /* TTSettingGeneralGroup.m in Sources */,
+				B32FD36221AA8553007B9966 /* HouseFindPageControl.swift in Sources */,
 				FEFA52FE205FB1A8001F50D8 /* ExploreMoviePlayerController.m in Sources */,
 				FEFA52FF205FB1A8001F50D8 /* AKImageAlertView.m in Sources */,
 				B388CB2F2142652A00653188 /* SimpleNavBar.swift in Sources */,
@@ -22894,6 +22949,7 @@
 				FEFA5309205FB1A8001F50D8 /* TTInterfaceTipBaseModel.m in Sources */,
 				FEFA530A205FB1A8001F50D8 /* TTVSegmentedPageViewController.m in Sources */,
 				FEFA530B205FB1A8001F50D8 /* ExploreAddEntryListCell.m in Sources */,
+				B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D721A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				FEFA530E205FB1A8001F50D8 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
 				FEFA5313205FB1A8001F50D8 /* PSPDFUIKitMainThreadGuard.m in Sources */,
@@ -22952,6 +23008,7 @@
 				B388CB452142652A00653188 /* AccountAPI.swift in Sources */,
 				D50168612089EC4B00B8F1C7 /* TTMessageNotificationNormalCell.m in Sources */,
 				FEFA534B205FB1A8001F50D8 /* NewFeedbackAlertManager.m in Sources */,
+				B32FD33F21A65D85007B9966 /* FHRentSearchInNeighborhoodCellRender.swift in Sources */,
 				FEFA534D205FB1A8001F50D8 /* TTVideoPasterADViewController.m in Sources */,
 				3DF3635921A29D9E0097FCB6 /* LBSMapPageVC.swift in Sources */,
 				FEFA534E205FB1A8001F50D8 /* TTVVideoPlayerModel.m in Sources */,
@@ -23568,6 +23625,7 @@
 				FEFA55FC205FB1A8001F50D8 /* ExploreDetailSaveImageManager.m in Sources */,
 				FEFA55FD205FB1A8001F50D8 /* TTArticleDetailViewController+AKReadBonus.m in Sources */,
 				FEFA55FE205FB1A8001F50D8 /* TTVADInfo+ActionTitle.m in Sources */,
+				B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */,
 				FEFA5601205FB1A8001F50D8 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				D50439A12079B87700DA4953 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				FEFA5602205FB1A8001F50D8 /* TTSettingMineTabManager.m in Sources */,
@@ -23646,6 +23704,7 @@
 				FEFA564D205FB1A8001F50D8 /* TTVReplyViewModel.m in Sources */,
 				FEFA564F205FB1A8001F50D8 /* TTNetwork.m in Sources */,
 				B388CB2D2142652A00653188 /* CommonUIStyle.swift in Sources */,
+				B32FD34221A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */,
 				FEFA5651205FB1A8001F50D8 /* UIView+TTVHitTestExtensions.m in Sources */,
 				FEFA5652205FB1A8001F50D8 /* LastRead.m in Sources */,
 				FEFA5653205FB1A8001F50D8 /* TTMoviePlayerControlFinishShareAction.m in Sources */,
@@ -23887,6 +23946,7 @@
 				FEFA5755205FB1A8001F50D8 /* TTRPay.m in Sources */,
 				FEFA5758205FB1A8001F50D8 /* TTStartupInterfaceGroup.m in Sources */,
 				3DF3640D21A29D9F0097FCB6 /* HouseCommentVC.swift in Sources */,
+				B32FD33A21A57423007B9966 /* BaseHouseDetailPage.swift in Sources */,
 				FEFA5759205FB1A8001F50D8 /* TTLocationManager.m in Sources */,
 				D507C763206B8AE40072A03E /* ArticleMomentProfileViewController.m in Sources */,
 				FEFA575B205FB1A8001F50D8 /* TTArticleDetailMonitor.m in Sources */,
@@ -23926,6 +23986,7 @@
 				FEFA5779205FB1A8001F50D8 /* ArticleVideoPosterView.m in Sources */,
 				FEFA577A205FB1A8001F50D8 /* TTAdSiteWebPreloadManager.m in Sources */,
 				FEFA577B205FB1A8001F50D8 /* TTVVideoPlayerViewShareCointainerView.m in Sources */,
+				B32FD33121A55C7B007B9966 /* FHRentDisclaimerCell.swift in Sources */,
 				FEFA577C205FB1A8001F50D8 /* TTProfileViewController+UserLogin.m in Sources */,
 				3D2D378221ABE371002AC330 /* SearchRentEntity.swift in Sources */,
 				3DF3637D21A29D9F0097FCB6 /* HouseOutlineHeaderCell.swift in Sources */,
@@ -24021,6 +24082,7 @@
 				FEFA57D8205FB1A8001F50D8 /* SSCommentInputView.m in Sources */,
 				FEFA57D9205FB1A8001F50D8 /* ExploreVideoDetailAppointLargePicADView.m in Sources */,
 				FEFA57DA205FB1A8001F50D8 /* TTLayOutUGCCellBaseModel.m in Sources */,
+				B32FD33521A570EA007B9966 /* HouseRentTracer.swift in Sources */,
 				FEFA57DC205FB1A8001F50D8 /* TTSettingADSplashVC.m in Sources */,
 				3DF3636221A29D9E0097FCB6 /* ErshouHousePriceChartCell.swift in Sources */,
 				FEFA57DD205FB1A8001F50D8 /* TTWeChatShare+TTService.m in Sources */,
@@ -24299,6 +24361,7 @@
 				3DF3641621A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				FEFA590E205FB1A8001F50D8 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F521A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
+				B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				FEFA5910205FB1A8001F50D8 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				FEFA5912205FB1A8001F50D8 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				FEFA5915205FB1A8001F50D8 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -24368,6 +24431,7 @@
 				FEFA595B205FB1A8001F50D8 /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7B2142652B00653188 /* FPSMonitor.swift in Sources */,
 				FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */,
+				B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				B388CCBF2142652C00653188 /* TGPacman.swift in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -24818,7 +24882,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = J3249442BT;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -24919,7 +24983,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = X46375UBYG;
+				DEVELOPMENT_TEAM = J3249442BT;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",

@@ -227,6 +227,7 @@ func parseNeighborhoodStatsInfo(_ data: NeighborhoodDetailData,traceExtension: T
                 items: [cellRender],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
         }else {
@@ -273,6 +274,7 @@ func parseErshouHouseCoreInfoNode(_ ershouHouseData: ErshouHouseData) -> () -> T
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: ErshouHouseCoreInfoCell.identifier))
         }else {

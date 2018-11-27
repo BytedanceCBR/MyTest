@@ -123,6 +123,7 @@ func parsePropertiesNode(properties: [(String, String)]) -> () -> TableSectionNo
                 items: [render],
                 selectors: [],
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FloorPanInfoPropertyCell.identifier))
     }

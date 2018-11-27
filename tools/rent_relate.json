@@ -1,0 +1,158 @@
+{
+	"data": {
+		"has_more": false,
+		"items": [{
+			"id": "123123",
+			"impr_id": "zxcv123asdf",
+			"title": "麦田租房",
+			"subtitle": "一室一厅/666平米",
+			"pricing": "9000元/月",
+			"house_type": 3,
+			"tags": [{
+				"id": 1122,
+				"content": "满五年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}, {
+				"id": 1122,
+				"content": "满1年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}],
+			"house_image_tag": {
+				"id": "12312",
+				"text": "大象租房",
+				"background_color": "#69db82",
+				"text_color": "#ffffff"
+			},
+			"url": "http://www.baidu.com",
+			"house_image": [{
+				"uri": "f100-image/R9LYVWXGFeuS6R/",
+				"url": "https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R",
+				"width": 540,
+				"height": 480,
+				"url_list": ["https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R"]
+			}],
+			"status": 0,
+			"log_pb": {
+				"group_id": "123123123123",
+				"impr_id": "zxcv123asdf"
+			}
+		}, {
+			"id": "123124",
+			"impr_id": "zxcv123asdf",
+			"title": "麦田租房",
+			"subtitle": "一室一厅/666平米",
+			"pricing": "9000元/月",
+			"house_type": 3,
+			"tags": [{
+				"id": 1122,
+				"content": "满五年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}, {
+				"id": 1122,
+				"content": "满1年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}],
+			"house_image_tag": {
+				"id": "12312",
+				"text": "大象租房",
+				"background_color": "#69db82",
+				"text_color": "#ffffff"
+			},
+			"url": "http://www.baidu.com",
+			"house_image": [{
+				"uri": "f100-image/R9LYVWXGFeuS6R/",
+				"url": "https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R",
+				"width": 540,
+				"height": 480,
+				"url_list": ["https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R"]
+			}],
+			"status": 0,
+			"log_pb": {
+				"group_id": "123123123123",
+				"impr_id": "zxcv123asdf"
+			}
+		}, {
+			"id": "123125",
+			"impr_id": "zxcv123asdf",
+			"title": "麦田租房",
+			"subtitle": "一室一厅/666平米",
+			"pricing": "9000元/月",
+			"house_type": 3,
+			"tags": [{
+				"id": 1122,
+				"content": "满五年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}, {
+				"id": 1122,
+				"content": "满1年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}],
+			"house_image_tag": {
+				"id": "12312",
+				"text": "大象租房",
+				"background_color": "#69db82",
+				"text_color": "#ffffff"
+			},
+			"url": "http://www.baidu.com",
+			"house_image": [{
+				"uri": "f100-image/R9LYVWXGFeuS6R/",
+				"url": "https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R",
+				"width": 540,
+				"height": 480,
+				"url_list": ["https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R"]
+			}],
+			"status": 0,
+			"log_pb": {
+				"group_id": "123123123123",
+				"impr_id": "zxcv123asdf"
+			}
+		}, {
+			"id": "123126",
+			"impr_id": "zxcv123asdf",
+			"title": "麦田租房",
+			"subtitle": "一室一厅/666平米",
+			"pricing": "9000元/月",
+			"house_type": 3,
+			"tags": [{
+				"id": 1122,
+				"content": "满五年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}, {
+				"id": 1122,
+				"content": "满1年",
+				"background_color": "#ebf0f4",
+				"text_color": "#3d6e99"
+			}],
+			"house_image_tag": {
+				"id": "12312",
+				"text": "大象租房",
+				"background_color": "#69db82",
+				"text_color": "#ffffff"
+			},
+			"url": "http://www.baidu.com",
+			"house_image": [{
+				"uri": "f100-image/R9LYVWXGFeuS6R/",
+				"url": "https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R",
+				"width": 540,
+				"height": 480,
+				"url_list": ["https://p3.pstatp.com/large/f100-image/R9LYVWXGFeuS6R"]
+			}],
+			"status": 0,
+			"log_pb": {
+				"group_id": "123123123123",
+				"impr_id": "zxcv123asdf"
+			}
+		}],
+		"search_id": "20181122140822010015094030355F7F",
+		"total": 4
+	},
+	"message": "success",
+	"status": 0
+}

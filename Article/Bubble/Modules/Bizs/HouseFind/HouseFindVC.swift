@@ -32,6 +32,11 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
             result.append(SectionItem(houseType: .newHouse, label: "新房"))
         }
     }
+    if let cfg = config.searchTabRentFilter {
+        if cfg.count > 0 {
+            result.append(SectionItem(houseType: .rentHouse, label: "租房"))
+        }
+    }
     if let cfg = config.searchTabNeighborHoodFilter {
         if cfg.count > 0 {
             result.append(SectionItem(houseType: .neighborhood, label: "小区"))
@@ -49,7 +54,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     private var houseFilterDataSource: [HouseType: CollectionDataSource] = [:]
 
+    private var houseFilterCollectionView: [HouseType: UICollectionView] = [:]
+
     fileprivate var errorVM : NHErrorViewModel?
+
+    fileprivate var pageControl: HouseFindPageControl?
 
     private lazy var searchBtn: UIButton = {
         let re = UIButton()
@@ -100,20 +109,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         return re
     }()
 
-    lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: 74, height: 28)
-        flowLayout.minimumLineSpacing = 12
-        flowLayout.minimumInteritemSpacing = 9
-        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
-        let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
-        result.backgroundColor = UIColor.clear
-
-        result.contentInset = UIEdgeInsets(top: -6, left: 0, bottom: 80, right: 0)
-        return result
-    }()
-
     private lazy var infoDisplay: EmptyMaskView = {
         let re = EmptyMaskView()
         re.isHidden = true
@@ -123,6 +118,14 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     let tapGesture: UITapGestureRecognizer = {
         let re = UITapGestureRecognizer()
         re.cancelsTouchesInView = false
+        return re
+    }()
+
+    let containerView: UIScrollView = {
+        let re = UIScrollView()
+        re.isPagingEnabled = true
+        re.bounces = false
+        re.showsHorizontalScrollIndicator = false
         return re
     }()
 
@@ -139,28 +142,28 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             self?.requestHistory()
         }
 
-        collectionView.keyboardDismissMode = .onDrag
-        collectionView.addGestureRecognizer(tapGesture)
-
-        resetCollectionDataSource()
+        containerView.addGestureRecognizer(tapGesture)
 
         setupViews()
-
-        registerCollectionViewComponent()
 
         segmentedNav.indexChangeBlock = { [unowned self] index in
             if let config = EnvContext.shared.client.configCacheSubject.value {
                 let items = houseTypeSectionByConfig(config: config)
+
                 if items.count > index {
                     self.houseType.accept(items[index].houseType)
                 }
+
+                let offset = self.pageControl?.pageOffsetXByIndex(index) ?? 0
+                self.containerView.contentOffset = CGPoint(x: offset, y: 0)
+
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
+                self.adjustVerticalPositionToTop()
+
             }
         }
 
-        registerCollectionViewComponent()
         houseType.skip(1).bind { [weak self] _ in
-            self?.resetCollectionDataSource()
             self?.requestHistory()
         }.disposed(by: disposeBag)
 
@@ -176,6 +179,20 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             }
         }
 
+        pageControl = HouseFindPageControl(segmentControl: segmentedNav,
+                                           pageView: containerView)
+        pageControl?.didPageIndexChanged = { [unowned self] index in
+            self.view.endEditing(true)
+            if let config = EnvContext.shared.client.configCacheSubject.value {
+                let items = houseTypeSectionByConfig(config: config)
+
+                if items.count > index {
+                    self.houseType.accept(items[index].houseType)
+                }
+                self.handleScroll(houseType: self.houseType.value)
+                NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
+            }
+        }
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
@@ -202,8 +219,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func setupViews() {
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
-            maker.left.equalTo(88 * CommonUIStyle.Screen.widthScale)
-            maker.right.equalTo(-88 * CommonUIStyle.Screen.widthScale)
+            maker.left.equalTo(70 * CommonUIStyle.Screen.widthScale)
+            maker.right.equalTo(-70 * CommonUIStyle.Screen.widthScale)
             maker.height.equalTo(28)
             maker.centerX.equalToSuperview()
         }
@@ -225,18 +242,16 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             maker.left.right.equalToSuperview()
         }
 
-        self.view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { maker in
+        self.view.addSubview(containerView)
+        containerView.snp.makeConstraints { (maker) in
             maker.left.right.equalToSuperview()
             maker.top.equalTo(seperateLineView.snp.bottom)
-
             if #available(iOS 11, *) {
                 maker.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             } else {
                 maker.bottom.equalToSuperview().offset(-CommonUIStyle.TabBar.height)
             }
         }
-
 
         self.view.addSubview(searchBtn)
         searchBtn.snp.makeConstraints { maker in
@@ -260,8 +275,103 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         EnvContext.shared.client.configCacheSubject
             .subscribe(onNext: { [weak self] _ in
                 self?.setupSectionLabelByConfig()
+                self?.createPageViews()
+                if let houseType = self?.houseType.value {
+                    self?.handleScroll(houseType: houseType)
+                }
             })
             .disposed(by: disposeBag)
+    }
+
+
+    func setupSectionLabelByConfig() {
+        if let config = EnvContext.shared.client.configCacheSubject.value {
+            let sections = houseTypeSectionByConfig(config: config)
+            sections.forEach({ (item) in
+                let _ = self.dataSourceByHouseType(houseType: item.houseType)
+            })
+            if let first = sections.first {
+                self.houseType.accept(first.houseType)
+                self.errorVM?.onRequestNormalData()
+            }
+
+            self.cleanAllDatasourceHistoryCache()
+            self.preLoadHistoryData(items: sections)
+            self.segmentedNav.sectionTitleArray = sections.map { $0.label }
+            if self.segmentedNav.segmentWidthsArray?.count ?? 0 > 0 {
+                self.segmentedNav.setSelectedSegmentIndex(index: 0, animated: false)
+            }
+        } else {
+            self.segmentedNav.sectionTitleArray = []
+        }
+    }
+
+    fileprivate func createPageViews() {
+        containerView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        if let config = EnvContext.shared.client.configCacheSubject.value {
+            let items = houseTypeSectionByConfig(config: config)
+            let pages = items.map { (item) -> UICollectionView in
+                let ds = dataSourceByHouseType(houseType: item.houseType)
+                let flowLayout = UICollectionViewFlowLayout()
+                flowLayout.itemSize = CGSize(width: 74, height: 28)
+                flowLayout.minimumLineSpacing = 12
+                flowLayout.minimumInteritemSpacing = 9
+                flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
+                flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
+                let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+                result.backgroundColor = UIColor.clear
+
+                result.contentInset = UIEdgeInsets(top: -6, left: 0, bottom: 80, right: 0)
+                result.dataSource = ds
+                result.delegate = ds
+                result.keyboardDismissMode = .onDrag
+                houseFilterCollectionView[item.houseType] = result
+                return result
+            }
+
+            items.forEach { (item) in
+                let ds = dataSourceByHouseType(houseType: item.houseType)
+                let priceNode = searchConfigByHouseType(
+                    configData: config,
+                    houseType: item.houseType).first(where: { $0.tabStyle ?? -1 == 2 })
+
+                ds.priceNodeItem = priceNode
+                let nodes = searchConfigByHouseType(
+                    configData: config,
+                    houseType: item.houseType)
+                    .filter { $0.tabStyle ?? -1 != 2 }
+                    .map { (option) -> [Node] in
+                        if let options = option.options {
+                            return transferSearchConfigOptionToNode(
+                                options: options,
+                                rate: option.rate,
+                                isSupportMulti: option.supportMulti)
+                        } else {
+                            return []
+                        }
+                }
+                if ds.nodes.count == 0 {
+                    ds.nodes = nodes.reduce([], { (result, nodes) -> [Node] in
+                        result + nodes
+                    })
+                }
+            }
+
+            pages.forEach { (view) in
+                self.containerView.addSubview(view)
+            }
+            pages.snp.makeConstraints { (make) in
+                make.top.bottom.width.height.equalToSuperview()
+            }
+            pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            pages.forEach { (collectionView) in
+                self.registerCollectionViewComponent(collectionView: collectionView)
+                collectionView.reloadData()
+            }
+        }
+
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -353,52 +463,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             .disposed(by: disposeBag)
     }
 
-    func setupSectionLabelByConfig() {
-
-        EnvContext.shared.client.configCacheSubject
-            .bind { [unowned self] (data) in
-                if let config = data {
-                    let sections = houseTypeSectionByConfig(config: config)
-                    if let first = sections.first {
-                        self.houseType.accept(first.houseType)
-                        self.errorVM?.onRequestNormalData()
-                    }
-
-                    self.cleanAllDatasourceHistoryCache()
-                    self.preLoadHistoryData(items: sections)
-                    self.segmentedNav.sectionTitleArray = sections.map { $0.label }
-                    if self.segmentedNav.segmentWidthsArray?.count ?? 0 > 0 {
-                        self.segmentedNav.setSelectedSegmentIndex(index: 0, animated: false)
-                    }
-                } else {
-                    self.segmentedNav.sectionTitleArray = []
-                }
-                self.resetCollectionDataSource(force: true)
-            }
-            .disposed(by: disposeBag)
-    }
 
     fileprivate func preLoadHistoryData(items: [SectionItem]) {
         items.forEach { [weak self] (item) in
             self?.requestHistory(houseType: "\(item.houseType.rawValue)")
         }
-    }
-
-
-    fileprivate func processKeyboardDisplay() {
-        NotificationCenter.default.rx
-            .notification(.UIKeyboardDidShow, object: nil)
-            .subscribe(onNext: { [unowned self] notification in
-                let userInfo = notification.userInfo!
-                let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-                self.collectionView.contentInset = UIEdgeInsets(top: -6, left: 0, bottom: keyBoardBounds.height, right: 0)
-            }).disposed(by: disposeBag)
-        NotificationCenter.default.rx
-            .notification(.UIKeyboardDidHide, object: nil)
-            .subscribe(onNext: { [unowned self] notification in
-                self.collectionView.contentInset = UIEdgeInsets(top: -6, left: 0, bottom: 65, right: 0)
-            })
-            .disposed(by: disposeBag)
     }
 
     fileprivate func bindSearchAction() {
@@ -445,59 +514,24 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    fileprivate func resetCollectionDataSource(force: Bool = false) {
-        let dataSource = dataSourceByHouseType(houseType: self.houseType.value)
-        self.collectionView.dataSource = dataSource
-        self.collectionView.delegate = dataSource
-        dataSource.deleteHistory = { [weak self] in
-            self?.requestDeleteHistory()
-        }
-        if let config = EnvContext.shared.client.configCacheSubject.value {
 
-            let priceNode = searchConfigByHouseType(
-                    configData: config,
-                    houseType: self.houseType.value).first(where: { $0.tabStyle ?? -1 == 2 })
-
-            dataSource.priceNodeItem = priceNode
-
-            let nodes = searchConfigByHouseType(
-                    configData: config,
-                    houseType: self.houseType.value)
-                    .filter { $0.tabStyle ?? -1 != 2 }
-                    .map { (option) -> [Node] in
-                        if let options = option.options {
-                            return transferSearchConfigOptionToNode(
-                                    options: options,
-                                    rate: option.rate,
-                                    isSupportMulti: option.supportMulti)
-                        } else {
-                            return []
-                        }
-                    }
-            if dataSource.nodes.count == 0 || force {
-                dataSource.nodes = nodes.reduce([], { (result, nodes) -> [Node] in
-                    result + nodes
-                })
-            }
-
-        }
-        self.collectionView.reloadData()
-        handleScroll() //每次重新设置delegate的时候 都需要重新监听信号
-    }
-    
-    fileprivate func handleScroll() {
+    fileprivate func handleScroll(houseType: HouseType) {
         self.contentOffsetDisposeBag = DisposeBag()
-        self.collectionView.rx.contentOffset
-            .subscribe(onNext : {
-                [unowned self] (point) in
-                self.seperateLineView.isHidden = (point.y - 0.5 <= -self.collectionView.contentInset.top)
-            }
-        )
-        .disposed(by: contentOffsetDisposeBag!)
-        
+        if let collectionView = self.houseFilterCollectionView[houseType] {
+            collectionView.rx.contentOffset.bind { [unowned self, unowned collectionView] (point) in
+                self.seperateLineView.isHidden = (point.y - 0.5 <= -collectionView.contentInset.top)
+            }.disposed(by: contentOffsetDisposeBag!)
+        }
+//        self.houseFilterCollectionView[houseType]?.rx.contentOffset
+//            .subscribe(onNext : { [unowned self] (point) in
+//                self.seperateLineView.isHidden = (point.y - 0.5 <= -self.collectionView.contentInset.top)
+//            }
+//        )
+//        .disposed(by: contentOffsetDisposeBag!)
+
     }
 
-    fileprivate func registerCollectionViewComponent() {
+    fileprivate func registerCollectionViewComponent(collectionView: UICollectionView) {
         collectionView.register(HouseFindHistoryCollectionCell.self, forCellWithReuseIdentifier: "history")
         collectionView.register(
                 BubbleCollectionCell.self,
@@ -505,6 +539,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         collectionView.register(PriceInputCell.self, forCellWithReuseIdentifier: "price-\(HouseType.neighborhood)")
         collectionView.register(PriceInputCell.self, forCellWithReuseIdentifier: "price-\(HouseType.secondHandHouse)")
         collectionView.register(PriceInputCell.self, forCellWithReuseIdentifier: "price-\(HouseType.newHouse)")
+        collectionView.register(PriceInputCell.self, forCellWithReuseIdentifier: "price-\(HouseType.rentHouse)")
+
         collectionView.register(
                 BubbleCollectionSectionHeader.self,
                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
@@ -532,18 +568,17 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func adjustVerticalPositionToTop() {
-        collectionView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
+        self.houseFilterCollectionView[houseType.value]?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
     }
 
     fileprivate func requestHistory(houseType: String? = nil) {
         let htypeIntValue = houseType != nil ? Int(houseType!) : self.houseType.value.rawValue
         let htype = HouseType(rawValue: htypeIntValue ?? self.houseType.value.rawValue) ?? self.houseType.value
         requestSearchHistory(houseType: (houseType == nil ? "\(self.houseType.value.rawValue)" : houseType!))
-//            .debug()
             .subscribe(onNext: {[unowned self] (payload) in
                 let dataSource = self.dataSourceByHouseType(houseType: htype)
                 dataSource.history.accept(payload)
-                self.collectionView.reloadData()
+                self.houseFilterCollectionView[htype]?.reloadData()
             }, onError: { (error) in
 //                print(error)
             })
@@ -557,11 +592,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             EnvContext.shared.toast.showToast("网络异常")
         } else {
             requestDeleteSearchHistory(houseType: houseTypeStr)
-                //            .debug()
                 .subscribe(onNext: { [unowned self] (payload) in
                     let dataSource = self.dataSourceByHouseType(houseType: houseType)
                     dataSource.history.accept(nil)
-                    self.collectionView.reloadData()
+                    self.houseFilterCollectionView[houseType]?.reloadData()
                     //                EnvContext.shared.toast.showToast("历史记录删除成功")
                     }, onError: { (error) in
 //                        print(error)
@@ -612,6 +646,8 @@ fileprivate func searchConfigByHouseType(
         return configData.searchTabCourtFilter ?? []
     case .neighborhood:
         return configData.searchTabNeighborHoodFilter ?? []
+    case .rentHouse:
+        return configData.searchTabRentFilter ?? []
     default:
         return configData.searchTabFilter ?? []
     }

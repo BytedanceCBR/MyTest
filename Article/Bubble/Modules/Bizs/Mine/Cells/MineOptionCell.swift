@@ -71,7 +71,8 @@ func parseOptionNode(
         return TableSectionNode(
             items: [render],
             selectors: callback != nil ? [callback!] : nil,
-                tracer: nil,
+            tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: MineOptionCell.identifier))
     }
@@ -96,6 +97,7 @@ func parseContactUsNode(phoneNumber: String, callback: ((TracerParams) -> Void)?
                 items: [render],
                 selectors: callback != nil ? [callback!] : nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: MineOptionCell.identifier))
     }

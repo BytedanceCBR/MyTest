@@ -106,6 +106,7 @@ func parseNeighborhoodPriceNode(_ data: NeighborhoodDetailData) -> () -> TableSe
             items: [cellRender],
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NeighborhoodPriceCell.identifier))
     }

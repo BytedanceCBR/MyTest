@@ -390,7 +390,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     fileprivate func reBindTableItemSelector() {
 
         func bindExtensionValueListSelector(_ children: [Node]) {
-            if children.count > 0,
+            if children.count > 1,
                 children[1].children.count > 0 {
                 dataSources[ConditionType.subCategory.rawValue].onSelect = createSubCategorySelector(nodes: children)
             } else {
@@ -697,6 +697,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 //                theCell.redDot.isHidden = true
 //            }
             theCell.redDot.isHidden = true
+
+            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
+                theCell.redDot.isHidden = false
+            } else {
+                theCell.redDot.isHidden = true
+            }
 
             return theCell
         } else {

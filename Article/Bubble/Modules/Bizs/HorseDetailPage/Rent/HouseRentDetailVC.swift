@@ -12,8 +12,7 @@ import RxSwift
 import RxCocoa
 import Reachability
 
-class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate {
-
+class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
@@ -27,7 +26,12 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     private var detailPageViewModel: HouseRentDetailViewMode?
 
     var shareParams: TracerParams?
-    let stateControl = HomeHeaderStateControl()
+    private let stateControl = HomeHeaderStateControl()
+
+    private let followUpViewModel: FollowUpViewModel
+
+    private var bottomBarViewModel: FHHouseContactBottomBarViewModel?
+
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -69,15 +73,11 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return label
     }()
 
-
-
     lazy var shareManager: TTShareManager = {
         let re = TTShareManager()
         re.delegate = self
         return re
     }()
-
-
 
     var traceParams = TracerParams.momoid()
 
@@ -93,6 +93,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     var logPB: [String: Any]?
     var searchId: String?
+    var houseRentTracer: HouseRentTracer
 
     var houseSearchParams: TracerParams? {
         didSet {
@@ -109,12 +110,26 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let houseId = HouseRentDetailVC.getHouseId(paramObj?.queryParams)
         self.houseId = Int64(houseId) ?? 0
         self.houseType = .rentHouse
+        self.houseRentTracer = HouseRentTracer(pageType: "rent_detail",
+                                               houseType: "rent",
+                                               cardType: "left_pic")
+        self.followUpViewModel = FollowUpViewModel()
         super.init(nibName: nil, bundle: nil)
+        getTraceParams(routeParamObj: paramObj)
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
+    }
+
+    private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
+        if let userInfo = paramObj?.userInfo {
+            self.houseRentTracer.cardType = userInfo.allInfo["card_type"] as? String ?? "be_null"
+            self.houseRentTracer.enterFrom = userInfo.allInfo["enter_from"] as? String ?? "be_null"
+            self.houseRentTracer.elementFrom = userInfo.allInfo["element_from"] as? String ?? "be_null"
+            self.houseRentTracer.rank = userInfo.allInfo["rank"] as? String ?? "be_null"
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -133,14 +148,78 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         view.backgroundColor = UIColor.white
         setupNavBar()
         bindNavBarStateMonitor()
-        bindShareAction()
         setupBottomStatusBar()
         setupTableView()
         setupInfoMaskView()
-        detailPageViewModel = HouseRentDetailViewMode()
+        detailPageViewModel = HouseRentDetailViewMode(houseId: houseId,
+                                                      houseRentTracer: houseRentTracer)
+        bindFollowUp()
+        detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
+        self.tableView.delegate = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)
-        tableView.reloadData()
+        detailPageViewModel?.tableView = tableView
+        bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
+
+        //触发请求数据
+        detailPageViewModel?.requestDetailData()
+        view.bringSubview(toFront: navBar)
+
+        bindShareAction()
+    }
+
+    fileprivate func bindFollowUp() {
+        if let detailPageViewModel = self.detailPageViewModel {
+            //绑定关注按钮点击事件
+            navBar.rightBtn.rx.tap
+                .bind(onNext:  { [weak detailPageViewModel, unowned self] in
+
+//                    var tracerParams = EnvContext.shared.homePageParams
+//                    if let params = detailPageViewModel.goDetailTraceParam {
+//                        tracerParams = tracerParams <|> params
+//                            .exclude("house_type")
+//                            .exclude("element_type")
+//                            .exclude("maintab_search")
+//                            .exclude("search")
+//                            .exclude("filter")
+//                    }
+//                    tracerParams = tracerParams <|>
+//                        toTracerParams(pageTypeString(detailPageViewModel.houseType ?? .newHouse), key: "page_type")
+                    if let theDetailModel = detailPageViewModel {
+                        let followUpOrCancel = theDetailModel.follwUpStatus.value.state() ?? false
+                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: followUpOrCancel,
+                                                              houseId: self.houseId,
+                                                              houseType: .rentHouse,
+                                                              followAction: .rentHouse,
+                                                              statusBehavior: theDetailModel.follwUpStatus)
+                    }
+//                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
+                })
+                .disposed(by: disposeBag)
+            //绑定关注状态回调
+            detailPageViewModel.follwUpStatus
+                .filter { (result) -> Bool in
+                    if case .success(_) = result {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                .map { [weak self] (result) -> Bool in
+                    if case let .success(status) = result {
+                        if !status && self?.stateControl.state != .suspend
+                        {
+                            self?.navBar.rightBtn.setImage(#imageLiteral(resourceName: "tab-collect"), for: .normal)
+                        }
+                        return status
+                    } else {
+                        return false
+                    }
+                }
+                .bind(to: navBar.rightBtn.rx.isSelected)
+                .disposed(by: disposeBag)
+
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -167,6 +246,12 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
         isFromPush = false
 //        self.recordGoDetailSearch()
+    }
+
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.houseRentTracer.recordStayPage()
     }
 
     func resetMapCellIfNeeded() {
@@ -206,7 +291,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             maker.left.right.equalToSuperview()
         }
-        
+
         view.addSubview(bottomStatusBar)
         bottomStatusBar.snp.makeConstraints { maker in
             maker.right.left.equalToSuperview()
@@ -282,6 +367,7 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tableView.rx.contentOffset
             .subscribe(onNext: stateControl.scrollViewContentYOffsetObserve)
             .disposed(by: disposeBag)
+
     }
 
     fileprivate func bindShareAction() {
@@ -300,10 +386,9 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
     }
 
-
     fileprivate func openSharePanel() {
         var logPB: Any? = nil
-        logPB = self.logPB ?? logPB
+        logPB = self.logPB
         var params = EnvContext.shared.homePageParams <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.logPB ?? logPB, key: "log_pb")
@@ -315,25 +400,27 @@ class HouseRentDetailVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             .exclude("search")
         recordEvent(key: "click_share", params: params)
         shareParams = params
-//        if let shareItem = self.detailPageViewModel?.getShareItem() {
-//
-//            var shareContentItems = [TTActivityContentItemProtocol]()
-//
-//            //            if TTAccountAuthWeChat.isAppInstalled() {
-//            //判断是否有微信
-//            shareContentItems.append(createWeChatTimelineShareItem(shareItem: shareItem))
-//            shareContentItems.append(createWeChatShareItem(shareItem: shareItem))
-//            //            }
-//
-//            if QQApiInterface.isQQInstalled() && QQApiInterface.isQQSupportApi() {
-//                //判断是否有qq
-//                shareContentItems.append(createQQFriendShareItem(shareItem: shareItem))
-//                shareContentItems.append(createQQZoneContentItem(shareItem: shareItem))
-//            }
-//
-//            self.shareManager.displayActivitySheet(withContent: shareContentItems)
-//        }
+        if let shareItem = self.detailPageViewModel?.getShareItem() {
+
+            var shareContentItems = [TTActivityContentItemProtocol]()
+
+            //            if TTAccountAuthWeChat.isAppInstalled() {
+            //判断是否有微信
+            shareContentItems.append(createWeChatTimelineShareItem(shareItem: shareItem))
+            shareContentItems.append(createWeChatShareItem(shareItem: shareItem))
+            //            }
+
+            if QQApiInterface.isQQInstalled() && QQApiInterface.isQQSupportApi() {
+                //判断是否有qq
+                shareContentItems.append(createQQFriendShareItem(shareItem: shareItem))
+                shareContentItems.append(createQQZoneContentItem(shareItem: shareItem))
+            }
+
+            self.shareManager.displayActivitySheet(withContent: shareContentItems)
+        }
     }
+
+    
 
 
 }
