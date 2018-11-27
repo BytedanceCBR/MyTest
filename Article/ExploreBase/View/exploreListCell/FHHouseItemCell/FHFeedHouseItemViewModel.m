@@ -140,7 +140,7 @@
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"enter_from"] = @"maintab";
-    param[@"element_type"] = @"mix_list";
+    param[@"element_from"] = @"mix_list";
     param[@"rank"] = @(indexPath.row);
     
     param[@"origin_from"] = @"mix_list";
@@ -184,7 +184,7 @@
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"enter_from"] = @"maintab";
-    param[@"element_type"] = @"mix_list";
+    param[@"element_from"] = @"mix_list";
     param[@"rank"] = @(indexPath.row);
     
     if (houseModel.logPb.count > 0) {

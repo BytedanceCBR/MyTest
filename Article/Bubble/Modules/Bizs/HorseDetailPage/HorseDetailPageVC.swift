@@ -278,7 +278,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
         }
         
-        if (allParams["element_type"]  as? String ) == "mix_list" && (allParams["enter_from"]  as? String ) == "maintab" {
+        if (allParams["element_from"]  as? String ) == "mix_list" && (allParams["enter_from"]  as? String ) == "maintab" {
             
             //enter from feed mix list
             traceParams = traceParams <|> toTracerParams("maintab", key: "enter_from")
