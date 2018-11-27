@@ -3551,6 +3551,7 @@
 		B3BDFAA121460CB800C948FC /* JXPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD08214266B700653188 /* JXPhotoBrowser.framework */; };
 		B3BDFAA221460CBD00C948FC /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD06214266B200653188 /* Charts.framework */; };
 		B3BDFAA421460CCD00C948FC /* libMJRefresh.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3BDFAA321460CCD00C948FC /* libMJRefresh.a */; };
+		B3C18BBC21AD3282005CF234 /* FHHouseShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */; };
 		C2036D7E1F288E5300ECFA51 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		C212227E1F4F0CF00036101E /* TTShortVideoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BB79DA1F4578CB002C2EEF /* TTShortVideoHelper.m */; };
 		C22374101F5428E50005E844 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
@@ -3587,7 +3588,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -8111,6 +8112,7 @@
 		B3BDFA9821460C8100C948FC /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		B3BDFA9B21460C9000C948FC /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = Carthage/Build/iOS/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
 		B3BDFAA321460CCD00C948FC /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseShareViewModel.swift; sourceTree = "<group>"; };
 		B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.release.xcconfig"; sourceTree = "<group>"; };
 		C0B392A9E342CCCDCA90EB90 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		C2036D7C1F288E5300ECFA51 /* TTQQSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTQQSDKRegister.h; sourceTree = "<group>"; };
@@ -9146,7 +9148,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -14865,6 +14867,7 @@
 				B32FD30121A3B479007B9966 /* HouseRentDetailVC.swift */,
 				B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */,
 				B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */,
+				B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */,
 			);
 			path = Rent;
 			sourceTree = "<group>";
@@ -19485,6 +19488,7 @@
 				43538E5D1F98D6B100F6B6FF /* TTVPlayerTipRelatedFinishedForward.m in Sources */,
 				2DB9A5DC1F20B01D005E4A06 /* SSADSplashView.m in Sources */,
 				F87695241F31D0D600D59CA5 /* TTVMoreAction.m in Sources */,
+				B3C18BBC21AD3282005CF234 /* FHHouseShareViewModel.swift in Sources */,
 				4883308319F9177D0004419A /* ExploreDetailnatantActionButton.m in Sources */,
 				0A2948B51FA337A800CB0E9D /* TTWebImageHEIFCoder.m in Sources */,
 				48884DF31FAB52490067C98A /* TSVCategoryContainerViewController.m in Sources */,

@@ -11,6 +11,15 @@ import Foundation
 public enum Result<Value> {
     case success(Value)
     case failure(Error)
+
+    func state() -> Value? {
+        switch self {
+        case let .success(value):
+            return value
+        default:
+            return nil
+        }
+    }
 }
 
 precedencegroup SequencePrecedence {

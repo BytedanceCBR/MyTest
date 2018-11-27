@@ -32,7 +32,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     private let houseId: Int64
 
+    private var shareInfo: FHRentDetailResponseDataShareInfoModel?
+
     let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
+
+    private var groupId: String = ""
 
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
@@ -137,6 +141,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         }
     }
 
+
+    /// 房屋概况组件
+    ///
+    /// - Returns:
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
         let action: () -> Void = { [weak self] in
             if let url = self?.detailData.value?.data?.reportUrl {
@@ -153,6 +161,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                      tracer: houseRentTracer))
     }
 
+    /// 房屋配置
+    ///
+    /// - Returns:
     func parseRentHouseFacility() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("房屋配置", adjustBottomSpace: 0))
         return parseNodeWrapper(preNode: header,
@@ -160,6 +171,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                       tracer: houseRentTracer))
     }
 
+    /// 小区测评
+    ///
+    /// - Returns:
     func parseRentNeighborhoodInfo() -> () -> [TableSectionNode]? {
         let title = detailData.value?.data?.neighborhoodInfo?.name
         let process: TableCellSelectedProcess = { [weak self] (params) in
@@ -174,6 +188,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                           tracer: houseRentTracer))
     }
 
+    /// 同小区房源
+    ///
+    /// - Returns:
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
         let params = TracerParams.momoid()
         return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
@@ -184,6 +201,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                                                               tracerParams: params))
     }
 
+    /// 相关租房
+    ///
+    /// - Returns:
     func parseRentErshouHouseListItemNode() -> () -> [TableSectionNode]? {
 //        let relatedErshouItems = relateErshouHouseData.value?.data?.items?.map({ (item) -> HouseItemInnerEntity in
 ////            var newItem = item
@@ -201,11 +221,23 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         return parseNodeWrapper(preNode: header, wrapedNode: result)
     }
 
+    /// 跳转到小区详情页
+    ///
+    /// - Parameter neighborhoodId: 小区id
     fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"))
+        let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
+        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            
+
+            TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
+        }
+
 
     }
 
+    /// 跳转到投诉页面
+    ///
+    /// - Parameter url: reportUrl
     fileprivate func jumpToReportPage(url: String) {
         TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
     }
@@ -249,6 +281,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 if let status = model?.data?.userStatus {
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
                 }
+                self?.shareInfo = model?.data?.shareInfo
             }
             self?.requestReletedData()
         }
@@ -262,6 +295,31 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
         let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
             self?.houseInSameNeighborhood.accept(model)
+        }
+    }
+
+    func getShareItem() -> ShareItem {
+        var shareimage: UIImage? = nil
+        if let shareImageUrl = shareInfo?.coverImage {
+            shareimage = BDImageCache.shared().imageFromDiskCache(forKey: shareImageUrl)
+        }
+
+        if let shareInfo = shareInfo {
+            return ShareItem(
+                title: shareInfo.title ?? "",
+                desc: shareInfo.desc ?? "",
+                webPageUrl: shareInfo.shareUrl ?? "",
+                thumbImage: shareimage ?? #imageLiteral(resourceName: "default_image"),
+                shareType: TTShareType.webPage,
+                groupId: groupId)
+        } else {
+            return ShareItem(
+                title: "",
+                desc: "",
+                webPageUrl: "",
+                thumbImage: #imageLiteral(resourceName: "icon-bus"),
+                shareType: TTShareType.webPage,
+                groupId: "")
         }
     }
 

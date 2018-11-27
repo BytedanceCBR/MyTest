@@ -115,6 +115,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                                                cardType: "left_pic")
         self.followUpViewModel = FollowUpViewModel()
         super.init(nibName: nil, bundle: nil)
+        getTraceParams(routeParamObj: paramObj)
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
@@ -147,7 +148,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         view.backgroundColor = UIColor.white
         setupNavBar()
         bindNavBarStateMonitor()
-        bindShareAction()
         setupBottomStatusBar()
         setupTableView()
         setupInfoMaskView()
@@ -164,6 +164,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         //触发请求数据
         detailPageViewModel?.requestDetailData()
         view.bringSubview(toFront: navBar)
+
+        bindShareAction()
     }
 
     fileprivate func bindFollowUp() {
@@ -184,7 +186,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 //                    tracerParams = tracerParams <|>
 //                        toTracerParams(pageTypeString(detailPageViewModel.houseType ?? .newHouse), key: "page_type")
                     if let theDetailModel = detailPageViewModel {
-                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: true,
+                        let followUpOrCancel = theDetailModel.follwUpStatus.value.state() ?? false
+                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: followUpOrCancel,
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse,
                                                               followAction: .rentHouse,
@@ -383,7 +386,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         }
     }
 
-
     fileprivate func openSharePanel() {
         var logPB: Any? = nil
         logPB = self.logPB
@@ -398,25 +400,27 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             .exclude("search")
         recordEvent(key: "click_share", params: params)
         shareParams = params
-//        if let shareItem = self.detailPageViewModel?.getShareItem() {
-//
-//            var shareContentItems = [TTActivityContentItemProtocol]()
-//
-//            //            if TTAccountAuthWeChat.isAppInstalled() {
-//            //判断是否有微信
-//            shareContentItems.append(createWeChatTimelineShareItem(shareItem: shareItem))
-//            shareContentItems.append(createWeChatShareItem(shareItem: shareItem))
-//            //            }
-//
-//            if QQApiInterface.isQQInstalled() && QQApiInterface.isQQSupportApi() {
-//                //判断是否有qq
-//                shareContentItems.append(createQQFriendShareItem(shareItem: shareItem))
-//                shareContentItems.append(createQQZoneContentItem(shareItem: shareItem))
-//            }
-//
-//            self.shareManager.displayActivitySheet(withContent: shareContentItems)
-//        }
+        if let shareItem = self.detailPageViewModel?.getShareItem() {
+
+            var shareContentItems = [TTActivityContentItemProtocol]()
+
+            //            if TTAccountAuthWeChat.isAppInstalled() {
+            //判断是否有微信
+            shareContentItems.append(createWeChatTimelineShareItem(shareItem: shareItem))
+            shareContentItems.append(createWeChatShareItem(shareItem: shareItem))
+            //            }
+
+            if QQApiInterface.isQQInstalled() && QQApiInterface.isQQSupportApi() {
+                //判断是否有qq
+                shareContentItems.append(createQQFriendShareItem(shareItem: shareItem))
+                shareContentItems.append(createQQZoneContentItem(shareItem: shareItem))
+            }
+
+            self.shareManager.displayActivitySheet(withContent: shareContentItems)
+        }
     }
+
+    
 
 
 }

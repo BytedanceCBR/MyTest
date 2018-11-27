@@ -41,7 +41,8 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
         }
         theCell.neighborhoodId = neighborhoodInfo?.id
         theCell.name = neighborhoodInfo?.name
-        if let detailUrl = neighborhoodInfo?.evaluationInfo?.detailUrl {
+        if let detailUrl = neighborhoodInfo?.evaluationInfo?.detailUrl,
+            !detailUrl.isEmpty {
             theCell.detailUrl = detailUrl
             theCell.bgView.isHidden = false
         } else {
