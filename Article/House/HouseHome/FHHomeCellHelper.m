@@ -122,6 +122,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+       
             
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
