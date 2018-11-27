@@ -188,7 +188,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
         self.navBar.mapBtn.rx.tap
-            .debounce(0.5, scheduler: MainScheduler.instance)
+            .debounce(0.3, scheduler: MainScheduler.instance)
             .bind { [weak self] void in
                 self?.gotoMapSearch()
             }.disposed(by: disposeBag)
@@ -581,6 +581,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return
         }
         
+        self.navBar.mapBtn.isEnabled = false
+        
         self.conditionFilterViewModel?.closeConditionFilterPanel(index: -1)
         
         //点击切换埋点
@@ -654,6 +656,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             openUrl = "\(openUrl)&\(query)"
         }
         guard let url = URL(string: openUrl) else {
+            self.navBar.mapBtn.isEnabled = true
             return
         }
         var info = [AnyHashable: Any]()
@@ -661,7 +664,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
         
-        
+        self.navBar.mapBtn.isEnabled = true
     }
 
     override func viewDidLayoutSubviews() {
