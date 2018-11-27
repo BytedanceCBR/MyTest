@@ -129,6 +129,10 @@ class GuessYouWantView: UIView {
         var secondLineLen:CGFloat = 0
         var line:Int = 1
         remainWidth -= (firstWordLength + 10)
+        if firstText.count == 0 {
+            firstLineLen = 0
+            remainWidth = UIScreen.main.bounds.width - 40
+        }
         for item in array {
             if let text = item.text {
                 let len = guessYouWantTextLength(text: text)
