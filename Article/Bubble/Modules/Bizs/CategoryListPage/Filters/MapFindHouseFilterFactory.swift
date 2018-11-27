@@ -28,11 +28,7 @@ import RxCocoa
 
     private var searchAndConditionFilterVM: SearchAndConditionFilterViewModel?
 
-    var houseType: HouseType = .secondHandHouse {
-        didSet {
-            houseTypeState.accept(houseType)
-        }
-    }
+    private var houseType: HouseType = .secondHandHouse
 
     private let houseTypeState = BehaviorRelay<HouseType>(value: .secondHandHouse)
 
@@ -60,6 +56,7 @@ import RxCocoa
 
     init(houseType: HouseType, allCondition: Bool) {
         self.houseType = houseType
+        self.houseTypeState.accept(houseType)
         self.allCondition = allCondition
         super.init()
         self.searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
@@ -97,6 +94,8 @@ import RxCocoa
                 return configs.filter
             case HouseType.neighborhood:
                 return configs.neighborhoodFilter
+            case HouseType.rentHouse:
+                return configs.rentFilter
             default:
                 return configs.filter
             }
@@ -108,6 +107,7 @@ import RxCocoa
     func resetConditionData() {
         Observable
             .zip(houseTypeState, EnvContext.shared.client.configCacheSubject)
+            .debug()
             .filter { (e) in
                 let (_, config) = e
                 return config != nil

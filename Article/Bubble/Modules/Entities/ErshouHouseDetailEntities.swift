@@ -78,7 +78,7 @@ struct PriceChangeHistory: Mappable {
     
     var detailUrl: String?
     var priceChangeDesc: String?
-    var history:[ChangeHistory]?
+    var history:[[String:Any]]?
 
     init?(map: Map) {
         

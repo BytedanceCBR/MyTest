@@ -43,9 +43,9 @@
     self.trendView.clickedLeftCallback = ^(UIButton * _Nonnull btn) {
         [wself leftBtnDidClick:btn];
     };
-    self.trendView.clickedRightCallback = ^{
-        [wself rightBtnDidClickWithModel: wself.model];
-    };
+//    self.trendView.clickedRightCallback = ^{
+//        [wself rightBtnDidClickWithModel: wself.model];
+//    };
     
 }
 
