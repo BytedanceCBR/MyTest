@@ -278,6 +278,28 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
         }
         
+        if (allParams["element_type"]  as? String ) == "mix_list" && (allParams["enter_from"]  as? String ) == "maintab" {
+            
+            //enter from feed mix list
+            traceParams = traceParams <|> toTracerParams("maintab", key: "enter_from")
+            
+            if let cardType = allParams["card_type"] {
+                traceParams = traceParams <|> toTracerParams(cardType,key:"card_type")
+            }
+            if let elementFrom = allParams["element_from"] {
+                traceParams = traceParams <|> toTracerParams(elementFrom, key: "element_from")
+            }
+            if let rank = allParams["rank"] {
+                traceParams = traceParams <|> toTracerParams(rank, key: "rank")
+            }
+            if let originFrom = allParams["origin_from"] {
+                traceParams = traceParams <|> toTracerParams(originFrom,key:"origin_from")
+            }
+            if let originSearchId = allParams["origin_search_id"] {
+                traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
+            }
+        }
+
     }
     
 

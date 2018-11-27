@@ -114,10 +114,15 @@ func openPriceChangeHistoryPage(
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     return { (theTracerParams) in
         if let pushUrl = priceChangeHistory?.detailUrl, pushUrl.count > 0 {
-            let data = priceChangeHistory?.history?.toJSONString() ?? ""
-            let userInfo = TTRouteUserInfo(info: ["house_id":houseId,"history": data, "title": "123"])
+            let historyData = priceChangeHistory?.history ?? []
             if let url = "\(EnvContext.networkConfig.host)\(pushUrl)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"), userInfo: userInfo)
+                // js data
+                let history  = ["history":historyData]
+                let jsData   = ["data":history,"house_id":houseId] as [String : Any]
+                let jsParams = ["requestPageData":jsData]
+                let userInfo = TTRouteUserInfo(info: ["url":url, "title": "价格变动", "jsParams":jsParams])
+                let jumpUrl = "fschema://webview_oc" //route协议
+                TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             }
         }
     }
