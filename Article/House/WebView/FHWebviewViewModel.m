@@ -34,7 +34,7 @@
             NSMutableDictionary *callBackData = [NSMutableDictionary dictionaryWithDictionary:obj];
             [plugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
                 [callBackData setObject:@(1) forKey:@"code"];
-                if (![NSNull isEqual:params]) {
+                if ([params isKindOfClass:[NSDictionary class]]) {
                     [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull temObj, BOOL * _Nonnull stop) {
                         [callBackData setObject:temObj forKey:key];
                     }];
