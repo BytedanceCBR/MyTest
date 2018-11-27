@@ -122,9 +122,10 @@ func openPriceChangeHistoryPage(
             let historyData = priceChangeHistory?.history ?? []
             if let url = "\(EnvContext.networkConfig.host)\(pushUrl)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                 // 埋点
-                let params = TracerParams.momoid() <|>
+                let params = EnvContext.shared.homePageParams <|>
                     toTracerParams("old_detail", key: "page_type") <|>
-                tracerParams
+                    tracerParams <|>
+                    theTracerParams
                 recordEvent(key: "click_price_variation", params: params)
                 // js data
                 let history  = ["history":historyData]
