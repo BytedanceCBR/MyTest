@@ -749,11 +749,16 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     @objc func loadData() {
-        let refreshParams = self.tracerParams.exclude("card_type") <|>
+        var refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type") <|>
                 toTracerParams(self.categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(self.categoryListViewModel?.originSearchId ?? "be_null", key: "origin_search_id")
-            
+        
+        if let logpb = self.categoryListViewModel?.logPB
+        {
+            refreshParams = refreshParams <|>
+                toTracerParams(logpb, key: "log_pb")
+        }
             
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         errorVM?.onRequest()

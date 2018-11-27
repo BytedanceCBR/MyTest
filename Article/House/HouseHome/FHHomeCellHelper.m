@@ -119,6 +119,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+       
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
         }];
@@ -253,11 +254,17 @@ static NSMutableArray  * _Nullable identifierArr;
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             
             NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
             [dictTrace setValue:@"maintab" forKey:@"enter_from"];
             [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
             
+            NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+            if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            }else
+            {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+            }
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
@@ -382,7 +389,6 @@ static NSMutableArray  * _Nullable identifierArr;
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             
             NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-//            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
             [dictTrace setValue:@"maintab" forKey:@"enter_from"];
             [dictTrace setValue:@"school_operation" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
