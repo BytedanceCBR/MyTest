@@ -17,6 +17,8 @@
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
+#import "FHHouseEvnContextBridgeImp.h"
+#import "FHHouseBridgeManager.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -78,7 +80,7 @@ static NSMutableArray  * _Nullable identifierArr;
             
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
-                if ([model.houseType isEqualToString:@"2"]) {
+                if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
                     [modelsArray addObject:model];
                     break;
                 }
@@ -86,18 +88,45 @@ static NSMutableArray  * _Nullable identifierArr;
         }
     }
     
-    if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]]) {
+    if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]] && ![modelsArray isEqualToArray:((FHHomeTableViewDelegate *)tableView.delegate).modelsArray]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
-    }
-    
-    if (self.dataModel != dataModel) {
+        [tableView reloadData];
         
-        [identifierArr removeAllObjects];
+        [FHHomeCellHelper sendCellShowTrace];
+    }
+}
+
++ (void)sendCellShowTrace
+{
+    
+    FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
+    
+    if (modelOpdata2.items > 0)
+    {
+        [modelOpdata2.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *stringOpStyle = @"be_null";
+            FHConfigDataOpData2ItemsModel *item = (FHConfigDataOpData2ItemsModel *)obj;
+            
+            NSLog(@"logpb = %@",item.logPb);
+            NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
+            
+            if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                if ([item.logPb isKindOfClass:[NSDictionary class]]) {
+                    NSString *stringName =  item.logPb[@"operation_name"];
+                    [dictTraceParams setValue:stringName forKey:@"operation_name"];
+                }
+            }
+            [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+            
+            [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+            
+            
+            [TTTracker eventV3:@"operation_show" params:dictTraceParams];
+        }];
     }
     
-    [tableView reloadData];
-    self.dataModel = dataModel;
-
+    [identifierArr removeAllObjects];
+    
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
@@ -117,7 +146,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
                 
-                if ([model.houseType isEqualToString:@"2"]) {
+                if (model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
                     hasCity = YES;
                     break;
                 }
@@ -225,15 +254,23 @@ static NSMutableArray  * _Nullable identifierArr;
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             
             NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
             [dictTrace setValue:@"maintab" forKey:@"enter_from"];
             [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+            if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            }else
+            {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+            }
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
             if (itemModel.openUrl) {
+                
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
@@ -352,10 +389,17 @@ static NSMutableArray  * _Nullable identifierArr;
             FHConfigDataOpDataItemsModel *itemModel = [model.items objectAtIndex:clickIndex];
             
             NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-            [dictTrace setValue:itemModel.logPb forKey:@"log_pb"];
             [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-            [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+            [dictTrace setValue:@"school_operation" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+            if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            }else
+            {
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"school_operation" forKey:@"origin_from"];
+            }
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
@@ -375,9 +419,10 @@ static NSMutableArray  * _Nullable identifierArr;
     //        make.left.top.right.equalTo(cellBanner.contentView);
     //        make.height.mas_equalTo(70 * ((countItems + 1)/2));
     //    }];
-    //
+    
     [cellBanner setNeedsLayout];
     [cellBanner layoutIfNeeded];
+    
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
@@ -385,6 +430,11 @@ static NSMutableArray  * _Nullable identifierArr;
     WeakSelf;
     [cell updateWithModel:model];
     cell.trendView.clickedRightCallback = ^{
+        
+        // logpb处理
+        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
+        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
         
         if (model.mapOpenUrl) {
             
@@ -465,3 +515,4 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 @end
+
