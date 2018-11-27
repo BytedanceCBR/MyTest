@@ -988,12 +988,14 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if (self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
     }
-    
+
     for (ExploreCellBase * cell in  [_listView visibleCells]) {
         if ([cell isKindOfClass:[ExploreCellBase class]]) {
             NSIndexPath *indexPath = [_listView indexPathForCell:cell];

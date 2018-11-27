@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
 @property(nonatomic , strong) FHConfigDataModel *currentDataModel;
 @property(nonatomic , strong) NSDictionary *currentDictionary;
+@property (nonatomic,assign)BOOL isNeedTriggerPullDownUpdate;
 
 +(instancetype)sharedInstance;
 //从原有数据源接收数据

@@ -11,7 +11,6 @@
 
 @interface FHHomeConfigManager()
 
-@property (nonatomic,assign)BOOL isNeedTriggerPullDownUpdate;
 
 @end
 
