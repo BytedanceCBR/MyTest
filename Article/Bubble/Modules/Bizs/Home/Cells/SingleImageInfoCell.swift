@@ -540,6 +540,69 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
     
+    @objc
+    func update(withRentHouseModel model: FHHouseRentDataItemsModel, isFirstCell : Bool ,isLastCell: Bool) {
+        
+        let cell = self
+//        let item = model
+        cell.majorTitle.text = model.title
+        cell.extendTitle.text = model.subtitle
+        cell.isTail = isLastCell
+        cell.isFirstCell = isFirstCell
+        
+        let text = NSMutableAttributedString()
+        if let tags = model.tags as? [FHHouseRentDataItemsTagsModel] {
+            let  attrTexts = tags.enumerated().map ({ (arg) -> NSAttributedString  in
+                let (offset, element) = arg
+                return createTagAttrString(
+                    element.content ?? "",
+                    isFirst: offset == 0,
+                    textColor: hexStringToUIColor(hex: element.textColor),
+                    backgroundColor: hexStringToUIColor(hex: element.backgroundColor))
+            })
+            
+            var height: CGFloat = 0
+            attrTexts.enumerated().forEach({ (e) in
+                let (offset, tag) = e
+                
+                text.append(tag)
+                
+                let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 170, height: CGFloat.greatestFiniteMagnitude), text: text)
+                let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+                if lineHeight > height {
+                    if offset != 0 {
+                        text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                    }
+                    if offset == 0 {
+                        height = lineHeight
+                    }
+                }
+            })
+        }
+        
+        cell.areaLabel.attributedText = text
+        cell.areaLabel.snp.updateConstraints { (maker) in
+            maker.left.equalToSuperview().offset(-3)
+        }
+        cell.priceLabel.text = model.pricing
+        
+        cell.roomSpaceLabel.text = nil
+        let houseImags  = model.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
+        cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+        if let houseImageTag = model.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            cell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            cell.imageTopLeftLabel.text = houseImageTag.text
+            cell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            cell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            cell.imageTopLeftLabelBgView.isHidden = true
+        }
+        cell.updateOriginPriceLabelConstraints(originPriceText: nil)        
+    }
+    
+    
 }
 
 class StrickoutLabel: UILabel {
