@@ -13,9 +13,12 @@
 #import "TTRoute.h"
 #import "TTRWebViewProgressView.h"
 #import "SSNavigationBar.h"
+#import "UIView+Refresh_ErrorHandler.h"
 
-@interface FHWebviewViewController ()<TTRouteInitializeProtocol, TTRWebViewDelegate>
-
+@interface FHWebviewViewController ()<TTRouteInitializeProtocol, TTRWebViewDelegate, UIViewControllerErrorHandler>
+{
+    BOOL _isWebViewLoading;
+}
 @property (nonatomic, strong) FHWebviewViewModel *viewModel;
 @property (nonatomic, strong) TTRouteUserInfo *userInfo;
 @property (nonatomic, copy)   NSString *url;
@@ -88,15 +91,25 @@
 #pragma mark - TTRWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIView<TTRWebView> *)webView {
-    
+    _isWebViewLoading = YES;
+    [self tt_startUpdate];
 }
 
 - (void)webViewDidFinishLoad:(UIView<TTRWebView> *)webView {
-    
+    _isWebViewLoading = NO;
+    [self tt_endUpdataData];
 }
 
 - (void)webView:(UIView<TTRWebView> *)webView didFailLoadWithError:(NSError *)error {
-    
+    _isWebViewLoading = NO;
+    [self tt_endUpdataData];
+}
+
+#pragma mark - UIViewControllerErrorHandler
+
+- (BOOL)tt_hasValidateData
+{
+    return NO;
 }
 
 @end
