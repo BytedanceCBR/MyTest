@@ -211,7 +211,8 @@ func parseOpenAllNode(
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
-                    tracer: nil,
+                tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: OpenAllCell.identifier))
         }else {
@@ -230,6 +231,7 @@ func parseFlineNode(
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FGrayLineCell.identifier))
         }else {
@@ -237,6 +239,7 @@ func parseFlineNode(
                 items: [],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FGrayLineCell.identifier))
         }
@@ -255,6 +258,7 @@ func parseFMarginLineNode(
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FGrayLineCell.identifier))
         }else {
@@ -262,6 +266,7 @@ func parseFMarginLineNode(
                 items: [],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FGrayLineCell.identifier))
         }

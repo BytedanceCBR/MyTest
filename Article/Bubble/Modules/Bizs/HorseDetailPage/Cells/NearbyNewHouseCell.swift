@@ -227,6 +227,7 @@ func parseNearbyNewHouseListNode(
                 items: renders,
                 selectors: selectors,
                 tracer: hsRecords,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NearbyNewHouseCell.identifier))
         } else {

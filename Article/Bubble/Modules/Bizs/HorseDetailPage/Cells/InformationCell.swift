@@ -67,6 +67,7 @@ func parseInfoNode(_ content: String?, filter: (() -> Bool)? = nil) -> () -> Tab
                 items: [render],
                 selectors: [],
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: InformationCell.identifier))
         }

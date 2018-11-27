@@ -134,7 +134,8 @@ func parseNewHouseCommentNode(
                 traceExtension
         return TableSectionNode(items: renders ?? [],
                                 selectors: selectors,
-                tracer: [elementShowOnceRecord(params: params)],
+                                tracer: [elementShowOnceRecord(params: params)],
+                                sectionTracer: nil,
                                 label: "用户点评",
                                 type: .node(identifier: NewHouseCommentCell.identifier))
 

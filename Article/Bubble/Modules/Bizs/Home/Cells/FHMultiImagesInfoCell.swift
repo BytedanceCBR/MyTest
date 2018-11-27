@@ -335,6 +335,7 @@ func parseMultiHouseListItemNode(
                 items: renders,
                 selectors: selectors,
                 tracer: records,
+                sectionTracer: nil,
                 label: "精选好房",
                 type: .node(identifier: FHMultiImagesInfoCell.identifier))
         } else {

@@ -178,6 +178,7 @@ func parseNewHouseNameNode(_ newHouseData: NewHouseData) -> () -> TableSectionNo
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NewHouseNameCell.identifier))
     }
@@ -212,6 +213,7 @@ func parseErshouHouseNameNode(_ ershouHouseData: ErshouHouseData) -> () -> Table
                 items: [cellRender],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NewHouseNameCell.identifier))
     }

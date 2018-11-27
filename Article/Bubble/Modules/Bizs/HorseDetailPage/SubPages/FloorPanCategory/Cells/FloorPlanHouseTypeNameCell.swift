@@ -101,6 +101,7 @@ func parseFloorPlanHouseTypeNameNode(_ data: FloorPlanInfoData) -> () -> TableSe
                 items: [render],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FloorPlanHouseTypeNameCell.identifier))
     }

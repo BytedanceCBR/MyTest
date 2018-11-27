@@ -148,6 +148,7 @@ func parsePermitListNode(_ detail: CourtMoreDetail) -> () -> TableSectionNode? {
                 items: [oneTimeRender(render)],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: PermitListCell.identifier))
         } else {

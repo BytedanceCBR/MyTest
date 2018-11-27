@@ -49,6 +49,14 @@
     
 }
 
+-(void)rightBtnDidClickWithModel: (FHConfigDataCityStatsModel *)model {
+
+    if (model.mapOpenUrl) {
+        
+        NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
+}
 
 -(void)leftBtnDidClick:(UIButton*)btn {
 

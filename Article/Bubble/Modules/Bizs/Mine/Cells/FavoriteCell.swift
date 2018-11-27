@@ -168,7 +168,12 @@ func parseFavoriteNode(
     }
     return {
         let cellRender = curry(fillFavoriteCell)(items)
-        return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: FavoriteCell.identifier))
+        return TableSectionNode(items: [cellRender],
+                                selectors: nil,
+                                tracer: nil,
+                                sectionTracer: nil,
+                                label: "",
+                                type: .node(identifier: FavoriteCell.identifier))
     }
 }
 
@@ -370,7 +375,12 @@ func parseSpringboardNode(_ items: [OpData.Item],isNeedUpdateBoard: Bool, dispos
     }
     return {
         let cellRender = curry(fillSpringboardCell)(views)(items)(nedUpdateBoard)
-        return TableSectionNode(items: [cellRender], selectors: nil, tracer: nil, label: "", type: .node(identifier: SpringBroadCell.identifier))
+        return TableSectionNode(items: [cellRender],
+                                selectors: nil,
+                                tracer: nil,
+                                sectionTracer: nil,
+                                label: "",
+                                type: .node(identifier: SpringBroadCell.identifier))
     }
 }
 

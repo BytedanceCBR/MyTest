@@ -60,6 +60,7 @@ func parseFloorPlanRecommendHeaderNode(isShow:Bool) -> () -> TableSectionNode? {
                 items: (isShow) ? [render] : [],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FloorPlanRecommendHeaderCell.identifier))
     }

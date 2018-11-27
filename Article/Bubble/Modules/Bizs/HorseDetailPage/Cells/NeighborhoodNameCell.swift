@@ -161,6 +161,7 @@ func parseNeighborhoodNameNode(_ data: NeighborhoodDetailData,traceExtension: Tr
             items: [cellRender],
             selectors: nil,
             tracer: [elementShowOnceRecord(params: paramsHoseDeal)],
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NeighborhoodNameCell.identifier))
     }

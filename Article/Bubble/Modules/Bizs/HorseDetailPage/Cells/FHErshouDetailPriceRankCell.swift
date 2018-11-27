@@ -155,6 +155,7 @@ func parsePriceRankNode(_ priceRank: HousePriceRank?, traceExtension: TracerPara
                 items: [cellRender],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: FHErshouDetailPriceRankCell.identifier))
             

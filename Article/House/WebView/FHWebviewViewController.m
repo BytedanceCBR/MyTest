@@ -13,12 +13,18 @@
 #import "TTRoute.h"
 #import "TTRWebViewProgressView.h"
 #import "SSNavigationBar.h"
+#import "UIView+Refresh_ErrorHandler.h"
+#import "FHErrorMaskView.h"
+#import "TTReachability.h"
 
-@interface FHWebviewViewController ()<TTRouteInitializeProtocol>
-
+@interface FHWebviewViewController ()<TTRouteInitializeProtocol, TTRWebViewDelegate, UIViewControllerErrorHandler>
+{
+    BOOL _isWebViewLoading;
+}
 @property (nonatomic, strong) FHWebviewViewModel *viewModel;
 @property (nonatomic, strong) TTRouteUserInfo *userInfo;
-@property(nonatomic , copy) NSString *url;
+@property (nonatomic, copy)   NSString *url;
+@property (nonatomic, strong) FHErrorMaskView *maskView;
 
 @end
 
@@ -73,11 +79,44 @@
     self.viewModel = [[FHWebviewViewModel alloc] initWithViewController:self];
     NSDictionary *jsParam =  [self.userInfo.allInfo objectForKey:@"jsParams"];
     [self.viewModel registerJSBridge:self.webview.ttr_staticPlugin jsParamDic:jsParam];
+    self.webview.backgroundColor = UIColor.whiteColor;
     
-    // 加载url
-    NSURL *u = [NSURL URLWithString:self.url];
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:u];
-    [self.webview ttr_loadRequest:request];
+    [self setupMaskView];
+    
+    [self reloadingWebView];
+}
+
+- (void)showMaskView:(BOOL)showen {
+    self.maskView.hidden = !showen;
+    self.webview.hidden = showen;
+}
+
+- (void)setupMaskView {
+    _maskView = [[FHErrorMaskView alloc] init];
+    [self.view addSubview:_maskView];
+    [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
+    self.maskView.hidden = YES;
+    
+    __weak typeof(self) wself = self;
+    _maskView.retryBlock = ^{
+        [wself reloadingWebView];
+    };
+}
+
+- (void)reloadingWebView {
+    if ([TTReachability isNetworkConnected]) {
+        // 加载url
+        NSURL *u = [NSURL URLWithString:self.url];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:u];
+        [self.webview ttr_loadRequest:request];
+        [self showMaskView:NO];
+    } else {
+        [self showMaskView:YES];
+        [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+        [self.maskView showRetry:YES];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -87,5 +126,31 @@
 
 #pragma mark - TTRWebViewDelegate
 
+- (void)webViewDidStartLoad:(UIView<TTRWebView> *)webView {
+    _isWebViewLoading = YES;
+    [self tt_startUpdate];
+}
+
+- (void)webViewDidFinishLoad:(UIView<TTRWebView> *)webView {
+    _isWebViewLoading = NO;
+    [self tt_endUpdataData];
+    [self showMaskView:NO];
+}
+
+- (void)webView:(UIView<TTRWebView> *)webView didFailLoadWithError:(NSError *)error {
+    _isWebViewLoading = NO;
+    [self tt_endUpdataData];
+    
+    [self showMaskView:YES];
+    [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+    [self.maskView showRetry:YES];
+}
+
+#pragma mark - UIViewControllerErrorHandler
+
+- (BOOL)tt_hasValidateData
+{
+    return NO;
+}
 
 @end

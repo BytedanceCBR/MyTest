@@ -95,6 +95,7 @@ func parsePriceChangeHistoryNode(_ ershouHouseData: ErshouHouseData) -> () -> Ta
             items: [cellRender],
             selectors: [selectors],
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: PriceChangeHistoryCell.identifier))
     }

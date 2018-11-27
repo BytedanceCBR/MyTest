@@ -100,7 +100,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     
     FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
-
+    
     if (modelOpdata2.items > 0)
     {
         [modelOpdata2.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -109,7 +109,7 @@ static NSMutableArray  * _Nullable identifierArr;
             
             NSLog(@"logpb = %@",item.logPb);
             NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
-
+            
             if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
                 if ([item.logPb isKindOfClass:[NSDictionary class]]) {
                     NSString *stringName =  item.logPb[@"operation_name"];
@@ -119,14 +119,14 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
-       
+            
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
     
     [identifierArr removeAllObjects];
-
+    
 }
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
@@ -431,17 +431,31 @@ static NSMutableArray  * _Nullable identifierArr;
     [cell updateWithModel:model];
     cell.trendView.clickedRightCallback = ^{
         
-            // logpb处理
+        // logpb处理
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
-
-        if (model.mapOpenUrl) {
+        
+        if (model.mapOpenUrl.length > 0) {
             
-            NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
+            NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];
+            if (![urlStr containsString:@"enter_from"]) {
+                [urlStr appendString:@"&enter_from=city_market"];
+            }
+            if (![urlStr containsString:@"search_id"]) {
+                [urlStr appendString:@"&search_id=be_null"];
+            }
+            if (![urlStr containsString:@"origin_from"]) {
+                [urlStr appendString:@"&origin_from=city_market"];
+            }
+            if (![urlStr containsString:@"origin_search_id"]) {
+                [urlStr appendString:@"&origin_search_id=be_null"];
+            }
+            NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
         [wself addHomeCityMarketClickLog];
+        [wself addCityMarketEnterMapFindLog];
     };
 }
 
@@ -514,4 +528,17 @@ static NSMutableArray  * _Nullable identifierArr;
     [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
 
++(void)addCityMarketEnterMapFindLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"enter_from"] = @"city_market";
+    param[@"search_id"] = @"be_null";
+    param[@"origin_from"] = @"city_market";
+    param[@"origin_search_id"] = @"be_null";
+
+    [FHUserTracker writeEvent:@"enter_mapfind" params:param];
+}
+
+
 @end
+

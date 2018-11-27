@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
-func parseRentHouseCycleImageNode(_ images: [ImageItem]?,
+func parseRentHouseCycleImageNode(_ images: [FHRentDetailResponseDataHouseImageModel]?,
                                   disposeBag: DisposeBag) -> () -> TableSectionNode? {
     let cellRender = curry(fillRentHouseCycleImageCell)(images ?? [])(disposeBag)
     return {
@@ -16,17 +16,19 @@ func parseRentHouseCycleImageNode(_ images: [ImageItem]?,
             items: [oneTimeRender(cellRender)],
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: CycleImageCell.identifier))
     }
 }
 
 
-func fillRentHouseCycleImageCell(_ images: [ImageItem],
+func fillRentHouseCycleImageCell(_ images: [FHRentDetailResponseDataHouseImageModel],
                                  disposeBag: DisposeBag,
                                  cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? CycleImageCell {
-//        theCell.traceParams = traceParams
+        let traceParams = TracerParams.momoid()
+        theCell.traceParams = traceParams
         theCell.count = images.count
 //        theCell.smallTracer = theCell.smallImageTracerGen(images: images, traceParams: traceParams)
         theCell.headerImages = images.map { item in
