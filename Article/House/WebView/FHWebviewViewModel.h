@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHWebviewViewModel : NSObject
 
 -(instancetype)initWithViewController:(FHWebviewViewController *)viewController;
--(void)registerJSBridge:(TTRStaticPlugin *)plugin;
+-(void)registerJSBridge:(TTRStaticPlugin *)plugin jsParamDic:(NSDictionary *)param;
 
 @end
 

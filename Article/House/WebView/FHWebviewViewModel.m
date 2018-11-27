@@ -22,27 +22,25 @@
 {
     self = [super init];
     if (self) {
-        
         self.viewController = viewController;
-//        _detectionBiz = [[CJLiveDetectionBiz alloc] init];
-//        _detectionBiz.delegate = self;
-        
     }
     return self;
 }
 
--(void)registerJSBridge:(TTRStaticPlugin *)plugin
+-(void)registerJSBridge:(TTRStaticPlugin *)plugin jsParamDic:(NSDictionary *)param
 {
-    __weak typeof(self) wself = self;
-    
-    [plugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
-        NSMutableDictionary *dic = [wself viewController].dic;
-        //  "page_type" = priceChangeHistory;
-//        [dic setObject:@"priceChangeHistory" forKey:@"page_type"];
-        [dic setObject:@(1) forKey:@"code"];
-        callback(TTRJSBMsgSuccess,dic);
-    } forMethodName:@"requestPageData"];
-    
+    [param enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull methodName, NSDictionary*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([methodName length] > 0) {
+            NSMutableDictionary *callBackData = [NSMutableDictionary dictionaryWithDictionary:obj];
+            [plugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
+                [callBackData setObject:@(1) forKey:@"code"];
+                [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull temObj, BOOL * _Nonnull stop) {
+                    [callBackData setObject:temObj forKey:key];
+                }];
+                callback(TTRJSBMsgSuccess, callBackData);
+            } forMethodName:methodName];
+        }
+    }];
 }
 
 @end

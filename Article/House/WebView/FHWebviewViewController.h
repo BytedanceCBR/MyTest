@@ -10,10 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*
+ Route传参：TTRouteParamObj中的TTRouteUserInfo
+ url:请求地址
+ title:标题
+ jsParams:["methodName":JsonModel] // JS数据传递
+ */
 @interface FHWebviewViewController : TTRWebViewController
-
-@property(nonatomic , copy) NSString *url;
-@property(nonatomic, strong) NSMutableDictionary *dic;
 
 @end
 

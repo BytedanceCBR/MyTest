@@ -116,9 +116,13 @@ func openPriceChangeHistoryPage(
         if let pushUrl = priceChangeHistory?.detailUrl, pushUrl.count > 0 {
             let historyData = priceChangeHistory?.history ?? []
             if let url = "\(EnvContext.networkConfig.host)\(pushUrl)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                let userInfo = TTRouteUserInfo(info: ["house_id":houseId,"history": historyData, "title": "123", "url":url])
+                // js data
+                let history  = ["history":historyData]
+                let jsData   = ["data":history,"house_id":houseId] as [String : Any]
+                let jsParams = ["requestPageData":jsData]
+                let userInfo = TTRouteUserInfo(info: ["url":url, "title": "价格变动", "jsParams":jsParams])
                 let jumpUrl = "fschema://webview_oc" //route协议
-                 TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
+                TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             }
         }
     }
