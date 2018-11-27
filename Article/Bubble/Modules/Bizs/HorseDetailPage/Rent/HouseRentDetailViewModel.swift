@@ -226,8 +226,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Parameter neighborhoodId: 小区id
     fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
         let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
-        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            
+        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let detailModel = self.detailData.value {
+            let pageData = ["data": detailModel.data?.toDictionary(),
+                            "code": "1"] as [String : Any]
+            let jsParams = ["requestPageData": pageData]
 
             TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
         }
