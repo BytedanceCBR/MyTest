@@ -111,10 +111,21 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     
     let disposeBag = DisposeBag()
     
-    var data: NeighborhoodInfo?
+    var data: NeighborhoodInfo? {
+        didSet {
+            self.detailUrl = data?.evaluationInfo?.detailUrl
+            self.name = data?.name
+            self.lat = data?.gaodeLat
+            self.lng = data?.gaodeLng
+        }
+    }
     var logPB: [String: Any]?
     var neighborhoodId:String?
     var centerPoint: CLLocationCoordinate2D?
+    var detailUrl: String?
+    var name: String?
+    var lat: String?
+    var lng: String?
 
     func setLocation(lat: String, lng: String) {
         if let theLat = Double(lat), let theLng = Double(lng) {
@@ -240,7 +251,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         let evaluateGest = UITapGestureRecognizer()
         evaluateGest.rx.event
             .subscribe(onNext: { [unowned self] (_) in
-                if let urlStr = self.data?.evaluationInfo?.detailUrl {
+                if let urlStr = self.detailUrl {
                     openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: self.tracerParams, disposeBag: self.disposeBag)(TracerParams.momoid())
                 }
             })
@@ -252,8 +263,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         mapImageView.isUserInteractionEnabled = true
         
         let selector = { [unowned self] in
-            if let lat = self.data?.gaodeLat,
-                let lng = self.data?.gaodeLng {
+            if let lat = self.lat,
+                let lng = self.lng {
                 let theParams = TracerParams.momoid() <|>
                     toTracerParams("map", key: "click_type") <|>
                     toTracerParams("old_detail", key: "enter_from") <|>
@@ -263,14 +274,15 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                 
                 let clickParams = theParams <|>
                     toTracerParams("map", key: "click_type")
-                openMapPage(
-                    navVC: self.navVC,
-                    lat: lat,
-                    lng: lng,
-                    title: self.data?.name ?? "",
-                    clickMapParams: clickParams,
-                    traceParams: theParams,
-                    disposeBag: self.disposeBag)(TracerParams.momoid())
+
+                let userInfo = TTRouteUserInfo(info: ["tracer": theParams.paramsGetter([:])])
+                //fschema://fh_house_detail_map
+                recordEvent(key: "click_map", params: clickParams)
+                let jumpUrl = "fschema://fh_house_detail_map?lat=\(lat)&lng=\(lng)&title=\(self.name ?? "")"
+                if let thrUrl = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    TTRoute.shared()?.openURL(byViewController: URL(string: thrUrl),
+                                              userInfo: userInfo)
+                }
             }
         }
         
@@ -314,6 +326,24 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
     override func prepareForReuse() {
         super.prepareForReuse()
     }
+
+    func schoolLabelIsHidden(isHidden: Bool) {
+        schoolKey.isHidden = isHidden
+        schoolLabel.isHidden = isHidden
+        if isHidden {
+            mapImageView.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.top.equalTo(nameKey.snp.bottom).offset(20)
+            }
+        } else {
+            mapImageView.snp.makeConstraints { maker in
+                maker.left.right.bottom.equalToSuperview()
+                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.top.equalTo(schoolKey.snp.bottom).offset(20)
+            }
+        }
+    }
 }
 
 func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtension: TracerParams = TracerParams.momoid(), neighborhoodId: String, navVC: UINavigationController?) -> () -> TableSectionNode? {
@@ -356,6 +386,7 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
                 items: [render],
                 selectors: nil,
                 tracer: tracers,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NeighborhoodInfoCell.identifier))
     }

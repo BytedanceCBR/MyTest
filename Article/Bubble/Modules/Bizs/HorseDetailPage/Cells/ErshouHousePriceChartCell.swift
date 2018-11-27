@@ -718,6 +718,7 @@ func parseErshouHousePriceChartNode(_ ershouHouseData: ErshouHouseData,traceExte
                 items: [render],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: ErshouHousePriceChartCell.identifier))
         } else {

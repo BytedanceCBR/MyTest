@@ -153,6 +153,7 @@ func parseGlobalPricingNode(_ newHouseData: NewHouseData, traceExt: TracerParams
                 items: cellRenders,
                 selectors: selectors,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: GlobalPricingCell.identifier))
     }

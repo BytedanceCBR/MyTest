@@ -106,6 +106,7 @@ func parseTimeLineHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
                     items: [cellRender],
                     selectors: nil,
                     tracer: nil,
+                    sectionTracer: nil,
                     label: "",
                     type: .node(identifier: HeaderCell.identifier))
         } else {
@@ -121,7 +122,8 @@ func parseFloorPanHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSection
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
-                    tracer: nil,
+                tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         } else {
@@ -137,7 +139,7 @@ func parseCommentHeaderNode(_ newHouseData: NewHouseData) -> () -> TableSectionN
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
-                    tracer: nil,
+                tracer: nil, sectionTracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         } else {
@@ -166,6 +168,7 @@ func parseHeaderNode(
                 items: [cellRender],
                 selectors: selectors,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: HeaderCell.identifier))
         }

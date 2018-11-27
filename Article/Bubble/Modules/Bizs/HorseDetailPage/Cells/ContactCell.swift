@@ -100,6 +100,7 @@ func parseNewHouseContactNode(_ newHouseData: NewHouseData,traceExt: TracerParam
                     items: [cellRender],
                     selectors: nil,
                     tracer: [elementShowOnceRecord(params: params)],
+                    sectionTracer: nil,
                     label: "",
                     type: .node(identifier: ContactCell.identifier))
         }else {

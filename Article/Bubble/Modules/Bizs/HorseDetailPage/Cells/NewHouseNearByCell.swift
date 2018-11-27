@@ -767,6 +767,7 @@ func parseNeighorhoodNearByNode(
             items: [oneTimeRender(cellRender)],
             selectors: selector != nil ? [selector!] : nil,
             tracer: [elementShowOnceRecord(params: showParams)],
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NewHouseNearByCell.identifier))
     }
@@ -847,6 +848,7 @@ func parseNewHouseNearByNode(
             items: [oneTimeRender(cellRender)],
             selectors: selector != nil ? [selector!] : nil,
             tracer: [elementShowOnceRecord(params: showParams)],
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: NewHouseNearByCell.identifier))
     }

@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//  Route传参：TTRouteParamObj中的TTRouteUserInfo
 /*
- Route传参：TTRouteParamObj中的TTRouteUserInfo
  url:请求地址
  title:标题
  jsParams:["methodName":JsonModel] // JS数据传递

@@ -14,6 +14,7 @@ func parseRentPropertyListCellNode(_ infos: [ErshouHouseBaseInfo]?) -> () -> Tab
             items: [cellRender],
             selectors: nil,
             tracer: nil,
+            sectionTracer: nil,
             label: "",
             type: .node(identifier: PropertyListCell.identifier))
     }

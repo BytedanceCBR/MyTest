@@ -332,6 +332,7 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
                 items: [oneTimeRender(cellRender)],
                 selectors: nil,
                 tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: NeighborhoodPropertyInfoCell.identifier))
         }else {

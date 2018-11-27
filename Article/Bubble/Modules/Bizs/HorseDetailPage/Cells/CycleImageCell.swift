@@ -220,7 +220,7 @@ class CycleImageCell: BaseUITableViewCell {
         }
     }
     
-    fileprivate func smallImageTracerGen(images: [ImageModel], traceParams: TracerParams?) -> (Int,TracerParams?) -> Void {
+    func smallImageTracerGen(images: [ImageModel], traceParams: TracerParams?) -> (Int,TracerParams?) -> Void {
         
         var array: [Int] = []
         return { [unowned self ] (index,param) in
@@ -542,6 +542,7 @@ func parseNewHouseCycleImageNode(
                 items: [oneTimeRender(cellRender)],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }
@@ -564,6 +565,7 @@ func parseErshouHouseCycleImageNode(
                 items: [oneTimeRender(cellRender)],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }
@@ -585,6 +587,7 @@ func parseCycleImageNode(_ images: [ImageItem]?,
                 items: [oneTimeRender(cellRender)],
                 selectors: nil,
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: CycleImageCell.identifier))
     }

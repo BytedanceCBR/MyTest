@@ -130,6 +130,7 @@ func parseUserInfoNode(
                 items: [cellRender],
                 selectors: [selector!],
                 tracer: nil,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier: UserInfoCell.identifier))
     }

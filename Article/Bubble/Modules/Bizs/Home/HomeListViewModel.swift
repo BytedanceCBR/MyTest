@@ -746,6 +746,7 @@ func parseHomeNewHouseListItemNode(
                 items: renders,
                 selectors: selectors,
                 tracer: records,
+                sectionTracer: nil,
                 label: "",
                 type: .node(identifier:items?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
         } else {

@@ -504,7 +504,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                         assertionFailure()
                     }
                 }
-                self.navBar.showMapButton(show:(self.houseType.value == .secondHandHouse))
+                let htype = self.houseType.value
+                let showMap = (htype == .secondHandHouse || htype == .rentHouse)
+                self.navBar.showMapButton(show:showMap)
             }
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
@@ -527,6 +529,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return EnvContext.shared.client.configCacheSubject.value?.neighborhoodFilterOrder
         case .newHouse:
             return EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder
+        case .rentHouse:
+            return EnvContext.shared.client.configCacheSubject.value?.rentFilterOrder
         default:
             return EnvContext.shared.client.configCacheSubject.value?.filterOrder
         }
@@ -884,6 +888,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     return config?.filter
                 case HouseType.neighborhood:
                     return config?.neighborhoodFilter
+                case HouseType.rentHouse:
+                    return config?.rentFilter
                 default:
                     return config?.filter
                 }
@@ -992,6 +998,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.popupMenuView = nil
             }
             return result
+
         }
         popupMenuView = PopupMenuView(targetView: navBar.searchTypeBtn, menus: popupMenuItems)
         view.addSubview(popupMenuView!)
