@@ -17,10 +17,7 @@
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
-<<<<<<< HEAD
 #import "FHHouseEvnContextBridgeImp.h"
-=======
->>>>>>> house_show埋点添加
 #import "FHHouseBridgeManager.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
@@ -122,7 +119,6 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
-       
             
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
@@ -435,19 +431,11 @@ static NSMutableArray  * _Nullable identifierArr;
     [cell updateWithModel:model];
     cell.trendView.clickedRightCallback = ^{
         
-<<<<<<< HEAD
         // logpb处理
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
         
-=======
-            // logpb处理
-        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
-        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
-        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
-
->>>>>>> house_show埋点添加
         if (model.mapOpenUrl) {
             
             NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
