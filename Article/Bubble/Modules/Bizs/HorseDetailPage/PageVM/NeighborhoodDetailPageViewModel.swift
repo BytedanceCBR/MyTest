@@ -272,6 +272,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: traceExtension)
                     }
                 }
+                <- parseFlineNode((data.statsInfo?.count ?? 0 > 0) ? 6 : 0)
                 <- parseHeaderNode("小区概况", adjustBottomSpace: 0) {
                     data.baseInfo?.count ?? 0 > 0
                 }
