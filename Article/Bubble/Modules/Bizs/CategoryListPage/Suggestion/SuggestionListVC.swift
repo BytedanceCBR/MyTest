@@ -337,7 +337,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
     }
     
     func reloadTableViewData() {
-        if self.tableViewModel.loadRequestTimes >= 2 {
+        if self.tableViewModel.guessYouWantItems.value.count > 0 || self.tableViewModel.loadRequestTimes >= 2 {
             UIView.performWithoutAnimation {
                 self.tableView.reloadData()
             }
@@ -439,7 +439,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         super.viewDidAppear(animated)
 //        var offset: CGFloat = -1
 //        tableView.rx.didScroll
-////            .throttle(0.2, scheduler: MainScheduler.instance)
+////            .throttle(0.2, scheduleƒr: MainScheduler.instance)
 //            .bind { [weak self] void in
 //                guard let `self` = self else { return }
 //                if self.tableViewModel.combineItems.value.count > 0,
