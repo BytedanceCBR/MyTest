@@ -521,7 +521,14 @@ fileprivate func openTTRouterUrl(
         let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap])
         if let openUrl = item.openUrl
         {
-            TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
+            if openUrl.contains("snssdk1370://category_feed")
+            {
+                FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdate = true
+                TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: nil)
+            }else
+            {
+                TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
+            }
         }
         
 //        let vc = CategoryListPageVC(isOpenConditionFilter: true)

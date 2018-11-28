@@ -988,7 +988,7 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0)) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
@@ -1007,7 +1007,6 @@ TTRefreshViewDelegate
                 if ([cell isKindOfClass:[ExploreCellBase class]]) {
                     [cell willAppear];
                 }
-                
             }
         }
     }

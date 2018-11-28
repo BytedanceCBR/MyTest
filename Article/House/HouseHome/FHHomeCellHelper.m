@@ -273,6 +273,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
                 if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                    [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
                 }else
                 {
