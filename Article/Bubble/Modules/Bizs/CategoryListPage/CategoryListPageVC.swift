@@ -511,6 +511,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
             searchView.setSelectedConditions(conditions: queryParams)
+            self.conditionFilterViewModel?.setSortBtnSelected()
         }
     }
 
