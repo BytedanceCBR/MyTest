@@ -269,10 +269,15 @@ static NSMutableArray  * _Nullable identifierArr;
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
-            if (itemModel.openUrl) {
+            if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
                 
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                }else
+                {
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                }
             }
         }
     };
@@ -535,7 +540,7 @@ static NSMutableArray  * _Nullable identifierArr;
     param[@"search_id"] = @"be_null";
     param[@"origin_from"] = @"city_market";
     param[@"origin_search_id"] = @"be_null";
-
+    
     [FHUserTracker writeEvent:@"enter_mapfind" params:param];
 }
 
