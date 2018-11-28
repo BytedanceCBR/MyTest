@@ -142,6 +142,7 @@ class CornerView: UIView {
     lazy var imageTopLeftLabel: UILabel = {
         let re = UILabel()
         re.text = "新上"
+        re.textAlignment = .center
         re.textColor = UIColor.white
         re.font = CommonUIStyle.Font.pingFangRegular(10)
         return re
@@ -245,14 +246,15 @@ class CornerView: UIView {
         imageTopLeftLabelBgView.snp.makeConstraints { (maker) in
             maker.left.equalTo(majorImageView.snp.left).offset(0)
             maker.top.equalTo(majorImageView.snp.top)
-            maker.height.equalTo(16)
+            maker.height.equalTo(17)
+            maker.width.equalTo(48)
         }
 
         imageTopLeftLabelBgView.addSubview(imageTopLeftLabel)
         imageTopLeftLabel.snp.makeConstraints { (maker) in
-            maker.left.equalTo(9)
-            maker.right.equalTo(-9)
-            maker.centerY.equalToSuperview()
+            maker.left.equalTo(1)
+            maker.right.equalTo(-1)
+            maker.center.equalToSuperview()
         }
     }
     

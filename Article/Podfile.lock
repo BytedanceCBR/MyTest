@@ -428,18 +428,6 @@ PODS:
     - TTVideoService
     - YYCache
     - YYWebImage (~> 1.0.4)
-  - IESSafeGuard (0.6.5):
-    - IESSafeGuard/Core (= 0.6.5)
-    - IESSafeGuard/DeviceFingerprint (= 0.6.5)
-    - IESSafeGuard/RequestEncrypt (= 0.6.5)
-  - IESSafeGuard/Core (0.6.5):
-    - IESSafeGuard/DeviceFingerprint
-    - IESSafeGuard/RequestEncrypt
-  - IESSafeGuard/DeviceFingerprint (0.6.5)
-  - IESSafeGuard/RequestEncrypt (0.6.5):
-    - IESSafeGuard/DeviceFingerprint
-    - Mantle
-    - OpenSSL-Universal (~> 1.0.1.20)
   - IESVideoPlayer (0.1.16):
     - AWEVideoPlayer (~> 0.3.12)
     - TTPlayerSDK (~> 2.8)
@@ -554,6 +542,9 @@ PODS:
   - SDWebImage/WebP (4.4.1):
     - libwebp (~> 0.5)
     - SDWebImage/Core
+  - SecGuard (0.8.9.6):
+    - OpenSSL-Universal (~> 1.0.1.20)
+    - TTNetworkManager
   - SSZipArchive (1.6.2)
   - TSVToolkit (0.1.2):
     - ReactiveObjC (~> 3.0)
@@ -1211,7 +1202,6 @@ DEPENDENCIES:
   - Heimdallr/Upload (= 0.4.21)
   - Heimdallr/Utility (= 0.4.21)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
-  - IESSafeGuard (= 0.6.5)
   - IESVideoPlayer (= 0.1.16)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0)
@@ -1233,6 +1223,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1)
   - SDWebImage/GIF (= 4.4.1)
   - SDWebImage/WebP (= 4.4.1)
+  - SecGuard
   - SSZipArchive (= 1.6.2)
   - TSVToolkit (= 0.1.2)
   - TTABManager (= 0.0.7)
@@ -1453,7 +1444,6 @@ SPEC CHECKSUMS:
   Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
-  IESSafeGuard: 16f342dc14823ccde841b74e985024ff14d4c714
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: 978886965ffa3f719042c14840dbf65513b9c541
@@ -1474,6 +1464,7 @@ SPEC CHECKSUMS:
   RNCryptor-objc: 9c0b03ebe2b563ac069f2d4d41e1d1db1e485ddc
   RSSwizzle: 2bf09a88678d5fe2246a6fee32505bf769a9a079
   SDWebImage: 7d9faa33fa14c9b9604c7fbedd4a314f5db1558a
+  SecGuard: 7198ebef4f75e8c4c0de4b082d64b113090976b7
   SSZipArchive: b20c738ef5d2504fbd3cea9105c699fd6d21b4c3
   TSVToolkit: 2e7da7aa00ee6c5c498bdd075989bf23036dee91
   TTABManager: 6a5cb47d33221ec84c21382790fdc4f1bb497c03
@@ -1546,6 +1537,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 6417dd91c7487aeef8cabd8d8972e34c2429c8fa
+PODFILE CHECKSUM: d30faccd203de8a7dd6e92dd6bbcbb20dd0933f2
 
 COCOAPODS: 1.4.0

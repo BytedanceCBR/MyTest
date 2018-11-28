@@ -86,14 +86,19 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
         toTracerParams("house_info", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
+
     return {
-        return TableSectionNode(
-            items: renders ?? [],
-            selectors: nil,
-            tracer:[tracerEvaluationRecord],
-            sectionTracer: nil,
-            label: "",
-            type: .node(identifier: FHHouseRentSummaryCell.identifier))
+        if (renders?.count ?? 0 > 0) {
+            return TableSectionNode(
+                items: renders ?? [],
+                selectors: nil,
+                tracer:[tracerEvaluationRecord],
+                sectionTracer: nil,
+                label: "",
+                type: .node(identifier: FHHouseRentSummaryCell.identifier))
+        } else {
+            return nil
+        }
     }
 }
 

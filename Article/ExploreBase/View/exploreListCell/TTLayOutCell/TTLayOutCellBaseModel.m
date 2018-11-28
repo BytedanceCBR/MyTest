@@ -177,7 +177,7 @@
     }
     self.sourceImageUserInteractionEnabled = YES;
     self.sourceNameFirstWordFontSize = [TTDeviceUIUtils tt_fontSize:16];
-    self.sourceImageViewHidden = NO;
+    self.sourceImageViewHidden = YES;
     left += kUFS2SourceViewImageSide() + kUFS2PaddingSourceImageToSource();
     
     CGSize sourceSize = [sourceName sizeWithAttributes:@{NSFontAttributeName : [UIFont tt_boldFontOfSize:kUFSourceLabelFontSize()]}];
@@ -238,7 +238,8 @@
     }
     
     self.userVerifiedImgAuthInfo = [TTLayOutCellDataHelper getUserAuthInfoWithOrderedData:self.orderedData];
-    BOOL shouldShowVerifyIcon = [TTVerifyIconHelper shouldShowVerifyIcon:self.userVerifiedImgAuthInfo isFeed:[self.orderedData isFeedCategory]];
+//    BOOL shouldShowVerifyIcon = [TTVerifyIconHelper shouldShowVerifyIcon:self.userVerifiedImgAuthInfo isFeed:[self.orderedData isFeedCategory]];
+    BOOL shouldShowVerifyIcon = NO;
     self.userDecoration = [TTLayOutCellDataHelper getUserDecorationWithOrderedData:self.orderedData];
     
     CGFloat recommendMaxWidth = 0;
@@ -250,12 +251,12 @@
     }
     
     self.userNameLabelFrame = CGRectMake(left, sourceLabelY, sourceSize.width, sourceSize.height);
-    self.userNameLabelHidden = NO;
+    self.userNameLabelHidden = YES;
     self.userNameLabelStr = sourceName;
     left += sourceSize.width;
     
     if (shouldShowVerifyIcon) {
-        self.userVerifiedImgHidden = NO;
+        self.userVerifiedImgHidden = YES;
     }
     else{
         self.userVerifiedImgHidden = YES;
@@ -265,7 +266,7 @@
         left += kUFRecommendLabelLeftPadding();
         CGFloat recommendY = ceilf(sourceLabelY + (sourceSize.height - recommendSize.height) / 2);
         self.recommendLabelFrame = CGRectMake(left, recommendY, recommendSize.width, recommendSize.height);
-        self.recommendLabelHidden = NO;
+        self.recommendLabelHidden = YES;
         self.recommendLabelStr = recommendStr;
         self.recommendLabelFontSize = kUFSourceLabelFontSize();
     }
@@ -274,11 +275,11 @@
     self.subscribButtonTop = subscribeButtonY;
     if (showFollowButton && layoutDislike && !self.unInterestedButtonHidden) {
         self.subscribButtonRight = unInterestedBtnX - 1;//微调关注按钮位置
-        self.subscribButtonHidden = NO;
+        self.subscribButtonHidden = YES;
     }
     else if (showFollowButton) {
         self.subscribButtonRight = self.cellWidth - kUFSubscribeButtonRightPadding();
-        self.subscribButtonHidden = NO;
+        self.subscribButtonHidden = YES;
     }
     
     
@@ -295,12 +296,13 @@
     }
     
     self.userVerifiedLabelFrame = CGRectMake(self.userNameLabelFrame.origin.x, verifiedContentLabelY, verifiedContentMaxWidth, verifiedContentSize.height);
-    self.userVerifiedLabelHidden = NO;
+    self.userVerifiedLabelHidden = YES;
     self.userVerifiedLabelTextColorThemeKey = kColorText3;
     self.userVerifiedLabelStr = verifiedContentStr;
     self.userVerifiedLabelFontSize = verifiedContentFontSize;
     
-    return infoRegionHeight;
+//    return infoRegionHeight; //个别纯文本文章显示
+    return 0;
 }
 
 /**

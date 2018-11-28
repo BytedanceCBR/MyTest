@@ -163,6 +163,7 @@
 #import "TTASettingConfiguration.h"
 #import "TTVVideoDetailViewController.h"
 #import "FHHomeConfigManager.h"
+#import "FHFeedHouseCellHelper.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -2750,12 +2751,14 @@ TTRefreshViewDelegate
 
 - (void)refreshData
 {
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
     [self.listView triggerPullDown];
 }
 
 - (void)emptyViewBtnAction {
     
     if (![self.categoryID isEqualToString:kTTNewsLocalCategoryID]) {
+        [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
         [self.listView triggerPullDown];
     }
     else {
@@ -2818,6 +2821,7 @@ TTRefreshViewDelegate
 {
     //默认为none，如果是其他方式，在此方法外部重新赋值
     //self.refreshFromType = ListDataOperationReloadFromTypeNone;为了刷新统计时发送正确的refreshfromType给传过去
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
     [self.listView triggerPullDown];
 }
 

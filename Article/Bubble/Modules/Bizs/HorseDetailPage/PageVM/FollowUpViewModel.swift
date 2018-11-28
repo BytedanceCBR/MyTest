@@ -184,7 +184,7 @@ class FollowUpViewModel {
         followAction: FollowActionType,
         followId: String,
         disposeBag: DisposeBag,
-        statusBehavior: BehaviorRelay<Bool>,
+        statusBehavior: BehaviorRelay<Bool>? = nil,
         isNeedRecord: Bool = true,
         showTip: Bool = false) -> () -> Void {
         
@@ -225,7 +225,7 @@ class FollowUpViewModel {
                             }
                         }
                         NotificationCenter.default.post(name: .followUpDidChange, object: nil)
-                        statusBehavior.accept(true)
+                        statusBehavior?.accept(true)
                     }
                 }, onError: { error in
                     
