@@ -1048,6 +1048,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return "neighborhood_list"
         case .newHouse:
             return "new_list"
+        case .rentHouse:
+            return "rent_list"
         default:
             return "old_list"
         }
@@ -1100,6 +1102,8 @@ func houseTypeString(_ houseType: HouseType) -> String {
         return "neighborhood_list"
     case .secondHandHouse:
         return "old_list"
+    case .rentHouse:
+        return "rent_list"
     default:
         return "be_null"
     }

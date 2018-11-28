@@ -138,6 +138,8 @@ class HomeListViewModel: DetailPageViewModel {
                     origin_from = "new_list"
                 }else if index == .secondHandHouse {
                     origin_from = "old_list"
+                }else if index == .rentHouse {
+                    origin_from = "rent_list"
                 }
                 
                 self?.originSearchId = self?.itemsSearchIdCache[matchHouseTypeName(houseTypeV: index)]
@@ -340,7 +342,7 @@ class HomeListViewModel: DetailPageViewModel {
     }
     
     //isStay 是否取反
-    func uploadTracker(isWithStayTime: Bool? = false,stayTime: TracerParams? = TracerParams.momoid(),enterType: NSString? = "be_null",isStay: Bool? = false)
+    func uploadTracker(isWithStayTime: Bool? = false,stayTime: TracerParams? = TracerParams.momoid(),enterType: NSString? = "be_null",isStay: Bool? = false, currentHouseType: HouseType = .neighborhood)
     {
         var params : TracerParams
         let isWithStayTimeV = isWithStayTime ?? false
@@ -360,11 +362,17 @@ class HomeListViewModel: DetailPageViewModel {
             params = TracerParams.momoid()
         }
         
-        var category_name = self.dataSource?.categoryView.houseTypeRelay.value == .newHouse ? "new_list": (self.dataSource?.categoryView.houseTypeRelay.value == .secondHandHouse ? "old_list" : "be_null")
+        var category_name = houseTypeString(self.dataSource?.categoryView.houseTypeRelay.value ?? .secondHandHouse)
         
         if (isStay ?? false)
         {
-            category_name = category_name == "old_list" ? "new_list" : "old_list"
+            if currentHouseType != .neighborhood
+            {
+                category_name = matchHouseTypeName(houseTypeV: currentHouseType)
+            }else
+            {
+                category_name = "be_null"
+            }
         }
         
         params = params <|>
