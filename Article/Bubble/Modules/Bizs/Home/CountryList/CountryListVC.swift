@@ -179,7 +179,8 @@ class CountryListVC: BaseViewController {
                             generalBizConfig.setCurrentSelectCityId(cityId: Int(currentCityId))
                         }
                         self.navigationController?.popViewController(animated: true)
-                        
+                        FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
+
                     }
                     
                     generalBizConfig.generalCacheSubject.accept(response?.data)

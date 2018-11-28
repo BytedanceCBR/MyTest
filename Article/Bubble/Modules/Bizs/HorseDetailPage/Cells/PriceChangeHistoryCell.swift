@@ -69,7 +69,7 @@ class PriceChangeHistoryCell: BaseUITableViewCell {
         sepLine.snp.makeConstraints { (maker) in
             maker.left.equalTo(20)
             maker.right.equalTo(-20)
-            maker.height.equalTo(1)
+            maker.height.equalTo(0.5)
             maker.bottom.equalToSuperview()
         }
     }
@@ -84,17 +84,22 @@ class PriceChangeHistoryCell: BaseUITableViewCell {
     }
 }
 
-func parsePriceChangeHistoryNode(_ ershouHouseData: ErshouHouseData) -> () -> TableSectionNode? {
+func parsePriceChangeHistoryNode(_ ershouHouseData: ErshouHouseData, traceExtension: TracerParams = TracerParams.momoid()) -> () -> TableSectionNode? {
     return {
         if ershouHouseData.priceChangeHistory == nil {
             return nil
         }
         let cellRender = curry(fillPriceChangeHistoryCell)(ershouHouseData)
-        let selectors = openPriceChangeHistoryPage(priceChangeHistory: ershouHouseData.priceChangeHistory,houseId:ershouHouseData.id ?? "0", tracerParams: TracerParams.momoid(), navVC: nil)
+        let selectors = openPriceChangeHistoryPage(priceChangeHistory: ershouHouseData.priceChangeHistory,houseId:ershouHouseData.id ?? "0", tracerParams: traceExtension, navVC: nil)
+        let params = TracerParams.momoid() <|>
+            toTracerParams("price_variation", key: "element_type") <|>
+            toTracerParams("old_detail", key: "page_type") <|>
+        traceExtension
+        
         return TableSectionNode(
             items: [cellRender],
             selectors: [selectors],
-            tracer: nil,
+            tracer:  [elementShowOnceRecord(params: params)],
             sectionTracer: nil,
             label: "",
             type: .node(identifier: PriceChangeHistoryCell.identifier))
@@ -117,12 +122,18 @@ func openPriceChangeHistoryPage(
         if let pushUrl = priceChangeHistory?.detailUrl, pushUrl.count > 0 {
             let historyData = priceChangeHistory?.history ?? []
             if let url = "\(EnvContext.networkConfig.host)\(pushUrl)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                // 埋点
+                let params = EnvContext.shared.homePageParams <|>
+                    toTracerParams("old_detail", key: "page_type") <|>
+                    tracerParams <|>
+                    theTracerParams
+                recordEvent(key: "click_price_variation", params: params)
                 // js data
                 let history  = ["history":historyData]
                 let jsData   = ["data":history,"house_id":houseId] as [String : Any]
                 let jsParams = ["requestPageData":jsData]
                 let userInfo = TTRouteUserInfo(info: ["url":url, "title": "价格变动", "jsParams":jsParams])
-                let jumpUrl = "fschema://webview_oc" //route协议
+                let jumpUrl = "snssdk1370://webview_oc" //route协议
                 TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             }
         }

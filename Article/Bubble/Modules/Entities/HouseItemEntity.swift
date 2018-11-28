@@ -92,6 +92,13 @@ struct HouseItemInnerEntity: Mappable {
     var recommendReasons: [ResommendReason]?
     var fhSearchId: String?
     var originPrice:String?
+    
+    //租房4个字段
+    var rentTags : [RentTagEntity]?
+    var pricing : String?
+    var subtitle : String?
+    var houseType: Int?
+
     init?(map: Map) {
         
     }
@@ -128,6 +135,11 @@ struct HouseItemInnerEntity: Mappable {
         recommendReasons <- map["recommend_reasons"]
         logPB <- map["log_pb"]
         originPrice <- map["origin_price"]
+        rentTags <- map["tags"]
+        pricing <- map["pricing"]
+        subtitle <- map["subtitle"]
+        houseType <- map["house_type"]
+        
     }
 
     struct HouseImageTag: Mappable {

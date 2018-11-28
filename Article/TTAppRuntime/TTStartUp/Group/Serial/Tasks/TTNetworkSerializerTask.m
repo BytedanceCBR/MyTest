@@ -25,6 +25,8 @@
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
+#import "FHHomeConfigManager.h"
+
 //#import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
 
@@ -149,6 +151,15 @@
         [commonParams setValue:newVersion forKey:@"version_code"];
         
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
+        
+        // add by zjing f_city_name
+        FHConfigDataModel *configModel = [[FHHomeConfigManager sharedInstance]currentDataModel];
+        NSString *cityName = configModel.currentCityName;
+        if (cityName.length > 0) {
+            
+            [commonParams setValue:cityName forKey:@"f_city_name"];
+        }
+
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
         }

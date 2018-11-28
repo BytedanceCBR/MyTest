@@ -269,10 +269,16 @@ static NSMutableArray  * _Nullable identifierArr;
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
-            if (itemModel.openUrl) {
+            if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
                 
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                    [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                }else
+                {
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                }
             }
         }
     };
@@ -436,12 +442,26 @@ static NSMutableArray  * _Nullable identifierArr;
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
         
-        if (model.mapOpenUrl) {
+        if (model.mapOpenUrl.length > 0) {
             
-            NSURL *url = [NSURL URLWithString:model.mapOpenUrl];
+            NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];
+            if (![urlStr containsString:@"enter_from"]) {
+                [urlStr appendString:@"&enter_from=city_market"];
+            }
+            if (![urlStr containsString:@"search_id"]) {
+                [urlStr appendString:@"&search_id=be_null"];
+            }
+            if (![urlStr containsString:@"origin_from"]) {
+                [urlStr appendString:@"&origin_from=city_market"];
+            }
+            if (![urlStr containsString:@"origin_search_id"]) {
+                [urlStr appendString:@"&origin_search_id=be_null"];
+            }
+            NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
         [wself addHomeCityMarketClickLog];
+        [wself addCityMarketEnterMapFindLog];
     };
 }
 
@@ -513,6 +533,18 @@ static NSMutableArray  * _Nullable identifierArr;
     param[@"page_type"] = @"maintab";
     [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
+
++(void)addCityMarketEnterMapFindLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"enter_from"] = @"city_market";
+    param[@"search_id"] = @"be_null";
+    param[@"origin_from"] = @"city_market";
+    param[@"origin_search_id"] = @"be_null";
+    
+    [FHUserTracker writeEvent:@"enter_mapfind" params:param];
+}
+
 
 @end
 

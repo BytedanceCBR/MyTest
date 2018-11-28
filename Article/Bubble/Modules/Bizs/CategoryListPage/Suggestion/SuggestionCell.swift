@@ -145,6 +145,7 @@ class SuggestionHeaderView: UIView {
     
     lazy var label: UILabel = {
         let re = UILabel()
+        re.text = "历史记录"
         re.font = CommonUIStyle.Font.pingFangMedium(14)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
