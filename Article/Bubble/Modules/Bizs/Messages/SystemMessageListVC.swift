@@ -64,6 +64,10 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.automaticallyAdjustsScrollViewInsets = false
 
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+            toTracerParams("be_null", key: "origin_from") <|>
+            toTracerParams("be_null", key: "origin_search_id")
+        
         navBar.title.text = paramObj?.queryParams["title"] as? String
         listId = paramObj?.queryParams["list_id"] as? String
         errorVM = NHErrorViewModel(errorMask: infoDisplay, requestRetryText: "网络异常") { [weak self] in
