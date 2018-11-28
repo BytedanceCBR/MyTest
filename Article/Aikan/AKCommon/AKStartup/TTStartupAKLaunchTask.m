@@ -59,7 +59,7 @@
 - (void)registerSafeGuardService
 {
 
-    SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformHotSoon
+    SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformAweme
                                                                   appID:@"1370"
                                                                hostType:SGMSafeGuardHostTypeDomestic
                                                               secretKey:[self secretKey]];
@@ -83,7 +83,7 @@
 
 - (NSString *)secretKey
 {
-    return @"a3668f0afac72ca3f6c1697d29e0e1bb1fef4ab0285319b95ac39fa42c38d05f";
+    return @"2a35c29661d45a80fdf0e73ba5015be19f919081b023e952c7928006fa7a11b3";
 }
 
 - (void)stop
@@ -138,4 +138,4 @@
     return [[TTAccount sharedAccount] sessionKey];
 }
 
-    @end
+@end

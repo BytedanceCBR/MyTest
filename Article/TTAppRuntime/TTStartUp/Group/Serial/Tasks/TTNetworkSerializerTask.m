@@ -152,7 +152,7 @@
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         
         // add by zjing f_city_name
-        FHConfigDataModel *configModel = [[FHHomeConfigManager sharedInstance]currentDataModel];
+        FHConfigDataModel *configModel = [[FHHomeConfigManager sharedInstance] currentDataModel];
         NSString *cityName = configModel.currentCityName;
         if (cityName.length > 0) {
             
