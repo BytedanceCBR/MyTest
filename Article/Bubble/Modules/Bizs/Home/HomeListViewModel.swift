@@ -99,6 +99,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
     
+    var itemsTraceCache: [String : [IndexPath]] = [:] //埋点上报缓存
+    
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
     
     var reloadFromType: TTReloadType?
@@ -219,12 +221,7 @@ class HomeListViewModel: DetailPageViewModel {
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
         
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
-            
-            if let tracer = datas[indexPath.section].tracer {
-                
-            }
-            
-            if let recordIndexCache = self.dataSource?.recordIdCache, !recordIdCache.contains(indexPath) {
+            if let recordIndexCache = self.dataSource?.recordIndexCache, !recordIndexCache.contains(indexPath) {
                 
                 if let tracer = datas[indexPath.section].tracer {
                     self.dataSource?.callTracer(
