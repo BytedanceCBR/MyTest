@@ -124,6 +124,10 @@ class HomeListViewModel: DetailPageViewModel {
         let datas = self.generateDefaultSection()
         self.dataSource = FHFunctionListDataSourceDelegate(tableView: tableView,datasV:datas)
         
+        self.dataSource?.recordIndexChangedCallBack = { [weak self] in
+            self?.itemsTraceCache[matchHouseTypeName(houseTypeV: self?.dataSource?.categoryView.houseTypeRelay.value)] = self?.dataSource?.recordIndexCache
+        }
+        
         tableView.rx.didScroll
             .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
             .bind { [weak self, weak tableView] void in
@@ -136,6 +140,9 @@ class HomeListViewModel: DetailPageViewModel {
             houseType.skip(1).subscribe(onNext:{ [weak self] (index) in
                 
                 self?.enterType = "switch"
+                
+                self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
+                
                 
                 let origin_from = houseTypeString(houseType.value)
                 
@@ -222,7 +229,6 @@ class HomeListViewModel: DetailPageViewModel {
         
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
             if let recordIndexCache = self.dataSource?.recordIndexCache, !recordIndexCache.contains(indexPath) {
-                
                 if let tracer = datas[indexPath.section].tracer {
                     self.dataSource?.callTracer(
                         tracer: tracer,
@@ -230,6 +236,7 @@ class HomeListViewModel: DetailPageViewModel {
                         traceParams: TracerParams.momoid())
                 }
                 self.dataSource?.recordIndexCache.append(indexPath)
+                self.itemsTraceCache[matchHouseTypeName(houseTypeV: self.dataSource?.categoryView.houseTypeRelay.value)] = self.dataSource?.recordIndexCache
             }
         })
         
@@ -369,7 +376,7 @@ class HomeListViewModel: DetailPageViewModel {
         
         var category_name = houseTypeString(self.dataSource?.categoryView.houseTypeRelay.value ?? .secondHandHouse)
         var stay_category_name = houseTypeString(self.stayHouseTraceType ?? .secondHandHouse)
-
+        
         if (isStay ?? false)
         {
             if currentHouseType != .neighborhood
@@ -385,7 +392,7 @@ class HomeListViewModel: DetailPageViewModel {
             EnvContext.shared.homePageParams <|>
             toTracerParams(enterType, key: "enter_type") <|>
             toTracerParams((isStay ?? false) ? stay_category_name : category_name, key: "category_name") <|>
-//            toTracerParams(category_name, key: "origin_from") <|>
+            //            toTracerParams(category_name, key: "origin_from") <|>
             toTracerParams("maintab", key: "enter_from") <|>
             toTracerParams("maintab_list",key:"element_from") <|>
             toTracerParams((self.originSearchId ?? "be_null"),key:"search_id")
@@ -416,7 +423,7 @@ class HomeListViewModel: DetailPageViewModel {
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
-
+            
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
                                   offset: 0,
@@ -632,7 +639,10 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let dataSource = self.dataSource {
                             dataSource.datas = response
-                            dataSource.recordIndexCache = []
+                            if pullType == .pullDownType
+                            {
+                                dataSource.recordIndexCache = []
+                            }
                             self.tableView?.reloadData()
                         }
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
@@ -1101,7 +1111,7 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
     return { cell in
         
         if let theCell = cell as? SingleImageInfoCell {
-
+            
             theCell.majorTitle.text = data.title
             theCell.extendTitle.text = data.subtitle
             theCell.isTail = isLastCell
@@ -1167,6 +1177,8 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     
     var recordIndexCache: [IndexPath] = []
     
+    var recordIndexChangedCallBack: () -> () = {}
+    
     lazy var categoryView : CategorySectionView = {
         let view = CategorySectionView()
         return view
@@ -1203,6 +1215,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
                     traceParams: TracerParams.momoid())
             }
             recordIndexCache.append(indexPath)
+            recordIndexChangedCallBack()
         }
         
         switch datas[indexPath.section].type {
