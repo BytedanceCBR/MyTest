@@ -307,6 +307,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
     /// 绑定列表刷新
     func bindDataSourceObv() {
+        self.tableViewModel.sectionHeaderView.label.isHidden = true
+        self.tableViewModel.sectionHeaderView.deleteBtn.isHidden = true
         //绑定列表刷新
         Observable
             .combineLatest(tableViewModel.suggestions, tableViewModel.suggestionHistory, tableViewModel.guessYouWantItems)
@@ -319,8 +321,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
                     return history
                 }
             }
-            .bind { [unowned tableView, unowned self] _ in
-                tableView.reloadData()
+            .bind { [unowned self] _ in
+                self.reloadTableViewData()
                 if self.hasShowKeyboard == false {
                     self.navBar.searchInput.becomeFirstResponder()
                     self.hasShowKeyboard = true
@@ -330,8 +332,19 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
             .disposed(by: disposeBag)
         
         tableViewModel.suggestionHistory.subscribe {[unowned self] (_) in
-            self.tableView.reloadData()
+            self.reloadTableViewData()
         }.disposed(by: disposeBag)
+    }
+    
+    func reloadTableViewData() {
+        if self.tableViewModel.loadRequestTimes >= 2 {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+            }
+            let delHidden:Bool = self.tableViewModel.suggestionHistory.value.count > 0
+            self.tableViewModel.sectionHeaderView.label.isHidden = !delHidden
+            self.tableViewModel.sectionHeaderView.deleteBtn.isHidden = !delHidden
+        }
     }
 
     func bindNavBarObv() {
@@ -628,6 +641,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     var homePageRollData:HomePageRollScreen?
     
     var isFirstGuessHeightShow:Bool = true
+    
+    var loadRequestTimes:Int = 0
 
     init(houseType: BehaviorRelay<HouseType>, isFromHome: EnterSuggestionType) {
         self.houseType = houseType
@@ -640,28 +655,12 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 .disposed(by: disposeBag)
         houseType
             .bind(onNext: { [unowned self] houseType in
+                self.loadRequestTimes = 0
                 self.suggestionHistory.accept([])
                 self.requestHistoryFromRemote(houseType: "\(houseType.rawValue)")
                 self.requestGuessYouWantData()
             })
             .disposed(by: disposeBag)
-
-        
-        suggestionHistory
-            .map { $0.count == 0 }
-            .bind(to: sectionHeaderView.deleteBtn.rx.isHidden)
-            .disposed(by: disposeBag)
-        
-        suggestionHistory
-            .map {
-                if $0.count != 0 {
-                    return "历史记录"
-                }
-                return ""
-            }
-            .bind(to: sectionHeaderView.label.rx.text)
-            .disposed(by: disposeBag)
-
 
         sectionHeaderView.deleteBtn.rx.tap.bind { [unowned self] void in
             self.requestDeleteHistory()
@@ -886,11 +885,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let guessHeight:CGFloat = isFirstGuessHeightShow ? 138 : CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
-        let sectionHeaderHeight = CGFloat (suggestionHistory.value.count > 0 ? 40 : 0)
         if suggestions.value.count > 0 {
             return CGFloat.leastNormalMagnitude
         }
-        return sectionHeaderHeight + guessHeight
+        return 40 + guessHeight
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -954,15 +952,16 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     fileprivate func requestHistoryFromRemote(houseType: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             EnvContext.shared.toast.showToast("网络异常")
+            self.loadRequestTimes += 1
         } else {
             self.sendHistoryQueryBag = DisposeBag()
             requestSearchHistory(houseType: (houseType == nil ? "\(self.houseType.value.rawValue)" : houseType!))
-                //            .debug()
                 .subscribe(onNext: {[unowned self] (payload) in
-                    let historys = payload?.data?.data?.map(convertDataToSuggestionItem)
-                    self.suggestionHistory.accept(historys ?? [])
-                    }, onError: { (error) in
-//                        print(error)
+                        let historys = payload?.data?.data?.map(convertDataToSuggestionItem)
+                        self.suggestionHistory.accept(historys ?? [])
+                        self.loadRequestTimes += 1
+                    }, onError: {[unowned self] (error) in
+                        self.loadRequestTimes += 1
                 })
                 .disposed(by: sendHistoryQueryBag)
         }
@@ -1002,6 +1001,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         let houseType = self.houseType.value
         let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
         requestGuessYouWant(cityId: cityId ?? 122, houseType: houseType.rawValue).subscribe(onNext: { [unowned self] (response) in
+                self.loadRequestTimes += 1
                 self.isFirstGuessHeightShow = false
                 if let data = response?.data?.data , data.count > 0 {
                     // 把外部传入的搜索词放到第一个位置
@@ -1036,6 +1036,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 }
             }, onError: {[unowned self] (error) in
                 self.isFirstGuessHeightShow = false
+                self.loadRequestTimes += 1
         }).disposed(by: guessYouwantBag)
     }
 }
