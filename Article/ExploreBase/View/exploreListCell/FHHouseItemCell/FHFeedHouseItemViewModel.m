@@ -16,6 +16,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseBridgeManager.h"
 #import "FHHouseRentModel.h"
+#import "FHFeedHouseCellHelper.h"
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
 
@@ -25,19 +26,11 @@
 
 @property(nonatomic, strong)FHExploreHouseItemData *houseItemsData;
 
-@property(nonatomic, strong)NSMutableArray *cacheArray;
-
 @end
 
 @implementation FHFeedHouseItemViewModel
 
--(NSMutableArray *)cacheArray {
-    
-    if (!_cacheArray) {
-        _cacheArray = @[].mutableCopy;
-    }
-    return _cacheArray;
-}
+
 
 -(instancetype)initWithTableView:(UITableView *)tableView {
     
@@ -385,29 +378,31 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
+    
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         
         FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
-        if (![self.cacheArray containsObject:model.houseId]) {
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.houseId]) {
             
-            [self.cacheArray addObject:model.houseId];
             [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.houseId];
         }
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
         
         FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
-        if (![self.cacheArray containsObject:model.hid]) {
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.hid]) {
             
-            [self.cacheArray addObject:model.hid];
             [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.hid];
         }
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
         
         FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
-        if (![self.cacheArray containsObject:model.id]) {
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.id]) {
             
-            [self.cacheArray addObject:model.id];
             [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.id];
         }
     }
     
