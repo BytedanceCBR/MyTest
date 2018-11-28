@@ -378,7 +378,7 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
+//    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
     
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         

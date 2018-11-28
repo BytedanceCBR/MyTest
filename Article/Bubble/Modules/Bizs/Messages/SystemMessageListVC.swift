@@ -45,7 +45,7 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
 
-    fileprivate var minCoursor: Int64 = 0
+    fileprivate var minCoursor: String = "0"
 
     var stayTimeParams: TracerParams?
     
@@ -168,7 +168,7 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
                         ItemModel(data: $0)
                     }
                     self?.tableView.hasMore = response?.data?.hasMore ?? false
-                    self?.minCoursor = response?.data?.minCoursor ?? 0
+                    self?.minCoursor = response?.data?.minCoursor ?? "0"
                     var fhSections = self?.tableViewDelegate?.fhSections ?? [[]]
                     if let models = models {
                         fhSections.append(models)

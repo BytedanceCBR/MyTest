@@ -329,7 +329,7 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             }
         }
         if let id = data.id,
-            id == "2333",
+            id == "308",
             let url = data.openUrl,
             let encodeUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
