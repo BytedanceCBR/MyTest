@@ -8,11 +8,10 @@
 #import "TTStartupAKLaunchTask.h"
 #import "AKRedPacketManager.h"
 #import "AKHelper.h"
-#import <IESSafeGuardManager.h>
-#import <IESDeviceFingerprintManager.h>
+#import <SecGuard/SGMSafeGuardManager.h>
 #import <TTRoute.h>
 
-@interface TTStartupAKLaunchTask () <IESDeviceFingerprintDelegate>
+@interface TTStartupAKLaunchTask ()<SGMSafeGuardDelegate>
 @end
 
 @implementation TTStartupAKLaunchTask
@@ -36,9 +35,7 @@
     
     // 注册路由action
     [self registerRouteActions];
-    
-//    // 尝试获取新人红包
-//    [[AKRedPacketManager sharedManager] applyNewbeeRedPacketIgnoreLocalFlag:NO];
+
 }
 
 - (void)registerRouteActions
@@ -61,29 +58,37 @@
 
 - (void)registerSafeGuardService
 {
-    // 安全组@liuzhanluan and @libo 说用火山的appid和spname
-    IESSafeGuardConfig *config = [IESSafeGuardConfig configWithPlatform:IESSafeGuardPlatformCommon
+
+    SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformHotSoon
                                                                   appID:@"1370"
-                                                                 spname:@"hotsoon"
+                                                               hostType:SGMSafeGuardHostTypeDomestic
                                                               secretKey:[self secretKey]];
-//    [IESSafeGuardManager startWithConfig:config delegate:self.class];
-    
-    IESDeviceFingerprintPlatform internalPlatform = (IESDeviceFingerprintPlatform)(config.platform);
-    [IESDeviceFingerprintManager registerPlatform:internalPlatform];
-    [IESDeviceFingerprintManager registerDelegate:self.class];
-    
-    [IESSafeGuardManager scheduleSafeGuard];
-    [IESSafeGuardManager startForScene:@"launch"];
+    [[SGMSafeGuardManager sharedManager] sgm_startWithConfig:config delegate:self];
+    // 安全组@liuzhanluan and @libo 说用火山的appid和spname
+//    IESSafeGuardConfig *config = [IESSafeGuardConfig configWithPlatform:IESSafeGuardPlatformCommon
+//                                                                  appID:@"1370"
+//                                                                 spname:@"hotsoon"
+//                                                              secretKey:[self secretKey]];
+////    [IESSafeGuardManager startWithConfig:config delegate:self.class];
+//
+//    IESDeviceFingerprintPlatform internalPlatform = (IESDeviceFingerprintPlatform)(config.platform);
+//    [IESDeviceFingerprintManager registerPlatform:internalPlatform];
+//    [IESDeviceFingerprintManager registerDelegate:self.class];
+//
+//    [IESSafeGuardManager scheduleSafeGuard];
+//    [IESSafeGuardManager startForScene:@"launch"];
+    [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
+
 }
 
 - (NSString *)secretKey
 {
-    return @"2a35c29661d45a80fdf0e73ba5015be19f919081b023e952c7928006fa7a11b3";
+    return @"a3668f0afac72ca3f6c1697d29e0e1bb1fef4ab0285319b95ac39fa42c38d05f";
 }
 
 - (void)stop
 {
-    [IESDeviceFingerprintManager stop];
+//    [IESDeviceFingerprintManager stop];
 }
 
 #pragma mark - IESDeviceFingerprintDelegate
@@ -113,4 +118,24 @@
     return nil;
 }
 
-@end
+- (nullable CLLocation *)sgm_currentLocation {
+    return nil;
+}
+
+- (nonnull NSString *)sgm_customDeviceID {
+    return [[TTInstallIDManager sharedInstance] deviceID];
+}
+
+- (nonnull NSString *)sgm_installChannel {
+    return [TTSandBoxHelper getCurrentChannel];
+}
+
+- (nonnull NSString *)sgm_installID {
+    return [[TTInstallIDManager sharedInstance] installID];
+}
+
+- (nonnull NSString *)sgm_sessionID {
+    return [[TTAccount sharedAccount] sessionKey];
+}
+
+    @end

@@ -26,8 +26,7 @@
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
 #import "FHHomeConfigManager.h"
-
-//#import <SecGuard/SGMSafeGuardManager.h>
+#import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
 
 @implementation TTNetworkSerializerTask
@@ -85,13 +84,13 @@
 //
 //    // 启动自动防护
 //    [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
-//
-//    // 请求验证
-//    TTURLHashBlock hash = ^(NSURL *url, NSDictionary *formData) {
-//        return [[SGMSafeGuardManager sharedManager] sgm_encryptURLWithURL:url formData:formData];
-//    };
-//
-//    [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
+
+    // 请求验证
+    TTURLHashBlock hash = ^(NSURL *url, NSDictionary *formData) {
+        return [[SGMSafeGuardManager sharedManager] sgm_encryptURLWithURL:url formData:formData];
+    };
+
+    [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
 
     // 网络库default serializer初始化
     [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[BDTDefaultHTTPRequestSerializer class]];

@@ -20,11 +20,12 @@ def appPods
     pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
     pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
-    
+    pod 'SecGuard'
+
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
-    #-----安全组sdk-----#
-    pod 'IESSafeGuard', '0.6.5'
+#    #-----安全组sdk-----#
+#    pod 'IESSafeGuard', '0.6.5'
 
     #-----视频业务库-----#
     pod 'TTVideoService', '0.1.40'
@@ -401,17 +402,22 @@ end
 
 target 'f100' do
     appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'NewsLiteInHouse' do
     pod 'TTDebugAssistant', '0.2.31'
     pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
     appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+
 end
+
+
+
 
 # POD POST_INSTALL
 post_install do |installer|
-
     installer.aggregate_targets.each do |target|
         copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
         string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'

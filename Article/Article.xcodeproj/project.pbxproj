@@ -18014,6 +18014,7 @@
 			buildPhases = (
 				02BD8BE149E5EEA0F6225003 /* [CP] Check Pods Manifest.lock */,
 				B373C7FB2174587A008F9905 /* Run Script - build revision */,
+				3A6A3D26EC059D267CF68A6C /* [CP-User] sgmpreaction */,
 				B373C7FC2174587A008F9905 /* Sources */,
 				B373CE862174587A008F9905 /* Run Script - delete revision */,
 				B373CE872174587A008F9905 /* Resources */,
@@ -18042,6 +18043,7 @@
 			buildPhases = (
 				A46A8E1EEFD156C1E092FD50 /* [CP] Check Pods Manifest.lock */,
 				FEFA525B205FB1A8001F50D8 /* Run Script - build revision */,
+				60839967663B27998D99191F /* [CP-User] sgmpreaction */,
 				FEFA525C205FB1A8001F50D8 /* Sources */,
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
@@ -18426,6 +18428,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		3A6A3D26EC059D267CF68A6C /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP-User] sgmpreaction";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+			showEnvVarsInLog = 0;
+		};
 		3D396439219ACED0002E9010 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -18557,6 +18578,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -18639,6 +18661,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
@@ -18667,6 +18690,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60839967663B27998D99191F /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP-User] sgmpreaction";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
 			showEnvVarsInLog = 0;
 		};
 		6B66AE861D11833100F57F45 /* Run Script - delete revision */ = {
@@ -18774,6 +18816,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -18855,6 +18898,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
@@ -19147,6 +19191,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -19228,6 +19273,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
