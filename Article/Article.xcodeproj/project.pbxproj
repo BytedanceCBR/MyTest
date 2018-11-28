@@ -2432,7 +2432,6 @@
 		B373CBF72174587A008F9905 /* NewsListLogicManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AF9E251F0E284400C1E28D /* NewsListLogicManager.m */; };
 		B373CBF82174587A008F9905 /* ExploreArticleVideoCellCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF320A51B3FF7280052B848 /* ExploreArticleVideoCellCommentView.m */; };
 		B373CBF92174587A008F9905 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCAD0091DDC237200EBF9CF /* ExploreVideoDetailPhoneGroupPicADView.m */; };
-		B373CBFA2174587A008F9905 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
 		B373CBFB2174587A008F9905 /* TTFabricSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7BF1F1332DA0002B455 /* TTFabricSDKRegister.m */; };
 		B373CBFC2174587A008F9905 /* TTInterfaceTipBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9627EF521F2767BD00969C9A /* TTInterfaceTipBaseView.m */; };
 		B373CBFD2174587A008F9905 /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAE82142652900653188 /* TGBlank.swift */; };
@@ -3278,8 +3277,6 @@
 		B388CC092142652B00653188 /* MessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA742142652900653188 /* MessageListVC.swift */; };
 		B388CC0A2142652B00653188 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA752142652900653188 /* ChatVC.swift */; };
 		B388CC0B2142652B00653188 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA752142652900653188 /* ChatVC.swift */; };
-		B388CC0C2142652B00653188 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
-		B388CC0D2142652B00653188 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
 		B388CC0E2142652B00653188 /* MetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA782142652900653188 /* MetaData.swift */; };
 		B388CC0F2142652B00653188 /* MetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA782142652900653188 /* MetaData.swift */; };
 		B388CC102142652B00653188 /* TableViewTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA792142652900653188 /* TableViewTracer.swift */; };
@@ -7975,7 +7972,6 @@
 		B388CA732142652900653188 /* ChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		B388CA742142652900653188 /* MessageListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListVC.swift; sourceTree = "<group>"; };
 		B388CA752142652900653188 /* ChatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
-		B388CA762142652900653188 /* MessagesListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesListVC.swift; sourceTree = "<group>"; };
 		B388CA782142652900653188 /* MetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaData.swift; sourceTree = "<group>"; };
 		B388CA792142652900653188 /* TableViewTracer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewTracer.swift; sourceTree = "<group>"; };
 		B388CA7A2142652900653188 /* EventKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
@@ -15105,7 +15101,6 @@
 				B388CA712142652900653188 /* Cells */,
 				B388CA742142652900653188 /* MessageListVC.swift */,
 				B388CA752142652900653188 /* ChatVC.swift */,
-				B388CA762142652900653188 /* MessagesListVC.swift */,
 				B3A73586214F612F001A3953 /* SystemMessageListVC.swift */,
 			);
 			path = Messages;
@@ -18021,6 +18016,7 @@
 			buildPhases = (
 				02BD8BE149E5EEA0F6225003 /* [CP] Check Pods Manifest.lock */,
 				B373C7FB2174587A008F9905 /* Run Script - build revision */,
+				3A6A3D26EC059D267CF68A6C /* [CP-User] sgmpreaction */,
 				B373C7FC2174587A008F9905 /* Sources */,
 				B373CE862174587A008F9905 /* Run Script - delete revision */,
 				B373CE872174587A008F9905 /* Resources */,
@@ -18049,6 +18045,7 @@
 			buildPhases = (
 				A46A8E1EEFD156C1E092FD50 /* [CP] Check Pods Manifest.lock */,
 				FEFA525B205FB1A8001F50D8 /* Run Script - build revision */,
+				60839967663B27998D99191F /* [CP-User] sgmpreaction */,
 				FEFA525C205FB1A8001F50D8 /* Sources */,
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
@@ -18433,6 +18430,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		3A6A3D26EC059D267CF68A6C /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP-User] sgmpreaction";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+			showEnvVarsInLog = 0;
+		};
 		3D396439219ACED0002E9010 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -18564,6 +18580,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -18646,6 +18663,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
@@ -18674,6 +18692,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60839967663B27998D99191F /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP-User] sgmpreaction";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
 			showEnvVarsInLog = 0;
 		};
 		6B66AE861D11833100F57F45 /* Run Script - delete revision */ = {
@@ -18781,6 +18818,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -18862,6 +18900,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
@@ -19154,6 +19193,7 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
@@ -19235,6 +19275,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
@@ -20376,7 +20417,6 @@
 				A9AF9E261F0E284400C1E28D /* NewsListLogicManager.m in Sources */,
 				6BF320A61B3FF7280052B848 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				2DCAD02A1DDC237200EBF9CF /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B388CC0C2142652B00653188 /* MessagesListVC.swift in Sources */,
 				A97DBC331F1332E40002B455 /* TTFabricSDKRegister.m in Sources */,
 				9627EF5D1F2767BD00969C9A /* TTInterfaceTipBaseView.m in Sources */,
 				B388CCC22142652C00653188 /* TGBlank.swift in Sources */,
@@ -22115,7 +22155,6 @@
 				B373CBF72174587A008F9905 /* NewsListLogicManager.m in Sources */,
 				B373CBF82174587A008F9905 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				B373CBF92174587A008F9905 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B373CBFA2174587A008F9905 /* MessagesListVC.swift in Sources */,
 				B373CBFB2174587A008F9905 /* TTFabricSDKRegister.m in Sources */,
 				B373CBFC2174587A008F9905 /* TTInterfaceTipBaseView.m in Sources */,
 				B373CBFD2174587A008F9905 /* TGBlank.swift in Sources */,
@@ -23854,7 +23893,6 @@
 				FEFA56E1205FB1A8001F50D8 /* NewsListLogicManager.m in Sources */,
 				FEFA56E2205FB1A8001F50D8 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				FEFA56E3205FB1A8001F50D8 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B388CC0D2142652B00653188 /* MessagesListVC.swift in Sources */,
 				FEFA56E4205FB1A8001F50D8 /* TTFabricSDKRegister.m in Sources */,
 				FEFA56E7205FB1A8001F50D8 /* TTInterfaceTipBaseView.m in Sources */,
 				B388CCC32142652C00653188 /* TGBlank.swift in Sources */,

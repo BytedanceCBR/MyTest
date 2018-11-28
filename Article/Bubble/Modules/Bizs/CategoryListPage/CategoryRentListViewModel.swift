@@ -151,7 +151,7 @@ func openRentHouseDetailPage(
     return { (params) in
         
         //TODO: add rent detail params
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_house_detail"))
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"))
         return
         
     }

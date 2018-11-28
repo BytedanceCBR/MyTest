@@ -1037,6 +1037,8 @@ fileprivate func houseTypeStringByHouseType(houseType: HouseType) -> String {
         return "old"
     case .neighborhood:
         return "neighborhood"
+    case .rentHouse:
+        return "rent"
     default:
         return "be_null"
     }
