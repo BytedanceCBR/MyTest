@@ -56,7 +56,7 @@ func parseRentHouseListRowItemNode(
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 //                toTracerParams("be_null", key: "element_type") <|>
-                toTracerParams("old", key: "house_type")
+                toTracerParams("rent", key: "house_type")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
     let count = data?.count ?? 0
