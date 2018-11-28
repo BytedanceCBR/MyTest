@@ -69,7 +69,7 @@ class PriceChangeHistoryCell: BaseUITableViewCell {
         sepLine.snp.makeConstraints { (maker) in
             maker.left.equalTo(20)
             maker.right.equalTo(-20)
-            maker.height.equalTo(1)
+            maker.height.equalTo(0.5)
             maker.bottom.equalToSuperview()
         }
     }
