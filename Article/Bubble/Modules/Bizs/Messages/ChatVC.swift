@@ -358,7 +358,11 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             // "二手房"
             category_name = "old_message_list"
             origin_from = "messagetab_old"
-
+            
+        case "302":
+            // "租房"
+            category_name = "rent_message_list"
+            origin_from = "messagetab_rent"
         case "303":
             // "小区"
             category_name = "neighborhood_message_list"

@@ -469,6 +469,28 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                         disposeBag: disposeBag,
                         tracerParams: params,
                         navVC: navVC)(elementParams)
+                    
+                case .rentHouse:
+                    //TODO: add rent detail params linlin
+                    let listType = selectTraceParam(self.traceParams, key: "category_name")
+                    var elementParams = TracerParams.momoid()
+                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
+                        <|> beNull(key: "element_from")
+                    
+                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+                        
+                        params = params <|> toTracerParams("rent_message_list", key: "enter_from")
+                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
+                        
+                    }else {
+                        params = params <|> toTracerParams(listType ?? "rent_message_list", key: "enter_from")
+                    }
+                    
+                    // add by zjing for test
+                    print("zjing -elementParams\(elementParams.paramsGetter([:]))-params\(params.paramsGetter([:]))")
+                    
+                    openRentHouseDetailPage(houseId: Int64(houseId) ?? 0, disposeBag: disposeBag, tracerParams: params, navVC: navVC)(elementParams)
+                    
                 default:
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
@@ -492,6 +514,8 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             return "new"
         case .secondHandHouse:
             return "old"
+        case .rentHouse:
+            return "rent"
         default:
             return "old"
         }
