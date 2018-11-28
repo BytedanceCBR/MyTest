@@ -15,6 +15,8 @@
 #import "FHNewHouseItemModel.h"
 #import "FHUserTracker.h"
 #import "FHHouseBridgeManager.h"
+#import "FHHouseRentModel.h"
+#import "FHFeedHouseCellHelper.h"
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
 
@@ -24,19 +26,11 @@
 
 @property(nonatomic, strong)FHExploreHouseItemData *houseItemsData;
 
-@property(nonatomic, strong)NSMutableArray *cacheArray;
-
 @end
 
 @implementation FHFeedHouseItemViewModel
 
--(NSMutableArray *)cacheArray {
-    
-    if (!_cacheArray) {
-        _cacheArray = @[].mutableCopy;
-    }
-    return _cacheArray;
-}
+
 
 -(instancetype)initWithTableView:(UITableView *)tableView {
     
@@ -65,11 +59,11 @@
 
 -(void)updateWithHouseData:(FHExploreHouseItemData *_Nullable)data {
     
-    if (data != self.houseItemsData) {
-        [self.cacheArray removeAllObjects];
-    }
+//    if (data != self.houseItemsData) {
+//        [self.cacheArray removeAllObjects];
+//    }
     self.houseItemsData = data;
-    
+
     [self.headerView updateTitle: self.houseItemsData.title];
     [self.footerView updateTitle: self.houseItemsData.loadmoreButton];
     [self.tableView reloadData];
@@ -207,6 +201,50 @@
     }
 }
 
+-(void)showRentHouseDetailPage:(NSIndexPath *)indexPath
+{
+    
+    FHHouseRentDataItemsModel *houseModel = self.houseItemsData.rentHouseList[indexPath.row];
+    // todo linlin rent_detail 埋点 linlin
+    
+    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+    [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
+    
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_house_detail?rent_id=%@",houseModel.id];
+    
+    TTRouteUserInfo *userInfo = nil;
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"house_type"] = @"rent";
+    param[@"log_pb"] = houseModel.logPb ? : @"be_null";
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"enter_from"] = @"maintab";
+    param[@"element_from"] = @"mix_list";
+    param[@"rank"] = @(indexPath.row);
+    
+    if (houseModel.logPb.count > 0) {
+        
+        param[@"search_id"] = houseModel.logPb[@"search_id"] ? : @"be_null";
+    }
+    param[@"origin_from"] = @"mix_list";
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+    
+    if (houseModel.logPb) {
+        
+        param[@"log_pb"] = houseModel.logPb;
+        
+    }
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    if (strUrl.length  > 0) {
+        
+        NSURL *url =[NSURL URLWithString:strUrl];
+        [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+
 -(void)addHouseShowLogWithIndexPath:(NSIndexPath *)indexPath {
     
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -221,6 +259,12 @@
         
         param[@"house_type"] = @"old";
         FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
+        // logpb处理
+        param[@"log_pb"] = model.logPb ? : @"be_null";
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        
+        param[@"house_type"] = @"rent";
+        FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
         // logpb处理
         param[@"log_pb"] = model.logPb ? : @"be_null";
     }
@@ -253,6 +297,12 @@
         }
         return 1;
         
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        if (self.houseItemsData.rentHouseList.count < 1) {
+            return 0;
+        }
+        return 1;
+        
     }
     return 0;
     
@@ -268,13 +318,17 @@
         
         return self.houseItemsData.secondHouseList.count;
         
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        
+        return self.houseItemsData.rentHouseList.count;
+        
     }
     return 0;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
         if (indexPath.row == 0) {
             
             return 85;
@@ -312,27 +366,43 @@
             [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
             
         }
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        
+        FHHouseRentDataItemsModel *item = self.houseItemsData.rentHouseList[indexPath.row];
+        BOOL isFirstCell = (indexPath.row == 0);
+        BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
+        [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithRentHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
     }
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
+    
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         
         FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
-        if (![self.cacheArray containsObject:model.houseId]) {
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.houseId]) {
             
-            [self.cacheArray addObject:model.houseId];
             [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.houseId];
         }
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
         
         FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
-        if (![self.cacheArray containsObject:model.hid]) {
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.hid]) {
             
-            [self.cacheArray addObject:model.hid];
             [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.hid];
+        }
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        
+        FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
+        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.id]) {
+            
+            [self addHouseShowLogWithIndexPath:indexPath];
+            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.id];
         }
     }
     
@@ -362,6 +432,13 @@
             
             [self showSecondHouseDetailPage:indexPath];
 
+        }
+    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+        
+        if (self.houseItemsData.rentHouseList.count > 0 && indexPath.row < self.houseItemsData.rentHouseList.count) {
+            
+            [self showRentHouseDetailPage:indexPath];
+            
         }
     }
     

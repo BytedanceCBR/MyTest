@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.6)
+  - BDALog (0.1.7)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -1419,7 +1419,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 7c9ae5939b17526808824b626057185cbf96c955
+  BDALog: c4719524bcb76adc22abf406b38c3530e420f55b
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23

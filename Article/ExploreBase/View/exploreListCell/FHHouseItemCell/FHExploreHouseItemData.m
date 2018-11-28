@@ -8,11 +8,13 @@
 #import "FHExploreHouseItemData.h"
 #import "FHSearchHouseModel.h"
 #import "FHNewHouseItemModel.h"
+#import "FHHouseRentModel.h"
 
 @interface FHExploreHouseItemData ()
 
 @property(nonatomic, strong) NSArray<FHNewHouseItemModel *> *itemList;
 @property(nonatomic, strong) NSArray<FHSearchHouseDataItemsModel *> *secondItemList;
+@property(nonatomic, strong) NSArray<FHHouseRentDataItemsModel *> *rentItemList;
 
 @end
 
@@ -25,7 +27,6 @@
     [super updateWithDictionary:dictionary];
     NSDictionary *raw_data = [dictionary tt_dictionaryValueForKey:@"raw_data"];
     if (raw_data != nil) {
-        
 
         self.title = [raw_data tt_stringValueForKey:@"title"];
         self.items = [raw_data tt_arrayValueForKey:@"items"];
@@ -33,6 +34,7 @@
         self.imprType = [raw_data tt_stringValueForKey:@"impr_type"];
         self.loadmoreButton = [raw_data tt_stringValueForKey:@"loadmore_button"];
         self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
+
         self.logPb = [raw_data tt_dictionaryValueForKey:@"log_pb"];
         if (self.houseType.integerValue == FHHouseTypeNewHouse) {
 
@@ -60,13 +62,29 @@
             }
             self.secondItemList = mutable;
             
+        }else if (self.houseType.integerValue == FHHouseTypeRentHouse) {
+            
+            NSMutableArray *mutable = @[].mutableCopy;
+            for (NSDictionary *dict in self.items) {
+                
+                FHHouseRentDataItemsModel *model = [[FHHouseRentDataItemsModel alloc]initWithDictionary:dict error:nil];
+                if (model != nil) {
+                    
+                    [mutable addObject:model];
+                }
+            }
+            self.rentItemList = mutable;
+            
         }
+        
+        
     }
 }
 
 -(void)setItems:(NSArray<NSDictionary *> *)items {
     
     _items = items;
+
     if (self.houseType.integerValue == FHHouseTypeNewHouse) {
 
         NSMutableArray *mutable = @[].mutableCopy;
@@ -92,6 +110,19 @@
             }
         }
         self.secondItemList = mutable;
+        
+    }else if (self.houseType.integerValue == FHHouseTypeRentHouse) {
+    
+        NSMutableArray *mutable = @[].mutableCopy;
+        for (NSDictionary *dict in self.items) {
+            
+            FHHouseRentDataItemsModel *model = [[FHHouseRentDataItemsModel alloc]initWithDictionary:dict error:nil];
+            if (model != nil) {
+                
+                [mutable addObject:model];
+            }
+        }
+        self.rentItemList = mutable;
         
     }
     
@@ -172,6 +203,29 @@
         }
     }
     return self.secondItemList;
+}
+
+
+
+- (nullable NSArray<FHHouseRentDataItemsModel *> *)rentHouseList {
+    
+    if (!self.rentItemList) {
+        if (self.houseType.integerValue == FHHouseTypeRentHouse) {
+            
+            NSMutableArray *mutable = @[].mutableCopy;
+            for (NSDictionary *dict in self.items) {
+                
+                FHHouseRentDataItemsModel *model = [[FHHouseRentDataItemsModel alloc]initWithDictionary:dict error:nil];
+                if (model != nil) {
+                    
+                    [mutable addObject:model];
+                }
+            }
+            self.secondItemList = mutable;
+            
+        }
+    }
+    return self.rentItemList;
 }
 
 @end

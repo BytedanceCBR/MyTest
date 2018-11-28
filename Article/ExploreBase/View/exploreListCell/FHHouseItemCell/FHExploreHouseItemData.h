@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHSearchHouseDataItemsModel;
 @class FHNewHouseItemModel;
+@class FHHouseRentDataItemsModel;
+
 
 @interface FHExploreHouseItemData : ExploreOriginalData
 
@@ -27,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSArray<FHSearchHouseDataItemsModel *> *)secondHouseList;
 
+- (nullable NSArray<FHHouseRentDataItemsModel *> *)rentHouseList;
 
 @end
 

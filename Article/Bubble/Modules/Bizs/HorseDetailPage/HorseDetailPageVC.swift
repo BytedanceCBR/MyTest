@@ -473,7 +473,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let detailPageViewModel = detailPageViewModel {
 
             detailPageViewModel.followStatus
-                .filter { [weak self] (result) -> Bool in
+                .filter { (result) -> Bool in
                     if case .success(_) = result {
                         return true
                     } else {
@@ -1084,6 +1084,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 //        print("release HorseDetailPageVC")
  //        self.closeANRMonitor()
     }
+
+
 
 }
 

@@ -70,7 +70,7 @@
         inset.bottom = [[UIApplication sharedApplication] keyWindow].safeAreaInsets.bottom;
         self.webview.ttr_scrollView.contentInset = inset;
     }
-    
+    self.webview.opaque = NO;
     self.webview.frame = CGRectMake(0,
                                     44.f + self.view.tt_safeAreaInsets.top,
                                     UIScreen.mainScreen.bounds.size.width,
@@ -82,7 +82,7 @@
     self.viewModel = [[FHWebviewViewModel alloc] initWithViewController:self];
     NSDictionary *jsParam =  [self.userInfo.allInfo objectForKey:@"jsParams"];
     [self.viewModel registerJSBridge:self.webview.ttr_staticPlugin jsParamDic:jsParam];
-    self.webview.backgroundColor = UIColor.whiteColor;
+    self.webview.backgroundColor = UIColor.clearColor;
     self.view.backgroundColor = UIColor.whiteColor;
     
     [self setupMaskView];

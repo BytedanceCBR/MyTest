@@ -15,7 +15,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     var cellFactory: UITableViewCellFactory
 
-    private let detailData = BehaviorRelay<FHRentDetailResponseModel?>(value: nil)
+    let detailData = BehaviorRelay<FHRentDetailResponseModel?>(value: nil)
 
     private var relateErshouHouseData = BehaviorRelay<FHHouseRentRelatedResponseModel?>(value: nil)
 
@@ -150,8 +150,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             if let url = self?.detailData.value?.data?.reportUrl {
                 self?.jumpToReportPage(url: url)
             } else {
-                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
+//                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
+                self?.jumpToReportPage(url: "http://www.baidu.com")
             }
+
         }
         let header = combineParser(left: parseFlineNode(),
                                    right: parseRentSummaryHeaderCellNode("房屋概况", reportAction: action))
