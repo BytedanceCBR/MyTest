@@ -10,6 +10,39 @@
 #import "AKHelper.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 #import <TTRoute.h>
+#import "UIAlertView+FHAlertView.h"
+
+void fhPreFcActionAlert(forceCrashMask mask)
+{
+    if (mask & forceCrashMaskRebuild) {
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        if ([NSThread isMainThread]) {
+            [UIAlertView fh_showAlertViewWithTitle:@"提示"
+                                            message:@"检测到环境异常，请前往官方渠道下载"
+                                  cancelButtonTitle:@"知道了"
+                                  otherButtonTitles:nil
+                                          dismissed:^(NSInteger buttonIndex) {
+            } canceled:^{
+                NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+                dispatch_semaphore_signal(sema);
+            }];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIAlertView fh_showAlertViewWithTitle:@"提示"
+                                                message:@"检测到环境异常，请前往官方渠道下载" cancelButtonTitle:@"知道了"
+                                      otherButtonTitles:nil
+                                              dismissed:^(NSInteger buttonIndex) {
+                } canceled:^{
+                    NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+                    dispatch_semaphore_signal(sema);
+                }];
+            });
+        }
+        dispatch_wait(sema, DISPATCH_TIME_FOREVER);
+    }
+}
 
 @interface TTStartupAKLaunchTask ()<SGMSafeGuardDelegate>
 @end
@@ -49,11 +82,6 @@
             [userInfo copy];
         })];
     } withIdentifier:@"change_tab"];
-    
-    // 弹新人红包
-    [TTRoute registerAction:^(NSDictionary *params) {
-        [[AKRedPacketManager sharedManager] applyNewbeeRedPacketIgnoreLocalFlag:YES];
-    } withIdentifier:@"apply_newbee_rp"];
 }
 
 - (void)registerSafeGuardService
@@ -78,7 +106,7 @@
 //    [IESSafeGuardManager scheduleSafeGuard];
 //    [IESSafeGuardManager startForScene:@"launch"];
     [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
-
+    [[SGMSafeGuardManager sharedManager] setPreFcActionPtr:fhPreFcActionAlert];
 }
 
 - (NSString *)secretKey
