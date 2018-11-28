@@ -71,7 +71,10 @@
         self.webview.ttr_scrollView.contentInset = inset;
     }
     
-    self.webview.frame = CGRectMake(0, 44.f + self.view.tt_safeAreaInsets.top, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
+    self.webview.frame = CGRectMake(0,
+                                    44.f + self.view.tt_safeAreaInsets.top,
+                                    UIScreen.mainScreen.bounds.size.width,
+                                    UIScreen.mainScreen.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top));
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -80,6 +83,7 @@
     NSDictionary *jsParam =  [self.userInfo.allInfo objectForKey:@"jsParams"];
     [self.viewModel registerJSBridge:self.webview.ttr_staticPlugin jsParamDic:jsParam];
     self.webview.backgroundColor = UIColor.whiteColor;
+    self.view.backgroundColor = UIColor.whiteColor;
     
     [self setupMaskView];
     

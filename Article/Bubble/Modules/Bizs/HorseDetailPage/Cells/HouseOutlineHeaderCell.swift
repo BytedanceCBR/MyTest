@@ -19,6 +19,8 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
     var tracerParams:TracerParams?
     let disposeBag = DisposeBag()
     var reportUrl:String?
+
+    var ershouHouseData: ErshouHouseData?
     
     lazy var label: UILabel = {
         let re = UILabel()
@@ -63,8 +65,19 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
         infoButton.rx.tap
             .subscribe(onNext: {[weak self] (void) in
                 if let urlStr = self?.reportUrl {
-                    if let theUrl = URL(string: urlStr) {
-                        TTRoute.shared().openURL(byPushViewController: theUrl)
+                    if let ershouHouseData = self?.ershouHouseData,
+                        let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+
+                        let openUrl = "fschema://webview_oc"
+                        let model = ershouHouseData.toJSON()
+                        let pageData: [String: Any] = ["data": model]
+                        let commonParamsData: [String: Any] = ["data": commonParams]
+
+                        let jsParams = ["requestPageData": pageData,
+                                        "getNetCommonParams": commonParamsData]
+                        let info: [String: Any] = ["url": "http://i.haoduofangs.com\(urlStr)", "jsParams": jsParams]
+                        let userInfo = TTRouteUserInfo(info: info)
+                        TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                     }
                 }
             }).disposed(by: disposeBag)
@@ -99,7 +112,7 @@ func parseHouseOutlineHeaderNode(
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
+            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
             
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("house_info", key: "element_type") <|>
@@ -118,11 +131,13 @@ func parseHouseOutlineHeaderNode(
 }
 
 func fillHouseOutlineHeaderCell(_ title: String,
+                                _ ershouHouseData: ErshouHouseData,
                                 _ openUrl:String?,
                                 traceExtension: TracerParams = TracerParams.momoid(),
                                 cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HouseOutlineHeaderCell {
         theCell.label.text = title
         theCell.reportUrl = openUrl
+        theCell.ershouHouseData = ershouHouseData
     }
 }

@@ -150,8 +150,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             if let url = self?.detailData.value?.data?.reportUrl {
                 self?.jumpToReportPage(url: url)
             } else {
-                let houseId = self?.detailData.value?.data?.id ?? ""
-                self?.jumpToReportPage(url: "fschema://webview?url=http://i.haoduofangs.com/f100/client/feedback&house_id=\(houseId)&title=aaaa")
+                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
             }
         }
         let header = combineParser(left: parseFlineNode(),
@@ -226,23 +225,29 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Parameter neighborhoodId: 小区id
     fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
         let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
-        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-            let detailModel = self.detailData.value {
-            let pageData = ["data": detailModel.data?.toDictionary(),
-                            "code": "1"] as [String : Any]
-            let jsParams = ["requestPageData": pageData]
-
+        if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
         }
-
-
     }
 
     /// 跳转到投诉页面
     ///
     /// - Parameter url: reportUrl
     fileprivate func jumpToReportPage(url: String) {
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: url))
+        if let jumpUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
+            let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+            let openUrl = "fschema://webview_oc"
+            let pageData: [String: Any] = ["data": detailModel]
+            let commonParamsData: [String: Any] = ["data": commonParams]
+
+            let jsParams = ["requestPageData": pageData,
+                            "getNetCommonParams": commonParamsData]
+            let info: [String: Any] = ["url": jumpUrl, "jsParams": jsParams]
+            let userInfo = TTRouteUserInfo(info: info)
+            TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {

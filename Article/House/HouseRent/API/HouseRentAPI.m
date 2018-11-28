@@ -17,7 +17,7 @@
     NSString* url = @"https://i.haoduofangs.com/f100/api/related_rent";
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"house_id": rentId}
+            params:@{@"rent_id": rentId, @"count": @(5)}
             method:@"GET"
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
@@ -41,8 +41,9 @@
     NSString* url = @"https://i.haoduofangs.com/f100/api/same_neighborhood_rent";
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"house_id": rentId,
-//                     @"neighborhood_id": neighborhoodId,
+            params:@{@"rent_id": rentId,
+                     @"neighborhood_id": neighborhoodId,
+                     @"count": @(5),
                      }
             method:@"GET"
             needCommonParams:YES
