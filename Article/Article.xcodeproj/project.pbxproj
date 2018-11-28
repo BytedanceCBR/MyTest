@@ -932,6 +932,9 @@
 		764A56D421A54BE100C0A8B2 /* GuessYouWantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56D321A54BE100C0A8B2 /* GuessYouWantView.swift */; };
 		764A56D521A54BE100C0A8B2 /* GuessYouWantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56D321A54BE100C0A8B2 /* GuessYouWantView.swift */; };
 		764A56D621A54BE100C0A8B2 /* GuessYouWantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764A56D321A54BE100C0A8B2 /* GuessYouWantView.swift */; };
+		76D1BF7421AE94BB004D79F0 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D1BF7321AE94BB004D79F0 /* String+Extension.swift */; };
+		76D1BF7521AE94BB004D79F0 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D1BF7321AE94BB004D79F0 /* String+Extension.swift */; };
+		76D1BF7621AE94BB004D79F0 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D1BF7321AE94BB004D79F0 /* String+Extension.swift */; };
 		7B036C351F9DC94D009AA77A /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
 		7B27B0C81FC41F4700679550 /* TTRWenda.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B27B0C61FC41F4200679550 /* TTRWenda.m */; };
 		7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B4772551CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m */; };
@@ -3588,7 +3591,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -6983,6 +6986,7 @@
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
 		764A56D321A54BE100C0A8B2 /* GuessYouWantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessYouWantView.swift; sourceTree = "<group>"; };
+		76D1BF7321AE94BB004D79F0 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		7B036C331F9DC94D009AA77A /* TTWendaMethodDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWendaMethodDelegate.h; sourceTree = "<group>"; };
 		7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTWendaMethodDelegate.m; sourceTree = "<group>"; };
 		7B27B0C61FC41F4200679550 /* TTRWenda.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTRWenda.m; sourceTree = "<group>"; };
@@ -9148,7 +9152,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -14961,6 +14965,7 @@
 			isa = PBXGroup;
 			children = (
 				B388C9E92142652800653188 /* Utils+Device.swift */,
+				76D1BF7321AE94BB004D79F0 /* String+Extension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -19892,6 +19897,7 @@
 				2A1636882018362900B6CA4E /* SSItemActionSender.m in Sources */,
 				EFBC9306165F8215009F2EA1 /* SSUpdateListNotifyManager.m in Sources */,
 				A97DC54C1F134C020002B455 /* TTPhotoSingleSearchWordCell.m in Sources */,
+				76D1BF7421AE94BB004D79F0 /* String+Extension.swift in Sources */,
 				C29075A11D1D411600BE351C /* HTSPanelControllerItem.m in Sources */,
 				1BFA0BCD1A1D8EE200FA69FF /* SubscribeEntryGetRemoteDataOperation.m in Sources */,
 				6BD6202C1E652C78002223E5 /* TTDBCenter.m in Sources */,
@@ -21846,6 +21852,7 @@
 				B373CAD82174587A008F9905 /* TTLayOutPureTitleCell.m in Sources */,
 				B373CAD92174587A008F9905 /* TTAdCanvasPreloader.m in Sources */,
 				B373CADA2174587A008F9905 /* MarqueeGroupView.swift in Sources */,
+				76D1BF7621AE94BB004D79F0 /* String+Extension.swift in Sources */,
 				B373CADB2174587A008F9905 /* Comment.m in Sources */,
 				B373CADC2174587A008F9905 /* TTVPasterADModel.m in Sources */,
 				B373CADD2174587A008F9905 /* TTVDetailCarCard.m in Sources */,
@@ -23584,6 +23591,7 @@
 				FEFA55AA205FB1A8001F50D8 /* TTLayOutPureTitleCell.m in Sources */,
 				FEFA55AD205FB1A8001F50D8 /* TTAdCanvasPreloader.m in Sources */,
 				B388CBDF2142652B00653188 /* MarqueeGroupView.swift in Sources */,
+				76D1BF7521AE94BB004D79F0 /* String+Extension.swift in Sources */,
 				FEFA55AE205FB1A8001F50D8 /* Comment.m in Sources */,
 				FEFA55AF205FB1A8001F50D8 /* TTVPasterADModel.m in Sources */,
 				FEFA55B0205FB1A8001F50D8 /* TTVDetailCarCard.m in Sources */,

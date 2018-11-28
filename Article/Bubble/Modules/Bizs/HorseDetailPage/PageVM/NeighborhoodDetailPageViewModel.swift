@@ -444,18 +444,24 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     }
     
     fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid()) {
-        let decodedUrl = url.removingPercentEncoding ?? ""
-        let arrUrls = decodedUrl.components(separatedBy: "?")
-        if arrUrls.count > 0 {
-            let openUrl = arrUrls[0]
-            if let theUrl = URL(string: openUrl) {
-                
+        let openUrl = url.removingPercentEncoding ?? ""
+        if openUrl.count > 0 {
+            if let theUrl = URL(string: openUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
                 var element_from = "be_null"
                 var category_name = "be_null"
+                
                 if openUrl.contains("house_list_in_neighborhood") {
-                    element_from = "house_onsale"
-                    category_name = "same_neighborhood_list"
+                    let houseType = openUrl.urlParameterForKey("house_type") ?? "0"
+                    if houseType == "2" {
+                        // 在售房源
+                        element_from = "house_onsale"
+                        category_name = "same_neighborhood_list"
+                    } else if houseType == "3" {
+                        // 在租房源
+                        #warning ("在租房源埋点")
+                    }
                 } else if openUrl.contains("neighborhood_sales_list") {
+                    // 成交历史
                     element_from = "house_deal"
                     category_name = "neighborhood_trade_list"
                 }
