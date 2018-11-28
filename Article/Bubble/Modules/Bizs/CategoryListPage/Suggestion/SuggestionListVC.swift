@@ -189,9 +189,9 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         
         if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
             if let _ = sugDelegate.suggestionSelected  {
-                self.onSuggestionSelected = { [weak sugDelegate,weak self](routeObj) in
+                self.onSuggestionSelected = { [weak sugDelegate](routeObj) in
                     sugDelegate?.suggestionSelected?(routeObj)
-                    self?.navigationController?.popViewController(animated: true)
+//                    self?.navigationController?.popViewController(animated: true)
                 }
             }
             self.filterConditionResetter = { [weak sugDelegate] in
@@ -382,7 +382,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
     func bindHouseTypeObv() {
         houseType
-            .debug("bindHouseTypeObv")
+//            .debug("bindHouseTypeObv")
             .subscribe(onNext: { [weak self] (type) in
                 self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
                 self?.navBar.searchTypeLabel.text = type.stringValue()
