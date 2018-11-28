@@ -120,7 +120,7 @@ class PopupMenuItemView: UIControl {
             maker.left.equalTo(10)
             maker.right.equalTo(-10)
             maker.top.bottom.equalToSuperview()
-            maker.height.equalTo(30)
+            maker.height.equalTo(35)
         }
     }
 
