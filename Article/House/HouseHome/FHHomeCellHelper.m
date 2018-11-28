@@ -258,6 +258,13 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
             
+            if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+                [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+            }else
+            {
+                [dictTrace setValue:itemModel.logPb[@"be_null"] forKey:@"element_from"];
+            }
+
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
@@ -265,6 +272,8 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             }
+            
+
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
@@ -396,8 +405,15 @@ static NSMutableArray  * _Nullable identifierArr;
             
             NSMutableDictionary *dictTrace = [NSMutableDictionary new];
             [dictTrace setValue:@"maintab" forKey:@"enter_from"];
-            [dictTrace setValue:@"school_operation" forKey:@"element_from"];
             [dictTrace setValue:@"click" forKey:@"enter_type"];
+            
+            
+            if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+                [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+            }else
+            {
+                [dictTrace setValue:itemModel.logPb[@"be_null"] forKey:@"element_from"];
+            }
             
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
