@@ -212,7 +212,7 @@
     NSString *searchId = self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_house_detail?rent_id=%@",houseModel.id];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@",houseModel.id];
     
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *param = @{}.mutableCopy;

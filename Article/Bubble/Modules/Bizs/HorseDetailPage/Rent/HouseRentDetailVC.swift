@@ -137,7 +137,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     }
 
     class func getHouseId(_ dict: [AnyHashable: Any]?) -> String {
-        if let houseId = dict?["rent_id"] {
+        if let houseId = dict?["house_id"] {
             return houseId as? String ?? ""
         }
         return ""
@@ -441,13 +441,19 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             .bind { [unowned self] void in
                 if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
-//                    self.bottomBarViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
-//                        [unowned self]  in
-//                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
-//                        alert.dismiss()
-//                        self.sendClickConfirmTrace()
-//                        self.followForSendPhone(true)
-//                    }
+                    self.bottomBarViewModel?.sendPhoneNumberRequest(houseId: self.houseId,
+                                                                    phone: phoneNum,
+                                                                    from: gethouseTypeSendPhoneFromStr(houseType: self.houseType),
+                                                                    success: {
+                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+                        alert.dismiss()
+                        self.followUpViewModel.followHouseItem(houseType: .rentHouse,
+                                                               followAction: .rentHouse,
+                                                               followId: "\(self.houseId)",
+                                                               disposeBag: self.disposeBag)()
+                    }, error: { (error) in
+
+                    })
                 }else
                 {
                     alert.sendPhoneView.showErrorText()
