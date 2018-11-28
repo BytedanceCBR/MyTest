@@ -159,8 +159,10 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         self.tableView.delegate = detailPageViewModel
         detailPageViewModel?.registerCell(tableView: tableView)
         detailPageViewModel?.tableView = tableView
-        bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar)
-
+        bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar,
+                                                              houseId: self.houseId,
+                                                              houseType: .rentHouse)
+        bindButtomBarState()
         //触发请求数据
         detailPageViewModel?.requestDetailData()
         view.bringSubview(toFront: navBar)
@@ -187,7 +189,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 //                        toTracerParams(pageTypeString(detailPageViewModel.houseType ?? .newHouse), key: "page_type")
                     if let theDetailModel = detailPageViewModel {
                         let followUpOrCancel = theDetailModel.follwUpStatus.value.state() ?? false
-                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: followUpOrCancel,
+                        self.followUpViewModel.followThisItem(isFollowUpOrCancel: !followUpOrCancel,
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse,
                                                               followAction: .rentHouse,
@@ -317,6 +319,19 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         }
     }
 
+    fileprivate func bindButtomBarState() {
+        self.bottomBar.isHidden = true
+        detailPageViewModel?.detailData
+            .filter { $0 != nil }
+            .bind(onNext: { [unowned self] (model) in
+                self.bottomBarViewModel?.refreshRentHouseBottomBar(model: model!)
+            })
+            .disposed(by: disposeBag)
+        self.bottomBarViewModel?.showSendPhoneAlert = { [weak self] (title, subTitle, confirmTitle) in
+            self?.showSendPhoneAlert(title: title, subTitle: subTitle, confirmBtnTitle: confirmTitle)
+        }
+    }
+
 
     //导航栏透明度调整控制器
     private func bindNavBarStateMonitor() {
@@ -420,7 +435,42 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         }
     }
 
-    
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+        let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
+        alert.sendPhoneView.confirmBtn.rx.tap
+            .bind { [unowned self] void in
+                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
+                {
+//                    self.bottomBarViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
+//                        [unowned self]  in
+//                        EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
+//                        alert.dismiss()
+//                        self.sendClickConfirmTrace()
+//                        self.followForSendPhone(true)
+//                    }
+                }else
+                {
+                    alert.sendPhoneView.showErrorText()
+                }
+
+
+            }
+            .disposed(by: disposeBag)
+
+
+        var tracerParams = EnvContext.shared.homePageParams <|> traceParams
+        tracerParams = tracerParams <|>
+            //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
+            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.searchId ?? "be_null", key: "search_id")
+
+
+        recordEvent(key: TraceEventName.inform_show,
+                    params: tracerParams.exclude("element_type"))
+
+        alert.showFrom(self.view)
+    }
 
 
 }
