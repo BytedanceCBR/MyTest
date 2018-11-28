@@ -335,17 +335,17 @@ class HomeListViewModel: DetailPageViewModel {
             }
             let dataParser = DetailDataParser.monoid()
                 <- parseSpringboardNode(entrys ?? [],isNeedUpdateBoard: isNeedUpdateSpringBoard, disposeBag: self.disposeBag, navVC: self.navVC)
-                <- parseErshouHouseListItemNode(
+                <- parseFHHomeErshouHouseListItemNode(
                     self.dataSource?.categoryView.houseTypeRelay.value == HouseType.secondHandHouse ? theDataItems : [],
                     disposeBag: self.disposeBag,
                     tracerParams: homeCommonParams <|> toTracerParams("old", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                     navVC: self.navVC)
-                <- parseHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
+                <- parseFHHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
                                                  disposeBag: self.disposeBag,
                                                  tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                  navVC: self.navVC)
                 <- parseFHHomeRentHouseListRowItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.rentHouse ? theDataItems : [],
-                                                       disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
+                                                       disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("rent", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                        navVC: self.navVC)
             return dataParser.parser([])
         } else {
@@ -395,7 +395,8 @@ class HomeListViewModel: DetailPageViewModel {
             //            toTracerParams(category_name, key: "origin_from") <|>
             toTracerParams("maintab", key: "enter_from") <|>
             toTracerParams("maintab_list",key:"element_from") <|>
-            toTracerParams((self.originSearchId ?? "be_null"),key:"search_id")
+            toTracerParams((self.originSearchId ?? "be_null"),key:"search_id") <|>
+            toTracerParams((isStay ?? false) ? stay_category_name : category_name, key: "origin_from")
         
         
         let traceDict = params.paramsGetter([:])
@@ -715,7 +716,7 @@ class HomeListViewModel: DetailPageViewModel {
     
 }
 
-func parseHomeNewHouseListItemNode(
+func parseFHHomeNewHouseListItemNode(
     _ items: [HouseItemInnerEntity]?,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
@@ -752,7 +753,7 @@ func parseHomeNewHouseListItemNode(
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
         
         let count = items?.count ?? 0
@@ -1057,7 +1058,7 @@ func parseFHHomeRentHouseListRowItemNode(
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
         
         let count = items?.count ?? 0
