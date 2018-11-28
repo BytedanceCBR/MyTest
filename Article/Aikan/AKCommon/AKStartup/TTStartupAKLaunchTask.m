@@ -12,32 +12,54 @@
 #import <TTRoute.h>
 #import "UIAlertView+FHAlertView.h"
 
+
+@interface PreFcAction : NSObject<UIAlertViewDelegate>
+{
+    dispatch_semaphore_t _sema;
+}
++(instancetype)shareInstance;
+-(void)setSema:(dispatch_semaphore_t)sema;
+@end
+
+@implementation PreFcAction
+
++ (instancetype)shareInstance {
+    static PreFcAction* instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[PreFcAction alloc] init];
+    });
+    return instance;
+
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+    dispatch_semaphore_signal(_sema);
+}
+
+- (void)setSema:(dispatch_semaphore_t)sema {
+    _sema = sema;
+}
+
+@end
+
 void fhPreFcActionAlert(forceCrashMask mask)
 {
     if (mask & forceCrashMaskRebuild) {
         dispatch_semaphore_t sema = dispatch_semaphore_create(0);
         if ([NSThread isMainThread]) {
-            [UIAlertView fh_showAlertViewWithTitle:@"提示"
-                                            message:@"检测到环境异常，请前往官方渠道下载"
-                                  cancelButtonTitle:@"知道了"
-                                  otherButtonTitles:nil
-                                          dismissed:^(NSInteger buttonIndex) {
-            } canceled:^{
-                NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
-                dispatch_semaphore_signal(sema);
-            }];
+            PreFcAction* action = [PreFcAction shareInstance];
+            [action setSema:sema];
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到您当前安装的软件为非官方版本，为保证正常安全浏览请前往App Store下载安装官方版本" delegate:action cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+            [alert show];
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [UIAlertView fh_showAlertViewWithTitle:@"提示"
-                                                message:@"检测到环境异常，请前往官方渠道下载" cancelButtonTitle:@"知道了"
-                                      otherButtonTitles:nil
-                                              dismissed:^(NSInteger buttonIndex) {
-                } canceled:^{
-                    NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
-                    dispatch_semaphore_signal(sema);
-                }];
+                PreFcAction* action = [PreFcAction shareInstance];
+                [action setSema:sema];
+                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到您当前安装的软件为非官方版本，为保证正常安全浏览请前往App Store下载安装官方版本" delegate:action cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+                [alert show];
             });
         }
         dispatch_wait(sema, DISPATCH_TIME_FOREVER);
@@ -45,6 +67,7 @@ void fhPreFcActionAlert(forceCrashMask mask)
 }
 
 @interface TTStartupAKLaunchTask ()<SGMSafeGuardDelegate>
+
 @end
 
 @implementation TTStartupAKLaunchTask
