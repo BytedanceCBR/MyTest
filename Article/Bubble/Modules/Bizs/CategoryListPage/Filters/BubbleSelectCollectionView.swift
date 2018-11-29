@@ -221,6 +221,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         self.headerViewType = headerView
         let dataSource = dataSource
         self.dataSource = dataSource
+
         super.init(frame: CGRect.zero)
         setupUI()
         collectionView.dataSource = dataSource
@@ -520,7 +521,7 @@ class BubbleCollectionSectionHeader: UICollectionReusableView {
 
     lazy var label: UILabel = {
         let result = UILabel()
-        result.font = CommonUIStyle.Font.pingFangMedium(18)
+        result.font = CommonUIStyle.Font.pingFangRegular(16)
         result.textColor = hexStringToUIColor(hex: "#081f33")
         return result
     }()
@@ -907,7 +908,7 @@ class PriceBubbleCollectionSectionHeader: UICollectionReusableView {
 
     lazy var label: UILabel = {
         let result = UILabel()
-        result.font = CommonUIStyle.Font.pingFangMedium(18)
+        result.font = CommonUIStyle.Font.pingFangRegular(16)
         result.textColor = hexStringToUIColor(hex: "#081f33")
         return result
     }()
