@@ -138,12 +138,12 @@ func parseUserInfoNode(
 
 func fillUserInfoCell(_ info: TTAccountUserEntity?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
-        theCell.userName.text = info?.name ?? "登录/注册"
+        theCell.userName.text = info?.name ?? "登录"
         if info != nil {
             theCell.userDesc.text = "查看并编辑个人资料"
             theCell.editBtn.isHidden = false
         } else {
-            theCell.userDesc.text = "我们一起开启美好的找房之旅～"
+            theCell.userDesc.text = "登录后，关注房源永不丢失"
             theCell.editBtn.isHidden = true
         }
 
