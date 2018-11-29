@@ -356,7 +356,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                 // 关键词搜索
                 vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-                    //                        self.isNeedEncode = true
+                    self.isNeedEncode = false
                     self.conditionFilterViewModel?.cleanSortCondition()
                     self.suggestionParams = nil
                     self.hasRecordEnterCategory = false

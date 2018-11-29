@@ -706,7 +706,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             
             theCell.label.attributedText = attrTextProcess(attrText(text: text))
         } else {
-            if combineItems.value.count != 0 {
+            if combineItems.value.count != 0,
+                combineItems.value.count > indexPath.row {
                 switch houseType.value {
                 case .newHouse where suggestions.value.count == 0:
                     fillNormalItem(cell: cell, item: combineItems.value[indexPath.row], highlighted: highlighted)
