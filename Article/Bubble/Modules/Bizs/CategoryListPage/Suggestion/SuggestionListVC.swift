@@ -15,6 +15,7 @@ enum EnterSuggestionType: Int {
     case enterSuggestionTypeHome = 1
     case enterSuggestionTypeFindTab = 2
     case enterSuggestionTypeList = 3
+    case enterSuggestionTypeRenting = 4
 }
 
 fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [HouseType] {
@@ -141,7 +142,15 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
     
     required init(routeParamObj paramObj: TTRouteParamObj?) {
         
-        let fromHomeType : EnterSuggestionType = (paramObj?.allParams["from_home"] as? EnterSuggestionType) ?? EnterSuggestionType.enterSuggestionTypeHome
+        var fromType : EnterSuggestionType? = (paramObj?.allParams["from_home"] as? EnterSuggestionType)
+            //?? EnterSuggestionType.enterSuggestionTypeHome
+        if fromType == nil  {
+            if let type = paramObj?.allParams["from_home"] as? Int {
+                fromType = EnterSuggestionType(rawValue: type)
+            }
+        }
+        
+        let fromHomeType = fromType ?? EnterSuggestionType.enterSuggestionTypeHome
         
         if let tracerParams = paramObj?.allParams["tracer"] as? [String: Any] {
             for tkey in tracerParams.keys {
@@ -850,17 +859,23 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                 return "findtab_neighborhood"
             case .newHouse:
                 return "findtab_new"
+            case .rentHouse:
+                return "findtab_rent"
             default:
                 return "findtab_old"
             }
         } else if isFromHome == EnterSuggestionType.enterSuggestionTypeHome {
             return "maintab"
+        } else if isFromHome == EnterSuggestionType.enterSuggestionTypeRenting {
+            return "renting";
         } else {
             switch self.houseType.value {
             case .neighborhood:
                 return "neighborhood_list"
             case .newHouse:
                 return "new_list"
+            case .rentHouse:
+                return "rent_list"
             default:
                 return "old_list"
             }

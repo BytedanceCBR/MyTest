@@ -438,9 +438,9 @@ class CategoryListViewModel: DetailPageViewModel {
                         }
                         
                         let params = TracerParams.momoid() <|>
-                            toTracerParams("old_list", key: "enter_from") <|>
+                            toTracerParams("rent_list", key: "enter_from") <|>
                             toTracerParams("be_null", key: "element_from") <|>
-                            toTracerParams("old_list", key: "page_type") <|>
+                            toTracerParams("rent_list", key: "page_type") <|>
                             beNull(key: "element_type")
                         self.offset = self.offset + (data.items?.count ?? 0)
                         return (response?.data?.hasMore ?? false,
