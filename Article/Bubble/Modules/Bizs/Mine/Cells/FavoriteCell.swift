@@ -121,21 +121,25 @@ func parseFavoriteNode(
     userFavoriteCounts: [UserFollowListResponse?],
     navVC: UINavigationController?) -> () -> TableSectionNode? {
     var items: [FavoriteItemView] = []
-    if userFavoriteCounts.count == 3 {
+    if userFavoriteCounts.count == 4 {
         items = [
             FavoriteItemView(
                 image: #imageLiteral(resourceName: "icon-ershoufang"),
                 title: getFavoriteCategoryLabel(title: "二手房", userFollowListResponse: userFavoriteCounts[0])),
             FavoriteItemView(
                 image: #imageLiteral(resourceName: "icon-ershoufang"),
-                title: getFavoriteCategoryLabel(title: "新房", userFollowListResponse: userFavoriteCounts[1])),
+                title: getFavoriteCategoryLabel(title: "租房", userFollowListResponse: userFavoriteCounts[1])),
             FavoriteItemView(
                 image: #imageLiteral(resourceName: "icon-ershoufang"),
-                title: getFavoriteCategoryLabel(title: "小区", userFollowListResponse: userFavoriteCounts[2])),
+                title: getFavoriteCategoryLabel(title: "新房", userFollowListResponse: userFavoriteCounts[2])),
+            FavoriteItemView(
+                image: #imageLiteral(resourceName: "icon-ershoufang"),
+                title: getFavoriteCategoryLabel(title: "小区", userFollowListResponse: userFavoriteCounts[3])),
             ]
     }
 
     let selectors = [HouseType.secondHandHouse,
+                     HouseType.rentHouse,
                      HouseType.newHouse,
                      HouseType.neighborhood].map { [weak navVC] (houseType) in
                         return  { [weak navVC] in

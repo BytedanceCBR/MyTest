@@ -1020,6 +1020,8 @@ fileprivate func categoryNameByHouseType(houseType: HouseType) -> String {
     switch houseType {
     case .newHouse:
         return "new_follow_list"
+    case .rentHouse:
+        return "rent_follow_list"
     case .secondHandHouse:
         return "old_follow_list"
     case .neighborhood:
