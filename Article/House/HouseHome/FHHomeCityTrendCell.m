@@ -77,6 +77,10 @@
     }
     
     self.isShowBubble = !self.isShowBubble;
+    if (self.isShowBubble && self.clickedDataSourceCallback) {
+        
+        self.clickedDataSourceCallback(btn);
+    }
     
 }
 -(void)timeoutTimer:(NSTimer*)timer {
