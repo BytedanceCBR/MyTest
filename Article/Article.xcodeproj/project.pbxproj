@@ -2432,7 +2432,6 @@
 		B373CBF72174587A008F9905 /* NewsListLogicManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AF9E251F0E284400C1E28D /* NewsListLogicManager.m */; };
 		B373CBF82174587A008F9905 /* ExploreArticleVideoCellCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF320A51B3FF7280052B848 /* ExploreArticleVideoCellCommentView.m */; };
 		B373CBF92174587A008F9905 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCAD0091DDC237200EBF9CF /* ExploreVideoDetailPhoneGroupPicADView.m */; };
-		B373CBFA2174587A008F9905 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
 		B373CBFB2174587A008F9905 /* TTFabricSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7BF1F1332DA0002B455 /* TTFabricSDKRegister.m */; };
 		B373CBFC2174587A008F9905 /* TTInterfaceTipBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9627EF521F2767BD00969C9A /* TTInterfaceTipBaseView.m */; };
 		B373CBFD2174587A008F9905 /* TGBlank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAE82142652900653188 /* TGBlank.swift */; };
@@ -3278,8 +3277,6 @@
 		B388CC092142652B00653188 /* MessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA742142652900653188 /* MessageListVC.swift */; };
 		B388CC0A2142652B00653188 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA752142652900653188 /* ChatVC.swift */; };
 		B388CC0B2142652B00653188 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA752142652900653188 /* ChatVC.swift */; };
-		B388CC0C2142652B00653188 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
-		B388CC0D2142652B00653188 /* MessagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA762142652900653188 /* MessagesListVC.swift */; };
 		B388CC0E2142652B00653188 /* MetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA782142652900653188 /* MetaData.swift */; };
 		B388CC0F2142652B00653188 /* MetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA782142652900653188 /* MetaData.swift */; };
 		B388CC102142652B00653188 /* TableViewTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA792142652900653188 /* TableViewTracer.swift */; };
@@ -7975,7 +7972,6 @@
 		B388CA732142652900653188 /* ChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		B388CA742142652900653188 /* MessageListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListVC.swift; sourceTree = "<group>"; };
 		B388CA752142652900653188 /* ChatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
-		B388CA762142652900653188 /* MessagesListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesListVC.swift; sourceTree = "<group>"; };
 		B388CA782142652900653188 /* MetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaData.swift; sourceTree = "<group>"; };
 		B388CA792142652900653188 /* TableViewTracer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewTracer.swift; sourceTree = "<group>"; };
 		B388CA7A2142652900653188 /* EventKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventKeys.swift; sourceTree = "<group>"; };
@@ -15105,7 +15101,6 @@
 				B388CA712142652900653188 /* Cells */,
 				B388CA742142652900653188 /* MessageListVC.swift */,
 				B388CA752142652900653188 /* ChatVC.swift */,
-				B388CA762142652900653188 /* MessagesListVC.swift */,
 				B3A73586214F612F001A3953 /* SystemMessageListVC.swift */,
 			);
 			path = Messages;
@@ -20422,7 +20417,6 @@
 				A9AF9E261F0E284400C1E28D /* NewsListLogicManager.m in Sources */,
 				6BF320A61B3FF7280052B848 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				2DCAD02A1DDC237200EBF9CF /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B388CC0C2142652B00653188 /* MessagesListVC.swift in Sources */,
 				A97DBC331F1332E40002B455 /* TTFabricSDKRegister.m in Sources */,
 				9627EF5D1F2767BD00969C9A /* TTInterfaceTipBaseView.m in Sources */,
 				B388CCC22142652C00653188 /* TGBlank.swift in Sources */,
@@ -22161,7 +22155,6 @@
 				B373CBF72174587A008F9905 /* NewsListLogicManager.m in Sources */,
 				B373CBF82174587A008F9905 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				B373CBF92174587A008F9905 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B373CBFA2174587A008F9905 /* MessagesListVC.swift in Sources */,
 				B373CBFB2174587A008F9905 /* TTFabricSDKRegister.m in Sources */,
 				B373CBFC2174587A008F9905 /* TTInterfaceTipBaseView.m in Sources */,
 				B373CBFD2174587A008F9905 /* TGBlank.swift in Sources */,
@@ -23900,7 +23893,6 @@
 				FEFA56E1205FB1A8001F50D8 /* NewsListLogicManager.m in Sources */,
 				FEFA56E2205FB1A8001F50D8 /* ExploreArticleVideoCellCommentView.m in Sources */,
 				FEFA56E3205FB1A8001F50D8 /* ExploreVideoDetailPhoneGroupPicADView.m in Sources */,
-				B388CC0D2142652B00653188 /* MessagesListVC.swift in Sources */,
 				FEFA56E4205FB1A8001F50D8 /* TTFabricSDKRegister.m in Sources */,
 				FEFA56E7205FB1A8001F50D8 /* TTInterfaceTipBaseView.m in Sources */,
 				B388CCC32142652C00653188 /* TGBlank.swift in Sources */,

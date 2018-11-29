@@ -9,7 +9,7 @@
 
 @interface FHFeedHouseCellHelper ()
 
-@property(nonatomic, strong)NSMutableArray *houseCacheArray;
+@property(nonatomic, strong)NSMutableDictionary *houseCacheDict;
 
 @end
 
@@ -36,9 +36,9 @@ static id _instance;
     return _instance;
 }
 
-- (void)removeHouseCacheArray {
+- (void)removeHouseCache {
     
-    [self.houseCacheArray removeAllObjects];
+    [self.houseCacheDict removeAllObjects];
 }
 
 -(void)addHouseCache:(NSString *)houseId {
@@ -46,18 +46,18 @@ static id _instance;
     if (houseId.length < 0) {
         return;
     }
-    [self.houseCacheArray addObject:houseId];
-}
--(NSMutableArray *)houseCacheArray {
+    [self.houseCacheDict setObject:@"1" forKey:houseId];
 
-    if (!_houseCacheArray) {
-        _houseCacheArray = @[].mutableCopy;
-    }
-    return _houseCacheArray;
 }
-
--(NSArray *)cacheArray {
+-(NSMutableDictionary *)houseCacheDict {
     
-    return self.houseCacheArray;
+    if (!_houseCacheDict) {
+        _houseCacheDict = [NSMutableDictionary dictionary];
+    }
+    return _houseCacheDict;
+}
+
+-(NSDictionary *)houseCache {
+    return self.houseCacheDict;
 }
 @end

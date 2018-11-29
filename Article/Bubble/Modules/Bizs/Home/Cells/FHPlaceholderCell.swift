@@ -72,7 +72,7 @@ func fillHouseListPlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableVi
         
         if isFirst {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(20)
+                maker.top.equalTo(25)
             }
         }else {
             theCell.majorImageView.snp.updateConstraints { maker in

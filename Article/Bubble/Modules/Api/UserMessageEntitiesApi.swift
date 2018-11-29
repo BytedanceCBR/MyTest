@@ -116,8 +116,8 @@ func pageRequestUserMessageList(
     }
 }
 
-func requestSystemNotification(listId: String, maxCoursor: Int64 = 0) -> Observable<SystemNotificationResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/f100/api/msg/system_list"
+func requestSystemNotification(listId: String, maxCoursor: String = "0") -> Observable<SystemNotificationResponse?> {
+    let url = "\(EnvContext.networkConfig.host)/f100/api/v2/msg/system_list"
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,

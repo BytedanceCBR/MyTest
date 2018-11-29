@@ -221,7 +221,7 @@ struct SystemNotificationResponse: Mappable {
     struct Data: Mappable {
         var items: [Item]?
         var hasMore: Bool?
-        var minCoursor: Int64?
+        var minCoursor: String?
         init?(map: Map) {
 
         }
@@ -234,7 +234,7 @@ struct SystemNotificationResponse: Mappable {
     }
 
     struct Item: Mappable {
-        var id: Int64?
+        var id: String?
         var title: String?
         var images: ImageItem?
         var openUrl: String?
