@@ -205,7 +205,6 @@
 {
     
     FHHouseRentDataItemsModel *houseModel = self.houseItemsData.rentHouseList[indexPath.row];
-    // todo linlin rent_detail 埋点 linlin
     
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
@@ -236,7 +235,8 @@
         param[@"log_pb"] = houseModel.logPb;
         
     }
-    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    NSDictionary *userDict = @{@"tracer":param};
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:userDict];
     if (strUrl.length  > 0) {
         
         NSURL *url =[NSURL URLWithString:strUrl];
