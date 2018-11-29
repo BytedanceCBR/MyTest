@@ -374,7 +374,7 @@ class HomeListViewModel: DetailPageViewModel {
             params = TracerParams.momoid()
         }
         
-        var category_name = houseTypeString(self.dataSource?.categoryView.houseTypeRelay.value ?? .secondHandHouse)
+        let category_name = houseTypeString(self.dataSource?.categoryView.houseTypeRelay.value ?? .secondHandHouse)
         var stay_category_name = houseTypeString(self.stayHouseTraceType ?? .secondHandHouse)
         
         if (isStay ?? false)
@@ -390,7 +390,7 @@ class HomeListViewModel: DetailPageViewModel {
         
         params = params <|>
             EnvContext.shared.homePageParams <|>
-            toTracerParams(enterType, key: "enter_type") <|>
+            toTracerParams(enterType ?? "be_null", key: "enter_type") <|>
             toTracerParams((isStay ?? false) ? stay_category_name : category_name, key: "category_name") <|>
             //            toTracerParams(category_name, key: "origin_from") <|>
             toTracerParams("maintab", key: "enter_from") <|>
@@ -610,7 +610,7 @@ class HomeListViewModel: DetailPageViewModel {
                                 
                                 currentItems.append(contentsOf: items)
                                 
-                                self.itemsDataCache.updateValue(currentItems ?? [], forKey: houstTypeKey)
+                                self.itemsDataCache.updateValue(currentItems, forKey: houstTypeKey)
                             }
                             
                             self.itemsSearchIdCache.updateValue(response?.data?.searchId ?? "", forKey: houstTypeKey)
@@ -638,7 +638,7 @@ class HomeListViewModel: DetailPageViewModel {
                             self.tableView?.finishPullDown(withSuccess: true)
                         }
                         
-                        if let dataSource = self.dataSource {
+                        if let dataSource = self.dataSource, response.count != 0 {
                             dataSource.datas = response
                             if pullType == .pullDownType
                             {
@@ -1084,8 +1084,10 @@ func parseFHHomeRentHouseListRowItemNode(
 func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool = false) -> ((BaseUITableViewCell) -> Void) {
     
     let text = NSMutableAttributedString()
-    let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
-        createTagAttrString(
+    let attrTexts = data.tags?.enumerated().map({ (arg) -> NSAttributedString in
+        
+        let (offset, item) = arg
+        return createTagAttrString(
             item.content,
             isFirst: offset == 0,
             textColor: hexStringToUIColor(hex: item.textColor),
@@ -1120,9 +1122,9 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
             theCell.isTail = isLastCell
             
             let text = NSMutableAttributedString()
-            let attrTexts = data.rentTags?.enumerated().map({ (offset, item) -> NSAttributedString in
+            let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
                 return createTagAttrString(
-                    item.text,
+                    item.content,
                     isFirst: offset == 0,
                     textColor: hexStringToUIColor(hex: item.textColor),
                     backgroundColor: hexStringToUIColor(hex: item.backgroundColor))
@@ -1151,7 +1153,6 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
                 
                 maker.left.equalToSuperview().offset(-3)
             }
-            
             theCell.priceLabel.text = data.pricing
             theCell.roomSpaceLabel.text = nil  //data.displayPricePerSqm
             theCell.majorImageView.bd_setImage(with: URL(string: data.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
@@ -1166,7 +1167,6 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
                 theCell.imageTopLeftLabelBgView.isHidden = true
             }
             theCell.updateOriginPriceLabelConstraints(originPriceText: nil )
-            
             
         }
         

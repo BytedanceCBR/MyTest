@@ -449,6 +449,9 @@ static NSMutableArray  * _Nullable identifierArr;
     
     WeakSelf;
     [cell updateWithModel:model];
+    cell.clickedDataSourceCallback = ^(UIButton * _Nonnull btn) {
+        [wself addHomeCityMarketDataSourceLog];
+    };
     cell.trendView.clickedRightCallback = ^{
         
         // logpb处理
@@ -540,6 +543,12 @@ static NSMutableArray  * _Nullable identifierArr;
     [FHUserTracker writeEvent:@"city_market_show" params:param];
 }
 
++(void)addHomeCityMarketDataSourceLog
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"page_type"] = @"maintab";
+    [FHUserTracker writeEvent:@"city_market_data_source" params:param];
+}
 
 +(void)addHomeCityMarketClickLog
 {

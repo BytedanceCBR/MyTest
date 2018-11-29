@@ -120,9 +120,6 @@ class GuessYouWantView: UIView {
     }
     
     func firstLineGreaterThanSecond(firstText:String, array:Array<GuessYouWant>, count:Int = 1) -> Array<GuessYouWant> {
-        if count > 5 {
-            return array
-        }
         var remainWidth:CGFloat = UIScreen.main.bounds.width - 40
         let firstWordLength = guessYouWantTextLength(text: firstText)
         var firstLineLen:CGFloat = (firstWordLength + 10)
@@ -133,28 +130,65 @@ class GuessYouWantView: UIView {
             firstLineLen = 0
             remainWidth = UIScreen.main.bounds.width - 40
         }
-        for item in array {
-            if let text = item.text {
-                let len = guessYouWantTextLength(text: text)
-                if len > remainWidth {
-                    if line >= 2 {
-                        break
+        var vArray = array
+        var retArray:[GuessYouWant] = []
+        while vArray.count > 0 {
+            if let item = vArray.first {
+                if let text = item.text {
+                    let len = guessYouWantTextLength(text: text)
+                    if len > remainWidth {
+                        var findIndex:Int = -1
+                        if remainWidth >= 24 {
+                            for index in 0 ..< vArray.count {
+                                // 找满足长度的数据
+                                let remainItem = vArray[index]
+                                let remainLen = guessYouWantTextLength(text: remainItem.text ?? "")
+                                if remainLen <= remainWidth {
+                                    // 找到
+                                    findIndex = index
+                                    remainWidth -= (remainLen + 10)
+                                    
+                                    if line == 1 {
+                                        firstLineLen += (remainLen + 10)
+                                    } else if line == 2 {
+                                        secondLineLen += (remainLen + 10)
+                                    }
+                                    vArray.remove(at: findIndex)
+                                    retArray.append(remainItem)
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if findIndex >= 0 {
+                            continue
+                        } else {
+                            if line >= 2 {
+                                break
+                            }
+                            line += 1
+                            remainWidth = UIScreen.main.bounds.width - 40
+                        }
                     }
-                    line += 1
-                    remainWidth = UIScreen.main.bounds.width - 40
+                    remainWidth -= (len + 10)
+                    
+                    if line == 1 {
+                        firstLineLen += (len + 10)
+                    } else if line == 2 {
+                        secondLineLen += (len + 10)
+                    }
                 }
-                remainWidth -= (len + 10)
-                
-                if line == 1 {
-                    firstLineLen += (len + 10)
-                } else if line == 2 {
-                    secondLineLen += (len + 10)
-                }
+                vArray.remove(at: 0)
+                retArray.append(item)
             }
         }
         if firstLineLen >= secondLineLen {
-            return array
+            return retArray
         } else {
+            if count > 8 {
+                retArray.removeLast()
+                return retArray
+            }
             var tempArrayData = array
             let tempArray = tempArrayData.fd_randamArray()
             return self.firstLineGreaterThanSecond(firstText:firstText, array:tempArray, count:count+1)

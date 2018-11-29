@@ -102,7 +102,7 @@ class NeighborhoodNameCell: BaseUITableViewCell {
             maker.left.equalTo(leftMarge)
             maker.top.equalTo(nameLabel.snp.bottom).offset(6)
             maker.height.equalTo(17)
-            maker.bottom.equalTo(-16)
+            maker.bottom.equalTo(-14)
             maker.right.equalTo(monthUp.snp.left).offset(-10)
 
         }
