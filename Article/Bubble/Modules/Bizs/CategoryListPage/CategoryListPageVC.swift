@@ -537,6 +537,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    fileprivate func allSortConditionKeys() -> String {
+        if let options = filterSortCondition(by: self.houseType.value)?.first?.options?.first?.options {
+            if options.count > 1 {
+                if let type = options[1].type,
+                    let sortType = "\(type)[]".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    return sortType
+                }
+                return options[1].type ?? ""
+            }
+            return options.first?.type ?? ""
+        } else {
+            return ""
+        }
+    }
+
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["full_text"] {
@@ -927,7 +942,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 let ns = items.1.reduce([], { (result, nodes) -> [Node] in
                     result + nodes
                 })
-                let keys = self.allKeysFromNodes(nodes: ns)
+                var keys = self.allKeysFromNodes(nodes: ns)
+                let sortKey = self.allSortConditionKeys()
+                //计算所有排序的key
+                keys.insert(sortKey)
+
                 var oldConditions = ""
 
                 self.queryParams?.forEach({ (key, value) in

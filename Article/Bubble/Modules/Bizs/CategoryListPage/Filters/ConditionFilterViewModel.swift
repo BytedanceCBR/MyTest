@@ -189,7 +189,6 @@ class ConditionFilterViewModel {
     }
 
     fileprivate func setSortBtnSelectedWhenClosePanel() {
-        print(self.searchAndConditionFilterVM.searchSortCondition?.rankType)
         if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
             sortCondition.rankType != "default" {
             self.searchSortBtn?.isSelected = true
