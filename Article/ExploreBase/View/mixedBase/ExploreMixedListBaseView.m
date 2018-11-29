@@ -164,6 +164,7 @@
 #import "TTVVideoDetailViewController.h"
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
+#import "FHFeedHouseItemCell.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -2751,14 +2752,14 @@ TTRefreshViewDelegate
 
 - (void)refreshData
 {
-    [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
     [self.listView triggerPullDown];
 }
 
 - (void)emptyViewBtnAction {
     
     if (![self.categoryID isEqualToString:kTTNewsLocalCategoryID]) {
-        [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
+        [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
         [self.listView triggerPullDown];
     }
     else {
@@ -2821,7 +2822,7 @@ TTRefreshViewDelegate
 {
     //默认为none，如果是其他方式，在此方法外部重新赋值
     //self.refreshFromType = ListDataOperationReloadFromTypeNone;为了刷新统计时发送正确的refreshfromType给传过去
-    [[FHFeedHouseCellHelper sharedInstance]removeHouseCacheArray];
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
     [self.listView triggerPullDown];
 }
 
@@ -3397,6 +3398,9 @@ TTRefreshViewDelegate
             }
         }
     }
+    
+//    [self addHouseItemHouseShowLog];
+    
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -3428,6 +3432,29 @@ TTRefreshViewDelegate
     }
     [[TTVideoAutoPlayManager sharedManager] tryAutoPlayInTableView:self.listView];
     [[TTVAutoPlayManager sharedManager] tryAutoPlayInTableView:self.listView];
+    
+    if (scrollView != self.listView) {
+        
+        return;
+    }
+    [self addHouseItemHouseShowLog];
+}
+
+-(void)addHouseItemHouseShowLog {
+    
+    NSArray *visibleCells = [self.listView visibleCells];
+    if (visibleCells.count < 1) {
+        return;
+    }
+    
+    for (ExploreCellBase *cell in visibleCells) {
+        
+        if ([cell isKindOfClass:[FHFeedHouseItemCell class]]) {
+            
+            FHFeedHouseItemCell *houseCell = (FHFeedHouseItemCell *)cell;
+            [houseCell addHouseShowLog];
+        }
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -3443,6 +3470,14 @@ TTRefreshViewDelegate
     if ([_fetchListManager canSilentFetchItems] && scrollView.contentOffset.y > 2) {
         [self trySilentFetchIfNeeded];
     }
+    
+    if (scrollView != self.listView) {
+        
+        return;
+    }
+    
+    [self addHouseItemHouseShowLog];
+
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView

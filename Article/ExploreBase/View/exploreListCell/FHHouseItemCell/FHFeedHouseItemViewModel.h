@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithHouseData:(FHExploreHouseItemData *_Nullable)data;
 
+-(void)addHouseShowLog;
+
 @end
 
 NS_ASSUME_NONNULL_END

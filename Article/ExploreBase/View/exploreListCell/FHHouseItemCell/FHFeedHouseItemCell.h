@@ -12,12 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedHouseItemCell : ExploreCellBase
 
+-(void)addHouseShowLog;
 
 @end
 
 @interface FHFeedHouseItemCellView : ExploreCellViewBase
 
 @property (nonatomic, strong) ExploreOrderedData *orderedData;
+
+-(void)addHouseShowLog;
 
 @end
 
