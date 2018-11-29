@@ -27,9 +27,14 @@ func fillRentNameCell(model: FHRentDetailResponseDataModel?, cell: BaseUITableVi
     }
     theCell.bottomLine.isHidden = true
     theCell.nameLabel.text = model?.title
-    let tags:[NSAttributedString] = ["新上", "立刻入住"].map({ (item) -> NSAttributedString in
-        createTagAttributeTextNormal(content: item)
-    })
+
+    if let subTitle = model?.subtitle {
+        let tags:[NSAttributedString] = [subTitle].map({ (item) -> NSAttributedString in
+            createTagAttributeTextNormal(content: item)
+        })
+        theCell.setTags(tags: tags)
+    }
     theCell.setAlias(alias: nil)
-    theCell.setTags(tags: tags)
+
+
 }

@@ -61,11 +61,20 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
             btn.setTitle("全部图片", for: .normal)
             return btn
         }()
+
+        lazy var imageNameLabel: UILabel = {
+            let re = UILabel()
+            re.font = UIFont.systemFont(ofSize: 17)
+            re.textColor = .white
+            re.isHidden = true
+            return re
+        }()
         
         init() {
             super.init(frame: .zero)
             addSubview(backBtn)
             addSubview(showBtn)
+            addSubview(imageNameLabel)
             backBtn.addTarget(self, action: #selector(onBackButton), for: .touchUpInside)
             showBtn.addTarget(self, action: #selector(onShowAllButton), for: .touchUpInside)
 
@@ -85,6 +94,11 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
 
             showBtn.sizeToFit()
             showBtn.frame = CGRect(x: x, y: 0, width: showBtn.bounds.width, height: self.bounds.height)
+
+            imageNameLabel.frame = CGRect(x: showBtn.frame.maxX + 10,
+                                          y: 0,
+                                          width: backBtn.frame.minX - 10,
+                                          height: self.bounds.height)
         }
         
         @objc private func onBackButton() {

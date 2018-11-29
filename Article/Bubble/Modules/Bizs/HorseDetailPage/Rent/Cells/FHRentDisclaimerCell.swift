@@ -124,7 +124,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             // 光点型页码指示器
             //    browser.plugins.append(DefaultPageControlPlugin())
             // 数字型页码指示器cccc
-            let numberPageControlPlugin = HouseNumberPageControlPlugin()
+            let numberPageControlPlugin = RentHouseNumberPageControlPlugin()
 //            numberPageControlPlugin.traceParams = traceParams
 //            numberPageControlPlugin.images = self.headerImages
 
@@ -132,7 +132,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 30
             browser.plugins.append(numberPageControlPlugin)
             browser.cellPlugins = [RawImageButtonPlugin()]
-            let plugin = PhotoBrowserShowAllPlugin()
+            let plugin = RentPhotoBrowserShowAllPlugin(titles: headerImages.map { $0.name ?? "" } )
+            plugin.overlayView.imageNameLabel.isHidden = false
             browser.plugins.append(plugin)
 
             let originWindowLevel: UIWindowLevel? = UIApplication.shared.keyWindow?.windowLevel
@@ -148,6 +149,27 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         }
     }
 }
+
+fileprivate class RentHouseNumberPageControlPlugin: HouseNumberPageControlPlugin {
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser, didChangedPageIndex index: Int) {
+        currentPageRelay.accept(index)
+    }
+}
+
+fileprivate class RentPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
+    private var titles: [String]
+    init(titles: [String]) {
+        self.titles = titles
+    }
+
+    override func photoBrowser(_ photoBrowser: PhotoBrowser, didChangedPageIndex index: Int) {
+        if titles.count > index {
+            self.overlayView.imageNameLabel.text = titles[index]
+        }
+    }
+
+}
+
 
 extension FHRentDisclaimerCell: PhotoBrowserDelegate {
     /// 共有多少张图片
@@ -194,7 +216,6 @@ extension FHRentDisclaimerCell: PhotoBrowserDelegate {
                       didLongPressForIndex index: Int,
                       image: UIImage) {
         if index >= headerImages.count { return }
-        let imageModel = headerImages[index]
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
 
     }
@@ -255,15 +276,36 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
             !realtorName.isEmpty {
             theCell.displayOwnerLabel()
             theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
+            var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+            if let businessLicense = model?.contact?.businessLicense {
+                let imageModel = FHRentDetailResponseDataHouseImageModel()
+                imageModel.url = businessLicense
+                imageModel.name = "营业执照"
+                headerImages.append(imageModel)
+            }
+            if let certificate = model?.contact?.certificate {
+                let imageModel = FHRentDetailResponseDataHouseImageModel()
+                imageModel.url = certificate
+                imageModel.name = "从业人员信息卡"
+                headerImages.append(imageModel)
+            }
         } else {
             theCell.hiddenOwnerLabel()
         }
         theCell.displayOwnerLabel()
         theCell.ownerLabel.text = "房屋负责人：李小强"
-        theCell.disclaimerContent.text = "免责声明：房源所示图片及其他信息仅供参考，租房时请以房本信息为准。"
-        theCell.onContactIconClick = {
-            print("open photo")
-        }
-        theCell.headerImages = model?.houseImage as? [FHRentDetailResponseDataHouseImageModel] ?? []
+        theCell.disclaimerContent.text = model?.disclaimer?.text
+
+        //测试代码
+        var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+        var imageModel = FHRentDetailResponseDataHouseImageModel()
+        imageModel.url = model?.contact?.businessLicense
+        imageModel.name = "营业执照"
+        headerImages.append(imageModel)
+        imageModel = FHRentDetailResponseDataHouseImageModel()
+        imageModel.url = model?.contact?.certificate
+        imageModel.name = "从业人员信息卡"
+        headerImages.append(imageModel)
+        theCell.headerImages = headerImages
     }
 }
