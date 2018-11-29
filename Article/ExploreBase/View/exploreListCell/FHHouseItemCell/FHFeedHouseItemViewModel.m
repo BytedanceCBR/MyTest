@@ -90,7 +90,8 @@
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:@"mixlist_loadmore" forKey:@"origin_from"];
         
-        NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+        NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
+
         [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
         
         NSURL *url =[NSURL URLWithString:self.houseItemsData.loadmoreOpenUrl];
@@ -127,7 +128,7 @@
         // logpb处理
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?court_id=%@",houseModel.houseId];
@@ -171,7 +172,7 @@
 
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",houseModel.hid];
@@ -213,7 +214,7 @@
     
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     [contextBridge setTraceValue:@"mix_list" forKey:@"origin_from"];
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@",houseModel.id];
@@ -304,7 +305,7 @@
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
 
     [FHUserTracker writeEvent:@"house_show" params:param];
@@ -322,7 +323,7 @@
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
     
     [FHUserTracker writeEvent:@"house_show" params:param];
@@ -341,7 +342,7 @@
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
-    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
 
     [FHUserTracker writeEvent:@"house_show" params:param];
@@ -409,8 +410,6 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"zjing-cellForRowAtIndexPath %@",[FHFeedHouseCellHelper sharedInstance].houseCache);
-
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFeedHouseCellId];
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         

@@ -36,6 +36,9 @@
         self.houseType = [raw_data tt_stringValueForKey:@"house_type"];
 
         self.logPb = [raw_data tt_dictionaryValueForKey:@"log_pb"];
+        self.searchId = [raw_data tt_stringValueForKey:@"search_id"];
+
+        
         if (self.houseType.integerValue == FHHouseTypeNewHouse) {
 
             NSMutableArray *mutable = @[].mutableCopy;
@@ -139,6 +142,7 @@
                                                             @"imprType",
                                                             @"loadmoreButton",
                                                             @"logPb",
+                                                            @"searchId",
                                                             @"houseType"]];
     };
     return properties;
@@ -156,6 +160,7 @@
                                          @"imprType":@"impr_type",
                                          @"loadmoreButton":@"loadmore_button",
                                          @"logPb":@"log_pb",
+                                         @"searchId":@"search_id",
                                          @"houseType":@"house_type"
                                          }];
         properties = [dict copy];
