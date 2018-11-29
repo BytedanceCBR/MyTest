@@ -104,6 +104,7 @@ class MinePageViewModel: NSObject, UITableViewDelegate {
 
     func requestFavoriteCount() {
         let obvs = [HouseType.secondHandHouse,
+                    HouseType.rentHouse,
                     HouseType.newHouse,
                     HouseType.neighborhood]
             .map { (type) -> Observable<UserFollowListResponse?> in

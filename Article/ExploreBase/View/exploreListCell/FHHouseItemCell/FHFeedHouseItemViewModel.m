@@ -245,38 +245,100 @@
 }
 
 
--(void)addHouseShowLogWithIndexPath:(NSIndexPath *)indexPath {
-    
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+-(void)addHouseShowLog {
     
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         
-        param[@"house_type"] = @"new";
-        FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
-        // logpb处理
-        param[@"log_pb"] = model.logPb ? : @"be_null";
+        for (NSInteger index = 0; index < self.houseItemsData.houseList.count; index++) {
+            
+            FHNewHouseItemModel *model = self.houseItemsData.houseList[index];
+            if (![[FHFeedHouseCellHelper sharedInstance].houseCache objectForKey:model.houseId]) {
+                
+                [self addNewHouseShowLogWithIndex:index model:model];
+                [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.houseId];
+            }
+            
+        }
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
         
-        param[@"house_type"] = @"old";
-        FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
-        // logpb处理
-        param[@"log_pb"] = model.logPb ? : @"be_null";
+        for (NSInteger index = 0; index < self.houseItemsData.secondHouseList.count; index++) {
+            
+            FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[index];
+            if (![[FHFeedHouseCellHelper sharedInstance].houseCache objectForKey:model.hid]) {
+
+                [self addSecondHouseShowLogWithIndex:index model:model];
+                [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.hid];
+            }
+            
+        }
+
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
         
-        param[@"house_type"] = @"rent";
-        FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
-        // logpb处理
-        param[@"log_pb"] = model.logPb ? : @"be_null";
+        for (NSInteger index = 0; index < self.houseItemsData.rentHouseList.count; index++) {
+            
+            FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[index];
+            if (![[FHFeedHouseCellHelper sharedInstance].houseCache objectForKey:model.id]) {
+
+                [self addRentHouseShowLogWithIndex:index model:model];
+                [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.id];
+            }
+            
+        }
     }
+    
+}
+
+-(void)addNewHouseShowLogWithIndex:(NSInteger )index model:(FHNewHouseItemModel *)model {
+
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"house_type"] = @"new";
+    param[@"log_pb"] = model.logPb ? : @"be_null";
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"element_type"] = @"mix_list";
-    param[@"rank"] = @(indexPath.row);
+    param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
     NSString *searchId = self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
-    // add by zjing todo house_show去重
+
+    [FHUserTracker writeEvent:@"house_show" params:param];
+    
+}
+
+-(void)addSecondHouseShowLogWithIndex:(NSInteger )index model:(FHSearchHouseDataItemsModel *)model {
+    
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"house_type"] = @"old";
+    param[@"log_pb"] = model.logPb ? : @"be_null";
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"element_type"] = @"mix_list";
+    param[@"rank"] = @(index);
+    
+    param[@"origin_from"] = @"mix_list";
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+    
+    [FHUserTracker writeEvent:@"house_show" params:param];
+}
+
+
+-(void)addRentHouseShowLogWithIndex:(NSInteger )index model:(FHHouseRentDataItemsModel *)model {
+    
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"house_type"] = @"rent";
+    param[@"log_pb"] = model.logPb ? : @"be_null";
+
+    param[@"card_type"] = @"left_pic";
+    param[@"page_type"] = @"maintab";
+    param[@"element_type"] = @"mix_list";
+    param[@"rank"] = @(index);
+    
+    param[@"origin_from"] = @"mix_list";
+    NSString *searchId = self.houseItemsData.logPb[@"search_id"];
+    param[@"origin_search_id"] = searchId ? : @"be_null";
+
     [FHUserTracker writeEvent:@"house_show" params:param];
     
 }
@@ -342,6 +404,8 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSLog(@"zjing-cellForRowAtIndexPath %@",[FHFeedHouseCellHelper sharedInstance].houseCache);
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFeedHouseCellId];
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
         
@@ -376,37 +440,37 @@
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
-    
-    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
-        
-        FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
-        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.houseId]) {
-            
-            [self addHouseShowLogWithIndexPath:indexPath];
-            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.houseId];
-        }
-    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-        
-        FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
-        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.hid]) {
-            
-            [self addHouseShowLogWithIndexPath:indexPath];
-            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.hid];
-        }
-    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
-        
-        FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
-        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.id]) {
-            
-            [self addHouseShowLogWithIndexPath:indexPath];
-            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.id];
-        }
-    }
-    
-}
+//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//
+//    NSLog(@"zjing-willDisplayCell %@",[FHFeedHouseCellHelper sharedInstance].cacheArray);
+//    
+//    if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+//
+//        FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
+//        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.houseId]) {
+//
+//            [self addNewHouseShowLogWithIndex:indexPath.row model:model];
+//            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.houseId];
+//        }
+//    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+//
+//        FHSearchHouseDataItemsModel *model = self.houseItemsData.secondHouseList[indexPath.row];
+//        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.hid]) {
+//
+//            [self addSecondHouseShowLogWithIndex:indexPath.row model:model];
+//            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.hid];
+//        }
+//    }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+//
+//        FHHouseRentDataItemsModel *model = self.houseItemsData.rentHouseList[indexPath.row];
+//        if (![[FHFeedHouseCellHelper sharedInstance].cacheArray containsObject:model.id]) {
+//
+//            [self addRentHouseShowLogWithIndex:indexPath.row model:model];
+//            [[FHFeedHouseCellHelper sharedInstance] addHouseCache:model.id];
+//        }
+//    }
+//
+//}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     

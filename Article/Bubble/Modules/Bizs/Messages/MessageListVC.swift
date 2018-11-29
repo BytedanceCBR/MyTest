@@ -66,7 +66,54 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         if let paramObj = paramObj {
             self.messageId = paramObj.queryParams["list_id"] as? String
             self.navBar.title.text = paramObj.queryParams["title"] as? String
+
+            var category_name = "be_null"
+            var origin_from = "be_null"
+            
+            switch self.messageId {
+                
+            case "300":
+                // "新房"
+                category_name = "new_message_list"
+                origin_from = "messagetab_new"
+                
+            case "301":
+                // "二手房"
+                category_name = "old_message_list"
+                origin_from = "messagetab_old"
+                
+            case "302":
+                // "租房"
+                category_name = "rent_message_list"
+                origin_from = "messagetab_rent"
+            case "303":
+                // "小区"
+                category_name = "neighborhood_message_list"
+                origin_from = "messagetab_neighborhood"
+            case "307":
+                // "小区"
+                category_name = "recommend_message_list"
+                origin_from = "messagetab_recommend"
+                
+            default:
+                break
+                
+            }
+            
+            let params = TracerParams.momoid() <|>
+                toTracerParams("click", key: "enter_type") <|>
+                beNull(key: "log_pb") <|>
+                toTracerParams(category_name, key: "category_name")
+            
+            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                toTracerParams(origin_from, key: "origin_from")
+            self.traceParams = params <|>
+                toTracerParams("be_null", key: "log_pb") <|>
+                toTracerParams("messagetab", key: "enter_from") <|>
+                toTracerParams("be_null", key: "search_id") <|>
+                toTracerParams(category_name, key: "category_name")
         }
+
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
                 EnvContext.shared.toast.dismissToast()
@@ -89,8 +136,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         self.view.backgroundColor = UIColor.white
         self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController,tableView:tableView)
         self.tableListViewModel?.traceParams = traceParams
-
-        
 
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
@@ -469,6 +514,27 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                         disposeBag: disposeBag,
                         tracerParams: params,
                         navVC: navVC)(elementParams)
+                    
+                case .rentHouse:
+
+                    var tracerDict:[String:Any] = [:]
+                    tracerDict["card_type"] = "left_pic"
+                    
+                    let listType = selectTraceParam(self.traceParams, key: "category_name")
+                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+                        tracerDict["enter_from"] = "rent_message_list"
+                    }else {
+                        tracerDict["enter_from"] = listType ?? "rent_message_list"
+                    }
+                    tracerDict["element_from"] = "be_null"
+                    tracerDict["log_pb"] = selectTraceParam(params, key: "log_pb") ?? "be_null"
+                    tracerDict["rank"] = rankByIndexPath(indexPath)
+                    tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
+                    tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
+
+                    let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
+                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
+                    
                 default:
                     openErshouHouseDetailPage(
                         houseId: Int64(houseId) ?? 0,
@@ -492,6 +558,8 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             return "new"
         case .secondHandHouse:
             return "old"
+        case .rentHouse:
+            return "rent"
         default:
             return "old"
         }

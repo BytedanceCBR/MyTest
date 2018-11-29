@@ -71,6 +71,8 @@ class HomeListViewModel: DetailPageViewModel {
     var originSearchId: String?
     var originFrom: String?
     
+    var stayHouseTraceType: HouseType?
+    
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
     weak var navVC: UINavigationController?
@@ -97,6 +99,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
     
+    var itemsTraceCache: [String : [IndexPath]] = [:] //埋点上报缓存
+    
     var isNeedUpdateSpringBoard: Bool = true //是否需要更新Board入口，防止重新加载
     
     var reloadFromType: TTReloadType?
@@ -120,6 +124,10 @@ class HomeListViewModel: DetailPageViewModel {
         let datas = self.generateDefaultSection()
         self.dataSource = FHFunctionListDataSourceDelegate(tableView: tableView,datasV:datas)
         
+        self.dataSource?.recordIndexChangedCallBack = { [weak self] in
+            self?.itemsTraceCache[matchHouseTypeName(houseTypeV: self?.dataSource?.categoryView.houseTypeRelay.value)] = self?.dataSource?.recordIndexCache
+        }
+        
         tableView.rx.didScroll
             .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
             .bind { [weak self, weak tableView] void in
@@ -133,12 +141,10 @@ class HomeListViewModel: DetailPageViewModel {
                 
                 self?.enterType = "switch"
                 
-                var origin_from = "be_null"
-                if index == .newHouse {
-                    origin_from = "new_list"
-                }else if index == .secondHandHouse {
-                    origin_from = "old_list"
-                }
+                self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
+                
+                
+                let origin_from = houseTypeString(houseType.value)
                 
                 self?.originSearchId = self?.itemsSearchIdCache[matchHouseTypeName(houseTypeV: index)]
                 
@@ -222,9 +228,7 @@ class HomeListViewModel: DetailPageViewModel {
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
         
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
-            
             if let recordIndexCache = self.dataSource?.recordIndexCache, !recordIndexCache.contains(indexPath) {
-                
                 if let tracer = datas[indexPath.section].tracer {
                     self.dataSource?.callTracer(
                         tracer: tracer,
@@ -232,6 +236,7 @@ class HomeListViewModel: DetailPageViewModel {
                         traceParams: TracerParams.momoid())
                 }
                 self.dataSource?.recordIndexCache.append(indexPath)
+                self.itemsTraceCache[matchHouseTypeName(houseTypeV: self.dataSource?.categoryView.houseTypeRelay.value)] = self.dataSource?.recordIndexCache
             }
         })
         
@@ -264,12 +269,21 @@ class HomeListViewModel: DetailPageViewModel {
             
             if !self.isFirstEnterCategory
             {
-                self.uploadTracker(isWithStayTime: true, stayTime: self.stayTimeParams, enterType:"switch",isStay: true)
+                self.uploadTracker(isWithStayTime: true, stayTime: self.stayTimeParams, enterType:"switch",isStay: true, currentHouseType: self.stayHouseTraceType ?? .neighborhood)
             }
             
-            self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
-            self.uploadTracker(enterType: "switch")
-            self.tableView?.finishPullDown(withSuccess: true)
+            if let dataTypeV = dataType
+            {
+                let origin_from = houseTypeString(dataTypeV)
+                
+                self.originFrom = origin_from
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(origin_from, key: "origin_from")
+                
+                self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
+                self.uploadTracker(enterType: "switch")
+                self.tableView?.finishPullDown(withSuccess: true)
+            }
         }
     }
     
@@ -321,17 +335,17 @@ class HomeListViewModel: DetailPageViewModel {
             }
             let dataParser = DetailDataParser.monoid()
                 <- parseSpringboardNode(entrys ?? [],isNeedUpdateBoard: isNeedUpdateSpringBoard, disposeBag: self.disposeBag, navVC: self.navVC)
-                <- parseErshouHouseListItemNode(
+                <- parseFHHomeErshouHouseListItemNode(
                     self.dataSource?.categoryView.houseTypeRelay.value == HouseType.secondHandHouse ? theDataItems : [],
                     disposeBag: self.disposeBag,
                     tracerParams: homeCommonParams <|> toTracerParams("old", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                     navVC: self.navVC)
-                <- parseHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
+                <- parseFHHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
                                                  disposeBag: self.disposeBag,
                                                  tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                  navVC: self.navVC)
                 <- parseFHHomeRentHouseListRowItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.rentHouse ? theDataItems : [],
-                                                       disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
+                                                       disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("rent", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                        navVC: self.navVC)
             return dataParser.parser([])
         } else {
@@ -340,7 +354,7 @@ class HomeListViewModel: DetailPageViewModel {
     }
     
     //isStay 是否取反
-    func uploadTracker(isWithStayTime: Bool? = false,stayTime: TracerParams? = TracerParams.momoid(),enterType: NSString? = "be_null",isStay: Bool? = false)
+    func uploadTracker(isWithStayTime: Bool? = false,stayTime: TracerParams? = TracerParams.momoid(),enterType: NSString? = "be_null",isStay: Bool? = false, currentHouseType: HouseType = .neighborhood)
     {
         var params : TracerParams
         let isWithStayTimeV = isWithStayTime ?? false
@@ -360,21 +374,29 @@ class HomeListViewModel: DetailPageViewModel {
             params = TracerParams.momoid()
         }
         
-        var category_name = self.dataSource?.categoryView.houseTypeRelay.value == .newHouse ? "new_list": (self.dataSource?.categoryView.houseTypeRelay.value == .secondHandHouse ? "old_list" : "be_null")
+        var category_name = houseTypeString(self.dataSource?.categoryView.houseTypeRelay.value ?? .secondHandHouse)
+        var stay_category_name = houseTypeString(self.stayHouseTraceType ?? .secondHandHouse)
         
         if (isStay ?? false)
         {
-            category_name = category_name == "old_list" ? "new_list" : "old_list"
+            if currentHouseType != .neighborhood
+            {
+                stay_category_name = houseTypeString(currentHouseType)
+            }else
+            {
+                stay_category_name = "be_null"
+            }
         }
         
         params = params <|>
             EnvContext.shared.homePageParams <|>
             toTracerParams(enterType, key: "enter_type") <|>
-            toTracerParams(category_name, key: "category_name") <|>
-            toTracerParams(category_name, key: "origin_from") <|>
+            toTracerParams((isStay ?? false) ? stay_category_name : category_name, key: "category_name") <|>
+            //            toTracerParams(category_name, key: "origin_from") <|>
             toTracerParams("maintab", key: "enter_from") <|>
             toTracerParams("maintab_list",key:"element_from") <|>
-            toTracerParams((self.originSearchId ?? "be_null"),key:"search_id")
+            toTracerParams((self.originSearchId ?? "be_null"),key:"search_id") <|>
+            toTracerParams((isStay ?? false) ? stay_category_name : category_name, key: "origin_from")
         
         
         let traceDict = params.paramsGetter([:])
@@ -387,6 +409,8 @@ class HomeListViewModel: DetailPageViewModel {
         {
             recordEvent(key: "enter_category", params: traceDict)
         }
+        
+        self.stayHouseTraceType = self.dataSource?.categoryView.houseTypeRelay.value
     }
     
     //第一次请求，继承协议方法
@@ -400,18 +424,6 @@ class HomeListViewModel: DetailPageViewModel {
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
-            var origin_from = "be_null"
-            if typeValue == .newHouse {
-                origin_from = "new_list"
-            }else if typeValue == .secondHandHouse {
-                origin_from = "old_list"
-            }else if typeValue == .secondHandHouse {
-                origin_from = "rent_list"
-            }
-            
-            self.originFrom = origin_from
-            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-                toTracerParams(origin_from, key: "origin_from")
             
             requestHouseRecommend(cityId: cityId ?? 122,
                                   horseType: typeValue.rawValue,
@@ -474,13 +486,20 @@ class HomeListViewModel: DetailPageViewModel {
                     }
                     self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     self.dataSource?.categoryView.segmentedControl.touchEnabled = true
-                    self.isFirstEnterCategorySwitch ? self.uploadTracker(enterType:((TTCategoryStayTrackManager.share().enterType ?? "be_null") as NSString)) : self.uploadTracker(enterType:"switch")
                     
                     if !self.isFirstEnterCategory
                     {
                         let enterTypeV = TTCategoryStayTrackManager.share().enterType ?? "switch"
-                        self.uploadTracker(isWithStayTime: true, stayTime: self.stayTimeParams, enterType:enterTypeV as NSString, isStay: true)
+                        self.uploadTracker(isWithStayTime: true, stayTime: self.stayTimeParams, enterType:enterTypeV as NSString, isStay: true,currentHouseType: self.stayHouseTraceType ?? .neighborhood)
                     }
+                    
+                    let origin_from = houseTypeString(typeValue)
+                    
+                    self.originFrom = origin_from
+                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                        toTracerParams(origin_from, key: "origin_from")
+                    
+                    self.isFirstEnterCategorySwitch ? self.uploadTracker(enterType:((TTCategoryStayTrackManager.share().enterType ?? "be_null") as NSString)) : self.uploadTracker(enterType:"switch")
                     
                     self.stayTimeParams = TracerParams.momoid() <|> traceStayTime()
                     self.isFirstEnterCategory = false
@@ -561,11 +580,7 @@ class HomeListViewModel: DetailPageViewModel {
                         }
                         var categoryName: String?
                         if let houseTypeValue = self.dataSource?.categoryView.houseTypeRelay.value {
-                            if houseTypeValue == HouseType.newHouse {
-                                categoryName = "new_list"
-                            }else if houseTypeValue == HouseType.secondHandHouse {
-                                categoryName = "old_list"
-                            }
+                            categoryName = houseTypeString(houseTypeValue)
                         }
                         let refreshType = reloadFromType != nil ? refreshTypeByReloadType(reloadType: reloadFromType!) : pullString
                         let enterType = self.enterType != nil ? self.enterType! : TTCategoryStayTrackManager.share().enterType
@@ -625,7 +640,10 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         if let dataSource = self.dataSource {
                             dataSource.datas = response
-                            dataSource.recordIndexCache = []
+                            if pullType == .pullDownType
+                            {
+                                dataSource.recordIndexCache = []
+                            }
                             self.tableView?.reloadData()
                         }
                         self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
@@ -698,7 +716,7 @@ class HomeListViewModel: DetailPageViewModel {
     
 }
 
-func parseHomeNewHouseListItemNode(
+func parseFHHomeNewHouseListItemNode(
     _ items: [HouseItemInnerEntity]?,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
@@ -735,7 +753,7 @@ func parseHomeNewHouseListItemNode(
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
         
         let count = items?.count ?? 0
@@ -1042,7 +1060,7 @@ func parseFHHomeRentHouseListRowItemNode(
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
         
         let count = items?.count ?? 0
@@ -1096,7 +1114,7 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
     return { cell in
         
         if let theCell = cell as? SingleImageInfoCell {
-
+            
             theCell.majorTitle.text = data.title
             theCell.extendTitle.text = data.subtitle
             theCell.isTail = isLastCell
@@ -1162,6 +1180,8 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     
     var recordIndexCache: [IndexPath] = []
     
+    var recordIndexChangedCallBack: () -> () = {}
+    
     lazy var categoryView : CategorySectionView = {
         let view = CategorySectionView()
         return view
@@ -1198,6 +1218,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
                     traceParams: TracerParams.momoid())
             }
             recordIndexCache.append(indexPath)
+            recordIndexChangedCallBack()
         }
         
         switch datas[indexPath.section].type {
