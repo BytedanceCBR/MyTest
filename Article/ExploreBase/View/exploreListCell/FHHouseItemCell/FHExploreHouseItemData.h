@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *loadmoreButton;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *searchId;
 
 - (nullable NSArray<FHNewHouseItemModel *> *)houseList;
 
