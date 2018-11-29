@@ -356,7 +356,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                 // 关键词搜索
                 vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-                    //                        self.isNeedEncode = true
+                    self.isNeedEncode = false
                     self.conditionFilterViewModel?.cleanSortCondition()
                     self.suggestionParams = nil
                     self.hasRecordEnterCategory = false
@@ -369,9 +369,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     }
                     nav?.popViewController(animated: true)
                     self.navBar.searchInput.text = nil
-                    //                        self.searchAndConditionFilterVM.sendSearchRequest()
-                    //                        self.navBar.searchInput.placeholder = associationalWord
                     self.allParams = params?.paramObj.allParams as? [String: Any]
+                    if let queryParams = self.queryParams {
+                        self.conditionFilterViewModel?.sortPanelView?.setSelectedConditions(conditions: queryParams)
+                        self.conditionFilterViewModel?.setSortBtnSelected()
+                    }
                 }
             })
             .disposed(by: disposeBag)
