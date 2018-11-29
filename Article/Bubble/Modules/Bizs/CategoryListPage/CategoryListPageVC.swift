@@ -356,7 +356,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
                 // 关键词搜索
                 vc.onSuggestionSelected = { [weak nav, unowned self, unowned vc] (params) in
-                    //                        self.isNeedEncode = true
+                    self.isNeedEncode = false
                     self.conditionFilterViewModel?.cleanSortCondition()
                     self.suggestionParams = nil
                     self.hasRecordEnterCategory = false
@@ -369,9 +369,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     }
                     nav?.popViewController(animated: true)
                     self.navBar.searchInput.text = nil
-                    //                        self.searchAndConditionFilterVM.sendSearchRequest()
-                    //                        self.navBar.searchInput.placeholder = associationalWord
                     self.allParams = params?.paramObj.allParams as? [String: Any]
+                    if let queryParams = self.queryParams {
+                        self.conditionFilterViewModel?.sortPanelView?.setSelectedConditions(conditions: queryParams)
+                        self.conditionFilterViewModel?.setSortBtnSelected()
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -511,6 +513,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
             searchView.setSelectedConditions(conditions: queryParams)
+            self.conditionFilterViewModel?.setSortBtnSelected()
         }
     }
 
@@ -533,6 +536,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return EnvContext.shared.client.configCacheSubject.value?.rentFilterOrder
         default:
             return EnvContext.shared.client.configCacheSubject.value?.filterOrder
+        }
+    }
+
+    fileprivate func allSortConditionKeys() -> String {
+        if let options = filterSortCondition(by: self.houseType.value)?.first?.options?.first?.options {
+            if options.count > 1 {
+                if let type = options[1].type,
+                    let sortType = "\(type)[]".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    return sortType
+                }
+                return options[1].type ?? ""
+            }
+            return options.first?.type ?? ""
+        } else {
+            return ""
         }
     }
 
@@ -926,7 +944,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 let ns = items.1.reduce([], { (result, nodes) -> [Node] in
                     result + nodes
                 })
-                let keys = self.allKeysFromNodes(nodes: ns)
+                var keys = self.allKeysFromNodes(nodes: ns)
+                let sortKey = self.allSortConditionKeys()
+                //计算所有排序的key
+                keys.insert(sortKey)
+
                 var oldConditions = ""
 
                 self.queryParams?.forEach({ (key, value) in

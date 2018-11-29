@@ -26,15 +26,14 @@ func parseRentReleatedHouseListItemNode(
             .enumerated()
             .map { (e) -> (TracerParams) -> Void in
                 let (offset, item) = e
-                return openErshouHouseDetailPage(
-                    houseId: Int64(item.id ?? "")!,
-                    logPB: item.logPb as? [String : Any],
-                    disposeBag: disposeBag,
-                    tracerParams: tracerParams <|>
-                        toTracerParams(offset, key: "rank") <|>
-                        toTracerParams(elementFrom, key: "element_from") <|>
-                        toTracerParams(item.logPb ?? "be_null", key: "log_pb"),
-                    navVC: navVC)
+                return { (params) in
+                    if let houseId = item.id {
+                        let url = URL(string: "fschema://rent_detail?house_id=\(houseId)")
+                        TTRoute.shared()?.openURL(byPushViewController: url)
+                    }
+
+                }
+
         }
 
         let paramsElement = TracerParams.momoid() <|>

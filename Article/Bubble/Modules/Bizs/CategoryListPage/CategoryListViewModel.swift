@@ -641,18 +641,20 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == datas.value.count - 1 {
-            return 125
-        }
+        
         if isShowDefault
         {
             if indexPath.row == 0
             {
-                return 135
+                return 130
             }else
             {
                 return 115
             }
+        }
+        
+        if indexPath.row == datas.value.count - 1 {
+            return 125
         }
         return 105
     }

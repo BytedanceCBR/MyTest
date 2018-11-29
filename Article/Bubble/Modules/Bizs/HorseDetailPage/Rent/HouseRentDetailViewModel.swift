@@ -213,13 +213,20 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
         let params = TracerParams.momoid()
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
+
+        let tail = parseOpenAllNode(true) {
+            print("加载")
+        }
+
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             traceExtension: params,
             disposeBag: disposeBag,
             tracerParams: params,
             navVC: self.navVC)
-        return parseNodeWrapper(preNode: header, wrapedNode: result)
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: result,
+                                tailNode: tail)
     }
 
     /// 跳转到小区详情页

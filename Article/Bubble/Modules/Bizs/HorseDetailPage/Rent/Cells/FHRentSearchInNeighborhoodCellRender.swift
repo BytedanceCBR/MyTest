@@ -105,19 +105,9 @@ fileprivate func searchInNeighborhoodItemCellSelector(
     itemTracerParams: TracerParams,
     navVC: UINavigationController?,
     disposeBag: DisposeBag) {
-    let theParams = itemTracerParams <|>
-        toTracerParams("slide", key: "card_type") <|>
-    itemTracerParams
     if let id = item.id, let houseId = Int64(id) {
-        openErshouHouseDetailPage(
-            houseId: houseId,
-            logPB: item.logPb as? [String : Any],
-            disposeBag: disposeBag,
-            tracerParams: theParams <|>
-                toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                toTracerParams(offset, key: "rank"),
-            navVC: navVC)(TracerParams.momoid())
+        let url = URL(string: "fschema://rent_detail?house_id=\(houseId)")
+        TTRoute.shared()?.openURL(byPushViewController: url)
     }
 }
 

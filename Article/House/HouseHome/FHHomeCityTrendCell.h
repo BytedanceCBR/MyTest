@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHomeCityTrendCell : FHHomeBaseTableCell
 
 @property(nonatomic, strong)FHHomeCityTrendView *trendView;
+@property (nonatomic, copy) void(^clickedDataSourceCallback)(UIButton *btn);
 
 -(void)updateWithModel:(FHConfigDataCityStatsModel *)model;
 

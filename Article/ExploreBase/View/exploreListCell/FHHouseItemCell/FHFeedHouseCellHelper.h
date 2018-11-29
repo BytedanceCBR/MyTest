@@ -11,12 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFeedHouseCellHelper : NSObject
 
-@property(nonatomic, strong,readonly)NSArray *cacheArray;
+@property(nonatomic, strong,readonly)NSDictionary *houseCache;
 
 +(instancetype)sharedInstance;
 
 - (void)addHouseCache:(NSString *)houseId;
-- (void)removeHouseCacheArray;
+- (void)removeHouseCache;
 
 @end
 

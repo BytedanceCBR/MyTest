@@ -39,16 +39,40 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
     }
 
     fileprivate func setNeighborhoodItem(items: [ItemValueView]) {
-        for v in contentView.subviews where v is ItemValueView {
+        for v in contentView.subviews {
             v.removeFromSuperview()
         }
-        
         items.forEach { view in
             contentView.addSubview(view)
         }
-        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 4, averageLayout: true, leadSpacing: 20, tailSpacing: 20)
+        
+        let topLine = UIView()
+        topLine.backgroundColor = hexStringToUIColor(hex: "#e8eaeb")
+        contentView.addSubview(topLine)
+        topLine.snp.makeConstraints { (maker) in
+            maker.height.equalTo(0.5)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
+            maker.top.equalToSuperview()
+        }
+        
+        let space = (UIScreen.main.bounds.width - 40 - CGFloat(70 * items.count)) / 2 // 间隔
+        items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: space, averageLayout: true, leadSpacing: 20, tailSpacing: 20)
         items.snp.makeConstraints { maker in
             maker.top.bottom.equalToSuperview()
+        }
+        // 添加中间分割线(小区信息)
+        for i in 1 ..< items.count {
+            let v = UIView()
+            v.backgroundColor = hexStringToUIColor(hex: "#e8eaeb")
+            contentView.addSubview(v)
+            let leftOffset = CGFloat(20 + CGFloat(i) * 70 + (CGFloat(i) - 1 + 0.5) * space)
+            v.snp.makeConstraints { (maker) in
+                maker.height.equalTo(27)
+                maker.width.equalTo(1)
+                maker.centerY.equalToSuperview()
+                maker.left.equalToSuperview().offset(leftOffset)
+            }
         }
     }
 
@@ -73,20 +97,14 @@ fileprivate class ItemButtonControl: UIControl {
     
     lazy var valueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangMedium(16)
-        re.textColor = hexStringToUIColor(hex: "#45494d")
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
+        re.textColor = hexStringToUIColor(hex: "#8a9299")
         return re
     }()
     
     lazy var rightArrowImageView: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "setting-arrow-3")
-        return re
-    }()
-    
-    lazy var bottomLine: UIView = {
-        let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: "#081f33")
+        re.image = UIImage(named: "setting-arrow-4")
         return re
     }()
     
@@ -96,28 +114,19 @@ fileprivate class ItemButtonControl: UIControl {
         addSubview(valueLabel)
         valueLabel.snp.makeConstraints { maker in
             maker.left.top.equalTo(self)
-            maker.height.equalTo(22)
-            maker.bottom.equalTo(self).offset(-0.5)
+            maker.height.equalTo(17)
+            maker.bottom.equalTo(self)
         }
         addSubview(rightArrowImageView)
         rightArrowImageView.snp.makeConstraints { maker in
-            maker.left.equalTo(valueLabel.snp.right).offset(7)
-            maker.right.equalTo(self)
-            maker.width.equalTo(10)
-            maker.height.equalTo(10)
+            maker.left.equalTo(valueLabel.snp.right).offset(10)
+            maker.width.height.equalTo(12)
             maker.centerY.equalTo(valueLabel)
-        }
-        addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { maker in
-            maker.left.right.equalTo(valueLabel)
-            maker.top.equalTo(valueLabel.snp.bottom)
-            maker.height.equalTo(0.5)
         }
     }
     
     override var isEnabled: Bool {
         didSet {
-            bottomLine.isHidden = !isEnabled
             rightArrowImageView.isHidden = !isEnabled
         }
     }
@@ -130,10 +139,11 @@ fileprivate class ItemButtonControl: UIControl {
 // 小区头部成交房源套数
 fileprivate class ItemValueView: UIControl {
     
+    // 套数
     lazy var keyLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: "#8a9299")
+        re.font = CommonUIStyle.Font.pingFangRegular(14)
+        re.textColor = hexStringToUIColor(hex: "#517b9f")
         return re
     }()
     
@@ -144,22 +154,35 @@ fileprivate class ItemValueView: UIControl {
     
     override init(frame: CGRect) {
         super.init(frame: CGRect.zero)
-        backgroundColor = hexStringToUIColor(hex: "#f7f8f9")
-        layer.cornerRadius = 4.0
+        
+        backgroundColor = hexStringToUIColor(hex: "#ffffff")
+        
         addSubview(valueDataLabel)
         valueDataLabel.isUserInteractionEnabled = false
         valueDataLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(self).offset(16)
-            maker.top.equalTo(self).offset(11)
+            maker.left.equalTo(self)
+            maker.top.equalTo(self).offset(14.5)
+            maker.right.equalTo(self)
         }
         
         addSubview(keyLabel)
         keyLabel.snp.makeConstraints { maker in
             maker.left.equalTo(valueDataLabel.snp.left)
-            maker.top.equalTo(valueDataLabel.snp.bottom).offset(4.5)
-            maker.height.equalTo(17)
-            maker.right.equalToSuperview().offset(-20)
-            maker.bottom.equalToSuperview().offset(-11)
+            maker.top.equalTo(valueDataLabel.snp.bottom).offset(2)
+            maker.height.equalTo(20)
+            maker.bottom.equalToSuperview().offset(-14)
+        }
+        
+        self.isDataEnabled = true
+    }
+    
+    var isDataEnabled: Bool = true {
+        didSet {
+            if isDataEnabled {
+                keyLabel.textColor = hexStringToUIColor(hex: "#517b9f")
+            } else {
+                keyLabel.textColor = hexStringToUIColor(hex: "#a1aab3")
+            }
         }
     }
     
@@ -179,7 +202,7 @@ class HorseCoreInfoItemView: UIView {
 
     lazy var valueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangMedium(18)
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
         re.textColor = hexStringToUIColor(hex: "#ff5b4c")
         return re
     }()
@@ -241,8 +264,8 @@ func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, disposeBag: Dis
     if let theCell = cell as? ErshouHouseCoreInfoCell, let statsInfo = data.statsInfo {
         let infos = statsInfo.map { info -> ItemValueView in
             let re = ItemValueView()
-            re.keyLabel.text = info.attr
-            re.valueDataLabel.valueLabel.text = info.value
+            re.keyLabel.text = info.value
+            re.valueDataLabel.valueLabel.text = info.attr
             re.rx.controlEvent(UIControlEvents.touchUpInside).subscribe({ (event) in
                 if !event.isCompleted {
                     callBack(info)
@@ -250,11 +273,13 @@ func fillNeighborhoodStatsInfoCell(data: NeighborhoodDetailData, disposeBag: Dis
             }).disposed(by: disposeBag)
             
             if info.value == "暂无" || info.value == "0套" {
-                re.valueDataLabel.valueLabel.text = "暂无"
+                re.keyLabel.text = "暂无"
                 re.valueDataLabel.isEnabled = false
+                re.isDataEnabled = false
                 re.isEnabled = false
             } else {
                 re.valueDataLabel.isEnabled = true
+                re.isDataEnabled = true
                 re.isEnabled = true
             }
             return re
