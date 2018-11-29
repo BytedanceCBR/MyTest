@@ -75,6 +75,9 @@ class SortConditionPanel: BaseConditionPanelView, UITableViewDelegate {
                     }
                 }
         }
+        if let node = self.dataSource.selectedNode() {
+            didSelect?(node)
+        }
         self.tableView.reloadData()
     }
 

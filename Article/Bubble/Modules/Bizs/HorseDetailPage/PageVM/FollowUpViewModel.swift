@@ -177,6 +177,9 @@ class FollowUpViewModel {
                     disposeBag: disposeBag)()
             }
     }
+
+
+
     
     // MARK: 静默关注房源
     func followHouseItem(
@@ -185,6 +188,7 @@ class FollowUpViewModel {
         followId: String,
         disposeBag: DisposeBag,
         statusBehavior: BehaviorRelay<Bool>? = nil,
+        followStateBehavior: BehaviorRelay<Result<Bool>>? = nil,
         isNeedRecord: Bool = true,
         showTip: Bool = false) -> () -> Void {
         
@@ -220,15 +224,15 @@ class FollowUpViewModel {
                         }else if response?.data?.followStatus ?? 0 == 1 {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {
-                                
                                 EnvContext.shared.toast.showToast("提交成功")
                             }
                         }
                         NotificationCenter.default.post(name: .followUpDidChange, object: nil)
                         statusBehavior?.accept(true)
+                        followStateBehavior?.accept(.success(true))
                     }
                 }, onError: { error in
-                    
+                    EnvContext.shared.toast.showToast("网络异常")
                 })
                 .disposed(by: disposeBag)
         }

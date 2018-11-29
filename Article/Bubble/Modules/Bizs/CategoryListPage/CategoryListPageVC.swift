@@ -511,6 +511,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
         if let queryParams = self.queryParams {
             searchView.setSelectedConditions(conditions: queryParams)
+            self.conditionFilterViewModel?.setSortBtnSelected()
         }
     }
 
@@ -533,6 +534,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return EnvContext.shared.client.configCacheSubject.value?.rentFilterOrder
         default:
             return EnvContext.shared.client.configCacheSubject.value?.filterOrder
+        }
+    }
+
+    fileprivate func allSortConditionKeys() -> String {
+        if let options = filterSortCondition(by: self.houseType.value)?.first?.options?.first?.options {
+            if options.count > 1 {
+                if let type = options[1].type,
+                    let sortType = "\(type)[]".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    return sortType
+                }
+                return options[1].type ?? ""
+            }
+            return options.first?.type ?? ""
+        } else {
+            return ""
         }
     }
 
@@ -595,7 +611,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
         let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
         let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
-        let enterFrom = catName
+        let enterFrom = (selectTraceParam(self.tracerParams, key: "enter_from") as? String) ?? catName
         
         
         if elementName == "be_null" && originFrom != "be_null" {
@@ -614,13 +630,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         
         recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
         
-        //进入地图找房页埋点
-        let enterParams = TracerParams.momoid() <|>
-            toTracerParams(enterFrom, key: "enter_from") <|>
-            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
-            toTracerParams(originFrom, key: "origin_from") <|>
-            toTracerParams(originSearchId, key: "origin_search_id")
-        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
+//        //进入地图找房页埋点
+//        let enterParams = TracerParams.momoid() <|>
+//            toTracerParams(enterFrom, key: "enter_from") <|>
+//            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
+//            toTracerParams(originFrom, key: "origin_from") <|>
+//            toTracerParams(originSearchId, key: "origin_search_id")
+//        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
         
         /*
          var dict : [String : Any] = [
@@ -640,7 +656,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         
         var query = ""
         if  !openUrl.contains("enter_category") {
-            query = "enter_category=\(enterCategory)"
+            query = "enter_category=\(catName)"
         }
         if !openUrl.contains("origin_from") {
             query = "\(query)&origin_from=\(originFrom)"
@@ -650,11 +666,18 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             query = "\(query)&origin_search_id=\(originSearchId)"
         }
         if !openUrl.contains("enter_from"){
-            query = "\(query)&enter_from=\(enterFrom)"
+            query = "\(query)&enter_from=\(catName)"
         }
         if !openUrl.contains("element_from"){
             query = "\(query)&element_from=\(elementName)"
         }
+        if !openUrl.contains("search_id"){
+            query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
+        }
+        
+//        if !openUrl.contains("category_name") {
+//            query = "\(query)&category_name=\(catName)"
+//        }
         
         if query.count > 0 {
             openUrl = "\(openUrl)&\(query)"
@@ -919,7 +942,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 let ns = items.1.reduce([], { (result, nodes) -> [Node] in
                     result + nodes
                 })
-                let keys = self.allKeysFromNodes(nodes: ns)
+                var keys = self.allKeysFromNodes(nodes: ns)
+                let sortKey = self.allSortConditionKeys()
+                //计算所有排序的key
+                keys.insert(sortKey)
+
                 var oldConditions = ""
 
                 self.queryParams?.forEach({ (key, value) in
