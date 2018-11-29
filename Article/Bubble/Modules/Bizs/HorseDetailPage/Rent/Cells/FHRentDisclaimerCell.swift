@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import SnapKit
+import RxCocoa
 class FHRentDisclaimerCell: BaseUITableViewCell {
 
     lazy var ownerLabel: UILabel = {
@@ -30,6 +31,10 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         re.numberOfLines = 0
         return re
     }()
+
+    var onContactIconClick: (() -> Void)?
+
+    let disposeBag = DisposeBag()
 
     open override class var identifier: String {
         return "rentDisclaimerCell"
@@ -69,6 +74,12 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.top.equalTo(ownerLabel.snp.bottom).offset(3)
             make.bottom.equalTo(-14)
         }
+
+        contactIcon.rx.tap
+            .bind(onNext: { [weak self] in
+                self?.onContactIconClick?()
+            })
+            .disposed(by: disposeBag)
     }
 
     func hiddenOwnerLabel() {
@@ -118,7 +129,11 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
         } else {
             theCell.hiddenOwnerLabel()
         }
-
+        theCell.displayOwnerLabel()
+        theCell.ownerLabel.text = "房屋负责人：李小强"
         theCell.disclaimerContent.text = "免责声明：房源所示图片及其他信息仅供参考，租房时请以房本信息为准。"
+        theCell.onContactIconClick = {
+            print("open photo")
+        }
     }
 }

@@ -1015,17 +1015,19 @@ func parseFHHomeRentHouseListRowItemNode(
             .enumerated()
             .map { (e) -> (TracerParams) -> Void in
                 let (offset, item) = e
-                return openNewHouseDetailPage(
-                    houseId: Int64(item.id ?? "")!,
-                    logPB: item.logPB ?? [:],
-                    disposeBag: disposeBag,
-                    tracerParams: tracerParams <|>
-                        toTracerParams(offset, key: "rank") <|>
-                        toTracerParams("maintab", key: "enter_from") <|>
-                        toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
-                    navVC:navVC)
+
+                return { (params) in
+                    if let houseId = item.id {
+                        let tracer = tracerParams <|>
+                            toTracerParams(offset, key: "rank") <|>
+                            toTracerParams("maintab", key: "enter_from") <|>
+                            toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                            toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+                        let userInfo = TTRouteUserInfo(info: ["tracer": tracer.paramsGetter([:])])
+                        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
+                    }
+                }
         }
         
         

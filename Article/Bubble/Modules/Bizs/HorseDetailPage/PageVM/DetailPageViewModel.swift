@@ -735,6 +735,49 @@ func parseNodeWrapper(preNode: @escaping () -> [TableSectionNode]?,
     }
 }
 
+func parseNodeWrapper(preNode: @escaping () -> [TableSectionNode]?,
+                      wrapedNode: @escaping () -> TableSectionNode?,
+                      tailNode: @escaping () -> [TableSectionNode]?) -> () -> [TableSectionNode]? {
+    return {
+        if let wrapped = wrapedNode() {
+            var result = [TableSectionNode]()
+            if let node = preNode() {
+                result.append(contentsOf: node)
+            }
+            result.append(wrapped)
+
+            if let node = tailNode() {
+                result.append(contentsOf: node)
+            }
+            return result
+        } else {
+            return []
+        }
+    }
+}
+
+func parseNodeWrapper(preNode: @escaping () -> [TableSectionNode]?,
+                      wrapedNode: @escaping () -> TableSectionNode?,
+                      tailNode: @escaping () -> TableSectionNode?) -> () -> [TableSectionNode]? {
+    return {
+        if let wrapped = wrapedNode() {
+            var result = [TableSectionNode]()
+            if let node = preNode() {
+                result.append(contentsOf: node)
+            }
+            result.append(wrapped)
+
+            if let node = tailNode() {
+                result.append(node)
+            }
+            return result
+        } else {
+            return []
+        }
+    }
+}
+
+
 
 func parseNodeWrapper(preNode: @escaping () -> TableSectionNode?,
                       wrapedNode: @escaping () -> TableSectionNode?) -> () -> [TableSectionNode]? {
