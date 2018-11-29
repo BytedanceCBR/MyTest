@@ -1109,6 +1109,16 @@ fileprivate func openDetailPage(
             disposeBag: disposeBag,
             tracerParams: params,
             navVC: navVC)
+    case .rentHouse:
+        params = params <|>
+            toTracerParams("rent_follow_list", key: "enter_from") <|>
+            toTracerParams(logPB ?? "be_null", key: "log_pb")
+        return openRentHouseDetailPage(
+            houseId: followUpId,
+            logPB: logPB,
+            disposeBag: disposeBag,
+            tracerParams: params,
+            navVC: navVC)
     case .neighborhood:
         params = params <|>
             toTracerParams("neighborhood_follow_list", key: "enter_from") <|>
