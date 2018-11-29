@@ -19,6 +19,7 @@ enum HouseCategory: String {
     case neighborhood_nearby_list
     case neighborhood_trade_list
     case house_model_list
+    case rent_list
 }
 
 enum EnterFrom: String {
@@ -26,6 +27,7 @@ enum EnterFrom: String {
     case new_detail
     case old_detail
     case neighborhood_detail
+    case rent_detail
 }
 
 enum EnterType: String {
