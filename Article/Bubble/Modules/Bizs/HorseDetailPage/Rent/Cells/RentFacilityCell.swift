@@ -64,7 +64,16 @@ func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?
 
         let items: [FHHouseRentFacilityItemView] = facilities?.map({ (model) -> FHHouseRentFacilityItemView in
             let re = FHHouseRentFacilityItemView()
-            re.label.text = model.name
+            if model.enabled {
+                re.label.text = model.name
+            } else {
+                let attriText = NSAttributedString(string: model.name ?? "",
+                                                   attributes: [NSAttributedStringKey.strikethroughStyle: [NSUnderlineStyle.patternSolid, NSUnderlineStyle.styleSingle],
+                                                                NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#737a80"),
+                                                                NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14)])
+                re.label.attributedText = attriText
+            }
+
             if let url = model.iconUrl {
                 re.iconView.bd_setImage(with: URL(string: url))
             }
