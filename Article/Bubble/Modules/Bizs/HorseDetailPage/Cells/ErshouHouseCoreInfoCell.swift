@@ -39,17 +39,23 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
     }
 
     fileprivate func setNeighborhoodItem(items: [ItemValueView]) {
-        for v in contentView.subviews where v is ItemValueView {
+        for v in contentView.subviews {
             v.removeFromSuperview()
         }
-        
-        for v in contentView.subviews where v.tag == 101 {
-            v.removeFromSuperview()
-        }
-        
         items.forEach { view in
             contentView.addSubview(view)
         }
+        
+        let topLine = UIView()
+        topLine.backgroundColor = hexStringToUIColor(hex: "#e8eaeb")
+        contentView.addSubview(topLine)
+        topLine.snp.makeConstraints { (maker) in
+            maker.height.equalTo(0.5)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
+            maker.top.equalToSuperview()
+        }
+        
         let space = (UIScreen.main.bounds.width - 40 - CGFloat(70 * items.count)) / 2 // 间隔
         items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: space, averageLayout: true, leadSpacing: 20, tailSpacing: 20)
         items.snp.makeConstraints { maker in
@@ -58,14 +64,13 @@ class ErshouHouseCoreInfoCell: BaseUITableViewCell {
         // 添加中间分割线(小区信息)
         for i in 1 ..< items.count {
             let v = UIView()
-            v.tag = 101
             v.backgroundColor = hexStringToUIColor(hex: "#e8eaeb")
             contentView.addSubview(v)
             let leftOffset = CGFloat(20 + CGFloat(i) * 70 + (CGFloat(i) - 1 + 0.5) * space)
             v.snp.makeConstraints { (maker) in
                 maker.height.equalTo(27)
-                maker.width.equalTo(0.5)
-                maker.centerY.equalTo(contentView)
+                maker.width.equalTo(1)
+                maker.centerY.equalToSuperview()
                 maker.left.equalToSuperview().offset(leftOffset)
             }
         }
