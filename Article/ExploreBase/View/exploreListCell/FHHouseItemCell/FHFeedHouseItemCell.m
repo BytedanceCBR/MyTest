@@ -20,10 +20,28 @@
 
 - (void)willDisplay {
     [self.cellView willAppear];
+    
+    
+    CGPoint tablePoint = [self convertPoint:CGPointZero toView:self.tableView];
+    if (tablePoint.y < [UIScreen mainScreen].bounds.size.height) {
+        
+        [self addHouseShowLog];
+    }
+    
 }
 
 - (void)didEndDisplaying {
     [self.cellView didDisappear];
+    
+}
+
+-(void)addHouseShowLog {
+    
+    FHFeedHouseItemCellView *cellView = (FHFeedHouseItemCellView *)self.cellView;
+    if (cellView) {
+        
+        [cellView addHouseShowLog];
+    }
 }
 
 
@@ -55,6 +73,7 @@
 @property(nonatomic, strong)UIView *bottomView;
 
 @property (nonatomic, strong) FHFeedHouseItemViewModel *viewModel;
+
 
 @end
 
@@ -103,6 +122,12 @@
     [self.viewModel updateWithHouseData:self.orderedData.houseItemsData];
 
 }
+
+- (void)addHouseShowLog {
+    
+    [self.viewModel addHouseShowLog];
+}
+
 
 - (id)cellData {
     return [self orderedData];
