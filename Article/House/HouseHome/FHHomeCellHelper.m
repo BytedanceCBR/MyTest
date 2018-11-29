@@ -106,8 +106,6 @@ static NSMutableArray  * _Nullable identifierArr;
         [modelOpdata2.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *stringOpStyle = @"be_null";
             FHConfigDataOpData2ItemsModel *item = (FHConfigDataOpData2ItemsModel *)obj;
-            
-            NSLog(@"logpb = %@",item.logPb);
             NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
             
             if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {

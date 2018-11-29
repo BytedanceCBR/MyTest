@@ -32,6 +32,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
     private var bottomBarViewModel: FHHouseContactBottomBarViewModel?
 
+    private let followUpStatus = BehaviorRelay<Bool>(value: false)
+
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -163,6 +165,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse)
         bindButtomBarState()
+        detailPageViewModel?.navVC = self.navigationController
         //触发请求数据
         detailPageViewModel?.requestDetailData()
         view.bringSubview(toFront: navBar)
@@ -450,7 +453,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                         self.followUpViewModel.followHouseItem(houseType: .rentHouse,
                                                                followAction: .rentHouse,
                                                                followId: "\(self.houseId)",
-                                                               disposeBag: self.disposeBag)()
+                                                               disposeBag: self.disposeBag,
+                                                               followStateBehavior: self.detailPageViewModel?.follwUpStatus)()
                     }, error: { (error) in
 
                     })

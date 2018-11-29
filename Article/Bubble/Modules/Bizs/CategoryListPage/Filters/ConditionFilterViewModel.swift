@@ -104,7 +104,9 @@ class ConditionFilterViewModel {
                 } else {
                     self?.searchSortBtn?.isSelected = false
                 }
-                self?.openOrCloseSortPanel()
+                if self?.sortPanelView?.isHidden == false {
+                    self?.openOrCloseSortPanel()
+                }
             }
         }
     }
@@ -176,11 +178,14 @@ class ConditionFilterViewModel {
         }
     }
 
-    fileprivate func setSortBtnSelected() {
+    func setSortBtnSelected() {
         let isHidden = self.sortPanelView?.isHidden ?? true
         //当前视图在关闭状态
         if isHidden == true {
-            self.searchSortBtn?.isSelected = true
+            if let sortCondition = self.searchAndConditionFilterVM.searchSortCondition,
+                sortCondition.rankType != "default" {
+                self.searchSortBtn?.isSelected = true
+            }
         } else { //当前视图在打开状态
             setSortBtnSelectedWhenClosePanel()
         }

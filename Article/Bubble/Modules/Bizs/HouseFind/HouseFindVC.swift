@@ -288,7 +288,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         if let config = EnvContext.shared.client.configCacheSubject.value {
             let sections = houseTypeSectionByConfig(config: config)
             sections.forEach({ (item) in
-                let _ = self.dataSourceByHouseType(houseType: item.houseType)
+                let ds = self.dataSourceByHouseType(houseType: item.houseType)
+                ds.deleteHistory = { [weak self] in
+                    self?.requestDeleteHistory()
+                }
             })
             if let first = sections.first {
                 self.houseType.accept(first.houseType)
@@ -522,13 +525,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 self.seperateLineView.isHidden = (point.y - 0.5 <= -collectionView.contentInset.top)
             }.disposed(by: contentOffsetDisposeBag!)
         }
-//        self.houseFilterCollectionView[houseType]?.rx.contentOffset
-//            .subscribe(onNext : { [unowned self] (point) in
-//                self.seperateLineView.isHidden = (point.y - 0.5 <= -self.collectionView.contentInset.top)
-//            }
-//        )
-//        .disposed(by: contentOffsetDisposeBag!)
-
     }
 
     fileprivate func registerCollectionViewComponent(collectionView: UICollectionView) {
