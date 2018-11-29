@@ -179,7 +179,7 @@ class HorseCoreInfoItemView: UIView {
 
     lazy var valueLabel: UILabel = {
         let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangMedium(18)
+        re.font = CommonUIStyle.Font.pingFangMedium(16)
         re.textColor = hexStringToUIColor(hex: "#ff5b4c")
         return re
     }()
