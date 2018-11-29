@@ -94,23 +94,28 @@
         [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
         
         NSURL *url =[NSURL URLWithString:self.houseItemsData.loadmoreOpenUrl];
+
         TTRouteUserInfo *userInfo = nil;
-        //        if (neighborModel.logPb) {
-        //            NSString *groupId = neighborModel.logPb.groupId;
-        //            NSString *imprId = neighborModel.logPb.imprId;
-        //            NSString *searchId = neighborModel.logPb.searchId;
-        //            if (groupId) {
-        //                [strUrl appendFormat:@"&group_id=%@",groupId];
-        //            }
-        //            if (imprId) {
-        //                [strUrl appendFormat:@"&impr_id=%@",imprId];
-        //            }
-        //            if (searchId) {
-        //                [strUrl appendFormat:@"&search_id=%@",searchId];
-        //            }
-        //            NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
-        //            userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-        //        }
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[@"enter_from"] = @"maintab";
+        param[@"enter_type"] = @"click";
+        param[@"element_from"] = @"mix_list";
+        param[@"search_id"] = searchId;
+        param[@"origin_from"] = @"mix_list";
+        param[@"origin_search_id"] = searchId ? : @"be_null";
+
+        if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+            param[@"category_name"] = @"new_list";
+
+        }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+            param[@"category_name"] = @"old_list";
+
+        }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+            param[@"category_name"] = @"rent_list";
+
+        }
+        NSDictionary *userDict = @{@"tracer":param};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:userDict];
         [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
     }
 }
