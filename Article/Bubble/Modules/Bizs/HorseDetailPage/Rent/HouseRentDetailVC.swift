@@ -126,11 +126,17 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     }
 
     private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
-        if let userInfo = paramObj?.userInfo {
-            self.houseRentTracer.cardType = userInfo.allInfo["card_type"] as? String ?? "be_null"
-            self.houseRentTracer.enterFrom = userInfo.allInfo["enter_from"] as? String ?? "be_null"
-            self.houseRentTracer.elementFrom = userInfo.allInfo["element_from"] as? String ?? "be_null"
-            self.houseRentTracer.rank = userInfo.allInfo["rank"] as? String ?? "be_null"
+        if let tracer = paramObj?.userInfo.allInfo["tracer"] as? [String: Any] {
+            self.houseRentTracer.cardType = tracer["card_type"] as? String ?? "be_null"
+            self.houseRentTracer.enterFrom = tracer["enter_from"] as? String ?? "be_null"
+            self.houseRentTracer.elementFrom = tracer["element_from"] as? String ?? "be_null"
+            self.houseRentTracer.logPb = tracer["log_pb"]
+            self.houseRentTracer.searchId = tracer["search_id"] as? String ?? "be_null"
+            if let rank = tracer["rank"] as? Int {
+                self.houseRentTracer.rank = "\(rank)"
+            } else {
+                self.houseRentTracer.rank = tracer["rank"] as? String ?? "be_null"
+            }
         }
     }
 

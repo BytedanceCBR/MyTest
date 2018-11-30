@@ -473,7 +473,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-//                <- parseErshouHouseDisclaimerNode(data)
+                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {
+                    
+                })
+                <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -1133,12 +1136,8 @@ fileprivate func openDetailPage(
         params = params <|>
             toTracerParams("rent_follow_list", key: "enter_from") <|>
             toTracerParams(logPB ?? "be_null", key: "log_pb")
-        return openNewHouseDetailPage(
-            houseId: followUpId,
-            logPB: logPB,
-            disposeBag: disposeBag,
-            tracerParams: params,
-            navVC: navVC)
+        return openRentHouseDetailPage(houseId: followUpId,
+                                       tracerParams: params)
     default:
         return openErshouHouseDetailPage(
             houseId: followUpId,
@@ -1248,9 +1247,34 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
     }
 }
 
+func openRentHouseDetailPage(houseId: Int64,
+                             tracerParams: TracerParams,
+                             houseSearchParams: TracerParams? = nil)  -> (TracerParams) -> Void {
+    return { (params) in
+        var tracer: [String: Any?] = tracerParams.paramsGetter([:])
+
+        if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
+            tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        if let paramsDict: [String: Any?] = params.paramsGetter([:]) {
+            tracer.merge(paramsDict, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        tracer["element_from"] = "be_null"
+        tracer["card_type"] = "left_pic"
+        tracer["origin_from"] = "minetab_rent"
+        let info = ["tracer": tracer]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
+    }
+}
+
 func openErshouHouseDetailPage(
     houseId: Int64,
-        logPB: [String: Any]? = nil,
+    logPB: [String: Any]? = nil,
     followStatus: BehaviorRelay<Result<Bool>>? = nil,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
