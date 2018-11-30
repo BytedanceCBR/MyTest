@@ -39,6 +39,7 @@ import RxCocoa
     private lazy var searchFilterPanel: SearchFilterPanel = {
         let re = SearchFilterPanel()
         re.backgroundColor = UIColor.white
+        re.bottomLine?.isHidden = true
         return re
     }()
 
@@ -130,8 +131,9 @@ import RxCocoa
         self.conditionFilterViewModel?.sortPanelView = searchView
         self.conditionFilterViewModel?.searchSortBtn = searchSortBtn
         self.searchSortBtn.rx.tap
-            .subscribe(onNext: { [unowned self] void in
-                self.conditionFilterViewModel?.openOrCloseSortPanel()
+            .subscribe(onNext: { [weak self] void in
+                self?.conditionFilterViewModel?.openOrCloseSortPanel()
+                self?.delegate?.onConditionWillPanelDisplay()
             })
             .disposed(by: disposeBag)
 
