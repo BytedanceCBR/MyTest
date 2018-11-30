@@ -478,7 +478,6 @@ static NSMutableArray  * _Nullable identifierArr;
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
         [wself addHomeCityMarketClickLog];
-        [wself addCityMarketEnterMapFindLog];
     };
 }
 
@@ -556,18 +555,6 @@ static NSMutableArray  * _Nullable identifierArr;
     param[@"page_type"] = @"maintab";
     [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
-
-+(void)addCityMarketEnterMapFindLog
-{
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    param[@"enter_from"] = @"city_market";
-    param[@"search_id"] = @"be_null";
-    param[@"origin_from"] = @"city_market";
-    param[@"origin_search_id"] = @"be_null";
-    
-    [FHUserTracker writeEvent:@"enter_mapfind" params:param];
-}
-
 
 @end
 
