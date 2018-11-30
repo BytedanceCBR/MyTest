@@ -143,7 +143,6 @@ class HomeListViewModel: DetailPageViewModel {
                 
                 self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
                 
-                
                 let origin_from = houseTypeString(houseType.value)
                 
                 self?.originSearchId = self?.itemsSearchIdCache[matchHouseTypeName(houseTypeV: index)]
@@ -216,11 +215,12 @@ class HomeListViewModel: DetailPageViewModel {
         })
             .disposed(by: disposeBag)
     }
-    
+     
     func homeViewControllerWillAppear()
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
-        if isFirstEnterCategory && categoryStartName != "f_find_house" {
+        
+        if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
             EnvContext.shared.client.generalBizconfig.load()
         }
     }
@@ -1167,7 +1167,7 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
                 theCell.imageTopLeftLabelBgView.isHidden = true
             }
             theCell.updateOriginPriceLabelConstraints(originPriceText: nil )
-            
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         }
         
     }
