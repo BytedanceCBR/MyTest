@@ -432,6 +432,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     }
                     }, rentCallBack: {
                 
+                        if let id = data.id ,
+                            let title = data.name {
+                            
+                            openRentHouseList(
+                                title: title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
+                                neighborhoodId: id,
+                                disposeBag: self.disposeBag,
+                                navVC: self.navVC,
+                                searchSource: .neighborhoodDetail,
+                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                            
+                        }
                 
                 }, filter: { () -> Bool in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
