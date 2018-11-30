@@ -412,9 +412,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                     
                     let titileLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 38))
                     titileLabel.text = annotation.title
-                    let reactSize = annotation.title.boundingRect
                     
-                    print("react size = \(reactSize)")
                     titileLabel.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 13, height: 32)
                     backImageView.frame = CGRect(x: 0, y: 0, width: (titileLabel.text?.count ?? 5) * 14 + 10, height: 35)
                     
