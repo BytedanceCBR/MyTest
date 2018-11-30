@@ -143,7 +143,6 @@ class HomeListViewModel: DetailPageViewModel {
                 
                 self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
                 
-                
                 let origin_from = houseTypeString(houseType.value)
                 
                 self?.originSearchId = self?.itemsSearchIdCache[matchHouseTypeName(houseTypeV: index)]
@@ -1167,7 +1166,7 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
                 theCell.imageTopLeftLabelBgView.isHidden = true
             }
             theCell.updateOriginPriceLabelConstraints(originPriceText: nil )
-            
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         }
         
     }
