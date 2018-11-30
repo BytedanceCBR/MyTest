@@ -66,12 +66,12 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+                toTracerParams("left_pic", key: "card_type") <|>
 //                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
-                toTracerParams("same_neighborhood", key: "element_type")
+                toTracerParams("be_null", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []
     }
@@ -106,8 +106,16 @@ fileprivate func searchInNeighborhoodItemCellSelector(
     navVC: UINavigationController?,
     disposeBag: DisposeBag) {
     if let id = item.id, let houseId = Int64(id) {
+        var tracer = itemTracerParams.paramsGetter([:])
+        tracer["card_type"] = "left_pic"
+        tracer["enter_from"] = "same_neighborhood_list"
+        tracer["element_type"] = "be_null"
+        tracer["rank"] = offset
+        tracer["log_pb"] = item.logPb
+        let info = ["tracer": tracer]
+        let userInfo = TTRouteUserInfo(info: info)
         let url = URL(string: "fschema://rent_detail?house_id=\(houseId)")
-        TTRoute.shared()?.openURL(byPushViewController: url)
+        TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
     }
 }
 
