@@ -21,6 +21,11 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         return re
     }()
 
+    lazy var tapButton: UIButton = {
+        let re = UIButton()
+        return re
+    }()
+    
     lazy var contactIcon: UIButton = {
         let re = UIButton()
         re.setImage(UIImage(named: "contact"), for: .normal)
@@ -58,6 +63,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
 
     func setupUI() {
         contentView.backgroundColor = hexStringToUIColor(hex: "f2f4f5")
+        contentView.addSubview(tapButton)
         contentView.addSubview(ownerLabel)
         contentView.addSubview(contactIcon)
         ownerLabel.snp.makeConstraints { (make) in
@@ -73,6 +79,11 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.width.equalTo(20)
             make.height.equalTo(13)
         }
+        contactIcon.isUserInteractionEnabled = false
+        tapButton.snp.makeConstraints { (maker) in
+            maker.top.left.equalTo(ownerLabel)
+            maker.bottom.right.equalTo(contactIcon)
+        }
 
         contentView.addSubview(disclaimerContent)
         disclaimerContent.snp.makeConstraints { (make) in
@@ -82,7 +93,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.bottom.equalTo(-14)
         }
 
-        contactIcon.rx.tap
+        tapButton.rx.tap
             .bind(onNext: { [weak self] in
                 self?.openPhoto()
             })
@@ -117,7 +128,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             let browser = FHPhotoBrowser(photoLoader: BDWebImagePhotoLoader())
             // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
             // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleccccNoHiding`。
-            browser.animationType = .scale
+            browser.animationType = .scaleNoHiding
             // 浏览器协议实现者
             browser.photoBrowserDelegate = self
             // 装配页码指示器插件，提供了两种PageControl实现，若需要其它样式，可参照着自由定制

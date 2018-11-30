@@ -75,7 +75,12 @@
 
 -(void)clearSortCondition
 {
-        [_houseFilterViewModel cleanSortCondition];
+    [_houseFilterViewModel cleanSortCondition];
+}
+
+-(void)showBottomLine:(BOOL)show
+{
+    [_houseFilterViewModel setFilterPanelBottomLineHidden:!show];
 }
 
 @end
