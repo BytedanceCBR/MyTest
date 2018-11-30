@@ -589,7 +589,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.priceLabel.text = model.pricing
         
         cell.roomSpaceLabel.text = nil
-        let houseImags  = model.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
+        let houseImags  = model.houseImage as? [FHHouseRentDataItemsHouseImageModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         if let houseImageTag = model.houseImageTag,
             let backgroundColor = houseImageTag.backgroundColor,
