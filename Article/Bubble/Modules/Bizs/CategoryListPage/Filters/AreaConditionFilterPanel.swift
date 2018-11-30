@@ -166,7 +166,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         let selected = self.selectNodePath()
         self.conditionLabelSetter?(selected)
 //        self.didSelect?(selected)
-        scrollVisibleCellInScreen()
+        if selected.count > 0 {
+            scrollVisibleCellInScreen()
+        }
     }
 
     func scrollVisibleCellInScreen() {
@@ -646,7 +648,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             itemPath.row < tableView.numberOfRows(inSection: 0) {
             tableView.scrollToRow(at: itemPath, at: .top, animated: false)
         } else {
-            tableView.scrollRectToVisible(tableView.bounds, animated: false)
+            tableView.scrollRectToVisible(CGRect(x: 0,
+                                                 y: -10,
+                                                 width: tableView.frame.width,
+                                                 height: tableView.frame.height),
+                                          animated: false)
         }
     }
 }
@@ -804,7 +810,7 @@ fileprivate class AreaConditionCell: UITableViewCell {
 
         checkboxBtn.snp.makeConstraints { maker in
             maker.right.equalTo(-23)
-            maker.centerY.equalTo(label.centerY)
+            maker.centerY.equalTo(label)
             maker.width.height.equalTo(14)
         }
 
