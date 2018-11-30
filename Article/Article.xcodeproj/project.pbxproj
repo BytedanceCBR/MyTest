@@ -786,6 +786,18 @@
 		6116AF6821A83D3000D32056 /* FHHomeTrendBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */; };
 		611AEA81214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
 		611AEA82214B54E8008D4309 /* FHPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */; };
+		6124ECC821AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
+		6124ECC921AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
+		6124ECCA21AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
+		6124ECCC21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCB21B00F790009359A /* FHNeighborSameHouseCellRender.swift */; };
+		6124ECCD21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCB21B00F790009359A /* FHNeighborSameHouseCellRender.swift */; };
+		6124ECCE21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCB21B00F790009359A /* FHNeighborSameHouseCellRender.swift */; };
+		6124ECD021B018930009359A /* FHSameHouseItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */; };
+		6124ECD121B018930009359A /* FHSameHouseItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */; };
+		6124ECD221B018930009359A /* FHSameHouseItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */; };
+		6124ECD421B1249E0009359A /* FHOpenAllView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECD321B1249E0009359A /* FHOpenAllView.swift */; };
+		6124ECD521B1249E0009359A /* FHOpenAllView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECD321B1249E0009359A /* FHOpenAllView.swift */; };
+		6124ECD621B1249E0009359A /* FHOpenAllView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECD321B1249E0009359A /* FHOpenAllView.swift */; };
 		61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
 		61466A30214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */; };
 		61501BAA2148BC1100870420 /* FHCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BA72148BC0F00870420 /* FHCellModel.swift */; };
@@ -3591,7 +3603,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -6747,6 +6759,10 @@
 		6116AF6421A83D3000D32056 /* FHHomeTrendBubbleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTrendBubbleView.h; sourceTree = "<group>"; };
 		6116AF6521A83D3000D32056 /* FHHomeTrendBubbleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTrendBubbleView.m; sourceTree = "<group>"; };
 		611AEA80214B54E8008D4309 /* FHPlaceholderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPlaceholderCell.swift; sourceTree = "<group>"; };
+		6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHeaderSegmentCell.swift; sourceTree = "<group>"; };
+		6124ECCB21B00F790009359A /* FHNeighborSameHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHNeighborSameHouseCellRender.swift; sourceTree = "<group>"; };
+		6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHSameHouseItemListCell.swift; sourceTree = "<group>"; };
+		6124ECD321B1249E0009359A /* FHOpenAllView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHOpenAllView.swift; sourceTree = "<group>"; };
 		61466A2E214A133D0023F721 /* FHMultiImagesInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHMultiImagesInfoCell.swift; sourceTree = "<group>"; };
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
@@ -9153,7 +9169,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10847,6 +10863,10 @@
 				3DF3631F21A29D9E0097FCB6 /* MultitemCollectionCell.swift */,
 				3DF3632021A29D9E0097FCB6 /* GlobalPricingCell.swift */,
 				760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */,
+				6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */,
+				6124ECCB21B00F790009359A /* FHNeighborSameHouseCellRender.swift */,
+				6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */,
+				6124ECD321B1249E0009359A /* FHOpenAllView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -19498,6 +19518,7 @@
 				3ABB8D57158783E700F29B4D /* APNsManager.m in Sources */,
 				B388CC2A2142652B00653188 /* SuggestionCell.swift in Sources */,
 				A97DBC0F1F1332E40002B455 /* TTUmengSDKRegister.m in Sources */,
+				6124ECD421B1249E0009359A /* FHOpenAllView.swift in Sources */,
 				F87694F41F31D0D600D59CA5 /* TTVHomeViewController.m in Sources */,
 				B388CC4A2142652B00653188 /* AddressBookSync.swift in Sources */,
 				A8B769331E1CF60900F22A0C /* TTLocalAssetMovieController.m in Sources */,
@@ -19506,6 +19527,7 @@
 				471954BC1F9F294C00B397E7 /* TTVDetailRelatedRecommendCellViewModel.m in Sources */,
 				D09459DC1CC9024B002D447F /* TTArticleCardCellViewHeaderView.m in Sources */,
 				B388CC1E2142652B00653188 /* BubbleSelectCollectionView.swift in Sources */,
+				6124ECC821AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				B32FD36121AA84A3007B9966 /* HouseFindPageControl.swift in Sources */,
 				0AE08A421DC9951300DBFA53 /* TTSettingGeneralGroup.m in Sources */,
 				2D2557C71E8271CE00FF96A7 /* ExploreMoviePlayerController.m in Sources */,
@@ -20391,6 +20413,7 @@
 				2D2557DF1E8271CE00FF96A7 /* TTVideoRotateScreenController.m in Sources */,
 				3DF3636D21A29D9E0097FCB6 /* NeighborhoodPriceCell.swift in Sources */,
 				2DB9A5AC1F20B01D005E4A06 /* TTAdResourceDownloader.m in Sources */,
+				6124ECCC21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */,
 				A97DB94F1F1332DE0002B455 /* UIImagePickerController+TTBlocks.m in Sources */,
 				484E238319C869270035D8EB /* ExploreSearchView.m in Sources */,
 				B388CCA82142652B00653188 /* TGBallRotateChase.swift in Sources */,
@@ -20447,6 +20470,7 @@
 				F87695641F31D0D700D59CA5 /* TTHTTPProcesserMessageHandle.m in Sources */,
 				F87696FC1F31D0DA00D59CA5 /* TTDetailNatantVideoInfoView.m in Sources */,
 				F87695C01F31D0D800D59CA5 /* TTContentViewEntity.m in Sources */,
+				6124ECD021B018930009359A /* FHSameHouseItemListCell.swift in Sources */,
 				A97DBC131F1332E40002B455 /* TTWeixinSDKRegister.m in Sources */,
 				AB1622151F500EFA00B4CC0C /* STPersistence.m in Sources */,
 				D5041F51205802A400BAEE7F /* AKProfileBenefitManager.m in Sources */,
@@ -21258,6 +21282,7 @@
 				B373C8922174587A008F9905 /* TTVSegmentedPageViewController.m in Sources */,
 				B373C8932174587A008F9905 /* ExploreAddEntryListCell.m in Sources */,
 				B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
+				6124ECCA21AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D821A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				B373C8942174587A008F9905 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
 				B373C8952174587A008F9905 /* PSPDFUIKitMainThreadGuard.m in Sources */,
@@ -21434,6 +21459,7 @@
 				B373C93A2174587A008F9905 /* TTVSwipeView.m in Sources */,
 				B373C93B2174587A008F9905 /* TGIndicator.swift in Sources */,
 				B373C93C2174587A008F9905 /* SSQRCodeScanViewController.m in Sources */,
+				6124ECD221B018930009359A /* FHSameHouseItemListCell.swift in Sources */,
 				B373C93D2174587A008F9905 /* TTLocalResourceDownloader.m in Sources */,
 				B373C93E2174587A008F9905 /* TTInterestResponseModel.m in Sources */,
 				B373C93F2174587A008F9905 /* TTEditUserProfileItemCell.m in Sources */,
@@ -22026,6 +22052,7 @@
 				B373CB7D2174587A008F9905 /* TTVideoCellActionBar.m in Sources */,
 				B373CB7E2174587A008F9905 /* TTVVideoDetailHeaderPosterViewController.m in Sources */,
 				B373CB7F2174587A008F9905 /* CategorySectionView.swift in Sources */,
+				6124ECD621B1249E0009359A /* FHOpenAllView.swift in Sources */,
 				3DF3636921A29D9E0097FCB6 /* NeighborhoodNameCell.swift in Sources */,
 				B373CB802174587A008F9905 /* TTImageView+TrafficSave.m in Sources */,
 				B373CB812174587A008F9905 /* TTVPasterADViewController.m in Sources */,
@@ -22451,6 +22478,7 @@
 				B373CD102174587A008F9905 /* ErshouHouseDetailEntities.swift in Sources */,
 				B373CD112174587A008F9905 /* TTHighlightedLabel.m in Sources */,
 				B373CD132174587A008F9905 /* TTFollowedModel.m in Sources */,
+				6124ECCE21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */,
 				B373CD142174587A008F9905 /* TTStrongPushImagesView.m in Sources */,
 				B373CD152174587A008F9905 /* ExploreArticleCardCell.m in Sources */,
 				B373CD162174587A008F9905 /* TTAdCanvasButtonCell.m in Sources */,
@@ -22997,6 +23025,7 @@
 				FEFA530A205FB1A8001F50D8 /* TTVSegmentedPageViewController.m in Sources */,
 				FEFA530B205FB1A8001F50D8 /* ExploreAddEntryListCell.m in Sources */,
 				B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
+				6124ECC921AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D721A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				FEFA530E205FB1A8001F50D8 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
 				FEFA5313205FB1A8001F50D8 /* PSPDFUIKitMainThreadGuard.m in Sources */,
@@ -23173,6 +23202,7 @@
 				FEFA53C8205FB1A8001F50D8 /* TTVSwipeView.m in Sources */,
 				B388CC8B2142652B00653188 /* TGIndicator.swift in Sources */,
 				FEFA53C9205FB1A8001F50D8 /* SSQRCodeScanViewController.m in Sources */,
+				6124ECD121B018930009359A /* FHSameHouseItemListCell.swift in Sources */,
 				FEFA53CA205FB1A8001F50D8 /* TTLocalResourceDownloader.m in Sources */,
 				FEFA53CB205FB1A8001F50D8 /* TTInterestResponseModel.m in Sources */,
 				FEFA53CC205FB1A8001F50D8 /* TTEditUserProfileItemCell.m in Sources */,
@@ -23765,6 +23795,7 @@
 				FEFA565B205FB1A8001F50D8 /* TTVideoCellActionBar.m in Sources */,
 				FEFA565D205FB1A8001F50D8 /* TTVVideoDetailHeaderPosterViewController.m in Sources */,
 				B388CBE52142652B00653188 /* CategorySectionView.swift in Sources */,
+				6124ECD521B1249E0009359A /* FHOpenAllView.swift in Sources */,
 				3DF3636821A29D9E0097FCB6 /* NeighborhoodNameCell.swift in Sources */,
 				FEFA565E205FB1A8001F50D8 /* TTImageView+TrafficSave.m in Sources */,
 				FEFA565F205FB1A8001F50D8 /* TTVPasterADViewController.m in Sources */,
@@ -24190,6 +24221,7 @@
 				B388CC672142652B00653188 /* ErshouHouseDetailEntities.swift in Sources */,
 				FEFA581E205FB1A8001F50D8 /* TTHighlightedLabel.m in Sources */,
 				FEFA5821205FB1A8001F50D8 /* TTFollowedModel.m in Sources */,
+				6124ECCD21B00F790009359A /* FHNeighborSameHouseCellRender.swift in Sources */,
 				FEFA5822205FB1A8001F50D8 /* TTStrongPushImagesView.m in Sources */,
 				FEFA5824205FB1A8001F50D8 /* ExploreArticleCardCell.m in Sources */,
 				FEFA5825205FB1A8001F50D8 /* TTAdCanvasButtonCell.m in Sources */,

@@ -1110,6 +1110,45 @@ func parseSearchInNeighborhoodCollectionNode(
     }
 }
 
+func parseSearchInNeighborhoodSameHouseNode(
+    _ data: SameNeighborhoodHouseResponse.Data?,
+    traceExtension: TracerParams = TracerParams.momoid(),
+    followStatus: BehaviorRelay<Result<Bool>>,
+    navVC: UINavigationController?) -> () -> TableSectionNode? {
+    return {
+        
+        // add by zjing for test
+        if let datas = data?.items.take(5), datas.count > 0 {
+            let params = TracerParams.momoid() <|>
+                toTracerParams("same_neighborhood", key: "element_type") <|>
+            traceExtension
+            
+            let theDatas = datas.map({ (item) -> HouseItemInnerEntity in
+                var newItem = item
+                newItem.fhSearchId = data?.searchId
+                return newItem
+            })
+            
+            let openParams = params <|>
+                toTracerParams("slide", key: "card_type") <|>
+                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                toTracerParams("same_neighborhood", key: "element_from")
+            
+            let render = oneTimeRender(curry(fillSearchInNeighborhoodCell)(theDatas)(followStatus)(openParams)(navVC))
+            return TableSectionNode(
+                items: [render],
+                selectors: nil,
+                tracer: [elementShowOnceRecord(params: params)],
+                sectionTracer: nil,
+                label: "小区房源",
+                type: .node(identifier: MultitemCollectionCell.identifier))
+        } else {
+            return nil
+        }
+    }
+}
+
+
 func parseNeighborhoodEvaluationCollectionNode(
     _ data: NeighborhoodDetailData?,
     traceExtension: TracerParams = TracerParams.momoid(),
