@@ -337,7 +337,8 @@ struct FHHouseDetailContact: Mappable {
     var realtorId: String? // 经纪人id, 类型 string
     var agencyName: String? // 经纪人公司名称, 类型 string
     var showRealtorinfo: Int? // 是否显示经纪人信息(经纪人名称, 头像, 经纪人公司), 类型 int 1: 显示; int 0: 不显示
-
+    var businessLicense: String? // 营业执照
+    var certificate: String? // 从业人员信息卡
     var noticeDesc: String? // 新房详情电话描述
 
     init?(map: Map) {
@@ -352,7 +353,8 @@ struct FHHouseDetailContact: Mappable {
         realtorId <- map["realtor_id"]
         agencyName <- map["agency_name"]
         showRealtorinfo <- map["show_realtorinfo"]
-
+        businessLicense <- map["business_license"]
+        certificate <- map["certificate"]
         noticeDesc <- map["notice_desc"]
 
     }
