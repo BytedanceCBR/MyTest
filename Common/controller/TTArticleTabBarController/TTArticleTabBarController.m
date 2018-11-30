@@ -1449,13 +1449,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             //之前是多少，现在还是多少
             isTrackForShow = NO;
         }
-        if(displayRedPoint)
-        {
-            [badgeView setBadgeNumber:TTBadgeNumberPoint];
-        }
-        else
-        {
-            [badgeView setBadgeNumber:number];
+        if (index == 0) {
+            // 首页不显示红点 数字
+            [badgeView setBadgeNumber:TTBadgeNumberHidden];
+        } else {
+            if(displayRedPoint)
+            {
+                [badgeView setBadgeNumber:TTBadgeNumberPoint];
+            }
+            else
+            {
+                [badgeView setBadgeNumber:number];
+            }
         }
         
         if (isTrackForShow) {
