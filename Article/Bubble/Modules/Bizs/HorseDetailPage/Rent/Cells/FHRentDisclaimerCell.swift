@@ -21,6 +21,11 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         return re
     }()
 
+    lazy var tapButton: UIButton = {
+        let re = UIButton()
+        return re
+    }()
+    
     lazy var contactIcon: UIButton = {
         let re = UIButton()
         re.setImage(UIImage(named: "contact"), for: .normal)
@@ -58,6 +63,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
 
     func setupUI() {
         contentView.backgroundColor = hexStringToUIColor(hex: "f2f4f5")
+        contentView.addSubview(tapButton)
         contentView.addSubview(ownerLabel)
         contentView.addSubview(contactIcon)
         ownerLabel.snp.makeConstraints { (make) in
@@ -73,6 +79,11 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.width.equalTo(20)
             make.height.equalTo(13)
         }
+        contactIcon.isUserInteractionEnabled = false
+        tapButton.snp.makeConstraints { (maker) in
+            maker.top.left.equalTo(ownerLabel)
+            maker.bottom.right.equalTo(contactIcon)
+        }
 
         contentView.addSubview(disclaimerContent)
         disclaimerContent.snp.makeConstraints { (make) in
@@ -82,7 +93,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.bottom.equalTo(-14)
         }
 
-        contactIcon.rx.tap
+        tapButton.rx.tap
             .bind(onNext: { [weak self] in
                 self?.openPhoto()
             })
