@@ -357,48 +357,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 })
                 <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
                 <- parseFlineNode(data.totalSales?.list?.count ?? 0 > 0 ? 6 : 0)
-                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
-                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
-                }
-                <- parseSearchInNeighborhoodCollectionNode(
-                    houseInSameNeighborhood.value?.data,
-                    traceExtension: traceExtension,
-                    followStatus: self.followStatus,
-                    navVC: self.navVC)
-                <- parseOpenAllNode(houseInSameNeighborhood.value?.data?.hasMore ?? false, "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源", barHeight: 0) { [unowned self] in
-                    if let id = data.id ,
-                        let title = data.name {
-
-                        let loadMoreParams = EnvContext.shared.homePageParams <|>
-                                toTracerParams("same_neighborhood", key: "element_type") <|>
-                                toTracerParams(id, key: "group_id") <|>
-                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams("neighborhood_detail", key: "page_type")
-                        recordEvent(key: "click_loadmore", params: loadMoreParams)
-
-                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
-                            theParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
-                            toTracerParams("neighborhood_detail", key: "enter_from") <|>
-                            // TODO: 埋点缺失logPB
-//                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("same_neighborhood", key: "element_from") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-
-                        openErshouHouseList(
-                                title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
-                                neighborhoodId: id,
-                                searchId: self.houseInSameNeighborhood.value?.data?.searchId,
-                                disposeBag: self.disposeBag,
-                                navVC: self.navVC,
-                                searchSource: .neighborhoodDetail,
-                                followStatus: self.followStatus,
-                                tracerParams: params,
-                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
-                    }
-                }
-                <- parseFlineNode(houseInSameNeighborhood.value?.data?.total ?? 0 > 0 ? 6 : 0)
-
                 <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
                     self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 }
@@ -432,6 +390,52 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                     }
                 }
+                <- parseFlineNode(relateNeighborhoodData.value?.data?.total ?? 0 > 0 ? 6 : 0)
+//                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
+//                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
+//                }
+                <- parseSameHouseItemListNode("小区房源", ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: houseInSameNeighborhood.value?.data?.items.take(2), rentHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, filter: { () -> Bool in
+                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
+                })
+//                <- parseNeighborSameHouseListItemNode(houseInSameNeighborhood.value?.data?.items, traceExtension: traceExtension, disposeBag: disposeBag, tracerParams: traceParams, navVC: self.navVC)
+//                <- parseSearchInNeighborhoodCollectionNode(
+//                    houseInSameNeighborhood.value?.data,
+//                    traceExtension: traceExtension,
+//                    followStatus: self.followStatus,
+//                    navVC: self.navVC)
+//                <- parseOpenAllNode(houseInSameNeighborhood.value?.data?.hasMore ?? false, "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源", barHeight: 0) { [unowned self] in
+//                    if let id = data.id ,
+//                        let title = data.name {
+//
+//                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+//                            toTracerParams("same_neighborhood", key: "element_type") <|>
+//                            toTracerParams(id, key: "group_id") <|>
+//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//                            toTracerParams("neighborhood_detail", key: "page_type")
+//                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+//
+//                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+//                            theParams <|>
+//                            toTracerParams("slide", key: "card_type") <|>
+//                            toTracerParams("neighborhood_detail", key: "enter_from") <|>
+//                            // TODO: 埋点缺失logPB
+//                            //                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
+//                            toTracerParams("same_neighborhood", key: "element_from") <|>
+//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+//
+//                        openErshouHouseList(
+//                            title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
+//                            neighborhoodId: id,
+//                            searchId: self.houseInSameNeighborhood.value?.data?.searchId,
+//                            disposeBag: self.disposeBag,
+//                            navVC: self.navVC,
+//                            searchSource: .neighborhoodDetail,
+//                            followStatus: self.followStatus,
+//                            tracerParams: params,
+//                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+//                    }
+//                }
+
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -520,6 +524,7 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     var nearByCell : NewHouseNearByCell?
     
     var neighborhoodInfoFoldState:Bool = true
+    var sameHouseType: HouseType = .secondHandHouse
     
     var cellHeightCaches:[String:CGFloat] = [:]
 
@@ -555,6 +560,15 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     indexPath: indexPath,
                     tableView: tableView)
             }
+            if let refreshCell = cell as? FHSameHouseItemListCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.houseType = self.sameHouseType
+                processRefreshSameHouseListCell(
+                    cell: tempRefreshCell,
+                    indexPath: indexPath,
+                    tableView: tableView)
+            }
+            
             datas[indexPath.section].items[indexPath.row](cell)
             if cell is NewHouseNearByCell
             {
@@ -583,10 +597,40 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    fileprivate func processRefreshSameHouseListCell(
+        cell: FHSameHouseItemListCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        let tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
+            self?.changeSameHouseListHouseTypeState()
+            tableView?.beginUpdates()
+            if let refreshCell = tempCell {
+                let tempRefreshCell = refreshCell
+                tempRefreshCell.houseType = self?.sameHouseType ?? .secondHandHouse
+                tempRefreshCell.setNeedsUpdateConstraints()
+            }
+            tableView?.endUpdates()
+        }
+    }
+    
+    
     fileprivate func changeNeighborhoodInfoFoldState()
     {
         self.neighborhoodInfoFoldState = !self.neighborhoodInfoFoldState
     }
+    
+    fileprivate func changeSameHouseListHouseTypeState()
+    {
+        if self.sameHouseType == .secondHandHouse {
+
+            self.sameHouseType = .rentHouse
+        }else if self.sameHouseType == .rentHouse {
+            
+            self.sameHouseType = .secondHandHouse
+        }
+    }
+    
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if datas[indexPath.section].selectors?.isEmpty ?? true == false {
