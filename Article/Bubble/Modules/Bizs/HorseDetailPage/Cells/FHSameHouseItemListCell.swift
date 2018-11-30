@@ -20,7 +20,7 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
     var rentFooter: FHOpenAllView?
 
     var secondItemList: [HouseItemInnerEntity] = []
-    var rentItemList: [HouseItemInnerEntity] = []
+    var rentItemList: [FHRentSameNeighborhoodResponseDataItemsModel] = []
     
     var houseType: HouseType = .secondHandHouse {
         
@@ -296,12 +296,12 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
             if tableView == self.ershouTableView {
 
                 let model = secondItemList[indexPath.row]
-                fillSameHouseListitemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
+                fillSameSecondHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
                 return theCell
             }else if tableView == self.rentTableView {
 
                 let model = rentItemList[indexPath.row]
-                fillSameHouseListitemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
+                fillSameRentHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
                 return theCell
             }
             
@@ -335,10 +335,12 @@ func parseSameHouseItemListNode(
     _ title: String,
     ershouData: [HouseItemInnerEntity]?,
     ershouHasMore: Bool = false,
-    rentData: [HouseItemInnerEntity]?,
+    rentData: [FHRentSameNeighborhoodResponseDataItemsModel]?,
     rentHasMore: Bool = false,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    ershouCallBack: @escaping () -> Void,
+    rentCallBack: @escaping () -> Void,
     filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         
@@ -346,11 +348,10 @@ func parseSameHouseItemListNode(
             return nil
         }
         
-        let cellRender = curry(fillSameHouseItemListCell)(title)(ershouData ?? [])(ershouHasMore)(rentData ?? [])(rentHasMore)(disposeBag)(tracerParams)
-        var selectors: [TableCellSelectedProcess] = []
+        let cellRender = curry(fillSameHouseItemListCell)(title)(ershouData ?? [])(ershouHasMore)(ershouCallBack)(rentData ?? [])(rentHasMore)(rentCallBack)(disposeBag)(tracerParams)
         return TableSectionNode(
             items: [cellRender],
-            selectors: selectors,
+            selectors: [],
             tracer: nil,
             sectionTracer: nil,
             label: "",
@@ -361,13 +362,25 @@ func parseSameHouseItemListNode(
 func fillSameHouseItemListCell(_ title: String,
                                ershouData: [HouseItemInnerEntity],
                                ershouHasMore: Bool = false,
-                               rentData: [HouseItemInnerEntity],
+                               ershouCallBack: @escaping () -> Void,
+                               rentData: [FHRentSameNeighborhoodResponseDataItemsModel],
                                rentHasMore: Bool = false,
+                               rentCallBack: @escaping () -> Void,
                                disposeBag: DisposeBag,
                                tracerParams: TracerParams,
                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHSameHouseItemListCell {
         theCell.titleLabel.text = title
+        
+        theCell.ershouFooter?.openAllBtn.rx.tap
+            .bind {void in
+                ershouCallBack()
+            }.disposed(by: disposeBag)
+        
+        theCell.rentFooter?.openAllBtn.rx.tap
+            .bind {void in
+                rentCallBack()
+            }.disposed(by: disposeBag)
         
         theCell.secondItemList = ershouData
         theCell.ershouHasMore = ershouHasMore
@@ -431,7 +444,7 @@ func fillSameHouseItemListCell(_ title: String,
     }
 }
 
-fileprivate func fillSameHouseListitemCell(_ data: HouseItemInnerEntity,
+fileprivate func fillSameSecondHouseItemCell(_ data: HouseItemInnerEntity,
                                            isFirstCell: Bool = false,
                                            isLastCell: Bool = false,
                                            cell: BaseUITableViewCell) {
@@ -478,6 +491,69 @@ fileprivate func fillSameHouseListitemCell(_ data: HouseItemInnerEntity,
         theCell.priceLabel.text = data.displayPrice
         theCell.roomSpaceLabel.text = data.displayPricePerSqm
         if let imageItem = data.houseImage?.first {
+            theCell.majorImageView.bd_setImage(with: URL(string: imageItem.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+        }
+        if let houseImageTag = data.houseImageTag,
+            let backgroundColor = houseImageTag.backgroundColor,
+            let textColor = houseImageTag.textColor {
+            theCell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+            theCell.imageTopLeftLabel.text = houseImageTag.text
+            theCell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+            theCell.imageTopLeftLabelBgView.isHidden = false
+        } else {
+            theCell.imageTopLeftLabelBgView.isHidden = true
+        }
+    }
+}
+
+
+fileprivate func fillSameRentHouseItemCell(_ data: FHRentSameNeighborhoodResponseDataItemsModel,
+                                           isFirstCell: Bool = false,
+                                           isLastCell: Bool = false,
+                                           cell: BaseUITableViewCell) {
+    if let theCell = cell as? SingleImageInfoCell {
+        theCell.majorTitle.text = data.title
+        theCell.extendTitle.text = data.subtitle
+        theCell.isTail = isLastCell
+        
+        let text = NSMutableAttributedString()
+        let attrTexts = data.tags?.enumerated().map({ (arg) -> NSAttributedString in
+            let (offset, item) = arg
+            let theItem = item as? FHRentSameNeighborhoodResponseDataItemsTagsModel
+            return createTagAttrString(
+                theItem?.content ?? "",
+                isFirst: offset == 0,
+                textColor: hexStringToUIColor(hex: theItem?.textColor ?? ""),
+                backgroundColor: hexStringToUIColor(hex: theItem?.backgroundColor ?? ""))
+        })
+        
+        var height: CGFloat = 0
+        attrTexts?.enumerated().forEach({ (e) in
+            let (offset, tag) = e
+            
+            text.append(tag)
+            
+            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 170, height: CGFloat.greatestFiniteMagnitude), text: text)
+            let lineHeight = tagLayout?.textBoundingSize.height ?? 0
+            if lineHeight > height {
+                if offset != 0 {
+                    text.deleteCharacters(in: NSRange(location: text.length - tag.length, length: tag.length))
+                }
+                if offset == 0 {
+                    height = lineHeight
+                }
+            }
+        })
+        
+        theCell.areaLabel.attributedText = text
+        theCell.areaLabel.snp.updateConstraints { (maker) in
+            
+            maker.left.equalToSuperview().offset(-3)
+        }
+        
+        theCell.priceLabel.text = data.pricing
+//        theCell.roomSpaceLabel.text = data.pric
+        if let imageItem = data.houseImage?.first as? FHRentSameNeighborhoodResponseDataItemsHouseImageModel {
             theCell.majorImageView.bd_setImage(with: URL(string: imageItem.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         }
         if let houseImageTag = data.houseImageTag,

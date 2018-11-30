@@ -62,6 +62,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     private var relateNeighborhoodData = BehaviorRelay<RelatedNeighborhoodResponse?>(value: nil)
     //小区内相关
     private var houseInSameNeighborhood = BehaviorRelay<SameNeighborhoodHouseResponse?>(value: nil)
+    private var rentHouseInSameNeighborhood = BehaviorRelay<FHRentSameNeighborhoodResponseModel?>(value: nil)
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> = BehaviorRelay<FHHouseDetailContact?>(value: nil)
     
@@ -86,7 +87,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         tableView.register(MultitemCollectionNeighborhoodCell.self, forCellReuseIdentifier: "MultitemCollectionCell-neighborhood")
         cellFactory.register(tableView: tableView)
 
-        Observable.combineLatest(neighborhoodDetailResponse, relateNeighborhoodData, houseInSameNeighborhood)
+        Observable.combineLatest(neighborhoodDetailResponse, relateNeighborhoodData, houseInSameNeighborhood, rentHouseInSameNeighborhood)
                 .bind {  [unowned self] (_) in
                     let diss = DisposeBag()
                     self.cellsDisposeBag = diss
@@ -135,16 +136,19 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     func requestReletedData() {
         if let neighborhoodId = neighborhoodDetailResponse.value?.data?.neighborhoodInfo?.id {
             requestRelatedNeighborhoodSearch(neighborhoodId: neighborhoodId)
-                    .subscribe(onNext: { [unowned self] response in
-                        self.relateNeighborhoodData.accept(response)
+                    .subscribe(onNext: { [weak self] response in
+                        self?.relateNeighborhoodData.accept(response)
                     })
                     .disposed(by: disposeBag)
 //            requestSearch(offset: 0, query: "neighborhood_id=\(neighborhoodId)&house_type=\(HouseType.secondHandHouse.rawValue)")
             requestHouseInSameNeighborhoodSearch(neighborhoodId: neighborhoodId)
-                    .subscribe(onNext: { [unowned self] response in
-                        self.houseInSameNeighborhood.accept(response)
+                    .subscribe(onNext: { [weak self] response in
+                        self?.houseInSameNeighborhood.accept(response)
                     })
                     .disposed(by: disposeBag)
+            let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
+                self?.rentHouseInSameNeighborhood.accept(model)
+            }
 
         }
 
@@ -391,7 +395,41 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
 //                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
 //                }
-                <- parseSameHouseItemListNode("小区房源", ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: houseInSameNeighborhood.value?.data?.items.take(2), rentHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, filter: { () -> Bool in
+                <- parseSameHouseItemListNode("小区房源", ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [unowned self] in
+                    if let id = data.id ,
+                        let title = data.name {
+                        
+                        let loadMoreParams = EnvContext.shared.homePageParams <|>
+                            toTracerParams("same_neighborhood", key: "element_type") <|>
+                            toTracerParams(id, key: "group_id") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                            toTracerParams("neighborhood_detail", key: "page_type")
+                        recordEvent(key: "click_loadmore", params: loadMoreParams)
+                        
+                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+                            theParams <|>
+                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                            // TODO: 埋点缺失logPB
+                            //                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
+                            toTracerParams("same_neighborhood", key: "element_from") <|>
+                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                        
+                        openErshouHouseList(
+                            title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
+                            neighborhoodId: id,
+                            searchId: self.houseInSameNeighborhood.value?.data?.searchId,
+                            disposeBag: self.disposeBag,
+                            navVC: self.navVC,
+                            searchSource: .neighborhoodDetail,
+                            followStatus: self.followStatus,
+                            tracerParams: params,
+                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                    }
+                    }, rentCallBack: {
+                
+                
+                }, filter: { () -> Bool in
                     self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 })
 //                <- parseNeighborSameHouseListItemNode(houseInSameNeighborhood.value?.data?.items, traceExtension: traceExtension, disposeBag: disposeBag, tracerParams: traceParams, navVC: self.navVC)
