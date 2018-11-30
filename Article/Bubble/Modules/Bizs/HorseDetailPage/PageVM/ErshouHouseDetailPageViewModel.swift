@@ -532,6 +532,33 @@ func openErshouHouseList(
     navVC?.pushViewController(listVC, animated: true)
 }
 
+//跳转到小区租房列表页
+func openRentHouseList(
+    title: String?,
+    neighborhoodId: String,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?,
+    searchSource: SearchSourceKey,
+    followStatus: BehaviorRelay<Result<Bool>>? = nil,
+    tracerParams: TracerParams = TracerParams.momoid(),
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+            
+    let listVC = ErshouHouseListVC(
+        title: title,
+        neighborhoodId: neighborhoodId,
+        houseId: houseId,
+        searchSource: searchSource,
+        searchId: searchId,
+        houseType:HouseType.rentHouse,
+        bottomBarBinder: bottomBarBinder)
+    listVC.followStatus = followStatus
+    listVC.tracerParams = tracerParams
+    navVC?.pushViewController(listVC, animated: true)
+}
+
+
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource, TableViewTracer {
 
     var datas: [TableSectionNode] = []
@@ -1088,6 +1115,16 @@ fileprivate func openDetailPage(
         toTracerParams(logPB ?? "be_null", key: "log_pb")
         return openNeighborhoodDetailPage(
             neighborhoodId: followUpId,
+            logPB: logPB,
+            disposeBag: disposeBag,
+            tracerParams: params,
+            navVC: navVC)
+    case .rentHouse:
+        params = params <|>
+            toTracerParams("rent_follow_list", key: "enter_from") <|>
+            toTracerParams(logPB ?? "be_null", key: "log_pb")
+        return openNewHouseDetailPage(
+            houseId: followUpId,
             logPB: logPB,
             disposeBag: disposeBag,
             tracerParams: params,

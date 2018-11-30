@@ -54,11 +54,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
          houseId: String? = nil,
          searchSource: SearchSourceKey,
          searchId: String? = nil,
+         houseType: HouseType = HouseType.secondHandHouse ,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
         self.searchSource = searchSource
         self.searchId = searchId
+        self.theHouseType.accept(houseType)
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.titleName.accept(title ?? "小区房源")
     }
@@ -73,7 +75,16 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         let traceParam = (paramObj?.userInfo.allInfo["tracerParams"] as? TracerParams) ?? TracerParams.momoid()
         var followStatus: BehaviorRelay<Result<Bool>>? = nil
         followStatus = paramObj?.userInfo.allInfo["followStatus"] as? BehaviorRelay<Result<Bool>>
-        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, bottomBarBinder: bottomBarBinder)
+        
+        var houseTypeValue = HouseType.secondHandHouse
+        
+        if let hType = paramObj?.userInfo.allInfo["house_type"] as? Int {
+            if let ht = HouseType(rawValue: hType) {
+                houseTypeValue = ht
+            }
+        }
+
+        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, houseType: houseTypeValue ,  bottomBarBinder: bottomBarBinder)
         self.tracerParams = traceParam
         self.followStatus = followStatus
     }
@@ -181,8 +192,21 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                     return config != nil
                 }
                 .map { (e) -> ([SearchConfigFilterItem]?) in
-                    let (_, config) = e
-                    return config?.filter?.filter { $0.text != "区域" }
+                    let (type, config) = e
+                    var theConfig: [SearchConfigFilterItem]? = nil
+                    switch type {
+                    case HouseType.newHouse:
+                        theConfig = config?.courtFilter
+                    case HouseType.secondHandHouse:
+                        theConfig = config?.filter
+                    case HouseType.neighborhood:
+                        theConfig = config?.neighborhoodFilter
+                    case HouseType.rentHouse:
+                        theConfig = config?.rentFilter
+                    default:
+                        theConfig = config?.filter
+                    }
+                    return theConfig?.filter { $0.text != "区域" }
                 }
                 .map { items in
                     let result: [SearchConditionItem] = items?
@@ -229,7 +253,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                         return
                     }
                     self.errorVM?.onRequest()
-                    self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                    if self.theHouseType.value == HouseType.rentHouse {
+                        self.ershouHouseListViewModel?.requestRentHouseList(query: query, condition: nil)
+                    }else{
+                        self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                    }
                 }, onError: { error in
 //                    print(error)
                 }, onCompleted: {
@@ -273,7 +301,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 //        ershouHouseListViewModel?.requestErshouHouseList(
 //            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
 //            condition: nil)
-        ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        if self.theHouseType.value == HouseType.rentHouse {
+            ershouHouseListViewModel?.requestRent(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        }else{
+            ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        }
         
     }
 
