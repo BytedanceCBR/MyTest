@@ -212,6 +212,97 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
     
     
+    func requestRelatedHouse( houseId: String? = nil) {
+        oneTimeToast = createOneTimeToast()
+        let loader = pageRequestRelatedHouse(query: nil, houseId: houseId, searchId: self.searchId, condition: nil, count: 15)
+        pageableLoader = { [unowned self] in
+            loader()
+                .subscribe(onNext: { [unowned self] (response) in
+                    if let data = response?.data {
+                        let items = data.items?.map({ (item) -> HouseItemInnerEntity in
+                            var newItem = item
+                            newItem.fhSearchId = data.searchId
+                            return newItem
+                        })
+                        let params = TracerParams.momoid()
+                        let datas = parseErshouRelatedHouseListItemNode(
+                            items,
+                            disposeBag: self.disposeBag,
+                            tracerParams: params ,
+                            navVC: self.navVC)
+                        
+                        self.datas.accept(self.datas.value + datas)
+                    }
+                    
+                    /*
+                     func parseFHHomeErshouHouseListItemNode(
+                     _ data: [HouseItemInnerEntity]?,
+                     traceExtension: TracerParams = TracerParams.momoid(),
+                     disposeBag: DisposeBag,
+                     tracerParams: TracerParams,
+                     navVC: UINavigationController?) -> () -> TableSectionNode? {
+                     */
+                    
+                    self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                    self.onSuccess?(self.datas.value.count != 0)
+                    // self.oneTimeToast?(response?.data?.refreshTip)
+                    
+                    },
+                           onError: self.processError())
+                .disposed(by: self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+        
+    }
+    
+    func requestRelatedHouseList(query: String,houseId: String, condition: String?) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        EnvContext.shared.toast.showLoadingToast("正在加载")
+        oneTimeToast = createOneTimeToast()
+        
+        let loader = pageRequestRelatedHouse(query: query, houseId: houseId, searchId: self.searchId, count: 20)
+        pageableLoader = { [unowned self] in
+            loader()
+                .subscribe(
+                    onNext: { [unowned self] (response) in
+                        if let data = response?.data {
+                            let items = data.items?.map({ (item) -> HouseItemInnerEntity in
+                                var newItem = item
+                                newItem.fhSearchId = data.searchId
+                                return newItem
+                            })
+                            let params = TracerParams.momoid()
+                            let datas = parseErshouRelatedHouseListItemNode(
+                                items,
+                                disposeBag: self.disposeBag,
+                                tracerParams: params ,
+                                navVC: self.navVC)
+                            
+                            self.datas.accept(self.datas.value + datas)
+                        }
+                        
+                        self.title.accept("(\(response?.data?.total ?? 0))")
+                        self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                        self.onSuccess?(self.datas.value.count != 0)
+                        // self.oneTimeToast?(response?.data?.refreshTip)
+                    },
+                    onError: { [weak self] in
+                        self?.processError()
+                        
+                        }())
+                .disposed(by: self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row < datas.value.count {
             let params = EnvContext.shared.homePageParams <|>
