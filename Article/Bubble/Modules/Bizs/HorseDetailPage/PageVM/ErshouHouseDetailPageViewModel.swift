@@ -473,7 +473,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-//                <- parseErshouHouseDisclaimerNode(data)
+                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {
+                    
+                })
+                <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
