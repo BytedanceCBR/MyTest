@@ -149,10 +149,22 @@ func openRentHouseDetailPage(
     houseSearchParams: TracerParams? = nil,
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     return { (params) in
-        
-        //TODO: add rent detail params
-        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"))
-        return
-        
+        var tracer: [String: Any?] = tracerParams.paramsGetter([:])
+        if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
+            tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        if let paramsDict: [String: Any?] = params.paramsGetter([:]) {
+            tracer.merge(paramsDict, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        tracer["element_from"] = "be_null"
+        tracer["card_type"] = "left_pic"
+        tracer["log_pb"] = logPB
+        let info = ["tracer": tracer]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
     }
 }

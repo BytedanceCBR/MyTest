@@ -150,6 +150,22 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
             toTracerParams(self.categoryListVM?.originSearchId ?? "be_null", key: "origin_search_id")
+
+        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+            toTracerParams(originFromByType(houseType: houseType), key: "origin_from")
+    }
+
+    fileprivate func originFromByType(houseType: HouseType) -> String {
+        switch houseType {
+        case .newHouse:
+            return "minetab_new"
+        case .secondHandHouse:
+            return "minetab_old"
+        case .neighborhood:
+            return "maintab_neighborhood"
+        case .rentHouse:
+            return "maintab_rent"
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
