@@ -228,6 +228,10 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             {
                 categoryName = "neighborhood_follow_list"
             }
+            if self?.houseType == .rentHouse
+            {
+                categoryName = "rent_follow_list"
+            }
             
             
             self?.tracerParams = (self?.tracerParams ?? TracerParams.momoid()) <|>
