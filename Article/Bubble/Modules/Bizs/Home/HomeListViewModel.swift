@@ -215,11 +215,12 @@ class HomeListViewModel: DetailPageViewModel {
         })
             .disposed(by: disposeBag)
     }
-    
+     
     func homeViewControllerWillAppear()
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
-        if isFirstEnterCategory && categoryStartName != "f_find_house" {
+        
+        if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
             EnvContext.shared.client.generalBizconfig.load()
         }
     }
