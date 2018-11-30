@@ -150,17 +150,6 @@ class ChatVC: BaseViewController {
                 toTracerParams("click_tab", key: "enter_type") <|>
                 toTracerParams(withTips ?? "0", key: "with_tips") <|>
                 traceStayTime()
-
-//        EnvContext.shared.client.accountConfig.userInfo
-//                .bind { [unowned self] user in
-//                    if user == nil {
-//                        self.tableViewModel?.datas = []
-//                        self.updateTableView()
-//                        self.showEmptyInfo()
-//                    }
-//                }.disposed(by: disposeBag)
-
-
     }
 
     func requestData() {
@@ -197,6 +186,8 @@ class ChatVC: BaseViewController {
                         self.emptyMaskView.isHidden = true
                         self.errorVM?.onRequestNormalData()
                     }
+                } else {
+                    self.showNetworkError()
                 }
             }, onError: { [unowned self] (error) in
                 self.showNetworkError()
@@ -228,11 +219,20 @@ class ChatVC: BaseViewController {
         emptyMaskView.icon.image = UIImage(named:"empty_message")
         self.emptyMaskView.label.text = "还没有关注的信息"
         view.bringSubview(toFront: emptyMaskView)
+        self.clearBadgeNumber()
     }
     
     fileprivate func showNetworkError() {
         self.emptyMaskView.isHidden = false
         self.emptyMaskView.label.text = "网络异常"
+        self.clearBadgeNumber()
+    }
+    
+    fileprivate func clearBadgeNumber()
+    {
+        if let badgeView = self.messageTab()?.ttBadgeView {
+            badgeView.badgeNumber = TTBadgeNumberHidden
+        }
     }
 
     /*
