@@ -88,14 +88,18 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         cellFactory.register(tableView: tableView)
 
         Observable.combineLatest(neighborhoodDetailResponse, relateNeighborhoodData, houseInSameNeighborhood, rentHouseInSameNeighborhood)
-                .bind {  [unowned self] (_) in
+                .bind {  [weak self] (_) in
+
                     let diss = DisposeBag()
-                    self.cellsDisposeBag = diss
-                    let result = self.processData(diss)([])
-                    self.dataSource.datas = result
-                    self.tableView?.reloadData()
+                    self?.cellsDisposeBag = diss
+                    let result = self?.processData(diss)([])
+                    self?.dataSource.datas = result ?? []
+                    self?.tableView?.reloadData()
                     DispatchQueue.main.async {
-                        self.traceDisplayCell(tableView: self.tableView, datas: self.dataSource.datas)
+                        if let tableView = self?.tableView,
+                            let datas = self?.dataSource.datas {
+                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                        }
                     }
                 }
                 .disposed(by: disposeBag)

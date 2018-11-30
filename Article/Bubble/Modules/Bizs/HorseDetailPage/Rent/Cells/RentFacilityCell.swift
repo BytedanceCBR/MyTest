@@ -63,15 +63,18 @@ func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?
     if let theCell = cell as? RentFacilityCell {
 
         let items: [FHHouseRentFacilityItemView] = facilities?.map({ (model) -> FHHouseRentFacilityItemView in
-            let re = FHHouseRentFacilityItemView()
+            let strickoutLable = StrickoutLabel()
+            strickoutLable.textColor = hexStringToUIColor(hex: "#a0aab3")
+            strickoutLable.font = CommonUIStyle.Font.pingFangRegular(14)
+            let re = FHHouseRentFacilityItemView(strickoutLabel: strickoutLable)
             if model.enabled {
                 re.label.text = model.name
+                re.strickoutLabel.isHidden = true
             } else {
-                let attriText = NSAttributedString(string: model.name ?? "",
-                                                   attributes: [NSAttributedStringKey.strikethroughStyle: [NSUnderlineStyle.patternSolid, NSUnderlineStyle.styleSingle],
-                                                                NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#737a80"),
-                                                                NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14)])
-                re.label.attributedText = attriText
+                if let name = model.name {
+                    re.strickoutLabel.text = name
+                    re.strickoutLabel.isHidden = false
+                }
             }
 
             if let url = model.iconUrl {

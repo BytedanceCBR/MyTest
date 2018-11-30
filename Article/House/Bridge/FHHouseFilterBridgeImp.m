@@ -34,7 +34,7 @@
     }
     
     MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:showAllCondition];
+    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:showAllCondition isSortable:YES];
     return _houseFilterViewModel;
 }
 
@@ -75,7 +75,12 @@
 
 -(void)clearSortCondition
 {
-        [_houseFilterViewModel cleanSortCondition];
+    [_houseFilterViewModel cleanSortCondition];
+}
+
+-(void)showBottomLine:(BOOL)show
+{
+    [_houseFilterViewModel setFilterPanelBottomLineHidden:!show];
 }
 
 @end

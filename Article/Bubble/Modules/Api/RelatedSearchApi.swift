@@ -167,3 +167,81 @@ func pageRequestHouseInSameNeighborhoodSearch(
                 })
     }
 }
+
+
+func requestRentInSameNeighborhoodSearch(
+    query:String? = nil ,
+    neighborhoodId: String? = nil,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    condition: String? = nil ,
+    count: Int = 5,
+    offset: Int = 0) -> Observable<SearchRentResponse?> {
+    var url = "\(EnvContext.networkConfig.host)/f100/api/same_neighborhood_rent"
+    var params = [String :Any]()
+    if let theQuery = query {
+        url = "\(url)?\(theQuery)"
+        if let nid = neighborhoodId {
+            params["neighborhood_id"] = nid
+        }
+        if let hid = houseId {
+            params["exclude_id[]"] = hid
+        }
+    }else{
+        params["neighborhood_id"] = neighborhoodId ?? ""
+        params["exclude_id[]"] = houseId ?? ""
+    }
+    params["house_type"] = HouseType.rentHouse.rawValue
+    params["offset"] = offset
+    params["search_id"] =  searchId ?? ""
+    params["count"] = count
+    
+    if let cd = condition {
+        params["suggestion_params"] = cd
+    }
+    
+    return TTNetworkManager.shareInstance().rx
+        .requestForBinary(
+            url: url,
+            params: params,
+            method: "GET",
+            needCommonParams: true)
+        .map({ (data) -> NSString? in
+            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+        })
+        .map({ (payload) -> SearchRentResponse? in
+            if let payload = payload {
+                let response = SearchRentResponse(JSONString: payload as String)
+                return response
+            } else {
+                return nil
+            }
+        })
+}
+
+func pageRequestRentInSameNeighborhoodSearch(
+    query:String? = nil ,
+    neighborhoodId: String? = nil,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    condition: String? = nil ,
+    count: Int = 5) -> () -> Observable<SearchRentResponse?> {
+    var offset: Int = 0
+    var theSearchId = searchId
+    return {
+        requestRentInSameNeighborhoodSearch(
+            query:query,
+            neighborhoodId: neighborhoodId,
+            houseId: houseId ,
+            searchId: theSearchId,
+            condition: condition  ,
+            count: count,
+            offset: offset)
+            .do(onNext: { (response) in
+                if let count = response?.data?.items?.count {
+                    offset = offset + Int(count)
+                    theSearchId = response?.data?.searchId
+                }
+            })
+    }
+}

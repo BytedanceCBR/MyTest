@@ -17,6 +17,8 @@ class HouseRentTracer {
     var elementFrom: String
     var rank: String
     var hasRecordGoDetail: Bool
+    var searchId: String?
+    var groupId: String?
     init(pageType: String,
          houseType: String,
          cardType: String) {
@@ -27,6 +29,8 @@ class HouseRentTracer {
         self.elementFrom = "be_null"
         self.rank = "be_null"
         self.hasRecordGoDetail = false
+        self.searchId = "be_null"
+        self.groupId = "be_null"
     }
 
     func recordGoDetail() {

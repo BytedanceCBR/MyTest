@@ -473,7 +473,10 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-//                <- parseErshouHouseDisclaimerNode(data)
+                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {
+                    
+                })
+                <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -531,6 +534,33 @@ func openErshouHouseList(
     listVC.tracerParams = tracerParams
     navVC?.pushViewController(listVC, animated: true)
 }
+
+//跳转到小区租房列表页
+func openRentHouseList(
+    title: String?,
+    neighborhoodId: String,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    disposeBag: DisposeBag,
+    navVC: UINavigationController?,
+    searchSource: SearchSourceKey,
+    followStatus: BehaviorRelay<Result<Bool>>? = nil,
+    tracerParams: TracerParams = TracerParams.momoid(),
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+            
+    let listVC = ErshouHouseListVC(
+        title: title,
+        neighborhoodId: neighborhoodId,
+        houseId: houseId,
+        searchSource: searchSource,
+        searchId: searchId,
+        houseType:HouseType.rentHouse,
+        bottomBarBinder: bottomBarBinder)
+    listVC.followStatus = followStatus
+    listVC.tracerParams = tracerParams
+    navVC?.pushViewController(listVC, animated: true)
+}
+
 
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource, TableViewTracer {
 
@@ -1102,6 +1132,12 @@ fileprivate func openDetailPage(
             disposeBag: disposeBag,
             tracerParams: params,
             navVC: navVC)
+    case .rentHouse:
+        params = params <|>
+            toTracerParams("rent_follow_list", key: "enter_from") <|>
+            toTracerParams(logPB ?? "be_null", key: "log_pb")
+        return openRentHouseDetailPage(houseId: followUpId,
+                                       tracerParams: params)
     default:
         return openErshouHouseDetailPage(
             houseId: followUpId,
@@ -1211,9 +1247,34 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
     }
 }
 
+func openRentHouseDetailPage(houseId: Int64,
+                             tracerParams: TracerParams,
+                             houseSearchParams: TracerParams? = nil)  -> (TracerParams) -> Void {
+    return { (params) in
+        var tracer: [String: Any?] = tracerParams.paramsGetter([:])
+
+        if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
+            tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        if let paramsDict: [String: Any?] = params.paramsGetter([:]) {
+            tracer.merge(paramsDict, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        tracer["element_from"] = "be_null"
+        tracer["card_type"] = "left_pic"
+        tracer["origin_from"] = "minetab_rent"
+        let info = ["tracer": tracer]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
+    }
+}
+
 func openErshouHouseDetailPage(
     houseId: Int64,
-        logPB: [String: Any]? = nil,
+    logPB: [String: Any]? = nil,
     followStatus: BehaviorRelay<Result<Bool>>? = nil,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,

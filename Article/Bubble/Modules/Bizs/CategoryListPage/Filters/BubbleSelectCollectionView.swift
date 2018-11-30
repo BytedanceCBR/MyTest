@@ -148,7 +148,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
         flowLayout.minimumLineSpacing = 12
         flowLayout.minimumInteritemSpacing = 9
-        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
+//        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
@@ -174,7 +174,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         return result
     }()
 
-    private class func catulateCellWidthBaseOnScreen() -> CGFloat {
+    fileprivate class func catulateCellWidthBaseOnScreen() -> CGFloat {
         let collectionViewWidth = UIScreen.main.bounds.width - 24 * 2
         if (75 * 4 + 9 * 3) > collectionViewWidth {
             return (collectionViewWidth - 9 * 2) / 3
@@ -223,6 +223,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         self.dataSource = dataSource
 
         super.init(frame: CGRect.zero)
+
         setupUI()
         collectionView.dataSource = dataSource
         collectionView.delegate = dataSource
@@ -301,8 +302,10 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
                 headerViewType,
                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
                 withReuseIdentifier: "header")
-
-
+        collectionView.register(
+            BubbleCollectionSectionHeader.self,
+            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+            withReuseIdentifier: "default")
         
         
         collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
@@ -889,16 +892,25 @@ class PriceBubbleSelectDataSource: BubbleSelectDataSource {
         _ collectionView: UICollectionView,
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
-        if let theHeaderView = headerView as? PriceBubbleCollectionSectionHeader {
-//            let rate = self.nodes.first?.rate ?? 1
-
-            inputHeaderView = theHeaderView
-            theHeaderView.label.text = "\(nodes[indexPath.section].label)"
-            onHeaderViewInit?()
-            onHeaderViewInit = nil
+        if indexPath.section == 0 {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
+            if let theHeaderView = headerView as? PriceBubbleCollectionSectionHeader {
+                inputHeaderView = theHeaderView
+                theHeaderView.label.text = "\(nodes[indexPath.section].label)"
+                if let theOnHeaderViewInit = onHeaderViewInit,
+                    indexPath.section == 0 {
+                    theOnHeaderViewInit()
+                    onHeaderViewInit = nil
+                }
+            }
+            return headerView
+        } else {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "default", for: indexPath)
+            if let theHeaderView = headerView as? BubbleCollectionSectionHeader {
+                theHeaderView.label.text = "\(nodes[indexPath.section].label)"
+            }
+            return headerView
         }
-        return headerView
     }
 
 }
@@ -944,6 +956,25 @@ class PriceBubbleCollectionSectionHeader: UICollectionReusableView {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+
+    func setInputViewHidden(isHidden: Bool) {
+        priceInputView.isHidden = isHidden
+        if isHidden {
+            label.snp.remakeConstraints { (make) in
+                make.top.equalTo(14)
+                make.bottom.equalToSuperview().offset(-14)
+                make.right.equalTo(-20)
+                make.left.equalTo(20)
+            }
+        } else {
+            label.snp.remakeConstraints { (make) in
+                make.top.equalTo(priceInputView.snp.bottom).offset(20)
+                make.bottom.equalToSuperview().offset(-14)
+                make.right.equalTo(-20)
+                make.left.equalTo(20)
+            }
+        }
     }
 }
 

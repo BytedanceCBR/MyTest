@@ -150,8 +150,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             if let url = self?.detailData.value?.data?.reportUrl {
                 self?.jumpToReportPage(url: url)
             } else {
-//                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
-                self?.jumpToReportPage(url: "http://www.baidu.com")
+                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
             }
 
         }
@@ -214,8 +213,20 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let params = TracerParams.momoid()
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
-        let tail = parseOpenAllNode(true) {
-            print("加载")
+        let tail = parseOpenAllNode(true) { [weak self] in
+            if let houseId = self?.houseId {
+                var theUrl = "fschema://house_list_in_neighborhood?house_id=\(houseId)"
+                if let neighborhoodId = self?.detailData.value?.data?.neighborhoodInfo?.id {
+                    theUrl = theUrl + "neighborhood_id=\(neighborhoodId)"
+                }
+                let url = URL(string: theUrl)
+                let bottomBarBinder: FollowUpBottomBarBinder = { [weak self] (HouseDetailPageBottomBarView, UIButton, TracerParams) in
+
+                }
+                let info = ["bottomBarBinder": bottomBarBinder]
+                let userInfo = TTRouteUserInfo(info: info)
+                TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
+            }
         }
 
         let result = parseRentReleatedHouseListItemNode(
