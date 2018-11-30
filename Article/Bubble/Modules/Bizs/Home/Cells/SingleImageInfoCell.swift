@@ -196,14 +196,15 @@ class CornerView: UIView {
 
         infoPanel.addSubview(majorTitle)
         majorTitle.snp.makeConstraints { maker in
+            maker.top.equalToSuperview().offset(-3)
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(16)
+            maker.height.equalTo(20)
         }
 
         infoPanel.addSubview(extendTitle)
         extendTitle.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(majorTitle.snp.bottom).offset(8)
+            maker.top.equalTo(majorTitle.snp.bottom).offset(4)
             maker.height.equalTo(17)
 
         }
@@ -284,9 +285,81 @@ class CornerView: UIView {
         }
     }
     
+    func updateLayoutCompoents(isShowTags: Bool)
+    {
+        if isShowTags {
+            self.majorTitle.numberOfLines = 1
+            
+            majorTitle.snp.updateConstraints { maker in
+                maker.left.right.top.equalToSuperview()
+                maker.height.equalTo(20)
+            }
+            
+            extendTitle.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(majorTitle.snp.bottom).offset(4)
+                maker.height.equalTo(17)
+            }
+            
+        } else {
+            self.majorTitle.numberOfLines = 2
+            
+            let fitSize = self.majorTitle.sizeThatFits(CGSize(width: UIScreen.main.bounds.width * 0.60, height: 0))
+            
+            majorTitle.snp.updateConstraints { maker in
+                maker.left.right.top.equalToSuperview()
+                maker.top.equalToSuperview().offset(fitSize.height < 30 ? 0 : -5)
+                maker.height.equalTo(fitSize.height < 30 ? 20 : 50)
+            }
+            
+            extendTitle.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(majorTitle.snp.bottom).offset(fitSize.height < 30 ? 4 : 1)
+                maker.height.equalTo(17)
+            }
+            
+            areaLabel.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(extendTitle.snp.bottom).offset(0)
+                maker.height.equalTo(0)
+            }
+
+            priceLabel.snp.updateConstraints { maker in
+                maker.left.equalToSuperview()
+                maker.top.equalTo(areaLabel.snp.bottom).offset(0)
+                maker.height.equalTo(24)
+                maker.width.lessThanOrEqualTo(130)
+            }
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         imageTopLeftLabelBgView.isHidden = true
+        
+        majorTitle.snp.updateConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+            maker.height.equalTo(20)
+        }
+        
+        extendTitle.snp.updateConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(majorTitle.snp.bottom).offset(4)
+            maker.height.equalTo(17)
+        }
+        
+        areaLabel.snp.updateConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(extendTitle.snp.bottom).offset(5)
+            maker.height.equalTo(15)
+        }
+        
+        priceLabel.snp.updateConstraints { maker in
+            maker.left.equalToSuperview()
+            maker.top.equalTo(areaLabel.snp.bottom).offset(5)
+            maker.height.equalTo(24)
+            maker.width.lessThanOrEqualTo(130)
+        }
     }
     
     override func gestureRecognizer(
@@ -332,8 +405,7 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell,
     
     cell.areaLabel.attributedText = text
     cell.areaLabel.snp.updateConstraints { (maker) in
-        
-        maker.left.equalToSuperview().offset(-3)
+        maker.left.equalToSuperview().offset(-5)
     }
     cell.priceLabel.text = item.baseInfoMap?.pricing
 
@@ -342,7 +414,6 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell,
 
     cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
     //新上/降价
-
 }
 
 func createTagAttrString(
@@ -601,10 +672,8 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         } else {
             cell.imageTopLeftLabelBgView.isHidden = true
         }
-        cell.updateOriginPriceLabelConstraints(originPriceText: nil)        
+        cell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
-    
-    
 }
 
 @objc

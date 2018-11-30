@@ -136,6 +136,7 @@ func fillRentHouseListitemCell(_ data: RentInnerItemEntity,
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
         theCell.updateOriginPriceLabelConstraints(originPriceText: nil )
+        theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }
 
