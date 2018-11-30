@@ -7,11 +7,13 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     let disposeBag = DisposeBag()
     var refreshCallback: CellRefreshCallback?
+    var navVC: UINavigationController?
 
     var ershouHasMore: Bool = false
     var rentHasMore: Bool = false
@@ -312,7 +314,17 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
+        if tableView == self.ershouTableView {
+
+            let model = secondItemList[indexPath.row]
+            var params = TracerParams.momoid()
+            jump2ErshouHouseDetailPage(offset: indexPath.row, item: model, params: params, navVC: self.navVC, disposeBag: disposeBag)
+        }else if tableView == self.rentTableView {
+
+            let model = rentItemList[indexPath.row]
+            var params = TracerParams.momoid()
+            openRentHouseDetailPage(houseId: Int64(model.id ?? "") ?? 0, tracerParams: params)(TracerParams.momoid())
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -330,9 +342,34 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
     
 }
 
+fileprivate func jump2ErshouHouseDetailPage(
+    offset: Int,
+    item: HouseItemInnerEntity,
+    followStatus: BehaviorRelay<Result<Bool>>? = nil,
+    params: TracerParams,
+    navVC: UINavigationController?,
+    disposeBag: DisposeBag) {
+    let theParams = params <|>
+        toTracerParams("slide", key: "card_type") <|>
+    params
+    if let id = item.id, let houseId = Int64(id) {
+        openErshouHouseDetailPage(
+            houseId: houseId,
+            logPB: item.logPB,
+            followStatus: followStatus,
+            disposeBag: disposeBag,
+            tracerParams: theParams <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(offset, key: "rank"),
+            navVC: navVC)(TracerParams.momoid())
+    }
+}
+
 
 func parseSameHouseItemListNode(
     _ title: String,
+    navVC: UINavigationController?,
     ershouData: [HouseItemInnerEntity]?,
     ershouHasMore: Bool = false,
     rentData: [FHRentSameNeighborhoodResponseDataItemsModel]?,
@@ -348,7 +385,7 @@ func parseSameHouseItemListNode(
             return nil
         }
         
-        let cellRender = curry(fillSameHouseItemListCell)(title)(ershouData ?? [])(ershouHasMore)(ershouCallBack)(rentData ?? [])(rentHasMore)(rentCallBack)(disposeBag)(tracerParams)
+        let cellRender = curry(fillSameHouseItemListCell)(title)(navVC)(ershouData ?? [])(ershouHasMore)(ershouCallBack)(rentData ?? [])(rentHasMore)(rentCallBack)(disposeBag)(tracerParams)
         return TableSectionNode(
             items: [cellRender],
             selectors: [],
@@ -360,6 +397,7 @@ func parseSameHouseItemListNode(
 }
 
 func fillSameHouseItemListCell(_ title: String,
+                               navVC: UINavigationController?,
                                ershouData: [HouseItemInnerEntity],
                                ershouHasMore: Bool = false,
                                ershouCallBack: @escaping () -> Void,
@@ -370,8 +408,9 @@ func fillSameHouseItemListCell(_ title: String,
                                tracerParams: TracerParams,
                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHSameHouseItemListCell {
-        theCell.titleLabel.text = title
         
+        theCell.titleLabel.text = title
+        theCell.navVC = navVC
         theCell.ershouFooter?.openAllBtn.rx.tap
             .bind {void in
                 ershouCallBack()

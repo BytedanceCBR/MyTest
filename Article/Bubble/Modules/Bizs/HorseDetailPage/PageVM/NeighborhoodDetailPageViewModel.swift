@@ -399,7 +399,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
 //                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
 //                }
-                <- parseSameHouseItemListNode("小区房源", ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [unowned self] in
+                <- parseSameHouseItemListNode("小区房源", navVC: navVC, ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [unowned self] in
                     if let id = data.id ,
                         let title = data.name {
                         
