@@ -39,7 +39,6 @@ import RxCocoa
     private lazy var searchFilterPanel: SearchFilterPanel = {
         let re = SearchFilterPanel()
         re.backgroundColor = UIColor.white
-        re.bottomLine?.isHidden = true
         return re
     }()
 
@@ -152,6 +151,11 @@ import RxCocoa
             }
         }
 
+    }
+    
+    @objc
+    func setFilterPanelBottomLineHidden(_ isHidden: Bool) {
+        self.searchFilterPanel.bottomLine?.isHidden = isHidden
     }
 
     @objc
