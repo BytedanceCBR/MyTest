@@ -607,6 +607,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
     
 }
 
+@objc
 class StrickoutLabel: UILabel {
     override func draw(_ rect: CGRect) {
         super.draw(rect)

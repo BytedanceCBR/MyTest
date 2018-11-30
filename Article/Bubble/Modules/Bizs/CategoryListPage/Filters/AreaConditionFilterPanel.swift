@@ -91,6 +91,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             result.separatorStyle = .none
             result.rowHeight = UITableViewAutomaticDimension
             result.register(AreaConditionCell.self, forCellReuseIdentifier: "item")
+            result.contentInset = UIEdgeInsets(top: 0,
+                                               left: 0,
+                                               bottom: 10,
+                                               right: 0)
             return result
         }
     }()
@@ -800,7 +804,7 @@ fileprivate class AreaConditionCell: UITableViewCell {
 
         checkboxBtn.snp.makeConstraints { maker in
             maker.right.equalTo(-23)
-            maker.top.equalTo(label).offset(3)
+            maker.centerY.equalTo(label.centerY)
             maker.width.height.equalTo(14)
         }
 
@@ -809,8 +813,8 @@ fileprivate class AreaConditionCell: UITableViewCell {
         selectedBackgroundView = bgView
         label.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.top.equalTo(10)
-            maker.bottom.equalTo(-10)
+            maker.top.equalTo(20)
+            maker.bottom.equalToSuperview()
             maker.right.lessThanOrEqualTo(checkboxBtn.snp.left).offset(-5)
         }
 
