@@ -9,8 +9,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 @objc class MapFindHouseFilterFactory: NSObject {
-    @objc func createFilterPanelViewModel(houseType: HouseType,  allCondition: Bool) -> HouseFilterViewModel {
-        return HouseFilterViewModel(houseType: houseType, allCondition: allCondition)
+    @objc func createFilterPanelViewModel(houseType: HouseType,  allCondition: Bool, isSortable: Bool) -> HouseFilterViewModel {
+        return HouseFilterViewModel(houseType: houseType, allCondition: allCondition, isSortable: isSortable)
     }
 }
 
@@ -36,9 +36,15 @@ import RxCocoa
 
     var allKeys: Set<String> = []
 
+    private lazy var searchFilterPanel: SearchFilterPanel = {
+        let re = SearchFilterPanel()
+        re.backgroundColor = UIColor.white
+        return re
+    }()
+
     // 搜索过滤器展现面版
     @objc lazy var filterPanelView: UIView = {
-        let re = SearchFilterPanel()
+        let re = UIView()
         re.backgroundColor = UIColor.white
         return re
     }()
@@ -52,9 +58,27 @@ import RxCocoa
         return re
     }()
 
+    lazy var searchSortBtn: UIButton = {
+        let re = ExtendHotAreaButton()
+        re.setImage(UIImage(named: "sort"), for: .normal)
+        re.setImage(UIImage(named: "sort_selected"), for: .selected)
+        re.setImage(UIImage(named: "sort_selected"), for: .highlighted)
+        re.adjustsImageWhenHighlighted = false
+        return re
+    }()
+
+    lazy var searchView: SortConditionPanel = {
+        let searchView = SortConditionPanel()
+        searchView.isHidden = true
+        return searchView
+    }()
+
     private var allCondition = false
 
-    init(houseType: HouseType, allCondition: Bool) {
+    init(houseType: HouseType,
+         allCondition: Bool,
+         isSortable: Bool) {
+
         self.houseType = houseType
         self.houseTypeState.accept(houseType)
         self.allCondition = allCondition
@@ -62,8 +86,29 @@ import RxCocoa
         self.searchAndConditionFilterVM = SearchAndConditionFilterViewModel()
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: self.filterConditionPanel,
-            searchFilterPanel: self.filterPanelView as! SearchFilterPanel,
+            searchFilterPanel: searchFilterPanel,
             searchAndConditionFilterVM: searchAndConditionFilterVM!)
+        filterPanelView.addSubview(searchFilterPanel)
+
+        if isSortable {
+            filterPanelView.addSubview(searchSortBtn)
+            searchSortBtn.snp.makeConstraints { (make) in
+                make.centerY.equalTo(filterPanelView).offset(4)
+                make.right.equalTo(-10)
+                make.width.height.equalTo(20)
+            }
+            searchFilterPanel.snp.makeConstraints { (make) in
+                make.left.top.bottom.equalToSuperview()
+                make.right.equalTo(searchSortBtn.snp.left)
+            }
+            //初始化搜索条件面板
+            setupSortCondition()
+            bindSearchBtnBehavior()
+        } else {
+            searchFilterPanel.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+        }
         self.resetConditionData()
         self.bindConditionChangeDelegate()
         self.conditionFilterViewModel?.conditionPanelWillDisplay = { [weak self] in
@@ -71,7 +116,72 @@ import RxCocoa
         }
     }
 
-    func bindConditionChangeDelegate() {
+    fileprivate func bindSearchBtnBehavior() {
+
+    }
+
+    fileprivate func setupSortCondition() {
+
+        filterConditionPanel.addSubview(searchView)
+        searchView.snp.makeConstraints { (maker) in
+            maker.top.left.right.equalToSuperview()
+            maker.height.equalTo(433)
+        }
+        self.conditionFilterViewModel?.sortPanelView = searchView
+        self.conditionFilterViewModel?.searchSortBtn = searchSortBtn
+        self.searchSortBtn.rx.tap
+            .subscribe(onNext: { [unowned self] void in
+                self.conditionFilterViewModel?.openOrCloseSortPanel()
+            })
+            .disposed(by: disposeBag)
+
+        searchView.snp.updateConstraints({ (maker) in
+            maker.height.equalTo(categulateSortPanelHeight(by: houseType))
+        })
+        if let options = filterSortCondition(by: houseType)?.first?.options {
+            let nodes: [Node] = transferSearchConfigOptionToNode(
+                options: options,
+                rate: 1,
+                isSupportMulti: false)
+            if let orderConditions = nodes.first {
+                searchView.setSortConditions(nodes: orderConditions.children)
+            } else {
+
+            }
+        }
+
+    }
+
+    @objc
+    func resetSortCondition(queryParams: [String: Any]?) {
+        if let queryParams = queryParams {
+            searchView.setSelectedConditions(conditions: queryParams)
+            self.conditionFilterViewModel?.setSortBtnSelected()
+        }
+    }
+
+    fileprivate func filterSortCondition(by houseType: HouseType) -> [SearchConfigFilterItem]? {
+        switch houseType {
+        case .neighborhood:
+            return EnvContext.shared.client.configCacheSubject.value?.neighborhoodFilterOrder
+        case .newHouse:
+            return EnvContext.shared.client.configCacheSubject.value?.courtFilterOrder
+        case .rentHouse:
+            return EnvContext.shared.client.configCacheSubject.value?.rentFilterOrder
+        default:
+            return EnvContext.shared.client.configCacheSubject.value?.filterOrder
+        }
+    }
+
+    fileprivate func categulateSortPanelHeight(by houseType: HouseType) -> CGFloat {
+        if let condition = filterSortCondition(by: houseType)?.first?.options?.first?.options {
+            return CGFloat(45 * condition.count + 15)
+        } else {
+            return 433
+        }
+    }
+
+    fileprivate func bindConditionChangeDelegate() {
         searchAndConditionFilterVM?.queryCondition
             .skip(1)
             .map {  (result) -> String in
