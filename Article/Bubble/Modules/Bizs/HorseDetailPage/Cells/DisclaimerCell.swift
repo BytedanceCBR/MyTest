@@ -62,14 +62,58 @@ class DisclaimerCell: BaseUITableViewCell {
 
 func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSectionNode? {
     return {
-        let cellRender = curry(fillDisclaimerCell)(data.disclaimer)
+        if data.disclaimer == nil {
+            return nil
+        }
+        let cellRender = curry(fillErshouHouseDisclaimerCell)(data.disclaimer)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
             tracer: nil,
             sectionTracer: nil,
             label: "",
-            type: .node(identifier: DisclaimerCell.identifier))
+            type: .node(identifier: FHRentDisclaimerCell.identifier))
+    }
+}
+
+func fillErshouHouseDisclaimerCell(model: Disclaimer?, cell: BaseUITableViewCell)  {
+    if let theCell = cell as? FHRentDisclaimerCell {
+//        if let contact = model?.contact,
+//            let realtorName = contact.realtorName,
+//            !realtorName.isEmpty {
+//            theCell.displayOwnerLabel()
+//            theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
+//            var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+//            if let businessLicense = model?.contact?.businessLicense {
+//                let imageModel = FHRentDetailResponseDataHouseImageModel()
+//                imageModel.url = businessLicense
+//                imageModel.name = "营业执照"
+//                headerImages.append(imageModel)
+//            }
+//            if let certificate = model?.contact?.certificate {
+//                let imageModel = FHRentDetailResponseDataHouseImageModel()
+//                imageModel.url = certificate
+//                imageModel.name = "从业人员信息卡"
+//                headerImages.append(imageModel)
+//            }
+//        } else {
+//            theCell.hiddenOwnerLabel()
+//        }
+        theCell.displayOwnerLabel()
+        theCell.ownerLabel.text = "房屋负责人：李小强"
+        theCell.disclaimerContent.text = model?.text
+        
+        //测试代码
+        var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+        var imageModel = FHRentDetailResponseDataHouseImageModel()
+//        imageModel.url = model?.contact?.businessLicense
+        imageModel.name = "营业执照"
+        headerImages.append(imageModel)
+        imageModel = FHRentDetailResponseDataHouseImageModel()
+//        imageModel.url = model?.contact?.certificate
+        imageModel.name = "从业人员信息卡"
+        headerImages.append(imageModel)
+        theCell.headerImages = headerImages
     }
 }
 
