@@ -176,12 +176,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             } else {
                 titleStr = "询底价"
             }
-            if self?.houseType == .neighborhood {
-                titleStr = "咨询经纪人"
-            }
-            
+
             if self?.houseType == .rentHouse {
-                titleStr = "咨询经纪人"
+                titleStr = "电话咨询"
             }
             
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
