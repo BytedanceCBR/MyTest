@@ -517,7 +517,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         category_name = "same_neighborhood_list"
                     } else if houseType == "3" {
                         // 在租房源
-                        //TODO: ("在租房源埋点")
+                        element_from = "house_renting"
+                        category_name = "same_neighborhood_list"
                     }
                 } else if openUrl.contains("neighborhood_sales_list") {
                     // 成交历史
