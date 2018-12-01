@@ -478,6 +478,10 @@ func openEvaluateWebPage(
             if houseType == .neighborhood {
                 enterFrom = "neighborhood_detail"
             }
+            if houseType == .rentHouse {
+                enterFrom = "rent_detail"
+            }
+            
             let openParams = EnvContext.shared.homePageParams <|>
                 toTracerParams(enterFrom, key: "enter_from") <|>
                 traceParams.exclude("rank")

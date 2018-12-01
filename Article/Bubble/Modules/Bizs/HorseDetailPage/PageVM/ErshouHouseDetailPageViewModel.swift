@@ -226,7 +226,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 })
                 .disposed(by: disposeBag)
 
-        requestRelatedHouseSearch(houseId: "\(houseId)")
+        requestRelatedHouseSearch(houseId: "\(houseId)", count:5)
             .subscribe(onNext: { [unowned self] response in
                 self.relateErshouHouseData.accept(response)
             })
