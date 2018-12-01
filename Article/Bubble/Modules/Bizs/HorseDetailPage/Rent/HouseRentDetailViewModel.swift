@@ -112,6 +112,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
         let dataParser = DetailDataParser.monoid()
             <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
+                                            tracer:self.houseRentTracer,
                                             disposeBag: disposeBag)
             <- parseRentNameCellNode(model: detailData.value?.data)
             <- parseRentCoreInfoCellNode(model: detailData.value?.data,
