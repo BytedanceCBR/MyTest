@@ -226,7 +226,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 })
                 .disposed(by: disposeBag)
 
-        requestRelatedHouseSearch(houseId: "\(houseId)")
+        requestRelatedHouseSearch(houseId: "\(houseId)", count:5)
             .subscribe(onNext: { [unowned self] response in
                 self.relateErshouHouseData.accept(response)
             })
@@ -473,9 +473,17 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {
-                    
-                })
+                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {[unowned self] in
+                        if let id = data.neighborhoodInfo?.id {
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("old_detail", key: "page_type")
+                            
+                            openAroundHouseList(title: "周边房源", neighborhoodId: id,houseId: data.id ,  disposeBag: self.disposeBag,houseType:self.houseType,  navVC: self.navVC, searchSource: .oldDetail, bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
+                        }
+                    })
                 <- parseErshouHouseDisclaimerNode(data)
             return dataParser.parser
         } else {
@@ -560,6 +568,35 @@ func openRentHouseList(
     listVC.tracerParams = tracerParams
     navVC?.pushViewController(listVC, animated: true)
 }
+
+//跳转到周边房源
+func openAroundHouseList(
+    title: String?,
+    neighborhoodId: String,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    disposeBag: DisposeBag,
+    houseType: HouseType ,
+    navVC: UINavigationController?,
+    searchSource: SearchSourceKey,
+    followStatus: BehaviorRelay<Result<Bool>>? = nil,
+    tracerParams: TracerParams = TracerParams.momoid(),
+    bottomBarBinder: @escaping FollowUpBottomBarBinder) {
+    
+    let listVC = ErshouHouseListVC(
+        title: title,
+        neighborhoodId: neighborhoodId,
+        houseId: houseId,
+        searchSource: searchSource,
+        searchId: searchId,
+        houseType: houseType,
+        relatedHouse: true ,
+        bottomBarBinder: bottomBarBinder)
+    listVC.followStatus = followStatus
+    listVC.tracerParams = tracerParams
+    navVC?.pushViewController(listVC, animated: true)
+}
+
 
 
 fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSource, TableViewTracer {
@@ -922,6 +959,104 @@ func parseErshouHouseListRowItemNode(
         return []
     }
 }
+
+
+func parseErshouRelatedHouseListItemNode(
+    _ data: [HouseItemInnerEntity]?,
+    traceExtension: TracerParams = TracerParams.momoid(),
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) ->  [TableRowNode] {
+    
+    var traceParmas = tracerParams.paramsGetter([:])
+    var elementFrom: String = "related"
+    if let elementFromV = (traceParmas["element_from"] ?? elementFrom) as? String
+    {
+        elementFrom = elementFromV
+    }
+    
+    let selectors = data?
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> (TracerParams) -> Void in
+            let (offset, item) = e
+            return openErshouHouseDetailPage(
+                houseId: Int64(item.id ?? "")!,
+                logPB: item.logPB,
+                disposeBag: disposeBag,
+                tracerParams: tracerParams <|>
+                    toTracerParams(offset, key: "rank") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    //                    toTracerParams("maintab", key: "enter_from") <|>
+                    toTracerParams(elementFrom, key: "element_from") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                navVC: navVC)
+    }
+    
+    let paramsElement = TracerParams.momoid() <|>
+        toTracerParams("related", key: "element_type") <|>
+        toTracerParams("old_detail", key: "page_type") <|>
+    traceExtension
+    
+    var records = data?
+        .filter {
+            $0.id != nil
+        }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (offset, item) = e
+            let theParams = tracerParams <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+            return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
+    }
+    records?.insert(elementShowOnceRecord(params:paramsElement), at: 0)
+    
+    let count = data?.count ?? 0
+    
+    if let renders = data?.enumerated().map( { (index, item) in
+        data?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(false) : curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+//        curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+    }),
+        let selectors = selectors,
+        let records = records {
+        let items = zip(selectors, records)
+        
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
+            return TableRowNode(
+                itemRender: render,
+                selector: item.0,
+                tracer: item.1,
+                type: .node(identifier:data?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier),
+                editor: nil)
+        }
+    } else {
+        return []
+    }
+    
+//    if let renders = data?.enumerated().map({ (index, item) in
+//        data?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(false) : curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+//    }), let selectors = selectors ,count != 0 {
+//        return TableSectionNode(
+//            items: renders,
+//            selectors: selectors,
+//            tracer: records,
+//            sectionTracer: nil,
+//            label: "",
+//            type: .node(identifier:data?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
+//    } else {
+//        return []
+//    }
+    
+}
+
+
 
 func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
                                  isLastCell: Bool = false,

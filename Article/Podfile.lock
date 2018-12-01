@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.7)
+  - BDALog (0.1.6)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -542,7 +542,7 @@ PODS:
   - SDWebImage/WebP (4.4.1):
     - libwebp (~> 0.5)
     - SDWebImage/Core
-  - SecGuard (0.8.9.6):
+  - SecGuard (0.8.9.8):
     - OpenSSL-Universal (~> 1.0.1.20)
     - TTNetworkManager
   - SSZipArchive (1.6.2)
@@ -614,14 +614,14 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
-  - TTAppUpdateHelper/TTUpdateHelper (1.0.4):
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.3):
     - JSONModel
     - TTBaseLib/TTCategory
     - TTBaseLib/TTDeviceHelper
     - TTBaseLib/TTSandBoxHelper
     - TTBaseLib/TTUIResponderHelper
     - TTTracker
-  - TTAppUpdateHelper/TTUpdateView (1.0.4):
+  - TTAppUpdateHelper/TTUpdateView (1.0.3):
     - TTThemed
     - TTUIWidget
   - TTAudio (0.1.4):
@@ -1419,7 +1419,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: c4719524bcb76adc22abf406b38c3530e420f55b
+  BDALog: 7c9ae5939b17526808824b626057185cbf96c955
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1464,7 +1464,7 @@ SPEC CHECKSUMS:
   RNCryptor-objc: 9c0b03ebe2b563ac069f2d4d41e1d1db1e485ddc
   RSSwizzle: 2bf09a88678d5fe2246a6fee32505bf769a9a079
   SDWebImage: 7d9faa33fa14c9b9604c7fbedd4a314f5db1558a
-  SecGuard: 7198ebef4f75e8c4c0de4b082d64b113090976b7
+  SecGuard: 5dbe0fadbd875bfff93409f89e6e14f4955eb39e
   SSZipArchive: b20c738ef5d2504fbd3cea9105c699fd6d21b4c3
   TSVToolkit: 2e7da7aa00ee6c5c498bdd075989bf23036dee91
   TTABManager: 6a5cb47d33221ec84c21382790fdc4f1bb497c03
@@ -1473,7 +1473,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
-  TTAppUpdateHelper: d1a28f4825ef183967a2c2c2025db9abd8ba725f
+  TTAppUpdateHelper: 6132cdbb7ffd64e3fa417925cfd3dc3372ae3a7d
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299

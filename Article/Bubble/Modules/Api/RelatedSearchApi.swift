@@ -10,15 +10,21 @@ import Foundation
 import RxSwift
 import ObjectMapper
 
-func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query: String = "") -> Observable<RelatedHouseResponse?> {
+func requestRelatedHouseSearch(houseId: String = "", offset: String = "0", query: String = "",count : Int = 20) -> Observable<RelatedHouseResponse?> {
     var url = "\(EnvContext.networkConfig.host)/f100/api/related_house?house_id=\(houseId)&offset=\(offset)"
     if !query.isEmpty {
         url = "\(url)&\(query)"
     }
+    
+    var params = [String : Any]()
+    if !url.contains("count") {
+        params["count"] = count
+    }
+    
     return TTNetworkManager.shareInstance().rx
         .requestForBinary(
             url: url,
-            params: nil,
+            params: params,
             method: "GET",
             needCommonParams: true)
         .map({ (data) -> NSString? in
@@ -225,7 +231,7 @@ func pageRequestRentInSameNeighborhoodSearch(
     houseId: String? = nil,
     searchId: String? = nil,
     condition: String? = nil ,
-    count: Int = 5) -> () -> Observable<SearchRentResponse?> {
+    count: Int = 20) -> () -> Observable<SearchRentResponse?> {
     var offset: Int = 0
     var theSearchId = searchId
     return {
@@ -237,6 +243,26 @@ func pageRequestRentInSameNeighborhoodSearch(
             condition: condition  ,
             count: count,
             offset: offset)
+            .do(onNext: { (response) in
+                if let count = response?.data?.items?.count {
+                    offset = offset + Int(count)
+                    theSearchId = response?.data?.searchId
+                }
+            })
+    }
+}
+
+
+func pageRequestRelatedHouse(
+    query:String? = nil ,
+    houseId: String? = nil,
+    searchId: String? = nil,
+    condition: String? = nil ,
+    count: Int = 20) -> () -> Observable<RelatedHouseResponse?> {
+    var offset: Int = 0
+    var theSearchId = searchId
+    return {
+        requestRelatedHouseSearch(houseId: houseId ?? "", offset: "\(offset)", query: query ?? "" , count: count)
             .do(onNext: { (response) in
                 if let count = response?.data?.items?.count {
                     offset = offset + Int(count)

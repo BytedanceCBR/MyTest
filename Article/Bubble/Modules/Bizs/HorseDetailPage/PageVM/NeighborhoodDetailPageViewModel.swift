@@ -362,39 +362,40 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 })
                 <- parseTransactionRecordNode(data.totalSales?.list, traceExtension: traceExtension)
                 <- parseFlineNode(data.totalSales?.list?.count ?? 0 > 0 ? 6 : 0)
-                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))") { [unowned self] in
-                    self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
-                }
+                <- parseHeaderNode("周边小区(\(relateNeighborhoodData.value?.data?.total ?? 0))", subTitle: "查看更多", showLoadMore: relateNeighborhoodData.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = self.relateNeighborhoodData.value?.data?.hasMore, hasMore == true {
+                        if let id = data.neighborhoodInfo?.id {
+                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                                toTracerParams(id, key: "group_id") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                toTracerParams("neighborhood_detail", key: "page_type") <|>
+                                toTracerParams("click", key: "enter_type")
+                            recordEvent(key: "click_loadmore", params: loadMoreParams)
+                            let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
+                                theParams <|>
+                                toTracerParams("slide", key: "card_type") <|>
+                                toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb") <|>
+                                toTracerParams("neighborhood_nearby", key: "element_from") <|>
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                            
+                            openRelatedNeighborhoodList(
+                                neighborhoodId: id,
+                                searchId: self.relateNeighborhoodData.value?.data?.searchId,
+                                disposeBag: self.disposeBag,
+                                tracerParams: params,
+                                navVC: self.navVC,
+                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                        }
+                    }
+                    }, filter: {[unowned self] () -> Bool in
+                        self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
+                })
                 <- parseRelatedNeighborhoodCollectionNode(
                     relatedItems,
                     traceExtension: traceExtension,
                     itemTracerParams: theParams <|> toTracerParams("neighborhood_detail", key: "page_type") <|> toTracerParams("neighborhood", key: "house_type"),
                     navVC: navVC)
-                <- parseOpenAllNode(relateNeighborhoodData.value?.data?.hasMore ?? false, "查看\(relateNeighborhoodData.value?.data?.total ?? 0)个周边小区", barHeight: 6) { [unowned self] in
-                    if let id = data.neighborhoodInfo?.id {
-                        let loadMoreParams = EnvContext.shared.homePageParams <|>
-                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
-                                toTracerParams(id, key: "group_id") <|>
-                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                            toTracerParams("neighborhood_detail", key: "page_type") <|>
-                            toTracerParams("click", key: "enter_type")
-                        recordEvent(key: "click_loadmore", params: loadMoreParams)
-                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
-                            theParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
-                            toTracerParams(self.relateNeighborhoodData.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("neighborhood_nearby", key: "element_from") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-
-                        openRelatedNeighborhoodList(
-                            neighborhoodId: id,
-                            searchId: self.relateNeighborhoodData.value?.data?.searchId,
-                            disposeBag: self.disposeBag,
-                            tracerParams: params,
-                            navVC: self.navVC,
-                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
-                    }
-                }
                 <- parseFlineNode(relateNeighborhoodData.value?.data?.total ?? 0 > 0 ? 6 : 0)
 //                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
 //                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
@@ -486,7 +487,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
 //                    }
 //                }
-
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
