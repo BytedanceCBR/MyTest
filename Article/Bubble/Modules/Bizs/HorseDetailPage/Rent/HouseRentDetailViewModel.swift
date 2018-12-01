@@ -196,7 +196,23 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Returns:
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
         let params = TracerParams.momoid()
-        return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
+        let header = parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.items?.count ?? 0))", subTitle: "查看更多", showLoadMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = self.houseInSameNeighborhood.value?.data?.hasMore, hasMore == true {
+//                        if let id = data.id {
+//                            openRentHouseList(
+//                                title: "同小区房源(\(self.houseInSameNeighborhood.value?.data?.items?.count ?? 0))",
+//                                neighborhoodId: id,
+//                                disposeBag: self.disposeBag,
+//                                navVC: self.navVC,
+//                                searchSource: .neighborhoodDetail,
+//                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+//
+//                        }
+                    }
+                }, filter: {[unowned self] () -> Bool in
+                    self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
+            })
+        return parseNodeWrapper(preNode: header,
                                 wrapedNode: parseRentSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data,
                                                                               tracer: houseRentTracer,
                                                                               traceExtension: params,

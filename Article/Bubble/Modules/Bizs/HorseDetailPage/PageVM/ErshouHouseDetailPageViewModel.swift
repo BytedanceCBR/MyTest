@@ -1,4 +1,4 @@
-//
+ //
 //  ErshouHouseDetailPageViewModel.swift
 //  Bubble
 //
@@ -476,12 +476,17 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {[unowned self] in
                         if let id = data.neighborhoodInfo?.id {
                             let loadMoreParams = EnvContext.shared.homePageParams <|>
-                                toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                                toTracerParams("related", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams("old_detail", key: "page_type")
+                                toTracerParams("old_detail", key: "page_type") <|>
+                                toTracerParams(self.searchId ?? "", key: "search_id") <|>
+                                toTracerParams(self.searchId ?? "", key: "origin_search_id") <|>
+                                toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams("old_detail", key: "enter_from")
                             
-                            openAroundHouseList(title: "周边房源", neighborhoodId: id,houseId: data.id ,  disposeBag: self.disposeBag,houseType:self.houseType,  navVC: self.navVC, searchSource: .oldDetail, bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
+                            
+                            openAroundHouseList(title: "周边房源", neighborhoodId: id,houseId: data.id ,  disposeBag: self.disposeBag,houseType:self.houseType,  navVC: self.navVC, searchSource: .oldDetail, tracerParams: loadMoreParams , bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                         }
                     })
                 <- parseErshouHouseDisclaimerNode(data)
@@ -592,7 +597,8 @@ func openAroundHouseList(
         houseType: houseType,
         relatedHouse: true ,
         bottomBarBinder: bottomBarBinder)
-    listVC.followStatus = followStatus
+    listVC.followStatus = followStatus   
+    
     listVC.tracerParams = tracerParams
     navVC?.pushViewController(listVC, animated: true)
 }
