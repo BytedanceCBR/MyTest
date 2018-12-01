@@ -14,7 +14,7 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
     let disposeBag = DisposeBag()
     var refreshCallback: CellRefreshCallback?
     var navVC: UINavigationController?
-
+    var tracerParams: TracerParams = TracerParams.momoid()
     var ershouHasMore: Bool = false
     var rentHasMore: Bool = false
     
@@ -317,13 +317,31 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
         if tableView == self.ershouTableView {
 
             let model = secondItemList[indexPath.row]
-            var params = TracerParams.momoid()
+            let params = TracerParams.momoid() <|>
+                toTracerParams("left_pic", key: "card_type") <|>
+                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                toTracerParams("same_neighborhood", key: "element_from") <|>
+                toTracerParams(model.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(indexPath.row, key: "rank") <|>
+            EnvContext.shared.homePageParams
             jump2ErshouHouseDetailPage(offset: indexPath.row, item: model, params: params, navVC: self.navVC, disposeBag: disposeBag)
+
         }else if tableView == self.rentTableView {
 
             let model = rentItemList[indexPath.row]
-            var params = TracerParams.momoid()
-            openRentHouseDetailPage(houseId: Int64(model.id ?? "") ?? 0, tracerParams: params)(TracerParams.momoid())
+            var tracer: [String: Any] = [:]
+            tracer["card_type"] = "left_pic"
+            tracer["enter_from"] = "neighborhood_detail"
+            tracer["element_from"] = "same_neighborhood"
+            tracer["log_pb"] = model.logPb ?? "be_null"
+            tracer["rank"] = indexPath.row
+            tracer["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+            tracer["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+
+            let info = ["tracer": tracer]
+            let userInfo = TTRouteUserInfo(info: info)
+            TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(model.id ?? "")"), userInfo: userInfo)
+            
         }
     }
     
@@ -411,6 +429,7 @@ func fillSameHouseItemListCell(_ title: String,
         
         theCell.titleLabel.text = title
         theCell.navVC = navVC
+        theCell.tracerParams = tracerParams
         theCell.ershouFooter?.openAllBtn.rx.tap
             .bind {void in
                 ershouCallBack()
