@@ -196,18 +196,23 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Returns:
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
         let params = TracerParams.momoid()
-        let header = parseHeaderNode("同小区房源(\(houseInSameNeighborhood.value?.data?.items?.count ?? 0))", subTitle: "查看更多", showLoadMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+        let title = self.detailData.value?.data?.neighborhoodInfo?.name ?? ""
+        let totalCount = self.houseInSameNeighborhood.value?.data?.total ?? "0"
+        let header = parseHeaderNode("同小区房源(\(totalCount))", subTitle: "查看更多", showLoadMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
                     if let hasMore = self.houseInSameNeighborhood.value?.data?.hasMore, hasMore == true {
-//                        if let id = data.id {
-//                            openRentHouseList(
-//                                title: "同小区房源(\(self.houseInSameNeighborhood.value?.data?.items?.count ?? 0))",
-//                                neighborhoodId: id,
-//                                disposeBag: self.disposeBag,
-//                                navVC: self.navVC,
-//                                searchSource: .neighborhoodDetail,
-//                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
-//
-//                        }
+                        if let id = self.detailData.value?.data?.neighborhoodInfo?.id {
+                            let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
+                                print("")
+                            }
+                            openRentHouseList(
+                                title: "\(title)(\(totalCount))",
+                                neighborhoodId: id,
+                                disposeBag: self.disposeBag,
+                                navVC: self.navVC,
+                                searchSource: .rentDetail,
+                                bottomBarBinder: binder)
+
+                        }
                     }
                 }, filter: {[unowned self] () -> Bool in
                     self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
