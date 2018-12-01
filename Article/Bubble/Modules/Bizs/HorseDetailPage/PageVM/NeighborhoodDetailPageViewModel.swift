@@ -413,12 +413,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             theParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams("left_pic", key: "card_type") <|>
                             toTracerParams("neighborhood_detail", key: "enter_from") <|>
-                            // TODO: 埋点缺失logPB
-                            //                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("same_neighborhood", key: "element_from") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                            toTracerParams("same_neighborhood", key: "element_from")
                         
                         openErshouHouseList(
                             title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
@@ -436,12 +433,19 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         if let id = data.id ,
                             let title = data.name {
                             
+                            let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+                                theParams <|>
+                                toTracerParams("left_pic", key: "card_type") <|>
+                                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                                toTracerParams(self.rentHouseInSameNeighborhood.value?.data?.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("same_neighborhood", key: "element_from")
                             openRentHouseList(
                                 title: title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .neighborhoodDetail,
+                                tracerParams: params,
                                 bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                             
                         }
