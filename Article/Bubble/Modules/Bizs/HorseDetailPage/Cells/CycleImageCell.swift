@@ -244,6 +244,33 @@ class CycleImageCell: BaseUITableViewCell {
         }
     }
     
+    func rentSmallImageTracerGen(images: [FHRentDetailResponseDataHouseImageModel], traceParams: TracerParams?) -> (Int,TracerParams?) -> Void {
+        
+        var array: [Int] = []
+        return { [unowned self ] (index,param) in
+            
+            if var theTracerParams = traceParams {
+                
+                if let theParams = param {
+                    
+                    theTracerParams = theTracerParams <|> theParams
+                }
+                
+                print("rentSmallImageTracerGen  tracePrams=\(theTracerParams.paramsGetter([:]))")
+
+                
+                let offset = CycleImageCell.offsetByIndex(index: index, count: self.headerImages.count)
+                let imageModel = images[offset]
+                if !array.contains(offset) {
+                    
+                    theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    array.append(offset)
+                }
+            }
+        }
+    }
+    
     @objc
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
