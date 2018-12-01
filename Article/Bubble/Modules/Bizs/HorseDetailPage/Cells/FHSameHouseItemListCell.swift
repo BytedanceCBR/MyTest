@@ -24,6 +24,9 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
     var secondItemList: [HouseItemInnerEntity] = []
     var rentItemList: [FHRentSameNeighborhoodResponseDataItemsModel] = []
     
+    var ershouCache: [IndexPath] = []
+    var rentCache: [IndexPath] = []
+
     var houseType: HouseType = .secondHandHouse {
         
         didSet {
@@ -40,6 +43,8 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 self.ershouBtn.isSelected = true
                 self.rentBtn.isSelected = false
                 
+                addErshouHouseShowLog()
+                
             }else if houseType == .rentHouse {
                 ershouTableView.isHidden = true
                 rentTableView.isHidden = false
@@ -51,6 +56,9 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 }
                 self.ershouBtn.isSelected = false
                 self.rentBtn.isSelected = true
+                
+                addRentHouseShowLog()
+
             }
 //            layoutIfNeeded()
 
@@ -126,18 +134,10 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
         
         let ershouFooter = FHOpenAllView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 68))
-        ershouFooter.openAllBtn.rx.tap
-            .bind { [weak self] void in
-                self?.oepnAllSecondList()
-            }.disposed(by: disposeBag)
         ershouTableView.tableFooterView = ershouFooter
         self.ershouFooter = ershouFooter
         
         let rentFooter = FHOpenAllView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 68))
-        rentFooter.openAllBtn.rx.tap
-            .bind { [weak self] void in
-                self?.oepnAllRentList()
-            }.disposed(by: disposeBag)
         rentTableView.tableFooterView = rentFooter
         rentFooter.isHidden = true
         self.rentFooter = rentFooter
@@ -154,15 +154,71 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         
     }
     
-    func oepnAllSecondList() {
+    func addErshouHouseShowLog() {
 
+        let visibleCells = self.ershouTableView.visibleCells
+        if visibleCells.count < 1 {
+            return
+        }
         
+        for cell in visibleCells {
+            
+            let indexPath = ershouTableView.indexPath(for: cell)
+            if let theIndexPath = indexPath, theIndexPath.row < secondItemList.count {
+                
+                if !ershouCache.contains(theIndexPath) {
+                    
+                    let model = secondItemList[theIndexPath.row]
+                    var paramDict:[String: Any] = [:]
+                    paramDict["house_type"] = "old"
+                    paramDict["card_type"] = "left_pic"
+                    paramDict["page_type"] = "neighborhood_detail"
+                    paramDict["element_type"] = "same_neighborhood"
+                    paramDict["log_pb"] = model.logPB ?? "be_null"
+                    paramDict["rank"] = theIndexPath.row
+                    paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+                    paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+                    recordEvent(key: "house_show", params: paramDict)
+                    ershouCache.append(theIndexPath)
+                    
+                }
+            }
+            
+        }
         
     }
     
-    func oepnAllRentList() {
+    func addRentHouseShowLog() {
         
+        let visibleCells = self.rentTableView.visibleCells
+        if visibleCells.count < 1 {
+            return
+        }
         
+        for cell in visibleCells {
+            
+            let indexPath = rentTableView.indexPath(for: cell)
+            if let theIndexPath = indexPath, theIndexPath.row < rentItemList.count {
+                
+                if !rentCache.contains(theIndexPath) {
+                    
+                    let model = secondItemList[theIndexPath.row]
+                    var paramDict:[String: Any] = [:]
+                    paramDict["house_type"] = "rent"
+                    paramDict["card_type"] = "left_pic"
+                    paramDict["page_type"] = "neighborhood_detail"
+                    paramDict["element_type"] = "same_neighborhood"
+                    paramDict["log_pb"] = model.logPB ?? "be_null"
+                    paramDict["rank"] = theIndexPath.row
+                    paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+                    paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+                    recordEvent(key: "house_show", params: paramDict)
+                    rentCache.append(theIndexPath)
+                    
+                }
+            }
+            
+        }
         
     }
     
@@ -310,6 +366,17 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
 
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if self.houseType == .secondHandHouse {
+            
+            addErshouHouseShowLog()
+        }else if self.houseType == .rentHouse {
+            
+            addRentHouseShowLog()
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
