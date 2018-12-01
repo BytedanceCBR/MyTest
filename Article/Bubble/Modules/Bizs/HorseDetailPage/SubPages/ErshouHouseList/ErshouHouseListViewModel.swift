@@ -197,7 +197,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                                 toTracerParams("be_null", key: "element_type") <|>
                                 toTracerParams("rent_detail", key: "enter_from") <|>
                                 toTracerParams("related_list", key: "page_type") <|>
-                                toTracerParams("rent", key: "house_type") 
+                                toTracerParams("rent", key: "house_type")
                             
                             let datas = parseRentHouseListRowItemNode(
                                 items,

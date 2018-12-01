@@ -247,22 +247,52 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
         let tail = parseOpenAllNode(true) { [weak self] in
-            if let houseId = self?.houseId {
-                var theUrl = "fschema://house_list_in_neighborhood?house_id=\(houseId)"
-                if let neighborhoodId = self?.detailData.value?.data?.neighborhoodInfo?.id {
-                    theUrl = theUrl + "neighborhood_id=\(neighborhoodId)"
-                }
-                let url = URL(string: theUrl)
-                let bottomBarBinder: FollowUpBottomBarBinder = { [weak self] (HouseDetailPageBottomBarView, UIButton, TracerParams) in
-
-                    
-                    
-                    
-                }
-                let info = ["bottomBarBinder": bottomBarBinder]
-                let userInfo = TTRouteUserInfo(info: info)
-                TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
+            
+            guard let self = self else {
+                return
             }
+            
+            var params:[String:Any] = [:]
+            var theUrl = "fschema://house_list_in_neighborhood?house_id=\(self.houseId)"
+            if let neighborhoodId = self.detailData.value?.data?.neighborhoodInfo?.id {
+                theUrl = theUrl + "neighborhood_id=\(neighborhoodId)"
+                params["neighborhoodId"] = neighborhoodId
+            }
+            let url = URL(string: theUrl)
+            let bottomBarBinder: FollowUpBottomBarBinder = { /*[weak self]*/ (HouseDetailPageBottomBarView, UIButton, TracerParams) in
+                
+            }
+            
+            let element_from = "related"
+            let category_name = "same_neighborhood_list"
+            
+            params["houseId"] = "\(self.houseId)"
+            params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
+            if let title = self.detailData.value?.data?.neighborhoodInfo?.name {
+                let totalCount = self.relateErshouHouseData.value?.data?.total ?? "0"
+                params["title"] = title+"(\(totalCount))"
+            }
+            
+            if let searchId = self.relateErshouHouseData.value?.data?.searchId {
+                params["searchId"] = searchId
+            }
+            
+            let transactionTrace = self.traceParam <|>
+                toTracerParams(category_name, key: "category_name") <|>
+                toTracerParams(element_from, key: "element_from") <|>
+                toTracerParams("related_list", key: "page_type") <|>
+                toTracerParams("click", key: "enter_type")
+            
+            params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
+//            params["followStatus"] = self.followStatus
+            
+            params["tracerParams"] = transactionTrace
+            
+            params["bottomBarBinder"] = bottomBarBinder
+            
+            let userInfo = TTRouteUserInfo(info: params)
+            TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
+            
         }
 
         let result = parseRentReleatedHouseListItemNode(

@@ -49,9 +49,9 @@ func parseRentHouseListRowItemNode(
         .filter { $0.id != nil }
         .enumerated()
         .map { (e) -> ElementRecord in
-            let (_, item) = e
+            let (index, item) = e
             let theParams = params <|>
-                //                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(index, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
