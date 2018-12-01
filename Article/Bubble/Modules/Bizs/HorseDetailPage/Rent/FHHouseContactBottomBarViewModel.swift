@@ -15,7 +15,7 @@ class FHHouseContactBottomBarViewModel {
     weak var bottomBar: HouseDetailPageBottomBarView?
 
     var contactPhone = BehaviorRelay<FHHouseDetailContact?>(value: nil)
-
+   
     let houseId: Int64
     let houseType: HouseType
     var searchId: String?
@@ -23,7 +23,8 @@ class FHHouseContactBottomBarViewModel {
     var logPb: Any?
     var showSendPhoneAlert: ((String, String, String) -> Void)?
 
-
+    var traceParams: TracerParams?
+    
     init(bottomBar: HouseDetailPageBottomBarView,
          houseId: Int64,
          houseType: HouseType) {
@@ -120,20 +121,17 @@ class FHHouseContactBottomBarViewModel {
                                           disposeBag: self.disposeBag)
                     self.followForSendPhone(showTip: false)
 
-//                    if self.houseType != .neighborhood {
-//
-//                        var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
-//                            .exclude("house_type")
-//                            .exclude("element_type")
-//                            .exclude("maintab_search")
-//                            .exclude("search")
-//                            .exclude("filter")
-//                        traceParams = traceParams <|>
-//                            toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-//                            toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
-//                            toTracerParams("\(self.houseId)", key: "group_id")
-//                        recordEvent(key: "click_call", params: traceParams)
-//                    }
+                    if self.houseType == .rentHouse {
+                        if let traceParamsV = self.traceParams
+                        {
+                            let traceParamsClick = TracerParams.momoid() <|>
+                                traceParamsV <|>
+                                EnvContext.shared.homePageParams <|>
+                                toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("\(self.houseId)", key: "group_id")
+                            recordEvent(key: "click_call", params: traceParamsClick)
+                        }
+                    }
 
                 }else {
                     var titleStr: String = "询底价"

@@ -33,6 +33,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     private let houseId: Int64
 
     private var shareInfo: FHRentDetailResponseDataShareInfoModel?
+    
+    var contactPhone = BehaviorRelay<FHHouseDetailContact?>(value: nil)
 
     let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
 
@@ -223,6 +225,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 let url = URL(string: theUrl)
                 let bottomBarBinder: FollowUpBottomBarBinder = { [weak self] (HouseDetailPageBottomBarView, UIButton, TracerParams) in
 
+                    
+                    
+                    
                 }
                 let info = ["bottomBarBinder": bottomBarBinder]
                 let userInfo = TTRouteUserInfo(info: info)
@@ -307,6 +312,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let task = FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil {
                 self?.detailData.accept(model)
+                if let contactDict = self?.detailData.value?.data?.contact?.toDictionary() as? [String: Any]
+                {
+                    let contactMapple = FHHouseDetailContact(JSON: contactDict)
+                    self?.contactPhone.accept(contactMapple)
+                }
+               
                 if let status = model?.data?.userStatus {
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
                 }
@@ -314,6 +325,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             }
             self?.requestReletedData()
         }
+    }
+    
+    
+    func recordFollowEvent(_ traceParam: TracerParams) {
+        recordEvent(key: TraceEventName.click_follow, params: traceParam)
     }
 
     func requestReletedData() {
