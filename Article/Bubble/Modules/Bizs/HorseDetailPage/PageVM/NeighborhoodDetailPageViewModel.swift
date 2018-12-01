@@ -543,6 +543,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
                 params["followStatus"] = self.followStatus
                 
+                params["house_type"] = 4
+                
                 let tracePramas = transactionTrace
                 params["tracerParams"] = tracePramas
                 
