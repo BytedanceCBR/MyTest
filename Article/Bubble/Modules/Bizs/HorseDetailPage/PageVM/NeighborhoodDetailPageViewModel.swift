@@ -618,6 +618,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     indexPath: indexPath,
                     tableView: tableView)
             }
+            
+            datas[indexPath.section].items[indexPath.row](cell)
             if let refreshCell = cell as? FHSameHouseItemListCell {
                 let tempRefreshCell = refreshCell
                 tempRefreshCell.houseType = self.sameHouseType
@@ -626,8 +628,6 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     indexPath: indexPath,
                     tableView: tableView)
             }
-            
-            datas[indexPath.section].items[indexPath.row](cell)
             if cell is NewHouseNearByCell
             {
                 nearByCell = cell as? NewHouseNearByCell
@@ -661,7 +661,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         tableView: UITableView) {
         let tempCell = cell
         tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
-            self?.changeSameHouseListHouseTypeState()
+            
+            self?.sameHouseType = tempCell?.houseType ?? .secondHandHouse
             tableView?.beginUpdates()
             if let refreshCell = tempCell {
                 let tempRefreshCell = refreshCell
@@ -678,18 +679,6 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         self.neighborhoodInfoFoldState = !self.neighborhoodInfoFoldState
     }
     
-    fileprivate func changeSameHouseListHouseTypeState()
-    {
-        if self.sameHouseType == .secondHandHouse {
-
-            self.sameHouseType = .rentHouse
-        }else if self.sameHouseType == .rentHouse {
-            
-            self.sameHouseType = .secondHandHouse
-        }
-    }
-    
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if datas[indexPath.section].selectors?.isEmpty ?? true == false {
             datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid())
