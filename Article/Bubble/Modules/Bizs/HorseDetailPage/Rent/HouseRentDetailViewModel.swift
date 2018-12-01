@@ -39,6 +39,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
 
     private var groupId: String = ""
+    
+    var traceParam : TracerParams = TracerParams.momoid()
 
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
@@ -195,7 +197,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     ///
     /// - Returns:
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
-        let params = TracerParams.momoid()
+        var params = TracerParams.momoid()
         let title = self.detailData.value?.data?.neighborhoodInfo?.name ?? ""
         let totalCount = self.houseInSameNeighborhood.value?.data?.total ?? "0"
         let header = parseHeaderNode("同小区房源(\(totalCount))", subTitle: "查看更多", showLoadMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
@@ -204,12 +206,18 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
                                 print("")
                             }
+                            params = self.traceParam <|>
+                                toTracerParams("same_neighborhood", key: "element_from") <|>
+                                toTracerParams("same_neighborhood_list", key: "category_name") <|>
+                                toTracerParams("click", key: "enter_type")
+                            
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .rentDetail,
+                                tracerParams: params,
                                 bottomBarBinder: binder)
 
                         }
