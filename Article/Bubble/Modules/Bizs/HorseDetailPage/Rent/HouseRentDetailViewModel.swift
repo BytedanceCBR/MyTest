@@ -209,7 +209,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             params = self.traceParam <|>
                                 toTracerParams("same_neighborhood", key: "element_from") <|>
                                 toTracerParams("same_neighborhood_list", key: "category_name") <|>
-                                toTracerParams("click", key: "enter_type")
+                                toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams("same_neighborhood_list", key: "page_type")
                             
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
