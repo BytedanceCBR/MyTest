@@ -13,8 +13,10 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
     let render = curry(fillRentNeighborhoodInfoCell)(model?.data?.neighborhoodInfo)
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
-        toTracerParams("neighborhood_detail", key: "element_type") <|>
-        toTracerParams(tracer.pageType, key: "page_type")
+        toTracerParams("rent_detail", key: "element_type") <|>
+        toTracerParams(tracer.pageType, key: "page_type") <|>
+        toTracerParams("rent_detail", key: "enter_from")
+    
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     return {
         return TableSectionNode(
