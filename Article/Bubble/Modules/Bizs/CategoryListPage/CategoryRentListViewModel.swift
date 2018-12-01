@@ -40,7 +40,8 @@ func parseRentHouseListRowItemNode(
                 tracerParams: params <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams("be_null", key: "element_from") <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    toTracerParams("related_list", key: "enter_from"),
                 houseSearchParams: houseSearchParams,
                 navVC: navVC)
     }
