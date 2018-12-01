@@ -24,7 +24,7 @@ func parseRentHouseListRowItemNode(
 //    var traceDict = traceParams.paramsGetter([:])
     
     let params = traceParams <|>
-        toTracerParams("old", key: "house_type") <|>
+        toTracerParams("rent", key: "house_type") <|>
         //        toTracerParams("old_list", key: "page_type") <|>
         toTracerParams("left_pic", key: "card_type")
     let selectors = data?

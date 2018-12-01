@@ -67,7 +67,6 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         self.relatedHouse = relatedHouse
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.titleName.accept(title ?? "小区房源")
-        print("house id is: \(self.houseId)")
     }
     
     required convenience init(routeParamObj paramObj: TTRouteParamObj?) {
@@ -291,6 +290,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         self.tracerParams = tracerParams <|>
             toTracerParams(searchId ?? "be_null", key: "search_id")
 //        self.searchAndConditionFilterVM.sendSearchRequest()
+        if relatedHouse {
+            self.tracerParams = self.tracerParams <|>
+            toTracerParams("related_list", key: "category_name")
+        }
+        
         stayTimeParams = tracerParams.exclude("card_type") <|> traceStayTime()
 
         // 进入列表页埋点
@@ -338,8 +342,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            
+            let params = stayTimeParams <|>
+                toTracerParams(self.ershouHouseListViewModel?.searchId ?? "be_null", key: "search_id")
+            
+            recordEvent(key: TraceEventName.stay_category, params: params)
         }
     }
 
@@ -349,8 +358,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     func loadMore() {
         self.errorVM?.onRequestRefreshData()
+        
+        let sid = self.ershouHouseListViewModel?.searchId
+        
         let refreshParams = self.tracerParams.exclude("card_type") <|>
-                toTracerParams("pre_load_more", key: "refresh_type")
+                toTracerParams("pre_load_more", key: "refresh_type") <|>
+            toTracerParams(sid ?? "be_null", key: "search_id")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         errorVM?.onRequest()
         ershouHouseListViewModel?.pageableLoader?()
