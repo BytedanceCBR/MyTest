@@ -49,18 +49,22 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     var followStatus: BehaviorRelay<Result<Bool>>? = nil
     
+    var relatedHouse = false
+    
     init(title: String?,
          neighborhoodId: String,
          houseId: String? = nil,
          searchSource: SearchSourceKey,
          searchId: String? = nil,
          houseType: HouseType = HouseType.secondHandHouse ,
+         relatedHouse: Bool = false ,
          bottomBarBinder: @escaping FollowUpBottomBarBinder) {
         self.neighborhoodId = neighborhoodId
         self.houseId = houseId
         self.searchSource = searchSource
         self.searchId = searchId
         self.theHouseType.accept(houseType)
+        self.relatedHouse = relatedHouse
         super.init(identifier: neighborhoodId, isHiddenBottomBar: true, bottomBarBinder: bottomBarBinder)
         self.titleName.accept(title ?? "小区房源")
     }
@@ -83,8 +87,10 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                 houseTypeValue = ht
             }
         }
+        
+        let relatedHouse = (paramObj?.userInfo.allInfo["related_house"] as? Bool) ?? false
 
-        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, houseType: houseTypeValue ,  bottomBarBinder: bottomBarBinder)
+        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, houseType: houseTypeValue , relatedHouse: relatedHouse , bottomBarBinder: bottomBarBinder)
         self.tracerParams = traceParam
         self.followStatus = followStatus
     }
@@ -112,6 +118,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.sameNeighborhoodFollowUp = self.sameNeighborhoodFollowUp
         ershouHouseListViewModel?.searchId = searchId
+        ershouHouseListViewModel?.traceParams = self.tracerParams
+        
         ershouHouseListViewModel?.datas
             .skip(1)
             .map { $0.count < 1 }
@@ -241,10 +249,15 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                 .disposed(by: disposeBag)
 
         searchAndConditionFilterVM.queryCondition
-                .skip(1)
-                .map { [unowned self] (result) in
-                    "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" + result
+            .skip(1)
+            .map { [unowned self] (result) -> String in
+                
+                if self.relatedHouse {
+                    return "house_type=\(self.theHouseType.value.rawValue)"+result
+                }else{
+                    return "exclude_id[]=\(self.houseId ?? "")&exclude_id[]=\(self.neighborhoodId)&neighborhood_id=\(self.neighborhoodId)&house_type=\(self.theHouseType.value.rawValue)&neighborhood_id=\(self.neighborhoodId)" + result
                 }
+            }
                 .debounce(0.01, scheduler: MainScheduler.instance)
                 .subscribe(onNext: { [unowned self] query in
                     if EnvContext.shared.client.reachability.connection == .none
@@ -253,10 +266,17 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                         return
                     }
                     self.errorVM?.onRequest()
-                    if self.theHouseType.value == HouseType.rentHouse {
-                        self.ershouHouseListViewModel?.requestRentHouseList(query: query, condition: nil)
-                    }else{
-                        self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                    if self.relatedHouse {
+                        
+                        self.ershouHouseListViewModel?.requestRelatedHouseList(query: query, houseId: self.houseId ?? "", condition: nil)
+                        
+                    } else {
+                        
+                        if self.theHouseType.value == HouseType.rentHouse {
+                            self.ershouHouseListViewModel?.requestRentHouseList(query: query, condition: nil)
+                        }else{
+                            self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                        }
                     }
                 }, onError: { error in
 //                    print(error)
@@ -272,6 +292,11 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         self.tracerParams = tracerParams <|>
             toTracerParams(searchId ?? "be_null", key: "search_id")
 //        self.searchAndConditionFilterVM.sendSearchRequest()
+        if relatedHouse {
+            self.tracerParams = self.tracerParams <|>
+            toTracerParams("related_list", key: "category_name")
+        }
+        
         stayTimeParams = tracerParams.exclude("card_type") <|> traceStayTime()
 
         // 进入列表页埋点
@@ -301,10 +326,14 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 //        ershouHouseListViewModel?.requestErshouHouseList(
 //            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
 //            condition: nil)
-        if self.theHouseType.value == HouseType.rentHouse {
-            ershouHouseListViewModel?.requestRent(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+        if self.relatedHouse {
+            ershouHouseListViewModel?.requestRelatedHouse(houseId: houseId ?? "")
         }else{
-            ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+            if self.theHouseType.value == HouseType.rentHouse {
+                ershouHouseListViewModel?.requestRent(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+            }else{
+                ershouHouseListViewModel?.request(neightborhoodId: neighborhoodId, houseId: houseId ?? "")
+            }
         }
         
     }
@@ -315,8 +344,13 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            
+            let params = stayTimeParams <|>
+                toTracerParams(self.ershouHouseListViewModel?.searchId ?? "be_null", key: "search_id")
+            
+            recordEvent(key: TraceEventName.stay_category, params: params)
         }
     }
 
@@ -326,8 +360,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     func loadMore() {
         self.errorVM?.onRequestRefreshData()
+        
+        let sid = self.ershouHouseListViewModel?.searchId
+        
         let refreshParams = self.tracerParams.exclude("card_type") <|>
-                toTracerParams("pre_load_more", key: "refresh_type")
+                toTracerParams("pre_load_more", key: "refresh_type") <|>
+            toTracerParams(sid ?? "be_null", key: "search_id")
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         errorVM?.onRequest()
         ershouHouseListViewModel?.pageableLoader?()

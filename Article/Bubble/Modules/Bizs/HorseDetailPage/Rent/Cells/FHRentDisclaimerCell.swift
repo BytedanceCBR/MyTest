@@ -41,6 +41,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     }()
 
     var onContactIconClick: (() -> Void)?
+    
+    var traceParam: TracerParams = TracerParams.momoid()
 
     let disposeBag = DisposeBag()
 
@@ -136,7 +138,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             //    browser.plugins.append(DefaultPageControlPlugin())
             // 数字型页码指示器cccc
             let numberPageControlPlugin = RentHouseNumberPageControlPlugin()
-//            numberPageControlPlugin.traceParams = traceParams
+            numberPageControlPlugin.traceParams = self.traceParam
 //            numberPageControlPlugin.images = self.headerImages
 
 //            numberPageControlPlugin.largeTracer = largeImageTracerGen(images: self.headerImages, traceParams: traceParams)

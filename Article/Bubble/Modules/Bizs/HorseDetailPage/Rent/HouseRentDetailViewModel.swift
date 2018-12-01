@@ -33,10 +33,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     private let houseId: Int64
 
     private var shareInfo: FHRentDetailResponseDataShareInfoModel?
+    
+    var contactPhone = BehaviorRelay<FHHouseDetailContact?>(value: nil)
 
     let follwUpStatus: BehaviorRelay<Result<Bool>> = BehaviorRelay(value: .success(false))
 
     private var groupId: String = ""
+    
+    var traceParam : TracerParams = TracerParams.momoid()
 
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
@@ -112,6 +116,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
         let dataParser = DetailDataParser.monoid()
             <- parseRentHouseCycleImageNode(detailData.value?.data?.houseImage as? [FHRentDetailResponseDataHouseImageModel],
+                                            tracer:self.houseRentTracer,
                                             disposeBag: disposeBag)
             <- parseRentNameCellNode(model: detailData.value?.data)
             <- parseRentCoreInfoCellNode(model: detailData.value?.data,
@@ -192,8 +197,36 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     ///
     /// - Returns:
     func parseRentSearchInNeighborhoodNodeCollection() -> () -> [TableSectionNode]? {
-        let params = TracerParams.momoid()
-        return parseNodeWrapper(preNode: parseHeaderNode("同小区房源"),
+        var params = TracerParams.momoid()
+        let title = self.detailData.value?.data?.neighborhoodInfo?.name ?? ""
+        let totalCount = self.houseInSameNeighborhood.value?.data?.total ?? "0"
+        let header = parseHeaderNode("同小区房源(\(totalCount))", subTitle: "查看更多", showLoadMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, adjustBottomSpace: -20, process: { [unowned self]  (traceParam) in
+                    if let hasMore = self.houseInSameNeighborhood.value?.data?.hasMore, hasMore == true {
+                        if let id = self.detailData.value?.data?.neighborhoodInfo?.id {
+                            let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
+                                print("")
+                            }
+                            params = self.traceParam <|>
+                                toTracerParams("same_neighborhood", key: "element_from") <|>
+                                toTracerParams("same_neighborhood_list", key: "category_name") <|>
+                                toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams("same_neighborhood_list", key: "page_type")
+                            
+                            openRentHouseList(
+                                title: "\(title)(\(totalCount))",
+                                neighborhoodId: id,
+                                disposeBag: self.disposeBag,
+                                navVC: self.navVC,
+                                searchSource: .rentDetail,
+                                tracerParams: params,
+                                bottomBarBinder: binder)
+
+                        }
+                    }
+                }, filter: {[unowned self] () -> Bool in
+                    self.houseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0
+            })
+        return parseNodeWrapper(preNode: header,
                                 wrapedNode: parseRentSearchInNeighborhoodNode(houseInSameNeighborhood.value?.data,
                                                                               tracer: houseRentTracer,
                                                                               traceExtension: params,
@@ -214,19 +247,52 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
         let tail = parseOpenAllNode(true) { [weak self] in
-            if let houseId = self?.houseId {
-                var theUrl = "fschema://house_list_in_neighborhood?house_id=\(houseId)"
-                if let neighborhoodId = self?.detailData.value?.data?.neighborhoodInfo?.id {
-                    theUrl = theUrl + "neighborhood_id=\(neighborhoodId)"
-                }
-                let url = URL(string: theUrl)
-                let bottomBarBinder: FollowUpBottomBarBinder = { [weak self] (HouseDetailPageBottomBarView, UIButton, TracerParams) in
-
-                }
-                let info = ["bottomBarBinder": bottomBarBinder]
-                let userInfo = TTRouteUserInfo(info: info)
-                TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
+            
+            guard let self = self else {
+                return
             }
+            
+            var params:[String:Any] = [:]
+            var theUrl = "fschema://house_list_in_neighborhood?house_id=\(self.houseId)"
+            if let neighborhoodId = self.detailData.value?.data?.neighborhoodInfo?.id {
+                theUrl = theUrl + "neighborhood_id=\(neighborhoodId)"
+                params["neighborhoodId"] = neighborhoodId
+            }
+            let url = URL(string: theUrl)
+            let bottomBarBinder: FollowUpBottomBarBinder = { /*[weak self]*/ (HouseDetailPageBottomBarView, UIButton, TracerParams) in
+                
+            }
+            
+            let element_from = "related"
+            let category_name = "same_neighborhood_list"
+            
+            params["houseId"] = "\(self.houseId)"
+            params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
+            if let title = self.detailData.value?.data?.neighborhoodInfo?.name {
+                let totalCount = self.relateErshouHouseData.value?.data?.total ?? "0"
+                params["title"] = title+"(\(totalCount))"
+            }
+            
+            if let searchId = self.relateErshouHouseData.value?.data?.searchId {
+                params["searchId"] = searchId
+            }
+            
+            let transactionTrace = self.traceParam <|>
+                toTracerParams(category_name, key: "category_name") <|>
+                toTracerParams(element_from, key: "element_from") <|>
+                toTracerParams("related_list", key: "page_type") <|>
+                toTracerParams("click", key: "enter_type")
+            
+            params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
+//            params["followStatus"] = self.followStatus
+            
+            params["tracerParams"] = transactionTrace
+            
+            params["bottomBarBinder"] = bottomBarBinder
+            
+            let userInfo = TTRouteUserInfo(info: params)
+            TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
+            
         }
 
         let result = parseRentReleatedHouseListItemNode(
@@ -306,6 +372,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let task = FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil {
                 self?.detailData.accept(model)
+                if let contactDict = self?.detailData.value?.data?.contact?.toDictionary() as? [String: Any]
+                {
+                    let contactMapple = FHHouseDetailContact(JSON: contactDict)
+                    self?.contactPhone.accept(contactMapple)
+                }
+               
                 if let status = model?.data?.userStatus {
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
                 }
@@ -313,6 +385,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             }
             self?.requestReletedData()
         }
+    }
+    
+    
+    func recordFollowEvent(_ traceParam: TracerParams) {
+        recordEvent(key: TraceEventName.click_follow, params: traceParam)
     }
 
     func requestReletedData() {

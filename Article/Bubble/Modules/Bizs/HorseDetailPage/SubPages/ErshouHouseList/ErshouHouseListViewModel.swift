@@ -19,6 +19,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     
     var sameNeighborhoodFollowUp: BehaviorRelay<Result<Bool>>?
 
+    var traceParams = TracerParams.momoid()
+    
     func createOneTimeToast() -> (String?) -> Void {
         var hasToast = false
         return { (message) in
@@ -105,6 +107,9 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                                 houseSearchParams: nil,
                                 navVC: self.navVC)
                             self.datas.accept(self.datas.value + datas)
+                            
+                            self.searchId = data.searchId
+                            
                         }
                         else {
                             
@@ -137,7 +142,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             newItem.fhSearchId = data.searchId
                             return newItem
                         })
-                        let params = TracerParams.momoid()
+
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type") <|>
+                            toTracerParams("rent_detail", key: "enter_from") <|>
+                            toTracerParams("related_list", key: "page_type") <|>
+                            self.traceParams
                         let datas = parseRentHouseListRowItemNode(
                             items,
                             traceParams: params,
@@ -146,6 +156,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             houseSearchParams: nil,
                             navVC: self.navVC)
                         self.datas.accept(self.datas.value + datas)
+                        
+                        self.searchId = data.searchId
                     }
                     
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
@@ -182,9 +194,11 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                                 return newItem
                             })
                             let params = TracerParams.momoid() <|>
-                                toTracerParams("same_neighborhood", key: "element_type") <|>
-                                toTracerParams("same_neighborhood_list", key: "enter_from") <|>
-                                toTracerParams("same_neighborhood_list", key: "page_type")
+                                toTracerParams("be_null", key: "element_type") <|>
+                                toTracerParams("rent_detail", key: "enter_from") <|>
+                                toTracerParams("related_list", key: "page_type") <|>
+                                toTracerParams("rent", key: "house_type")
+                            
                             let datas = parseRentHouseListRowItemNode(
                                 items,
                                 traceParams: params,
@@ -193,6 +207,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                                 houseSearchParams: nil,
                                 navVC: self.navVC)
                             self.datas.accept(self.datas.value + datas)
+                            
+                            self.searchId = data.searchId
                         } else {
                             
                         }
@@ -212,6 +228,117 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
     
     
+    func requestRelatedHouse( houseId: String? = nil) {
+        oneTimeToast = createOneTimeToast()
+        let loader = pageRequestRelatedHouse(query: nil, houseId: houseId, searchId: self.searchId, condition: nil, count: 15)
+        pageableLoader = { [unowned self] in
+            loader()
+                .subscribe(onNext: { [unowned self] (response) in
+                    if let data = response?.data {
+                        var ht : HouseType?
+                        let items = data.items?.map({ (item) -> HouseItemInnerEntity in
+                            var newItem = item
+                            newItem.fhSearchId = data.searchId
+                            ht = HouseType(rawValue: item.houseType ?? 0)
+                            return newItem
+                        })
+                        
+                        if ht == nil {
+                            ht = HouseType.secondHandHouse
+                        }
+                        
+                        var htName : String? = nil
+                        if ht == HouseType.rentHouse {
+                            htName = "rent"
+                        }
+                        
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type") <|>
+                            toTracerParams("old_detail", key: "enter_from") <|>
+                            toTracerParams("related_list", key: "page_type") <|>
+                            toTracerParams(htName ?? "old", key: "house_type")
+                        
+                        //           parseErshouRelatedHouseListItemNode
+                        let datas = parseRelatedHouseListItemNode(
+                            items,
+                            disposeBag: self.disposeBag,
+                            tracerParams: params ,
+                            navVC: self.navVC)
+                        
+                        self.datas.accept(self.datas.value + datas)
+                        
+                        self.searchId = data.searchId
+                    }
+                    
+                    /*
+                     func parseFHHomeErshouHouseListItemNode(
+                     _ data: [HouseItemInnerEntity]?,
+                     traceExtension: TracerParams = TracerParams.momoid(),
+                     disposeBag: DisposeBag,
+                     tracerParams: TracerParams,
+                     navVC: UINavigationController?) -> () -> TableSectionNode? {
+                     */
+                    
+                    self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                    self.onSuccess?(self.datas.value.count != 0)
+                    // self.oneTimeToast?(response?.data?.refreshTip)
+                    
+                    },
+                           onError: self.processError())
+                .disposed(by: self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+        
+    }
+    
+    func requestRelatedHouseList(query: String,houseId: String, condition: String?) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        EnvContext.shared.toast.showLoadingToast("正在加载")
+        oneTimeToast = createOneTimeToast()
+        
+        let loader = pageRequestRelatedHouse(query: query, houseId: houseId, searchId: self.searchId, count: 20)
+        pageableLoader = { [unowned self] in
+            loader()
+                .subscribe(
+                    onNext: { [unowned self] (response) in
+                        if let data = response?.data {
+                            let items = data.items?.map({ (item) -> HouseItemInnerEntity in
+                                var newItem = item
+                                newItem.fhSearchId = data.searchId
+                                return newItem
+                            })
+                            let params = TracerParams.momoid()
+                            let datas = parseErshouRelatedHouseListItemNode(
+                                items,
+                                disposeBag: self.disposeBag,
+                                tracerParams: params ,
+                                navVC: self.navVC)
+                            
+                            self.datas.accept(self.datas.value + datas)
+                            
+                            self.searchId = data.searchId
+                        }
+                        
+                        self.title.accept("(\(response?.data?.total ?? 0))")
+                        self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                        self.onSuccess?(self.datas.value.count != 0)
+                        // self.oneTimeToast?(response?.data?.refreshTip)
+                    },
+                    onError: { [weak self] in
+                        self?.processError()
+                        
+                        }())
+                .disposed(by: self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+    }
+
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row < datas.value.count {
             let params = EnvContext.shared.homePageParams <|>
@@ -230,4 +357,103 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         }
         return 105
     }
+}
+
+
+func parseRelatedHouseListItemNode(
+    _ data: [HouseItemInnerEntity]?,
+    traceExtension: TracerParams = TracerParams.momoid(),
+    disposeBag: DisposeBag,
+    tracerParams: TracerParams,
+    navVC: UINavigationController?) ->  [TableRowNode] {
+    
+    var traceParmas = tracerParams.paramsGetter([:])
+    var elementFrom: String = "related"
+    if let elementFromV = (traceParmas["element_from"] ?? elementFrom) as? String
+    {
+        elementFrom = elementFromV
+    }
+    
+    let selectors = data?
+        .filter { $0.id != nil }
+        .enumerated()
+        .map { (e) -> (TracerParams) -> Void in
+            let (offset, item) = e
+            return openErshouHouseDetailPage(
+                houseId: Int64(item.id ?? "")!,
+                logPB: item.logPB,
+                disposeBag: disposeBag,
+                tracerParams: tracerParams <|>
+                    toTracerParams(offset, key: "rank") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    //                    toTracerParams("maintab", key: "enter_from") <|>
+                    toTracerParams(elementFrom, key: "element_from") <|>
+                    toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    toTracerParams("related_list",key: "enter_from"),
+                navVC: navVC)
+    }
+    
+    let paramsElement = TracerParams.momoid() <|>
+        toTracerParams("related", key: "element_type") <|>
+        toTracerParams("related_list", key: "page_type") <|>
+    traceExtension
+    
+    var records = data?
+        .filter {
+            $0.id != nil
+        }
+        .enumerated()
+        .map { (e) -> ElementRecord in
+            let (offset, item) = e
+            let theParams = tracerParams <|>
+                toTracerParams(offset, key: "rank") <|>
+                toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+            
+            
+            return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+    }
+    records?.insert(elementShowOnceRecord(params:paramsElement), at: 0)
+    
+    let count = data?.count ?? 0
+    
+    if let renders = data?.enumerated().map( { (index, item) in
+        data?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(false) : curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+        //        curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+    }),
+        let selectors = selectors,
+        let records = records {
+        let items = zip(selectors, records)
+        
+        return zip(renders, items).map { (e) -> TableRowNode in
+            let (render, item) = e
+            return TableRowNode(
+                itemRender: render,
+                selector: item.0,
+                tracer: item.1,
+                type: .node(identifier:data?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier),
+                editor: nil)
+        }
+    } else {
+        return []
+    }
+    
+    //    if let renders = data?.enumerated().map({ (index, item) in
+    //        data?.first?.cellstyle == 1 ? curry(fillMultiHouseItemCell)(item)(index == count - 1)(false) : curry(fillErshouHouseListitemCell)(item)(index == count - 1)
+    //    }), let selectors = selectors ,count != 0 {
+    //        return TableSectionNode(
+    //            items: renders,
+    //            selectors: selectors,
+    //            tracer: records,
+    //            sectionTracer: nil,
+    //            label: "",
+    //            type: .node(identifier:data?.first?.cellstyle == 1 ? FHMultiImagesInfoCell.identifier : SingleImageInfoCell.identifier)) //to do，ABTest命中整个section，暂时分开,默认单图模式
+    //    } else {
+    //        return []
+    //    }
+    
 }
