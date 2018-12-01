@@ -143,17 +143,7 @@ func parseMoreConditionItemLabel(label: String, nodePath: [Node]) -> ConditionIt
 //TODO: fixbug 滚动栏跑偏
 class BubbleSelectCollectionView: BaseConditionPanelView {
 
-    lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
-        flowLayout.minimumLineSpacing = 12
-        flowLayout.minimumInteritemSpacing = 9
-//        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
-        let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
-        result.backgroundColor = UIColor.clear
-        return result
-    }()
+    var collectionView: UICollectionView?
 
     lazy var clearBtn: UIButton = {
         let result = UIButton()
@@ -205,9 +195,10 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         self.dataSource = dataSource
         self.headerViewType = BubbleCollectionSectionHeader.self
         super.init(frame: CGRect.zero)
+        self.collectionView = BubbleSelectCollectionView.createCollectionView()
         setupUI()
-        collectionView.delegate = delegate
-        collectionView.dataSource = dataSource
+        collectionView?.delegate = delegate
+        collectionView?.dataSource = dataSource
     }
 
     convenience init(nodes: [Node], headerView: AnyClass) {
@@ -221,17 +212,18 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         self.headerViewType = headerView
         let dataSource = dataSource
         self.dataSource = dataSource
+        self.collectionView = BubbleSelectCollectionView.createCollectionView()
 
         super.init(frame: CGRect.zero)
 
         setupUI()
-        collectionView.dataSource = dataSource
-        collectionView.delegate = dataSource
-        collectionView.reloadData()
+        collectionView?.dataSource = dataSource
+        collectionView?.delegate = dataSource
+        collectionView?.reloadData()
     }
     override func setSelectedConditions(conditions: [String : Any]) {
         dataSource.selectedIndexPaths.accept([])
-        collectionView.reloadData()
+        collectionView?.reloadData()
         let conditionStrArray = conditions
             .map { (e) -> [String] in
                 convertKeyValueToCondition(key: e.key, value: e.value)
@@ -256,6 +248,18 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 //        self.didSelect?(self.dataSource.selectedNodes())
         self.conditionLabelSetter?(self.dataSource.selectedNodes())
         self.dataSource.storeSelectedState()
+    }
+
+    class func createCollectionView() -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
+        flowLayout.minimumLineSpacing = 12
+        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
+        flowLayout.minimumInteritemSpacing = 9
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
+        let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        result.backgroundColor = UIColor.clear
+        return result
     }
 
     func setupUI() {
@@ -289,33 +293,33 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
             maker.left.equalTo(self.snp.centerX).offset(10)
             maker.height.equalTo(40)
         }
-
-        addSubview(collectionView)
-        collectionView.snp.makeConstraints { maker in
-            maker.top.left.right.equalToSuperview()
-            maker.bottom.equalTo(inputBgView.snp.top)
-        }
-        collectionView.register(
-                BubbleCollectionCell.self,
-                forCellWithReuseIdentifier: "item")
-        collectionView.register(
-                headerViewType,
+        if let collectionView = collectionView {
+            addSubview(collectionView)
+            collectionView.snp.makeConstraints { maker in
+                maker.top.left.right.equalToSuperview()
+                maker.bottom.equalTo(inputBgView.snp.top)
+            }
+            collectionView.register(
+                    BubbleCollectionCell.self,
+                    forCellWithReuseIdentifier: "item")
+            collectionView.register(
+                    headerViewType,
+                    forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                    withReuseIdentifier: "header")
+            collectionView.register(
+                BubbleCollectionSectionHeader.self,
                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
-                withReuseIdentifier: "header")
-        collectionView.register(
-            BubbleCollectionSectionHeader.self,
-            forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
-            withReuseIdentifier: "default")
-        
-        
-        collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
-            .subscribe(onNext: { [unowned self](size) in
-                if let size = size {
-                    self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
-                }
-            })
-            .disposed(by: contentDisposeBag!)
+                withReuseIdentifier: "default")
 
+
+            collectionView.rx.observe(CGSize.self, "contentSize", options: .new, retainSelf: false)
+                .subscribe(onNext: { [unowned self](size) in
+                    if let size = size {
+                        self.contentSizeDidChange?(CGSize(width: size.width,height: size.height + 10.0 + 60.0)) // collection view height + vertical margin + input bg view
+                    }
+                })
+                .disposed(by: contentDisposeBag!)
+        }
         bindButtonActions()
     }
 
@@ -348,7 +352,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     func onClean() {
         self.dataSource.selectedIndexPaths.accept([])
-        self.collectionView.reloadData()
+        self.collectionView?.reloadData()
     }
 
     override func viewDidDisplay() {
@@ -358,7 +362,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     override func viewDidDismiss() {
 //        print("AreaConditionFilterPanel -> viewDidDismiss")
         dataSource.restoreSelectedState()
-        collectionView.reloadData()
+        collectionView?.reloadData()
     }
 
     override func selectedNodes() -> [Node] {
@@ -591,13 +595,13 @@ func constructPriceBubbleSelectCollectionPanelWithContainer(
     thePanel.didSelect = { nodes in
         action(index, nodes)
     }
-    if let layout = thePanel.collectionView.collectionViewLayout as? UICollectionViewFlowLayout{
+    if let layout = thePanel.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout{
         layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 114)
     }
     return thePanel
 }
 
-class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
+class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
 
     var queryKey: String?
 
@@ -611,12 +615,27 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
             nodes: nodes,
             headerView: headerView,
             dataSource: dataSource)
-
+        self.collectionView = PriceBubbleSelectCollectionView.createCollectionView()
+        self.collectionView?.dataSource = dataSource
+        self.collectionView?.delegate = dataSource
         if let ds = self.priceDataSource() {
             ds.onHeaderViewInit = { [weak self] in
                 self?.bindInputPanelObservable()
             }
         }
+    }
+
+
+    override class func createCollectionView() -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
+        //        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
+        flowLayout.minimumLineSpacing = 12
+        flowLayout.minimumInteritemSpacing = 9
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
+        let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        result.backgroundColor = UIColor.clear
+        return result
     }
 
     func bindInputPanelObservable() {
@@ -644,7 +663,9 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
                 .subscribe(onNext: { [unowned self, unowned ds] s in
                     if ds.selectedIndexPaths.value.count > 0 {
                         ds.selectedIndexPaths.accept([])
-                        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+                        if let collectionView = self.collectionView {
+                            self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
+                        }
                         ds.inputHeaderView?.priceInputView.upperPriceTextField.becomeFirstResponder()
                     }
                 })
@@ -654,7 +675,9 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView {
                 .subscribe(onNext: { [unowned self, unowned ds] s in
                     if ds.selectedIndexPaths.value.count > 0 {
                         ds.selectedIndexPaths.accept([])
-                        self.collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+                        if let collectionView = self.collectionView {
+                            self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
+                        }
                         ds.inputHeaderView?.priceInputView.lowerPriceTextField.becomeFirstResponder()
                     }
                 })
@@ -876,7 +899,7 @@ fileprivate func getRateTextByRateValue(_ rate: Int) -> String {
     }
 }
 
-class PriceBubbleSelectDataSource: BubbleSelectDataSource {
+class PriceBubbleSelectDataSource: BubbleSelectDataSource , UICollectionViewDelegateFlowLayout {
 
     var disposeBag = DisposeBag()
 
@@ -913,6 +936,13 @@ class PriceBubbleSelectDataSource: BubbleSelectDataSource {
         }
     }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if section == 0 {
+            return CGSize(width: UIScreen.main.bounds.width, height: 114)
+        } else {
+            return CGSize(width: UIScreen.main.bounds.width, height: 58)
+        }
+    }
 }
 
 
