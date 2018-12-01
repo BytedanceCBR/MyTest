@@ -161,6 +161,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         setupInfoMaskView()
         detailPageViewModel = HouseRentDetailViewMode(houseId: houseId,
                                                       houseRentTracer: houseRentTracer)
+        detailPageViewModel?.traceParam = getTracePamrasFromRent() <|>
+            toTracerParams("rent_detail", key: "enter_from")
         
         detailPageViewModel?.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
             
