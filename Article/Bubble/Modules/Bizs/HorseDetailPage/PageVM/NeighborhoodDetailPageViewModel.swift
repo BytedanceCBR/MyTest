@@ -134,6 +134,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionNeighborhoodCell {
                 theCell.hasShowOnScreen = true
             }
+
         })
     }
 
@@ -700,5 +701,51 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let tempKey = "\(indexPath.section)_\(indexPath.row)"
         cellHeightCaches[tempKey] = cell.frame.size.height
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        guard let tableView = scrollView as? UITableView else {
+            return
+        }
+        let visibleCells = tableView.visibleCells
+        if visibleCells.count < 1 {
+            return
+        }
+
+        for cell in visibleCells {
+
+            if let theCell = cell as? FHSameHouseItemListCell {
+
+                if theCell.houseType == .secondHandHouse {
+
+                    let point = theCell.convert(CGPoint.zero, to: tableView.superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            theCell.addErshouHouseShowLog(indexPath)
+                        }
+                    }
+                    
+                }else if theCell.houseType == .rentHouse {
+
+                    let point = theCell.convert(CGPoint.zero, to: tableView.superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            theCell.addRentHouseShowLog(indexPath)
+                        }
+                    }
+
+
+                }
+            }
+        }
     }
 }
