@@ -520,8 +520,9 @@ func fillSameHouseItemListCell(_ title: String,
         if ershouData.count > 0 {
             theCell.houseType = .secondHandHouse
             
-            theCell.ershouBtn.isHidden = false
             if rentData.count > 0 {
+                
+                theCell.ershouBtn.isHidden = false
                 theCell.rentBtn.isHidden = false
                 theCell.rentBtn.snp.remakeConstraints { (maker) in
                     maker.right.equalTo(-20)
@@ -536,6 +537,7 @@ func fillSameHouseItemListCell(_ title: String,
                 }
                 
             }else {
+                theCell.ershouBtn.isHidden = true
                 theCell.rentBtn.isHidden = true
                 theCell.ershouBtn.snp.remakeConstraints { (maker) in
                     maker.right.equalTo(-20)
@@ -546,7 +548,8 @@ func fillSameHouseItemListCell(_ title: String,
             }
         }else if rentData.count > 0 {
             theCell.houseType = .rentHouse
-            theCell.rentBtn.isHidden = false
+            theCell.ershouBtn.isHidden = true
+            theCell.rentBtn.isHidden = true
             theCell.rentBtn.snp.remakeConstraints { (maker) in
                 maker.right.equalTo(-20)
                 maker.centerY.equalTo(theCell.titleLabel)

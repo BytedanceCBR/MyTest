@@ -68,6 +68,13 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
                     if let ershouHouseData = self?.ershouHouseData,
                         let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
 
+                        var traceParam = EnvContext.shared.homePageParams <|>
+                        toTracerParams("old_detail", key: "page_type")
+                        if let tp = self?.tracerParams {
+                            traceParam = traceParam <|> tp
+                        }
+                        recordEvent(key: "click_feedback", params: traceParam)
+                        
                         let openUrl = "fschema://webview_oc"
                         let model = ershouHouseData.toJSON()
                         let pageData: [String: Any] = ["data": model]
@@ -75,7 +82,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
 
                         let jsParams = ["requestPageData": pageData,
                                         "getNetCommonParams": commonParamsData]
-                        let info: [String: Any] = ["url": "http://i.haoduofangs.com\(urlStr)", "jsParams": jsParams]
+                        let info: [String: Any] = ["url": "http://i.haoduofangs.com\(urlStr)", "jsParams": jsParams,"title": "房源问题反馈"]
                         let userInfo = TTRouteUserInfo(info: info)
                         TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                     }
@@ -139,5 +146,6 @@ func fillHouseOutlineHeaderCell(_ title: String,
         theCell.label.text = title
         theCell.reportUrl = openUrl
         theCell.ershouHouseData = ershouHouseData
+        theCell.tracerParams = traceExtension
     }
 }
