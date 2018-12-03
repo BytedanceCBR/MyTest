@@ -9,7 +9,7 @@ import Foundation
 import SnapKit
 class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
-    var pending: CGFloat = 20
+    var pending: CGFloat = 13
     var cubePending: CGFloat = 4
 
     private var itemViews: [HorseCoreInfoItemView] = []
@@ -35,7 +35,11 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layoutItems()
+        if shouldUseAverageLayout(firstLabel: itemViews.first?.valueLabel) {
+            averageLayoutItems()
+        } else {
+            layoutItems()
+        }
     }
 
     func setItem(items: [HorseCoreInfoItemView]) {
@@ -47,7 +51,20 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
             contentView.addSubview(view)
         }
         itemViews.append(contentsOf: items)
-        layoutItems()
+        if shouldUseAverageLayout(firstLabel: itemViews.first?.valueLabel) {
+            averageLayoutItems()
+        } else {
+            layoutItems()
+        }
+    }
+
+    func shouldUseAverageLayout(firstLabel: UILabel?) -> Bool {
+        if let firstLabel = firstLabel {
+            let width = firstLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: firstLabel.frame.height)).width
+            return width <= ((self.frame.width - 4 * cubePending) / 3)
+        } else {
+            return true
+        }
     }
 
     func layoutItems() {

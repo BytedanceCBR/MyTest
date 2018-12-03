@@ -18502,9 +18502,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-frameworks.sh",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework.dSYM",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TTNetworkManagerFramework.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/TTNetworkManagerFramework.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -18764,9 +18769,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework.dSYM",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TTNetworkManagerFramework.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/TTNetworkManagerFramework.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -18953,9 +18963,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite-frameworks.sh",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManagerFramework.framework.dSYM",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TTNetworkManagerFramework.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/TTNetworkManagerFramework.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
