@@ -33,7 +33,7 @@ class HeaderCell: BaseUITableViewCell {
 
     lazy var arrowsImg: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "arrowicon-feed")
+        re.image = UIImage(named: "arrowicon-feed-4")
         re.isHidden = true
         return re
     }()
@@ -54,7 +54,7 @@ class HeaderCell: BaseUITableViewCell {
         contentView.addSubview(label)
         contentView.addSubview(arrowsImg)
         arrowsImg.snp.makeConstraints { maker in
-            maker.right.equalToSuperview().offset(-20)
+            maker.right.equalToSuperview().offset(-17)
             maker.height.width.equalTo(18)
             maker.centerY.equalTo(label.snp.centerY)
          }

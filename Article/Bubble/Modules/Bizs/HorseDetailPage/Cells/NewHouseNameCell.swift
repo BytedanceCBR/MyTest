@@ -61,7 +61,7 @@ class NewHouseNameCell: BaseUITableViewCell {
         nameLabel.snp.makeConstraints { maker in
             maker.left.equalTo(leftMerge)
             maker.right.equalToSuperview().offset(rightMerge)
-            maker.top.equalToSuperview().offset(25)
+            maker.top.equalToSuperview().offset(20)
         }
 
         contentView.addSubview(aliasLabel)
@@ -80,10 +80,10 @@ class NewHouseNameCell: BaseUITableViewCell {
 
         contentView.addSubview(tagsView)
         tagsView.snp.makeConstraints { maker in
-            maker.top.equalTo(aliasLabel.snp.bottom).offset(4)
+            maker.top.equalTo(aliasLabel.snp.bottom).offset(-2)
             maker.left.equalTo(nameLabel.snp.left)
             maker.bottom.equalToSuperview().offset(-16)
-            maker.width.equalToSuperview().offset(-30)
+            maker.right.equalToSuperview().offset(-20)
         }
         contentView.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { (make) in

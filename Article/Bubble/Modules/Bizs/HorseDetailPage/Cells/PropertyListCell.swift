@@ -322,7 +322,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
             twoValueView.forEach { view in
                 view.subviews.snp.makeConstraints { maker in
                     maker.top.bottom.equalToSuperview()
-                    maker.height.equalTo(35)
+                    maker.height.equalTo(30)
                 }
             }
 
