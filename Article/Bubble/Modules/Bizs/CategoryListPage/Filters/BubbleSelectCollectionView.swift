@@ -615,9 +615,9 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             nodes: nodes,
             headerView: headerView,
             dataSource: dataSource)
-        self.collectionView = PriceBubbleSelectCollectionView.createCollectionView()
-        self.collectionView?.dataSource = dataSource
-        self.collectionView?.delegate = dataSource
+//        self.collectionView = PriceBubbleSelectCollectionView.createCollectionView()
+//        self.collectionView?.dataSource = dataSource
+//        self.collectionView?.delegate = dataSource
         if let ds = self.priceDataSource() {
             ds.onHeaderViewInit = { [weak self] in
                 self?.bindInputPanelObservable()
@@ -723,6 +723,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         super.onClean()
         priceDataSource()?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
         priceDataSource()?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+        self.dataSource.selectedIndexPaths.accept([])
+        self.collectionView?.reloadData()
     }
 
     override func viewDidDisplay() {

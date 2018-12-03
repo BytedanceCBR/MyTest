@@ -216,14 +216,14 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             self?.bottomBarViewModel?.traceParams = traceParamClick
             if let phone = contactPhone?.phone, phone.count > 0 {
                 self?.bottomBarViewModel?.contactPhone.accept(contactPhone)
+                titleStr = "电话咨询"
             } else {
                 titleStr = "询底价"
             }
 
-            if self?.houseType == .rentHouse {
-                titleStr = "电话咨询"
-            }
-            
+
+
+
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
         })
