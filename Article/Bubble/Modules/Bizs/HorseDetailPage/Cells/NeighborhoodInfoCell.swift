@@ -267,7 +267,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
                 let lng = self.lng {
                 let theParams = TracerParams.momoid() <|>
                     toTracerParams("map", key: "click_type") <|>
-                    toTracerParams("old_detail", key: "enter_from") <|>
+                    self.tracerParams <|>
                     toTracerParams("map", key: "element_from") <|>
                     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
                     toTracerParams(self.data?.logPB ?? "be_null", key: "log_pb")
@@ -379,7 +379,7 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
         }
         let tracers = [elementRecord]
 
-        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)(traceExtension)
+        let render = curry(fillNeighborhoodInfoCell)(ershouHouseData)(tracer)(neighborhoodId)(navVC)(ershouHouseData.logPB)(traceExtension <|> toTracerParams("old_detail", key: "enter_from"))
         
         return TableSectionNode(
 
@@ -414,10 +414,20 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
         if let evaluationInfo = data.neighborhoodInfo?.evaluationInfo {
             
             theCell.starsContainer.updateStarsCount(scoreValue: evaluationInfo.totalScore ?? 0)
-            theCell.starsContainer.snp.updateConstraints { maker in
-                maker.height.equalTo(50)
+            if let scoreValue = evaluationInfo.totalScore, scoreValue > 0
+            {
+                theCell.starsContainer.snp.updateConstraints { maker in
+                    maker.height.equalTo(50)
+                }
+                theCell.starsContainer.isHidden = false
+            }else
+            {
+                theCell.starsContainer.snp.updateConstraints { maker in
+                    maker.height.equalTo(0)
+                }
+                theCell.starsContainer.isHidden = true
             }
-            theCell.starsContainer.isHidden = false
+
             
             if let url = evaluationInfo.detailUrl, url.count > 0 {
                 theCell.bgView.isHidden = false
