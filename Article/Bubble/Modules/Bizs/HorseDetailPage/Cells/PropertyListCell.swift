@@ -33,7 +33,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
-            maker.top.equalTo(2)
+            maker.top.equalTo(6)
             maker.bottom.equalToSuperview().offset(-26)
             maker.left.right.equalToSuperview()
         }
