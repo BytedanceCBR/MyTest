@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    var source: String?
+    
     var goDetailTraceParam: TracerParams?
     
     

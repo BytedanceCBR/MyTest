@@ -357,7 +357,7 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
             }else if tableView == self.rentTableView {
 
                 let model = rentItemList[indexPath.row]
-                fillSameRentHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
+                fillSameRentHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == rentItemList.count - 1, cell: theCell)
                 return theCell
             }
             
