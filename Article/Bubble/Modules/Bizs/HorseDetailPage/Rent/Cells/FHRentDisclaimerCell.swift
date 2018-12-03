@@ -291,17 +291,26 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
             theCell.displayOwnerLabel()
             theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
             var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-            if let businessLicense = model?.contact?.businessLicense {
+            if let businessLicense = model?.contact?.businessLicense,
+                !businessLicense.isEmpty {
                 let imageModel = FHRentDetailResponseDataHouseImageModel()
                 imageModel.url = businessLicense
                 imageModel.name = "营业执照"
                 headerImages.append(imageModel)
             }
-            if let certificate = model?.contact?.certificate {
+            if let certificate = model?.contact?.certificate,
+                !certificate.isEmpty {
                 let imageModel = FHRentDetailResponseDataHouseImageModel()
                 imageModel.url = certificate
                 imageModel.name = "从业人员信息卡"
                 headerImages.append(imageModel)
+            }
+            if headerImages.count > 0 {
+                theCell.headerImages = headerImages
+                theCell.contactIcon.isHidden = false
+            } else {
+                //隐藏经济负责人营业执照
+                theCell.contactIcon.isHidden = true
             }
         } else {
             theCell.hiddenOwnerLabel()

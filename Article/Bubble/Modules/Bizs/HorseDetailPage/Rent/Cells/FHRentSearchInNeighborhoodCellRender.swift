@@ -29,14 +29,20 @@ func parseRentSearchInNeighborhoodNode(
                 toTracerParams("rent_detail", key: "enter_from") <|>
                 toTracerParams("same_neighborhood", key: "element_from")
 
+            let sectionParms = params <|>
+                toTracerParams(tracer.rank, key: "rank") <|>
+                toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+                toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams(tracer.pageType, key: "page_type")
+
+
             let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams)
+            let sectionRecord = elementShowOnceRecord(params: sectionParms)
             return TableSectionNode(
                 items: [render],
                 selectors: nil,
-                tracer: [elementShowOnceRecord(params: params <|>
-                    toTracerParams("rent_detail", key: "page_type") <|>
-                    toTracerParams("old", key: "house_type"))],
-                sectionTracer: nil,
+                tracer: nil,
+                sectionTracer: sectionRecord,
                 label: "小区房源",
                 type: .node(identifier: MultitemCollectionCell.identifier))
         } else {
