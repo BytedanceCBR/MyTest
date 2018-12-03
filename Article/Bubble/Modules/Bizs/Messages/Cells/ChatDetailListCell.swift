@@ -172,6 +172,82 @@ class ChatDetailListCell: BaseUITableViewCell {
             
         }
     }
+    
+    func updateLayoutCompoents(isShowTags: Bool)
+    {
+        if isShowTags {
+            self.majorTitle.numberOfLines = 1
+            
+            majorTitle.snp.updateConstraints { maker in
+                maker.left.right.top.equalToSuperview()
+                maker.height.equalTo(20)
+            }
+            
+            extendTitle.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(majorTitle.snp.bottom).offset(4)
+                maker.height.equalTo(17)
+            }
+            
+        } else {
+            self.majorTitle.numberOfLines = 2
+            
+            let fitSize = self.majorTitle.sizeThatFits(CGSize(width: UIScreen.main.bounds.width * (UIScreen.main.bounds.size.width > 376 ? 0.6 : (UIScreen.main.bounds.size.width > 321 ? 0.56 : 0.48)), height: 0))
+            
+            majorTitle.snp.updateConstraints { maker in
+                maker.left.right.top.equalToSuperview()
+                maker.top.equalToSuperview().offset(fitSize.height < 30 ? 0 : -5)
+                maker.height.equalTo(fitSize.height < 30 ? 20 : 50)
+            }
+            
+            extendTitle.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(majorTitle.snp.bottom).offset(fitSize.height < 30 ? 4 : 1)
+                maker.height.equalTo(17)
+            }
+            
+            areaLabel.snp.updateConstraints { maker in
+                maker.left.right.equalToSuperview()
+                maker.top.equalTo(extendTitle.snp.bottom).offset(0)
+                maker.height.equalTo(0)
+            }
+            
+            priceLabel.snp.updateConstraints { maker in
+                maker.left.equalToSuperview()
+                maker.top.equalTo(areaLabel.snp.bottom).offset(0)
+                maker.height.equalTo(24)
+                maker.width.lessThanOrEqualTo(130)
+            }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        majorTitle.snp.updateConstraints { maker in
+            maker.left.right.top.equalToSuperview()
+            maker.height.equalTo(20)
+        }
+        
+        extendTitle.snp.updateConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(majorTitle.snp.bottom).offset(4)
+            maker.height.equalTo(17)
+        }
+        
+        areaLabel.snp.updateConstraints { maker in
+            maker.left.right.equalToSuperview()
+            maker.top.equalTo(extendTitle.snp.bottom).offset(5)
+            maker.height.equalTo(15)
+        }
+        
+        priceLabel.snp.updateConstraints { maker in
+            maker.left.equalToSuperview()
+            maker.top.equalTo(areaLabel.snp.bottom).offset(5)
+            maker.height.equalTo(24)
+            maker.width.lessThanOrEqualTo(130)
+        }
+    }
 
 }
 

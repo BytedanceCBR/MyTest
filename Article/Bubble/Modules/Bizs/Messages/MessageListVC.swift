@@ -403,7 +403,8 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                 } else {
                     theCell.priceLabel.textColor = hexStringToUIColor(hex: "#f85959")
                 }
-
+                
+                theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
             }
         }
 
