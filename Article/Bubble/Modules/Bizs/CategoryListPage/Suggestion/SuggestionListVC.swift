@@ -25,6 +25,13 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
             result.append(.secondHandHouse)
         }
     }
+    
+    if let cfg = config.searchTabRentFilter {
+        if cfg.count > 0 {
+            result.append(.rentHouse)
+        }
+    }
+    
     if let cfg = config.searchTabCourtFilter {
         if cfg.count > 0 {
             result.append(.newHouse)
