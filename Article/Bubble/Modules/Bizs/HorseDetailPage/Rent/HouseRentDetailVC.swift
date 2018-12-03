@@ -109,7 +109,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     var houseSearchParamsStay: TracerParams?
 
     required init(routeParamObj paramObj: TTRouteParamObj?) {
-        let houseId = HouseRentDetailVC.getHouseId(paramObj?.queryParams)
+         let houseId = HouseRentDetailVC.getHouseId(paramObj?.queryParams)
         self.houseId = Int64(houseId) ?? 0
         self.houseType = .rentHouse
         self.houseRentTracer = HouseRentTracer(pageType: "rent_detail",
@@ -504,7 +504,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
 
 
-        var tracerParams = EnvContext.shared.homePageParams <|> traceParams
+        var tracerParams = EnvContext.shared.homePageParams <|>
+            (self.bottomBarViewModel?.traceParams ?? TracerParams.momoid())
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>

@@ -14,7 +14,7 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
     let disposeBag = DisposeBag()
     var refreshCallback: CellRefreshCallback?
     var navVC: UINavigationController?
-
+    var tracerParams: TracerParams = TracerParams.momoid()
     var ershouHasMore: Bool = false
     var rentHasMore: Bool = false
     
@@ -23,6 +23,9 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     var secondItemList: [HouseItemInnerEntity] = []
     var rentItemList: [FHRentSameNeighborhoodResponseDataItemsModel] = []
+    
+    var ershouCache: [IndexPath] = []
+    var rentCache: [IndexPath] = []
     
     var houseType: HouseType = .secondHandHouse {
         
@@ -40,6 +43,21 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 self.ershouBtn.isSelected = true
                 self.rentBtn.isSelected = false
                 
+                if let superview = self.superview?.superview {
+                    
+                    let point = self.convert(CGPoint.zero, to: superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            addErshouHouseShowLog(indexPath)
+                        }
+                    }
+                }
+                
+                
             }else if houseType == .rentHouse {
                 ershouTableView.isHidden = true
                 rentTableView.isHidden = false
@@ -51,11 +69,27 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 }
                 self.ershouBtn.isSelected = false
                 self.rentBtn.isSelected = true
+                
+                if let superview = self.superview?.superview {
+
+                    let point = self.convert(CGPoint.zero, to: superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            addRentHouseShowLog(indexPath)
+                        }
+                    }
+                    
+                    
+                }
             }
-//            layoutIfNeeded()
 
         }
     }
+    
     
     open override class var identifier: String {
         return "FHSameHouseItemListCell"
@@ -126,18 +160,10 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
         
         let ershouFooter = FHOpenAllView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 68))
-        ershouFooter.openAllBtn.rx.tap
-            .bind { [weak self] void in
-                self?.oepnAllSecondList()
-            }.disposed(by: disposeBag)
         ershouTableView.tableFooterView = ershouFooter
         self.ershouFooter = ershouFooter
         
         let rentFooter = FHOpenAllView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 68))
-        rentFooter.openAllBtn.rx.tap
-            .bind { [weak self] void in
-                self?.oepnAllRentList()
-            }.disposed(by: disposeBag)
         rentTableView.tableFooterView = rentFooter
         rentFooter.isHidden = true
         self.rentFooter = rentFooter
@@ -154,16 +180,44 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         
     }
     
-    func oepnAllSecondList() {
+    func addErshouHouseShowLog(_ indexPath: IndexPath) {
 
-        
-        
+        if self.ershouCache.contains(indexPath) || secondItemList.count < 1 || indexPath.row < 0 || indexPath.row >= secondItemList.count {
+            return
+        }
+        let model = secondItemList[indexPath.row]
+        var paramDict:[String: Any] = [:]
+        paramDict["house_type"] = "old"
+        paramDict["card_type"] = "left_pic"
+        paramDict["page_type"] = "neighborhood_detail"
+        paramDict["element_type"] = "same_neighborhood"
+        paramDict["log_pb"] = model.logPB ?? "be_null"
+        paramDict["rank"] = indexPath.row
+        paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+        paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+        recordEvent(key: "house_show", params: paramDict)
+        ershouCache.append(indexPath)
+
     }
     
-    func oepnAllRentList() {
+    func addRentHouseShowLog(_ indexPath: IndexPath) {
         
-        
-        
+        if self.rentCache.contains(indexPath) || rentItemList.count < 1 || indexPath.row < 0 || indexPath.row >= rentItemList.count {
+            return
+        }
+        let model = rentItemList[indexPath.row]
+        var paramDict:[String: Any] = [:]
+        paramDict["house_type"] = "rent"
+        paramDict["card_type"] = "left_pic"
+        paramDict["page_type"] = "neighborhood_detail"
+        paramDict["element_type"] = "same_neighborhood"
+        paramDict["log_pb"] = model.logPb ?? "be_null"
+        paramDict["rank"] = indexPath.row
+        paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+        paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+        recordEvent(key: "house_show", params: paramDict)
+        rentCache.append(indexPath)
+
     }
     
     func ershouBtnDidClick() {
@@ -312,18 +366,37 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if tableView == self.ershouTableView {
 
             let model = secondItemList[indexPath.row]
-            var params = TracerParams.momoid()
+            let params = TracerParams.momoid() <|>
+                toTracerParams("left_pic", key: "card_type") <|>
+                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                toTracerParams("same_neighborhood", key: "element_from") <|>
+                toTracerParams(model.logPB ?? "be_null", key: "log_pb") <|>
+                toTracerParams(indexPath.row, key: "rank") <|>
+            EnvContext.shared.homePageParams
             jump2ErshouHouseDetailPage(offset: indexPath.row, item: model, params: params, navVC: self.navVC, disposeBag: disposeBag)
+
         }else if tableView == self.rentTableView {
 
             let model = rentItemList[indexPath.row]
-            var params = TracerParams.momoid()
-            openRentHouseDetailPage(houseId: Int64(model.id ?? "") ?? 0, tracerParams: params)(TracerParams.momoid())
+            var tracer: [String: Any] = [:]
+            tracer["card_type"] = "left_pic"
+            tracer["enter_from"] = "neighborhood_detail"
+            tracer["element_from"] = "same_neighborhood"
+            tracer["log_pb"] = model.logPb ?? "be_null"
+            tracer["rank"] = indexPath.row
+            tracer["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+            tracer["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
+
+            let info = ["tracer": tracer]
+            let userInfo = TTRouteUserInfo(info: info)
+            TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(model.id ?? "")"), userInfo: userInfo)
+            
         }
     }
     
@@ -411,6 +484,7 @@ func fillSameHouseItemListCell(_ title: String,
         
         theCell.titleLabel.text = title
         theCell.navVC = navVC
+        theCell.tracerParams = tracerParams
         theCell.ershouFooter?.openAllBtn.rx.tap
             .bind {void in
                 ershouCallBack()
