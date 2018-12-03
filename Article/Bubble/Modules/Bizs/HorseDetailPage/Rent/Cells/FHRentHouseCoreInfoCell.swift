@@ -9,7 +9,7 @@ import Foundation
 import SnapKit
 class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
-    var pending: CGFloat = 10
+    var pending: CGFloat = 20
     var cubePending: CGFloat = 4
 
     private var itemViews: [HorseCoreInfoItemView] = []
@@ -66,6 +66,15 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
                                     width: self.frame.width - offsetX - cubePending,
                                     height: self.frame.height)
             }
+        }
+    }
+
+    func averageLayoutItems() {
+        let width = (self.frame.width - 4 * cubePending) / 3
+        var offsetX: CGFloat = cubePending
+        itemViews.forEach { (view) in
+            view.frame = CGRect(x: offsetX, y: 0, width: width, height: self.frame.height)
+            offsetX = offsetX + cubePending + width
         }
     }
 
