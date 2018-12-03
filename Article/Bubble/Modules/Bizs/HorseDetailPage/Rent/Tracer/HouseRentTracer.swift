@@ -20,6 +20,12 @@ class HouseRentTracer {
     var searchId: String?
     var groupId: String?
     var originFrom : String?
+    var enterQuery: String?
+    var searchQuery: String?
+    var queryType: String?
+    var time: String?
+    var offset: String?
+    var limit: String?
     init(pageType: String,
          houseType: String,
          cardType: String) {

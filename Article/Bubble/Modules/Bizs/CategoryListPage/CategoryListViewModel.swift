@@ -84,7 +84,11 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var houseSearchRecorder: ((String?) -> Void)?
 
-    var houseSearch: [String: Any]?
+    var houseSearch: [String: Any]? {
+        didSet {
+            print("houseSearch: \(houseSearch)")
+        }
+    }
     
     var currentHouseType: HouseType?
 

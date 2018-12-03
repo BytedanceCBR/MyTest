@@ -250,12 +250,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let params = TracerParams.momoid()
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
-        let tail = parseOpenAllNode(true) { [weak self] in
-            
-            guard let self = self else {
-                return
-            }
-            
+        let tail = parseOpenAllNode(true) { [unowned self] in
+
             var params:[String:Any] = [:]
             var theUrl = "fschema://house_list_in_neighborhood?house_id=\(self.houseId)"
             if let neighborhoodId = self.detailData.value?.data?.neighborhoodInfo?.id {
