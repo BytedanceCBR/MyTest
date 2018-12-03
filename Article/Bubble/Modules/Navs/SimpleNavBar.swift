@@ -339,7 +339,7 @@ class CategorySearchNavBar: UIView {
         addSubview(searchAreaPanel)
 
         backBtn.snp.makeConstraints { maker in
-            maker.left.equalTo(12)
+            maker.left.equalTo(20)
             maker.width.height.equalTo(24)
             maker.centerY.equalTo(searchAreaPanel)
         }

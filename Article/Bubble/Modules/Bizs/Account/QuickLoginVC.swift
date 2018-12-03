@@ -441,7 +441,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         confirmBtn.snp.makeConstraints { maker in
             maker.top.equalTo(varifyCodeInput.snp.bottom).offset(40)
             maker.left.equalTo(titleLabel)
-            maker.right.equalTo(rightView).offset(-30)
+            maker.right.equalTo(rightView)
             maker.height.equalTo(46)
         }
         

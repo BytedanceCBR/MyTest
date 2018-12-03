@@ -338,7 +338,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
 }
 
 // 房源概况-info
-fileprivate class HouseOutlineInfoView:UIView {
+class HouseOutlineInfoView:UIView {
     
     lazy var iconImg: UIImageView = {
         let re = UIImageView()

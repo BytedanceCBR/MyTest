@@ -75,109 +75,140 @@ class FHHouseRentSummaryCell: BaseUITableViewCell {
 
 func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
                               tracer: HouseRentTracer) -> () -> TableSectionNode? {
-
-    let houseOverview: [FHRentDetailResponseDataHouseOverviewModel]? = model?.data?.houseOverview as? [FHRentDetailResponseDataHouseOverviewModel]
-    let renders = houseOverview?.map({ (model) -> ((BaseUITableViewCell) -> Void) in
-        curry(fillRentSummaryCell)(model)
-    })
-//    let render = curry(fillRentSummaryCell)
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_info", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
-
+    
     return {
-        if (renders?.count ?? 0 > 0) {
+        if let outline = model?.data?.houseOverview {
+            let cellRender = curry(fillRentOutlineListCell)(outline)
             return TableSectionNode(
-                items: renders ?? [],
+                items: [cellRender],
                 selectors: nil,
-                tracer:[tracerEvaluationRecord],
+                tracer: [tracerEvaluationRecord],
                 sectionTracer: nil,
                 label: "",
-                type: .node(identifier: FHHouseRentSummaryCell.identifier))
-        } else {
+                type: .node(identifier: PropertyListCell.identifier))
+        }else {
+            
             return nil
         }
     }
 }
 
-func fillRentSummaryCell(model: FHRentDetailResponseDataHouseOverviewModel, cell: BaseUITableViewCell) {
-    if let theCell = cell as? FHHouseRentSummaryCell {
-        theCell.titleView.text = model.title
-        theCell.contentLabel.text = model.content
+func convertRentDetailToErshouOutlineOverreview(model: FHRentDetailResponseDataHouseOverviewModel) -> ErshouOutlineOverreview? {
+    if var ershouOutline = ErshouOutlineOverreview(JSON: [:]) {
+        ershouOutline.reportUrl = model.reportUrl
+        ershouOutline.list = []
+        if let list = model.list {
+            for item in list {
+                if var listData = ErshouOutlineInfo(JSON: [:]), let tempItem = item as? FHRentDetailResponseDataHouseOverviewListDataModel {
+                    listData.title = tempItem.title
+                    listData.content = tempItem.content
+                    ershouOutline.list?.append(listData)
+                }
+            }
+        }
+        return ershouOutline
+    }
+    
+    return nil
+}
+
+func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOverviewModel, cell: BaseUITableViewCell) -> Void {
+    if let theCell = cell as? PropertyListCell {
+        theCell.prepareForReuse()
+        theCell.removeListBottomView(-26, false)
+        func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
+            infoView.keyLabel.text = keyText
+            infoView.valueLabel.text = valueText
+            infoView.valueLabel.sizeToFit()
+        }
+        
+        let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in
+            let (_,outline) = e
+            let re = HouseOutlineInfoView()
+            if let outline = outline as? FHRentDetailResponseDataHouseOverviewListDataModel {
+                setInfoValue(outline.title ?? "", outline.content ?? "", re)
+            }
+            return re
+        })
+        
+        theCell.addRowView(rows: listView ?? [], fixedSpacing: 4, averageLayout: false)
+        
+        if let count = listView?.count, count == 1 {
+            listView![0].snp.remakeConstraints { (maker) in
+                maker.edges.equalToSuperview()
+            }
+        }
     }
 }
 
 class FHHouseRentSummaryHeaderCell: BaseUITableViewCell {
-
+    
+    var reportAction: (() -> Void)?
+    
+    open override class var identifier: String {
+        return "rentSummaryHeaderCell"
+    }
+    
+    var tracerParams:TracerParams?
+    let disposeBag = DisposeBag()
+    
     lazy var label: UILabel = {
         let re = UILabel()
         re.font = CommonUIStyle.Font.pingFangMedium(18)
         re.textColor = hexStringToUIColor(hex: kFHDarkIndigoColor)
         return re
     }()
-
-    lazy var reportBtn: UIButton = {
-        let re  = UIButton()
-        re.setImage(UIImage(named: "info-outline-report"), for: .normal)
+    
+    lazy var infoButton: UIButton = {
+        let re = UIButton()
+        re.setImage(UIImage(named: "info-outline-material"), for: .normal)
+        
+        re.setTitle("举报", for: .normal)
+        let attriStr = NSAttributedString(
+            string: "举报",
+            attributes: [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12) ,
+                         NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#299cff")])
+        re.setAttributedTitle(attriStr, for: .normal)
+        re.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5)
         return re
     }()
-
-    lazy var reportLabel: UILabel = {
-        let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: "299cff")
-        re.text = "举报"
-        return re
-    }()
-
-    let disposeBag = DisposeBag()
-
-    var reportAction: (() -> Void)?
-
-    open override class var identifier: String {
-        return "rentSummaryHeaderCell"
-    }
-
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
+        contentView.addSubview(label)
+        
+        label.snp.makeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.right.equalTo(self).offset(-60)
+            maker.top.equalTo(10)
+            maker.height.equalTo(26)
+            maker.bottom.equalToSuperview().offset(0)
+        }
+        
+        contentView.addSubview(infoButton)
+        
+        infoButton.snp.makeConstraints { (maker) in
+            maker.centerY.equalTo(label)
+            maker.right.equalTo(self).offset(-25)
+        }
+        
+        infoButton.rx.tap
+            .subscribe(onNext: {[weak self] (void) in
+                 self?.reportAction?()
+                }).disposed(by: disposeBag)
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    func setupUI() {
-        contentView.addSubview(label)
-        contentView.addSubview(reportBtn)
-        contentView.addSubview(reportLabel)
-
-        label.snp.makeConstraints { maker in
-            maker.left.equalTo(20)
-            maker.top.equalTo(20)
-            maker.height.equalTo(26)
-            maker.bottom.equalToSuperview()
-            maker.right.equalTo(reportBtn.snp.left).offset(10)
-        }
-
-        reportBtn.snp.makeConstraints { (make) in
-            make.right.equalTo(reportLabel.snp.left).offset(-5)
-            make.centerY.equalTo(label)
-            make.height.width.equalTo(12)
-        }
-
-        reportLabel.snp.makeConstraints { (make) in
-            make.right.equalTo(-20)
-            make.centerY.equalTo(label)
-            make.height.equalTo(17)
-        }
-
-        reportBtn.rx.tap
-            .bind { [weak self] void in
-                self?.reportAction?()
-            }.disposed(by: disposeBag)
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 }
 
