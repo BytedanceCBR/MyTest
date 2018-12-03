@@ -119,6 +119,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: PriceChangeHistoryCell.self)
             .addCellClass(cellType: FHHeaderSegmentCell.self)
             .addCellClass(cellType: FHSameHouseItemListCell.self)
+            .addCellClass(cellType: FHRentHouseCoreInfoCell.self)
 
 
 }

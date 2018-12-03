@@ -119,7 +119,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                                             tracer:self.houseRentTracer,
                                             disposeBag: disposeBag)
             <- parseRentNameCellNode(model: detailData.value?.data)
-            <- parseRentCoreInfoCellNode(model: detailData.value?.data,
+            <- parseRentCoreInfoCellNode1(model: detailData.value?.data,
                                          tracer: houseRentTracer)
             <- parseRentPropertyListCellNode(infos)
             //房屋配置
