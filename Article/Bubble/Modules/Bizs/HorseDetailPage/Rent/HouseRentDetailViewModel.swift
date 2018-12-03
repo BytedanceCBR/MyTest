@@ -323,13 +323,19 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         if let jumpUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
             let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+            
+            let tp = EnvContext.shared.homePageParams <|>
+                toTracerParams("rent_detail", key: "page_type") <|>
+                self.traceParam
+            recordEvent(key: "click_feedback", params: tp)
+            
             let openUrl = "fschema://webview_oc"
             let pageData: [String: Any] = ["data": detailModel]
             let commonParamsData: [String: Any] = ["data": commonParams]
 
             let jsParams = ["requestPageData": pageData,
                             "getNetCommonParams": commonParamsData]
-            let info: [String: Any] = ["url": jumpUrl, "jsParams": jsParams]
+            let info: [String: Any] = ["url": jumpUrl, "jsParams": jsParams, "title": "房源问题反馈"]
             let userInfo = TTRouteUserInfo(info: info)
             TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
 
