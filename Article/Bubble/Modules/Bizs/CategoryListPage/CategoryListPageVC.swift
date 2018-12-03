@@ -387,16 +387,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             })
             .disposed(by: disposeBag)
 
-        let integratedMessageBar = ArticleListNotifyBarView(
-            frame: CGRect(
-                x: 0,
-                y: 200,
-                width: 500, height: tipViewHeight))
-        self.integratedMessageBar = integratedMessageBar
 
         //        self.ttErrorToastView = integratedMessageBar
         view.addSubview(tableView)
-        view.addSubview(integratedMessageBar)
 
         view.addSubview(searchSortBtnBG)
         searchSortBtnBG.addSubview(searchSortBtn)
@@ -441,9 +434,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             maker.edges.equalTo(tableView.snp.edges)
         }
 
-
-
-
+        let integratedMessageBar = ArticleListNotifyBarView(
+            frame: CGRect(
+                x: 0,
+                y: 200,
+                width: 500, height: tipViewHeight))
+        self.integratedMessageBar = integratedMessageBar
+        view.insertSubview(integratedMessageBar, aboveSubview: infoMaskView)
+        
         setupSortCondition()
 
         bindLoadMore()
@@ -470,6 +468,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
 
         self.view.bringSubview(toFront: searchFilterPanel)
+        self.view.bringSubview(toFront: searchSortBtnBG)
 
 
     }
