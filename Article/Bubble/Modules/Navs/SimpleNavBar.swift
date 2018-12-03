@@ -60,7 +60,7 @@ class SimpleNavBar: UIView {
 
         addSubview(backBtn)
         backBtn.snp.makeConstraints { maker in
-            maker.left.equalTo(12)
+            maker.left.equalTo(18)
             maker.width.height.equalTo(24)
             maker.bottom.equalTo(-10)
         }
@@ -69,7 +69,7 @@ class SimpleNavBar: UIView {
         rightBtn2.snp.makeConstraints { maker in
             maker.centerY.equalTo(backBtn.snp.centerY)
             maker.width.height.equalTo(30)
-            maker.right.equalTo(-12)
+            maker.right.equalTo(-18)
         }
 
         addSubview(title)
