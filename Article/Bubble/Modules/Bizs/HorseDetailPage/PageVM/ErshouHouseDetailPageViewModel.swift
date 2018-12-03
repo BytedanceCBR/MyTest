@@ -9,7 +9,9 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var source: String?
+    
     var goDetailTraceParam: TracerParams?
     
     
