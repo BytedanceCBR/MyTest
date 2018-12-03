@@ -47,12 +47,14 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
                 if offset % 2 == 0 {
                     let twoRow = PropertyListTwoRowView()
                     let row = PropertyListRowView()
+                    row.remakeValueLabelConstraints()
                     setRowValue(info, row)
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
                 } else {
                     let twoRow = twoValueView.last
                     let row = PropertyListRowView()
+                    row.remakeValueLabelConstraints()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
                 }
@@ -71,6 +73,7 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
 
             let singleViews = groups[1].map { (info) -> UIView in
                 let re = PropertyListRowView()
+                re.remakeValueLabelConstraints()
                 setRowValue(info, re)
                 return re
             }

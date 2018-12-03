@@ -66,7 +66,7 @@ class NewHouseNameCell: BaseUITableViewCell {
 
         contentView.addSubview(aliasLabel)
         aliasLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(nameLabel.snp.bottom).offset(6)
+            maker.top.equalTo(nameLabel.snp.bottom).offset(4)
             maker.left.equalTo(nameLabel.snp.left)
             maker.height.equalTo(0)
         }
