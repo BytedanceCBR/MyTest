@@ -12,21 +12,30 @@ class FHFilterRedDotManager {
 
     var hasClickDot = false
 
+    private var redDotTypes: [String] = []
+    private var reddotVersion: String? = ""
+    private var oldDotVersion: String = ""
+
     init() {
         loadConfig()
     }
 
     private func loadConfig() {
-        hasClickDot = UserDefaults.standard.bool(forKey: "hasClickDot")
+        if let redDotTypes = UserDefaults.standard.array(forKey: "redDotTypes") as? [String] {
+            self.redDotTypes = redDotTypes
+        }
+        reddotVersion = UserDefaults.standard.string(forKey: "version")
+        oldDotVersion = reddotVersion ?? ""
     }
 
     private func saveConfig() {
-        UserDefaults.standard.set(true, forKey: "hasClickDot")
+        UserDefaults.standard.setValue(redDotTypes, forKey: "redDotTypes")
+        UserDefaults.standard.setValue(reddotVersion, forKey: "version")
         UserDefaults.standard.synchronize()
     }
 
     func shouldShowRedDot(key: String) -> Bool {
-        if key == "school[]" && !hasClickDot {
+        if redDotTypes.contains(key) && !hasClickDot {
             return true
         } else {
             return false
@@ -34,9 +43,21 @@ class FHFilterRedDotManager {
     }
 
     func selectFilterItem(key: String) {
-        if key == "school[]" {
-            hasClickDot = true
-            saveConfig()
+        hasClickDot = true
+    }
+
+    func setSelectedConditions(conditions: [String: Any]) {
+        if let theTypes = conditions["reddot_type"] as? String {
+            self.redDotTypes.removeAll()
+            self.redDotTypes.append("\(theTypes)[]")
         }
+        if let reddotVersion = conditions["reddot_version"] {
+            self.reddotVersion = reddotVersion as? String
+            print(oldDotVersion)
+            if oldDotVersion != self.reddotVersion ?? "" {
+                hasClickDot = false
+            }
+        }
+        self.saveConfig()
     }
 }

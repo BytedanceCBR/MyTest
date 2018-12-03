@@ -34,7 +34,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         contentView.addSubview(wrapperView)
         wrapperView.snp.makeConstraints { maker in
             maker.top.equalTo(6)
-            maker.bottom.equalToSuperview().offset(-26)
+            maker.bottom.equalToSuperview().offset(-20)
             maker.left.right.equalToSuperview()
         }
         
@@ -90,7 +90,7 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
     
     func removeListBottomView(_ heightOffset:CGFloat = -10, _ bottomMaskHidden:Bool = true) {
         wrapperView.snp.remakeConstraints { maker in
-            maker.top.equalTo(2)
+            maker.top.equalTo(6)
             maker.bottom.equalToSuperview().offset(heightOffset)
             maker.left.right.equalToSuperview()
         }
@@ -100,8 +100,8 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
     func resetListBottomView()
     {
         wrapperView.snp.remakeConstraints { maker in
-            maker.top.equalTo(2)
-            maker.bottom.equalToSuperview().offset(-26)
+            maker.top.equalTo(6)
+            maker.bottom.equalToSuperview().offset(-20)
             maker.left.right.equalToSuperview()
         }
         bottomMaskView.isHidden = false
