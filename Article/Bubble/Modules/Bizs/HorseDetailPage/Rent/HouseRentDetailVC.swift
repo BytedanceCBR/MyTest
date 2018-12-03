@@ -172,7 +172,13 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             } else {
                 self.houseRentTracer.rank = tracer["rank"] as? String ?? "be_null"
             }
+            self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
+            self.logPB = tracer["log_pb"] as? [String: Any]
         }
+        if let hsp = paramObj?.userInfo.allInfo["house_search_params"] as? [String : Any] {
+            self.houseSearchParams = paramsOfMap(hsp)
+        }
+        
     }
 
     private func isFromSearch(routeParamObj paramObj: TTRouteParamObj?) -> Bool {
@@ -336,6 +342,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.houseRentTracer.recordStayPage()
+//        self.recordStayPageSearch()
     }
 
     func resetMapCellIfNeeded() {
@@ -484,6 +491,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     }
 
     fileprivate func openSharePanel() {
+        
         var params = EnvContext.shared.homePageParams <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
@@ -587,11 +595,50 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         alert.showFrom(self.view)
     }
 
+    
+//    //detail search log
+//    fileprivate func recordGoDetailSearch() {
+//        if let searchParams = self.houseSearchParams {
+//            let detailParams = self.traceParams
+//                .exclude("card_type")
+//                .exclude("element_from")
+//                .exclude("enter_from")
+//
+//            let recordParams = EnvContext.shared.homePageParams <|>
+//                detailParams <|>
+//                searchParams <|>
+//                toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
+//            recordEvent(key: "go_detail_search",
+//                        params: recordParams
+//                            .exclude("element_type")
+//                            .exclude("page_type"))
+//        }
+//    }
+//
+//    fileprivate func recordStayPageSearch() {
+//        if let houseSearchParamsStay = self.houseSearchParamsStay {
+//            let detailParams = self.traceParams
+//                .exclude("card_type")
+//                .exclude("element_from")
+//                .exclude("enter_from")
+//                .exclude("element_type")
+//                .exclude("page_type")
+//            let recordParams = EnvContext.shared.homePageParams <|>
+//                detailParams <|>
+//                houseSearchParamsStay <|>
+//                toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
+//            recordEvent(key: "stay_page_search",
+//                        params: recordParams
+//                            .exclude("time")
+//                            .exclude("element_type")
+//                            .exclude("page_type"))
+//        }
+//    }
+
     deinit {
         if let staySearchParams = staySearchParams {
             recordEvent(key: "stay_page_search", params: staySearchParams)
         }
     }
-
 
 }

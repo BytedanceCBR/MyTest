@@ -1394,7 +1394,9 @@ func openRentHouseDetailPage(houseId: Int64,
     return { (params) in
         var tracer: [String: Any?] = tracerParams.paramsGetter([:])
 
+        var houseSearchDict : [String : Any]? = nil
         if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
+            houseSearchDict = houseSearchParams
             tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
                 right
             })
@@ -1407,7 +1409,12 @@ func openRentHouseDetailPage(houseId: Int64,
         tracer["element_from"] = "be_null"
         tracer["card_type"] = "left_pic"
         tracer["origin_from"] = "minetab_rent"
-        let info = ["tracer": tracer]
+
+        var info = ["tracer": tracer]
+        if let hsp = houseSearchDict  {
+            info["house_search_params"] = hsp
+        }
+        
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
     }
