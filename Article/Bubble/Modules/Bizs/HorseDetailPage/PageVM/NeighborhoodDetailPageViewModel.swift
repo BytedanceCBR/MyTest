@@ -514,16 +514,34 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 var element_from = "be_null"
                 var category_name = "be_null"
                 
+                var params:[String:Any] = [:]
+                if let id = data.id {
+                    params["neighborhoodId"] = id
+                }
                 if openUrl.contains("house_list_in_neighborhood") {
                     let houseType = openUrl.urlParameterForKey("house_type") ?? "0"
                     if houseType == "2" {
                         // 在售房源
                         element_from = "house_onsale"
                         category_name = "same_neighborhood_list"
+                        params["house_type"] = HouseType.secondHandHouse.rawValue
+                        if let title = data.name {
+                            params["title"] = title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))"
+                        }
+                        if let searchId = self.houseInSameNeighborhood.value?.data?.searchId {
+                            params["searchId"] = searchId
+                        }
                     } else if houseType == "3" {
                         // 在租房源
                         element_from = "house_renting"
                         category_name = "same_neighborhood_list"
+                        params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
+                        if let title = data.name {
+                            params["title"] = title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))"
+                        }
+                        if let searchId = self.rentHouseInSameNeighborhood.value?.data?.searchId {
+                            params["searchId"] = searchId
+                        }
                     }
                 } else if openUrl.contains("neighborhood_sales_list") {
                     // 成交历史
@@ -535,20 +553,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     toTracerParams(category_name, key: "category_name") <|>
                     toTracerParams(element_from, key: "element_from")
                 
-                var params:[String:Any] = [:]
-                if let id = data.id {
-                    params["neighborhoodId"] = id
-                }
-                if let title = data.name {
-                    params["title"] = title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))"
-                }
-                if let searchId = self.houseInSameNeighborhood.value?.data?.searchId {
-                    params["searchId"] = searchId
-                }
                 params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
                 params["followStatus"] = self.followStatus
-                
-                params["house_type"] = 4
                 
                 let tracePramas = transactionTrace
                 params["tracerParams"] = tracePramas

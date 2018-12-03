@@ -12,6 +12,7 @@ import ObjectMapper
 
 enum SearchSourceKey: String {
     case oldDetail = "old_detail"
+    case rentDetail = "rent_detail" //FIXME linlin
     case neighborhoodDetail = "neighborhood_detail"
 }
 

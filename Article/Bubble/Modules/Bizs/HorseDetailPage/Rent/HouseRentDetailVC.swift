@@ -161,6 +161,31 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         setupInfoMaskView()
         detailPageViewModel = HouseRentDetailViewMode(houseId: houseId,
                                                       houseRentTracer: houseRentTracer)
+        detailPageViewModel?.traceParam = getTracePamrasFromRent() <|>
+            toTracerParams("rent_detail", key: "enter_from")
+        
+        detailPageViewModel?.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
+            
+            var titleStr:String = "电话咨询"
+            
+            let traceParamClick = self?.getTracePamrasFromRent()
+            
+            self?.bottomBarViewModel?.traceParams = traceParamClick
+            if let phone = contactPhone?.phone, phone.count > 0 {
+                self?.bottomBarViewModel?.contactPhone.accept(contactPhone)
+            } else {
+                titleStr = "询底价"
+            }
+
+            if self?.houseType == .rentHouse {
+                titleStr = "电话咨询"
+            }
+            
+            self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
+            self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
+        })
+            .disposed(by: disposeBag)
+        
         bindFollowUp()
         detailPageViewModel?.houseRentTracer = self.houseRentTracer
         self.tableView.dataSource = detailPageViewModel
@@ -178,6 +203,19 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
         bindShareAction()
     }
+    
+    func getTracePamrasFromRent() -> TracerParams
+    {
+        return TracerParams.momoid()  <|>
+            toTracerParams(self.houseRentTracer.searchId ?? "be_null", key: "search_id")   <|>
+            toTracerParams(self.houseRentTracer.pageType, key: "page_type")   <|>
+            toTracerParams(self.houseRentTracer.cardType, key: "card_type")   <|>
+            toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams(self.houseRentTracer.groupId ?? "be_null", key: "group_id") <|>
+            toTracerParams(self.houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.houseRentTracer.elementFrom , key: "element_from") <|>
+            toTracerParams(self.houseRentTracer.rank, key: "rank")
+    }
 
     fileprivate func bindFollowUp() {
         if let detailPageViewModel = self.detailPageViewModel {
@@ -185,17 +223,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel, unowned self] in
 
-//                    var tracerParams = EnvContext.shared.homePageParams
-//                    if let params = detailPageViewModel.goDetailTraceParam {
-//                        tracerParams = tracerParams <|> params
-//                            .exclude("house_type")
-//                            .exclude("element_type")
-//                            .exclude("maintab_search")
-//                            .exclude("search")
-//                            .exclude("filter")
-//                    }
-//                    tracerParams = tracerParams <|>
-//                        toTracerParams(pageTypeString(detailPageViewModel.houseType ?? .newHouse), key: "page_type")
+                    let tracerParamsFollow = EnvContext.shared.homePageParams <|>
+                        self.getTracePamrasFromRent()
+
                     if let theDetailModel = detailPageViewModel {
                         let followUpOrCancel = theDetailModel.follwUpStatus.value.state() ?? false
                         self.followUpViewModel.followThisItem(isFollowUpOrCancel: !followUpOrCancel,
@@ -204,7 +234,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                                                               followAction: .rentHouse,
                                                               statusBehavior: theDetailModel.follwUpStatus)
                     }
-//                    detailPageViewModel?.followThisItem(isNeedRecord: true, traceParam: tracerParams)
+                    detailPageViewModel?.recordFollowEvent(tracerParamsFollow)
                 })
                 .disposed(by: disposeBag)
             //绑定关注状态回调

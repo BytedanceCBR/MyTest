@@ -570,7 +570,7 @@ func openRentHouseList(
         houseType:HouseType.rentHouse,
         bottomBarBinder: bottomBarBinder)
     listVC.followStatus = followStatus
-    listVC.tracerParams = tracerParams
+    listVC.tracerParams = tracerParams 
     navVC?.pushViewController(listVC, animated: true)
 }
 
