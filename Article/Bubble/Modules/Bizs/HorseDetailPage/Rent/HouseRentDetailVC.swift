@@ -335,14 +335,14 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             refreshStatusBar()
         }
         isFromPush = false
-        self.recordGoDetailSearch()
+//        self.recordGoDetailSearch()
     }
 
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.houseRentTracer.recordStayPage()
-        self.recordStayPageSearch()
+//        self.recordStayPageSearch()
     }
 
     func resetMapCellIfNeeded() {

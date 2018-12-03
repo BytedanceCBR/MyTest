@@ -157,7 +157,7 @@ func openRentHouseDetailPage(
         var tracer: [String: Any?] = tracerParams.paramsGetter([:])
 //        var houseSearchDict : [String : Any]? = nil
         if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
-            houseSearchDict = houseSearchParams
+//            houseSearchDict = houseSearchParams
             tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
                 right
             })
