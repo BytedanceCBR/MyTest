@@ -134,6 +134,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             if let theCell = tableView?.cellForRow(at: indexPath) as? MultitemCollectionNeighborhoodCell {
                 theCell.hasShowOnScreen = true
             }
+
         })
     }
 
@@ -413,12 +414,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         
                         let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                             theParams <|>
-                            toTracerParams("slide", key: "card_type") <|>
+                            toTracerParams("left_pic", key: "card_type") <|>
                             toTracerParams("neighborhood_detail", key: "enter_from") <|>
-                            // TODO: 埋点缺失logPB
-                            //                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
-                            toTracerParams("same_neighborhood", key: "element_from") <|>
-                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                            toTracerParams("same_neighborhood", key: "element_from")
                         
                         openErshouHouseList(
                             title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
@@ -436,12 +434,19 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         if let id = data.id ,
                             let title = data.name {
                             
+                            let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
+                                theParams <|>
+                                toTracerParams("left_pic", key: "card_type") <|>
+                                toTracerParams("neighborhood_detail", key: "enter_from") <|>
+                                toTracerParams(self.rentHouseInSameNeighborhood.value?.data?.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("same_neighborhood", key: "element_from")
                             openRentHouseList(
                                 title: title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
                                 neighborhoodId: id,
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .neighborhoodDetail,
+                                tracerParams: params,
                                 bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                             
                         }
@@ -620,6 +625,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     indexPath: indexPath,
                     tableView: tableView)
             }
+            
+            datas[indexPath.section].items[indexPath.row](cell)
             if let refreshCell = cell as? FHSameHouseItemListCell {
                 let tempRefreshCell = refreshCell
                 tempRefreshCell.houseType = self.sameHouseType
@@ -628,8 +635,6 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     indexPath: indexPath,
                     tableView: tableView)
             }
-            
-            datas[indexPath.section].items[indexPath.row](cell)
             if cell is NewHouseNearByCell
             {
                 nearByCell = cell as? NewHouseNearByCell
@@ -663,7 +668,8 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         tableView: UITableView) {
         let tempCell = cell
         tempCell.refreshCallback = { [weak tableView, weak self, weak tempCell] in
-            self?.changeSameHouseListHouseTypeState()
+            
+            self?.sameHouseType = tempCell?.houseType ?? .secondHandHouse
             tableView?.beginUpdates()
             if let refreshCell = tempCell {
                 let tempRefreshCell = refreshCell
@@ -680,18 +686,6 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         self.neighborhoodInfoFoldState = !self.neighborhoodInfoFoldState
     }
     
-    fileprivate func changeSameHouseListHouseTypeState()
-    {
-        if self.sameHouseType == .secondHandHouse {
-
-            self.sameHouseType = .rentHouse
-        }else if self.sameHouseType == .rentHouse {
-            
-            self.sameHouseType = .secondHandHouse
-        }
-    }
-    
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if datas[indexPath.section].selectors?.isEmpty ?? true == false {
             datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid())
@@ -713,5 +707,51 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let tempKey = "\(indexPath.section)_\(indexPath.row)"
         cellHeightCaches[tempKey] = cell.frame.size.height
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        guard let tableView = scrollView as? UITableView else {
+            return
+        }
+        let visibleCells = tableView.visibleCells
+        if visibleCells.count < 1 {
+            return
+        }
+
+        for cell in visibleCells {
+
+            if let theCell = cell as? FHSameHouseItemListCell {
+
+                if theCell.houseType == .secondHandHouse {
+
+                    let point = theCell.convert(CGPoint.zero, to: tableView.superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            theCell.addErshouHouseShowLog(indexPath)
+                        }
+                    }
+                    
+                }else if theCell.houseType == .rentHouse {
+
+                    let point = theCell.convert(CGPoint.zero, to: tableView.superview)
+                    let index = Int(UIScreen.main.bounds.size.height - point.y - 70) / 105
+                    if index > 0 {
+                        
+                        for i in 0 ..< index {
+                            
+                            let indexPath = IndexPath(row: i, section: 0)
+                            theCell.addRentHouseShowLog(indexPath)
+                        }
+                    }
+
+
+                }
+            }
+        }
     }
 }
