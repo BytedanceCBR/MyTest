@@ -155,7 +155,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Returns:
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
         let action: () -> Void = { [weak self] in
-            if let url = self?.detailData.value?.data?.reportUrl {
+            if let url = self?.detailData.value?.data?.houseOverview?.reportUrl {
                 self?.jumpToReportPage(url: url)
             } else {
                 self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")

@@ -777,6 +777,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             if let houseListOpenUrl = self?.categoryListViewModel?.houseListOpenUrl {
                 self?.queryString = ""
                 self?.resetFilterConditionByRequestData(openUrl: houseListOpenUrl)
+
+                //这里必须要在重置逻辑之前嗲用
+                if FHFilterRedDotManager.shared.shouldOpenAreaPanel() {
+                    //这里暂时只能写死了,为了实现学区房红点
+                    if let areaConditionPanel = self?.conditionFilterViewModel?.conditionItemViews[0] {
+                        self?.conditionFilterViewModel?.onOpenConditionPanel(panel: areaConditionPanel, index: 0)
+                    }
+                }
             }
         }
 
