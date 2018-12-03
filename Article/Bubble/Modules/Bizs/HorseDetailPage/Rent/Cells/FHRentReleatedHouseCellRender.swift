@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 func parseRentReleatedHouseListItemNode(
     _ data: [FHHouseRentRelatedResponseDataItemsModel]?,
+    tracer: HouseRentTracer,
     traceExtension: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
@@ -28,8 +29,16 @@ func parseRentReleatedHouseListItemNode(
                 let (offset, item) = e
                 return { (params) in
                     if let houseId = item.id {
+                        var tracer = tracerParams.paramsGetter([:])
+                        tracer["card_type"] = "left_pic"
+                        tracer["enter_from"] = "rent_detail"
+                        tracer["element_from"] = "related"
+                        tracer["rank"] = offset
+                        tracer["log_pb"] = item.logPb
+                        let info = ["tracer": tracer]
+                        let userInfo = TTRouteUserInfo(info: info)
                         let url = URL(string: "fschema://rent_detail?house_id=\(houseId)")
-                        TTRoute.shared()?.openURL(byPushViewController: url)
+                        TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
                     }
 
                 }
@@ -38,6 +47,8 @@ func parseRentReleatedHouseListItemNode(
 
         let paramsElement = TracerParams.momoid() <|>
             toTracerParams("related", key: "element_type") <|>
+            toTracerParams(tracer.rank, key: "rank") <|>
+            toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams("rent_detail", key: "page_type") <|>
         traceExtension
 
@@ -50,7 +61,10 @@ func parseRentReleatedHouseListItemNode(
                 let (offset, item) = e
                 let theParams = tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
-                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                    toTracerParams("rent", key: "house_type") <|>
+                    toTracerParams("slide", key: "card_type") <|>
+                    toTracerParams("rent_detail", key: "page_type") <|>
+                    toTracerParams("related", key: "element_type") <|>
                     toTracerParams(item.logPb as? [String : Any] ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }

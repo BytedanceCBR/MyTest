@@ -297,6 +297,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
+            tracer: self.houseRentTracer,
             traceExtension: params,
             disposeBag: disposeBag,
             tracerParams: params,
