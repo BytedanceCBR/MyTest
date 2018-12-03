@@ -10,10 +10,10 @@ class FHFilterRedDotManager {
 
     static let shared = FHFilterRedDotManager()
 
-    var hasClickDot = false
+    var hasClickDot = true
 
     private var redDotTypes: [String] = []
-    private var reddotVersion: String? = ""
+    private var reddotVersion: String = ""
     private var oldDotVersion: String = ""
 
     init() {
@@ -24,8 +24,8 @@ class FHFilterRedDotManager {
         if let redDotTypes = UserDefaults.standard.array(forKey: "redDotTypes") as? [String] {
             self.redDotTypes = redDotTypes
         }
-        reddotVersion = UserDefaults.standard.string(forKey: "version")
-        oldDotVersion = reddotVersion ?? ""
+        reddotVersion = UserDefaults.standard.string(forKey: "version") ?? ""
+        oldDotVersion = reddotVersion
     }
 
     private func saveConfig() {
@@ -52,10 +52,11 @@ class FHFilterRedDotManager {
             self.redDotTypes.append("\(theTypes)[]")
         }
         if let reddotVersion = conditions["reddot_version"] {
-            self.reddotVersion = reddotVersion as? String
-            print(oldDotVersion)
-            if oldDotVersion != self.reddotVersion ?? "" {
+            self.reddotVersion = reddotVersion as? String ?? ""
+            if oldDotVersion != self.reddotVersion {
                 hasClickDot = false
+            } else {
+                hasClickDot = true
             }
         }
         self.saveConfig()
