@@ -49,13 +49,17 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
 
     return {
-        return TableSectionNode(
-            items: [render],
-            selectors: nil,
-            tracer:[tracerEvaluationRecord],
-            sectionTracer: nil,
-            label: "",
-            type: .node(identifier: RentFacilityCell.identifier))
+        if (model?.data?.facilities?.count ?? 0) != 0 {
+            return TableSectionNode(
+                items: [render],
+                selectors: nil,
+                tracer:[tracerEvaluationRecord],
+                sectionTracer: nil,
+                label: "",
+                type: .node(identifier: RentFacilityCell.identifier))
+        } else {
+            return nil
+        }
     }
 }
 
