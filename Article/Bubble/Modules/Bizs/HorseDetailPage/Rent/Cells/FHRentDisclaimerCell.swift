@@ -284,6 +284,7 @@ func parseRentDisclaimerCellNode(model: FHRentDetailResponseDataModel?) -> () ->
 
 func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? FHRentDisclaimerCell {
+        theCell.disclaimerContent.text = model?.disclaimer?.text
         if let contact = model?.contact,
             let realtorName = contact.realtorName,
             !realtorName.isEmpty {
@@ -305,20 +306,5 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
         } else {
             theCell.hiddenOwnerLabel()
         }
-        theCell.displayOwnerLabel()
-        theCell.ownerLabel.text = "房屋负责人：李小强"
-        theCell.disclaimerContent.text = model?.disclaimer?.text
-
-        //测试代码
-        var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-        var imageModel = FHRentDetailResponseDataHouseImageModel()
-        imageModel.url = model?.contact?.businessLicense
-        imageModel.name = "营业执照"
-        headerImages.append(imageModel)
-        imageModel = FHRentDetailResponseDataHouseImageModel()
-        imageModel.url = model?.contact?.certificate
-        imageModel.name = "从业人员信息卡"
-        headerImages.append(imageModel)
-        theCell.headerImages = headerImages
     }
 }

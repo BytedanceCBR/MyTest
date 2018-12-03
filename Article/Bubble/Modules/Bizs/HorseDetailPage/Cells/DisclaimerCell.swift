@@ -78,6 +78,7 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
 
 func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailContact?, cell: BaseUITableViewCell)  {
     if let theCell = cell as? FHRentDisclaimerCell {
+        theCell.disclaimerContent.text = model?.text
         if let contact = contact,
             let realtorName = contact.realtorName,
             !realtorName.isEmpty {
@@ -99,21 +100,6 @@ func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailCon
         } else {
             theCell.hiddenOwnerLabel()
         }
-        theCell.displayOwnerLabel()
-        theCell.ownerLabel.text = "房屋负责人：李小强"
-        theCell.disclaimerContent.text = model?.text
-        
-        //测试代码
-        var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-        var imageModel = FHRentDetailResponseDataHouseImageModel()
-        imageModel.url = contact?.businessLicense
-        imageModel.name = "营业执照"
-        headerImages.append(imageModel)
-        imageModel = FHRentDetailResponseDataHouseImageModel()
-        imageModel.url = contact?.certificate
-        imageModel.name = "从业人员信息卡"
-        headerImages.append(imageModel)
-        theCell.headerImages = headerImages
     }
 }
 
