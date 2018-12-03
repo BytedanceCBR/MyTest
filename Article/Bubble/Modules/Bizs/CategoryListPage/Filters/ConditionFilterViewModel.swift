@@ -145,6 +145,7 @@ class ConditionFilterViewModel {
     }
 
     func setSelectedItem(items: [String: Any]) {
+        FHFilterRedDotManager.shared.setSelectedConditions(conditions: items)
         conditionItemViews.forEach { $0.value.setSelectedConditions(conditions: items) }
     }
 
