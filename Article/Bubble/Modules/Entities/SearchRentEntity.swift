@@ -83,6 +83,7 @@ struct RentInnerItemEntity: Mappable {
     var tags : [RentTagEntity]?
     var imprId : String?
     var pricing : String?
+    var price : String?
     var houseImageTag : RentTagEntity?
     var logPB: [String: Any]?    
     var fhSearchId : String?
@@ -103,6 +104,7 @@ struct RentInnerItemEntity: Mappable {
         tags <- map["tags"]
         imprId <- map["impr_id"]
         pricing <- map["pricing"]
+        price <- map["pricing"]
         houseImageTag <- map["house_image_tag"]
         logPB <- map["log_pb"]
         fhSearchId <- map["fhSearchId"]

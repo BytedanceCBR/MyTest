@@ -1376,11 +1376,12 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
                 theCell.roomSpaceLabel.text = data.pricePerSqm
                 theCell.priceLabel.text = data.price
 
-            }else {
-                theCell.priceLabel.text = data.pricePerSqm
-
+            }else if data.houseType == HouseType.rentHouse.rawValue{
+                theCell.priceLabel.text = data.price
             }
-            
+            else {
+                theCell.priceLabel.text = data.pricePerSqm
+            }
         }
 
 
