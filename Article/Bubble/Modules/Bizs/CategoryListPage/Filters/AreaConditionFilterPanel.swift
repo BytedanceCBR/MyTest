@@ -331,6 +331,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
         dataSources.last?.isShowCheckBox = true
         dataSources.last?.isMultiSelected = true
+        dataSources.first?.isShowRedDot = true
         tableViews.forEach { view in
             addSubview(view)
         }
@@ -673,6 +674,8 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
 
     let index: Int
 
+    var isShowRedDot: Bool = false
+
     init(index: Int) {
         self.index = index
     }
@@ -701,19 +704,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
             if selectedIndexPaths.count == 0 && indexPath.row == 0 {
                 setCellSelected(true, cell: theCell)
             }
-//            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
-//                theCell.redDot.isHidden = false
-//            } else {
-//                theCell.redDot.isHidden = true
-//            }
-            theCell.redDot.isHidden = true
-
-            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) {
+            if FHFilterRedDotManager.shared.shouldShowRedDot(key: nodes[indexPath.row].key) && isShowRedDot {
                 theCell.redDot.isHidden = false
             } else {
                 theCell.redDot.isHidden = true
             }
-
+//            theCell.redDot.isHidden = true
             return theCell
         } else {
             return UITableViewCell()

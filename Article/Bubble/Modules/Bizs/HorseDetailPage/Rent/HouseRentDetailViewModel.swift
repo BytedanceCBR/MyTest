@@ -374,6 +374,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         }
     }
 
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+
     func requestDetailData() {
 //        let task =
         FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
