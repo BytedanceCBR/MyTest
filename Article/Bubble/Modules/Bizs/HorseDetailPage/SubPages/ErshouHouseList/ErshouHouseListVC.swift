@@ -118,6 +118,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         ershouHouseListViewModel = ErshouHouseListViewModel(tableView: tableView, navVC: self.navigationController)
         ershouHouseListViewModel?.sameNeighborhoodFollowUp = self.sameNeighborhoodFollowUp
         ershouHouseListViewModel?.searchId = searchId
+        ershouHouseListViewModel?.traceParams = self.tracerParams
+        
         ershouHouseListViewModel?.datas
             .skip(1)
             .map { $0.count < 1 }

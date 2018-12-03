@@ -152,53 +152,53 @@ class FHHouseContactBottomBarViewModel {
     //TODO func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?)
     func refreshRentHouseBottomBar(model: FHRentDetailResponseModel) {
         self.bottomBar?.isHidden = false
-        if let contact = model.data?.contact {
-            self.bottomBar?.leftView.isHidden = contact.showRealtorinfo == 1 ? false : true
-            self.bottomBar?.avatarView.bd_setImage(with: URL(string: contact.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
-            let leftWidth = contact.showRealtorinfo == 1 ? 140 : 0
-
-            if var realtorName = contact.realtorName, realtorName.count > 0 {
-                if realtorName.count > 4 {
-                    realtorName = realtorName + "..."
-                }
-                self.bottomBar?.nameLabel.text = realtorName
-            } else {
-                self.bottomBar?.nameLabel.text = "经纪人"
-            }
-
-            if var agencyName = contact.agencyName,
-                agencyName.count > 0,
-                let bottomBar = self.bottomBar {
-                if agencyName.count > 4 {
-                    agencyName = agencyName + "..."
-                }
-                bottomBar.agencyLabel.text = agencyName
-                bottomBar.agencyLabel.isHidden = false
-
-                bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                    maker.left.equalTo(bottomBar.avatarView.snp.right).offset(10)
-                    maker.top.equalTo(bottomBar.avatarView).offset(2)
-                    maker.right.equalToSuperview()
-                })
-
-            }else {
-                if let bottomBar = self.bottomBar {
-                    bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                        maker.left.equalTo(bottomBar.avatarView.snp.right).offset(10)
-                        maker.centerY.equalTo(bottomBar.avatarView)
-                        maker.right.equalToSuperview()
-                    })
-                }
-                self.bottomBar?.agencyLabel.isHidden = true
-
-            }
-
-            self.bottomBar?.leftView.snp.updateConstraints({ (maker) in
-                maker.width.equalTo(leftWidth)
-            })
-
-
-        }
+//        if let contact = model.data?.contact {
+//            self.bottomBar?.leftView.isHidden = contact.showRealtorinfo == 1 ? false : true
+//            self.bottomBar?.avatarView.bd_setImage(with: URL(string: contact.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+//            let leftWidth = contact.showRealtorinfo == 1 ? 140 : 0
+//
+//            if var realtorName = contact.realtorName, realtorName.count > 0 {
+//                if realtorName.count > 4 {
+//                    realtorName = realtorName + "..."
+//                }
+//                self.bottomBar?.nameLabel.text = realtorName
+//            } else {
+//                self.bottomBar?.nameLabel.text = "经纪人"
+//            }
+//
+//            if var agencyName = contact.agencyName,
+//                agencyName.count > 0,
+//                let bottomBar = self.bottomBar {
+//                if agencyName.count > 4 {
+//                    agencyName = agencyName + "..."
+//                }
+//                bottomBar.agencyLabel.text = agencyName
+//                bottomBar.agencyLabel.isHidden = false
+//
+//                bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+//                    maker.left.equalTo(bottomBar.avatarView.snp.right).offset(10)
+//                    maker.top.equalTo(bottomBar.avatarView).offset(2)
+//                    maker.right.equalToSuperview()
+//                })
+//
+//            }else {
+//                if let bottomBar = self.bottomBar {
+//                    bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+//                        maker.left.equalTo(bottomBar.avatarView.snp.right).offset(10)
+//                        maker.centerY.equalTo(bottomBar.avatarView)
+//                        maker.right.equalToSuperview()
+//                    })
+//                }
+//                self.bottomBar?.agencyLabel.isHidden = true
+//
+//            }
+//
+//            self.bottomBar?.leftView.snp.updateConstraints({ (maker) in
+//                maker.width.equalTo(leftWidth)
+//            })
+//
+//
+//        }
 
         //如果电话不存在则默认是询底价
         var titleStr:String = "电话咨询"

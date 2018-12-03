@@ -10,6 +10,7 @@
 #import "UIColor+TTThemeExtension.h"
 #import "TTThemeManager.h"
 #import "TTThemeConst.h"
+#import "LOTAnimationView.h"
 
 
 #define kLongTextWidth 17
@@ -696,7 +697,9 @@
     
 }
 
-@property(nonatomic,strong)TTRefreshAnimationView *refreshAnimationView;
+//@property(nonatomic,strong)TTRefreshAnimationView *refreshAnimationView;
+
+@property(nonatomic,strong)LOTAnimationView *animationView;
 
 @property(nonatomic,strong)SSThemedLabel *titleLabel;
 
@@ -725,8 +728,15 @@
         _loadingText = loadingText;
         _noMoreText = noMoreText;
         
-        self.refreshAnimationView = [[TTRefreshAnimationView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
-        [self addSubview:self.refreshAnimationView];
+//        self.refreshAnimationView = [[TTRefreshAnimationView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+//        [self addSubview:self.refreshAnimationView];
+        
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"house_refresh" ofType:@"json"];
+        _animationView = [LOTAnimationView animationWithFilePath:filePath];
+        _animationView.contentMode = UIViewContentModeScaleToFill;
+        _animationView.frame = CGRectMake(0, 10, 80, 42);
+        _animationView.loopAnimation = YES;
+        [self addSubview:_animationView];
         
         self.titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
         self.titleLabel.font = [UIFont systemFontOfSize:9.0f];
@@ -743,12 +753,17 @@
 
 -(void)startLoading{
     
-    [self.refreshAnimationView startLoading];
+//    [self.refreshAnimationView startLoading];
+    
+    [self.animationView play];
 }
 
 -(void)stopLoading{
     
-    [self.refreshAnimationView stopLoading];
+//    [self.refreshAnimationView stopLoading];
+    
+    [self.animationView stop];
+
     
 }
 
@@ -756,7 +771,9 @@
     
     offset += 30;
     CGFloat fractionDragged = MIN(1, -offset / (kTTPullRefreshHeight - 30));
-    self.refreshAnimationView.percent = fractionDragged;
+//    self.refreshAnimationView.percent = fractionDragged;
+    
+    self.animationView.animationProgress = fractionDragged;
 }
 
 -(void)updateViewWithPullState:(PullDirectionState)state{
@@ -787,7 +804,8 @@
             break;
         case PULL_REFRESH_STATE_NO_MORE:
             
-            self.refreshAnimationView.hidden = YES;
+//            self.refreshAnimationView.hidden = YES;
+//            self.animationView.hidden = YES;
             tmp = _noMoreText;
             break;
         default:
@@ -804,11 +822,17 @@
 {
     if (self.titleLabel.text == nil || [self.titleLabel.text isEqualToString:@""]) {
         self.titleLabel.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2+10);
-        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
+//        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
+        
+        self.animationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
+
     }
     else {
         self.titleLabel.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - self.titleLabel.frame.size.height/2 - 8);
-        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 6 - self.refreshAnimationView.frame.size.height/2);
+//        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 6 - self.refreshAnimationView.frame.size.height/2);
+        
+        self.animationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 10 - self.animationView.frame.size.height/2);
+
     }
 }
 

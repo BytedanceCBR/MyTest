@@ -161,6 +161,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         setupInfoMaskView()
         detailPageViewModel = HouseRentDetailViewMode(houseId: houseId,
                                                       houseRentTracer: houseRentTracer)
+        detailPageViewModel?.traceParam = getTracePamrasFromRent() <|>
+            toTracerParams("rent_detail", key: "enter_from")
         
         detailPageViewModel?.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
             
@@ -174,12 +176,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             } else {
                 titleStr = "询底价"
             }
-            if self?.houseType == .neighborhood {
-                titleStr = "咨询经纪人"
-            }
-            
+
             if self?.houseType == .rentHouse {
-                titleStr = "咨询经纪人"
+                titleStr = "电话咨询"
             }
             
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
