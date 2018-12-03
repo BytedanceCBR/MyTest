@@ -22,6 +22,8 @@ func parseRentHouseListRowItemNode(
     navVC: UINavigationController?) -> [TableRowNode] {
     // 租房列表
 //    var traceDict = traceParams.paramsGetter([:])
+//    print("trace dict is: \(traceDict)")
+    
     
     let params = traceParams <|>
         toTracerParams("rent", key: "house_type") <|>
@@ -40,10 +42,11 @@ func parseRentHouseListRowItemNode(
                 tracerParams: params <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams("be_null", key: "element_from") <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    toTracerParams("related_list", key: "enter_from"),
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
                 houseSearchParams: houseSearchParams,
                 navVC: navVC)
+            // <|>
+            //                    toTracerParams("related_list", key: "enter_from"),
     }
     
     let records = data?
