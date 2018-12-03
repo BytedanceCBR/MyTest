@@ -41,6 +41,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     private var groupId: String = ""
     
     var traceParam : TracerParams = TracerParams.momoid()
+    
+    var logPb : [String : Any]?
+    var searchId : String?
 
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
@@ -370,8 +373,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     }
 
     func requestDetailData() {
-        let task = FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
+//        let task =
+        FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil {
+                self?.logPb = model?.data?.logPb as? [String : Any]
+                self?.searchId = self?.logPb?["search_id"] as? String
                 self?.detailData.accept(model)
                 if let contactDict = self?.detailData.value?.data?.contact?.toDictionary() as? [String: Any]
                 {

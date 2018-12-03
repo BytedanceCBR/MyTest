@@ -137,6 +137,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             } else {
                 self.houseRentTracer.rank = tracer["rank"] as? String ?? "be_null"
             }
+            self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
+            self.logPB = tracer["log_pb"] as? [String: Any]
         }
     }
 
@@ -441,12 +443,22 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     }
 
     fileprivate func openSharePanel() {
-        var logPB: Any? = nil
-        logPB = self.logPB
-        var params = EnvContext.shared.homePageParams <|>
+//        var logPB: Any? = nil
+//        logPB = self.logPB
+        var params =  self.traceParams <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
-            toTracerParams(self.logPB ?? logPB, key: "log_pb")
-
+        toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
+        toTracerParams(self.houseRentTracer.enterFrom , key: "enter_from" ) <|>
+        toTracerParams(self.houseRentTracer.elementFrom , key:"element_from" ) <|>
+        toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
+        toTracerParams(self.houseRentTracer.originFrom, key: "origin_from") <|>
+        toTracerParams(self.houseRentTracer.searchId, key: "origin_search_id") <|>
+        toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id")
+        
+        if let logPb = self.detailPageViewModel?.logPb {
+            params = params <|> toTracerParams(logPb, key: "log_pb")
+        }
+        
         params = params
             .exclude("filter")
             .exclude("icon_type")
@@ -474,6 +486,49 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
         }
     }
 
+    func shareManager(
+        _ shareManager: TTShareManager!,
+        clickedWith activity: TTActivityProtocol!,
+        sharePanel panelController: TTActivityPanelControllerProtocol!) {
+        guard let activity = activity else {
+            return
+        }
+        var platform = "be_null"
+        if activity.isKind(of: TTWechatTimelineActivity.self)  { // 微信朋友圈
+            platform = "weixin_moments"
+        } else if activity.isKind(of: TTWechatActivity.self)  { // 微信朋友分享
+            platform = "weixin"
+        } else if activity.isKind(of: TTQQFriendActivity.self)  { //
+            platform = "qq"
+        } else if activity.isKind(of: TTQQZoneActivity.self)  {
+            platform = "qzone"
+        }
+        
+        var params =  self.traceParams <|>
+            toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
+            toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
+            toTracerParams(self.houseRentTracer.enterFrom , key: "enter_from" ) <|>
+            toTracerParams(self.houseRentTracer.elementFrom , key:"element_from" ) <|>
+            toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(self.houseRentTracer.originFrom, key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.searchId, key: "origin_search_id") <|>
+            toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id")
+        
+        if let logPb = self.detailPageViewModel?.logPb {
+            params = params <|> toTracerParams(logPb, key: "log_pb")
+        }
+        
+        params = params <|> toTracerParams(platform, key: "platform")
+        
+        params = params
+            .exclude("filter")
+            .exclude("icon_type")
+            .exclude("maintab_search")
+            .exclude("search")
+        recordEvent(key: "share_platform", params: params)
+        
+    }
+    
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
