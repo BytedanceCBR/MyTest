@@ -132,5 +132,6 @@ fileprivate func fillRentHouseListitemCell(_ data: FHHouseRentRelatedResponseDat
         } else {
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
+        theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }

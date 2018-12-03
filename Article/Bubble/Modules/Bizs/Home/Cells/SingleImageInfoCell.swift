@@ -304,7 +304,7 @@ class CornerView: UIView {
         } else {
             self.majorTitle.numberOfLines = 2
             
-            let fitSize = self.majorTitle.sizeThatFits(CGSize(width: UIScreen.main.bounds.width * 0.60, height: 0))
+            let fitSize = self.majorTitle.sizeThatFits(CGSize(width: UIScreen.main.bounds.width * (UIScreen.main.bounds.size.width > 376 ? 0.6 : (UIScreen.main.bounds.size.width > 321 ? 0.56 : 0.48)), height: 0))
             
             majorTitle.snp.updateConstraints { maker in
                 maker.left.right.top.equalToSuperview()

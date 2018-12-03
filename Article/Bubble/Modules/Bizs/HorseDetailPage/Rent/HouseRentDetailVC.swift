@@ -504,7 +504,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             .disposed(by: disposeBag)
 
 
-        var tracerParams = EnvContext.shared.homePageParams <|> traceParams
+        var tracerParams = EnvContext.shared.homePageParams <|>
+            (self.bottomBarViewModel?.traceParams ?? TracerParams.momoid())
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
