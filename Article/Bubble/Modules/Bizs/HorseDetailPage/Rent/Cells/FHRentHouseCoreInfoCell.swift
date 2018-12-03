@@ -11,6 +11,8 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
     var pending: CGFloat = 13
     var cubePending: CGFloat = 4
+    var leftPending: CGFloat = 20
+    var rightPending: CGFloat = 20
 
     private var itemViews: [HorseCoreInfoItemView] = []
 
@@ -68,7 +70,7 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
     }
 
     func layoutItems() {
-        var offsetX: CGFloat = cubePending
+        var offsetX: CGFloat = leftPending
         itemViews.enumerated().forEach { (e) in
             let (offset, view) = e
             if offset != itemViews.count - 1 {
@@ -80,15 +82,15 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
             } else {
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
-                                    width: self.frame.width - offsetX - cubePending,
+                                    width: self.frame.width - offsetX - rightPending,
                                     height: self.frame.height)
             }
         }
     }
 
     func averageLayoutItems() {
-        let width = (self.frame.width - 4 * cubePending) / 3
-        var offsetX: CGFloat = cubePending
+        let width = (self.frame.width - leftPending * 2 - 2 * cubePending) / 3
+        var offsetX: CGFloat = leftPending
         itemViews.forEach { (view) in
             view.frame = CGRect(x: offsetX, y: 0, width: width, height: self.frame.height)
             offsetX = offsetX + cubePending + width

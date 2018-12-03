@@ -168,7 +168,7 @@ func openRentHouseDetailPage(
         tracer["element_from"] = "be_null"
         tracer["card_type"] = "left_pic"
         tracer["log_pb"] = logPB
-        let info = ["tracer": tracer]
+        let info = ["tracer": tracer, "is_from_search": true] as [String : Any]
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
     }

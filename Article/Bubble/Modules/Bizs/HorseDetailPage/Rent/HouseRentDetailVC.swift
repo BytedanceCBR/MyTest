@@ -34,6 +34,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
     private let followUpStatus = BehaviorRelay<Bool>(value: false)
 
+    private var staySearchParams: TracerParams? = nil
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -123,6 +124,18 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                 EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
+        if self.isFromSearch(routeParamObj: paramObj) {
+            let params = TracerParams.momoid() <|>
+                toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
+                toTracerParams(houseRentTracer.searchQuery ?? "be_null", key: "search_query") <|>
+                toTracerParams(houseRentTracer.enterQuery ?? "be_null", key: "enter_query") <|>
+                toTracerParams(houseRentTracer.time ?? "be_null", key: "time") <|>
+                toTracerParams(houseRentTracer.offset ?? "be_null", key: "offset") <|>
+                toTracerParams(houseRentTracer.limit ?? "be_null", key: "limit") <|>
+                toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
+            recordEvent(key: "go_detail_search", params: params)
+            self.staySearchParams = params
+        }
     }
 
     private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
@@ -132,12 +145,42 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             self.houseRentTracer.elementFrom = tracer["element_from"] as? String ?? "be_null"
             self.houseRentTracer.logPb = tracer["log_pb"]
             self.houseRentTracer.searchId = tracer["search_id"] as? String ?? "be_null"
+            self.houseRentTracer.enterQuery = tracer["enter_query"] as? String ?? "be_null"
+            self.houseRentTracer.searchQuery = tracer["search_query"] as? String ?? "be_null"
+            self.houseRentTracer.queryType = tracer["query_type"] as? String ?? "be_null"
+
+            if let time = tracer["time"] as? Int {
+                self.houseRentTracer.time = "\(time)"
+            } else {
+                self.houseRentTracer.time = tracer["time"] as? String ?? "be_null"
+            }
+
+            if let offset = tracer["offset"] as? Int {
+                self.houseRentTracer.offset = "\(offset)"
+            } else {
+                self.houseRentTracer.offset = tracer["offset"] as? String ?? "be_null"
+            }
+
+            if let limit = tracer["limit"] as? Int {
+                self.houseRentTracer.limit = "\(limit)"
+            } else {
+                self.houseRentTracer.limit = tracer["limit"] as? String ?? "be_null"
+            }
+
             if let rank = tracer["rank"] as? Int {
                 self.houseRentTracer.rank = "\(rank)"
             } else {
                 self.houseRentTracer.rank = tracer["rank"] as? String ?? "be_null"
             }
         }
+    }
+
+    private func isFromSearch(routeParamObj paramObj: TTRouteParamObj?) -> Bool {
+        if let isFromSearch = paramObj?.userInfo.allInfo["is_from_search"] as? Bool,
+            isFromSearch == true {
+            return true
+        }
+        return false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -441,11 +484,13 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     }
 
     fileprivate func openSharePanel() {
-        var logPB: Any? = nil
-        logPB = self.logPB
         var params = EnvContext.shared.homePageParams <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
-            toTracerParams(self.logPB ?? logPB, key: "log_pb")
+            toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
+            toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams(self.houseRentTracer.elementFrom, key: "element_from") <|>
+            toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(self.houseRentTracer.logPb ?? "be_null", key: "log_pb")
 
         params = params
             .exclude("filter")
@@ -471,6 +516,29 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
             }
 
             self.shareManager.displayActivitySheet(withContent: shareContentItems)
+        }
+    }
+
+    func shareManager(
+        _ shareManager: TTShareManager!,
+        clickedWith activity: TTActivityProtocol!,
+        sharePanel panelController: TTActivityPanelControllerProtocol!) {
+        guard let activity = activity else {
+            return
+        }
+        var platform = "be_null"
+        if activity.isKind(of: TTWechatTimelineActivity.self)  { // 微信朋友圈
+            platform = "weixin_moments"
+        } else if activity.isKind(of: TTWechatActivity.self)  { // 微信朋友分享
+            platform = "weixin"
+        } else if activity.isKind(of: TTQQFriendActivity.self)  { //
+            platform = "qq"
+        } else if activity.isKind(of: TTQQZoneActivity.self)  {
+            platform = "qzone"
+        }
+
+        if let shareParams = shareParams {
+            recordEvent(key: "share_platform", params: shareParams <|> toTracerParams(platform, key: "platform"))
         }
     }
 
@@ -517,6 +585,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                     params: tracerParams.exclude("element_type"))
 
         alert.showFrom(self.view)
+    }
+
+    deinit {
+        if let staySearchParams = staySearchParams {
+            recordEvent(key: "stay_page_search", params: staySearchParams)
+        }
     }
 
 
