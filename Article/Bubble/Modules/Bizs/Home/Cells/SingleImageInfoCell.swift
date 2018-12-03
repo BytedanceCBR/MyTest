@@ -239,7 +239,7 @@ class CornerView: UIView {
         
         roomSpaceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(priceLabel.snp.right).offset(7)
-            maker.centerY.equalTo(priceLabel)
+            maker.centerY.equalTo(priceLabel).offset(2)
             maker.height.equalTo(17)
         }
 
@@ -272,14 +272,14 @@ class CornerView: UIView {
             }
             roomSpaceLabel.snp.remakeConstraints { maker in
                 maker.left.equalTo(originPriceLabel.snp.right).offset(offset)
-                maker.centerY.equalTo(priceLabel)
+                maker.centerY.equalTo(priceLabel).offset(2)
                 maker.height.equalTo(17)
             }
         } else {
             originPriceLabel.isHidden = true
             roomSpaceLabel.snp.remakeConstraints { maker in
                 maker.left.equalTo(priceLabel.snp.right).offset(7)
-                maker.centerY.equalTo(priceLabel)
+                maker.centerY.equalTo(priceLabel).offset(1)
                 maker.height.equalTo(17)
             }
         }
@@ -434,7 +434,7 @@ func createTagAttrString(
         attributeText.yy_setTextBinding(YYTextBinding(deleteConfirm: false), range: range)
 
         let border = YYTextBorder.init(fill: backgroundColor, cornerRadius: 2)
-        border.insets = UIEdgeInsets(top: 0, left: -3, bottom:  0, right: -3)
+        border.insets = UIEdgeInsets(top: 0, left: -4, bottom:  0, right: -4)
 
         attributeText.yy_setTextBackgroundBorder(border, range: range)
     }
