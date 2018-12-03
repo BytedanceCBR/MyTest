@@ -152,6 +152,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     })
                     .disposed(by: disposeBag)
             let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
+
                 self?.rentHouseInSameNeighborhood.accept(model)
             }
 
@@ -222,6 +223,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
 
+            if self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0 {
+                
+                self.dataSource.sameHouseType = .secondHandHouse
+            }else if self.rentHouseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0 {
+                
+                self.dataSource.sameHouseType = .rentHouse
+            }
             
             var theParams = EnvContext.shared.homePageParams <|>
 //                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
