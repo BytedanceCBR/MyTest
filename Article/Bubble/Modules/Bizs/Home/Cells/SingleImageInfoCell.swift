@@ -413,6 +413,7 @@ func fillHouseItemToCell(_ cell: SingleImageInfoCell,
     cell.majorImageView.bd_setImage(with: URL(string: item.houseImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
 
     cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
+    cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     //新上/降价
 }
 
@@ -500,6 +501,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
             cell.imageTopLeftLabelBgView.isHidden = true
         }
         cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
+        cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
     
     @objc func update(withSecondHouseModel model: FHSearchHouseDataItemsModel, isFirstCell: Bool, isLastCell: Bool) {
@@ -561,6 +563,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
             cell.imageTopLeftLabelBgView.isHidden = true
         }
         cell.updateOriginPriceLabelConstraints(originPriceText: item.originPrice)
+        cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
     
     @objc func update(withNewHouseModel model: FHNewHouseItemModel, isFirstCell: Bool,  isLastCell: Bool) {
@@ -673,6 +676,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
             cell.imageTopLeftLabelBgView.isHidden = true
         }
         cell.updateOriginPriceLabelConstraints(originPriceText: nil)
+        cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }
 

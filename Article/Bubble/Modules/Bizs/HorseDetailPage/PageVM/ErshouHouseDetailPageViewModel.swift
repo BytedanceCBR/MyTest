@@ -1119,6 +1119,7 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
         theCell.updateOriginPriceLabelConstraints(originPriceText: data.originPrice)
+        theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }
 
