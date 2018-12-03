@@ -34,13 +34,17 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
         if let evaluationInfo = neighborhoodInfo?.evaluationInfo {
             theCell.starsContainer.isHidden = false
             theCell.starsContainer.updateStarsCount(scoreValue: evaluationInfo.totalScore)
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(50)
+            }
         } else {
             theCell.starsContainer.isHidden = true
+            theCell.starsContainer.snp.updateConstraints { maker in
+                maker.height.equalTo(0)
+            }
         }
         theCell.nameValue.text = neighborhoodInfo?.areaName
-        theCell.starsContainer.snp.updateConstraints { maker in
-            maker.height.equalTo(50)
-        }
+        
         theCell.neighborhoodId = neighborhoodInfo?.id
         theCell.name = neighborhoodInfo?.name
         if let detailUrl = neighborhoodInfo?.evaluationInfo?.detailUrl,
