@@ -109,5 +109,5 @@
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHRentDetailAPI.h"
 #import "FHRentDetailResponse.h"
-
+#import "TTFullScreenLoadingView.h"
 #endif /* Article_Bridging_Header_h */

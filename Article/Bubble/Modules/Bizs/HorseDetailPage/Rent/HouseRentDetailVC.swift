@@ -11,8 +11,17 @@ import Charts
 import RxSwift
 import RxCocoa
 import Reachability
+enum MyEnumError: Error {
+    case errorOne
+    case errorTwo
+    /// 实现Error协议的localizedDescription只读实例属性
+    var localizedDescription: String {
+        let desc = self == .errorOne ? "the first errror" : "the second error"
+        return "\(self): \(desc)"
+    }
+}
 
-class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
+class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewControllerErrorHandler {
 
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
@@ -35,6 +44,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     private let followUpStatus = BehaviorRelay<Bool>(value: false)
 
     private var staySearchParams: TracerParams? = nil
+
+    private lazy var loadingView: TTFullScreenLoadingView = {
+        let re = TTFullScreenLoadingView(frame: CGRect.zero)
+        return re
+    }()
 
     var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
@@ -98,6 +112,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
     var searchId: String?
     var houseRentTracer: HouseRentTracer
 
+
     var houseSearchParams: TracerParams? {
         didSet {
             if let houseSearchParams = houseSearchParams {
@@ -118,6 +133,10 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                                                cardType: "left_pic")
         self.followUpViewModel = FollowUpViewModel()
         super.init(nibName: nil, bundle: nil)
+        self.netStateInfoVM = NHErrorViewModel(
+            errorMask: infoMaskView,
+            requestRetryText:"网络异常",
+            isUserClickEnable:false)
         getTraceParams(routeParamObj: paramObj)
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
@@ -227,9 +246,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                 titleStr = "询底价"
             }
 
-
-
-
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
             self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
         })
@@ -246,11 +262,46 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
                                                               houseType: .rentHouse)
         bindButtomBarState()
         detailPageViewModel?.navVC = self.navigationController
-        //触发请求数据
-        detailPageViewModel?.requestDetailData()
         view.bringSubview(toFront: navBar)
-
+        bindRequestListener()
+        // 发送请求
+        requestDetailData()
         bindShareAction()
+    }
+
+    func requestDetailData() {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // TODO: 实现网络异常提醒
+            netStateInfoVM?.onRequestInvalidNetWork()
+        } else {
+            netStateInfoVM?.onRequest()
+            self.tableView.isHidden = true
+            self.tt_startUpdate()
+            //触发请求数据
+            detailPageViewModel?.requestDetailData()
+        }
+    }
+
+    func bindRequestListener() {
+        detailPageViewModel?.onDataLoaded = { [weak self] in
+            self?.tableView.isHidden = false
+            self?.tt_endUpdataData()
+            if self?.tt_hasValidateData() ?? false {
+                self?.netStateInfoVM?.onRequestNormalData()
+            } else {
+                self?.netStateInfoVM?.onRequestNilData()
+            }
+        }
+        detailPageViewModel?.onRequestError = { [weak self] (error) in
+            self?.tableView.isHidden = true
+            self?.tt_endUpdataData()
+            self?.netStateInfoVM?.onRequestError(error: error)
+            // TODO: 显示错误提示
+        }
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return (self.detailPageViewModel?.datas.count ?? 0) > 0
     }
     
     func getTracePamrasFromRent() -> TracerParams
@@ -594,46 +645,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol {
 
         alert.showFrom(self.view)
     }
-
-    
-//    //detail search log
-//    fileprivate func recordGoDetailSearch() {
-//        if let searchParams = self.houseSearchParams {
-//            let detailParams = self.traceParams
-//                .exclude("card_type")
-//                .exclude("element_from")
-//                .exclude("enter_from")
-//
-//            let recordParams = EnvContext.shared.homePageParams <|>
-//                detailParams <|>
-//                searchParams <|>
-//                toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
-//            recordEvent(key: "go_detail_search",
-//                        params: recordParams
-//                            .exclude("element_type")
-//                            .exclude("page_type"))
-//        }
-//    }
-//
-//    fileprivate func recordStayPageSearch() {
-//        if let houseSearchParamsStay = self.houseSearchParamsStay {
-//            let detailParams = self.traceParams
-//                .exclude("card_type")
-//                .exclude("element_from")
-//                .exclude("enter_from")
-//                .exclude("element_type")
-//                .exclude("page_type")
-//            let recordParams = EnvContext.shared.homePageParams <|>
-//                detailParams <|>
-//                houseSearchParamsStay <|>
-//                toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
-//            recordEvent(key: "stay_page_search",
-//                        params: recordParams
-//                            .exclude("time")
-//                            .exclude("element_type")
-//                            .exclude("page_type"))
-//        }
-//    }
 
     deinit {
         if let staySearchParams = staySearchParams {
