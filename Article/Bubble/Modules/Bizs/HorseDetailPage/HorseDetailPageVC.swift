@@ -22,7 +22,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     private let houseId: Int64
     private let houseType: HouseType
-
+    private var source: String?
+    
     private let disposeBag = DisposeBag()
 
     private var detailPageViewModel: DetailPageViewModel?
@@ -149,6 +150,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         checkTraceParam(paramObj?.allParams)
         if let logPb = paramObj?.userInfo.allInfo["log_pb"] {
             traceParams = traceParams <|> toTracerParams(logPb , key: "log_pb");
+        }
+        if let source = paramObj?.userInfo.allInfo["source"] as? String {
+            self.source = source;
         }
         
         self.isFromPush = true
@@ -342,6 +346,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController, searchId)
+        detailPageViewModel?.source = self.source
+        
         detailPageViewModel?.showMessageAlert = { [weak self] (message) in
             self?.showLoadingAlert(message: message)
         }

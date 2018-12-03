@@ -19,6 +19,8 @@ extension Notification.Name {
 
 protocol DetailPageViewModel: class {
 
+    var source: String? { get set } // 页面来源
+
     var logPB: Any?  { get set }
     
     var searchId: String? { get set }
