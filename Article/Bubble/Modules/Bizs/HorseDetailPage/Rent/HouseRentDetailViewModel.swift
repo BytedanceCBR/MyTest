@@ -44,6 +44,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     
     var logPb : [String : Any]?
     var searchId : String?
+    var onDataLoaded: (() -> Void)?
+    var onRequestError: ((Error?) -> Void)?
 
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
@@ -55,7 +57,6 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             .filter { $0.0 != nil }
             .subscribe(onNext: { [weak self] (_) in
                 if let result = self?.processData()([]) {
-
                     self?.datas = result
                     self?.tableView?.reloadData()
                     DispatchQueue.main.async {
@@ -64,7 +65,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             self?.bindTableScrollingTrace()
                         }
                     }
-
+                    self?.onDataLoaded?()
                 }
             }).disposed(by: disposeBag)
     }
@@ -155,8 +156,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Returns:
     func parseRentHouseSummarySection() -> () -> [TableSectionNode]? {
         let action: () -> Void = { [weak self] in
-            if let url = self?.detailData.value?.data?.houseOverview?.reportUrl {
-                self?.jumpToReportPage(url: url)
+            if let url = self?.detailData.value?.data?.houseOverview?.reportUrl,
+                !url.isEmpty {
+                self?.jumpToReportPage(url: "http://i.haoduofangs.com/\(url)")
             } else {
                 self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
             }
@@ -399,8 +401,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
                 }
                 self?.shareInfo = model?.data?.shareInfo
+                self?.requestReletedData()
+            } else {
+                self?.onRequestError?(error)
             }
-            self?.requestReletedData()
         }
     }
     
