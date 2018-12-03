@@ -775,6 +775,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.bindHouseSearchParams()
 
             if let houseListOpenUrl = self?.categoryListViewModel?.houseListOpenUrl {
+                self?.queryString = ""
                 self?.resetFilterConditionByRequestData(openUrl: houseListOpenUrl)
             }
         }
