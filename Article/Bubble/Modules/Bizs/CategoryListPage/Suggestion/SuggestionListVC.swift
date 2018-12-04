@@ -907,7 +907,8 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let guessHeight:CGFloat = isFirstGuessHeightShow ? 138 : CGFloat (guessYouWantItems.value.count > 0 ? 138 : 0)
+        let tempHeight = self.sectionHeaderView.guessView.guessYouWangtViewHeight
+        let guessHeight:CGFloat = isFirstGuessHeightShow ? 138 : CGFloat (guessYouWantItems.value.count > 0 ? tempHeight : 0)
         if suggestions.value.count > 0 {
             return CGFloat.leastNormalMagnitude
         }
