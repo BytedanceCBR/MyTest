@@ -248,7 +248,7 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         
         chartBgView.addSubview(chartView)
         chartView.snp.makeConstraints { maker in
-            maker.left.equalTo(0)
+            maker.left.equalTo(8)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
             maker.height.equalTo(180)
@@ -296,7 +296,7 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
         leftAxis.labelTextColor = hexStringToUIColor(hex: kFHCoolGrey3Color)
         leftAxis.labelFont = .systemFont(ofSize: 12)
         leftAxis.axisLineColor = hexStringToUIColor(hex: "#dae1e7")
-        leftAxis.xOffset = 20
+        leftAxis.xOffset = 12
         leftAxis.labelCount = 4
         leftAxis.drawAxisLineEnabled = true
         leftAxis.gridColor = hexStringToUIColor(hex: "#ebeff2")
