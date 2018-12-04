@@ -806,6 +806,18 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
             if let info = item.info {
                 infos["suggestion"] = createQueryCondition(info)
             }
+            
+            var tracer = [String : Any]()
+            let dict =  self.tracerParams.paramsGetter([:])
+            if let elementFrom = dict["element_from"] {
+                tracer["element_from"] = elementFrom
+            }
+            if let enterFrom = dict["enter_from"] {
+                tracer["enter_from"] = enterFrom
+            }
+            
+            infos["tracer"] = tracer
+            
             let userInfo = TTRouteUserInfo(info: infos)
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
             if self.onSuggestionSelected != nil {
