@@ -66,7 +66,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         re.setAttributedTitle(
             attributeText("开始找房",
                           color: UIColor.white,
-                          font: CommonUIStyle.Font.pingFangRegular(16)),
+                          font: CommonUIStyle.Font.pingFangMedium(16)),
             for: .normal)
         re.layer.cornerRadius = 26
         re.backgroundColor = hexStringToUIColor(hex: "#299cff")

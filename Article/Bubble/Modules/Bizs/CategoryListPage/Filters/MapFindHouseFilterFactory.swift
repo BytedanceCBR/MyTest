@@ -94,7 +94,7 @@ import RxCocoa
             filterPanelView.addSubview(searchSortBtn)
             searchSortBtn.snp.makeConstraints { (make) in
                 make.centerY.equalTo(filterPanelView).offset(4)
-                make.right.equalTo(-10)
+                make.right.equalTo(-20)
                 make.width.height.equalTo(20)
             }
             searchFilterPanel.snp.makeConstraints { (make) in

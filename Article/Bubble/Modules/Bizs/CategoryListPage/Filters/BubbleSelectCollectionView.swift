@@ -555,7 +555,7 @@ class BubbleCollectionSectionHeader: UICollectionReusableView {
 
     lazy var label: UILabel = {
         let result = UILabel()
-        result.font = CommonUIStyle.Font.pingFangRegular(16)
+        result.font = CommonUIStyle.Font.pingFangMedium(16)
         result.textColor = hexStringToUIColor(hex: "#081f33")
         return result
     }()
