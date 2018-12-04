@@ -11,7 +11,7 @@ DSYM_UPLOAD_URL="http://symbolicate.byted.org/slardar_ios_upload"
 # 自定义配置
 ###############################################################################
 # Debug模式编译是否上传，1＝上传 0＝不上传，默认不上传
-UPLOAD_DEBUG_SYMBOLS=1
+UPLOAD_DEBUG_SYMBOLS=0
 
 # 模拟器编译是否上传，1＝上传，0＝不上传，默认不上传
 UPLOAD_SIMULATOR_SYMBOLS=0

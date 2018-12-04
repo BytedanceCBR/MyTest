@@ -69,7 +69,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
     lazy var navBar: CategorySearchNavBar = {
         let result = CategorySearchNavBar()
-        result.searchInput.placeholder = "二手房/租房/小区"
+        result.setSearchPlaceHolderText(text: "二手房/租房/小区")
         result.searchable = true
         return result
     }()
@@ -400,7 +400,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         houseType
 //            .debug("bindHouseTypeObv")
             .subscribe(onNext: { [weak self] (type) in
-                self?.navBar.searchInput.placeholder = searchBarPlaceholder(type)
+                self?.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(type))
                 self?.navBar.searchTypeLabel.text = type.stringValue()
                 let size = self?.navBar.searchTypeLabel.sizeThatFits(CGSize(width: 100, height: 20)) ?? CGSize(width: 42, height: 20)
                 self?.navBar.searchTypeLabel.snp.updateConstraints({ (maker) in
@@ -447,7 +447,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         self.tableViewModel.requestHistoryFromRemote(houseType: "\(self.houseType.value.rawValue)")
         if let rollData = homePageRollData {
             self.canSearchWithRollData = true
-            navBar.searchInput.placeholder = rollData.text ?? ""
+            navBar.setSearchPlaceHolderText(text: rollData.text ?? "")
         }
     }
 
