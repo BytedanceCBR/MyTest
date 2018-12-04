@@ -254,7 +254,8 @@ TTAccountMulticastProtocol
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+        _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.alwaysBounceVertical = YES;
 
         if (@available(iOS 11.0, *)) {

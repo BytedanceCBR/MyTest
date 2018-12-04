@@ -770,16 +770,14 @@
 - (void)updateAnimationWithScrollOffset:(CGFloat)offset{
     
     offset += 30;
-    CGFloat fractionDragged = MIN(1, -offset / (kTTPullRefreshHeight - 30));
+//    CGFloat fractionDragged = MIN(1, -offset / (kTTPullRefreshHeight - 30));
 //    self.refreshAnimationView.percent = fractionDragged;
-    
-    self.animationView.animationProgress = fractionDragged;
+//    self.animationView.animationProgress = fractionDragged;
 }
 
 -(void)updateViewWithPullState:(PullDirectionState)state{
     
     NSString *tmp;
-    
     switch (state) {
         case PULL_REFRESH_STATE_INIT:
             
@@ -792,6 +790,8 @@
         case PULL_REFRESH_STATE_PULL:
             
             tmp = _initText;
+            // UI要求 一直拖拽着时也要有动画
+            [self startLoading];
             break;
         case PULL_REFRESH_STATE_PULL_OVER:
             

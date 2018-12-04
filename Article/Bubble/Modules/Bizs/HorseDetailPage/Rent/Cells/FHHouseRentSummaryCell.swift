@@ -118,8 +118,10 @@ func convertRentDetailToErshouOutlineOverreview(model: FHRentDetailResponseDataH
     return nil
 }
 
+
 func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOverviewModel,
                              cell: BaseUITableViewCell) -> Void {
+
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         theCell.removeListBottomView(-26, false)

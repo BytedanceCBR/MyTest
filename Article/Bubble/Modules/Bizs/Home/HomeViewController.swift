@@ -169,6 +169,10 @@ class HomeViewController: BaseViewController {
             .subscribe(onNext: { _ in
                 TTLaunchTracer.shareInstance().writeEvent()
             })
+        
+        
+        view.backgroundColor = UIColor.white
+        tableView.backgroundColor = .white
     }
     
     

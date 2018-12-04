@@ -69,7 +69,8 @@ CGFloat ttv_bottomPaddingViewHeight(void)
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//        self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         self.backgroundColor = self.contentView.backgroundColor;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -124,7 +125,8 @@ CGFloat ttv_bottomPaddingViewHeight(void)
 {
     [super themeChanged:notification];
     
-    self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.contentView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.contentView.backgroundColor = [UIColor whiteColor];
     self.backgroundColor = self.contentView.backgroundColor;
     _separatorLineView.backgroundColor = [UIColor tt_themedColorForKey:kColorLine1];
     if ([TTDeviceHelper isPadDevice]) {
