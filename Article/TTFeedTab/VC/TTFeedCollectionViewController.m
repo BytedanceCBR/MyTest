@@ -113,7 +113,8 @@ TTFeedCollectionCellDelegate>
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
 
     // 刷新按钮
     [self.view addSubview:self.refreshView];
@@ -207,7 +208,9 @@ TTFeedCollectionCellDelegate>
 
 - (void)themeChanged:(NSNotification*)notification {
     if (_collectionView) {
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+
     }
 }
 
@@ -570,8 +573,9 @@ TTFeedCollectionCellDelegate>
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.showsVerticalScrollIndicator = NO;
         
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
-        
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+
         // 设置默认CellHelper类
         [[TTFeedCollectionCellService sharedInstance] setDefaultFeedCollectionCellHelperClass:[TTFeedCollectionCellDefaultHelper class]];
         

@@ -449,7 +449,9 @@ TTRefreshViewDelegate
         _listView.dataSource = self;
         _listView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _listView.separatorColor = [UIColor clearColor];
-        _listView.backgroundColor = [UIColor clearColor];
+//        _listView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
+        _listView.backgroundColor = [UIColor whiteColor];
         _listView.backgroundView = nil;
         _listView.estimatedRowHeight = 0;
         _listView.estimatedSectionHeaderHeight = 0;
@@ -933,6 +935,8 @@ TTRefreshViewDelegate
             }
         }
     }
+    
+    self.listView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)willAppear
@@ -1214,8 +1218,9 @@ TTRefreshViewDelegate
 - (void)themeChanged:(NSNotification *)notification
 {
     [super themeChanged:notification];
-    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
+    self.backgroundColor = [UIColor whiteColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
@@ -2046,7 +2051,8 @@ TTRefreshViewDelegate
 
 - (void)fetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore
 {
-    self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//    self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.ttLoadingView.backgroundColor = [UIColor whiteColor];
     self.ttTargetView = self.listView;
     
     if (!self.ttLoadingView && [SSCommonLogic feedLoadingInitImageEnable]) {

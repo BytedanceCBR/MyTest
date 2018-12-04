@@ -47,6 +47,8 @@
         self.listView.listView.delegate = self;
         self.listView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:self.listView];
+        self.listView.backgroundColor = [UIColor whiteColor];
+        self.listView.listView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
