@@ -746,8 +746,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         super.setSelectedConditions(conditions: conditions)
 
         //如果没有匹配到列表页中的任何项，则将第一条数据填充到用户自定义输入中
-
-        if self.dataSource.selectedIndexPaths.value.count == 0 {
+        if self.dataSource.selectedIndexPaths.value.count == 0 ||
+            dataSource.isOnlySelected(key: "rental_pay_period[]") {
             if let priceKey = (self.queryKey ?? "price").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                 self.userInput = conditions[priceKey] as? [String]
                 fillPriceInput = fillPriceByCondition(priceKey: priceKey, conditions: conditions)
@@ -801,7 +801,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             // 再试着取一下用户手动输入是否有值
             let (low, upper) = getUserInputValue()
             let result = getUserInputPriceNode(low: low, upper: upper)
-            return result
+            return result + selectedNodes
         } else {
             return selectedNodes
         }
@@ -835,7 +835,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             let whitespace = NSCharacterSet.whitespacesAndNewlines
             let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
-            let nodes = getUserInputPriceNode(low: low, upper: upper)
+            let nodes = getUserInputPriceNode(low: low, upper: upper) + self.selectedNodes()
             if updateFilterOnly {
                 self.conditionLabelSetter?(nodes)
             } else {
