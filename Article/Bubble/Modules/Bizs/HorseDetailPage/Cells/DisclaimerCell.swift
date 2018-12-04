@@ -78,7 +78,30 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
 
 func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailContact?, cell: BaseUITableViewCell)  {
     if let theCell = cell as? FHRentDisclaimerCell {
-        theCell.disclaimerContent.text = model?.text
+
+        if let disclaimer = model, let text = disclaimer.text {
+            let attrText = NSMutableAttributedString(string: text)
+            attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
+            disclaimer.richText.forEach { item in
+                attrText.yy_setTextHighlight(
+                    rangeOfArray(item.highlightRange),
+                    color: hexStringToUIColor(hex: "#299cff"),
+                    backgroundColor: nil,
+                    userInfo: nil,
+                    tapAction: { (_, text, range, _) in
+                        if let url = item.linkUrl,
+                            let theUrl = URL(string: url) {
+                            TTRoute.shared().openURL(byPushViewController: theUrl)
+                        } else {
+                            assertionFailure()
+                        }
+                },
+                    longPressAction: nil)
+            }
+            theCell.disclaimerContent.attributedText = attrText
+            theCell.remakeConstraints()
+        }
+
         if let contact = contact,
             let realtorName = contact.realtorName,
             !realtorName.isEmpty {
@@ -165,7 +188,6 @@ func fillDisclaimerCell(disclaimer: Disclaimer?, cell: BaseUITableViewCell) -> V
             theCell.contentLabel.attributedText = attrText
             theCell.remakeConstraints()
         }
-
     }
 }
 
