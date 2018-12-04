@@ -14,7 +14,7 @@ class FHPlaceholderCell: BaseUITableViewCell {
     }
     
     lazy var majorImageView: UIImageView = {
-        let re = UIImageView(image: UIImage(named: "house-invalid-name"))
+        let re = UIImageView(image: UIImage(named: UIScreen.main.bounds.size.width > 376 ? "house-invalid-name414" : "house-invalid-name"))
         re.contentMode = .scaleAspectFill
         return re
     }()
@@ -56,11 +56,11 @@ func fillHousePlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCe
         
         if isFirst {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(20)
+                maker.top.equalTo(0)
             }
         }else {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(10)
+                maker.top.equalTo(0)
             }
         }
     }
@@ -72,11 +72,11 @@ func fillHouseListPlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableVi
         
         if isFirst {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(25)
+                maker.top.equalTo(0)
             }
         }else {
             theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(10)
+                maker.top.equalTo(0)
             }
         }
     }
