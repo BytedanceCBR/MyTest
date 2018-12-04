@@ -147,11 +147,14 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     var collectionView: UICollectionView?
 
+
     lazy var clearBtn: UIButton = {
         let result = UIButton()
         result.backgroundColor = UIColor.white
-
-        result.setTitle("不限条件", for: .normal)
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#081f33")]
+        let attrText = NSAttributedString(string: "不限条件", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         result.layer.cornerRadius = 20
         result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .normal)
@@ -162,7 +165,11 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let result = UIButton()
         result.backgroundColor = hexStringToUIColor(hex: "#299cff")
         result.layer.cornerRadius = 20
-        result.setTitle("确定", for: .normal)
+
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: UIColor.white]
+        let attrText = NSAttributedString(string: "确定", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         return result
     }()
 
@@ -191,7 +198,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     convenience init(nodes: [Node], resetBtnName: String = "不限条件", queryWhenClean: Bool = true) {
         self.init(nodes: nodes, headerView: BubbleCollectionSectionHeader.self)
         self.queryWhenClean = queryWhenClean
-        clearBtn.setTitle(resetBtnName, for: .normal)
+        setClearBtnText(cotnent: resetBtnName)
     }
 
     init(
@@ -264,6 +271,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
+        result.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         return result
     }
 
@@ -330,6 +338,13 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setClearBtnText(cotnent: String) {
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "081f33")]
+        let attrText = NSAttributedString(string: cotnent, attributes: buttomAttr)
+        clearBtn.setAttributedTitle(attrText, for: .normal)
     }
     
     deinit {
@@ -656,12 +671,12 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
     override class func createCollectionView() -> UICollectionView {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
-        //        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
         flowLayout.minimumLineSpacing = 12
         flowLayout.minimumInteritemSpacing = 9
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
+        result.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         return result
     }
 
@@ -886,9 +901,9 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
 
     func processUserInputPrice(updateFilterOnly: Bool = false) {
         if let ds = priceDataSource() {
-            let whitespace = NSCharacterSet.whitespacesAndNewlines
-            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
-            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+//            let whitespace = NSCharacterSet.whitespacesAndNewlines
+//            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+//            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let nodes = self.selectedNodes()
             if updateFilterOnly {
                 self.conditionLabelSetter?(nodes)

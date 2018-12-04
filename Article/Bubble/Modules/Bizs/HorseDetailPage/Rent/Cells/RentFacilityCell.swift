@@ -32,7 +32,8 @@ class RentFacilityCell: BaseUITableViewCell {
     func setupUI() {
         contentView.addSubview(facilityItemView)
         facilityItemView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview();
+            make.left.right.top.equalToSuperview()
+            make.bottom.equalTo(-10)
         }
     }
 }

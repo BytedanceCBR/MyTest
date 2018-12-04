@@ -64,7 +64,7 @@ class TransactionRecordCell: BaseUITableViewCell {
         contentView.addSubview(namelabel)
         namelabel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
-            maker.top.equalTo(10)
+            maker.top.equalTo(totalPriceLabel)
             maker.right.equalTo(totalPriceLabel.snp.left).offset(-5)
             maker.height.equalTo(22)
          }
@@ -83,11 +83,21 @@ class TransactionRecordCell: BaseUITableViewCell {
             maker.bottom.equalToSuperview().offset(-11)
             maker.right.equalTo(pricePreSqmLabel.snp.left).offset(-5)
         }
+        self.isFirstCell = false
     }
     
     override var isTail: Bool {
         didSet {
             bottomLine.isHidden = isTail
+        }
+    }
+    
+    var isFirstCell:Bool = false {
+        didSet {
+            let topOffset:CGFloat = isFirstCell ? 20.0 : 10.0
+            totalPriceLabel.snp.updateConstraints { (maker) in
+                maker.top.equalTo(topOffset)
+            }
         }
     }
 
@@ -118,7 +128,7 @@ func parseTransactionRecordNode(_ datas: [TotalSalesInnerItem]?, traceExtension:
                 let count = datas.count
                 let renders = datas.take(3).enumerated().map( { (index, item) in
                     
-                    curry(fillTransactionRecordCell)(item)((index == count - 1))
+                    curry(fillTransactionRecordCell)(item)((false))((index == count - 1))
                 })
                 return TableSectionNode(
                     items: renders,
@@ -141,7 +151,7 @@ func parseTransactionRecordNode(_ data: NeighborhoodTotalSalesResponse?) -> () -
                 let count = datas.count
                 let renders = datas.enumerated().map( { (index, item) in
                     
-                    curry(fillTransactionRecordCell)(item)(index == count - 1)
+                    curry(fillTransactionRecordCell)(item)((index == 0))(index == count - 1)
                 })
 
                 return renders.map { TableRowNode(
@@ -156,6 +166,7 @@ func parseTransactionRecordNode(_ data: NeighborhoodTotalSalesResponse?) -> () -
 }
 
 func fillTransactionRecordCell(_ item: TotalSalesInnerItem,
+                               isFirstCell: Bool,
                                isLastCell: Bool = false,
                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? TransactionRecordCell {
@@ -164,6 +175,7 @@ func fillTransactionRecordCell(_ item: TotalSalesInnerItem,
         theCell.totalPriceLabel.text = item.pricing
         theCell.pricePreSqmLabel.text = item.pricingPerSqm
         theCell.isTail = isLastCell
+        theCell.isFirstCell = isFirstCell
         if isLastCell
         {
             theCell.descLabel.snp.remakeConstraints { maker in

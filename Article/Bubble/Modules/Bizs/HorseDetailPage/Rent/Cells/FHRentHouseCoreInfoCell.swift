@@ -62,8 +62,8 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
     func shouldUseAverageLayout(firstLabel: UILabel?) -> Bool {
         if let firstLabel = firstLabel {
-            let width = firstLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: firstLabel.frame.height)).width
-            return width <= ((self.frame.width - 4 * cubePending) / 3)
+            let width = firstLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: firstLabel.frame.height)).width + 2 * pending
+            return width <= ((self.frame.width - 2 * cubePending - leftPending - rightPending) / 3)
         } else {
             return true
         }
@@ -76,9 +76,9 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
             if offset != itemViews.count - 1 {
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
-                                    width: catulateLabelWidth(view.valueLabel) + 4 * pending,
+                                    width: catulateLabelWidth(view.valueLabel) + 2 * pending,
                                     height: self.frame.height)
-                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel) + 4 * pending
+                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel) + 2 * pending
             } else {
                 view.frame = CGRect(x: offsetX,
                                     y: 0,

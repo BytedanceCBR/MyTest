@@ -88,7 +88,7 @@ fileprivate class FavoriteItemView: UIView {
         return re
     }()
 
-    init(image: UIImage, title: String) {
+    init(image: UIImage?, title: String) {
         super.init(frame: CGRect.zero)
 
         IconView.image = image
@@ -124,16 +124,16 @@ func parseFavoriteNode(
     if userFavoriteCounts.count == 4 {
         items = [
             FavoriteItemView(
-                image: #imageLiteral(resourceName: "icon-ershoufang"),
+                image: UIImage(named: "icon-ershoufang"),
                 title: getFavoriteCategoryLabel(title: "二手房", userFollowListResponse: userFavoriteCounts[0])),
             FavoriteItemView(
-                image: #imageLiteral(resourceName: "icon-ershoufang"),
+                image: UIImage(named: "icon-zufang"),
                 title: getFavoriteCategoryLabel(title: "租房", userFollowListResponse: userFavoriteCounts[1])),
             FavoriteItemView(
-                image: #imageLiteral(resourceName: "icon-ershoufang"),
+                image: UIImage(named: "icon-xinfang"),
                 title: getFavoriteCategoryLabel(title: "新房", userFollowListResponse: userFavoriteCounts[2])),
             FavoriteItemView(
-                image: #imageLiteral(resourceName: "icon-ershoufang"),
+                image: UIImage(named: "icon-xiaoqu"),
                 title: getFavoriteCategoryLabel(title: "小区", userFollowListResponse: userFavoriteCounts[3])),
             ]
     }
