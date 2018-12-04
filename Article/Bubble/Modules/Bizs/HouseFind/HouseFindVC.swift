@@ -84,7 +84,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             sectionSelectedImageArray: nil,
             frame: CGRect.zero)
         re.selectionIndicatorHeight = 0
-
+        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(20),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#a1aab3")]
 
@@ -217,10 +217,17 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func setupViews() {
+        var sideMargin: CGFloat = 30
+        if let config = EnvContext.shared.client.configCacheSubject.value {
+            if houseTypeSectionByConfig(config: config).count < 3 {
+                sideMargin = 110
+            }
+        }
+
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
-            maker.left.equalTo(70 * CommonUIStyle.Screen.widthScale)
-            maker.right.equalTo(-70 * CommonUIStyle.Screen.widthScale)
+            maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
+            maker.right.equalTo(-sideMargin * CommonUIStyle.Screen.widthScale)
             maker.height.equalTo(28)
             maker.centerX.equalToSuperview()
         }
@@ -232,8 +239,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             maker.right.equalTo(-20)
             maker.height.equalTo(44)
         }
-
-
 
         self.view.addSubview(seperateLineView)
         seperateLineView.snp.makeConstraints { maker in
@@ -263,6 +268,23 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         self.bindScrollViewObv()
     }
 
+    fileprivate func adjustSegmentNav() {
+        var sideMargin: CGFloat = 30
+        if let config = EnvContext.shared.client.configCacheSubject.value {
+            if houseTypeSectionByConfig(config: config).count < 3 {
+                sideMargin = 110
+            }
+        }
+
+        segmentedNav.snp.remakeConstraints { maker in
+            maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
+            maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
+            maker.right.equalTo(-sideMargin * CommonUIStyle.Screen.widthScale)
+            maker.height.equalTo(28)
+            maker.centerX.equalToSuperview()
+        }
+    }
+
     fileprivate func bindScrollViewObv() {
         tapGesture.rx.event
             .bind { (gesture) in
@@ -274,6 +296,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func bindSearchConfigObv() {
         EnvContext.shared.client.configCacheSubject
             .subscribe(onNext: { [weak self] _ in
+                self?.adjustSegmentNav()
                 self?.setupSectionLabelByConfig()
                 self?.createPageViews()
                 if let houseType = self?.houseType.value {
@@ -451,7 +474,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         vc.suggestionParams = condition
         vc.queryString = query
         vc.navBar.isShowTypeSelector = false
-        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
+        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
         if let houseSearchParams = houseSearchParams {
             vc.allParams = ["houseSearch": houseSearchParams]
         }

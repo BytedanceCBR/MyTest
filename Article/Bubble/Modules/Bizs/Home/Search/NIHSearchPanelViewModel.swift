@@ -189,9 +189,9 @@ class NIHSearchPanelViewModel: NSObject {
         vc.queryString = query
         vc.navBar.isShowTypeSelector = false
         if associationalWord?.isEmpty ?? true {
-            vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
+            vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
         } else {
-            vc.navBar.searchInput.placeholder = associationalWord
+            vc.navBar.setSearchPlaceHolderText(text: associationalWord)
         }
         let nav = self.baseVC.navigationController
         nav?.pushViewController(vc, animated: true)

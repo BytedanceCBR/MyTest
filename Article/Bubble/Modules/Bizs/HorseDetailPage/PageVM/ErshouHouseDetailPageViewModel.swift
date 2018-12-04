@@ -476,7 +476,7 @@ import RxCocoa
                         toTracerParams("old", key: "house_type") <|>
                         toTracerParams("old_detail", key: "page_type"),
                     navVC: self.navVC)
-                <- parseOpenAllNode(relateErshouHouseData.value?.data?.hasMore ?? false, callBack: {[unowned self] in
+                <- parseOpenAllNode((relateErshouHouseData.value?.data?.hasMore ?? false) && (self.relateErshouHouseData.value?.data?.items?.count ?? 0 > 0), callBack: {[unowned self] in
                         if let id = data.neighborhoodInfo?.id {
                             let loadMoreParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams("related", key: "element_type") <|>
