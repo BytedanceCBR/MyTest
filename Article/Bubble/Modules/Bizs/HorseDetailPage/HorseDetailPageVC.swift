@@ -583,7 +583,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                             theSearchId = searchId
 
                         }
-                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
+                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, bottomBar: self.bottomBar, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
                         self.followForSendPhone(false)
 
                         if self.houseType != .neighborhood {

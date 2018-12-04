@@ -378,7 +378,7 @@ extension DetailPageViewModel {
                             if let logPB = self?.logPB as? [String: Any],let imprId = logPB["impr_id"] as? String {
                                 theImprId = imprId
                             }
-                            self?.callRealtorPhone(contactPhone: contactPhone, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
+                            self?.callRealtorPhone(contactPhone: contactPhone, bottomBar: bottomBar, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
                             self?.followHouseItem(houseType: houseType,
                                                   followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
                                                   followId: "\(houseId)",
@@ -476,6 +476,7 @@ extension DetailPageViewModel {
     
     // MARK: 电话转接以及拨打相关操作
     func callRealtorPhone(contactPhone: FHHouseDetailContact?,
+                          bottomBar: HouseDetailPageBottomBarView?,
                           houseId: Int64,
                           houseType: HouseType,
                           searchId: String,
@@ -486,10 +487,11 @@ extension DetailPageViewModel {
             return
         }
         
-        EnvContext.shared.toast.showToast("电话查询中")
+        bottomBar?.contactBtn.startLoading()
         requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
-            .subscribe(onNext: { (response) in
-                EnvContext.shared.toast.dismissToast()
+            .subscribe(onNext: { [weak bottomBar] (response) in
+                
+                bottomBar?.contactBtn.stopLoading()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
                     
                     Utils.telecall(phoneNumber: virtualNumber)
@@ -497,8 +499,8 @@ extension DetailPageViewModel {
                     Utils.telecall(phoneNumber: phone)
                 }
                 
-            }, onError: {  (error) in
-                EnvContext.shared.toast.dismissToast()
+            }, onError: { [weak bottomBar]  (error) in
+                bottomBar?.contactBtn.stopLoading()
                 Utils.telecall(phoneNumber: phone)
             })
             .disposed(by: disposeBag)
