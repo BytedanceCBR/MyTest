@@ -47,6 +47,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     var onDataLoaded: (() -> Void)?
     var onRequestError: ((Error?) -> Void)?
 
+    var onHouseOffSale: (() -> Void)?
+
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
         self.houseId = houseId
@@ -399,6 +401,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                
                 if let status = model?.data?.userStatus {
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
+                }
+                if let saleStatus = model?.status,
+                    saleStatus == 1 || saleStatus == -1 {
+                    self?.onHouseOffSale?()
                 }
                 self?.shareInfo = model?.data?.shareInfo
                 self?.requestReletedData()
