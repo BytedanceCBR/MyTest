@@ -45,6 +45,7 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_facility", key: "element_type") <|>
+        toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
 

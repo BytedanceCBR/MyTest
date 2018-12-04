@@ -35,7 +35,10 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 ershouTableView.isHidden = false
                 rentTableView.isHidden = true
                 var height = secondItemList.count > 0 ? secondItemList.count * 105 : 0
-                height += ershouHasMore ? 68 : 0
+                if secondItemList.count > 0 {
+                    
+                    height += ershouHasMore ? 68 : 20
+                }
 
                 bgView.snp.updateConstraints { (maker) in
                     maker.height.equalTo(height)
@@ -62,7 +65,10 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 ershouTableView.isHidden = true
                 rentTableView.isHidden = false
                 var height = rentItemList.count > 0 ? rentItemList.count * 105 : 0
-                height += rentHasMore ? 68 : 0
+                if rentItemList.count > 0 {
+                    
+                    height += rentHasMore ? 68 : 20
+                }
 
                 bgView.snp.updateConstraints { (maker) in
                     maker.height.equalTo(height)
@@ -357,7 +363,7 @@ extension FHSameHouseItemListCell: UITableViewDataSource, UITableViewDelegate {
             }else if tableView == self.rentTableView {
 
                 let model = rentItemList[indexPath.row]
-                fillSameRentHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == secondItemList.count - 1, cell: theCell)
+                fillSameRentHouseItemCell(model, isFirstCell: indexPath.row == 0, isLastCell: indexPath.row == rentItemList.count - 1, cell: theCell)
                 return theCell
             }
             

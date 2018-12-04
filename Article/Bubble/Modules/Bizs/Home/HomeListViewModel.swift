@@ -21,6 +21,8 @@ enum RequestSuccessType: Int {
 
 
 class HomeListViewModel: DetailPageViewModel {
+    var source: String?
+    
     var goDetailTraceParam: TracerParams?
     
     var houseType: HouseType = .newHouse

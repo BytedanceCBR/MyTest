@@ -44,6 +44,7 @@ class FHFilterRedDotManager {
 
     func selectFilterItem(key: String) {
         hasClickDot = true
+        oldDotVersion = self.reddotVersion
     }
 
     func setSelectedConditions(conditions: [String: Any]) {
@@ -61,4 +62,9 @@ class FHFilterRedDotManager {
         }
         self.saveConfig()
     }
+
+    func shouldOpenAreaPanel() -> Bool {
+        return !hasClickDot
+    }
+
 }

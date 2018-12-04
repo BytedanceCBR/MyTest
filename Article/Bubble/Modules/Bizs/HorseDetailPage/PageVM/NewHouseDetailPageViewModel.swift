@@ -7,6 +7,8 @@ import Foundation
 import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+    var source: String?
+    
     var goDetailTraceParam: TracerParams?
     
 

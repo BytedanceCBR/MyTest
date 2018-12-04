@@ -91,7 +91,9 @@ func constructMoreSelectCollectionPanelWithContainer(
         nodes: [Node],
         container: UIView,
         _ action: @escaping ConditionSelectAction) -> BaseConditionPanelView {
-    let thePanel = BubbleSelectCollectionView(nodes: nodes)
+    let thePanel = BubbleSelectCollectionView(nodes: nodes,
+                                              resetBtnName: "重置",
+                                              queryWhenClean: false)
     thePanel.isHidden = true
     container.addSubview(thePanel)
     thePanel.snp.makeConstraints { maker in
@@ -184,9 +186,12 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     var contentDisposeBag : DisposeBag? = DisposeBag()
     
     var headerViewType: AnyClass
+    var queryWhenClean: Bool = true
 
-    convenience init(nodes: [Node]) {
+    convenience init(nodes: [Node], resetBtnName: String = "不限条件", queryWhenClean: Bool = true) {
         self.init(nodes: nodes, headerView: BubbleCollectionSectionHeader.self)
+        self.queryWhenClean = queryWhenClean
+        clearBtn.setTitle(resetBtnName, for: .normal)
     }
 
     init(
@@ -353,6 +358,9 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     func onClean() {
         self.dataSource.selectedIndexPaths.accept([])
         self.collectionView?.reloadData()
+        if queryWhenClean {
+            self.didSelect?([])
+        }
     }
 
     override func viewDidDisplay() {
@@ -547,7 +555,7 @@ class BubbleCollectionSectionHeader: UICollectionReusableView {
 
     lazy var label: UILabel = {
         let result = UILabel()
-        result.font = CommonUIStyle.Font.pingFangRegular(16)
+        result.font = CommonUIStyle.Font.pingFangMedium(16)
         result.textColor = hexStringToUIColor(hex: "#081f33")
         return result
     }()
@@ -770,6 +778,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         priceDataSource()?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
         self.dataSource.selectedIndexPaths.accept([])
         self.collectionView?.reloadData()
+        self.didSelect?([])
     }
 
     override func viewDidDisplay() {
@@ -791,8 +800,8 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         super.setSelectedConditions(conditions: conditions)
 
         //如果没有匹配到列表页中的任何项，则将第一条数据填充到用户自定义输入中
-
-        if self.dataSource.selectedIndexPaths.value.count == 0 {
+        if self.dataSource.selectedIndexPaths.value.count == 0 ||
+            dataSource.isOnlySelected(key: "rental_pay_period[]") {
             if let priceKey = (self.queryKey ?? "price").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                 self.userInput = conditions[priceKey] as? [String]
                 fillPriceInput = fillPriceByCondition(priceKey: priceKey, conditions: conditions)
@@ -846,7 +855,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             // 再试着取一下用户手动输入是否有值
             let (low, upper) = getUserInputValue()
             let result = getUserInputPriceNode(low: low, upper: upper)
-            return result
+            return result + selectedNodes
         } else {
             return selectedNodes
         }
@@ -880,7 +889,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             let whitespace = NSCharacterSet.whitespacesAndNewlines
             let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
-            let nodes = getUserInputPriceNode(low: low, upper: upper)
+            let nodes = self.selectedNodes()
             if updateFilterOnly {
                 self.conditionLabelSetter?(nodes)
             } else {

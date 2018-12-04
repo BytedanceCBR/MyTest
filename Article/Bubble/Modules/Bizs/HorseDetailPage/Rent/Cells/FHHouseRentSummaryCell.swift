@@ -78,6 +78,7 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_info", key: "element_type") <|>
+        toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     
@@ -117,7 +118,8 @@ func convertRentDetailToErshouOutlineOverreview(model: FHRentDetailResponseDataH
     return nil
 }
 
-func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOverviewModel, cell: BaseUITableViewCell) -> Void {
+func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOverviewModel,
+                             cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         theCell.removeListBottomView(-26, false)
@@ -143,6 +145,7 @@ func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOv
                 maker.edges.equalToSuperview()
             }
         }
+        theCell.removeListBottomView()
     }
 }
 

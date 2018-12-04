@@ -85,17 +85,25 @@ func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailCon
             theCell.displayOwnerLabel()
             theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
             var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-            if let businessLicense = contact.businessLicense {
+            if let businessLicense = contact.businessLicense,
+                !businessLicense.isEmpty {
                 let imageModel = FHRentDetailResponseDataHouseImageModel()
                 imageModel.url = businessLicense
                 imageModel.name = "营业执照"
                 headerImages.append(imageModel)
             }
-            if let certificate = contact.certificate {
+            if let certificate = contact.certificate,
+                !certificate.isEmpty {
                 let imageModel = FHRentDetailResponseDataHouseImageModel()
                 imageModel.url = certificate
                 imageModel.name = "从业人员信息卡"
                 headerImages.append(imageModel)
+            }
+            if headerImages.count > 0 {
+                theCell.headerImages = headerImages
+                theCell.contactIcon.isHidden = false
+            } else {
+                theCell.contactIcon.isHidden = true
             }
         } else {
             theCell.hiddenOwnerLabel()
@@ -161,7 +169,7 @@ func fillDisclaimerCell(disclaimer: Disclaimer?, cell: BaseUITableViewCell) -> V
     }
 }
 
-func rangeOfArray(_ range: [Int]?) -> NSRange {
+fileprivate func rangeOfArray(_ range: [Int]?) -> NSRange {
     if let range = range, range.count == 2 {
         return NSRange(location: range[0], length: range[1] - range[0])
     } else {
@@ -170,7 +178,7 @@ func rangeOfArray(_ range: [Int]?) -> NSRange {
 
 }
 
-func highLightTextStyle() -> [NSAttributedStringKey: Any] {
+fileprivate func highLightTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959"),
 //            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid,
             NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]

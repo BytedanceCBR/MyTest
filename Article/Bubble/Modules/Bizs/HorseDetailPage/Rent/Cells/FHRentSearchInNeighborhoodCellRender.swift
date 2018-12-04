@@ -29,14 +29,20 @@ func parseRentSearchInNeighborhoodNode(
                 toTracerParams("rent_detail", key: "enter_from") <|>
                 toTracerParams("same_neighborhood", key: "element_from")
 
+            let sectionParms = params <|>
+                toTracerParams(tracer.rank, key: "rank") <|>
+                toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+                toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams(tracer.pageType, key: "page_type")
+
+
             let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams)
+            let sectionRecord = elementShowOnceRecord(params: sectionParms)
             return TableSectionNode(
                 items: [render],
                 selectors: nil,
-                tracer: [elementShowOnceRecord(params: params <|>
-                    toTracerParams("rent_detail", key: "page_type") <|>
-                    toTracerParams("old", key: "house_type"))],
-                sectionTracer: nil,
+                tracer: nil,
+                sectionTracer: sectionRecord,
                 label: "小区房源",
                 type: .node(identifier: MultitemCollectionCell.identifier))
         } else {
@@ -66,12 +72,11 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-                toTracerParams("left_pic", key: "card_type") <|>
 //                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
-                toTracerParams("be_null", key: "element_type")
+                toTracerParams("same_neighborhood", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []
     }
@@ -108,7 +113,8 @@ fileprivate func searchInNeighborhoodItemCellSelector(
     if let id = item.id, let houseId = Int64(id) {
         var tracer = itemTracerParams.paramsGetter([:])
         tracer["card_type"] = "left_pic"
-        tracer["enter_from"] = "same_neighborhood_list"
+        tracer["enter_from"] = "rent_detail"
+        tracer["element_from"] = "same_neighborhood"
         tracer["element_type"] = "be_null"
         tracer["rank"] = offset
         tracer["log_pb"] = item.logPb

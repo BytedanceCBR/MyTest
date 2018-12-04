@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+    
+    var source: String?
     var goDetailTraceParam: TracerParams?
     
     
@@ -223,13 +225,28 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     fileprivate func processData(_ theDisposeBag: DisposeBag) -> ([TableSectionNode]) -> [TableSectionNode] {
         if let data = neighborhoodDetailResponse.value?.data {
 
-            if self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0 {
+            if let source = self.source, source == "rent_detail" {
                 
-                self.dataSource.sameHouseType = .secondHandHouse
-            }else if self.rentHouseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0 {
+                if self.rentHouseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0 {
+                    
+                    self.dataSource.sameHouseType = .rentHouse
+                }else if self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0 {
+                    
+                    self.dataSource.sameHouseType = .secondHandHouse
+                }
                 
-                self.dataSource.sameHouseType = .rentHouse
+            }else {
+                
+                if self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0 {
+                    
+                    self.dataSource.sameHouseType = .secondHandHouse
+                }else if self.rentHouseInSameNeighborhood.value?.data?.items?.count ?? 0 > 0 {
+                    
+                    self.dataSource.sameHouseType = .rentHouse
+                }
+                
             }
+            
             
             var theParams = EnvContext.shared.homePageParams <|>
 //                toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
