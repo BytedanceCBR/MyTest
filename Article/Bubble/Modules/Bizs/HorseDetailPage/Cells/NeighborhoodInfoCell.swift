@@ -220,7 +220,8 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         contentView.addSubview(mapImageView)
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
-            maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+            // 等效高度为134
+            maker.height.equalTo(UIScreen.main.bounds.width * 0.36)
             maker.top.equalTo(schoolKey.snp.bottom).offset(20)
         }
         
