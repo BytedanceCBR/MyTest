@@ -64,7 +64,9 @@
     
     [[TTCustomAnimationManager sharedManager] registerFromVCClass:[self class] toVCClass:NSClassFromString(@"AWEVideoDetailViewController") animationClass:[TSVShortVideoEnterDetailAnimation class]];
     
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
+
     //必须设置，否则scrollView会异常
     self.automaticallyAdjustsScrollViewInsets = NO;
 //延迟createMainVC会造成gif类型的开屏广告卡顿，这个优化先下线
@@ -177,7 +179,9 @@
 {
     [super themeChanged:notification];
     if ([self isViewLoaded]) {
-        self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//        self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+        self.view.backgroundColor = [UIColor whiteColor];
+
     }
 }
 

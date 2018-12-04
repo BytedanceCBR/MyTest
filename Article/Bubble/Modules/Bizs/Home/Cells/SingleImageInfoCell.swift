@@ -44,12 +44,16 @@ class CornerView: UIView {
             if headView.superview == nil {
                 return
             }
-            let height = isFirstCell ? 0 : 20
+            let height = isFirstCell ? 0 : 14
             headView.snp.updateConstraints { maker in
                 maker.height.equalTo(height)
             }
+            
+            bottomView.snp.updateConstraints { maker in
+                maker.top.equalToSuperview().offset(91 + height)
+            }
+            updateConstraintsIfNeeded()
         }
-        
     }
     
     override var isTail: Bool {
@@ -62,6 +66,7 @@ class CornerView: UIView {
             bottomView.snp.updateConstraints { maker in
                 maker.height.equalTo(height)
             }
+            updateConstraintsIfNeeded()
         }
     }
 
@@ -166,12 +171,12 @@ class CornerView: UIView {
         self.contentView.addSubview(headView)
         headView.snp.makeConstraints { maker in
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(20)
+            maker.height.equalTo(14)
         }
         
         self.contentView.addSubview(bottomView)
         bottomView.snp.makeConstraints { maker in
-            maker.top.equalTo(105)
+            maker.top.equalToSuperview().offset(105)
             maker.left.right.bottom.equalToSuperview()
             maker.height.equalTo(10)
         }
@@ -179,8 +184,8 @@ class CornerView: UIView {
         self.contentView.addSubview(majorImageView)
         majorImageView.snp.makeConstraints { maker in
             maker.left.equalToSuperview().offset(20)
-            maker.top.equalTo(headView.snp.bottom)
-//            maker.bottom.equalTo(bottomView.snp.top)
+            maker.top.equalTo(headView.snp.bottom).offset(3)
+//            maker.bottom.lessThanOrEqualToSuperview().offset(-3)
             maker.width.equalTo(114)
             maker.height.equalTo(85)
         }
@@ -189,16 +194,17 @@ class CornerView: UIView {
         contentView.addSubview(infoPanel)
         infoPanel.snp.makeConstraints { maker in
             maker.left.equalTo(majorImageView.snp.right).offset(15)
-            maker.top.equalTo(majorImageView)
+            maker.top.equalTo(headView.snp.bottom)
             maker.bottom.equalTo(bottomView.snp.top)
+            maker.height.equalTo(91)
             maker.right.equalToSuperview().offset(-15)
         }
 
         infoPanel.addSubview(majorTitle)
         majorTitle.snp.makeConstraints { maker in
-            maker.top.equalToSuperview().offset(-3)
+            maker.top.equalToSuperview()
             maker.left.right.top.equalToSuperview()
-            maker.height.equalTo(20)
+            maker.height.equalTo(22)
         }
 
         infoPanel.addSubview(extendTitle)

@@ -518,7 +518,9 @@
 
 - (void)themeChanged:(NSNotification *)notification
 {
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
+
 }
 
 - (void)showFeedSearchGuideView {

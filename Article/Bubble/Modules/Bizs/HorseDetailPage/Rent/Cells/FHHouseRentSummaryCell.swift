@@ -118,8 +118,10 @@ func convertRentDetailToErshouOutlineOverreview(model: FHRentDetailResponseDataH
     return nil
 }
 
+
 func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOverviewModel,
                              cell: BaseUITableViewCell) -> Void {
+
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         theCell.removeListBottomView(-26, false)
@@ -127,6 +129,7 @@ func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOv
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
             infoView.valueLabel.sizeToFit()
+            infoView.showIconAndTitle(showen: !keyText.isEmpty)
         }
         
         let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in
@@ -188,7 +191,7 @@ class FHHouseRentSummaryHeaderCell: BaseUITableViewCell {
         label.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.right.equalTo(self).offset(-60)
-            maker.top.equalTo(10)
+            maker.top.equalTo(20)
             maker.height.equalTo(26)
             maker.bottom.equalToSuperview().offset(0)
         }

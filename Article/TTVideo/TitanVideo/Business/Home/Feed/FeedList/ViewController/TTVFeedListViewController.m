@@ -377,7 +377,9 @@ TTRefreshViewDelegate>
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
+
     [self addTableView];
     [self addPullDownRefreshView];
     self.view.ttErrorToastView = [ArticleListNotifyBarView addErrorToastViewWithTop:self.ttContentInset.top width:CGRectGetWidth(self.view.frame) height:CGRectGetHeight(self.view.frame)];
@@ -792,7 +794,8 @@ TTRefreshViewDelegate>
 - (void)themeChanged:(NSNotification *)notification
 {
     [super themeChanged:notification];
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.tableView.backgroundColor = self.view.backgroundColor;
 }
 
