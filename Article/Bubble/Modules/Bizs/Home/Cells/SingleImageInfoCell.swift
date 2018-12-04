@@ -245,7 +245,7 @@ class CornerView: UIView {
         
         roomSpaceLabel.snp.makeConstraints { maker in
             maker.left.equalTo(priceLabel.snp.right).offset(7)
-            maker.centerY.equalTo(priceLabel).offset(2)
+            maker.centerY.equalTo(priceLabel)
             maker.height.equalTo(17)
         }
 
@@ -278,7 +278,7 @@ class CornerView: UIView {
             }
             roomSpaceLabel.snp.remakeConstraints { maker in
                 maker.left.equalTo(originPriceLabel.snp.right).offset(offset)
-                maker.centerY.equalTo(priceLabel).offset(2)
+                maker.centerY.equalTo(priceLabel)
                 maker.height.equalTo(17)
             }
         } else {
