@@ -402,7 +402,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 if let status = model?.data?.userStatus {
                     self?.follwUpStatus.accept(.success(status.houseSubStatus == 1 ? true: false))
                 }
-                if let saleStatus = model?.status,
+                if let saleStatus = model?.data?.status,
                     saleStatus == 1 || saleStatus == -1 {
                     self?.onHouseOffSale?()
                 }
