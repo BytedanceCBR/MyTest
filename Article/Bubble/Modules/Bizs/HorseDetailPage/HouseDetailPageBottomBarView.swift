@@ -34,8 +34,8 @@ class HouseDetailPageBottomBarView: UIView {
         return label
     }()
     
-    lazy var contactBtn: UIButton = {
-        let re = UIButton()
+    lazy var contactBtn: FHLoadingButton = {
+        let re = FHLoadingButton()
 
         re.setTitleColor(.white, for: .normal)
         re.setTitleColor(.white, for: .highlighted)
@@ -92,3 +92,76 @@ class HouseDetailPageBottomBarView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+class FHLoadingButton: UIButton {
+    
+    var isLoading: Bool = false
+    
+    func startLoading() {
+        
+        self.isLoading = true
+        self.isEnabled = false
+        loadingAnimateView.isHidden = false
+        let duration: CFTimeInterval = 0.4
+        let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue = Double.pi * 2.0
+        rotationAnimation.duration = duration
+        rotationAnimation.repeatCount = Float.greatestFiniteMagnitude
+        loadingAnimateView.layer.add(rotationAnimation, forKey: "rotationAnimation")
+
+    }
+    
+    func stopLoading() {
+
+        self.isLoading = false
+        self.isEnabled = true
+        loadingAnimateView.isHidden = true
+        loadingAnimateView.layer.removeAllAnimations()
+        
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if self.isLoading {
+            
+            titleLabel?.sizeToFit()
+            loadingAnimateView.centerY = self.height / 2
+            loadingAnimateView.left = (self.width - loadingAnimateView.width - (titleLabel?.width ?? 0) - 4) / 2
+            
+            titleLabel?.left = loadingAnimateView.right + 4
+        }else {
+            
+            titleLabel?.centerY = self.height / 2
+            titleLabel?.centerX = self.width / 2
+
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    
+    func setupUI() {
+        
+        addSubview(loadingAnimateView)
+        loadingAnimateView.size = CGSize(width: 16, height: 16)
+        loadingAnimateView.isHidden = true
+    }
+    
+    
+    lazy var loadingAnimateView: UIImageView = {
+        
+        let imageView = UIImageView(image: UIImage(named: "house_loading"))
+        return imageView
+    }()
+}
+
