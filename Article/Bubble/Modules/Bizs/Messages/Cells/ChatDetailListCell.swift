@@ -278,7 +278,7 @@ class UserMsgSectionView: UIView {
     
     lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangMedium(14)
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = hexStringToUIColor(hex: "#ffffff")
         label.text = ""
         return label
@@ -297,7 +297,7 @@ class UserMsgSectionView: UIView {
         addSubview(timeAreaBgView)
         timeAreaBgView.snp.makeConstraints { (maker) in
             maker.centerX.equalToSuperview()
-            maker.top.equalTo(34)
+            maker.top.equalTo(30)
             maker.height.equalTo(24)
         }
         

@@ -108,7 +108,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     lazy var clearBtn: UIButton = {
         let result = UIButton()
         result.layer.cornerRadius = 20
-        result.setTitle("重置", for: .normal)
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "081f33")]
+        let attrText = NSAttributedString(string: "重置", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.setTitleColor(hexStringToUIColor(hex: "#081f33"), for: .normal)
         return result
@@ -118,7 +121,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         let result = UIButton()
         result.backgroundColor = hexStringToUIColor(hex: "#299cff")
         result.layer.cornerRadius = 20
-        result.setTitle("确定", for: .normal)
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: UIColor.white]
+        let attrText = NSAttributedString(string: "确定", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         return result
     }()
 

@@ -24,7 +24,7 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
 //        if hasOutLineInfo {
-            theCell.removeListBottomView()
+            theCell.removeListBottomView(-20)
 //        }
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
@@ -47,14 +47,12 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
                 if offset % 2 == 0 {
                     let twoRow = PropertyListTwoRowView()
                     let row = PropertyListRowView()
-                    row.remakeValueLabelConstraints()
                     setRowValue(info, row)
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
                 } else {
                     let twoRow = twoValueView.last
                     let row = PropertyListRowView()
-                    row.remakeValueLabelConstraints()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
                 }
@@ -67,13 +65,12 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
             twoValueView.forEach { view in
                 view.subviews.snp.makeConstraints { maker in
                     maker.top.bottom.equalToSuperview()
-                    maker.height.equalTo(35)
+                    maker.height.equalTo(30)
                 }
             }
 
             let singleViews = groups[1].map { (info) -> UIView in
                 let re = PropertyListRowView()
-                re.remakeValueLabelConstraints()
                 setRowValue(info, re)
                 return re
             }

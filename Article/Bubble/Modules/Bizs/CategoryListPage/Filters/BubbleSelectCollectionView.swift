@@ -147,11 +147,14 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     var collectionView: UICollectionView?
 
+
     lazy var clearBtn: UIButton = {
         let result = UIButton()
         result.backgroundColor = UIColor.white
-
-        result.setTitle("不限条件", for: .normal)
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#081f33")]
+        let attrText = NSAttributedString(string: "不限条件", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         result.layer.cornerRadius = 20
         result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .normal)
@@ -162,7 +165,11 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         let result = UIButton()
         result.backgroundColor = hexStringToUIColor(hex: "#299cff")
         result.layer.cornerRadius = 20
-        result.setTitle("确定", for: .normal)
+
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: UIColor.white]
+        let attrText = NSAttributedString(string: "确定", attributes: buttomAttr)
+        result.setAttributedTitle(attrText, for: .normal)
         return result
     }()
 
@@ -191,7 +198,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     convenience init(nodes: [Node], resetBtnName: String = "不限条件", queryWhenClean: Bool = true) {
         self.init(nodes: nodes, headerView: BubbleCollectionSectionHeader.self)
         self.queryWhenClean = queryWhenClean
-        clearBtn.setTitle(resetBtnName, for: .normal)
+        setClearBtnText(cotnent: resetBtnName)
     }
 
     init(
@@ -331,6 +338,13 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setClearBtnText(cotnent: String) {
+        let buttomAttr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(16),
+                          NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "081f33")]
+        let attrText = NSAttributedString(string: cotnent, attributes: buttomAttr)
+        clearBtn.setAttributedTitle(attrText, for: .normal)
     }
     
     deinit {
