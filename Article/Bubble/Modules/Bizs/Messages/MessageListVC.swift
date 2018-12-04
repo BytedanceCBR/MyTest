@@ -64,13 +64,16 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     public required init(routeParamObj paramObj: TTRouteParamObj?) {
         super.init(nibName: nil, bundle: nil)
         if let paramObj = paramObj {
-            self.messageId = paramObj.queryParams["list_id"] as? String
+            
+            let messageId = paramObj.queryParams["list_id"] as? String
+
+            self.messageId = messageId
             self.navBar.title.text = paramObj.queryParams["title"] as? String
 
             var category_name = "be_null"
             var origin_from = "be_null"
             
-            switch self.messageId {
+            switch messageId {
                 
             case "300":
                 // "新房"
@@ -112,6 +115,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                 toTracerParams("messagetab", key: "enter_from") <|>
                 toTracerParams("be_null", key: "search_id") <|>
                 toTracerParams(category_name, key: "category_name")
+
         }
 
         self.navBar.backBtn.rx.tap
@@ -523,7 +527,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     
                     let listType = selectTraceParam(self.traceParams, key: "category_name")
                     if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-                        tracerDict["enter_from"] = "rent_message_list"
+                        tracerDict["enter_from"] = "recommend_message_list"
                     }else {
                         tracerDict["enter_from"] = listType ?? "rent_message_list"
                     }
