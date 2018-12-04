@@ -33,6 +33,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
     
     func request(neightborhoodId: String? = nil, houseId: String? = nil) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestHouseInSameNeighborhoodSearch(
             neighborhoodId: neightborhoodId,
@@ -130,6 +136,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
 
     func requestRent(neightborhoodId: String? = nil, houseId: String? = nil) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRentInSameNeighborhoodSearch(neighborhoodId: neightborhoodId,houseId: houseId, searchId: searchId, count: 15)
         pageableLoader = { [unowned self] in
@@ -229,6 +241,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     
     
     func requestRelatedHouse( houseId: String? = nil) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRelatedHouse(query: nil, houseId: houseId, searchId: self.searchId, condition: nil, count: 15)
         pageableLoader = { [unowned self] in

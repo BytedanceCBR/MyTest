@@ -180,6 +180,7 @@ class ConditionFilterViewModel {
     }
 
     func setSortBtnSelected() {
+        self.pullConditionsFromPanels()
         let isHidden = self.sortPanelView?.isHidden ?? true
         //当前视图在关闭状态
         if isHidden == true {

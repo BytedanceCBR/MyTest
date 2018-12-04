@@ -127,9 +127,13 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     }
 
     func remakeConstraints() {
-        let size = disclaimerContent.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 30, height: 1000))
-        disclaimerContent.snp.updateConstraints { maker in
-            maker.height.equalTo(size.height)
+        let size = disclaimerContent.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 40, height: 1000))
+        disclaimerContent.snp.remakeConstraints { (make) in
+            make.left.equalTo(20)
+            make.right.equalTo(-20)
+            make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+            make.bottom.equalTo(-14)
+            make.height.equalTo(size.height)
         }
     }
 
@@ -297,23 +301,27 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
         if let disclaimer = model?.disclaimer, let text = disclaimer.text {
             let attrText = NSMutableAttributedString(string: text)
             attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
-//            disclaimer.richText.forEach { item in
-//                attrText.yy_setTextHighlight(
-//                    rangeOfArray(item.highlightRange),
-//                    color: hexStringToUIColor(hex: "#299cff"),
-//                    backgroundColor: nil,
-//                    userInfo: nil,
-//                    tapAction: { (_, text, range, _) in
-//                        if let url = item.linkUrl,
-//                            let theUrl = URL(string: url) {
-//                            TTRoute.shared().openURL(byPushViewController: theUrl)
-//                        } else {
-//                            assertionFailure()
-//                        }
-//                },
-//                    longPressAction: nil)
-//            }
-//            theCell.contentLabel.attributedText = attrText
+            disclaimer.richText?.forEach { item in
+                if let item = item as? FHRentDetailResponseDataRichTextModel,
+                    let ranges = item.highlightRange as? [Int]{
+                    attrText.yy_setTextHighlight(
+                        rangeOfArray(ranges),
+                        color: hexStringToUIColor(hex: "#299cff"),
+                        backgroundColor: nil,
+                        userInfo: nil,
+                        tapAction: { (_, text, range, _) in
+                            if let url = item.linkUrl,
+                                let theUrl = URL(string: url) {
+                                TTRoute.shared().openURL(byPushViewController: theUrl)
+                            } else {
+                                assertionFailure()
+                            }
+                    },
+                        longPressAction: nil)
+                }
+            }
+            theCell.disclaimerContent.attributedText = attrText
+            theCell.remakeConstraints()
         }
         if let contact = model?.contact,
             let realtorName = contact.realtorName,
