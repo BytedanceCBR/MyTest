@@ -572,7 +572,8 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
     
     NSString *bgColorKey = kColorBackground4;
     
-    self.contentScrollView.backgroundColor = [UIColor tt_themedColorForKey:bgColorKey];
+//    self.contentScrollView.backgroundColor = [UIColor tt_themedColorForKey:bgColorKey];
+    self.contentScrollView.backgroundColor = [UIColor whiteColor];
     _dashBorderLayer.strokeColor = [[UIColor tt_themedColorForKey:kColorLine4] CGColor];
     
     UIColor * color = [UIColor tt_themedColorForKey:bgColorKey];

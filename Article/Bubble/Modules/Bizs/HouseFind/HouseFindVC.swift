@@ -84,7 +84,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             sectionSelectedImageArray: nil,
             frame: CGRect.zero)
         re.selectionIndicatorHeight = 0
-
+        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(20),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#a1aab3")]
 
@@ -219,8 +219,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func setupViews() {
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
-            maker.left.equalTo(70 * CommonUIStyle.Screen.widthScale)
-            maker.right.equalTo(-70 * CommonUIStyle.Screen.widthScale)
+            maker.left.equalTo(30 * CommonUIStyle.Screen.widthScale)
+            maker.right.equalTo(-30 * CommonUIStyle.Screen.widthScale)
             maker.height.equalTo(28)
             maker.centerX.equalToSuperview()
         }
@@ -451,7 +451,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         vc.suggestionParams = condition
         vc.queryString = query
         vc.navBar.isShowTypeSelector = false
-        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
+        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
         if let houseSearchParams = houseSearchParams {
             vc.allParams = ["houseSearch": houseSearchParams]
         }

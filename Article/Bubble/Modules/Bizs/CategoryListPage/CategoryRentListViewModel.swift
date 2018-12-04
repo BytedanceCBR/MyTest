@@ -96,7 +96,7 @@ func fillRentHouseListitemCell(_ data: RentInnerItemEntity,
         let text = NSMutableAttributedString()
         let attrTexts = data.tags?.enumerated().map({ (offset, item) -> NSAttributedString in
             return createTagAttrString(
-                item.text,
+                item.content,
                 isFirst: offset == 0,
                 textColor: hexStringToUIColor(hex: item.textColor),
                 backgroundColor: hexStringToUIColor(hex: item.backgroundColor))

@@ -264,6 +264,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
+        result.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         return result
     }
 
@@ -656,12 +657,12 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
     override class func createCollectionView() -> UICollectionView {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: BubbleSelectCollectionView.catulateCellWidthBaseOnScreen(), height: 28)
-        //        flowLayout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 60)
         flowLayout.minimumLineSpacing = 12
         flowLayout.minimumInteritemSpacing = 9
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 10, right: 20)
         let result = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         result.backgroundColor = UIColor.clear
+        result.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         return result
     }
 
@@ -886,9 +887,9 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
 
     func processUserInputPrice(updateFilterOnly: Bool = false) {
         if let ds = priceDataSource() {
-            let whitespace = NSCharacterSet.whitespacesAndNewlines
-            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
-            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+//            let whitespace = NSCharacterSet.whitespacesAndNewlines
+//            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
+//            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let nodes = self.selectedNodes()
             if updateFilterOnly {
                 self.conditionLabelSetter?(nodes)

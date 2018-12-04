@@ -430,7 +430,7 @@ class CategoryListViewModel: DetailPageViewModel {
                         
                         let theDatas = data.items?.map({ (item) -> RentInnerItemEntity in
                             var newItem = item
-//                            newItem.fhSearchId = data.searchId
+                            newItem.fhSearchId = data.searchId
                             return newItem
                         })
                         

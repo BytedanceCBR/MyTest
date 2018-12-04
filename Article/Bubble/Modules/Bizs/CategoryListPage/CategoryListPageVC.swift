@@ -243,7 +243,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         if let associationalWord = self.associationalWord {
-            self.navBar.searchInput.placeholder = associationalWord
+            self.navBar.setSearchPlaceHolderText(text: associationalWord)
         }
         if self.associationalWord?.isEmpty ?? true &&
             navBar.searchInput.placeholder == nil {
@@ -556,9 +556,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["full_text"] {
-            self.navBar.searchInput.placeholder = getPlaceholderText(
+            self.navBar.setSearchPlaceHolderText(text: getPlaceholderText(
                 inputText: associationalWord as? String,
-                inputField: self.navBar.searchInput)
+                inputField: self.navBar.searchInput))
             if let associationalWord = associationalWord as? String {
                 self.associationalWord = associationalWord
                 self.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator { q in
@@ -571,9 +571,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         if let queryParams = queryParams,
             let placeholder = queryParams["placeholder"] as? String {
             if placeholder.isEmpty {
-                self.navBar.searchInput.placeholder = searchBarPlaceholder(self.houseType.value)
+                self.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(self.houseType.value))
             } else {
-                self.navBar.searchInput.placeholder = placeholder
+                self.navBar.setSearchPlaceHolderText(text: placeholder)
             }
             self.navBar.searchInput.text = nil
         }

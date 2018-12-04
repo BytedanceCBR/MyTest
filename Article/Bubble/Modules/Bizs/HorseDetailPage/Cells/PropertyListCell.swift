@@ -281,7 +281,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         if hasOutLineInfo {
-            theCell.removeListBottomView()
+            theCell.removeListBottomView(-20, true)
         }
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
@@ -377,7 +377,7 @@ class HouseOutlineInfoView:UIView {
         
         keyLabel.snp.makeConstraints { maker in
             maker.left.equalTo(iconImg.snp.right).offset(4)
-            maker.top.equalTo(10)
+            maker.top.equalTo(4)
             maker.height.equalTo(26)
             maker.right.equalTo(self).offset(-20)
         }
@@ -385,8 +385,22 @@ class HouseOutlineInfoView:UIView {
         valueLabel.snp.makeConstraints { maker in
             maker.left.equalTo(iconImg)
             maker.right.equalTo(-20)
-            maker.top.equalTo(keyLabel.snp.bottom).offset(2)
+            maker.top.equalToSuperview().offset(32)
             maker.bottom.equalTo(self)
+        }
+    }
+    
+    func showIconAndTitle(showen:Bool = true) {
+        iconImg.isHidden = !showen
+        keyLabel.isHidden = !showen
+        if showen {
+            valueLabel.snp.updateConstraints { (maker) in
+                maker.top.equalToSuperview().offset(32)
+            }
+        } else {
+            valueLabel.snp.updateConstraints { (maker) in
+                maker.top.equalToSuperview().offset(4)
+            }
         }
     }
     
@@ -426,6 +440,7 @@ func fillHouseOutlineListCell(_ outLineOverreview:ErshouOutlineOverreview, cell:
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
             infoView.valueLabel.sizeToFit()
+            infoView.showIconAndTitle(showen: !keyText.isEmpty)
         }
         
         let listView = outLineOverreview.list?.enumerated().map({ (e) -> HouseOutlineInfoView in

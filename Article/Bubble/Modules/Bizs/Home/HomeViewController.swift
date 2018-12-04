@@ -169,6 +169,10 @@ class HomeViewController: BaseViewController {
             .subscribe(onNext: { _ in
                 TTLaunchTracer.shareInstance().writeEvent()
             })
+        
+        
+        view.backgroundColor = UIColor.white
+        tableView.backgroundColor = .white
     }
     
     
@@ -415,7 +419,7 @@ extension HomeViewController {
         vc.suggestionParams = condition
         vc.queryString = query
         vc.navBar.isShowTypeSelector = false
-        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
+        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
         let nav = self.navigationController
         nav?.pushViewController(vc, animated: true)
         vc.navBar.backBtn.rx.tap

@@ -172,6 +172,7 @@ class SearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.textColor = hexStringToUIColor(hex: "081f33")
         result.returnKeyType = .search
         result.clearButtonMode = .always
         return result
@@ -226,6 +227,15 @@ class SearchNavBar: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setSearchPlaceHolderText(text: String?) {
+        if let text = text {
+            let attr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12),
+                        NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f4f5f6")]
+            let attrString = NSAttributedString(string: text, attributes: attr)
+            searchInput.attributedPlaceholder = attrString
+        }
     }
 
 }
@@ -294,6 +304,7 @@ class CategorySearchNavBar: UIView {
         let result = UITextField()
         result.background = nil
         result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.textColor = hexStringToUIColor(hex: "081f33")
         result.returnKeyType = .search
         result.clearButtonMode = .always
         return result
@@ -306,13 +317,6 @@ class CategorySearchNavBar: UIView {
         button.setImage(img, for: .highlighted)
         return button
     }()
-    /*
-    lazy var bottomLine: UIView = {
-        let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
-        return re
-    }()
-    */
 
     var searchable = false {
         didSet {
@@ -421,8 +425,16 @@ class CategorySearchNavBar: UIView {
         }
        */
     }
-    
-    
+
+    func setSearchPlaceHolderText(text: String?) {
+        if let text = text {
+            let attr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12),
+                        NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#8a9299")]
+            let attrString = NSAttributedString(string: text, attributes: attr)
+            searchInput.attributedPlaceholder = attrString
+        }
+    }
+
     func adjustTypeSelector(isShowSelector: Bool) {
 
         searchTypeLabel.isHidden = !isShowSelector

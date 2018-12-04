@@ -399,7 +399,7 @@
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
         if (indexPath.row == 0) {
             
-            return 85;
+            return 91;
         }
         return 105;
         
