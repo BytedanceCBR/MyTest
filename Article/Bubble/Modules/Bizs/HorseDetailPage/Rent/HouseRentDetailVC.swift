@@ -323,9 +323,19 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel, unowned self] in
 
+                    var imprId: String? = "be_null"
+                    var groupId: String? = "be_null"
+                    if let logpbV = self.houseRentTracer.logPb as? [String : Any]
+                    {
+                        imprId = logpbV["impr_id"] as? String
+                        groupId = logpbV["group_id"] as? String
+                    }
+                    
                     let tracerParamsFollow = EnvContext.shared.homePageParams <|>
-                        self.getTracePamrasFromRent()
-
+                        self.getTracePamrasFromRent() <|>
+                        toTracerParams(imprId ?? "be_null", key: "impr_id") <|>
+                        toTracerParams(groupId ?? "be_null", key: "group_id")
+                    
                     if let theDetailModel = detailPageViewModel {
                         let followUpOrCancel = theDetailModel.follwUpStatus.value.state() ?? false
                         self.followUpViewModel.followThisItem(isFollowUpOrCancel: !followUpOrCancel,
