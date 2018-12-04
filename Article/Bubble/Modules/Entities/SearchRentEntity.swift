@@ -53,6 +53,7 @@ struct RentItemEntity: Mappable {
 struct RentTagEntity : Mappable {
     
     var text : String = ""
+    var content : String = ""
     var backgroundColor : String?
     var id : String?
     var textColor : String?
@@ -62,6 +63,7 @@ struct RentTagEntity : Mappable {
     }
     
     mutating func mapping(map: Map) {
+        content <- map["content"]
         text <- map["text"]
         backgroundColor <- map["background_color"]
         id <- map["id"]
