@@ -260,10 +260,11 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
             return
         }
 
-        EnvContext.shared.toast.showToast("电话查询中")
+        bottomBar.contactBtn.startLoading()
         requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
-            .subscribe(onNext: { (response) in
-                EnvContext.shared.toast.dismissToast()
+            .subscribe(onNext: { [weak self] (response) in
+                
+                self?.bottomBar.contactBtn.stopLoading()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
                     
                     Utils.telecall(phoneNumber: virtualNumber)
@@ -271,8 +272,8 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                     Utils.telecall(phoneNumber: phone)
                 }
                 
-            }, onError: {  (error) in
-                EnvContext.shared.toast.dismissToast()
+            }, onError: { [weak self]  (error) in
+                self?.bottomBar.contactBtn.stopLoading()
                 Utils.telecall(phoneNumber: phone)
             })
             .disposed(by: self.disposeBag)
