@@ -27,14 +27,14 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
             result.append(SectionItem(houseType: .secondHandHouse, label: "二手房"))
         }
     }
-    if let cfg = config.searchTabCourtFilter {
-        if cfg.count > 0 {
-            result.append(SectionItem(houseType: .newHouse, label: "新房"))
-        }
-    }
     if let cfg = config.searchTabRentFilter {
         if cfg.count > 0 {
             result.append(SectionItem(houseType: .rentHouse, label: "租房"))
+        }
+    }
+    if let cfg = config.searchTabCourtFilter {
+        if cfg.count > 0 {
+            result.append(SectionItem(houseType: .newHouse, label: "新房"))
         }
     }
     if let cfg = config.searchTabNeighborHoodFilter {
@@ -66,7 +66,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         re.setAttributedTitle(
             attributeText("开始找房",
                           color: UIColor.white,
-                          font: CommonUIStyle.Font.pingFangRegular(16)),
+                          font: CommonUIStyle.Font.pingFangMedium(16)),
             for: .normal)
         re.layer.cornerRadius = 26
         re.backgroundColor = hexStringToUIColor(hex: "#299cff")

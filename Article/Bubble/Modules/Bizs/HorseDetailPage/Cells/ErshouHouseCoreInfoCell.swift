@@ -214,7 +214,7 @@ class HorseCoreInfoItemView: UIView {
         
         addSubview(valueLabel)
         valueLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(16)
+            maker.left.equalTo(14)
             maker.top.equalTo(12)
             maker.height.equalTo(25)
             maker.right.equalToSuperview().offset(-10)

@@ -9,7 +9,7 @@ import Foundation
 import SnapKit
 class FHRentHouseCoreInfoCell: BaseUITableViewCell {
 
-    var pending: CGFloat = 13
+    var pending: CGFloat = 12
     var cubePending: CGFloat = 4
     var leftPending: CGFloat = 20
     var rightPending: CGFloat = 20
@@ -76,9 +76,9 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
             if offset != itemViews.count - 1 {
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
-                                    width: catulateLabelWidth(view.valueLabel) + 2 * pending,
+                                    width: catulateLabelWidth(view.valueLabel) + 4 * pending,
                                     height: self.frame.height)
-                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel) + 2 * pending
+                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel) + 4 * pending
             } else {
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
