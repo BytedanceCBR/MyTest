@@ -32,11 +32,13 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         return re
     }()
 
-    lazy var disclaimerContent: UILabel = {
-        let re = UILabel()
-        re.font = CommonUIStyle.Font.pingFangRegular(12)
-        re.textColor = hexStringToUIColor(hex: "a2abb4")
+    lazy var disclaimerContent: YYLabel = {
+        let re = YYLabel()
         re.numberOfLines = 0
+        re.lineBreakMode = NSLineBreakMode.byWordWrapping
+        re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
+        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
 
@@ -121,6 +123,13 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.right.equalTo(-20)
             make.top.equalTo(ownerLabel.snp.bottom).offset(3)
             make.bottom.equalTo(-14)
+        }
+    }
+
+    func remakeConstraints() {
+        let size = disclaimerContent.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 30, height: 1000))
+        disclaimerContent.snp.updateConstraints { maker in
+            maker.height.equalTo(size.height)
         }
     }
 
@@ -285,6 +294,27 @@ func parseRentDisclaimerCellNode(model: FHRentDetailResponseDataModel?) -> () ->
 func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? FHRentDisclaimerCell {
         theCell.disclaimerContent.text = model?.disclaimer?.text
+        if let disclaimer = model?.disclaimer, let text = disclaimer.text {
+            let attrText = NSMutableAttributedString(string: text)
+            attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
+//            disclaimer.richText.forEach { item in
+//                attrText.yy_setTextHighlight(
+//                    rangeOfArray(item.highlightRange),
+//                    color: hexStringToUIColor(hex: "#299cff"),
+//                    backgroundColor: nil,
+//                    userInfo: nil,
+//                    tapAction: { (_, text, range, _) in
+//                        if let url = item.linkUrl,
+//                            let theUrl = URL(string: url) {
+//                            TTRoute.shared().openURL(byPushViewController: theUrl)
+//                        } else {
+//                            assertionFailure()
+//                        }
+//                },
+//                    longPressAction: nil)
+//            }
+//            theCell.contentLabel.attributedText = attrText
+        }
         if let contact = model?.contact,
             let realtorName = contact.realtorName,
             !realtorName.isEmpty {
@@ -316,4 +346,24 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
             theCell.hiddenOwnerLabel()
         }
     }
+}
+
+fileprivate func rangeOfArray(_ range: [Int]?) -> NSRange {
+    if let range = range, range.count == 2 {
+        return NSRange(location: range[0], length: range[1] - range[0])
+    } else {
+        return NSRange(location: 0, length: 0)
+    }
+
+}
+
+fileprivate func highLightTextStyle() -> [NSAttributedStringKey: Any] {
+    return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959"),
+            //            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid,
+        NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+}
+
+fileprivate func commonTextStyle() -> [NSAttributedStringKey: Any] {
+    return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey2Color),
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
 }

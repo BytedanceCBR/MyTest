@@ -158,7 +158,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let action: () -> Void = { [weak self] in
             if let url = self?.detailData.value?.data?.houseOverview?.reportUrl,
                 !url.isEmpty {
-                self?.jumpToReportPage(url: "http://i.haoduofangs.com/\(url)")
+                self?.jumpToReportPage(url: "http://i.haoduofangs.com\(url)")
             } else {
                 self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
             }

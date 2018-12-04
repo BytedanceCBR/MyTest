@@ -405,6 +405,8 @@ class ConditionFilterViewModel {
         item: SearchConditionItem,
         conditionLabelParser: @escaping (String, [Node]) -> ConditionItemType,
         conditionParser: ([Node]) -> (String) -> String) {
+        self.pullConditionsFromPanels()
+
         var conditions = self.searchAndConditionFilterVM.conditionTracer.value
         conditions[index] = selectedNode
         self.searchAndConditionFilterVM.conditionTracer.accept(conditions)
