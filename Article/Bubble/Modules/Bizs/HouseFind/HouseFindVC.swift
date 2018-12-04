@@ -27,14 +27,14 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
             result.append(SectionItem(houseType: .secondHandHouse, label: "二手房"))
         }
     }
-    if let cfg = config.searchTabCourtFilter {
-        if cfg.count > 0 {
-            result.append(SectionItem(houseType: .newHouse, label: "新房"))
-        }
-    }
     if let cfg = config.searchTabRentFilter {
         if cfg.count > 0 {
             result.append(SectionItem(houseType: .rentHouse, label: "租房"))
+        }
+    }
+    if let cfg = config.searchTabCourtFilter {
+        if cfg.count > 0 {
+            result.append(SectionItem(houseType: .newHouse, label: "新房"))
         }
     }
     if let cfg = config.searchTabNeighborHoodFilter {
