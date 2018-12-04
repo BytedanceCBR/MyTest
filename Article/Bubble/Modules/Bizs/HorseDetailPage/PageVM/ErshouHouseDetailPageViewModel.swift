@@ -345,6 +345,7 @@ class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTr
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
                 <- parsePropertyListNode(data)
+                <- parseFlineNode(data.baseInfo != nil ? 6: 0)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
                 }

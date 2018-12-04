@@ -281,7 +281,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
         if hasOutLineInfo {
-            theCell.removeListBottomView()
+            theCell.removeListBottomView(-20, true)
         }
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
