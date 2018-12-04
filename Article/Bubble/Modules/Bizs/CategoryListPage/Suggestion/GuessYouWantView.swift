@@ -22,6 +22,8 @@ class GuessYouWantView: UIView {
         }
     }
     
+    var guessYouWangtViewHeight:CGFloat = 138 // 默认是2行
+    
     var onGuessYouWantItemClick: ((GuessYouWant) -> Void)?
     
     var tempViews:[UIView] = []
@@ -181,6 +183,12 @@ class GuessYouWantView: UIView {
                 vArray.remove(at: 0)
                 retArray.append(item)
             }
+        }
+        if line >= 2 {
+            guessYouWangtViewHeight = 138
+        } else {
+            // 只有1行数据需要展示
+            guessYouWangtViewHeight = 99
         }
         if firstLineLen >= secondLineLen {
             return retArray
