@@ -650,13 +650,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         
         if isShowDefault
         {
-            if indexPath.row == 0
-            {
-                return 130
-            }else
-            {
-                return 115
-            }
+            return 105
         }
         
         if indexPath.row == datas.value.count - 1 {
