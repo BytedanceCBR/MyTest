@@ -183,10 +183,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
         let thirdTable = self.tableViews[2]
         let thirdDs = self.dataSources[2]
-//        self.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        DispatchQueue.main.async { [weak self] in
-            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        }
+        scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        DispatchQueue.main.async { [weak self] in
+//            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        }
     }
 
     fileprivate func choiceFirstAndSecondSelection(_ conditions: [String : Any]) {
@@ -283,11 +283,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     override func viewDidDisplay() {
         setDataBySelectedState()
-        if dataSources[2].nodes.count > 0 {
-            self.displayExtendValue()
-        } else {
-            self.displayNormalCondition()
-        }
+        adjustTablesLayout()
+        scrollVisibleCellInScreen()
     }
 
     fileprivate func setDataBySelectedState() {
