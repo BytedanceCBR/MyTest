@@ -577,7 +577,14 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 self?.displayNormalCondition()
                 subCategoryTable?.reloadData()
                 if subCategoryDS?.nodes.count ?? 0 > 0 {
-                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    if let subCategoryTable = subCategoryTable {
+                    subCategoryTable.scrollRectToVisible(CGRect(x: 0,
+                                                         y: -10,
+                                                         width: subCategoryTable.frame.width,
+                                                         height: subCategoryTable.frame.height),
+                                                  animated: false)
+                    }
                 }
                 categoryTable?.selectRow(
                         at: indexPath,
