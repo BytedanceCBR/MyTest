@@ -718,6 +718,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                             case let BizError.bizError(_, message):
                                 EnvContext.shared.toast.showToast(message)
                             default:
+                                tableView.setEditing(false, animated: true)
                                 EnvContext.shared.toast.showToast("网络异常")
                         }
                     })
@@ -780,6 +781,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                         case let BizError.bizError(_, message):
                             EnvContext.shared.toast.showToast(message)
                         default:
+                            tableView.setEditing(false, animated: true)
                             EnvContext.shared.toast.showToast("网络异常")
                         }
                 })

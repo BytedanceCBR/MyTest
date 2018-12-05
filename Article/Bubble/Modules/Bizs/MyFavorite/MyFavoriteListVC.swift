@@ -147,7 +147,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.tableView.endEditing(true)
+        tableView.setEditing(false, animated: true)
     }
 
     override func viewDidAppear(_ animated: Bool) {
