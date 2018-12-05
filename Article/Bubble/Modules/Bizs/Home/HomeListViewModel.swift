@@ -217,7 +217,7 @@ class HomeListViewModel: DetailPageViewModel {
         })
             .disposed(by: disposeBag)
     }
-     
+    
     func homeViewControllerWillAppear()
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
@@ -343,9 +343,9 @@ class HomeListViewModel: DetailPageViewModel {
                     tracerParams: homeCommonParams <|> toTracerParams("old", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                     navVC: self.navVC)
                 <- parseFHHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
-                                                 disposeBag: self.disposeBag,
-                                                 tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
-                                                 navVC: self.navVC)
+                                                   disposeBag: self.disposeBag,
+                                                   tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
+                                                   navVC: self.navVC)
                 <- parseFHHomeRentHouseListRowItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.rentHouse ? theDataItems : [],
                                                        disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("rent", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                        navVC: self.navVC)
@@ -422,12 +422,16 @@ class HomeListViewModel: DetailPageViewModel {
         
         self.houseId = houseId
         // 无网络时，仍然继续发起请求，等待网络恢复后，自动刷新首页。
-        let cityId = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        var cityId = 122
+        if let cityIdV = EnvContext.shared.client.generalBizconfig.currentSelectCityId.value
+        {
+            cityId = cityIdV
+        }
         
         if let typeValue = self.dataSource?.categoryView.houseTypeRelay.value
         {
             
-            requestHouseRecommend(cityId: cityId ?? 122,
+            requestHouseRecommend(cityId: cityId,
                                   horseType: typeValue.rawValue,
                                   offset: 0,
                                   searchId: nil,
@@ -479,6 +483,7 @@ class HomeListViewModel: DetailPageViewModel {
                 }
                 .subscribe(onNext: { [unowned self] response in
                     if let dataSource = self.dataSource, response.count != 0 {
+                        self.onSuccess?(.requestSuccessTypeNormal)
                         dataSource.datas = response
                         dataSource.recordIndexCache = []
                         self.tableView?.reloadData()
@@ -641,6 +646,7 @@ class HomeListViewModel: DetailPageViewModel {
                         }
                         
                         if let dataSource = self.dataSource, response.count != 0 {
+                            self.onSuccess?(.requestSuccessTypeNormal)
                             dataSource.datas = response
                             if pullType == .pullDownType
                             {
@@ -1035,7 +1041,7 @@ func parseFHHomeRentHouseListRowItemNode(
             .enumerated()
             .map { (e) -> (TracerParams) -> Void in
                 let (offset, item) = e
-
+                
                 return { (params) in
                     if let houseId = item.id {
                         let tracer = tracerParams <|>
