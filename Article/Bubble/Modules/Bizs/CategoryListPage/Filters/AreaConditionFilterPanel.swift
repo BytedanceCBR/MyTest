@@ -312,9 +312,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             let (dataSource, tableView) = e
             dataSource.restoreSelectedState()
             tableView.reloadData()
-            if dataSource.nodes.count > 0 {
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            }
+//            if dataSource.nodes.count > 0 {
+//                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//            }
         }
         //如果第三列没有任何选择项，则恢复成两列显示
 //        if let dataSource = dataSources.last {
@@ -383,18 +383,18 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     categoryTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
+                            scrollPosition: .top)
                     subCategoryTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
+                            scrollPosition: .top)
                     extentValueTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
-                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
-                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                    }
+                            scrollPosition: .top)
+//                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
+//                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    }
 
                     self.displayNormalCondition()
                 })
@@ -521,9 +521,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
     func bindAllTableReloader() {
         dataSources.forEach { [weak self] (ds) in
             ds.allTableReloader = {
-                self?.tableViews.forEach({ (tableView) in
-                    tableView.reloadData()
-                })
+                self?.tableViews.first?.reloadData()
             }
         }
     }
@@ -576,24 +574,25 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
                 self?.displayNormalCondition()
                 subCategoryTable?.reloadData()
-                if subCategoryDS?.nodes.count ?? 0 > 0 {
-//                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                    if let subCategoryTable = subCategoryTable {
-                    subCategoryTable.scrollRectToVisible(CGRect(x: 0,
-                                                         y: -10,
-                                                         width: subCategoryTable.frame.width,
-                                                         height: subCategoryTable.frame.height),
-                                                  animated: false)
-                    }
-                }
                 categoryTable?.selectRow(
                         at: indexPath,
                         animated: false,
-                        scrollPosition: .none)
+                        scrollPosition: .top)
                 subCategoryTable?.selectRow(
                         at: IndexPath(row: 0, section: 0),
                         animated: false,
-                        scrollPosition: .none)
+                        scrollPosition: .top)
+
+                if subCategoryDS?.nodes.count ?? 0 > 0 {
+//                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    if let subCategoryTable = subCategoryTable {
+//                        subCategoryTable.scrollRectToVisible(CGRect(x: 0,
+//                                                                    y: -10,
+//                                                                    width: subCategoryTable.frame.width,
+//                                                                    height: subCategoryTable.frame.height),
+//                                                             animated: false)
+//                    }
+                }
             }
         }
     }
@@ -807,6 +806,7 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         } else {
             assertionFailure()
         }
+        tableView.reloadData()
 
     }
 
