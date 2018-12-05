@@ -35,7 +35,6 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     lazy var disclaimerContent: YYLabel = {
         let re = YYLabel()
         re.numberOfLines = 0
-        re.lineBreakMode = NSLineBreakMode.byWordWrapping
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         re.font = CommonUIStyle.Font.pingFangRegular(13)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
@@ -51,6 +50,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     weak var photoBrowser: PhotoBrowser?
 
     var headerImages: [FHRentDetailResponseDataHouseImageModel] = []
+
+    private var lineHeight: CGFloat = 0
 
     open override class var identifier: String {
         return "rentDisclaimerCell"
@@ -111,6 +112,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.left.equalTo(20)
             make.right.equalTo(-20)
             make.top.equalTo(14)
+            make.height.equalTo(lineHeight)
             make.bottom.equalTo(-14)
         }
     }
@@ -122,18 +124,26 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.left.equalTo(20)
             make.right.equalTo(-20)
             make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+            make.height.equalTo(lineHeight)
             make.bottom.equalTo(-14)
         }
     }
 
     func remakeConstraints() {
-        let size = disclaimerContent.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 40, height: 1000))
-        disclaimerContent.snp.remakeConstraints { (make) in
-            make.left.equalTo(20)
-            make.right.equalTo(-20)
-            make.top.equalTo(ownerLabel.snp.bottom).offset(3)
-            make.bottom.equalTo(-14)
-            make.height.equalTo(size.height)
+        if let attrText = disclaimerContent.attributedText {
+            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 40,
+                                                               height: CGFloat.greatestFiniteMagnitude),
+                                         text: attrText)
+            lineHeight = tagLayout?.textBoundingSize.height ?? 0
+
+            disclaimerContent.snp.remakeConstraints { (make) in
+                make.left.equalTo(20)
+                make.right.equalTo(-20)
+                make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+                make.bottom.equalTo(-14)
+                make.height.equalTo(lineHeight)
+            }
+            self.contentView.setNeedsLayout()
         }
     }
 
@@ -283,7 +293,7 @@ extension FHRentDisclaimerCell: PhotoBrowserDelegate {
 }
 
 func parseRentDisclaimerCellNode(model: FHRentDetailResponseDataModel?) -> () -> TableSectionNode? {
-    let render = curry(fillRentDisclaimerCell)(model)
+    let render = oneTimeRender(curry(fillRentDisclaimerCell)(model))
     return {
         return TableSectionNode(
             items: [render],

@@ -155,6 +155,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params
         }
+
     }
 
     private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
@@ -261,6 +262,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse)
         bindButtomBarState()
+        bindOffSaleCallback()
         detailPageViewModel?.navVC = self.navigationController
         view.bringSubview(toFront: navBar)
         bindRequestListener()
@@ -404,6 +406,32 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         super.viewWillAppear(animated)
         self.houseRentTracer.recordStayPage()
 //        self.recordStayPageSearch()
+    }
+
+    fileprivate func bindOffSaleCallback() {
+        self.detailPageViewModel?.onHouseOffSale = { [weak self] (status) in
+            switch status {
+            case -1:
+                self?.navBar.rightBtn.isHidden = true
+                self?.navBar.rightBtn2.isHidden = true
+                self?.bottomStatusBar.isHidden = true
+                self?.bottomStatusBar.snp.updateConstraints({ (make) in
+                    make.height.equalTo(0)
+                })
+                self?.infoMaskView.isHidden = false
+                self?.infoMaskView.label.text = "该房源已下架"
+                self?.infoMaskView.retryBtn.isHidden = true
+                self?.infoMaskView.isUserInteractionEnabled = false
+                self?.tt_endUpdataData()
+            default:
+                self?.navBar.rightBtn.isHidden = false
+                self?.navBar.rightBtn2.isHidden = false
+                self?.bottomStatusBar.isHidden = false
+                self?.bottomStatusBar.snp.updateConstraints({ (make) in
+                    make.height.equalTo(30)
+                })
+            }
+        }
     }
 
     func resetMapCellIfNeeded() {

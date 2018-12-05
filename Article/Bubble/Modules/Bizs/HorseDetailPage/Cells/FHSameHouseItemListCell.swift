@@ -284,7 +284,7 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         let re = UIButton()
         re.setTitle("租房", for: .normal)
         re.setTitle("租房", for: .highlighted)
-        re.titleLabel?.font = CommonUIStyle.Font.pingFangMedium(14)
+        re.titleLabel?.font = CommonUIStyle.Font.pingFangRegular(14)
         re.setTitleColor(hexStringToUIColor(hex: kFHCoolGrey3Color), for: .normal)
         re.setTitleColor(hexStringToUIColor(hex: kFHClearBlueColor), for: .selected)
         return re

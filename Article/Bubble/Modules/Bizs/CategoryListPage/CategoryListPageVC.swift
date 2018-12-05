@@ -1113,6 +1113,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         recordEvent(key: "house_filter", params: params)
     }
 
+    deinit {
+        FHFilterRedDotManager.shared.mark()
+    }
+
 }
 
 extension CategoryListPageVC : FHMapSearchOpenUrlDelegate
