@@ -559,7 +559,7 @@ fileprivate func originFromNameByHouseType(houseType: HouseType) -> String {
     case .secondHandHouse:
         return "minetab_old"
     case .rentHouse:
-        return "maintab_rent"
+        return "minetab_rent"
     case .newHouse:
         return "minetab_new"
     default:
