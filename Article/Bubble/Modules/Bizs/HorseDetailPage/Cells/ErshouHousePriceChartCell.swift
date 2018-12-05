@@ -470,7 +470,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             maker.left.equalTo(8)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(207)
+            maker.height.equalTo(207 * CommonUIStyle.Screen.widthScale)
             maker.bottom.equalToSuperview()
         }
     
@@ -498,7 +498,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
         chartBgView.snp.remakeConstraints { maker in
             maker.left.right.equalToSuperview()
             maker.top.equalToSuperview().offset(0)
-            maker.height.equalTo(257)
+            maker.height.equalTo(207 * CommonUIStyle.Screen.widthScale + 50)
         }
         
         if self.isPriceChartFoldState {
@@ -512,7 +512,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             }
         } else {
             bottomBgView.snp.updateConstraints { (maker) in
-                maker.height.equalTo(315)
+                maker.height.equalTo(315 - 207 + 207 * CommonUIStyle.Screen.widthScale)
             }
             foldButton.snp.remakeConstraints { (maker) in
                 maker.left.right.equalToSuperview()
