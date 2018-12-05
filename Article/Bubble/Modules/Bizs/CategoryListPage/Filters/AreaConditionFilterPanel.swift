@@ -183,10 +183,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
         let thirdTable = self.tableViews[2]
         let thirdDs = self.dataSources[2]
-//        self.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        DispatchQueue.main.async { [weak self] in
-            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        }
+        scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        DispatchQueue.main.async { [weak self] in
+//            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        }
     }
 
     fileprivate func choiceFirstAndSecondSelection(_ conditions: [String : Any]) {
@@ -283,11 +283,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     override func viewDidDisplay() {
         setDataBySelectedState()
-        if dataSources[2].nodes.count > 0 {
-            self.displayExtendValue()
-        } else {
-            self.displayNormalCondition()
-        }
+        adjustTablesLayout()
+        scrollVisibleCellInScreen()
     }
 
     fileprivate func setDataBySelectedState() {
@@ -580,7 +577,14 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 self?.displayNormalCondition()
                 subCategoryTable?.reloadData()
                 if subCategoryDS?.nodes.count ?? 0 > 0 {
-                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    if let subCategoryTable = subCategoryTable {
+                    subCategoryTable.scrollRectToVisible(CGRect(x: 0,
+                                                         y: -10,
+                                                         width: subCategoryTable.frame.width,
+                                                         height: subCategoryTable.frame.height),
+                                                  animated: false)
+                    }
                 }
                 categoryTable?.selectRow(
                         at: indexPath,
