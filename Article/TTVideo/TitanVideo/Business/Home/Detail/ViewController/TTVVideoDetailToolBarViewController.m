@@ -631,7 +631,9 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [paramsDict setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
     [paramsDict setValue:self.videoInfo.groupModel.itemID forKey:@"item_id"];
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
-    [TTTrackerWrapper eventV3:@"rt_post_comment" params:paramsDict isDoubleSending:YES];
+    [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+
+    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];;
 
     [commentView dismissAnimated:YES];
     commentWriteManager.delegate = nil;
