@@ -283,6 +283,11 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     override func viewDidDisplay() {
         setDataBySelectedState()
+        if dataSources[2].nodes.count > 0 {
+            self.displayExtendValue()
+        } else {
+            self.displayNormalCondition()
+        }
     }
 
     fileprivate func setDataBySelectedState() {
@@ -316,6 +321,15 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         }
         //如果第三列没有任何选择项，则恢复成两列显示
 //        if let dataSource = dataSources.last {
+        adjustTablesLayout()
+//        }
+        scrollVisibleCellInScreen()
+        FHFilterRedDotManager.shared.mark()
+    }
+
+    func adjustTablesLayout() {
+        //如果第三列没有任何选择项，则恢复成两列显示
+        //        if let dataSource = dataSources.last {
         if dataSources[1].selectedIndexPaths.count == 0 {
             self.displayNormalCondition()
         } else {
@@ -329,9 +343,6 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 self.displayNormalCondition()
             }
         }
-//        }
-        scrollVisibleCellInScreen()
-        FHFilterRedDotManager.shared.mark()
     }
 
     func initPanelWithNativeDS() {
