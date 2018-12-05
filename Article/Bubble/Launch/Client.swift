@@ -90,12 +90,18 @@ extension Notification.Name {
                 }).disposed(by: disposeBag)
         
         
-        generalBizconfig.generalCacheSubject.skip(1).throttle(1, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
-            if let dictValue = data?.toJSON()
-            {
-                FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
-            }
-        }).disposed(by: disposeBag)
+        generalBizconfig.generalCacheSubject
+            .skip(1)
+            .throttle(1,
+                      latest: false,
+                      scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] data in
+                if let dictValue = data?.toJSON()
+                {
+                    FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     @objc func setCommonNetwork() {

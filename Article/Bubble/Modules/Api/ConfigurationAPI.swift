@@ -16,8 +16,8 @@ func requestSearchConfig(
     cityId: Int? = nil) -> Observable<SearchConfigResponse?> {
     let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock()
     var params = [String: Any]()
-    if let commonParams = commonParams {
-        params.merge(commonParams) { (left, right) -> Any in
+    if let commonParams = commonParams as? [String : Any] {
+        params.merge(commonParams ) { (left, right) -> Any in
             left
         }
     }
@@ -65,7 +65,7 @@ func requestGeneralConfig(
     let block = TTNetworkManager.shareInstance()?.commonParamsblock
     let commonParams = block?()
     if !needCommonParams {
-        if let commonParams = commonParams {
+        if let commonParams = commonParams as? [String : Any] {
             params.merge(commonParams) { (left, right) -> Any in
                 left
             }

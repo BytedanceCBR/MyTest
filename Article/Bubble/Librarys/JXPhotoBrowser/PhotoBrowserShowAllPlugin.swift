@@ -64,9 +64,10 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
 
         lazy var imageNameLabel: UILabel = {
             let re = UILabel()
-            re.font = UIFont.systemFont(ofSize: 17)
+            re.font = CommonUIStyle.Font.pingFangRegular(17)
             re.textColor = .white
             re.isHidden = true
+            re.textAlignment = .center
             return re
         }()
         
@@ -94,10 +95,10 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
 
             showBtn.sizeToFit()
             showBtn.frame = CGRect(x: x, y: 0, width: showBtn.bounds.width, height: self.bounds.height)
-
-            imageNameLabel.frame = CGRect(x: showBtn.frame.maxX + 10,
+            let offset = backBtn.frame.maxX + 10
+            imageNameLabel.frame = CGRect(x: offset,
                                           y: 0,
-                                          width: backBtn.frame.minX - 10,
+                                          width: self.frame.width - (backBtn.width + 20) * 2,
                                           height: self.bounds.height)
         }
         

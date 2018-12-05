@@ -37,10 +37,20 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
             theCell.starsContainer.snp.updateConstraints { maker in
                 maker.height.equalTo(50)
             }
+            theCell.nameKey.snp.remakeConstraints { (maker) in
+                maker.left.equalTo(theCell.leftMarge)
+                maker.top.equalTo(theCell.starsContainer.snp.bottom)
+                maker.height.equalTo(20)
+            }
         } else {
             theCell.starsContainer.isHidden = true
             theCell.starsContainer.snp.updateConstraints { maker in
                 maker.height.equalTo(0)
+            }
+            theCell.nameKey.snp.remakeConstraints { (maker) in
+                maker.left.equalTo(theCell.leftMarge)
+                maker.top.equalTo(10)
+                maker.height.equalTo(20)
             }
         }
         theCell.nameValue.text = neighborhoodInfo?.areaName

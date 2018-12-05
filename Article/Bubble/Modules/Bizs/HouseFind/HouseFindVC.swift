@@ -651,6 +651,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             return "findtab_neighborhood"
         case .newHouse:
             return "findtab_new"
+        case .rentHouse:
+            return "findtab_rent"
         default:
             return "findtab_old"
         }
