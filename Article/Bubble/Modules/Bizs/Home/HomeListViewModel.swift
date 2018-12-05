@@ -217,11 +217,11 @@ class HomeListViewModel: DetailPageViewModel {
         })
             .disposed(by: disposeBag)
     }
-     
+    
     func homeViewControllerWillAppear()
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
-
+        
         if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
             EnvContext.shared.client.generalBizconfig.load()
         }
@@ -343,9 +343,9 @@ class HomeListViewModel: DetailPageViewModel {
                     tracerParams: homeCommonParams <|> toTracerParams("old", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                     navVC: self.navVC)
                 <- parseFHHomeNewHouseListItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.newHouse ? theDataItems : [],
-                                                 disposeBag: self.disposeBag,
-                                                 tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
-                                                 navVC: self.navVC)
+                                                   disposeBag: self.disposeBag,
+                                                   tracerParams: homeCommonParams <|> toTracerParams("new", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
+                                                   navVC: self.navVC)
                 <- parseFHHomeRentHouseListRowItemNode(self.dataSource?.categoryView.houseTypeRelay.value == HouseType.rentHouse ? theDataItems : [],
                                                        disposeBag: self.disposeBag, tracerParams: homeCommonParams <|> toTracerParams("rent", key: "house_type") <|> toTracerParams("maintab", key: "enter_from") <|> toTracerParams("maintab_list", key: "element_from"),
                                                        navVC: self.navVC)
@@ -1041,7 +1041,7 @@ func parseFHHomeRentHouseListRowItemNode(
             .enumerated()
             .map { (e) -> (TracerParams) -> Void in
                 let (offset, item) = e
-
+                
                 return { (params) in
                     if let houseId = item.id {
                         let tracer = tracerParams <|>
