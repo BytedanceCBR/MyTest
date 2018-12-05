@@ -137,14 +137,14 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         self.navBar.title.text = self.titleName.value
         
         ershouHouseListViewModel?.onSuccess = {
-            [weak self] (isHaveData) in
-            if(isHaveData)
-            {
+            [weak self] (result) in
+            switch result {
+            case .Success:
                 self?.errorVM?.onRequestNormalData()
-            }else
-            
-            {
+            case .NoData:
                 self?.errorVM?.onRequestNilData()
+            case .BadData:
+                self?.errorVM?.onRequestError(error: nil)
             }
         }
 
@@ -310,6 +310,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         recordEvent(key: TraceEventName.enter_category, params: enterCategoryParams)
         setupErrorDisplay()
         self.errorVM?.onRequestViewDidLoad()
+        self.errorVM?.onRequest()
     }
     
     override func viewDidLayoutSubviews() {
