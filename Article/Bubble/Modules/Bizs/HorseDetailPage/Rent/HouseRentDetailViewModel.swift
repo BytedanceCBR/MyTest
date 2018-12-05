@@ -397,7 +397,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 self?.searchId = self?.logPb?["search_id"] as? String
 
                 if let saleStatus = model?.data?.status,
-                    saleStatus == 1 || saleStatus == -1 {
+                    saleStatus == 1 || saleStatus == -1 || saleStatus == 2 {
                     self?.onHouseOffSale?(saleStatus)
                     if saleStatus == -1 {
                         return
