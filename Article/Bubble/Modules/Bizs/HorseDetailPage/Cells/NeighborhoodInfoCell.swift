@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDelegate {
-    
+    let mapHightScale: CGFloat = 0.36
     open override class var identifier: String {
         return "NeighborhoodInfoCell"
     }
@@ -221,7 +221,7 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         mapImageView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
             // 等效高度为134
-            maker.height.equalTo(UIScreen.main.bounds.width * 0.36)
+            maker.height.equalTo(UIScreen.main.bounds.width * mapHightScale)
             maker.top.equalTo(schoolKey.snp.bottom).offset(20)
         }
         
@@ -334,13 +334,13 @@ class NeighborhoodInfoCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDe
         if isHidden {
             mapImageView.snp.makeConstraints { maker in
                 maker.left.right.bottom.equalToSuperview()
-                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.height.equalTo(UIScreen.main.bounds.width * mapHightScale)
                 maker.top.equalTo(nameKey.snp.bottom).offset(20)
             }
         } else {
             mapImageView.snp.makeConstraints { maker in
                 maker.left.right.bottom.equalToSuperview()
-                maker.height.equalTo(UIScreen.main.bounds.width * 0.4)
+                maker.height.equalTo(UIScreen.main.bounds.width * mapHightScale)
                 maker.top.equalTo(schoolKey.snp.bottom).offset(20)
             }
         }
