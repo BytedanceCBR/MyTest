@@ -134,7 +134,7 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
         if (dataModel.opData.items.count > 0) {
-            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120;
+            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120 * [TTDeviceHelper scaleToScreen375];
         }
         
         if (dataModel.opData2.items.count > 0) {
