@@ -104,29 +104,48 @@ func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailCon
 
         if let contact = contact,
             let realtorName = contact.realtorName,
-            !realtorName.isEmpty {
-            theCell.displayOwnerLabel()
-            theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
-            var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-            if let businessLicense = contact.businessLicense,
-                !businessLicense.isEmpty {
-                let imageModel = FHRentDetailResponseDataHouseImageModel()
-                imageModel.url = businessLicense
-                imageModel.name = "营业执照"
-                headerImages.append(imageModel)
-            }
-            if let certificate = contact.certificate,
-                !certificate.isEmpty {
-                let imageModel = FHRentDetailResponseDataHouseImageModel()
-                imageModel.url = certificate
-                imageModel.name = "从业人员信息卡"
-                headerImages.append(imageModel)
-            }
-            if headerImages.count > 0 {
-                theCell.headerImages = headerImages
-                theCell.contactIcon.isHidden = false
+            let agencyName = contact.agencyName {
+            if !realtorName.isEmpty || !agencyName.isEmpty {
+                theCell.displayOwnerLabel()
+                var tempName = ""
+                if !realtorName.isEmpty {
+                    tempName = realtorName
+                    if !agencyName.isEmpty {
+                        tempName += " | \(agencyName)"
+                    }
+                } else if !agencyName.isEmpty {
+                    tempName = agencyName
+                }
+                theCell.ownerLabel.text = "房源维护方：\(tempName)"
+                var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+                if let businessLicense = contact.businessLicense,
+                    !businessLicense.isEmpty {
+                    let imageModel = FHRentDetailResponseDataHouseImageModel()
+                    imageModel.url = businessLicense
+                    imageModel.name = "营业执照"
+                    headerImages.append(imageModel)
+                }
+                if let certificate = contact.certificate,
+                    !certificate.isEmpty {
+                    let imageModel = FHRentDetailResponseDataHouseImageModel()
+                    imageModel.url = certificate
+                    imageModel.name = "从业人员信息卡"
+                    headerImages.append(imageModel)
+                }
+                if headerImages.count > 0 {
+                    theCell.headerImages = headerImages
+                    theCell.contactIcon.isHidden = false
+                    theCell.contactIcon.snp.updateConstraints { (maker) in
+                        maker.right.lessThanOrEqualTo(-20)
+                    }
+                } else {
+                    theCell.contactIcon.isHidden = true
+                    theCell.contactIcon.snp.updateConstraints { (maker) in
+                        maker.right.lessThanOrEqualTo(10)
+                    }
+                }
             } else {
-                theCell.contactIcon.isHidden = true
+                theCell.hiddenOwnerLabel()
             }
         } else {
             theCell.hiddenOwnerLabel()
