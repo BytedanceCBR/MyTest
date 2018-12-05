@@ -43,7 +43,6 @@ class HeaderCell: BaseUITableViewCell {
             if label.superview != nil {
                 label.snp.updateConstraints { (maker) in
                     maker.bottom.equalToSuperview().offset(adjustBottomSpace)
-                    maker.top.equalToSuperview().offset(20)
                 }
             }
         }

@@ -74,12 +74,14 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
         itemViews.enumerated().forEach { (e) in
             let (offset, view) = e
             if offset != itemViews.count - 1 {
+
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
-                                    width: catulateLabelWidth(view.valueLabel) + 2 * pending,
+                                    width: catulateLabelWidth(view.valueLabel, fontSize: 14) + 2 * pending,
                                     height: self.frame.height)
-                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel) + 2 * pending
+                offsetX = offsetX + cubePending + catulateLabelWidth(view.valueLabel, fontSize: 14) + 2 * pending
             } else {
+                view.valueLabel.font = CommonUIStyle.Font.pingFangMedium(14)
                 view.frame = CGRect(x: offsetX,
                                     y: 0,
                                     width: self.frame.width - offsetX - rightPending,
@@ -97,7 +99,10 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
         }
     }
 
-    func catulateLabelWidth(_ label: UILabel) -> CGFloat {
+    func catulateLabelWidth(_ label: UILabel, fontSize: CGFloat = 16) -> CGFloat {
+        if fontSize != -1 {
+            label.font = CommonUIStyle.Font.pingFangMedium(fontSize)
+        }
         label.sizeToFit()
         let width = label.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: label.frame.height)).width
         return width
@@ -127,16 +132,16 @@ func parseRentCoreInfoCellNode1(model: FHRentDetailResponseDataModel?,
 
 func fillRentCoreInfoCell1(model: FHRentDetailResponseDataModel?, cell: BaseUITableViewCell) {
     if let theCell = cell as? FHRentHouseCoreInfoCell {
-        //        let re = HorseCoreInfoItemView()
-        //        re.keyLabel.text = "93457元/月"
-        //        re.valueLabel.text = "押一付三"
-        //        let re1 = HorseCoreInfoItemView()
-        //        re1.keyLabel.text = "2室1厅"
-        //        re1.valueLabel.text = "房型"
-        //        let re2 = HorseCoreInfoItemView()
-        //        re2.keyLabel.text = "20平"
-        //        re2.valueLabel.text = "共90平"
-        //        theCell.setItem(items: [re, re1, re2])
+//                let re = HorseCoreInfoItemView()
+//                re.keyLabel.text = "押一付三"
+//                re.valueLabel.text = "8457 到 12343元/月"
+//                let re1 = HorseCoreInfoItemView()
+//                re1.keyLabel.text = "房型"
+//                re1.valueLabel.text = "2室4厅5卫"
+//                let re2 = HorseCoreInfoItemView()
+//                re2.keyLabel.text = "20平"
+//                re2.valueLabel.text = "4555平"
+//                theCell.setItem(items: [re, re1, re2])
         let infos = model?.coreInfo?
             .map { $0 as? FHRentDetailResponseDataCoreInfoModel }
             .map { info -> HorseCoreInfoItemView in

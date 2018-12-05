@@ -177,9 +177,9 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
                 set1.setColor(lineColorByIndex(index))
                 set1.setCircleColor(lineColorByIndex(index))
                 set1.lineWidth = 1
-                set1.circleRadius = 4
+                set1.circleRadius = 3
                 set1.circleHoleColor = .white
-                set1.circleHoleRadius = 3
+                set1.circleHoleRadius = 2
                 // 选中效果
                 set1.highlightLineWidth = 1
                 set1.highlightColor = hexStringToUIColor(hex: kFHClearBlueColor)
@@ -251,7 +251,7 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
             maker.left.equalTo(8)
             maker.right.equalTo(0)
             maker.top.equalTo(priceLabel.snp.bottom).offset(10)
-            maker.height.equalTo(180)
+            maker.height.equalTo(180 * CommonUIStyle.Screen.widthScale)
             maker.bottom.equalToSuperview()
         }
 
