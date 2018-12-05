@@ -1339,6 +1339,9 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
                 maker.top.equalTo(theCell.areaLabel.snp.bottom).offset(3)
             }
             
+            theCell.majorImageView.bd_setImage(with: URL(string: data.images.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         } else {
             
             theCell.priceLabel.snp.makeConstraints { maker in
@@ -1385,11 +1388,12 @@ func fillFollowUpListItemCell(_ data: UserFollowData.Item,
             else {
                 theCell.priceLabel.text = data.pricePerSqm
             }
+            
+            
+            theCell.majorImageView.bd_setImage(with: URL(string: data.images.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
+            theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         }
-
-
-        theCell.majorImageView.bd_setImage(with: URL(string: data.images.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
-        theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
     }
 }
 
