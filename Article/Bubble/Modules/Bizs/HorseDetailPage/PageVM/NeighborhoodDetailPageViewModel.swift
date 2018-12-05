@@ -303,7 +303,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             traceExtension = traceExtension <|> toTracerParams(selectTraceParam(traceParams, key: "log_pb") ?? "be_null", key: "log_pb")
                         }
  
-                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data, traceExtension: traceExtension)
+                        self?.openTransactionHistoryOrHouseListVCWithURL(url: openUrl, data: data,info: info, traceExtension: traceExtension)
                     }
                 }
                 <- parseFlineNode((data.statsInfo?.count ?? 0 > 0) ? 6 : 0)
@@ -532,7 +532,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         navVC?.pushViewController(vc, animated: true)
     }
     
-    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData, traceExtension: TracerParams = TracerParams.momoid()) {
+    fileprivate func openTransactionHistoryOrHouseListVCWithURL(url:String, data: NeighborhoodDetailData, info:NeighborhoodItemAttribute, traceExtension: TracerParams = TracerParams.momoid()) {
         let openUrl = url.removingPercentEncoding ?? ""
         if openUrl.count > 0 {
             if let theUrl = URL(string: openUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
@@ -545,13 +545,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 if openUrl.contains("house_list_in_neighborhood") {
                     let houseType = openUrl.urlParameterForKey("house_type") ?? "0"
+                    let totalCount = info.value ?? "0套" // 多少套房源
                     if houseType == "2" {
                         // 在售房源
                         element_from = "house_onsale"
                         category_name = "same_neighborhood_list"
                         params["house_type"] = HouseType.secondHandHouse.rawValue
                         if let title = data.name {
-                            params["title"] = title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))"
+                            params["title"] = title+"(\(totalCount))"
                         }
                         if let searchId = self.houseInSameNeighborhood.value?.data?.searchId {
                             params["searchId"] = searchId
@@ -562,7 +563,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         category_name = "same_neighborhood_list"
                         params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
                         if let title = data.name {
-                            params["title"] = title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))"
+                            params["title"] = title+"(\(totalCount))"
                         }
                         if let searchId = self.rentHouseInSameNeighborhood.value?.data?.searchId {
                             params["searchId"] = searchId

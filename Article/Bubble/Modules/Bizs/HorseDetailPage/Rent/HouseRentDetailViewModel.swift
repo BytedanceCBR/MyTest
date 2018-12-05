@@ -47,6 +47,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     var onDataLoaded: (() -> Void)?
     var onRequestError: ((Error?) -> Void)?
 
+    var onHouseOffSale: ((Int) -> Void)?
+
     init(houseId: Int64, houseRentTracer: HouseRentTracer) {
         cellFactory = getHouseDetailCellFactory()
         self.houseId = houseId
@@ -390,6 +392,15 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             if model != nil {
                 self?.logPb = model?.data?.logPb as? [String : Any]
                 self?.searchId = self?.logPb?["search_id"] as? String
+
+                if let saleStatus = model?.data?.status,
+                    saleStatus == 1 || saleStatus == -1 {
+                    self?.onHouseOffSale?(saleStatus)
+                    if saleStatus == -1 {
+                        return
+                    }
+                }
+
                 self?.detailData.accept(model)
                 if let contactDict = self?.detailData.value?.data?.contact?.toDictionary() as? [String: Any]
                 {

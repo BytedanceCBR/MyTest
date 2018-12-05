@@ -35,7 +35,6 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     lazy var disclaimerContent: YYLabel = {
         let re = YYLabel()
         re.numberOfLines = 0
-        re.lineBreakMode = NSLineBreakMode.byWordWrapping
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
         re.font = CommonUIStyle.Font.pingFangRegular(13)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
@@ -51,6 +50,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
     weak var photoBrowser: PhotoBrowser?
 
     var headerImages: [FHRentDetailResponseDataHouseImageModel] = []
+
+    private var lineHeight: CGFloat = 0
 
     open override class var identifier: String {
         return "rentDisclaimerCell"
@@ -111,6 +112,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.left.equalTo(20)
             make.right.equalTo(-20)
             make.top.equalTo(14)
+            make.height.equalTo(lineHeight)
             make.bottom.equalTo(-14)
         }
     }
@@ -122,18 +124,26 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             make.left.equalTo(20)
             make.right.equalTo(-20)
             make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+            make.height.equalTo(lineHeight)
             make.bottom.equalTo(-14)
         }
     }
 
     func remakeConstraints() {
-        let size = disclaimerContent.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 40, height: 1000))
-        disclaimerContent.snp.remakeConstraints { (make) in
-            make.left.equalTo(20)
-            make.right.equalTo(-20)
-            make.top.equalTo(ownerLabel.snp.bottom).offset(3)
-            make.bottom.equalTo(-14)
-            make.height.equalTo(size.height)
+        if let attrText = disclaimerContent.attributedText {
+            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 40,
+                                                               height: CGFloat.greatestFiniteMagnitude),
+                                         text: attrText)
+            lineHeight = tagLayout?.textBoundingSize.height ?? 0
+
+            disclaimerContent.snp.remakeConstraints { (make) in
+                make.left.equalTo(20)
+                make.right.equalTo(-20)
+                make.top.equalTo(ownerLabel.snp.bottom).offset(3)
+                make.bottom.equalTo(-14)
+                make.height.equalTo(lineHeight)
+            }
+            self.contentView.setNeedsLayout()
         }
     }
 
@@ -283,7 +293,7 @@ extension FHRentDisclaimerCell: PhotoBrowserDelegate {
 }
 
 func parseRentDisclaimerCellNode(model: FHRentDetailResponseDataModel?) -> () -> TableSectionNode? {
-    let render = curry(fillRentDisclaimerCell)(model)
+    let render = oneTimeRender(curry(fillRentDisclaimerCell)(model))
     return {
         return TableSectionNode(
             items: [render],
@@ -325,30 +335,49 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
         }
         if let contact = model?.contact,
             let realtorName = contact.realtorName,
-            !realtorName.isEmpty {
-            theCell.displayOwnerLabel()
-            theCell.ownerLabel.text = "房屋负责人：\(realtorName)"
-            var headerImages = [FHRentDetailResponseDataHouseImageModel]()
-            if let businessLicense = model?.contact?.businessLicense,
-                !businessLicense.isEmpty {
-                let imageModel = FHRentDetailResponseDataHouseImageModel()
-                imageModel.url = businessLicense
-                imageModel.name = "营业执照"
-                headerImages.append(imageModel)
-            }
-            if let certificate = model?.contact?.certificate,
-                !certificate.isEmpty {
-                let imageModel = FHRentDetailResponseDataHouseImageModel()
-                imageModel.url = certificate
-                imageModel.name = "从业人员信息卡"
-                headerImages.append(imageModel)
-            }
-            if headerImages.count > 0 {
-                theCell.headerImages = headerImages
-                theCell.contactIcon.isHidden = false
+            let agencyName = contact.agencyName {
+            if !realtorName.isEmpty || !agencyName.isEmpty {
+                theCell.displayOwnerLabel()
+                var tempName = ""
+                if !realtorName.isEmpty {
+                    tempName = realtorName
+                    if !agencyName.isEmpty {
+                        tempName += " | \(agencyName)"
+                    }
+                } else if !agencyName.isEmpty {
+                    tempName = agencyName
+                }
+                theCell.ownerLabel.text = "房源维护方：\(tempName)"
+                var headerImages = [FHRentDetailResponseDataHouseImageModel]()
+                if let businessLicense = model?.contact?.businessLicense,
+                    !businessLicense.isEmpty {
+                    let imageModel = FHRentDetailResponseDataHouseImageModel()
+                    imageModel.url = businessLicense
+                    imageModel.name = "营业执照"
+                    headerImages.append(imageModel)
+                }
+                if let certificate = model?.contact?.certificate,
+                    !certificate.isEmpty {
+                    let imageModel = FHRentDetailResponseDataHouseImageModel()
+                    imageModel.url = certificate
+                    imageModel.name = "从业人员信息卡"
+                    headerImages.append(imageModel)
+                }
+                if headerImages.count > 0 {
+                    theCell.headerImages = headerImages
+                    theCell.contactIcon.isHidden = false
+                    theCell.contactIcon.snp.updateConstraints { (maker) in
+                        maker.right.lessThanOrEqualTo(-20)
+                    }
+                } else {
+                    //隐藏经济负责人营业执照
+                    theCell.contactIcon.isHidden = true
+                    theCell.contactIcon.snp.updateConstraints { (maker) in
+                        maker.right.lessThanOrEqualTo(10)
+                    }
+                }
             } else {
-                //隐藏经济负责人营业执照
-                theCell.contactIcon.isHidden = true
+                theCell.hiddenOwnerLabel()
             }
         } else {
             theCell.hiddenOwnerLabel()

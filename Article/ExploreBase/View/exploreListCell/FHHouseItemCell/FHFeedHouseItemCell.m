@@ -161,7 +161,7 @@
 
     if (self.orderedData.houseItemsData.items.count > 0) {
 
-        self.houseTableView.frame = CGRectMake(0, self.headerView.bottom, self.width, 105 * self.orderedData.houseItemsData.items.count - 20.f);
+        self.houseTableView.frame = CGRectMake(0, self.headerView.bottom, self.width, 105 * self.orderedData.houseItemsData.items.count - 14.f);
         self.footerView.frame = CGRectMake(0, self.houseTableView.bottom, self.width, 68);
     }
 
@@ -201,7 +201,7 @@
     if(data.houseItemsData.items.count < 1) {
         return 0;
     }
-    CGFloat height = 50.0f + 105 * data.houseItemsData.items.count - 20.f + 68.f;
+    CGFloat height = 50.0f + 105 * data.houseItemsData.items.count - 14.f + 68.f;
     if (data.preCellType == ExploreOrderedDataCellTypeFHHouse || data.preCellType == ExploreOrderedDataCellTypeNull) {
         
         height += 6;

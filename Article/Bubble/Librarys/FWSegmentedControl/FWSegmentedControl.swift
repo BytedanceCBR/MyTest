@@ -705,12 +705,12 @@ extension FWSegmentedControl {
 
     fileprivate func setSelectedSegmentIndex(index: Int, animated: Bool, notify: Bool) {
 
-        if EnvContext.shared.client.reachability.connection == .none
-        {
-            EnvContext.shared.toast.showToast("网络异常")
-            return
-        }
-        
+//        if EnvContext.shared.client.reachability.connection == .none
+//        {
+//            EnvContext.shared.toast.showToast("网络异常")
+//            return
+//        }
+
         self.selectedSegmentIndex = index
 
         self.setNeedsDisplay()

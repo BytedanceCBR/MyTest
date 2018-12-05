@@ -47,6 +47,12 @@ class FHFilterRedDotManager {
         oldDotVersion = self.reddotVersion
     }
 
+    func mark() {
+        oldDotVersion = reddotVersion
+        hasClickDot = true
+        saveConfig()
+    }
+
     func setSelectedConditions(conditions: [String: Any]) {
         if let theTypes = conditions["reddot_type"] as? String {
             self.redDotTypes.removeAll()

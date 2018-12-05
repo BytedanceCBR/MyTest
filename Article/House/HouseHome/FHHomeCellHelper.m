@@ -270,9 +270,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             }
-            
 
-            
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
@@ -321,6 +319,10 @@ static NSMutableArray  * _Nullable identifierArr;
         for (UIView *subView in cellBanner.bannerView.subviews) {
             [subView removeFromSuperview];
         }
+    }
+    
+    if (countItems >= 4) {
+        countItems = 4;
     }
     
     for (int index = 0; index < countItems; index++) {

@@ -331,6 +331,7 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         }
 //        }
         scrollVisibleCellInScreen()
+        FHFilterRedDotManager.shared.mark()
     }
 
     func initPanelWithNativeDS() {
