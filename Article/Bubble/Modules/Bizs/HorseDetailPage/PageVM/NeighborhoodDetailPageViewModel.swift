@@ -458,13 +458,13 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 
                         if let id = data.id ,
                             let title = data.name {
-                            
+                            //小区跳同小区租房列表
                             let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                                 theParams <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
                                 toTracerParams("neighborhood_detail", key: "enter_from") <|>
                                 toTracerParams(self.rentHouseInSameNeighborhood.value?.data?.searchId ?? "be_null", key: "search_id") <|>
-                                toTracerParams("same_neighborhood", key: "element_from")
+                                toTracerParams("house_renting", key: "element_from")
                             openRentHouseList(
                                 title: title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
                                 neighborhoodId: id,

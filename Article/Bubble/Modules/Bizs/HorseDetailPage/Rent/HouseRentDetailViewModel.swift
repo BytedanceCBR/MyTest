@@ -194,7 +194,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             }
         }
         let header = combineParser(left: parseFlineNode(),
-                                   right: parseHeaderNode("小区 \(title ?? "")", showLoadMore: true, adjustBottomSpace: 0, process: process))
+                                   right: parseHeaderNode("小区 \(title ?? "")",
+                                    showLoadMore: true,
+                                    adjustBottomSpace: 0,
+                                    process: process))
         return parseNodeWrapper(preNode: header,
                                 wrapedNode: parseRentNeighborhoodInfoNode(model: detailData.value,
                                                                           tracer: houseRentTracer))
@@ -213,12 +216,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
                                 print("")
                             }
-                            params = self.traceParam <|>
+                            params = EnvContext.shared.homePageParams <|>
+                                self.traceParam <|>
                                 toTracerParams("same_neighborhood", key: "element_from") <|>
                                 toTracerParams("same_neighborhood_list", key: "category_name") <|>
                                 toTracerParams("click", key: "enter_type") <|>
-                                toTracerParams("same_neighborhood_list", key: "page_type") <|>
-                                toTracerParams("same_neighborhood_list", key: "enter_from")
+                                toTracerParams("rent_detail", key: "enter_from")
                             
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
@@ -268,7 +271,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             }
             
             let element_from = "related"
-            let category_name = "same_neighborhood_list"
+            let category_name = "related_list"
             
             params["houseId"] = "\(self.houseId)"
             params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
@@ -280,11 +283,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                 params["searchId"] = searchId
             }
-            
-            let transactionTrace = self.traceParam <|>
+            let transactionTrace = EnvContext.shared.homePageParams <|>
+                self.traceParam <|>
                 toTracerParams(category_name, key: "category_name") <|>
+                toTracerParams("rent_detail", key: "enter_from") <|>
                 toTracerParams(element_from, key: "element_from") <|>
-                toTracerParams("related_list", key: "page_type") <|>
                 toTracerParams("click", key: "enter_type")
             
             params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue

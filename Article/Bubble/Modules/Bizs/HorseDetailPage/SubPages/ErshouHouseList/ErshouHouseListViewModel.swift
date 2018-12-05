@@ -135,6 +135,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         pageableLoader?()
     }
 
+    //这个接口被两个问题调用，因此不能添加enter_from买点
     func requestRent(neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -157,8 +158,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            toTracerParams("rent_detail", key: "enter_from") <|>
-                            toTracerParams("related_list", key: "page_type") <|>
                             self.traceParams
                         let datas = parseRentHouseListRowItemNode(
                             items,
@@ -269,11 +268,17 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         if ht == HouseType.rentHouse {
                             htName = "rent"
                         }
-                        
+
+                        var pageType: String?
+                        if ht == HouseType.rentHouse {
+                            pageType = "rent_detail"
+                        } else {
+                            pageType = "old_detail"
+                        }
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            toTracerParams("old_detail", key: "enter_from") <|>
-                            toTracerParams("related_list", key: "page_type") <|>
+                            toTracerParams("related_list", key: "enter_from") <|>
+                            toTracerParams(pageType ?? "be_null", key: "page_type") <|>
                             toTracerParams(htName ?? "old", key: "house_type")
                         
                         //           parseErshouRelatedHouseListItemNode
@@ -404,8 +409,7 @@ func parseRelatedHouseListItemNode(
                 tracerParams: tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    //                    toTracerParams("maintab", key: "enter_from") <|>
-                    toTracerParams(elementFrom, key: "element_from") <|>
+                    toTracerParams("be_null", key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>

@@ -296,11 +296,18 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
             self.tracerParams = self.tracerParams <|>
             toTracerParams("related_list", key: "category_name")
         }
-        
-        stayTimeParams = tracerParams.exclude("card_type") <|> traceStayTime()
+        let enterCategoryParams = tracerParams
+            .exclude("card_type")
+            .exclude("element_type")
+            .exclude("search_id")
+            .exclude("group_id")
+            .exclude("page_type")
+            .exclude("rank")
+
+        stayTimeParams = enterCategoryParams.exclude("card_type") <|> traceStayTime()
 
         // 进入列表页埋点
-        recordEvent(key: TraceEventName.enter_category, params: tracerParams.exclude("card_type"))
+        recordEvent(key: TraceEventName.enter_category, params: enterCategoryParams)
         setupErrorDisplay()
         self.errorVM?.onRequestViewDidLoad()
     }
@@ -365,8 +372,15 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         
         let refreshParams = self.tracerParams.exclude("card_type") <|>
                 toTracerParams("pre_load_more", key: "refresh_type") <|>
-            toTracerParams(sid ?? "be_null", key: "search_id")
-        recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
+                toTracerParams(sid ?? "be_null", key: "search_id")
+        let finalRefreshParams = refreshParams
+            .exclude("card_type")
+            .exclude("element_type")
+            .exclude("search_id")
+            .exclude("group_id")
+            .exclude("page_type")
+            .exclude("rank")
+        recordEvent(key: TraceEventName.category_refresh, params: finalRefreshParams)
         errorVM?.onRequest()
         ershouHouseListViewModel?.pageableLoader?()
     }

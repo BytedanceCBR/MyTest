@@ -486,10 +486,19 @@ import RxCocoa
                                 toTracerParams(self.searchId ?? "", key: "search_id") <|>
                                 toTracerParams(self.searchId ?? "", key: "origin_search_id") <|>
                                 toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams("related", key: "element_from") <|>
                                 toTracerParams("old_detail", key: "enter_from")
                             
                             
-                            openAroundHouseList(title: "周边房源", neighborhoodId: id,houseId: data.id ,  disposeBag: self.disposeBag,houseType:self.houseType,  navVC: self.navVC, searchSource: .oldDetail, tracerParams: loadMoreParams , bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
+                            openAroundHouseList(title: "周边房源",
+                                                neighborhoodId: id,
+                                                houseId: data.id ,
+                                                disposeBag: self.disposeBag,
+                                                houseType:self.houseType,
+                                                navVC: self.navVC,
+                                                searchSource: .oldDetail,
+                                                tracerParams: loadMoreParams ,
+                                                bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                         }
                     })
                 <- parseErshouHouseDisclaimerNode(data)
@@ -1155,8 +1164,11 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams("be_null", key: "element_type")
-            
-            let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("element_from"))
+            let finalHouseShowParams = houseShowParams
+                .exclude("element_from")
+                .exclude("category_name")
+                .exclude("click")
+            let tracer = onceRecord(key: TraceEventName.house_show, params: finalHouseShowParams)
             
             let render = curry(fillFollowUpListItemCell)(item)(!hasMore && index == count - 1)
             let editor = { (style: UITableViewCellEditingStyle) -> Observable<TableRowEditResult> in
