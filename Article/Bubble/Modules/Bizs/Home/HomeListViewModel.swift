@@ -221,7 +221,7 @@ class HomeListViewModel: DetailPageViewModel {
     func homeViewControllerWillAppear()
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
-        
+
         if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
             EnvContext.shared.client.generalBizconfig.load()
         }
@@ -893,6 +893,7 @@ func fillNewHouseListitemCell(_ data: CourtItemInnerEntity,
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.courtImage?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
             theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         }
         
     }
@@ -945,8 +946,8 @@ func fillHomeNewHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: Bool
             theCell.roomSpaceLabel.text = ""
             theCell.majorImageView.bd_setImage(with: URL(string: data.images?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
             theCell.updateOriginPriceLabelConstraints(originPriceText: nil)
+            theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
         }
-        
     }
 }
 

@@ -297,7 +297,8 @@ class CornerView: UIView {
             self.majorTitle.numberOfLines = 1
             
             majorTitle.snp.updateConstraints { maker in
-                maker.left.right.top.equalToSuperview()
+                maker.left.right.equalToSuperview()
+                maker.top.equalToSuperview().offset(-3)
                 maker.height.equalTo(20)
             }
             
@@ -620,6 +621,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         let houseImags  = model.images as? [FHNewHouseItemImagesModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         cell.updateOriginPriceLabelConstraints(originPriceText: nil)
+        cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
     
     @objc

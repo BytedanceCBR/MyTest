@@ -100,9 +100,9 @@
         NSMutableDictionary *param = @{}.mutableCopy;
         param[@"enter_from"] = @"maintab";
         param[@"enter_type"] = @"click";
-        param[@"element_from"] = @"mix_list";
+        param[@"element_from"] = @"maintab_mixlist";
         param[@"search_id"] = searchId;
-        param[@"origin_from"] = @"mix_list";
+        param[@"origin_from"] = @"mixlist_loadmore";
         param[@"origin_search_id"] = searchId ? : @"be_null";
 
         if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {

@@ -280,9 +280,7 @@ func parseFloorPlanPropertyListNode(_ data: FloorPlanInfoData) -> () -> TableSec
 func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool = false, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
-        if hasOutLineInfo {
-            theCell.removeListBottomView(-20, true)
-        }
+        theCell.removeListBottomView(-20, true)
         let groups: [[ErshouHouseBaseInfo]]? = infos?.reduce([[], []]) { (result, info) -> [[ErshouHouseBaseInfo]] in
             if info.isSingle == false {
                 return [result[0] + [info], result[1]]
