@@ -507,6 +507,17 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             maker.bottom.equalTo(inputBgView.snp.top)
         }
 
+        bindAllTableReloader()
+    }
+
+    func bindAllTableReloader() {
+        dataSources.forEach { [weak self] (ds) in
+            ds.allTableReloader = {
+                self?.tableViews.forEach({ (tableView) in
+                    tableView.reloadData()
+                })
+            }
+        }
     }
 
     func displayNormalCondition() {
@@ -663,6 +674,21 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                                           animated: false)
         }
     }
+
+    func addTableViewScrollMonitor() {
+        let firstTable = tableViews.first
+        tableViews.forEach { (tableView) in
+            tableView.rx.didScroll
+                .skip(1)
+                .debounce(0.3, scheduler: MainScheduler.instance)
+                .bind(onNext: { [weak firstTable] () in
+                    FHFilterRedDotManager.shared.mark()
+                    firstTable?.reloadData()
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+
 }
 
 fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
@@ -682,6 +708,8 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     let index: Int
 
     var isShowRedDot: Bool = false
+
+    var allTableReloader: (() -> Void)?
 
     init(index: Int) {
         self.index = index
@@ -759,7 +787,12 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         } else {
             selectedIndexPaths.remove(indexPath)
         }
-        tableView.reloadData()
+        if let allTableReloader = allTableReloader {
+            allTableReloader()
+        } else {
+            assertionFailure()
+        }
+
     }
 
     func selectedNodes() -> [Node] {
