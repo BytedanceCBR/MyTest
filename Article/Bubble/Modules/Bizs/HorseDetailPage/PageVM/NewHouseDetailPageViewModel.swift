@@ -452,7 +452,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     self.relatedCourt.value?.data?.items?.count ?? 0 > 0
                 }
                 <- parseNearbyNewHouseListNode(relatedCourt.value,traceExtension: traceExtension, navVC: navVC, disposeBag: disposeBag)
-
+                <- parseDisclaimerNode(data)
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser

@@ -208,15 +208,22 @@ class FollowUpViewModel {
                         if response?.data?.followStatus ?? 0 == 0 {
                             
                             var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
+                            
+                            // add by zjing for test
+                            toastCount = 0
+                            
                             if toastCount < 3 {
                                 
                                 var style = fhCommonToastStyle()
-                                style.verticalOffset = 24 + (CommonUIStyle.Screen.isIphoneX ? 10 : 0)
-                                style.titleFont = CommonUIStyle.Font.pingFangRegular(12)
-                                style.cornerRadius = 8
+                                style.isCustomPosition = true
+                                style.customX = UIScreen.main.bounds.size.width - 20
+                                style.backgroundColor = hexStringToUIColor(hex: kFHDarkIndigoColor, alpha: 0.6)
+                                style.verticalOffset = 40 + (CommonUIStyle.Screen.isIphoneX ? 20 : 0)
+                                style.titleFont = CommonUIStyle.Font.pingFangRegular(10)
+                                style.cornerRadius = 12
                                 style.verticalPadding = 8
                                 style.horizontalPadding = 10
-                                fhShowToast("已加入关注列表，点击可取消关注", position: .top)
+                                fhShowToast("已加入关注列表", position: .top)
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()

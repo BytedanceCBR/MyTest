@@ -65,7 +65,16 @@ class NIHSearchPanelViewModel: NSObject {
                     }
                     switch CLLocationManager.authorizationStatus() {
                     case .notDetermined, .restricted, .denied:
-                        self.suspendSearchBar.countryLabel.text = "深圳"
+                        if EnvContext.shared.client.generalBizconfig.currentSelectCityId.value == nil
+                        {
+                            if EnvContext.shared.client.reachability.connection == .none
+                            {
+                                self.suspendSearchBar.countryLabel.text = "深圳"
+                            }else
+                            {
+                                self.suspendSearchBar.countryLabel.text = ""
+                            }
+                        }
                         break
                         
                     case .authorizedWhenInUse, .authorizedAlways:

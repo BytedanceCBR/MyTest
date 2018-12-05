@@ -687,6 +687,9 @@ public struct ToastStyle {
 
     public var verticalOffset: CGFloat = 200.0
 
+    public var isCustomPosition: Bool = false
+    public var customX: CGFloat = 0.0
+
 }
 
 // MARK: - Toast Manager
@@ -753,9 +756,16 @@ public enum ToastPosition {
         let topPadding: CGFloat = style.verticalPadding + superview.csSafeAreaInsets.top
         let bottomPadding: CGFloat = style.verticalPadding + superview.csSafeAreaInsets.bottom
 
+        let customTopPadding: CGFloat = style.verticalPadding
         switch self {
         case .top:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding + style.verticalOffset)
+            if style.isCustomPosition {
+                
+                return CGPoint(x: (style.customX - toast.frame.size.width / 2), y: (toast.frame.size.height / 2.0) + customTopPadding + style.verticalOffset)
+            }else {
+                
+                return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding + style.verticalOffset)
+            }
         case .center:
             return CGPoint(x: superview.bounds.size.width / 2.0, y: superview.bounds.size.height / 2.0)
         case .bottom:
