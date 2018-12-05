@@ -132,7 +132,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         
     }
 
-    private func refreshRemoteData() {
+    private func refreshRemoteData() { 
         if EnvContext.shared.client.reachability.connection == .none {
             self.emptyMaskView.isHidden = false
             self.emptyMaskView.label.text = "网络异常"
@@ -143,6 +143,11 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tableView.endEditing(true)
     }
 
     override func viewDidAppear(_ animated: Bool) {

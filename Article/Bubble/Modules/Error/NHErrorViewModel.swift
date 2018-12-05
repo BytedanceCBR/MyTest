@@ -41,20 +41,20 @@ enum ErrorType: Int {
     
     var isViewDidLoad : Bool? //是否是第一次
     
-    var isRequestError: Bool?
+    var isRequestError: Bool
     
     var isUserInteractionEnabled : Bool? //是否可以点击重试
-
+    
     let disposeBag = DisposeBag()
-
+    
     let netState = BehaviorRelay<Bool>(value: true) //显示状态
     
     let errorState = BehaviorRelay<ErrorType>(value:.normal) //错误状态
-
+    
     var isInRequest = false
     
     @objc convenience init(_ errorMask : EmptyMaskView ,
-                     retryAction:(() -> Void)? = nil )
+                           retryAction:(() -> Void)? = nil )
     {
         self.init(errorMask: errorMask, retryAction: retryAction)
     }
@@ -84,6 +84,7 @@ enum ErrorType: Int {
     {
         self.isHaveData = false
         isViewDidLoad = true
+        self.isRequestError = false
         self.errorMask = errorMask
         self.errorMask.isHidden = true
         self.requestRetryText = requestRetryText
@@ -121,7 +122,7 @@ enum ErrorType: Int {
                 }
             }
             .disposed(by: disposeBag)
-
+        
     }
     //网络状态判断
     private func invalidNetwork() -> Bool
@@ -129,7 +130,7 @@ enum ErrorType: Int {
         return EnvContext.shared.client.reachability.connection == .none
     }
     
-   private func checkErrorState(){
+    private func checkErrorState(){
         let state = (invalidNetwork(),isHaveData,isViewDidLoad)
         switch state{
         case (true,false,false)://无网络，无数据，不是第一次
@@ -148,6 +149,9 @@ enum ErrorType: Int {
             errorState.accept(.normal)
             break
         case (false,false,false)://空数据 有网络，无数据，非第一次
+            if isRequestError {
+                errorState.accept(.errorRequest)
+            }
             if isInRequest {
                 errorState.accept(.errorNoData)
             }
@@ -156,9 +160,9 @@ enum ErrorType: Int {
             errorState.accept(.normal)
             break
         default:
-            errorState.accept(.normal)
+            break
         }
-       changeState()
+        changeState()
     }
     
     //默认初始状态
@@ -182,7 +186,7 @@ enum ErrorType: Int {
         switch errorState.value{
         case .errorRetry:
             self.resetState()
-        break
+            break
         case .errorNoData:
             self.isHaveData = false
             self.errorMask.label.text = self.requestNilDataText
@@ -223,23 +227,22 @@ enum ErrorType: Int {
             self.errorMask.isHidden = true
             break
         default:
-            
-        break
+            break
         }
     }
     
-
+    
     //VC页面加载调用，请求之前判断网络状态
     @objc func onRequestViewDidLoad()
     {
         checkErrorState()
         isViewDidLoad = false
     }
-
+    
     func onRequest() {
         isInRequest = true
     }
-
+    
     //无网络状态
     @objc func onRequestInvalidNetWork()
     {
@@ -256,7 +259,7 @@ enum ErrorType: Int {
     //请求错误，包括404，500，timeout等
     @objc func onRequestError(error: Error?) {
         isInRequest = false
-
+        
         self.errorMask.label.text = self.requestErrorText
         self.errorMask.retryBtn.isHidden = true
         self.netState.accept(true)
@@ -264,15 +267,15 @@ enum ErrorType: Int {
         if let requestImageV = self.requestErrorImage{
             self.errorMask.icon.image = UIImage(named:requestImageV)
         }
-//        errorState.accept(.errorRequest)
-        checkErrorState()
+        //        errorState.accept(.errorRequest)
         isRequestError = true
+        checkErrorState()
     }
     
     //网络正常，无数据状态
     @objc func onRequestNilData() {
         isInRequest = false
-
+        
         self.isHaveData = false
         self.errorMask.label.text = self.requestNilDataText
         if let requestNilDataImage = self.requestNilDataImage{
