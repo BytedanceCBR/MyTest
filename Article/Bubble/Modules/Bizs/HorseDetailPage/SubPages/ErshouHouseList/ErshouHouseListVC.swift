@@ -321,7 +321,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     private func setupErrorDisplay() {
         //增加error页
-        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常",requestRetryImage:"group-4",requestNilDataText:"没有找到相关的信息，换个条件试试吧~",requestNilDataImage:"group-9")
+        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常",requestRetryImage:"group-4",requestNilDataText:"没有找到相关的信息，换个条件试试吧~",requestNilDataImage:"group-9",requestErrorText:"数据走丢了",requestErrorImage:"group-8")
         infoMaskView.isHidden = true
         view.addSubview(infoMaskView)
         infoMaskView.snp.makeConstraints { maker in
