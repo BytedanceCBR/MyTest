@@ -183,7 +183,10 @@ class GeneralBizConfig {
             if let selectCityId = self?.currentSelectCityId.value {
                 re["city_id"] = "\(selectCityId)"
             } else {
-                re["city_id"] = "\(self?.tempCityIdValue)"
+                if let cityIdValue = self?.tempCityIdValue
+                {
+                    re["city_id"] = cityIdValue
+                }
             }
             re["app_id"] = "1370"
             re["aid"] = "1370"
