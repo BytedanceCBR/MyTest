@@ -718,7 +718,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                             case let BizError.bizError(_, message):
                                 EnvContext.shared.toast.showToast(message)
                             default:
-                                EnvContext.shared.toast.showToast("请求失败")
+                                EnvContext.shared.toast.showToast("网络异常")
                         }
                     })
                     .disposed(by: disposeBag)
@@ -780,7 +780,7 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                         case let BizError.bizError(_, message):
                             EnvContext.shared.toast.showToast(message)
                         default:
-                            EnvContext.shared.toast.showToast("请求失败")
+                            EnvContext.shared.toast.showToast("网络异常")
                         }
                 })
                 .disposed(by: self.disposeBag)

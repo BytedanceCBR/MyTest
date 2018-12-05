@@ -167,9 +167,9 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         case .secondHandHouse:
             return "minetab_old"
         case .neighborhood:
-            return "maintab_neighborhood"
+            return "minetab_neighborhood"
         case .rentHouse:
-            return "maintab_rent"
+            return "minetab_rent"
         }
     }
 
