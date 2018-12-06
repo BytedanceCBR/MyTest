@@ -70,8 +70,14 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
 
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { maker in
-            maker.left.right.bottom.equalToSuperview()
+            maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
+            if #available(iOS 11, *) {
+
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-49)
+            } else {
+                maker.bottom.equalToSuperview().offset(-49)
+            }
         }
         tableView.dataSource = tableViewModel
         tableView.delegate = tableViewModel
