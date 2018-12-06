@@ -183,10 +183,10 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         scrollToFirstVisibleItem(tableView: secondTable, datasource: secondDs)
         let thirdTable = self.tableViews[2]
         let thirdDs = self.dataSources[2]
-//        self.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        DispatchQueue.main.async { [weak self] in
-            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
-        }
+        scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        DispatchQueue.main.async { [weak self] in
+//            self?.scrollToFirstVisibleItem(tableView: thirdTable, datasource: thirdDs)
+//        }
     }
 
     fileprivate func choiceFirstAndSecondSelection(_ conditions: [String : Any]) {
@@ -283,6 +283,8 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
     override func viewDidDisplay() {
         setDataBySelectedState()
+        adjustTablesLayout()
+        scrollVisibleCellInScreen()
     }
 
     fileprivate func setDataBySelectedState() {
@@ -310,12 +312,21 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             let (dataSource, tableView) = e
             dataSource.restoreSelectedState()
             tableView.reloadData()
-            if dataSource.nodes.count > 0 {
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            }
+//            if dataSource.nodes.count > 0 {
+//                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//            }
         }
         //如果第三列没有任何选择项，则恢复成两列显示
 //        if let dataSource = dataSources.last {
+        adjustTablesLayout()
+//        }
+        scrollVisibleCellInScreen()
+        FHFilterRedDotManager.shared.mark()
+    }
+
+    func adjustTablesLayout() {
+        //如果第三列没有任何选择项，则恢复成两列显示
+        //        if let dataSource = dataSources.last {
         if dataSources[1].selectedIndexPaths.count == 0 {
             self.displayNormalCondition()
         } else {
@@ -329,9 +340,6 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                 self.displayNormalCondition()
             }
         }
-//        }
-        scrollVisibleCellInScreen()
-        FHFilterRedDotManager.shared.mark()
     }
 
     func initPanelWithNativeDS() {
@@ -375,18 +383,18 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                     categoryTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
+                            scrollPosition: .top)
                     subCategoryTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
+                            scrollPosition: .top)
                     extentValueTable.selectRow(
                             at: IndexPath(row: 0, section: 0),
                             animated: false,
-                            scrollPosition: .none)
-                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
-                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                    }
+                            scrollPosition: .top)
+//                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
+//                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    }
 
                     self.displayNormalCondition()
                 })
@@ -507,6 +515,15 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             maker.bottom.equalTo(inputBgView.snp.top)
         }
 
+        bindAllTableReloader()
+    }
+
+    func bindAllTableReloader() {
+        dataSources.forEach { [weak self] (ds) in
+            ds.allTableReloader = {
+                self?.tableViews.first?.reloadData()
+            }
+        }
     }
 
     func displayNormalCondition() {
@@ -557,17 +574,25 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
 
                 self?.displayNormalCondition()
                 subCategoryTable?.reloadData()
-                if subCategoryDS?.nodes.count ?? 0 > 0 {
-                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-                }
                 categoryTable?.selectRow(
                         at: indexPath,
                         animated: false,
-                        scrollPosition: .none)
+                        scrollPosition: .top)
                 subCategoryTable?.selectRow(
                         at: IndexPath(row: 0, section: 0),
                         animated: false,
-                        scrollPosition: .none)
+                        scrollPosition: .top)
+
+                if subCategoryDS?.nodes.count ?? 0 > 0 {
+//                    subCategoryTable?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+//                    if let subCategoryTable = subCategoryTable {
+//                        subCategoryTable.scrollRectToVisible(CGRect(x: 0,
+//                                                                    y: -10,
+//                                                                    width: subCategoryTable.frame.width,
+//                                                                    height: subCategoryTable.frame.height),
+//                                                             animated: false)
+//                    }
+                }
             }
         }
     }
@@ -663,6 +688,21 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                                           animated: false)
         }
     }
+
+    func addTableViewScrollMonitor() {
+        let firstTable = tableViews.first
+        tableViews.forEach { (tableView) in
+            tableView.rx.didScroll
+                .skip(1)
+                .debounce(0.3, scheduler: MainScheduler.instance)
+                .bind(onNext: { [weak firstTable] () in
+                    FHFilterRedDotManager.shared.mark()
+                    firstTable?.reloadData()
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+
 }
 
 fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
@@ -682,6 +722,8 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
     let index: Int
 
     var isShowRedDot: Bool = false
+
+    var allTableReloader: (() -> Void)?
 
     init(index: Int) {
         self.index = index
@@ -759,7 +801,13 @@ fileprivate class ConditionTableViewDataSource: NSObject, UITableViewDataSource,
         } else {
             selectedIndexPaths.remove(indexPath)
         }
+        if let allTableReloader = allTableReloader {
+            allTableReloader()
+        } else {
+            assertionFailure()
+        }
         tableView.reloadData()
+
     }
 
     func selectedNodes() -> [Node] {

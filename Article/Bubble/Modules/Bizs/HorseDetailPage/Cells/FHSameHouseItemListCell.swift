@@ -625,6 +625,8 @@ fileprivate func fillSameSecondHouseItemCell(_ data: HouseItemInnerEntity,
         } else {
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
+        
+        theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }
 
@@ -688,5 +690,6 @@ fileprivate func fillSameRentHouseItemCell(_ data: FHRentSameNeighborhoodRespons
         } else {
             theCell.imageTopLeftLabelBgView.isHidden = true
         }
+        theCell.updateLayoutCompoents(isShowTags: text.string.count > 0)
     }
 }

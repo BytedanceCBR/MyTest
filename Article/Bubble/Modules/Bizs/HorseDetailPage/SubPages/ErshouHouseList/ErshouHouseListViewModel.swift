@@ -7,10 +7,16 @@ import Foundation
 import RxCocoa
 import RxSwift
 
+enum ErshouHouseResult : Int {
+    case Success
+    case NoData
+    case BadData  //数据错误
+}
+
 class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     
     var title = BehaviorRelay<String>(value: "")
-    var onSuccess: ((Bool) -> Void)?
+    var onSuccess: ((ErshouHouseResult) -> Void)?
     var oneTimeToast: ((String?) -> Void)?
     
     var onError: ((Error?) -> Void)?
@@ -49,6 +55,11 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
                     
+                    var result = ErshouHouseResult.Success
+                    if response == nil {
+                        result = ErshouHouseResult.BadData
+                    }
+                    
                     if let data = response?.data {
                         
                         let items = data.items.map({ (item) -> HouseItemInnerEntity in
@@ -65,10 +76,17 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             houseSearchParams: nil,
                             navVC: self.navVC)
                         self.datas.accept(self.datas.value + datas)
+                        
+                        
+                        
+                    }
+                    
+                    if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                        result = ErshouHouseResult.NoData
                     }
 
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                    self.onSuccess?(self.datas.value.count != 0)
+                    self.onSuccess?(result)
                     // self.oneTimeToast?(response?.data?.refreshTip)
                     
                     },
@@ -93,6 +111,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
+                        
+                        var result = ErshouHouseResult.Success
+                        if response == nil {
+                            result = ErshouHouseResult.BadData
+                        }
+                        
                         if let data = response?.data {
                             
                             let theDatas = data.items?.map({ (item) -> HouseItemInnerEntity in
@@ -120,9 +144,14 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         else {
                             
                         }
+                        
+                        if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                            result = ErshouHouseResult.NoData
+                        }
+                        
                         self.title.accept("(\(response?.data?.total ?? 0))")
                         self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                        self.onSuccess?(self.datas.value.count != 0)
+                        self.onSuccess?(result)
                         // self.oneTimeToast?(response?.data?.refreshTip)
                     },
                     onError: { [weak self] in
@@ -135,6 +164,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         pageableLoader?()
     }
 
+    //这个接口被两个问题调用，因此不能添加enter_from买点
     func requestRent(neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -148,6 +178,11 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
                     
+                    var result = ErshouHouseResult.Success
+                    if response == nil {
+                        result = ErshouHouseResult.BadData
+                    }
+                    
                     if let data = response?.data {
                         let items = data.items?.map({ (item) -> RentInnerItemEntity in
                             var newItem = item
@@ -157,8 +192,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            toTracerParams("rent_detail", key: "enter_from") <|>
-                            toTracerParams("related_list", key: "page_type") <|>
                             self.traceParams
                         let datas = parseRentHouseListRowItemNode(
                             items,
@@ -172,8 +205,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         self.searchId = data.searchId
                     }
                     
+                    if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                        result = ErshouHouseResult.NoData
+                    }
+                    
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                    self.onSuccess?(self.datas.value.count != 0)
+                    self.onSuccess?(result)
                     // self.oneTimeToast?(response?.data?.refreshTip)
                     
                     },
@@ -199,6 +236,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
+                        
+                        var result = ErshouHouseResult.Success
+                        if response == nil {
+                            result = ErshouHouseResult.BadData
+                        }
+                        
                         if let data = response?.data {
                             let items = data.items?.map({ (item) -> RentInnerItemEntity in
                                 var newItem = item
@@ -224,9 +267,14 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         } else {
                             
                         }
+                        
+                        if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                            result = ErshouHouseResult.NoData
+                        }
+                        
                         self.title.accept("(\(response?.data?.total ?? 0))")
                         self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                        self.onSuccess?(self.datas.value.count != 0)
+                        self.onSuccess?(result)
                         // self.oneTimeToast?(response?.data?.refreshTip)
                     },
                     onError: { [weak self] in
@@ -252,6 +300,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
+                    
+                    var result = ErshouHouseResult.Success
+                    if response == nil && self.datas.value.count == 0 {
+                        result = ErshouHouseResult.BadData
+                    }
+                    
                     if let data = response?.data {
                         var ht : HouseType?
                         let items = data.items?.map({ (item) -> HouseItemInnerEntity in
@@ -269,11 +323,17 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         if ht == HouseType.rentHouse {
                             htName = "rent"
                         }
-                        
+
+                        var pageType: String?
+                        if ht == HouseType.rentHouse {
+                            pageType = "rent_detail"
+                        } else {
+                            pageType = "old_detail"
+                        }
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            toTracerParams("old_detail", key: "enter_from") <|>
-                            toTracerParams("related_list", key: "page_type") <|>
+                            toTracerParams("related_list", key: "enter_from") <|>
+                            toTracerParams(pageType ?? "be_null", key: "page_type") <|>
                             toTracerParams(htName ?? "old", key: "house_type")
                         
                         //           parseErshouRelatedHouseListItemNode
@@ -297,8 +357,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                      navVC: UINavigationController?) -> () -> TableSectionNode? {
                      */
                     
+                    if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                        result = ErshouHouseResult.NoData
+                    }
+                    
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                    self.onSuccess?(self.datas.value.count != 0)
+                    self.onSuccess?(result)
                     // self.oneTimeToast?(response?.data?.refreshTip)
                     
                     },
@@ -324,6 +388,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
+                        
+                        var result = ErshouHouseResult.Success
+                        if response == nil {
+                            result = ErshouHouseResult.BadData
+                        }
+                        
                         if let data = response?.data {
                             let items = data.items?.map({ (item) -> HouseItemInnerEntity in
                                 var newItem = item
@@ -342,9 +412,13 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             self.searchId = data.searchId
                         }
                         
+                        if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                            result = ErshouHouseResult.NoData
+                        }
+                        
                         self.title.accept("(\(response?.data?.total ?? 0))")
                         self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                        self.onSuccess?(self.datas.value.count != 0)
+                        self.onSuccess?(result)
                         // self.oneTimeToast?(response?.data?.refreshTip)
                     },
                     onError: { [weak self] in
@@ -404,8 +478,7 @@ func parseRelatedHouseListItemNode(
                 tracerParams: tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    //                    toTracerParams("maintab", key: "enter_from") <|>
-                    toTracerParams(elementFrom, key: "element_from") <|>
+                    toTracerParams("be_null", key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>

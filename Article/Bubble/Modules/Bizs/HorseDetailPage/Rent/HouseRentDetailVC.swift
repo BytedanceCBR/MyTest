@@ -423,6 +423,14 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 self?.infoMaskView.retryBtn.isHidden = true
                 self?.infoMaskView.isUserInteractionEnabled = false
                 self?.tt_endUpdataData()
+            case 2:
+                self?.navBar.rightBtn.isHidden = false
+                self?.navBar.rightBtn2.isHidden = false
+                self?.bottomStatusBar.isHidden = false
+                self?.bottomStatusBar.text = "该房源已出租"
+                self?.bottomStatusBar.snp.updateConstraints({ (make) in
+                    make.height.equalTo(30)
+                })
             default:
                 self?.navBar.rightBtn.isHidden = false
                 self?.navBar.rightBtn2.isHidden = false

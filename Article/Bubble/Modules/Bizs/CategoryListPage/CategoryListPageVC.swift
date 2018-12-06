@@ -781,8 +781,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 //这里必须要在重置逻辑之前嗲用
                 if FHFilterRedDotManager.shared.shouldOpenAreaPanel() {
                     //这里暂时只能写死了,为了实现学区房红点
-                    if let areaConditionPanel = self?.conditionFilterViewModel?.conditionItemViews[0] {
+                    if let areaConditionPanel = self?.conditionFilterViewModel?.conditionItemViews[0] as? AreaConditionFilterPanel {
                         self?.conditionFilterViewModel?.onOpenConditionPanel(panel: areaConditionPanel, index: 0)
+                        //需要在下一个loop开始监控，否则页面c打开时会触发滚动
+                        DispatchQueue.main.async {
+                            areaConditionPanel.addTableViewScrollMonitor()
+                        }
                     }
                 }
             }

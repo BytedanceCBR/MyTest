@@ -134,7 +134,7 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
         if (dataModel.opData.items.count > 0) {
-            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120;
+            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120 * [TTDeviceHelper scaleToScreen375];
         }
         
         if (dataModel.opData2.items.count > 0) {
@@ -258,9 +258,6 @@ static NSMutableArray  * _Nullable identifierArr;
             
             if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
                 [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
-            }else
-            {
-                [dictTrace setValue:itemModel.logPb[@"be_null"] forKey:@"element_from"];
             }
 
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
@@ -410,9 +407,6 @@ static NSMutableArray  * _Nullable identifierArr;
             
             if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
                 [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
-            }else
-            {
-                [dictTrace setValue:itemModel.logPb[@"be_null"] forKey:@"element_from"];
             }
             
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];

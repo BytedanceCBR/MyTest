@@ -63,7 +63,6 @@ static bool isTTCommentPublishing = NO;
 
 @implementation TTCommentDetailReplyWriteManager
 
-
 - (void)dealloc {
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -365,6 +364,20 @@ static bool isTTCommentPublishing = NO;
 
 #pragma mark - post comment
 
+- (NSString *)categoryName {
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [self.enterFrom stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![self.enterFrom isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    return categoryName;
+}
+
 - (void)postCommentWithLoginCallback:(TTCommentDetailWriteCommentViewLoginCallback)callback  {
 
     TTRichSpanText *replyRichSpanText = self.commentWriteView.inputTextView.richSpanText;
@@ -391,6 +404,16 @@ static bool isTTCommentPublishing = NO;
                                                          @"source" : @"comment"
                                                          }];
 
+    NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
+    [paramsDict setValue:self.enterFrom  forKey:@"enter_from"];
+    [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
+    [paramsDict setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
+    [paramsDict setValue:self.logPb forKey:@"log_pb"];
+    [paramsDict setValue:[self categoryName] forKey:@"category_name"];
+    [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    
+    
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {
         [userInfoDic setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
