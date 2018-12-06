@@ -380,21 +380,25 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
                         $0.reloadData()
                     }
 
-                    categoryTable.selectRow(
-                            at: IndexPath(row: 0, section: 0),
-                            animated: false,
-                            scrollPosition: .top)
-                    subCategoryTable.selectRow(
-                            at: IndexPath(row: 0, section: 0),
-                            animated: false,
-                            scrollPosition: .top)
-                    extentValueTable.selectRow(
-                            at: IndexPath(row: 0, section: 0),
-                            animated: false,
-                            scrollPosition: .top)
-//                    if subCategoryTable.numberOfRows(inSection: 0) > 0 {
-//                        subCategoryTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-//                    }
+
+                    if categoryTable.numberOfSections > 0, categoryTable.numberOfRows(inSection: 0) > 0 {
+                        categoryTable.selectRow(
+                                at: IndexPath(row: 0, section: 0),
+                                animated: false,
+                                scrollPosition: .top)
+                    }
+                    if subCategoryTable.numberOfSections > 0, subCategoryTable.numberOfRows(inSection: 0) > 0 {
+                        subCategoryTable.selectRow(
+                                at: IndexPath(row: 0, section: 0),
+                                animated: false,
+                                scrollPosition: .top)
+                    }
+                    if extentValueTable.numberOfSections > 0, extentValueTable.numberOfRows(inSection: 0) > 0 {
+                        extentValueTable.selectRow(
+                                at: IndexPath(row: 0, section: 0),
+                                animated: false,
+                                scrollPosition: .top)
+                    }
 
                     self.displayNormalCondition()
                 })
@@ -497,14 +501,20 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
         }
 
         reloadAllTables()
-        tableViews[ConditionType.category.rawValue].selectRow(
-                at: IndexPath(row: 0, section: 0),
-                animated: false,
-                scrollPosition: .none)
-        tableViews[ConditionType.subCategory.rawValue].selectRow(
-                at: IndexPath(row: 0, section: 0),
-                animated: false,
-                scrollPosition: .none)
+        let categoryTable = tableViews[ConditionType.category.rawValue]
+        if categoryTable.numberOfSections > 0, categoryTable.numberOfRows(inSection: 0) > 0 {
+            categoryTable.selectRow(
+                    at: IndexPath(row: 0, section: 0),
+                    animated: false,
+                    scrollPosition: .none)
+        }
+        let subCategoryTable = tableViews[ConditionType.subCategory.rawValue]
+        if subCategoryTable.numberOfSections > 0, subCategoryTable.numberOfRows(inSection: 0) > 0 {
+            subCategoryTable.selectRow(
+                    at: IndexPath(row: 0, section: 0),
+                    animated: false,
+                    scrollPosition: .none)
+        }
 
         let secondTableView = tableViews[1]
         addSubview(lineView)
@@ -562,6 +572,9 @@ class AreaConditionFilterPanel: BaseConditionPanelView {
             let subCategoryTable = self?.tableViews[ConditionType.subCategory.rawValue]
             let categoryTable = self?.tableViews[ConditionType.category.rawValue]
 
+            if nodes.count <= indexPath.row {
+                return
+            }
             if nodes[indexPath.row].isNoLimit == 1 || nodes[indexPath.row].children.isEmpty {
                 subCategoryDS?.selectedIndexPaths.removeAll()
                 extentValueDS?.selectedIndexPaths.removeAll()
