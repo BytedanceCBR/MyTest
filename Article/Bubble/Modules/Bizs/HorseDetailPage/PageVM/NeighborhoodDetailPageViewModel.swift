@@ -8,6 +8,7 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
+
     
     var source: String?
     var goDetailTraceParam: TracerParams?
@@ -53,6 +54,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     private var cellFactory: UITableViewCellFactory
 
     private var neighborhoodDetailResponse = BehaviorRelay<NeighborhoodDetailResponse?>(value: nil)
+
+    func isDataAvailable() -> Bool {
+        return neighborhoodDetailResponse.value != nil
+    }
 
     var groupId: String {
         get {

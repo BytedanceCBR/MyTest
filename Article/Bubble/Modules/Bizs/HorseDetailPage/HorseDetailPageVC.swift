@@ -15,7 +15,7 @@ import Reachability
 
 typealias DetailPageViewModelProvider = (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel
 
-class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate {
+class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareManagerDelegate, UIViewControllerErrorHandler {
     fileprivate var pageFrameObv: NSKeyValueObservation?
 
     private var isFromPush: Bool = false
@@ -349,10 +349,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         detailPageViewModel?.source = self.source
         
         detailPageViewModel?.showMessageAlert = { [weak self] (message) in
-            self?.showLoadingAlert(message: message)
+//            self?.showLoadingAlert(message: message)
+            self?.tt_startUpdate()
         }
         detailPageViewModel?.dismissMessageAlert = { [weak self] in
-            self?.dismissLoadingAlert()
+//            self?.dismissLoadingAlert()
+            self?.tt_endUpdataData()
         }
         detailPageViewModel?.traceParams = traceParams
         detailPageViewModel?.searchId = self.searchId
@@ -1084,6 +1086,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                             .exclude("element_type")
                             .exclude("page_type"))
         }
+    }
+
+
+    func tt_hasValidateData() -> Bool {
+        return self.detailPageViewModel?.isDataAvailable() ?? false
     }
 
     deinit {
