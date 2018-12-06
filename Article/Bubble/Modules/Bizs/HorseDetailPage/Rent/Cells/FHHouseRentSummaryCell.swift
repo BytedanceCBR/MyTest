@@ -83,7 +83,8 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     
     return {
-        if let outline = model?.data?.houseOverview {
+        if let outline = model?.data?.houseOverview,
+            outline.list?.count ?? 0 > 0 {
             let cellRender = curry(fillRentOutlineListCell)(outline)
             return TableSectionNode(
                 items: [cellRender],
