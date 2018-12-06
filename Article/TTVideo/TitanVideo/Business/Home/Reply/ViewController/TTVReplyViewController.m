@@ -488,6 +488,10 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
     } commentRepostWithPreRichSpanText:nil commentSource:nil];
 
+    replyManager.enterFrom = self.enterFromStr;
+    replyManager.categoryID = self.categoryID;
+    replyManager.logPb = self.logPb;
+
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
 
     if (self.isAdVideo) {

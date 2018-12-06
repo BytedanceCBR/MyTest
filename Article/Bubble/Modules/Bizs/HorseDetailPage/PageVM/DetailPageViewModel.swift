@@ -255,9 +255,6 @@ extension DetailPageViewModel {
                         if response?.data?.followStatus ?? 0 == 0 {
 
                             var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
-                            // add by zjing for test
-                            toastCount = 0
-                            
                             if toastCount < 3 {
 
                                 var style = fhCommonToastStyle()

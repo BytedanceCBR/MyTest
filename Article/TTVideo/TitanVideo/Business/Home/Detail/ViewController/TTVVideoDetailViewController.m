@@ -2016,6 +2016,10 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
 
+    replyManager.enterFrom = self.detailModel.clickLabel;
+    replyManager.categoryID = self.detailModel.categoryID;
+    replyManager.logPb = self.detailModel.logPb;
+
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
     self.replyWriteView.banEmojiInput = commentDetailModel.banEmojiInput;
 
@@ -2034,6 +2038,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     TTVReplyViewController *vc = [[TTVReplyViewController alloc] initWithViewFrame:CGRectMake(0, movieSize.height + movieViewContainer.top, movieSize.width, self.view.height - movieSize.height - movieViewContainer.top) comment:model showWriteComment:NO];
     vc.vcDelegate = self;
     vc.categoryID = self.detailModel.categoryID;
+    vc.enterFromStr = self.detailModel.clickLabel;
+    vc.logPb = self.detailModel.logPb;
     if (self.detailModel.adID && self.detailModel.adID.longLongValue > 0) {
         vc.isAdVideo = YES;
     }
