@@ -21,6 +21,8 @@ enum RequestSuccessType: Int {
 
 
 class HomeListViewModel: DetailPageViewModel {
+
+
     var source: String?
     
     var goDetailTraceParam: TracerParams?
@@ -728,6 +730,11 @@ class HomeListViewModel: DetailPageViewModel {
             })
             .disposed(by: disposeBag)
     }
+
+    
+    func isDataAvailable() -> Bool {
+        return true
+    }
     
 }
 
@@ -1187,6 +1194,7 @@ func fillFHHomeRentHouseListitemCell(_ data: HouseItemInnerEntity, isLastCell: B
         }
         
     }
+
 }
 
 

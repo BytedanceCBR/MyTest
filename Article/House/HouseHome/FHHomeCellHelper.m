@@ -133,12 +133,24 @@ static NSMutableArray  * _Nullable identifierArr;
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
-        if (dataModel.opData.items.count > 0) {
-            height += ((dataModel.opData.items.count - 1)/kFHHomeIconRowCount + 1) * 120 * [TTDeviceHelper scaleToScreen375];
+        NSInteger countValue = dataModel.opData.items.count;
+        
+        if (countValue > 0) {
+            if (countValue > 8)
+            {
+                countValue = 8;
+            }
+            height += ((countValue - 1)/kFHHomeIconRowCount + 1) * 120 * [TTDeviceHelper scaleToScreen375];
         }
         
-        if (dataModel.opData2.items.count > 0) {
-            height += ((dataModel.opData2.items.count - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+        NSInteger opData2CountValue = dataModel.opData2.items.count;
+        
+        if (opData2CountValue > 0) {
+            if (opData2CountValue > 4)
+            {
+                opData2CountValue = 4;
+            }
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
@@ -259,7 +271,7 @@ static NSMutableArray  * _Nullable identifierArr;
             if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
                 [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
             }
-
+            
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
@@ -267,7 +279,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             }
-
+            
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             
@@ -369,7 +381,13 @@ static NSMutableArray  * _Nullable identifierArr;
                 font = [UIFont systemFontOfSize:15];
             }
             itemView.titleLabel.font = font;
-            itemView.titleLabel.text = itemModel.title;
+            if (itemModel.title.length > 5)
+            {
+                itemView.titleLabel.text = [itemModel.title substringToIndex:5];
+            }else
+            {
+                itemView.titleLabel.text = itemModel.title;
+            }
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(12);
             }];
@@ -382,7 +400,13 @@ static NSMutableArray  * _Nullable identifierArr;
                 font = [UIFont systemFontOfSize:10];
             }
             itemView.subTitleLabel.font = font;
-            itemView.subTitleLabel.text = itemModel.descriptionStr;
+            if (itemModel.descriptionStr.length > 9)
+            {
+                itemView.subTitleLabel.text = [itemModel.descriptionStr substringToIndex:9];
+            }else
+            {
+                itemView.subTitleLabel.text = itemModel.descriptionStr;
+            }
             
             if (![TTDeviceHelper isScreenWidthLarge320]) {
                 [itemView.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {

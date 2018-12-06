@@ -67,7 +67,9 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
 
 func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?, cell: BaseUITableViewCell) {
     if let theCell = cell as? RentFacilityCell {
-
+        for v in theCell.facilityItemView.subviews {
+            v.removeFromSuperview()
+        }
         let items: [FHHouseRentFacilityItemView] = facilities?.map({ (model) -> FHHouseRentFacilityItemView in
             let strickoutLable = StrickoutLabel()
             strickoutLable.textColor = hexStringToUIColor(hex: "#a0aab3")

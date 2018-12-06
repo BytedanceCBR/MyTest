@@ -22,7 +22,7 @@ class FHHouseContactBottomBarViewModel {
     var imprId: String?
     var logPb: Any?
     var showSendPhoneAlert: ((String, String, String) -> Void)?
-
+    var followForSendPhone: ((Bool) -> Void)?
     var traceParams: TracerParams?
     
     init(bottomBar: HouseDetailPageBottomBarView,
@@ -147,7 +147,7 @@ class FHHouseContactBottomBarViewModel {
     }
 
     func followForSendPhone(showTip: Bool) {
-
+        self.followForSendPhone?(showTip)
     }
 
     //TODO func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?)

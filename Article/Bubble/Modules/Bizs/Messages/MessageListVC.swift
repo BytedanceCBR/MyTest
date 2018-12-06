@@ -11,7 +11,7 @@ import SnapKit
 import RxCocoa
 import RxSwift
 
-class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRouteInitializeProtocol {
+class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRouteInitializeProtocol, UIViewControllerErrorHandler {
     
     var hasMore = false
     
@@ -120,7 +120,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
 
         self.navBar.backBtn.rx.tap
             .bind { [weak self] void in
-                EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
     }
@@ -189,11 +188,9 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
             // 无网络时直接返回空，不请求
             return
         }
-
+        self.tt_startUpdate()
         self.dataLoader = self.onDataLoaded()
         
-//        EnvContext.shared.toast.showLoadingToast("正在加载")
-        showLoadingAlert(message: "正在加载")
         let loader = pageRequestUserMessageList(listId: messageId,
                                                 limit: "10",
                                                 query: "")
@@ -246,12 +243,13 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                             self.tableView.mj_footer.endRefreshingWithNoMoreData()
                         }
                     }
-                    
+                    self.tt_endUpdataData()
                     }, onError: { [unowned self] (error) in
                         self.dismissLoadingAlert()
                         self.tableView.mj_footer.endRefreshing()
                         self.errorVM?.onRequestError(error: error)
                         self.showNetworkError()
+                        self.tt_endUpdataData()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -308,6 +306,10 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     func cleanData() {
         self.tableListViewModel?.datas.accept([])
         tableView.reloadData()
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return self.tableListViewModel?.datas.value.count ?? 0 > 0
     }
     
 }

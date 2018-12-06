@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+
     var source: String?
     
     var goDetailTraceParam: TracerParams?
@@ -476,7 +477,6 @@ class CategoryListViewModel: DetailPageViewModel {
             self.dataSource.datas.accept([])
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         dataSource.canCancelFollowUp = true
         currentHouseType = houseType
         let loader = pageRequestFollowUpList(houseType: houseType)
@@ -570,6 +570,10 @@ class CategoryListViewModel: DetailPageViewModel {
             }
             self?.onError?(error)
         }
+    }
+
+    func isDataAvailable() -> Bool {
+        return true
     }
 
 }

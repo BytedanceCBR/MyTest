@@ -40,6 +40,7 @@ class CurrentCitySwitcher {
         state
             .withLatestFrom(oldAndNewState)
             .skip(1)
+            .throttle(1, latest: false, scheduler: MainScheduler.instance)
             .subscribe(onNext: { (s) in
                 self.onStateChanged(state: s)
             })

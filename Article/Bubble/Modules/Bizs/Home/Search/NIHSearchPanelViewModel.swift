@@ -70,9 +70,6 @@ class NIHSearchPanelViewModel: NSObject {
                             if EnvContext.shared.client.reachability.connection == .none
                             {
                                 self.suspendSearchBar.countryLabel.text = "深圳"
-                            }else
-                            {
-                                self.suspendSearchBar.countryLabel.text = ""
                             }
                         }
                         break

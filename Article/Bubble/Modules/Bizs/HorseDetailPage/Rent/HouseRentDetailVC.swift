@@ -148,12 +148,13 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams(houseRentTracer.searchQuery ?? "be_null", key: "search_query") <|>
                 toTracerParams(houseRentTracer.enterQuery ?? "be_null", key: "enter_query") <|>
-                toTracerParams(houseRentTracer.time ?? "be_null", key: "time") <|>
                 toTracerParams(houseRentTracer.offset ?? "be_null", key: "offset") <|>
                 toTracerParams(houseRentTracer.limit ?? "be_null", key: "limit") <|>
+                toTracerParams(houseRentTracer.rank, key: "rank") <|>
+                toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
             recordEvent(key: "go_detail_search", params: params)
-            self.staySearchParams = params
+            self.staySearchParams = params  <|> traceStayTime()
         }
 
     }
@@ -261,6 +262,15 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar,
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse)
+        bottomBarViewModel?.followForSendPhone = { [weak self] (showTips) in
+            if let selfRef = self {
+                selfRef.followUpViewModel.followHouseItem(houseType: .rentHouse,
+                                                       followAction: .rentHouse,
+                                                       followId: "\(selfRef.houseId)",
+                    disposeBag: selfRef.disposeBag,
+                    followStateBehavior: selfRef.detailPageViewModel?.follwUpStatus)()
+            }
+        }
         bindButtomBarState()
         bindOffSaleCallback()
         detailPageViewModel?.navVC = self.navigationController

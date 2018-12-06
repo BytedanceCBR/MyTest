@@ -124,7 +124,7 @@ func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOv
 
     if let theCell = cell as? PropertyListCell {
         theCell.prepareForReuse()
-        theCell.removeListBottomView(-26, false)
+        theCell.removeListBottomView(-20, true)
         func setInfoValue(_ keyText: String, _ valueText: String, _ infoView: HouseOutlineInfoView) {
             infoView.keyLabel.text = keyText
             infoView.valueLabel.text = valueText
@@ -148,7 +148,6 @@ func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOv
                 maker.edges.equalToSuperview()
             }
         }
-        theCell.removeListBottomView()
     }
 }
 

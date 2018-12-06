@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import RxCocoa
  class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+
+
     var source: String?
     
     var goDetailTraceParam: TracerParams?
@@ -50,6 +52,9 @@ import RxCocoa
     private var cellFactory: UITableViewCellFactory
 
     private var ershouHouseData = BehaviorRelay<ErshouHouseDetailResponse?>(value: nil)
+    func isDataAvailable() -> Bool {
+        return ershouHouseData.value != nil
+    }
 
     var groupId: String {
         get {

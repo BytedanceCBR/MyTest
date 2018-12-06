@@ -66,6 +66,8 @@ protocol DetailPageViewModel: class {
     var dismissMessageAlert: (() -> Void)? { get set }
     
     var goDetailTraceParam: TracerParams? { get set }
+
+    func isDataAvailable() -> Bool
     
 
 }
