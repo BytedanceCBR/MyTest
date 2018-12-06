@@ -8,8 +8,8 @@ import SnapKit
 import RxCocoa
 import RxSwift
 import Reachability
-class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol {
-    
+class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol, UIViewControllerErrorHandler{
+
     var hasMore = true
 
     let neighborhoodId: String
@@ -146,6 +146,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
             case .BadData:
                 self?.errorVM?.onRequestError(error: nil)
             }
+            self?.tt_endUpdataData()
         }
 
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
@@ -287,7 +288,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         
         //第一次进入请求数据
         if self.ershouHouseListViewModel?.datas.value.count == 0 {
-                        self.requestData()
+            self.tt_startUpdate()
+            self.requestData()
         }
         self.tracerParams = tracerParams <|>
             toTracerParams(searchId ?? "be_null", key: "search_id")
@@ -384,6 +386,10 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         recordEvent(key: TraceEventName.category_refresh, params: finalRefreshParams)
         errorVM?.onRequest()
         ershouHouseListViewModel?.pageableLoader?()
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return self.ershouHouseListViewModel?.datas.value.count ?? 0 > 0
     }
 
     
