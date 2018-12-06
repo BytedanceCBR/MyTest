@@ -209,17 +209,16 @@ class FollowUpViewModel {
                             
                             var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 {
-                                
                                 var style = fhCommonToastStyle()
                                 style.isCustomPosition = true
                                 style.customX = UIScreen.main.bounds.size.width - 20
                                 style.backgroundColor = hexStringToUIColor(hex: kFHDarkIndigoColor, alpha: 0.6)
-                                style.verticalOffset = 40 + (CommonUIStyle.Screen.isIphoneX ? 20 : 0)
-                                style.titleFont = CommonUIStyle.Font.pingFangRegular(10)
+                                style.messageFont = CommonUIStyle.Font.pingFangRegular(10)
+                                style.verticalOffset = 65 + (CommonUIStyle.Screen.isIphoneX ? 20 : 0)
                                 style.cornerRadius = 12
-                                style.verticalPadding = 8
-                                style.horizontalPadding = 10
-                                fhShowToast("已加入关注列表", position: .top)
+                                style.verticalPadding = 5
+                                style.horizontalPadding = 6
+                                fhShowToast("已加入关注列表", position: .top, style: style)
                                 toastCount += 1
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()

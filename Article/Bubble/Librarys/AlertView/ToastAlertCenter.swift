@@ -95,6 +95,7 @@ import SnapKit
 class ToastAlertView: UIView {
 
     private var progressHud: MBProgressHUD?
+    private var loadingHud: FHAlertView?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -105,23 +106,34 @@ class ToastAlertView: UIView {
     }
 
     func showProgressHud(_ message: String) {
-        progressHud?.hide(animated: false)
-
-        progressHud = MBProgressHUD.showAdded(to: self, animated: true)
-        progressHud?.color = color(0, 0, 0, 0.8)
-        progressHud?.contentColor = UIColor.white
-        progressHud?.label.font = CommonUIStyle.Font.pingFangRegular(17)
-        progressHud?.label.text = message
-        let cycleIndicatorView = CycleIndicatorView()
-        cycleIndicatorView.startAnimating()
-        progressHud?.customView = cycleIndicatorView
-        progressHud?.mode = MBProgressHUDMode.customView
+        loadingHud?.isHidden = false
+        loadingHud = FHAlertView()
+        loadingHud?.message.text = message
+        if let loadingHud = loadingHud {
+            self.addSubview(loadingHud)
+            loadingHud.snp.makeConstraints({ (make) in
+                make.center.equalToSuperview()
+            })
+        }
+//        progressHud?.hide(animated: false)
+//
+//        progressHud = MBProgressHUD.showAdded(to: self, animated: true)
+//        progressHud?.color = color(0, 0, 0, 0.8)
+//        progressHud?.contentColor = UIColor.white
+//        progressHud?.label.font = CommonUIStyle.Font.pingFangRegular(17)
+//        progressHud?.label.text = message
+//        let cycleIndicatorView = CycleIndicatorView()
+//        cycleIndicatorView.startAnimating()
+//        progressHud?.customView = cycleIndicatorView
+//        progressHud?.mode = MBProgressHUDMode.customView
     }
 
     func hideProgressHud() {
         progressHud?.hide(animated: true)
         progressHud?.removeFromSuperview()
         progressHud = nil
+        loadingHud?.isHidden = true
+        loadingHud = nil
     }
 }
 

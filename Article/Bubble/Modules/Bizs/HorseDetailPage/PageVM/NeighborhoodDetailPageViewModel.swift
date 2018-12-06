@@ -196,7 +196,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         self.dismissMessageAlert?()
                     }
                 }, onError: { [unowned self] (error) in
-                    EnvContext.shared.toast.showToast("网络异常")
                     self.onNetworkError?(error)
                 })
                 .disposed(by: disposeBag)
