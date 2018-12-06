@@ -369,7 +369,13 @@ static NSMutableArray  * _Nullable identifierArr;
                 font = [UIFont systemFontOfSize:15];
             }
             itemView.titleLabel.font = font;
-            itemView.titleLabel.text = itemModel.title;
+            if (itemModel.title.length > 5)
+            {
+                itemView.titleLabel.text = [itemModel.title substringToIndex:5];
+            }else
+            {
+                itemView.titleLabel.text = itemModel.title;
+            }
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(12);
             }];
@@ -382,7 +388,13 @@ static NSMutableArray  * _Nullable identifierArr;
                 font = [UIFont systemFontOfSize:10];
             }
             itemView.subTitleLabel.font = font;
-            itemView.subTitleLabel.text = itemModel.descriptionStr;
+            if (itemModel.descriptionStr.length > 9)
+            {
+                itemView.subTitleLabel.text = [itemModel.descriptionStr substringToIndex:9];
+            }else
+            {
+                itemView.subTitleLabel.text = itemModel.descriptionStr;
+            }
             
             if (![TTDeviceHelper isScreenWidthLarge320]) {
                 [itemView.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {

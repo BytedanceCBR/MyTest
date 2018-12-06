@@ -67,7 +67,9 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
 
 func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?, cell: BaseUITableViewCell) {
     if let theCell = cell as? RentFacilityCell {
-
+        for v in theCell.facilityItemView.subviews {
+            v.removeFromSuperview()
+        }
         let items: [FHHouseRentFacilityItemView] = facilities?.map({ (model) -> FHHouseRentFacilityItemView in
             let strickoutLable = StrickoutLabel()
             strickoutLable.textColor = hexStringToUIColor(hex: "#a0aab3")
@@ -84,11 +86,7 @@ func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?
             }
 
             if let url = model.iconUrl {
-                let bdReq = re.iconView.bd_setImage(with: URL(string: url))
-                bdReq?.completedBlock = {[weak re] (request, image, data, error, form) in
-                    let tempImage = image!.resizedImage(CGSize.init(width: 30.0 * UIScreen.main.scale, height: 30.0 * UIScreen.main.scale), interpolationQuality: CGInterpolationQuality.default)
-                    re?.iconView.image = tempImage
-                }
+                re.iconView.bd_setImage(with: URL(string: url))
             }
             return re
         }) ?? []

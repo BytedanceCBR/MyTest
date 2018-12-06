@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 class CategorySectionView: UIView {
-
+    
     let disposeBag = DisposeBag()
     
     lazy var categoryLabel: UILabel = {
@@ -22,6 +22,10 @@ class CategorySectionView: UIView {
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.text = "为你推荐"
         return label
+    }()
+    
+    var userSelectedCache: YYCache? = {
+        YYCache(name: "userdefaultselect")
     }()
     
     let houseTypeRelay = BehaviorRelay<HouseType>(value: .secondHandHouse)
@@ -41,7 +45,7 @@ class CategorySectionView: UIView {
         re.selectionIndicatorColor = .clear
         re.scSelectionIndicatorStyle = .fullWidthStripe
         re.scWidthStyle = .dynamicFixedSuper
-//        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+        //        re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(14),
                           NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#979fac")]
         
@@ -52,7 +56,7 @@ class CategorySectionView: UIView {
         re.selectionIndicatorColor = hexStringToUIColor(hex: "#f85959")
         return re
     }()
-
+    
     init() {
         super.init(frame: CGRect.zero)
         addSubview(categoryLabel)
@@ -67,25 +71,32 @@ class CategorySectionView: UIView {
         segmentedControl.indexChangeBlock = {[weak self] index in
             if let titleArray = self?.sectionTitleArray
             {
+                self?.userSelectedCache?.setObject(String(index) as NSCoding, forKey: "userdefaultselectindex")
+                
                 if titleArray[index] == HouseType.secondHandHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.secondHandHouse)
                     recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|> toTracerParams("old", key: "click_type"))
-
+                    self?.userSelectedCache?.setObject(String(HouseType.secondHandHouse.rawValue) as NSCoding, forKey: "userdefaultselect")
+                    
                 }else if titleArray[index] == HouseType.newHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.newHouse)
                     recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|> 
                         toTracerParams("new", key: "click_type"))
+                    self?.userSelectedCache?.setObject(String(HouseType.newHouse.rawValue) as NSCoding, forKey: "userdefaultselect")
                 }
                 else if titleArray[index] == HouseType.rentHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.rentHouse)
                     recordEvent(key: TraceEventName.click_switch_maintablist, params: TracerParams.momoid() <|>
                         toTracerParams("rent", key: "click_type"))
+                    self?.userSelectedCache?.setObject(String(HouseType.rentHouse.rawValue) as NSCoding, forKey: "userdefaultselect")
                 }
             }
         }
+        
+        
         
         addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints{ maker in
@@ -94,7 +105,7 @@ class CategorySectionView: UIView {
             maker.width.equalTo(110)
             maker.height.equalTo(20)
         }
-
+        
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.8, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
@@ -104,15 +115,24 @@ class CategorySectionView: UIView {
                 let resultArray = houseTypeTest.map{
                     matchHouseTypeName(houseTypeV: HouseType(rawValue: Int($0)))
                     }.filter{ $0 != ""}
-                self?.sectionTitleArray = resultArray.count == 0 ? [""] : resultArray as! [String]
+                self?.sectionTitleArray = resultArray.count == 0 ? [""] : resultArray
                 
                 //切换城市默认触发信号
-               if let defaulType = housetypelistV.first,let typeValue = HouseType(rawValue: defaulType)
-               {
-                  self?.houseTypeRelay.accept(typeValue)
-               }
+                if let defaulType = housetypelistV.first,let typeValue = HouseType(rawValue: defaulType)
+                {
+                    if let typeValueStr = self?.userSelectedCache?.object(forKey: "userdefaultselect") as? String
+                    {
+                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue)
+                        {
+                            self?.houseTypeRelay.accept(userSelectType)
+                        }
+                    }else
+                    {
+                        self?.houseTypeRelay.accept(typeValue)
+                    }
+                }
                 
-               self?.updateSegementLayOut()
+                self?.updateSegementLayOut()
             }
         })
             .disposed(by: disposeBag)
@@ -126,14 +146,25 @@ class CategorySectionView: UIView {
             maker.width.equalTo(sectionTitleArray.count == 1 ? 45 : sectionTitleArray.count * 55)
         }
         
-        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.sectionTitleArray = sectionTitleArray
+        
+        if let typeValueStr = self.userSelectedCache?.object(forKey: "userdefaultselectindex") as? String
+        {
+            if let userSelectIndex = Int(typeValueStr), sectionTitleArray.count > userSelectIndex
+            {
+                segmentedControl.selectedSegmentIndex = userSelectIndex
+            }
+        }else
+        {
+            segmentedControl.selectedSegmentIndex = 0
+        }
+        
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
 }
 
 func matchHouseTypeName(houseTypeV: HouseType?) -> String
