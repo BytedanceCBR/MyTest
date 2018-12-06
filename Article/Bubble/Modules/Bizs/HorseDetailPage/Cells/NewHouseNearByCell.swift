@@ -17,7 +17,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
     }
     
     deinit {
-        //        print("")
+//                print("")
     }
     
     var tracerParams = TracerParams.momoid()
@@ -506,8 +506,9 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             /**********************************队列组******************************************/
             for i in 1...3 {
                 DispatchQueue.global().async {
-                    [unowned self] in
-                    //全局并发同步
+                    [weak self] in
+                    guard let `self` = self else { return }
+                    // 全局并发同步
                     self.requestPOIInfoByType(poiType: self.categorys.count > i ? self.categorys[i] : .center)
                 }
             }
