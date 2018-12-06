@@ -158,6 +158,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(navBar)
         navBar.removeGradientColor()
+        self.navBar.seperatorLine.isHidden = true
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
                 maker.left.right.top.equalToSuperview()
