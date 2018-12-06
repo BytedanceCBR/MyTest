@@ -703,7 +703,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             return
         }
         var info = [AnyHashable: Any]()
-        info[OPENURL_CALLBAK] = self
+        let hashMap = NSHashTable<NSObject>(options:NSPointerFunctions.Options.weakMemory,capacity:1)
+        hashMap.add(self)
+        info[OPENURL_CALLBAK] = hashMap
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
         
