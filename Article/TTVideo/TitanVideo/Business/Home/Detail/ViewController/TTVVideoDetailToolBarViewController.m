@@ -633,7 +633,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
 
-    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];;
+    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
 
     [commentView dismissAnimated:YES];
     commentWriteManager.delegate = nil;

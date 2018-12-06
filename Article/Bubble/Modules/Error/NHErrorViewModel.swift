@@ -160,6 +160,7 @@ enum ErrorType: Int {
             errorState.accept(.normal)
             break
         default:
+            errorState.accept(.normal)
             break
         }
         changeState()

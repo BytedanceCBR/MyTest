@@ -19,6 +19,9 @@
 //内部使用
 @property (nonatomic, weak) TTCommentWriteView *commentWriteView;
 
+@property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, copy) NSString *categoryID;
+@property (nonatomic, copy) NSDictionary *logPb;
 
 - (instancetype)initWithCommentDetailModel:(id<TTCommentDetailModelProtocol>)commentDetailModel
                          replyCommentModel:(id<TTCommentDetailReplyCommentModelProtocol> )replyCommentModel

@@ -84,7 +84,11 @@ func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?
             }
 
             if let url = model.iconUrl {
-                re.iconView.bd_setImage(with: URL(string: url))
+                let bdReq = re.iconView.bd_setImage(with: URL(string: url))
+                bdReq?.completedBlock = {[weak re] (request, image, data, error, form) in
+                    let tempImage = image!.resizedImage(CGSize.init(width: 30.0 * UIScreen.main.scale, height: 30.0 * UIScreen.main.scale), interpolationQuality: CGInterpolationQuality.default)
+                    re?.iconView.image = tempImage
+                }
             }
             return re
         }) ?? []

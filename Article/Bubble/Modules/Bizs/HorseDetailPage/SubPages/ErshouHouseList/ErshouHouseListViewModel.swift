@@ -302,7 +302,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                 .subscribe(onNext: { [unowned self] (response) in
                     
                     var result = ErshouHouseResult.Success
-                    if response == nil {
+                    if response == nil && self.datas.value.count == 0 {
                         result = ErshouHouseResult.BadData
                     }
                     
