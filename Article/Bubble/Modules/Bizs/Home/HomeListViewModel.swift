@@ -113,6 +113,10 @@ class HomeListViewModel: DetailPageViewModel {
     
     fileprivate var pageFrameObv: NSKeyValueObservation?
     
+    var refreshTip : String?
+    
+    var showTips:((String) -> Void)?
+    
     var listDataRequestDisposeBag = DisposeBag()
     
     init(tableView: UITableView, navVC: UINavigationController?) {
@@ -443,6 +447,7 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
                         
                         self.originSearchId = data.searchId
+                        self.refreshTip = data.refreshTip
                         
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -571,6 +576,7 @@ class HomeListViewModel: DetailPageViewModel {
                     if let data = response?.data {
                         
                         self.originSearchId = data.searchId
+                        self.refreshTip = data.refreshTip
                         
                         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                             toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
@@ -578,7 +584,7 @@ class HomeListViewModel: DetailPageViewModel {
                         var pullString: String = "be_null"
                         if pullType == .pullDownType {
                             
-                            self.oneTimeToast?(response?.data?.refreshTip)
+//                            self.oneTimeToast?(response?.data?.refreshTip)
                             pullString = "pull"
                             
                         }else if pullType == .pullUpType {
@@ -643,6 +649,7 @@ class HomeListViewModel: DetailPageViewModel {
                         }else
                         {
                             self.tableView?.finishPullDown(withSuccess: true)
+                            self.showTips?(self.refreshTip ?? "")
                         }
                         
                         if let dataSource = self.dataSource, response.count != 0 {
