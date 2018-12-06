@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+
     var source: String?
     
     var goDetailTraceParam: TracerParams?
@@ -570,6 +571,10 @@ class CategoryListViewModel: DetailPageViewModel {
             }
             self?.onError?(error)
         }
+    }
+
+    func isDataAvailable() -> Bool {
+        return true
     }
 
 }

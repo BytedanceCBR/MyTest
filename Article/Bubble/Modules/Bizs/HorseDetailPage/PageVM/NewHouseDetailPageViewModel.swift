@@ -7,6 +7,8 @@ import Foundation
 import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
+
+
     var source: String?
     
     var goDetailTraceParam: TracerParams?
@@ -39,6 +41,10 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     var relatedCourt = BehaviorRelay<RelatedCourtResponse?>(value: nil)
 
     var newHouseDetail = BehaviorRelay<HouseDetailResponse?>(value: nil)
+
+    func isDataAvailable() -> Bool {
+        return newHouseDetail.value != nil
+    }
 
     var groupId: String {
         get {
@@ -81,6 +87,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     var dismissMessageAlert: (() -> Void)?
 
     var recordRowIndex: Set<IndexPath> = []
+
+
 
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?){
         self.tableView = tableView
