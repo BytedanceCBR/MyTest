@@ -262,6 +262,15 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         bottomBarViewModel = FHHouseContactBottomBarViewModel(bottomBar: bottomBar,
                                                               houseId: self.houseId,
                                                               houseType: .rentHouse)
+        bottomBarViewModel?.followForSendPhone = { [weak self] (showTips) in
+            if let selfRef = self {
+                selfRef.followUpViewModel.followHouseItem(houseType: .rentHouse,
+                                                       followAction: .rentHouse,
+                                                       followId: "\(selfRef.houseId)",
+                    disposeBag: selfRef.disposeBag,
+                    followStateBehavior: selfRef.detailPageViewModel?.follwUpStatus)()
+            }
+        }
         bindButtomBarState()
         bindOffSaleCallback()
         detailPageViewModel?.navVC = self.navigationController
