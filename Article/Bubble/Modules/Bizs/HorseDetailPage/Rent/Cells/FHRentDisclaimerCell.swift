@@ -154,6 +154,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
             // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleccccNoHiding`。
             browser.animationType = .scaleNoHiding
+
             // 浏览器协议实现者
             browser.photoBrowserDelegate = self
             // 装配页码指示器插件，提供了两种PageControl实现，若需要其它样式，可参照着自由定制
@@ -190,6 +191,15 @@ fileprivate class RentHouseNumberPageControlPlugin: HouseNumberPageControlPlugin
     open override func photoBrowser(_ photoBrowser: PhotoBrowser, didChangedPageIndex index: Int) {
         currentPageRelay.accept(index)
     }
+
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidLayoutSubviews view: UIView) {
+        super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
+        numberLabel.isHidden = false
+    }
+
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidAppear view: UIView, animated: Bool) {
+        view.addSubview(numberLabel)
+    }
 }
 
 fileprivate class RentPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
@@ -202,6 +212,15 @@ fileprivate class RentPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
         if titles.count > index {
             self.overlayView.imageNameLabel.text = titles[index]
         }
+    }
+
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidLayoutSubviews view: UIView) {
+        super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
+        overlayView.isHidden = false
+    }
+
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidAppear view: UIView, animated: Bool) {
+        view.addSubview(overlayView)
     }
 
 }
