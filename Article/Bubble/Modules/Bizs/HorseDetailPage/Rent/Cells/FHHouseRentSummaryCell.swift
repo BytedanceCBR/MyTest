@@ -148,7 +148,6 @@ func fillRentOutlineListCell(_ outLineOverreview:FHRentDetailResponseDataHouseOv
                 maker.edges.equalToSuperview()
             }
         }
-        theCell.removeListBottomView()
     }
 }
 
