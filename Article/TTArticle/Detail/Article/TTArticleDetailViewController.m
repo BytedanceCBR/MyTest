@@ -1796,6 +1796,10 @@
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"article";
 
+    commentManager.enterFromStr = self.detailModel.clickLabel;
+    commentManager.categoryID = self.detailModel.categoryID;
+    commentManager.logPb = self.detailModel.logPb;
+
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;
@@ -2703,7 +2707,17 @@
     [mdict setValue:self.detailModel.categoryID forKey:@"categoryName"];
     [mdict setValue:self.detailModel.article.groupModel.groupID forKey:@"groupId"];
     [mdict setValue:self.detailModel.article forKey:@"group"];
+    
+    [mdict setValue:self.detailModel.categoryID forKey:@"categoryID"];
+    [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
+    [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
+
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
+    
+    detailRoot.categoryID = self.detailModel.categoryID;
+    detailRoot.enterFrom = self.detailModel.clickLabel;
+    detailRoot.logPb = self.detailModel.logPb;
+
     TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];
     navVC.containerDelegate = self;
     if ([TTDeviceHelper OSVersionNumber] < 8.0f) {
