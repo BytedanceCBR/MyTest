@@ -371,7 +371,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
             maker.top.equalTo(navBar.snp.bottom)
             maker.left.right.equalToSuperview()
-            maker.bottom.equalTo(-50)
+            if #available(iOS 11, *) {
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50)
+            } else {
+                maker.bottom.equalTo(-50)
+            }
         }
 
         scrollView.addSubview(titleLabel)
