@@ -477,7 +477,6 @@ class CategoryListViewModel: DetailPageViewModel {
             self.dataSource.datas.accept([])
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         dataSource.canCancelFollowUp = true
         currentHouseType = houseType
         let loader = pageRequestFollowUpList(houseType: houseType)

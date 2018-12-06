@@ -9,7 +9,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 import SnapKit
-class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
+class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol, UIViewControllerErrorHandler {
+
 
     fileprivate var tableViewDelegate: FHListDataSourceDelegate?
 
@@ -160,7 +161,7 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
 
     fileprivate func requestSystemMessage() {
         if let listId = listId {
-            self.showLoadingAlert(message: "正在加载")
+            self.tt_startUpdate()
             if self.maxCoursor != 0 { // category_refresh埋点
                 recordEvent(key: "category_refresh", params: self.tracerParams <|>
                         toTracerParams("pre_load_more", key: "refresh_type"))
@@ -184,16 +185,20 @@ class SystemMessageListVC: BaseViewController, TTRouteInitializeProtocol {
                         self?.tableView.reloadData()
                         self?.errorVM?.onRequestNormalData()
                     }
-                    self?.dismissLoadingAlert()
+                    self?.tt_endUpdataData()
                 }, onError: { [weak self] error in
                     self?.errorVM?.onRequestError(error: error)
-                    self?.dismissLoadingAlert()
+                    self?.tt_endUpdataData()
                 })
                 .disposed(by: disposeBag)
         } else {
             self.errorVM?.onRequestNilData()
         }
 
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return self.tableViewDelegate?.fhSections.count ?? 0 > 0
     }
 
 }

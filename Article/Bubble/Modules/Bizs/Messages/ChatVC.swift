@@ -12,8 +12,8 @@ import RxCocoa
 import RxSwift
 import Reachability
 
-class ChatVC: BaseViewController {
-    
+class ChatVC: BaseViewController, UIViewControllerErrorHandler {
+
     lazy var navBar: SimpleNavBar = {
         let re = SimpleNavBar(hiddenMaskBtn: false)
         re.backBtn.isHidden = true
@@ -154,12 +154,11 @@ class ChatVC: BaseViewController {
 
     func requestData() {
         if isFirstEnter {
-            EnvContext.shared.toast.showLoadingToast("正在加载")
+            self.tt_startUpdate()
         }
         errorVM?.onRequest()
         requestUserUnread(query:"")
             .subscribe(onNext: { [unowned self] (responsed) in
-                EnvContext.shared.toast.dismissToast()
                 self.isFirstEnter = false
                 if let responseData = responsed?.data?.unread {
                     self.tableViewModel?.datas = responseData
@@ -189,10 +188,11 @@ class ChatVC: BaseViewController {
                 } else {
                     self.showNetworkError()
                 }
+                self.tt_endUpdataData()
             }, onError: { [unowned self] (error) in
                 self.showNetworkError()
-                EnvContext.shared.toast.dismissToast()
                 self.errorVM?.onRequestError(error: error)
+                self.tt_endUpdataData()
             })
             .disposed(by: disposeBag)
     }
@@ -233,6 +233,10 @@ class ChatVC: BaseViewController {
         if let badgeView = self.messageTab()?.ttBadgeView {
             badgeView.badgeNumber = TTBadgeNumberHidden
         }
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return self.tableViewModel?.datas.count ?? 0 > 0
     }
 
     /*
