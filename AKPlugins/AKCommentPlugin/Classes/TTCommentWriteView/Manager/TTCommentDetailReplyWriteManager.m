@@ -175,6 +175,7 @@ static bool isTTCommentPublishing = NO;
             if (self.commentWriteView.isNeedTips) {
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"发布成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             }
+        
         }
 
         // 传递给 publishCallback 处理
@@ -408,10 +409,19 @@ static bool isTTCommentPublishing = NO;
     [paramsDict setValue:self.enterFrom  forKey:@"enter_from"];
     [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
     [paramsDict setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
-    [paramsDict setValue:self.logPb forKey:@"log_pb"];
+    if (self.logPb.count > 0) {
+        
+        [paramsDict setValue:self.logPb forKey:@"log_pb"];
+    }else {
+        [paramsDict setValue:@"be_null" forKey:@"log_pb"];
+
+    }
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
-    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    if (self.enterFrom.length > 0) {
+        
+        [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    }
     
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];

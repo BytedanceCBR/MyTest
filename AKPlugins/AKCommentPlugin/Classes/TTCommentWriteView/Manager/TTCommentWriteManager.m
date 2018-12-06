@@ -372,6 +372,20 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
 
 #pragma mark -- TTCommentWriteViewDelegate
 
+- (NSString *)categoryName {
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [self.enterFromStr stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![self.enterFrom isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    return categoryName;
+}
+
 - (void)commentViewClickPublishButton {
 
     if (isTTArticleWritePublishing){
@@ -529,6 +543,25 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                                                                      @"with_emoticon_list" : (!emojiIds || emojiIds.count == 0) ? @"none" : [emojiIds componentsJoinedByString:@","],
                                                                      @"source" : @"comment"
                                                                      }];
+                
+                NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
+                [paramsDict setValue:self.enterFromStr  forKey:@"enter_from"];
+                [paramsDict setValue:self.groupModel.groupID forKey:@"group_id"];
+                [paramsDict setValue:self.groupModel.itemID forKey:@"item_id"];
+                if (self.logPb) {
+                    
+                    [paramsDict setValue:self.logPb forKey:@"log_pb"];
+                }else {
+                    [paramsDict setValue:@"be_null" forKey:@"log_pb"];
+                    
+                }
+                [paramsDict setValue:[self categoryName] forKey:@"category_name"];
+                [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+                if (self.enterFrom.length > 0) {
+                    
+                    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+                }
+                
 
                 if (self.publishStatusForTrack == 1) {
                     self.publishStatusForTrack = 2;

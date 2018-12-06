@@ -64,6 +64,12 @@
 
 @interface TTMomentDetailStore : Store
 @property (nonatomic, strong) TTMomentDetailIndependenceState *state;
+
+@property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, copy) NSString *categoryID;
+@property (nonatomic, strong) NSDictionary *logPb;
+
+
 + (instancetype)sharedStore;
 
 @end
