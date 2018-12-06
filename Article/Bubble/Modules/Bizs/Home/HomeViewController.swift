@@ -13,6 +13,8 @@ import RxCocoa
 import Reachability
 class HomeViewController: BaseViewController {
 
+    let tipViewHeight: CGFloat = 32
+    
     private var tableView: UITableView!
 
     private let dataSource: HomeViewTableViewDataSource!
@@ -52,6 +54,8 @@ class HomeViewController: BaseViewController {
     var isClickTab: Bool = false
     
     var enterType: String?
+    
+    var notifyBar: ArticleListNotifyBarView?
 
     private var stayTabParams = TracerParams.momoid()
     private var theThresholdTracer: ((String, TracerParams) -> Void)?
@@ -170,6 +174,15 @@ class HomeViewController: BaseViewController {
                 TTLaunchTracer.shareInstance().writeEvent()
             })
         
+        
+        let notifyBar = ArticleListNotifyBarView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: 500, height: tipViewHeight))
+        self.notifyBar = notifyBar
+        view.insertSubview(notifyBar, aboveSubview: tableView)
+        self.detailPageViewModel?.showTips = showTips()
         
         view.backgroundColor = UIColor.white
         tableView.backgroundColor = .white
@@ -368,6 +381,39 @@ class HomeViewController: BaseViewController {
             self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
         }
     }
+    
+    fileprivate func showTips() -> (String) -> Void {
+        return { [weak self] (message) in
+            self?.notifyBar?.showMessage(
+                message,
+                actionButtonTitle: "",
+                delayHide: true,
+                duration: 1,
+                bgButtonClickAction: { (button) in
+                    
+            }, actionButtonClick: { (button) in
+                
+            }, didHide: { (view) in
+                
+            })
+            if let tableView = self?.tableView {
+                if tableView.contentOffset.y <= 1 {
+                    let height = self?.notifyBar?.height ?? 0
+                    UIView.animate(withDuration: 0.3, animations: {
+                        self?.tableView.top = height
+                    })
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000), execute: {
+                        UIView.animate(withDuration: 0.3, animations: {
+                            self?.tableView.top = 0
+                        })
+                        
+                    })
+                }
+            }
+            
+        }
+    }
+    
 }
 
 
