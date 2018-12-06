@@ -431,9 +431,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
 //                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
 //                }
-                <- parseSameHouseItemListNode("小区房源", navVC: navVC, ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [unowned self] in
+                <- parseSameHouseItemListNode("小区房源", navVC: navVC, ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [weak self] in
                     if let id = data.id ,
-                        let title = data.name {
+                        let title = data.name, let wself = self {
                         
                         let loadMoreParams = EnvContext.shared.homePageParams <|>
                             toTracerParams("same_neighborhood", key: "element_type") <|>
@@ -449,40 +449,40 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             toTracerParams("same_neighborhood", key: "element_from")
                         
                         openErshouHouseList(
-                            title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
+                            title: title+"(\(wself.houseInSameNeighborhood.value?.data?.total ?? 0))",
                             neighborhoodId: id,
-                            searchId: self.houseInSameNeighborhood.value?.data?.searchId,
-                            disposeBag: self.disposeBag,
-                            navVC: self.navVC,
+                            searchId: wself.houseInSameNeighborhood.value?.data?.searchId,
+                            disposeBag: wself.disposeBag,
+                            navVC: wself.navVC,
                             searchSource: .neighborhoodDetail,
-                            followStatus: self.followStatus,
+                            followStatus: wself.followStatus,
                             tracerParams: params,
-                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                            bottomBarBinder: wself.bindBottomView(params: TracerParams.momoid()))
                     }
-                    }, rentCallBack: {
+                    }, rentCallBack: { [weak self] in
                 
                         if let id = data.id ,
-                            let title = data.name {
+                            let title = data.name, let wself = self {
                             //小区跳同小区租房列表
                             let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
                                 theParams <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
                                 toTracerParams("neighborhood_detail", key: "enter_from") <|>
-                                toTracerParams(self.rentHouseInSameNeighborhood.value?.data?.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams(wself.rentHouseInSameNeighborhood.value?.data?.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("house_renting", key: "element_from")
                             openRentHouseList(
-                                title: title+"(\(self.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
+                                title: title+"(\(wself.rentHouseInSameNeighborhood.value?.data?.total ?? "0"))",
                                 neighborhoodId: id,
-                                disposeBag: self.disposeBag,
-                                navVC: self.navVC,
+                                disposeBag: wself.disposeBag,
+                                navVC: wself.navVC,
                                 searchSource: .neighborhoodDetail,
                                 tracerParams: params,
-                                bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
+                                bottomBarBinder: wself.bindBottomView(params: TracerParams.momoid()))
                             
                         }
                 
-                }, filter: { () -> Bool in
-                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
+                }, filter: {[weak self] () -> Bool in
+                    self?.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 })
 //                <- parseNeighborSameHouseListItemNode(houseInSameNeighborhood.value?.data?.items, traceExtension: traceExtension, disposeBag: disposeBag, tracerParams: traceParams, navVC: self.navVC)
 //                <- parseSearchInNeighborhoodCollectionNode(
