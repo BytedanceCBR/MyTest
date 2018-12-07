@@ -466,13 +466,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             emptyInfoLabel.isHidden = false
             return
         }
-        let pois = response.pois.take(3).map { (poi) -> FHMAAnnotation in
-            let re = FHMAAnnotation()
-            re.type = categorys[segmentedControl.selectedSegmentIndex]
-            re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
-            re.title = poi.name
-            return re
-        }
+
         
         if let center = centerPoint {
             let from = MAMapPointForCoordinate(center)
@@ -484,38 +478,46 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
                 return distance < 2000 //2 公里
                 }.take(10)
             
+            let pois = poisMap.take(3).map { (poi) -> FHMAAnnotation in
+                let re = FHMAAnnotation()
+                re.type = categorys[segmentedControl.selectedSegmentIndex]
+                re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
+                re.title = poi.name
+                return re
+            }
+            
             if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
             {
                 poiMapDatas?[reuqestPoi.keywords] = poisMap
                 titleDatas?[reuqestPoi.keywords == "公交地铁" ? "交通": reuqestPoi.keywords] = "(\(poisMap.count))"
             }
-        }
-        
-        if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
-        {
-            poiAnnotationDatas?[reuqestPoi.keywords] = pois
-            if reuqestPoi.keywords == "公交地铁"
+            
+            if let reuqestPoi = request as? AMapPOIKeywordsSearchRequest
             {
-                changePoiData(index: 0)
-                self.callBackIndexChanged?()
-            }
-        }
-        requestIndex += 1
-        if requestIndex == 1
-        {
-            /**********************************队列组******************************************/
-            for i in 1...3 {
-                DispatchQueue.global().async {
-                    [weak self] in
-                    guard let `self` = self else { return }
-                    // 全局并发同步
-                    self.requestPOIInfoByType(poiType: self.categorys.count > i ? self.categorys[i] : .center)
+                poiAnnotationDatas?[reuqestPoi.keywords] = pois
+                if reuqestPoi.keywords == "公交地铁"
+                {
+                    changePoiData(index: 0)
+                    self.callBackIndexChanged?()
                 }
             }
-        }
-        
-        segmentedControl.sectionTitleArray = categorys.map { [weak self] in
-            $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "")
+            requestIndex += 1
+            if requestIndex == 1
+            {
+                /**********************************队列组******************************************/
+                for i in 1...3 {
+                    DispatchQueue.global().async {
+                        [weak self] in
+                        guard let `self` = self else { return }
+                        // 全局并发同步
+                        self.requestPOIInfoByType(poiType: self.categorys.count > i ? self.categorys[i] : .center)
+                    }
+                }
+            }
+            
+            segmentedControl.sectionTitleArray = categorys.map { [weak self] in
+                $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "")
+            }
         }
     }
     
