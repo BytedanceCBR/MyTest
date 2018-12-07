@@ -330,6 +330,10 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
         {
             var isSlected = false
             for (index,value) in items.enumerated() {
+                if EnvContext.shared.currentMapSelect == "交通"
+                {
+                    EnvContext.shared.currentMapSelect = "公交"
+                }
                 if value.name == EnvContext.shared.currentMapSelect
                 {
                     if itemViews.count > index
