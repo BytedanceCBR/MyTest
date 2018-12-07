@@ -44,7 +44,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestHouseInSameNeighborhoodSearch(
             neighborhoodId: neightborhoodId,
@@ -104,7 +103,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestErshouHouseSearch(query: query, searchId: searchId , suggestionParams: condition ?? "")
         pageableLoader = { [unowned self] in
@@ -377,7 +375,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-
         oneTimeToast = createOneTimeToast()
         
         let loader = pageRequestRelatedHouse(query: query, houseId: houseId, searchId: self.searchId, count: 20)

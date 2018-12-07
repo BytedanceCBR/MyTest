@@ -409,7 +409,7 @@ static bool isTTCommentPublishing = NO;
     [paramsDict setValue:self.enterFrom  forKey:@"enter_from"];
     [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
     [paramsDict setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
-    if (self.logPb.count > 0) {
+    if (self.logPb) {
         
         [paramsDict setValue:self.logPb forKey:@"log_pb"];
     }else {

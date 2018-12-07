@@ -266,16 +266,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         }
 
-//        self.tableView.addPullDown(
-//            withInitText: "下拉刷新数据",
-//            pullText: "松开即可刷新",
-//            loadingText: "正在努力加载",
-//            noMoreText: "没有更多数据",
-//            timeText: "",
-//            lastTimeKey: "") { [weak self] in
-//                self?.pullAndRefresh()
-//        }
-
         self.errorVM = NHErrorViewModel(
             errorMask:infoMaskView,
             requestRetryText:"网络异常",
@@ -558,6 +548,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["full_text"] {
+            print("process: \(associationalWord)")
+            print("process: queryParams \(queryParams)")
             self.navBar.setSearchPlaceHolderText(text: getPlaceholderText(
                 inputText: associationalWord as? String,
                 inputField: self.navBar.searchInput))
@@ -584,7 +576,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func processDisplayText(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["display_text"] as? String {
-            self.navBar.searchInput.placeholder = associationalWord
+            self.navBar.searchInput.placeholder = associationalWord.removingPercentEncoding
+            self.queryParams?["display_text"] = associationalWord.removingPercentEncoding
         }
     }
 
@@ -654,31 +647,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originSearchId, key: "origin_search_id")
         
         recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
-        
-//        //进入地图找房页埋点
-//        let enterParams = TracerParams.momoid() <|>
-//            toTracerParams(enterFrom, key: "enter_from") <|>
-//            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
-//            toTracerParams(originFrom, key: "origin_from") <|>
-//            toTracerParams(originSearchId, key: "origin_search_id")
-//        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
-        
-        /*
-         var dict : [String : Any] = [
-         "house_type" : self.houseType.value.rawValue ,
-         "center_longitude" : mapSearch.centerLongitude ?? "" ,
-         "center_latitude" : mapSearch.centerLatitude ?? "" ,
-         "resize_level" : mapSearch.resizeLevel ?? 11 ,
-         "origin_from" : originFrom ,
-         "origin_search_id" : originSearchId ,
-         "element_from" : elementName ,
-         "enter_from" : enterFrom ,
-         "enter_category" : enterCategory ,
-         ]
-         */
-        
-        
-        
         var query = ""
         if  !openUrl.contains("enter_category") {
             query = "enter_category=\(catName)"
@@ -700,10 +668,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
         }
         
-//        if !openUrl.contains("category_name") {
-//            query = "\(query)&category_name=\(catName)"
-//        }
-        
+
         if query.count > 0 {
             openUrl = "\(openUrl)&\(query)"
         }
@@ -737,7 +702,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 searchParams: houseSearchParams)
             self.categoryListViewModel?.houseSearch = houseSearchParams
         } else {
-            let houseSearchParams = ["eearch_query": "be_null",
+            let houseSearchParams = ["search_query": "be_null",
                                      "enter_query": "be_null"]
             self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
                 pageType: self.pageTypeString(),
@@ -816,7 +781,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     keys?.insert(sortKey)
                 }
                 if let queryParams = self?.queryParams, let keys = keys {
-                    self?.queryString = getNoneFilterConditionString(params: queryParams, conditionsKeys: keys)
+                    // 这里必须根据画参数的来源决定是否编码，如果是服务器传送来的，都不可以再做编码，TODO 后续改成客户算来源的参数也增加编码
+                    self?.queryString = getNoneFilterConditionString(params: queryParams, conditionsKeys: keys, encoding: !(self?.isNeedEncode ?? true))
                     self?.processDisplayText(queryParams: queryParams)
 
                 }
@@ -856,10 +822,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     // MARK: 搜索请求
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
+                .debounce(0.1, scheduler: MainScheduler.instance)
                 .map { [unowned self] (result) -> String in
                     self.getQueryCondition(filterCondition: result)
                 }
-                .debounce(0.1, scheduler: MainScheduler.instance)
                 .subscribe(onNext: { [unowned self] query in
                     self.requestData(query: query)
                 })
