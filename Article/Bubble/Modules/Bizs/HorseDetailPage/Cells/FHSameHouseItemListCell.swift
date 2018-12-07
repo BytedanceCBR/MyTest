@@ -450,8 +450,10 @@ func parseSameHouseItemListNode(
     _ title: String,
     navVC: UINavigationController?,
     ershouData: [HouseItemInnerEntity]?,
+    ershouDataTotal: Int,
     ershouHasMore: Bool = false,
     rentData: [FHRentSameNeighborhoodResponseDataItemsModel]?,
+    rentDataTotal: String,
     rentHasMore: Bool = false,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
@@ -464,7 +466,7 @@ func parseSameHouseItemListNode(
             return nil
         }
         
-        let cellRender = curry(fillSameHouseItemListCell)(title)(navVC)(ershouData ?? [])(ershouHasMore)(ershouCallBack)(rentData ?? [])(rentHasMore)(rentCallBack)(disposeBag)(tracerParams)
+        let cellRender = curry(fillSameHouseItemListCell)(title)(navVC)(ershouData ?? [])(ershouDataTotal)(ershouHasMore)(ershouCallBack)(rentData ?? [])(rentDataTotal)(rentHasMore)(rentCallBack)(disposeBag)(tracerParams)
         return TableSectionNode(
             items: [cellRender],
             selectors: [],
@@ -478,9 +480,11 @@ func parseSameHouseItemListNode(
 func fillSameHouseItemListCell(_ title: String,
                                navVC: UINavigationController?,
                                ershouData: [HouseItemInnerEntity],
+                               ershouDataTotal: Int,
                                ershouHasMore: Bool = false,
                                ershouCallBack: @escaping () -> Void,
                                rentData: [FHRentSameNeighborhoodResponseDataItemsModel],
+                               rentDataTotal: String,
                                rentHasMore: Bool = false,
                                rentCallBack: @escaping () -> Void,
                                disposeBag: DisposeBag,
@@ -488,17 +492,26 @@ func fillSameHouseItemListCell(_ title: String,
                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHSameHouseItemListCell {
         
-        theCell.titleLabel.text = title
         theCell.navVC = navVC
         theCell.tracerParams = tracerParams
         theCell.ershouFooter?.openAllBtn.rx.tap
-            .bind {void in
+            .bind { void in
                 ershouCallBack()
             }.disposed(by: disposeBag)
-        
+        //设置celltitle
+        theCell.ershouBtn.rx.tap
+            .bind { [weak theCell]  void in
+                theCell?.titleLabel.text = "小区房源(\(ershouDataTotal))"
+            }.disposed(by: disposeBag)
+
         theCell.rentFooter?.openAllBtn.rx.tap
-            .bind {void in
+            .bind { void in
                 rentCallBack()
+            }.disposed(by: disposeBag)
+        //设置celltitle
+        theCell.rentBtn.rx.tap
+            .bind { [weak theCell] void in
+                theCell?.titleLabel.text = "小区房源(\(rentDataTotal))"
             }.disposed(by: disposeBag)
         
         theCell.secondItemList = ershouData
@@ -523,15 +536,11 @@ func fillSameHouseItemListCell(_ title: String,
         theCell.rentTableView.tableFooterView = theCell.rentFooter
         theCell.rentTableView.tableFooterView?.isHidden = !rentHasMore
 
-        theCell.rentBtn.setTitle("租房 (\(rentData.count))", for: .normal)
-        theCell.rentBtn.setTitle("租房 (\(rentData.count))", for: .selected)
-        theCell.ershouBtn.setTitle("二手房 (\(ershouData.count))", for: .normal)
-        theCell.ershouBtn.setTitle("二手房 (\(ershouData.count))", for: .selected)
-
-        if ershouData.count > 0 {
+        if ershouData.count > 0 { //有二手房源
             theCell.houseType = .secondHandHouse
-            
-            if rentData.count > 0 {
+
+            theCell.titleLabel.text = "小区房源(\(ershouData.count))"
+            if rentData.count > 0 { //同时也有租房房源
                 
                 theCell.ershouBtn.isHidden = false
                 theCell.rentBtn.isHidden = false
@@ -547,7 +556,7 @@ func fillSameHouseItemListCell(_ title: String,
                     maker.height.equalTo(26)
                 }
                 
-            } else {
+            } else { //仅有二手房
                 theCell.ershouBtn.isHidden = false
                 theCell.rentBtn.isHidden = true
                 theCell.ershouBtn.snp.remakeConstraints { (maker) in
@@ -557,7 +566,9 @@ func fillSameHouseItemListCell(_ title: String,
                 }
 
             }
-        } else if rentData.count > 0 {
+        } else if rentData.count > 0 { //仅有租房
+
+            theCell.titleLabel.text = "小区房源(\(rentData.count))"
             theCell.houseType = .rentHouse
             theCell.ershouBtn.isHidden = true
             theCell.rentBtn.isHidden = false

@@ -321,7 +321,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                         var pageType: String?
                         if ht == HouseType.rentHouse {
-                            pageType = "rent_detail"
+                            pageType = "rent_deta"
                         } else {
                             pageType = "old_detail"
                         }
@@ -498,9 +498,11 @@ func parseRelatedHouseListItemNode(
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+            let finalParams = theParams
+                .exclude("element_from")
+                .exclude("enter_from")
             
-            
-            return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
+            return onceRecord(key: TraceEventName.house_show, params: finalParams)
     }
     records?.insert(elementShowOnceRecord(params:paramsElement), at: 0)
     

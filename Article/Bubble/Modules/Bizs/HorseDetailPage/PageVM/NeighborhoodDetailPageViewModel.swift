@@ -430,7 +430,17 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 //                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
 //                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
 //                }
-                <- parseSameHouseItemListNode("小区房源", navVC: navVC, ershouData: houseInSameNeighborhood.value?.data?.items, ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false, rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel], rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false, disposeBag: disposeBag, tracerParams: traceExtension, ershouCallBack: { [weak self] in
+                <- parseSameHouseItemListNode("小区房源",
+                                              navVC: navVC,
+                                              ershouData: houseInSameNeighborhood.value?.data?.items,
+                                              ershouDataTotal: houseInSameNeighborhood.value?.data?.total ?? 0,
+                                              ershouHasMore: houseInSameNeighborhood.value?.data?.hasMore ?? false,
+                                              rentData: rentHouseInSameNeighborhood.value?.data?.items as? [FHRentSameNeighborhoodResponseDataItemsModel],
+                                              rentDataTotal: rentHouseInSameNeighborhood.value?.data?.total ?? "",
+                                              rentHasMore: rentHouseInSameNeighborhood.value?.data?.hasMore ?? false,
+                                              disposeBag: disposeBag,
+                                              tracerParams: traceExtension,
+                                              ershouCallBack: { [weak self] in
                     if let id = data.id ,
                         let title = data.name, let wself = self {
                         

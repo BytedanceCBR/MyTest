@@ -31,7 +31,7 @@ func parseRentReleatedHouseListItemNode(
                     if let houseId = item.id {
                         var tracer = tracerParams.paramsGetter([:])
                         tracer["card_type"] = "left_pic"
-                        tracer["enter_from"] = "rent_detail"
+                        tracer["enter_from"] = "related_list"
                         tracer["element_from"] = "related"
                         tracer["rank"] = offset
                         tracer["log_pb"] = item.logPb
@@ -63,7 +63,7 @@ func parseRentReleatedHouseListItemNode(
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams("rent", key: "house_type") <|>
                     toTracerParams("slide", key: "card_type") <|>
-                    toTracerParams("rent_detail", key: "page_type") <|>
+                    toTracerParams("related_list", key: "page_type") <|>
                     toTracerParams("related", key: "element_type") <|>
                     toTracerParams(item.logPb as? [String : Any] ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
