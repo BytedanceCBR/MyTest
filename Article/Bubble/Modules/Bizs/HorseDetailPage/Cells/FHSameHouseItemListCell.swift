@@ -523,6 +523,11 @@ func fillSameHouseItemListCell(_ title: String,
         theCell.rentTableView.tableFooterView = theCell.rentFooter
         theCell.rentTableView.tableFooterView?.isHidden = !rentHasMore
 
+        theCell.rentBtn.setTitle("租房 (\(rentData.count))", for: .normal)
+        theCell.rentBtn.setTitle("租房 (\(rentData.count))", for: .selected)
+        theCell.ershouBtn.setTitle("二手房 (\(ershouData.count))", for: .normal)
+        theCell.ershouBtn.setTitle("二手房 (\(ershouData.count))", for: .selected)
+
         if ershouData.count > 0 {
             theCell.houseType = .secondHandHouse
             
@@ -542,7 +547,7 @@ func fillSameHouseItemListCell(_ title: String,
                     maker.height.equalTo(26)
                 }
                 
-            }else {
+            } else {
                 theCell.ershouBtn.isHidden = false
                 theCell.rentBtn.isHidden = true
                 theCell.ershouBtn.snp.remakeConstraints { (maker) in
@@ -552,7 +557,7 @@ func fillSameHouseItemListCell(_ title: String,
                 }
 
             }
-        }else if rentData.count > 0 {
+        } else if rentData.count > 0 {
             theCell.houseType = .rentHouse
             theCell.ershouBtn.isHidden = true
             theCell.rentBtn.isHidden = false

@@ -417,7 +417,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 self?.shareInfo = model?.data?.shareInfo
                 self?.requestReletedData()
             } else {
-                self?.onRequestError?(error)
+                if error != nil, let theError = error as? NSError, theError.code != 1000 {
+                    self?.onRequestError?(error)
+                } else {
+                    //数据解析失败
+                    self?.onRequestError?(nil)
+                }
             }
         }
     }

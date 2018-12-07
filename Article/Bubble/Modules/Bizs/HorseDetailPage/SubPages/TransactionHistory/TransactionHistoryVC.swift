@@ -8,7 +8,7 @@ import RxSwift
 import Reachability
 
 /// 楼盘动态
-class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol {
+class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitializeProtocol , UIViewControllerErrorHandler{
 
     var hasMore: Bool = true
 
@@ -63,6 +63,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitia
             infoMaskView.isUserInteractionEnabled = false
         } else {
             errorVM?.onRequest()
+            tt_startUpdate()
             self.transactionHistoryVM?.request(neighborhoodId: neighborhoodId)
         }
         
@@ -85,13 +86,14 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitia
         self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常",requestNilDataImage:"group-4")
         
         transactionHistoryVM?.onError = { [weak self] (error) in
+            self?.tt_endUpdataData()
             self?.tableView.mj_footer.endRefreshing()
             self?.errorVM?.onRequestError(error: error)
         }
         
         transactionHistoryVM?.onSuccess = {
             [weak self] (isHaveData) in
-
+            self?.tt_endUpdataData()
             if(isHaveData)
             {
                 self?.errorVM?.onRequestNormalData()
@@ -139,4 +141,7 @@ class TransactionHistoryVC: BaseSubPageViewController, PageableVC, TTRouteInitia
         transactionHistoryVM?.pageableLoader?()
     }
     
+    func tt_hasValidateData() -> Bool {
+        return self.transactionHistoryVM?.datas.value.count ?? 0 > 0
+    }
 }
