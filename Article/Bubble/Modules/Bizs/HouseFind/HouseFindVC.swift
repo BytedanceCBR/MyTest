@@ -191,7 +191,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 }
                 self.handleScroll(houseType: self.houseType.value)
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
-                self.adjustVerticalPositionToTop()
+                self.adjustBackgroundVerticalPositionToTop()
             }
         }
 
@@ -602,6 +602,15 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     fileprivate func adjustVerticalPositionToTop() {
         self.houseFilterCollectionView[houseType.value]?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
+    }
+
+    fileprivate func adjustBackgroundVerticalPositionToTop() {
+        self.houseFilterCollectionView
+            .filter { $0.key != houseType.value }
+            .forEach { (e) in
+                let (_, collectionView) = e
+                collectionView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
+            }
     }
 
     fileprivate func requestHistory(houseType: String? = nil) {
