@@ -20,6 +20,8 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
     private var cellFactory: UITableViewCellFactory
 
     private let disposeBag = DisposeBag()
+    
+    var onDataLoadCompleted: (() -> Void)?
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -39,7 +41,6 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
 
     func request(courtId: Int64) {
         let loader = pageRequestNewHouseComment(houseId: courtId, count: 15)
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         pageableLoader = { [unowned self] in
             loader()
                     .subscribe(onNext: { [unowned self] (response) in
@@ -52,7 +53,7 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
 
                         }
                         self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
-                        
+                        self.onDataLoadCompleted?()
                         EnvContext.shared.toast.dismissToast()
                         }, onError: self.processError())
                     .disposed(by: self.disposeBag)
@@ -63,7 +64,7 @@ class HouseCommentViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
     
     func processError() -> (Error?) -> Void {
         return { [weak self] error in
-            
+            self?.onDataLoadCompleted?()
             self?.tableView?.mj_footer.endRefreshing()
             if EnvContext.shared.client.reachability.connection != .none {
                 EnvContext.shared.toast.dismissToast()

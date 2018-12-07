@@ -6,7 +6,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-class HouseCommentVC: BaseSubPageViewController, PageableVC {
+class HouseCommentVC: BaseSubPageViewController, PageableVC ,UIViewControllerErrorHandler{
     
     var hasMore = true
 
@@ -35,6 +35,7 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
             infoMaskView.retryBtn.isHidden = true
             infoMaskView.isUserInteractionEnabled = false
         } else {
+            tt_startUpdate()
             houseCommentViewModel?.request(courtId: courtId)
         }
 //        infoMaskView.tapGesture.rx.event
@@ -47,6 +48,9 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
 //                self.houseCommentViewModel?.request(courtId: self.courtId)
 //            }
 //            .disposed(by: disposeBag)
+        self.houseCommentViewModel?.onDataLoadCompleted = { [weak self] in
+            self?.tt_endUpdataData()
+        }
         self.houseCommentViewModel?.datas.bind(onNext: { [unowned self] (datas) in
             if datas.count > 0 {
                 self.infoMaskView.isHidden = true
@@ -78,5 +82,9 @@ class HouseCommentVC: BaseSubPageViewController, PageableVC {
 
     func loadMore() {
         houseCommentViewModel?.pageableLoader?()
+    }
+    
+    func tt_hasValidateData() -> Bool {
+        return houseCommentViewModel?.datas.value.count ?? 0 > 0
     }
 }
