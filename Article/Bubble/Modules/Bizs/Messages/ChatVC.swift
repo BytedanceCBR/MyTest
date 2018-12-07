@@ -164,7 +164,9 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
         }
         errorVM?.onRequest()
         requestUserUnread(query:"")
-            .subscribe(onNext: { [unowned self] (responsed) in
+            .subscribe(onNext: { [weak self] (responsed) in
+                
+                guard let `self` = self else { return }
                 self.isFirstEnter = false
                 if let responseData = responsed?.data?.unread {
                     self.tableViewModel?.datas = responseData
@@ -192,7 +194,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
                         self.errorVM?.onRequestNormalData()
                     }
                 } else {
-                    self.showNetworkError()
+                    self.showResponseError()
                 }
                 self.tt_endUpdataData()
             }, onError: { [unowned self] (error) in
@@ -228,6 +230,13 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
         self.clearBadgeNumber()
     }
     
+    fileprivate func showResponseError() {
+        
+        self.emptyMaskView.label.text = "数据走丢了"
+        self.emptyMaskView.icon.image = UIImage(named: "group-9")
+        self.emptyMaskView.isHidden = false
+    }
+
     fileprivate func showNetworkError() {
         self.emptyMaskView.isHidden = false
         self.emptyMaskView.label.text = "网络异常"
