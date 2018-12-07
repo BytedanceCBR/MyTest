@@ -118,7 +118,7 @@ class CategoryListViewModel: DetailPageViewModel {
         
         //取消关注，删除到小于6个去自动请求
         dataSource.datasDeleteBehavior.skip(1).subscribe { [unowned self] (count) in
-            if let countRetain = count.element , countRetain < 9
+            if let countRetain = count.element , countRetain < (UIScreen.main.bounds.size.width < 375 ? 6 : 9)
             {
                 if let houseType = self.currentHouseType , self.favoriteHasMore
                 {
@@ -498,6 +498,13 @@ class CategoryListViewModel: DetailPageViewModel {
                             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                                 toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id")
                             self.favoriteHasMore = data.hasMore ?? false
+                            if self.favoriteHasMore
+                            {
+                               if data.items.count == 0
+                               {
+                                 self.favoriteHasMore = false
+                               }
+                            }
                             return (data.hasMore ?? false, parseFollowUpListRowItemNode(data, hasMore: data.hasMore ?? false, disposeBag: self.disposeBag, navVC: self.navVC))
                         } else {
                             return (false, [])
