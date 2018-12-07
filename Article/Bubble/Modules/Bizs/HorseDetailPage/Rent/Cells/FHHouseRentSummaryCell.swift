@@ -84,8 +84,8 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
     
     return {
         if let outline = model?.data?.houseOverview,
-            outline.list?.count ?? 0 > 0,
-            !(outline.list?.allSatisfy(isEmptyOutline) ?? false) {
+            outline.list?.count ?? 0 > 0 {
+//            !(outline.list?.allSatisfy(isEmptyOutline) ?? false) {
             let cellRender = curry(fillRentOutlineListCell)(outline)
             return TableSectionNode(
                 items: [cellRender],

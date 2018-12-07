@@ -44,7 +44,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestHouseInSameNeighborhoodSearch(
             neighborhoodId: neightborhoodId,
@@ -104,7 +103,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestErshouHouseSearch(query: query, searchId: searchId , suggestionParams: condition ?? "")
         pageableLoader = { [unowned self] in
@@ -171,7 +169,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRentInSameNeighborhoodSearch(neighborhoodId: neightborhoodId,houseId: houseId, searchId: searchId, count: 15)
         pageableLoader = { [unowned self] in
@@ -228,7 +225,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         
         let loader = pageRequestRentInSameNeighborhoodSearch(query: query, neighborhoodId: nil, houseId: nil, searchId: nil, count: 15)
@@ -294,7 +290,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRelatedHouse(query: nil, houseId: houseId, searchId: self.searchId, condition: nil, count: 15)
         pageableLoader = { [unowned self] in
@@ -380,7 +375,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         oneTimeToast = createOneTimeToast()
         
         let loader = pageRequestRelatedHouse(query: query, houseId: houseId, searchId: self.searchId, count: 20)

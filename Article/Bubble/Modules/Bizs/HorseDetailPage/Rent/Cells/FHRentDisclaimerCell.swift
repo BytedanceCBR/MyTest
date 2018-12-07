@@ -222,7 +222,11 @@ fileprivate class RentPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
         super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
         overlayView.isHidden = false
         let frame = overlayView.frame
+        guard let superView = overlayView.superview else { return }
+
         overlayView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        overlayView.center = CGPoint(x: superView.bounds.midX,
+                                     y: bottomOffsetY)
     }
 
     open override func photoBrowser(_ photoBrowser: PhotoBrowser,

@@ -307,7 +307,13 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         detailPageViewModel?.onRequestError = { [weak self] (error) in
             self?.tableView.isHidden = true
             self?.tt_endUpdataData()
-            self?.netStateInfoVM?.onRequestError(error: error)
+            if error == nil {
+                self?.netStateInfoVM?.onRequestNilData()
+                self?.navBar.rightBtn.isEnabled = false
+                self?.navBar.rightBtn2.isEnabled = false
+            } else {
+                self?.netStateInfoVM?.onRequestError(error: error)
+            }
             // TODO: 显示错误提示
         }
     }

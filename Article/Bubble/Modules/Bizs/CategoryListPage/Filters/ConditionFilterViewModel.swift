@@ -448,14 +448,17 @@ func getNoneFilterCondition(params: [String: Any], conditionsKeys: Set<String>) 
     return params.filter { !conditionsKeys.contains($0.key) }
 }
 
-func getNoneFilterConditionString(params: [String: Any]?, conditionsKeys: Set<String>) -> String {
+func getNoneFilterConditionString(params: [String: Any]?,
+                                  conditionsKeys: Set<String>,
+                                  encoding: Bool = true) -> String {
     guard let params = params else {
         return ""
     }
     let querys = getNoneFilterCondition(params: params, conditionsKeys: conditionsKeys)
     let conditions = querys.reduce("", { (result, value) -> String in
             let condition = convertKeyValueToCondition(key: value.key,
-                                                       value: value.value)
+                                                       value: value.value,
+                                                       encoding: encoding)
                 .reduce("", { (result, value) -> String in
                     result + "&\(value)"
                 })
@@ -471,10 +474,10 @@ func getNoneFilterConditionString(params: [String: Any]?, conditionsKeys: Set<St
 ///   - key:
 ///   - value:
 /// - Returns:
-func convertKeyValueToCondition(key: String, value: Any) -> [String] {
+func convertKeyValueToCondition(key: String, value: Any, encoding: Bool = true) -> [String] {
     if let arrays = value as? Array<Any> {
         return arrays.map { e in
-            if let value = "\(e)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            if let value = "\(e)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), encoding {
                 return "\(key)=\(value)"
             } else {
                 return "\(key)=\(e)"
@@ -482,7 +485,7 @@ func convertKeyValueToCondition(key: String, value: Any) -> [String] {
         }
     } else {
         if let valueStr = value as? String,
-            let theValue = valueStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let theValue = valueStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), encoding {
             return ["\(key)=\(theValue)"]
         } else {
             return ["\(key)=\(value)"]

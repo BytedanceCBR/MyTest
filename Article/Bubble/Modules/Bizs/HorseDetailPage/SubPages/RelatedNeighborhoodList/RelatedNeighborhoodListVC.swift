@@ -6,7 +6,8 @@
 import Foundation
 import RxSwift
 import RxCocoa
-class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
+class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC, UIViewControllerErrorHandler {
+
     
     var hasMore = true
 
@@ -66,6 +67,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
 
         if EnvContext.shared.client.reachability.connection != .none {
+            self.tt_startUpdate()
             self.errorVM?.onRequest()
             self.relatedNeighborhoodListViewModel?.request(neighborhoodId: neighborhoodId)
         } else {
@@ -85,6 +87,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         self.relatedNeighborhoodListViewModel?.onError = { [weak self] (error) in
             self?.tableView.mj_footer.endRefreshing()
             self?.errorVM?.onRequestError(error: error)
+            self?.tt_endUpdataData()
         }
         
         self.relatedNeighborhoodListViewModel?.onSuccess = {
@@ -94,6 +97,7 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
             {
                 self?.errorVM?.onRequestNormalData()
             }
+            self?.tt_endUpdataData()
         }
         
         // 进入列表页埋点
@@ -128,5 +132,9 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC  {
         recordEvent(key: TraceEventName.category_refresh, params: refreshParams)
         errorVM?.onRequest()
         relatedNeighborhoodListViewModel?.pageableLoader?()
+    }
+
+    func tt_hasValidateData() -> Bool {
+        return self.relatedNeighborhoodListViewModel?.datas.value.count ?? 0 > 0
     }
 }

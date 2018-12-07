@@ -130,6 +130,7 @@ import RxCocoa
         self.conditionFilterViewModel?.sortPanelView = searchView
         self.conditionFilterViewModel?.searchSortBtn = searchSortBtn
         self.searchSortBtn.rx.tap
+            .debounce(0.3, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] void in
                 self?.conditionFilterViewModel?.openOrCloseSortPanel()
                 self?.delegate?.onConditionWillPanelDisplay()
