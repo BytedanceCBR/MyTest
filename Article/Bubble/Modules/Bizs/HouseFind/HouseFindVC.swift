@@ -218,14 +218,22 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     }
 
-    fileprivate func setupViews() {
+    fileprivate func getSideMargin() -> CGFloat {
         var sideMargin: CGFloat = 30
         if let config = EnvContext.shared.client.configCacheSubject.value {
             if houseTypeSectionByConfig(config: config).count < 3 {
-                sideMargin = 110
+                if UIScreen.main.bounds.width < 370 {
+                    sideMargin = 90
+                } else {
+                    sideMargin = 110
+                }
             }
         }
+        return sideMargin
+    }
 
+    fileprivate func setupViews() {
+        let sideMargin = getSideMargin()
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
@@ -271,13 +279,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func adjustSegmentNav() {
-        var sideMargin: CGFloat = 30
-        if let config = EnvContext.shared.client.configCacheSubject.value {
-            if houseTypeSectionByConfig(config: config).count < 3 {
-                sideMargin = 110
-            }
-        }
 
+        let sideMargin = getSideMargin()
         segmentedNav.snp.remakeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
