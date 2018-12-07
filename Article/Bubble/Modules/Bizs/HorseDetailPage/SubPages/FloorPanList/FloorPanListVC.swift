@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-class FloorPanListVC: BaseSubPageViewController, PageableVC {
+class FloorPanListVC: BaseSubPageViewController, PageableVC, UIViewControllerErrorHandler {
     
     var hasMore = true
     
@@ -39,6 +39,7 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
             infoMaskView.retryBtn.isHidden = true
             infoMaskView.isUserInteractionEnabled = false
         } else {
+            tt_startUpdate()
             floorPanListViewModel?.request(courtId: courtId)
         }
         
@@ -55,6 +56,9 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
 //            }
 //            .disposed(by: disposeBag)
 
+        self.floorPanListViewModel?.onDataLoadCompleted = { [weak self] in
+            self?.tt_endUpdataData()
+        }
         self.floorPanListViewModel?.datas.bind(onNext: { [unowned self] (datas) in
             if datas.count > 0 {
                 self.infoMaskView.isHidden = true
@@ -79,4 +83,7 @@ class FloorPanListVC: BaseSubPageViewController, PageableVC {
         floorPanListViewModel?.pageableLoader?()
     }
 
+    func tt_hasValidateData() -> Bool {
+        return floorPanListViewModel?.datas.value.count ?? 0 > 0
+    }
 }
