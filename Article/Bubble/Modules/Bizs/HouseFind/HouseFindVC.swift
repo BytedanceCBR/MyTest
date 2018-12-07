@@ -191,8 +191,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 }
                 self.handleScroll(houseType: self.houseType.value)
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
+                self.adjustVerticalPositionToTop()
             }
         }
+
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
@@ -388,10 +390,19 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             pages.forEach { (view) in
                 self.containerView.addSubview(view)
             }
+
             pages.snp.makeConstraints { (make) in
                 make.top.bottom.width.height.equalToSuperview()
+                //如果只有一个page，则不执行批量均分布局
+                if pages.count == 1 {
+                    make.left.equalToSuperview()
+                }
             }
-            pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+
+            if pages.count > 0 {
+                pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            }
+
             pages.forEach { (collectionView) in
                 self.registerCollectionViewComponent(collectionView: collectionView)
                 collectionView.reloadData()

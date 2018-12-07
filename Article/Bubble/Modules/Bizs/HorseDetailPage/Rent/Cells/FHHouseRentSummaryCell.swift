@@ -84,7 +84,8 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
     
     return {
         if let outline = model?.data?.houseOverview,
-            outline.list?.count ?? 0 > 0 {
+            outline.list?.count ?? 0 > 0,
+            !(outline.list?.allSatisfy(isEmptyOutline) ?? false) {
             let cellRender = curry(fillRentOutlineListCell)(outline)
             return TableSectionNode(
                 items: [cellRender],
@@ -94,9 +95,17 @@ func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
                 label: "",
                 type: .node(identifier: PropertyListCell.identifier))
         }else {
-            
             return nil
         }
+    }
+}
+
+// 判断是否是无效的summary
+func isEmptyOutline(model: Any) -> Bool {
+    if let model = model as? FHRentDetailResponseDataHouseOverviewListDataModel {
+        return model.content?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true
+    } else {
+        return true
     }
 }
 
