@@ -147,6 +147,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
 
+    private var conditions: [Node]?
+
     var searchSortBtn: UIButton = {
         let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
@@ -626,7 +628,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
         let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
         let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
-        let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
+//        let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
         let enterFrom = (selectTraceParam(self.tracerParams, key: "enter_from") as? String) ?? catName
         
         
@@ -792,9 +794,21 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.bindHouseSearchParams()
 
             if let houseListOpenUrl = self?.categoryListViewModel?.houseListOpenUrl {
-                self?.queryString = ""
                 self?.resetFilterConditionByRequestData(openUrl: houseListOpenUrl)
+                guard let url = URL(string: houseListOpenUrl) else {
+                    return
+                }
 
+                let routeObj = TTRoute.shared()?.routeParamObj(with:url)
+                self?.allParams = routeObj?.allParams as? [String: Any]
+                var keys = self?.allKeysFromNodes(nodes: self?.conditions ?? [])
+                if let sortKey = self?.allSortConditionKeys() {
+                    //计算所有排序的key
+                    keys?.insert(sortKey)
+                }
+                if let queryParams = self?.queryParams, let keys = keys {
+                    self?.queryString = getNoneFilterConditionString(params: queryParams, conditionsKeys: keys)
+                }
                 //这里必须要在重置逻辑之前嗲用
                 if FHFilterRedDotManager.shared.shouldOpenAreaPanel() {
                     //这里暂时只能写死了,为了实现学区房红点
@@ -973,6 +987,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 let ns = items.1.reduce([], { (result, nodes) -> [Node] in
                     result + nodes
                 })
+
+                self.conditions = ns
                 var keys = self.allKeysFromNodes(nodes: ns)
                 let sortKey = self.allSortConditionKeys()
                 //计算所有排序的key
