@@ -308,6 +308,7 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
         let node = getDisplayDatas()[indexPath.section]
         if node.type == .item {
             if let item = node.children?[indexPath.row], let cityId = item.cityId {
