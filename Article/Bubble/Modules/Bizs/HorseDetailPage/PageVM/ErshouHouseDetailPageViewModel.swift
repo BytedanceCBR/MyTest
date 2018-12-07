@@ -357,7 +357,7 @@ import RxCocoa
                     (data.outLineOverreview == nil) ? false : true
                 }
                 <- parseHouseOutlineListNode(data)
-                <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: -10, process: openBeighBor) {
+                <- parseHeaderNode("小区 \(data.neighborhoodInfo?.name ?? "")", subTitle: "查看更多", showLoadMore: data.neighborhoodInfo != nil ? true : false, adjustBottomSpace: 0, process: openBeighBor) {
                     return data.neighborhoodInfo != nil ? true : false
                 }
                 <- parseNeighborhoodInfoNode(data, traceExtension: traceExtension, neighborhoodId: "\(self.houseId)", navVC: self.navVC)

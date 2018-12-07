@@ -35,7 +35,7 @@ class HouseFindSearchBar: UIView {
 
         addSubview(searchIcon)
         searchIcon.snp.makeConstraints { maker in
-            maker.height.width.equalTo(24)
+            maker.height.width.equalTo(16)
             maker.centerY.equalToSuperview()
             maker.left.equalTo(14)
         }

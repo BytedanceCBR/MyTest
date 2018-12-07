@@ -316,7 +316,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }
                 <- parseNeighborhoodPropertyListNode(data, traceExtension: traceExtension, disposeBag: self.disposeBag)
                 <- parseFlineNode((data.baseInfo?.count ?? 0 > 0) ? 6 : 0)
-                <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: -10, process: openEvaluationWeb) {
+                <- parseHeaderNode("小区评测", subTitle: "查看更多", showLoadMore: true, adjustBottomSpace: 0, process: openEvaluationWeb) {
                     return data.evaluationInfo != nil ? true : false
                 }
                 <- parseNeighborhoodEvaluationCollectionNode(

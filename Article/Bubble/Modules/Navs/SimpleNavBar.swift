@@ -154,7 +154,7 @@ class SearchNavBar: UIView {
 
     lazy var searchAreaPanel: UIView = {
         let result = UIView()
-        result.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.layer.masksToBounds = true
         result.layer.cornerRadius = 4
         result.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
@@ -171,7 +171,7 @@ class SearchNavBar: UIView {
     lazy var searchInput: UITextField = {
         let result = UITextField()
         result.background = nil
-        result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.font = CommonUIStyle.Font.pingFangRegular(12)
         result.textColor = hexStringToUIColor(hex: "081f33")
         result.returnKeyType = .search
         result.clearButtonMode = .always
@@ -205,13 +205,13 @@ class SearchNavBar: UIView {
         searchAreaPanel.addSubview(searchInput)
         
         searchIcon.snp.makeConstraints { maker in
-            maker.left.equalTo(4)
+            maker.left.equalTo(10)
             maker.height.width.equalTo(20)
             maker.centerY.equalTo(searchInput)
         }
         
         searchInput.snp.makeConstraints { maker in
-            maker.left.equalTo(searchIcon.snp.right).offset(1)
+            maker.left.equalTo(searchIcon.snp.right).offset(8)
             maker.right.equalToSuperview()
             maker.top.equalToSuperview().offset(5)
             maker.bottom.equalToSuperview().offset(-3)
@@ -232,7 +232,7 @@ class SearchNavBar: UIView {
     func setSearchPlaceHolderText(text: String?) {
         if let text = text {
             let attr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12),
-                        NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f4f5f6")]
+                        NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey3Color)]
             let attrString = NSAttributedString(string: text, attributes: attr)
             searchInput.attributedPlaceholder = attrString
         }
@@ -286,7 +286,7 @@ class CategorySearchNavBar: UIView {
 
     lazy var searchAreaPanel: UIView = {
         let result = UIView()
-        result.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         result.layer.masksToBounds = true
         result.layer.cornerRadius = 4
 //        result.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
@@ -303,7 +303,7 @@ class CategorySearchNavBar: UIView {
     lazy var searchInput: UITextField = {
         let result = UITextField()
         result.background = nil
-        result.font = CommonUIStyle.Font.pingFangRegular(14)
+        result.font = CommonUIStyle.Font.pingFangRegular(12)
         result.textColor = hexStringToUIColor(hex: "081f33")
         result.returnKeyType = .search
         result.clearButtonMode = .always
@@ -389,9 +389,9 @@ class CategorySearchNavBar: UIView {
 
         searchAreaPanel.addSubview(searchIcon)
         searchIcon.snp.makeConstraints { maker in
-            maker.left.equalTo(verticalLineView.snp.right).offset(4)
+            maker.left.equalTo(verticalLineView.snp.right).offset(10)
             maker.centerY.equalToSuperview()
-            maker.height.width.equalTo(20)
+            maker.height.width.equalTo(12)
         }
 
         self.addSubview(mapBtn)
@@ -405,7 +405,7 @@ class CategorySearchNavBar: UIView {
         
         searchAreaPanel.addSubview(searchInput)
         searchInput.snp.makeConstraints { maker in
-            maker.left.equalTo(searchIcon.snp.right).offset(1)
+            maker.left.equalTo(searchIcon.snp.right).offset(8)
             maker.right.equalToSuperview()
             maker.centerY.equalToSuperview()
             maker.height.equalTo(20)
@@ -442,13 +442,13 @@ class CategorySearchNavBar: UIView {
         verticalLineView.isHidden = !isShowSelector
         searchIcon.snp.remakeConstraints { maker in
             if isShowSelector {
-                maker.left.equalTo(verticalLineView.snp.right).offset(4)
+                maker.left.equalTo(verticalLineView.snp.right).offset(10)
             } else {
-                maker.left.equalToSuperview().offset(4)
+                maker.left.equalToSuperview().offset(10)
             }
 
             maker.centerY.equalToSuperview()
-            maker.height.width.equalTo(24)
+            maker.height.width.equalTo(12)
         }
 
 //        searchInput.snp.makeConstraints { maker in
