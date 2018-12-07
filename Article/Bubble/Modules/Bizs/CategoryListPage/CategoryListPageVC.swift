@@ -597,11 +597,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 if tableView.contentOffset.y <= 1 {
                     let height = self?.integratedMessageBar?.height ?? 0
                     var inset = tableView.contentInset
-                    inset.top += height
+                    //current original inset top is 0
+                    inset.top = height
                     tableView.contentInset = inset
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000), execute: {
                         UIView.animate(withDuration: 0.3, animations: {
-                            inset.top -= height
+                            inset.top = 0
                             tableView.contentInset = inset
                         })
                     })
