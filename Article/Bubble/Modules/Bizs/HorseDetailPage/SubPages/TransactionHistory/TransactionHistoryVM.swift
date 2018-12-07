@@ -42,7 +42,6 @@ class TransactionHistoryVM: NSObject, UITableViewDataSource, UITableViewDelegate
 
     func request(neighborhoodId: String) {
         let loader = pageRequestNeighborhoodTotalSales(neighborhoodId: neighborhoodId, count: 15)
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
