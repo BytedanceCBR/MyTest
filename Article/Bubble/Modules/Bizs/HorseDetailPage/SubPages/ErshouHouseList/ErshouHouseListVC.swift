@@ -162,7 +162,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
                 maker.left.right.top.equalToSuperview()
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(44)
             } else {
                 maker.left.right.top.equalToSuperview()
                 maker.height.equalTo(65)
