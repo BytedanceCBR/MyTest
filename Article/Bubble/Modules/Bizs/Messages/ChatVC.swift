@@ -74,7 +74,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
             maker.top.equalTo(navBar.snp.bottom)
             if #available(iOS 11, *) {
 
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-49)
+                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-49)
             } else {
                 maker.bottom.equalToSuperview().offset(-49)
             }
