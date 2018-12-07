@@ -20,6 +20,8 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
     private var cellFactory: UITableViewCellFactory
 
     private let disposeBag = DisposeBag()
+    
+    var onDataLoadCompleted: (() -> Void)?
 
     init(tableView: UITableView) {
         self.tableView = tableView
@@ -42,9 +44,9 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
             self.datas.accept([])
+            self.onDataLoadCompleted?()
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         let loader = pageRequestNewHouseTimeLine(houseId: courtId, count: 15)
         pageableLoader = { [unowned self] in
             loader()
@@ -61,6 +63,7 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
                     }
                     self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
                     EnvContext.shared.toast.dismissToast()
+                    self.onDataLoadCompleted?()
                     },
                     onError: self.processError())
                 .disposed(by: self.disposeBag)
@@ -71,7 +74,7 @@ class FloorPanListViewModel: NSObject, UITableViewDataSource, UITableViewDelegat
     
     func processError() -> (Error?) -> Void {
         return { [weak self] error in
-            
+            self?.onDataLoadCompleted?()
             self?.tableView?.mj_footer.endRefreshing()
             if EnvContext.shared.client.reachability.connection != .none {
                 EnvContext.shared.toast.dismissToast()
