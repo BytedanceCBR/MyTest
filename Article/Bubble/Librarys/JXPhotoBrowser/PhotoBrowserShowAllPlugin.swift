@@ -147,7 +147,7 @@ class PhotoBrowserShowAllPlugin: PhotoBrowserPlugin {
                                      y: bottomOffsetY)
     }
     
-    private var bottomOffsetY: CGFloat {
+    var bottomOffsetY: CGFloat {
         if let bottomY = centerBottomY {
             return bottomY
         }
