@@ -581,6 +581,13 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
+    fileprivate func processDisplayText(queryParams: [String: Any]?) {
+        if let queryParams = queryParams,
+            let associationalWord = queryParams["display_text"] as? String {
+            self.navBar.searchInput.placeholder = associationalWord
+        }
+    }
+
     fileprivate func showTips() -> (String) -> Void {
         return { [weak self] (message) in
             self?.integratedMessageBar?.showMessage(
@@ -799,8 +806,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     return
                 }
 
+                //需要重置非过滤器条件，以及热词placeholder
                 let routeObj = TTRoute.shared()?.routeParamObj(with:url)
                 self?.allParams = routeObj?.allParams as? [String: Any]
+                self?.queryParams = routeObj?.queryParams as? [String : Any]
                 var keys = self?.allKeysFromNodes(nodes: self?.conditions ?? [])
                 if let sortKey = self?.allSortConditionKeys() {
                     //计算所有排序的key
@@ -808,6 +817,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 }
                 if let queryParams = self?.queryParams, let keys = keys {
                     self?.queryString = getNoneFilterConditionString(params: queryParams, conditionsKeys: keys)
+                    self?.processDisplayText(queryParams: queryParams)
+
                 }
                 //这里必须要在重置逻辑之前嗲用
                 if FHFilterRedDotManager.shared.shouldOpenAreaPanel() {
