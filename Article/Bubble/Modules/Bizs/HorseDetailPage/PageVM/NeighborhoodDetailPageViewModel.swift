@@ -542,9 +542,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         var count: String = ""
         switch sameHouseType {
         case .rentHouse:
-            count = "\(rentHouse?.data?.items?.count ?? 0)"
+            count = "\(rentHouse?.data?.total ?? "0")"
         default:
-            count = "\(ershouHouse?.data?.items.count ?? 0)"
+            count = "\(ershouHouse?.data?.total ?? 0)"
         }
         return "小区房源(\(count))"
     }
