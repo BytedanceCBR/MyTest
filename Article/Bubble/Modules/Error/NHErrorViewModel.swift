@@ -52,6 +52,8 @@ enum ErrorType: Int {
     let errorState = BehaviorRelay<ErrorType>(value:.normal) //错误状态
     
     var isInRequest = false
+
+    var retryAction: (() -> Void)?
     
     @objc convenience init(_ errorMask : EmptyMaskView ,
                            retryAction:(() -> Void)? = nil )
@@ -95,7 +97,7 @@ enum ErrorType: Int {
         self.requestErrorImage = requestErrorImage
         self.toastErrorText = toastErrorText
         self.isUserInteractionEnabled = isUserClickEnable
-        
+        self.retryAction = retryAction
         super.init()
         
         if !(isUserClickEnable ?? false)
@@ -117,7 +119,7 @@ enum ErrorType: Int {
                     }
                     if self.errorState.value != .errorNoData && userClick
                     {
-                        retryAction?()
+                        self.retryAction?()
                     }
                 }
             }

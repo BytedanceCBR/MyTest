@@ -45,6 +45,82 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
     return result
 }
 
+fileprivate class FHFindHouseErrorViewModelGroup {
+    private var group: [NHErrorViewModel] = []
+    init() {
+
+    }
+
+    func addController(controller: NHErrorViewModel) {
+        controller.retryAction = { [weak self] in
+            
+        }
+        group.append(controller)
+    }
+
+    func removeAll() {
+        group.removeAll()
+    }
+
+    func onRequest() {
+        group.forEach { $0.onRequest() }
+    }
+
+    func onNetworkUnavailable() {
+        group.forEach {
+            $0.onRequestInvalidNetWork()
+            $0.errorMask.retryBtn.isHidden = false
+        }
+    }
+
+    func onRequestNormalData() {
+        group.forEach { $0.onRequestNormalData() }
+    }
+
+    func onRequestViewDidLoad() {
+        group.forEach { $0.onRequestViewDidLoad() }
+    }
+
+}
+
+fileprivate class FHFindHouseCategoryPageView: UIView {
+
+    private lazy var infoDisplay: EmptyMaskView = {
+        let re = EmptyMaskView()
+        re.isHidden = true
+        return re
+    }()
+
+    fileprivate var errorVM : NHErrorViewModel?
+
+    weak var collectionView: UICollectionView?
+    init(collectionView: UICollectionView, controler: FHFindHouseErrorViewModelGroup) {
+        self.collectionView = collectionView
+        super.init(frame: CGRect.zero)
+        setupUI()
+        let errorViewMocel = NHErrorViewModel(errorMask: infoDisplay)
+        controler.addController(controller: errorViewMocel)
+    }
+
+    func setupUI() {
+        if let collectionView = collectionView {
+
+            addSubview(collectionView )
+            collectionView.snp.makeConstraints({ (make) in
+                make.edges.equalToSuperview()
+            })
+            addSubview(infoDisplay)
+            infoDisplay.snp.makeConstraints { (make) in
+                make.edges.equalToSuperview()
+            }
+        }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     private var stayTabParams = TracerParams.momoid()
@@ -59,6 +135,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate var errorVM : NHErrorViewModel?
 
     fileprivate var pageControl: HouseFindPageControl?
+
+    fileprivate lazy var errorInfoDisplayController: FHFindHouseErrorViewModelGroup = {
+        let re = FHFindHouseErrorViewModelGroup()
+        return re
+    }()
 
     private lazy var searchBtn: UIButton = {
         let re = UIButton()
@@ -111,6 +192,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     private lazy var infoDisplay: EmptyMaskView = {
         let re = EmptyMaskView()
+        re.isUserInteractionEnabled = true
         re.isHidden = true
         return re
     }()
@@ -169,16 +251,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
         self.bindSearchAction()
 
-        if EnvContext.shared.client.configCacheSubject.value != nil {
-            errorVM?.onRequestNormalData()
-        } else {
-            if EnvContext.shared.client.reachability.connection == .none {
-                errorVM?.onRequestViewDidLoad()
-            } else {
-                errorVM?.onRequestNilData()
-            }
-        }
-
         pageControl = HouseFindPageControl(segmentControl: segmentedNav,
                                            pageView: containerView)
         pageControl?.didPageIndexChanged = { [unowned self] index in
@@ -203,6 +275,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         infoDisplay.snp.makeConstraints { (maker) in
             maker.top.bottom.left.right.equalToSuperview()
         }
+        EnvContext.shared.client.reachability.rx.reachabilityChanged
+            .subscribe(onNext: { [weak self] (reachability) in
+                if reachability.connection != .none {
+                    self?.checkingNetworkStateAndShowNetstateInfo()
+                }
+            })
+            .disposed(by: disposeBag)
 
     }
 
@@ -343,7 +422,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         }
         if let config = EnvContext.shared.client.configCacheSubject.value {
             let items = houseTypeSectionByConfig(config: config)
-            let pages = items.map { (item) -> UICollectionView in
+            let pages = items.map { (item) -> FHFindHouseCategoryPageView in
                 let ds = dataSourceByHouseType(houseType: item.houseType)
                 let flowLayout = UICollectionViewFlowLayout()
                 flowLayout.itemSize = CGSize(width: 74, height: 28)
@@ -359,7 +438,9 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 result.delegate = ds
                 result.keyboardDismissMode = .onDrag
                 houseFilterCollectionView[item.houseType] = result
-                return result
+
+                let re = FHFindHouseCategoryPageView(collectionView: result, controler: errorInfoDisplayController)
+                return re
             }
 
             items.forEach { (item) in
@@ -406,12 +487,34 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
             }
 
-            pages.forEach { (collectionView) in
-                self.registerCollectionViewComponent(collectionView: collectionView)
-                collectionView.reloadData()
+            pages.forEach { (view) in
+                if let collectionView = view.collectionView {
+                    self.registerCollectionViewComponent(collectionView: collectionView)
+                    collectionView.reloadData()
+                }
             }
         }
+        checkingNetworkStateAndShowNetstateInfo()
+    }
 
+    func checkingNetworkStateAndShowNetstateInfo() {
+
+        if EnvContext.shared.client.reachability.connection == .none {
+            errorInfoDisplayController.onNetworkUnavailable()
+            searchBtn.isHidden = true
+            searchBar.isHidden = true
+        } else {
+            if EnvContext.shared.client.configCacheSubject.value != nil {
+                errorInfoDisplayController.onRequestNormalData()
+                errorVM?.onRequestNormalData()
+                searchBtn.isHidden = false
+                searchBar.isHidden = false
+            } else {
+                searchBtn.isHidden = true
+                searchBar.isHidden = true
+                errorInfoDisplayController.onNetworkUnavailable()
+            }
+        }
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
