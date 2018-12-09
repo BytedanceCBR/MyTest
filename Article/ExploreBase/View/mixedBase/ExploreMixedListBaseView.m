@@ -681,8 +681,7 @@ TTRefreshViewDelegate
                              [wself fetchFromLocal:![wself tt_hasValidateData] fromRemote:YES getMore:NO];
                              if (![FHHomeConfigManager sharedInstance].currentDataModel)
                              {
-                                 [[FHHomeConfigManager sharedInstance] currentNeedRequestConfig:nil cityGeoCode:nil lat:0 lon:0 cityName:nil];
-                                 [[FHHomeConfigManager sharedInstance] startUpdateLocation];
+                                 [[FHHomeConfigManager sharedInstance] startUpdateAllConfig];
                              }
                          }];
     CGFloat barH = [SSCommonLogic articleNotifyBarHeight];

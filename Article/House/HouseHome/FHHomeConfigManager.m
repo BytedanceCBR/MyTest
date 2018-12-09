@@ -77,9 +77,9 @@
     
 }
 
-- (void)startUpdateLocation
+- (void)startUpdateAllConfig
 {
-    [[[EnvContext shared] client] setupLocationManager];
+    [[[EnvContext shared] client] onStart];
 }
 
 @end
