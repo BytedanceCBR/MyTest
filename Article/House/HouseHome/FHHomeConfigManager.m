@@ -8,6 +8,7 @@
 #import "FHHomeConfigManager.h"
 #import <TTRoute.h>
 #import <TTArticleCategoryManager.h>
+#import "Bubble-Swift.h"
 
 @interface FHHomeConfigManager()
 
@@ -35,7 +36,9 @@
         cityIdNumber = [cityId integerValue];
     }
     [FHMainApi getConfig:cityIdNumber gaodeLocation:CLLocationCoordinate2DMake(latValue, lonValue) gaodeCityId:cityCode gaodeCityName:cityName completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-        
+        self.currentDataModel = model.data;
+        self.currentDictionary = model.data.toDictionary;
+        [self.configDataReplay sendNext:model.data];
     }];
 }
 
@@ -72,8 +75,11 @@
 - (void)updateConfigDataFromCache
 {
     
-    
-    
+}
+
+- (void)startUpdateLocation
+{
+    [[[EnvContext shared] client] setupLocationManager];
 }
 
 @end

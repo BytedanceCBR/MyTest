@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openCategoryFeedStart;
 
+- (void)startUpdateLocation;
+
 @end
 
 NS_ASSUME_NONNULL_END
