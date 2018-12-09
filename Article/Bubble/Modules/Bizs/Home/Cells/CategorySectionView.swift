@@ -122,9 +122,12 @@ class CategorySectionView: UIView {
                 {
                     if let typeValueStr = self?.userSelectedCache?.object(forKey: "userdefaultselect") as? String
                     {
-                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue)
+                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue), housetypelistV.contains(Int(typeValueStr) ?? typeValue.rawValue)
                         {
                             self?.houseTypeRelay.accept(userSelectType)
+                        }else
+                        {
+                            self?.houseTypeRelay.accept(typeValue)
                         }
                     }else
                     {
@@ -153,6 +156,9 @@ class CategorySectionView: UIView {
             if let userSelectIndex = Int(typeValueStr), sectionTitleArray.count > userSelectIndex
             {
                 segmentedControl.selectedSegmentIndex = userSelectIndex
+            }else
+            {
+                segmentedControl.selectedSegmentIndex = 0
             }
         }else
         {
