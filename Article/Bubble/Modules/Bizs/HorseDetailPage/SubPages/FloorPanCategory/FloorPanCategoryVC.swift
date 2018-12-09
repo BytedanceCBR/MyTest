@@ -170,6 +170,9 @@ class FloorPanCategoryVC: BaseSubPageViewController, UIViewControllerErrorHandle
 //        self.errorVM?.onRequest()
         self.tt_startUpdate()
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
+        self.floorPanCategoryViewModel?.onRequestFinished = { [weak self] in
+            self?.tt_endUpdataData()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

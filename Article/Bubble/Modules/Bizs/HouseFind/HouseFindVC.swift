@@ -304,7 +304,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 if UIScreen.main.bounds.width < 370 {
                     sideMargin = 90
                 } else {
-                    sideMargin = 110
+                    sideMargin = 100
                 }
             }
         }
