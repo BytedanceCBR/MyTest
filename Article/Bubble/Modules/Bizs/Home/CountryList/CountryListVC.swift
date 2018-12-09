@@ -245,10 +245,6 @@ class CountryListVC: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    deinit {
-        print("deinit")
-    }
-
 }
 
 class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
