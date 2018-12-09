@@ -491,7 +491,7 @@ func fillSameHouseItemListCell(_ title: String,
                                tracerParams: TracerParams,
                                cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? FHSameHouseItemListCell {
-        
+        theCell.titleLabel.text = title
         theCell.navVC = navVC
         theCell.tracerParams = tracerParams
         theCell.ershouFooter?.openAllBtn.rx.tap
@@ -539,7 +539,6 @@ func fillSameHouseItemListCell(_ title: String,
         if ershouData.count > 0 { //有二手房源
             theCell.houseType = .secondHandHouse
 
-            theCell.titleLabel.text = "小区房源(\(ershouData.count))"
             if rentData.count > 0 { //同时也有租房房源
                 
                 theCell.ershouBtn.isHidden = false
@@ -568,7 +567,6 @@ func fillSameHouseItemListCell(_ title: String,
             }
         } else if rentData.count > 0 { //仅有租房
 
-            theCell.titleLabel.text = "小区房源(\(rentData.count))"
             theCell.houseType = .rentHouse
             theCell.ershouBtn.isHidden = true
             theCell.rentBtn.isHidden = false

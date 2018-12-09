@@ -427,10 +427,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     itemTracerParams: theParams <|> toTracerParams("neighborhood_detail", key: "page_type") <|> toTracerParams("neighborhood", key: "house_type"),
                     navVC: navVC)
                 <- parseFlineNode(relateNeighborhoodData.value?.data?.total ?? 0 > 0 ? 6 : 0)
-//                <- parseHeaderNode((houseInSameNeighborhood.value?.data?.hasMore ?? false) ? "小区房源"  : "小区房源(\(houseInSameNeighborhood.value?.data?.total ?? 0))") { [unowned self] in
-//                    self.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
-//                }
-                <- parseSameHouseItemListNode("小区房源",
+                <- parseSameHouseItemListNode(getTitleOfSameHouse(sameHouseType: self.dataSource.sameHouseType,
+                                                                  ershouHouse: houseInSameNeighborhood.value,
+                                                                  rentHouse: rentHouseInSameNeighborhood.value),
                                               navVC: navVC,
                                               ershouData: houseInSameNeighborhood.value?.data?.items,
                                               ershouDataTotal: houseInSameNeighborhood.value?.data?.total ?? 0,
@@ -535,6 +534,19 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         } else {
             return DetailDataParser.monoid().parser
         }
+    }
+
+    fileprivate func getTitleOfSameHouse(sameHouseType: HouseType,
+                                         ershouHouse: SameNeighborhoodHouseResponse?,
+                                         rentHouse: FHRentSameNeighborhoodResponseModel?) -> String {
+        var count: String = ""
+        switch sameHouseType {
+        case .rentHouse:
+            count = "\(rentHouse?.data?.items?.count ?? 0)"
+        default:
+            count = "\(ershouHouse?.data?.items.count ?? 0)"
+        }
+        return "小区房源(\(count))"
     }
     
     fileprivate func openTransactionHistoryPage(
