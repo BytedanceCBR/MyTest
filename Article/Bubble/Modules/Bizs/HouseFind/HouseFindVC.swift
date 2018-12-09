@@ -69,7 +69,7 @@ fileprivate class FHFindHouseErrorViewModelGroup {
     func onNetworkUnavailable() {
         group.forEach {
             $0.onRequestInvalidNetWork()
-            $0.errorMask.retryBtn.isHidden = false
+            $0.errorMask?.retryBtn.isHidden = false
         }
     }
 
@@ -380,6 +380,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func bindSearchConfigObv() {
         EnvContext.shared.client.configCacheSubject
             .subscribe(onNext: { [weak self] _ in
+                self?.errorInfoDisplayController.removeAll()
                 self?.adjustSegmentNav()
                 self?.setupSectionLabelByConfig()
                 self?.createPageViews()

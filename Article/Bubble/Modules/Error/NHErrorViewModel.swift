@@ -21,7 +21,7 @@ enum ErrorType: Int {
 }
 
 @objc class NHErrorViewModel: NSObject {
-    weak var errorMask: EmptyMaskView!
+    weak var errorMask: EmptyMaskView?
     
     var isHaveData: Bool?
     
@@ -88,7 +88,7 @@ enum ErrorType: Int {
         isViewDidLoad = true
         self.isRequestError = false
         self.errorMask = errorMask
-        self.errorMask.isHidden = true
+        self.errorMask?.isHidden = true
         self.requestRetryText = requestRetryText
         self.requestRetryImage = requestRetryImage
         self.requestNilDataText = requestNilDataText
@@ -102,10 +102,10 @@ enum ErrorType: Int {
         
         if !(isUserClickEnable ?? false)
         {
-            self.errorMask.retryBtn.isHidden = true
+            self.errorMask?.retryBtn.isHidden = true
         }else
         {
-            self.errorMask.retryBtn.isHidden = false
+            self.errorMask?.retryBtn.isHidden = false
         }
         
         errorMask.tapGesture.rx.event
@@ -171,16 +171,16 @@ enum ErrorType: Int {
     //默认初始状态
     private func resetState()
     {
-        self.errorMask.isHidden = false
+        self.errorMask?.isHidden = false
         self.netState.accept(true)
-        self.errorMask.label.text = self.requestRetryText
+        self.errorMask?.label.text = self.requestRetryText
         if let requestRetryImage = self.requestRetryImage{
-            self.errorMask.icon.image = UIImage(named:requestRetryImage)
+            self.errorMask?.icon.image = UIImage(named:requestRetryImage)
         }
         if errorState.value == .errorRetry && (self.isUserInteractionEnabled ?? false)
         {
-            self.errorMask.retryBtn.isUserInteractionEnabled = true
-            self.errorMask.retryBtn.isHidden = false
+            self.errorMask?.retryBtn.isUserInteractionEnabled = true
+            self.errorMask?.retryBtn.isHidden = false
         }
     }
     
@@ -192,17 +192,17 @@ enum ErrorType: Int {
             break
         case .errorNoData:
             self.isHaveData = false
-            self.errorMask.label.text = self.requestNilDataText
+            self.errorMask?.label.text = self.requestNilDataText
             if let requestNilDataImageV = self.requestNilDataImage
             {
-                self.errorMask.icon.image = UIImage(named:requestNilDataImageV)
+                self.errorMask?.icon.image = UIImage(named:requestNilDataImageV)
             }
             
-            self.errorMask.isHidden = false
+            self.errorMask?.isHidden = false
             self.netState.accept(false)
             break
         case .errorHaveDataNoNet:
-            self.errorMask.isHidden = true
+            self.errorMask?.isHidden = true
             if let toastErrorTextV = self.toastErrorText{
                 EnvContext.shared.toast.showToast(toastErrorTextV)
             }
@@ -210,24 +210,24 @@ enum ErrorType: Int {
             if (self.isUserInteractionEnabled ?? false)
             {
                 if let requestRetryImage = self.requestRetryImage{
-                    self.errorMask.icon.image = UIImage(named:requestRetryImage)
+                    self.errorMask?.icon.image = UIImage(named:requestRetryImage)
                 }
-                self.errorMask.retryBtn.isUserInteractionEnabled = true
-                self.errorMask.retryBtn.isHidden = false
+                self.errorMask?.retryBtn.isUserInteractionEnabled = true
+                self.errorMask?.retryBtn.isHidden = false
             }
             break
         case .errorRequest:
-            self.errorMask.label.text = self.requestErrorText
-            self.errorMask.retryBtn.isHidden = true
+            self.errorMask?.label.text = self.requestErrorText
+            self.errorMask?.retryBtn.isHidden = true
             self.netState.accept(true)
-            self.errorMask.isHidden = false
+            self.errorMask?.isHidden = false
             if let requestImageV = self.requestErrorImage{
-                self.errorMask.icon.image = UIImage(named:requestImageV)
+                self.errorMask?.icon.image = UIImage(named:requestImageV)
             }
             isRequestError = true
             break
         case .normal:
-            self.errorMask.isHidden = true
+            self.errorMask?.isHidden = true
             break
         default:
             break
@@ -255,7 +255,7 @@ enum ErrorType: Int {
             self.resetState()
         }else
         {
-            self.errorMask.isHidden = true
+            self.errorMask?.isHidden = true
             self.netState.accept(false)
         }
     }
@@ -263,12 +263,12 @@ enum ErrorType: Int {
     @objc func onRequestError(error: Error?) {
         isInRequest = false
         
-        self.errorMask.label.text = self.requestErrorText
-        self.errorMask.retryBtn.isHidden = true
+        self.errorMask?.label.text = self.requestErrorText
+        self.errorMask?.retryBtn.isHidden = true
         self.netState.accept(true)
-        self.errorMask.isHidden = false
+        self.errorMask?.isHidden = false
         if let requestImageV = self.requestErrorImage{
-            self.errorMask.icon.image = UIImage(named:requestImageV)
+            self.errorMask?.icon.image = UIImage(named:requestImageV)
         }
         //        errorState.accept(.errorRequest)
         isRequestError = true
@@ -280,12 +280,12 @@ enum ErrorType: Int {
         isInRequest = false
         
         self.isHaveData = false
-        self.errorMask.label.text = self.requestNilDataText
+        self.errorMask?.label.text = self.requestNilDataText
         if let requestNilDataImage = self.requestNilDataImage{
-            self.errorMask.icon.image = UIImage(named:requestNilDataImage)
+            self.errorMask?.icon.image = UIImage(named:requestNilDataImage)
         }
-        self.errorMask.retryBtn.isHidden = true
-        self.errorMask.isHidden = false
+        self.errorMask?.retryBtn.isHidden = true
+        self.errorMask?.isHidden = false
         self.netState.accept(false)
         errorState.accept(.errorNoData)
     }
@@ -297,7 +297,11 @@ enum ErrorType: Int {
     @objc func onRequestNormalData() {
         isInRequest = false
         self.isHaveData = true
-        self.errorMask.isHidden = true
+        if let errorMask = self.errorMask {
+            self.errorMask?.isHidden = true
+        } else {
+            assertionFailure("errorMaskView已经被释放，疑似有内存泄漏问题造成回调")
+        }
         self.netState.accept(false)
     }
     

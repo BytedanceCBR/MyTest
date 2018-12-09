@@ -972,7 +972,15 @@ extension FWSegmentedControl {
                         return CGRect(x: selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + (CGFloat(currentSegmentWidth) - contentWidth) / 2, y: indicatorYOffset, width: contentWidth - self.selectionIndicatorEdgeInsets.right, height: self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom)
                     }
                     else if self.scSelectionIndicatorStyle == .fullWidthStripe || self.scSelectionIndicatorStyle == .box {
-                        return CGRect(x: selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, y: indicatorYOffset, width: CGFloat(self.segmentWidthsArray![self.selectedSegmentIndex].floatValue) - self.selectionIndicatorEdgeInsets.right, height: self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom)
+                        if let segmentWidthsArray = self.segmentWidthsArray, segmentWidthsArray.count > self.selectedSegmentIndex {
+                            return CGRect(
+                                x: selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left,
+                                y: indicatorYOffset,
+                                width: CGFloat(self.segmentWidthsArray![self.selectedSegmentIndex].floatValue) - self.selectionIndicatorEdgeInsets.right,
+                                height: self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom)
+                        } else {
+                            return CGRect.zero
+                        }
                     }
                 }
 //                return CGRect(x: (self.segmentWidth + self.selectionIndicatorEdgeInsets.left) * CGFloat(self.selectedSegmentIndex), y: indicatorYOffset, width: self.segmentWidth - self.selectionIndicatorEdgeInsets.right  - self.selectionIndicatorEdgeInsets.left, height: self.selectionIndicatorHeight)
