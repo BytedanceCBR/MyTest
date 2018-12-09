@@ -288,6 +288,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
                 if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
                     [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                    [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
                 }else
                 {
@@ -446,7 +447,15 @@ static NSMutableArray  * _Nullable identifierArr;
             
             if (itemModel.openUrl) {
                 NSURL *url = [NSURL URLWithString:itemModel.openUrl];
-                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                
+                if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                    [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                    [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                }else
+                {
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                }
             }
         }
     };

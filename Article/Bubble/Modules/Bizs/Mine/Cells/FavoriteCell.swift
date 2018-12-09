@@ -528,6 +528,7 @@ fileprivate func openTTRouterUrl(
             if openUrl.contains("snssdk1370://category_feed")
             {
                 FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdate = true
+                FHHomeConfigManager.sharedInstance().isTraceClickIcon = true
                 TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: nil)
             }else
             {

@@ -972,6 +972,7 @@ TTRefreshViewDelegate
     NSUInteger originalCount = [_fetchListManager.items count];
     [_fetchListManager refreshItemsForListType:_listType];
 
+    
 //    if ([self.categoryID isEqualToString:kTTFollowCategoryID] &&  [KitchenMgr getBOOL:kKUGCFollowCategoryClearUnFollowThreadEnable]) {
 //        [_fetchListManager checkFollowCategoryFollowStatus];
 //    }
@@ -1258,7 +1259,12 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            return 1;
+            if (_fetchListManager.items.count > 0) {
+                return 1;
+            }else
+            {
+                return 0;
+            }
         }
         return 0;
     }else
