@@ -164,13 +164,13 @@ class CountryListVC: BaseViewController {
                                                                                                params: params ?? [:])
             locationResponseObv
                 .subscribe(onNext: { [unowned self] response in
-                    
+
                     let params = (self.dataSource.tracerParams ?? TracerParams.momoid()) <|>
                         toTracerParams("location", key: "query_type") <|>
                         toTracerParams(response?.data?.currentCityName ?? "be_null", key: "city")
-                    
+
                     recordEvent(key: "city_filter", params: params)
-                    
+
                     let generalBizConfig = EnvContext.shared.client.generalBizconfig
                     // 只在用户没有选择城市时才回设置城市
                     if let currentCityId = response?.data?.currentCityId {
@@ -182,31 +182,20 @@ class CountryListVC: BaseViewController {
                         FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
 
                     }
-                    
+
                     generalBizConfig.generalCacheSubject.accept(response?.data)
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                     }
 
                     //TODO: 暂时的解决方案，需要也加入到switcher中去
-                    requestSearchFilterConfig()
+                    self.requestSearchFilterConfig()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })
                 .disposed(by: self.requestDisposeBag)
         }
 
-        func requestSearchFilterConfig() {
-            requestSearchConfig()
-                .timeout(5, scheduler: MainScheduler.instance)
-                .subscribe(onNext: { (response) in
-                    EnvContext.shared.client.configCacheSubject.accept(response?.data)
-                }, onError: { (error) in
-                    EnvContext.shared.toast.showToast("加载失败")
-                })
-                .disposed(by: self.requestDisposeBag)
-        }
-        
         locationBar.countryBtn.rx.tap
             .subscribe(onNext: {
 
@@ -218,7 +207,18 @@ class CountryListVC: BaseViewController {
 
             })
             .disposed(by: self.disposeBag)
-        
+
+    }
+
+    func requestSearchFilterConfig() {
+        requestSearchConfig()
+            .timeout(5, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.client.configCacheSubject.accept(response?.data)
+            }, onError: { (error) in
+                EnvContext.shared.toast.showToast("加载失败")
+            })
+            .disposed(by: self.requestDisposeBag)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -227,7 +227,7 @@ class CountryListVC: BaseViewController {
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined, .restricted, .denied:
             break
-            
+
         case .authorizedWhenInUse, .authorizedAlways:
             if self.locationBar.countryLabel.text == "定位失败"
             {
@@ -243,6 +243,10 @@ class CountryListVC: BaseViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    deinit {
+        print("deinit")
     }
 
 }
