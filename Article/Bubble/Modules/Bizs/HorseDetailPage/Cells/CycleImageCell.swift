@@ -210,7 +210,6 @@ class CycleImageCell: BaseUITableViewCell {
 
     var headerImages: [ImageModel] = [] {
         didSet {
-            print("\(headerImages)");
             if let thePageVM = pageableViewModel {
                 
                 thePageVM.reloadData(currentPageOnly: false)
@@ -255,9 +254,6 @@ class CycleImageCell: BaseUITableViewCell {
                     
                     theTracerParams = theTracerParams <|> theParams
                 }
-                
-                print("rentSmallImageTracerGen  tracePrams=\(theTracerParams.paramsGetter([:]))")
-
                 
                 let offset = CycleImageCell.offsetByIndex(index: index, count: self.headerImages.count)
                 let imageModel = images[offset]
