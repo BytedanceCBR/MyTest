@@ -7,7 +7,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-class FloorPanCategoryVC: BaseSubPageViewController {
+class FloorPanCategoryVC: BaseSubPageViewController, UIViewControllerErrorHandler {
 
     var floorPanId: String
     
@@ -168,6 +168,7 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         self.errorVM?.onRequestViewDidLoad()
         //FIXME: uncomment this
 //        self.errorVM?.onRequest()
+        self.tt_startUpdate()
         floorPanCategoryViewModel?.request(courtId: Int64(floorPanId)!)
     }
 
@@ -190,4 +191,9 @@ class FloorPanCategoryVC: BaseSubPageViewController {
         }
         EnvContext.shared.toast.dismissToast()
     }
+
+    func tt_hasValidateData() -> Bool {
+        return self.floorPanCategoryViewModel?.items.value.count ?? 0 > 0
+    }
+
 }

@@ -569,6 +569,7 @@ fileprivate class CityItemCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         contentView.addSubview(label)
         label.snp.makeConstraints { maker in
             maker.left.equalTo(24)

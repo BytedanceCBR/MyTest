@@ -49,7 +49,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
 
     private let datas: BehaviorRelay<[TableRowNode]> = BehaviorRelay(value: [])
 
-    private let items: BehaviorRelay<[FloorPan.Item]> = BehaviorRelay<[FloorPan.Item]>(value: [])
+    let items: BehaviorRelay<[FloorPan.Item]> = BehaviorRelay<[FloorPan.Item]>(value: [])
 
     private let disposeBag = DisposeBag()
 
@@ -66,6 +66,8 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     var logPB: Any?
     
     var isHiddenBottomBar: Bool
+
+    var onRequestFinished: (() -> Void)?
 
     init(tableView: UITableView,
          navVC: UINavigationController?,
@@ -162,15 +164,17 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     func request(courtId: Int64) {
         if EnvContext.shared.client.reachability.connection == .none
         {
+            self.onRequestFinished?()
             return
         }
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         requestNewHouseFloorPan(houseId: courtId)
                 .subscribe(onNext: { [unowned self] response in
                     if let its = response?.data?.list {
                         self.items.accept(its)
                     }
-                    EnvContext.shared.toast.dismissToast()
+                    self.onRequestFinished?()
+                }, onError: { [unowned self] error in
+                    self.onRequestFinished?()
                 })
                 .disposed(by: disposeBag)
     }

@@ -7,7 +7,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 // 楼盘信息
-class FloorPanInfoVC: BaseSubPageViewController {
+class FloorPanInfoVC: BaseSubPageViewController, UIViewControllerErrorHandler {
 
     let floorPanId: String
 
@@ -44,37 +44,33 @@ class FloorPanInfoVC: BaseSubPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        self.tableView.contentInset = UIEdgeInsets(top: 0,
+                                                   left: 0,
+                                                   bottom: 0,
+                                                   right: 0)
         
         if EnvContext.shared.client.reachability.connection == .none {
             infoMaskView.isHidden = false
             infoMaskView.label.text = "网络异常"
         } else {
+            self.tt_startUpdate()
             self.floorPanInfoViewModel?.request(
                 floorPanId: floorPanId,
                 newHouseData: newHouseData)
         }
 
-//        infoMaskView.tapGesture.rx.event
-//            .bind { [unowned self] (_) in
-//                if EnvContext.shared.client.reachability.connection == .none {
-//                    // 无网络时直接返回空，不请求
-//                    EnvContext.shared.toast.showToast("网络异常")
-//                    return
-//                }
-//                self.floorPanInfoViewModel?.request(
-//                    floorPanId: self.floorPanId,
-//                    newHouseData: self.newHouseData)
-//            }
-//            .disposed(by: disposeBag)
+        self.floorPanInfoViewModel?.datas
+            .skip(1)
+            .bind(onNext: { [unowned self] (datas) in
+                if datas.count > 0 {
+                    self.infoMaskView.isHidden = true
+                }
+                self.tt_endUpdataData()
+            })
+            .disposed(by: disposeBag)
 
-        self.floorPanInfoViewModel?.datas.bind(onNext: { [unowned self] (datas) in
-            if datas.count > 0 {
-                self.infoMaskView.isHidden = true
-            }
-        })
-        .disposed(by: disposeBag)
-        tracerParams = (EnvContext.shared.homePageParams <|> tracerParams <|>
+        tracerParams = (EnvContext.shared.homePageParams <|>
+            tracerParams <|>
             toTracerParams("house_info_detail", key: "page_type") <|>
             toTracerParams("new_detail", key: "enter_from") <|>
             toTracerParams("house_info", key: "element_from") <|>
@@ -82,7 +78,8 @@ class FloorPanInfoVC: BaseSubPageViewController {
             beNull(key: "rank") <|>
             beNull(key: "card_type")).exclude("house_type")
 
-        stayTimeParams = tracerParams <|> traceStayTime()
+        stayTimeParams = tracerParams <|>
+            traceStayTime()
 
         recordEvent(key: "go_detail", params: self.tracerParams)
     }
@@ -97,4 +94,7 @@ class FloorPanInfoVC: BaseSubPageViewController {
         self.stayTimeParams = nil
     }
 
+    func tt_hasValidateData() -> Bool {
+        return self.floorPanInfoViewModel?.datas.value.count ?? 0 > 0
+    }
 }

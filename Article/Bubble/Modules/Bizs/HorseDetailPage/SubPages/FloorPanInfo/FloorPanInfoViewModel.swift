@@ -36,7 +36,6 @@ class FloorPanInfoViewModel: NSObject, UITableViewDelegate, UITableViewDataSourc
     }
 
     func request(floorPanId: String, newHouseData: NewHouseData) {
-        EnvContext.shared.toast.showLoadingToast("正在加载")
         if let floorPanId = Int64(floorPanId) {
             requestNewHouseMoreDetail(houseId: floorPanId)
                     .subscribe(onNext: { [unowned self] response in
