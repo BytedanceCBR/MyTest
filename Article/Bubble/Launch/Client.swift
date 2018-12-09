@@ -29,6 +29,10 @@ extension Notification.Name {
         YYCache(name: "phonenumber")
     }()
     
+    var userCurrentCityText: YYCache? = {
+        YYCache(name: "currentcitytext")
+    }()
+    
     let configCacheSubject = BehaviorRelay<SearchConfigResponseData?>(value: nil)
 
     let disposeBag = DisposeBag()

@@ -71,8 +71,6 @@ class CategorySectionView: UIView {
         segmentedControl.indexChangeBlock = {[weak self] index in
             if let titleArray = self?.sectionTitleArray
             {
-                self?.userSelectedCache?.setObject(String(index) as NSCoding, forKey: "userdefaultselectindex")
-                
                 if titleArray[index] == HouseType.secondHandHouse.stringValue()
                 {
                     self?.houseTypeRelay.accept(.secondHandHouse)
@@ -95,8 +93,6 @@ class CategorySectionView: UIView {
                 }
             }
         }
-        
-        
         
         addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints{ maker in
@@ -122,9 +118,12 @@ class CategorySectionView: UIView {
                 {
                     if let typeValueStr = self?.userSelectedCache?.object(forKey: "userdefaultselect") as? String
                     {
-                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue)
+                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue), housetypelistV.contains(Int(typeValueStr) ?? typeValue.rawValue)
                         {
                             self?.houseTypeRelay.accept(userSelectType)
+                        }else
+                        {
+                            self?.houseTypeRelay.accept(typeValue)
                         }
                     }else
                     {
@@ -143,22 +142,23 @@ class CategorySectionView: UIView {
     
     func updateSegementLayOut() {
         segmentedControl.snp.updateConstraints{ maker in
-            maker.width.equalTo(sectionTitleArray.count == 1 ? 45 : sectionTitleArray.count * 55)
+            maker.width.equalTo(sectionTitleArray.count * 55)
         }
         
         segmentedControl.sectionTitleArray = sectionTitleArray
         
-        if let typeValueStr = self.userSelectedCache?.object(forKey: "userdefaultselectindex") as? String
+        if let typeValueStr = self.userSelectedCache?.object(forKey: "userdefaultselect") as? String
         {
-            if let userSelectIndex = Int(typeValueStr), sectionTitleArray.count > userSelectIndex
+            if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? HouseType.secondHandHouse.rawValue)
             {
-                segmentedControl.selectedSegmentIndex = userSelectIndex
+                segmentedControl.selectedSegmentIndex = sectionTitleArray.index(of: matchHouseTypeName(houseTypeV: userSelectType)) ?? 0
             }
         }else
         {
             segmentedControl.selectedSegmentIndex = 0
         }
         
+        self.userSelectedCache?.setObject(String(self.houseTypeRelay.value.rawValue) as NSCoding, forKey: "userdefaultselect")
     }
     
     required init?(coder aDecoder: NSCoder) {

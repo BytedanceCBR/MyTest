@@ -58,6 +58,7 @@ class NIHSearchPanelViewModel: NSObject {
             .subscribe(onNext: { [unowned self] (city) in
                 if let city = city {
                     self.suspendSearchBar.countryLabel.text = city
+                    EnvContext.shared.client.userCurrentCityText?.setObject(city as NSCoding, forKey: "usercurrentcity")
                 } else {
                     if self.suspendSearchBar.countryLabel.text == "", self.suspendSearchBar.countryLabel.text == "深圳"
                     {

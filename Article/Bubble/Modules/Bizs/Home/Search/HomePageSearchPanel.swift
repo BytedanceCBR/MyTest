@@ -21,7 +21,13 @@ class HomePageSearchPanel: UIView {
         label.font = CommonUIStyle.Font.pingFangSemibold(14)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.numberOfLines = 1
-        label.text = "深圳"
+        if let city = EnvContext.shared.client.userCurrentCityText?.object(forKey: "usercurrentcity") as? String
+        {
+            label.text = city
+        }else
+        {
+            label.text = "深圳"
+        }
         return label
     }()
 
