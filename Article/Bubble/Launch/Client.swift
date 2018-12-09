@@ -163,7 +163,7 @@ extension Notification.Name {
         
         let categoryStartName = SSCommonLogic.feedStartCategory()
         
-        if categoryStartName != "f_house_news" {
+        if categoryStartName != "f_house_news", categoryStartName != nil{
             //请求推荐频道是否显示红点
             self.messageManager.startSyncCategoryBadge()
         }
