@@ -29,6 +29,7 @@
 #import "TTRelevantDurationTracker.h"
 #import <TTMonitor.h>
 #import "Bubble-Swift.h"
+#import "FHHomeConfigManager.h"
 
 @interface MyCollectionView : UICollectionView
 
@@ -416,8 +417,14 @@ TTFeedCollectionCellDelegate>
             [dict setValue:category.categoryID forKey:@"category_name"];
             [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dict setValue:userDrag?@"flip":@"click" forKey:@"enter_type"];
+            if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
+            {
+                [dict setValue:userDrag?@"flip":@"click_icon" forKey:@"enter_type"];
+                [FHHomeConfigManager sharedInstance].isTraceClickIcon = NO;
+            }
             [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
             
+
             if ([category.categoryID isEqualToString:@"f_find_house"])
             {
                 [dict setValue:@"maintab_list" forKey:@"element_from"];

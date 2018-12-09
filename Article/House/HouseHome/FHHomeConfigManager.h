@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHConfigDataModel *currentDataModel;
 @property(nonatomic , strong) NSDictionary *currentDictionary;
 @property (nonatomic,assign)BOOL isNeedTriggerPullDownUpdate;
+@property (nonatomic,assign)BOOL isTraceClickIcon;
 
 +(instancetype)sharedInstance;
 //从原有数据源接收数据
