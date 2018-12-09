@@ -348,6 +348,10 @@
 
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
 
+    replyManager.enterFrom = self.enterFrom;
+    replyManager.categoryID = self.categoryID;
+    replyManager.logPb = self.logPb;
+    
     replyManager.serviceID = self.pageState.serviceID;
     TTCommentWriteView *replyView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
 

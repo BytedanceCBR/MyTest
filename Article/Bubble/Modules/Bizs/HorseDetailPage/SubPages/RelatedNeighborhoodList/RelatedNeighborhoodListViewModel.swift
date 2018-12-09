@@ -23,8 +23,6 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel, TableViewTracer {
             return
         }
         
-        EnvContext.shared.toast.showLoadingToast("正在加载")
-        
         let loader = pageRequestRelatedNeighborhoodSearch(
             neighborhoodId: neighborhoodId,
             searchId: searchId,

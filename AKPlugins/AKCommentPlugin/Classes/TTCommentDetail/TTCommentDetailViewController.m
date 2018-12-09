@@ -110,6 +110,17 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
     //一个trick的实现，转发需求临时方案，先把文章信息带到评论详情页 //xushuangqing....
     _article = [baseCondition tt_objectForKey:@"group" ofClass:[Article class]];
+
+    self.enterFrom = baseCondition[@"enterFrom"];
+    self.categoryID = baseCondition[@"categoryID"];
+    self.logPb = baseCondition[@"logPb"];
+
+    self.store.enterFrom = self.enterFrom;
+    self.store.categoryID = self.categoryID;
+    self.store.logPb = self.logPb;
+
+    
+    
 }
 
 - (void)trySendCurrentPageStayTime {
@@ -283,6 +294,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [logv3Dic setValue:self.recommendReason forKey:@"recommend_reason"];
         [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
     }
+    
+    self.store.enterFrom = self.enterFrom;
+    self.store.categoryID = self.categoryID;
+    self.store.logPb = self.logPb;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

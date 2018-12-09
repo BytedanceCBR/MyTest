@@ -191,8 +191,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 }
                 self.handleScroll(houseType: self.houseType.value)
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
+                self.adjustBackgroundVerticalPositionToTop()
             }
         }
+
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
@@ -216,14 +218,22 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     }
 
-    fileprivate func setupViews() {
+    fileprivate func getSideMargin() -> CGFloat {
         var sideMargin: CGFloat = 30
         if let config = EnvContext.shared.client.configCacheSubject.value {
             if houseTypeSectionByConfig(config: config).count < 3 {
-                sideMargin = 110
+                if UIScreen.main.bounds.width < 370 {
+                    sideMargin = 90
+                } else {
+                    sideMargin = 110
+                }
             }
         }
+        return sideMargin
+    }
 
+    fileprivate func setupViews() {
+        let sideMargin = getSideMargin()
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
@@ -269,13 +279,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func adjustSegmentNav() {
-        var sideMargin: CGFloat = 30
-        if let config = EnvContext.shared.client.configCacheSubject.value {
-            if houseTypeSectionByConfig(config: config).count < 3 {
-                sideMargin = 110
-            }
-        }
 
+        let sideMargin = getSideMargin()
         segmentedNav.snp.remakeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
@@ -388,10 +393,19 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             pages.forEach { (view) in
                 self.containerView.addSubview(view)
             }
+
             pages.snp.makeConstraints { (make) in
                 make.top.bottom.width.height.equalToSuperview()
+                //如果只有一个page，则不执行批量均分布局
+                if pages.count == 1 {
+                    make.left.equalToSuperview()
+                }
             }
-            pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+
+            if pages.count > 0 {
+                pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            }
+
             pages.forEach { (collectionView) in
                 self.registerCollectionViewComponent(collectionView: collectionView)
                 collectionView.reloadData()
@@ -588,6 +602,15 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     fileprivate func adjustVerticalPositionToTop() {
         self.houseFilterCollectionView[houseType.value]?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
+    }
+
+    fileprivate func adjustBackgroundVerticalPositionToTop() {
+        self.houseFilterCollectionView
+            .filter { $0.key != houseType.value }
+            .forEach { (e) in
+                let (_, collectionView) = e
+                collectionView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 100, height: 100), animated: false)
+            }
     }
 
     fileprivate func requestHistory(houseType: String? = nil) {

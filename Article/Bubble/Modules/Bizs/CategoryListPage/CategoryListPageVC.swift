@@ -147,6 +147,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         return re
     }()
 
+    private var conditions: [Node]?
+
     var searchSortBtn: UIButton = {
         let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "sort"), for: .normal)
@@ -263,16 +265,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self.tableView.estimatedSectionFooterHeight = 0
 
         }
-
-//        self.tableView.addPullDown(
-//            withInitText: "下拉刷新数据",
-//            pullText: "松开即可刷新",
-//            loadingText: "正在努力加载",
-//            noMoreText: "没有更多数据",
-//            timeText: "",
-//            lastTimeKey: "") { [weak self] in
-//                self?.pullAndRefresh()
-//        }
 
         self.errorVM = NHErrorViewModel(
             errorMask:infoMaskView,
@@ -556,6 +548,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["full_text"] {
+            print("process: \(associationalWord)")
+            print("process: queryParams \(queryParams)")
             self.navBar.setSearchPlaceHolderText(text: getPlaceholderText(
                 inputText: associationalWord as? String,
                 inputField: self.navBar.searchInput))
@@ -576,6 +570,14 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.navBar.setSearchPlaceHolderText(text: placeholder)
             }
             self.navBar.searchInput.text = nil
+        }
+    }
+
+    fileprivate func processDisplayText(queryParams: [String: Any]?) {
+        if let queryParams = queryParams,
+            let associationalWord = queryParams["display_text"] as? String {
+            self.navBar.searchInput.placeholder = associationalWord.removingPercentEncoding
+            self.queryParams?["display_text"] = associationalWord.removingPercentEncoding
         }
     }
 
@@ -626,7 +628,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         var elementName = (selectTraceParam(self.tracerParams, key: "element_from") as? String) ?? "be_null"
         let originFrom = (selectTraceParam(self.tracerParams, key: "origin_from") as? String) ?? "be_null"
         let originSearchId = self.categoryListViewModel?.originSearchId ?? "be_null"
-        let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
+//        let enterCategory =  (selectTraceParam(self.tracerParams, key: TraceEventName.enter_category) as? String) ?? ""
         let enterFrom = (selectTraceParam(self.tracerParams, key: "enter_from") as? String) ?? catName
         
         
@@ -645,31 +647,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             toTracerParams(originSearchId, key: "origin_search_id")
         
         recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
-        
-//        //进入地图找房页埋点
-//        let enterParams = TracerParams.momoid() <|>
-//            toTracerParams(enterFrom, key: "enter_from") <|>
-//            toTracerParams(categoryListViewModel?.originSearchId ?? "be_null", key: "search_id") <|>
-//            toTracerParams(originFrom, key: "origin_from") <|>
-//            toTracerParams(originSearchId, key: "origin_search_id")
-//        recordEvent(key: TraceEventName.enter_mapfind, params: enterParams)
-        
-        /*
-         var dict : [String : Any] = [
-         "house_type" : self.houseType.value.rawValue ,
-         "center_longitude" : mapSearch.centerLongitude ?? "" ,
-         "center_latitude" : mapSearch.centerLatitude ?? "" ,
-         "resize_level" : mapSearch.resizeLevel ?? 11 ,
-         "origin_from" : originFrom ,
-         "origin_search_id" : originSearchId ,
-         "element_from" : elementName ,
-         "enter_from" : enterFrom ,
-         "enter_category" : enterCategory ,
-         ]
-         */
-        
-        
-        
         var query = ""
         if  !openUrl.contains("enter_category") {
             query = "enter_category=\(catName)"
@@ -691,10 +668,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
         }
         
-//        if !openUrl.contains("category_name") {
-//            query = "\(query)&category_name=\(catName)"
-//        }
-        
+
         if query.count > 0 {
             openUrl = "\(openUrl)&\(query)"
         }
@@ -728,7 +702,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 searchParams: houseSearchParams)
             self.categoryListViewModel?.houseSearch = houseSearchParams
         } else {
-            let houseSearchParams = ["eearch_query": "be_null",
+            let houseSearchParams = ["search_query": "be_null",
                                      "enter_query": "be_null"]
             self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
                 pageType: self.pageTypeString(),
@@ -792,9 +766,26 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             self?.bindHouseSearchParams()
 
             if let houseListOpenUrl = self?.categoryListViewModel?.houseListOpenUrl {
-                self?.queryString = ""
                 self?.resetFilterConditionByRequestData(openUrl: houseListOpenUrl)
+                guard let url = URL(string: houseListOpenUrl) else {
+                    return
+                }
 
+                //需要重置非过滤器条件，以及热词placeholder
+                let routeObj = TTRoute.shared()?.routeParamObj(with:url)
+                self?.allParams = routeObj?.allParams as? [String: Any]
+                self?.queryParams = routeObj?.queryParams as? [String : Any]
+                var keys = self?.allKeysFromNodes(nodes: self?.conditions ?? [])
+                if let sortKey = self?.allSortConditionKeys() {
+                    //计算所有排序的key
+                    keys?.insert(sortKey)
+                }
+                if let queryParams = self?.queryParams, let keys = keys {
+                    // 这里必须根据画参数的来源决定是否编码，如果是服务器传送来的，都不可以再做编码，TODO 后续改成客户算来源的参数也增加编码
+                    self?.queryString = getNoneFilterConditionString(params: queryParams, conditionsKeys: keys, encoding: !(self?.isNeedEncode ?? true))
+                    self?.processDisplayText(queryParams: queryParams)
+
+                }
                 //这里必须要在重置逻辑之前嗲用
                 if FHFilterRedDotManager.shared.shouldOpenAreaPanel() {
                     //这里暂时只能写死了,为了实现学区房红点
@@ -831,10 +822,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     // MARK: 搜索请求
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
+                .debounce(0.1, scheduler: MainScheduler.instance)
                 .map { [unowned self] (result) -> String in
                     self.getQueryCondition(filterCondition: result)
                 }
-                .debounce(0.1, scheduler: MainScheduler.instance)
                 .subscribe(onNext: { [unowned self] query in
                     self.requestData(query: query)
                 })
@@ -973,6 +964,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 let ns = items.1.reduce([], { (result, nodes) -> [Node] in
                     result + nodes
                 })
+
+                self.conditions = ns
                 var keys = self.allKeysFromNodes(nodes: ns)
                 let sortKey = self.allSortConditionKeys()
                 //计算所有排序的key

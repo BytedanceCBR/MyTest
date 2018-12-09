@@ -206,20 +206,32 @@ fileprivate class RentPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
     private var titles: [String]
     init(titles: [String]) {
         self.titles = titles
+        super.init()
+        self.overlayView.backgroundColor = color(0, 0, 0, 0.2)
     }
 
-    override func photoBrowser(_ photoBrowser: PhotoBrowser, didChangedPageIndex index: Int) {
+    override func photoBrowser(_ photoBrowser: PhotoBrowser,
+                               didChangedPageIndex index: Int) {
         if titles.count > index {
             self.overlayView.imageNameLabel.text = titles[index]
         }
     }
 
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidLayoutSubviews view: UIView) {
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser,
+                                    viewDidLayoutSubviews view: UIView) {
         super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
         overlayView.isHidden = false
+        let frame = overlayView.frame
+        guard let superView = overlayView.superview else { return }
+
+        overlayView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        overlayView.center = CGPoint(x: superView.bounds.midX,
+                                     y: bottomOffsetY)
     }
 
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidAppear view: UIView, animated: Bool) {
+    open override func photoBrowser(_ photoBrowser: PhotoBrowser,
+                                    viewDidAppear view: UIView,
+                                    animated: Bool) {
         view.addSubview(overlayView)
     }
 

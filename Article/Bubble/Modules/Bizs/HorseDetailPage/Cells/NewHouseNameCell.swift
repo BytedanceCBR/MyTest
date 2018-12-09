@@ -119,7 +119,7 @@ class NewHouseNameCell: BaseUITableViewCell {
                 text.append(dotAttributedString)
             }
             text.append(tag)
-            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 30, height: CGFloat.greatestFiniteMagnitude), text: text)
+            let tagLayout = YYTextLayout(containerSize: CGSize(width: UIScreen.main.bounds.width - 40, height: CGFloat.greatestFiniteMagnitude), text: text)
             let lineHeight = tagLayout?.textBoundingSize.height ?? 0
             // 只显示一行
             if lineHeight > height {
