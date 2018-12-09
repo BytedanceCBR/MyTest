@@ -245,7 +245,8 @@ extension Notification.Name {
                 .disposed(by: disposeBag)
     }
 
-    private func setupLocationManager() {
+    @objc
+    func setupLocationManager() {
         locationManager.requestCurrentLocation()
     }
     
