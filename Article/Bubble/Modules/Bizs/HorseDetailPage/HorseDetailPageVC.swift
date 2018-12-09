@@ -161,11 +161,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             errorMask: infoMaskView,
             requestRetryText: "网络异常",
             isUserClickEnable: false)
-
-        if houseType == HouseType.neighborhood && CommonUIStyle.Screen.isIphoneX {
-            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 34, right: 0)
-
-        }
+// 移除这段看似对iphonex做适配，但是却造成适配问题的代码
+// 问题引入的路径是从租房详情页 TTRoute跳转到小区详情页后，底部有空白
+// FIOS-929
+//        if houseType == HouseType.neighborhood && CommonUIStyle.Screen.isIphoneX {
+//            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 34, right: 0)
+//
+//        }
         self.automaticallyAdjustsScrollViewInsets = false
 
         navBar.rightBtn.isHidden = false
