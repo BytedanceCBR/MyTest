@@ -161,8 +161,13 @@ extension Notification.Name {
 
         accountConfig.loadAccount()
         
-        //请求推荐频道是否显示红点
-        self.messageManager.startSyncCategoryBadge()
+        let categoryStartName = SSCommonLogic.feedStartCategory()
+        
+        if categoryStartName != "f_house_news" {
+            //请求推荐频道是否显示红点
+            self.messageManager.startSyncCategoryBadge()
+        }
+
         
         EnvContext.shared.client.accountConfig.userInfo
             .bind {[weak self] user in
