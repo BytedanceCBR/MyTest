@@ -889,11 +889,12 @@ func openMapPage(
         vc.openMapType = openMapType
         vc.tracerParams = traceParams
         vc.centerPointStr.accept((lat, lng))
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { void in
-                navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
+//        关闭工作由mapView自己实现
+//        vc.navBar.backBtn.rx.tap
+//            .subscribe(onNext: { void in
+//                navVC?.popViewController(animated: true)
+//            })
+//            .disposed(by: disposeBag)
         navVC?.pushViewController(vc, animated: true)
     }
 }

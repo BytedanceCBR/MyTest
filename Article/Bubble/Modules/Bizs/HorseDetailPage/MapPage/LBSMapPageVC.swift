@@ -68,6 +68,11 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
     init(centerPointName: String) {
         self.centerPointName = centerPointName
         super.init(nibName: nil, bundle: nil)
+        self.navBar.backBtn.rx.tap
+            .bind { [unowned self] void in
+                self.navigationController?.popViewController(animated: true)
+            }.disposed(by: disposeBag)
+
     }
 
     required init(routeParamObj paramObj: TTRouteParamObj?) {
