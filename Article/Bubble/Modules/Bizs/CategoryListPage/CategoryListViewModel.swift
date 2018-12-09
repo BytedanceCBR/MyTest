@@ -619,7 +619,11 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     identifer: identifier,
                     tableView: tableView,
                     indexPath: indexPath)
-            datas.value[indexPath.row].itemRender(cell)
+            if datas.value.count > indexPath.row {
+                datas.value[indexPath.row].itemRender(cell)
+            } else {
+                assertionFailure("发生数组越界")
+            }
             return cell
         default:
             return CycleImageCell()
@@ -706,10 +710,13 @@ class CategoryListDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //                            UIView.setAnimationsEnabled(true)
 //
 //                        } else {
-
-                        theDatas.remove(at: indexPath.row)
-                        self.isShowDefault = false
+                        if theDatas.count > indexPath.row {
+                            theDatas.remove(at: indexPath.row)
+                        } else {
+                            assertionFailure("数组越界了")
+                        }
                         self.datas.accept(theDatas)
+                        self.isShowDefault = false
                         UIView.performWithoutAnimation {
                             tableView.reloadData()
                         }
