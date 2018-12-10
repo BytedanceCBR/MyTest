@@ -26,3 +26,7 @@
 	path = Bundles/ios_map_search
 	url = git@code.byted.org:fproject/ios_map_search.git
 	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_list"]
+	path = Bundles/ios_house_list
+	url = git@code.byted.org:fproject/ios_house_list.git
+	branch = feature/list_to_oc
