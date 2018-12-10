@@ -269,8 +269,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                     }
                     self.errorVM?.onRequest()
                     if self.relatedHouse {
-                        
-                        self.ershouHouseListViewModel?.requestRelatedHouseList(query: query, houseId: self.houseId ?? "", condition: nil)
+                        if self.theHouseType.value == HouseType.rentHouse {
+
+                            self.ershouHouseListViewModel?.requestRelatedRent(query: query, neightborhoodId: self.neighborhoodId, houseId: self.houseId)
+                        } else {
+                            self.ershouHouseListViewModel?.requestRelatedHouseList(query: query, houseId: self.houseId ?? "", condition: nil)
+                        }
                         
                     } else {
                         
@@ -334,11 +338,12 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     fileprivate func requestData() {
         errorVM?.onRequest()
-//        ershouHouseListViewModel?.requestErshouHouseList(
-//            query: "exclude_id[]=\(houseId ?? "")&exclude_id[]=\(neighborhoodId)&neighborhood_id=\(neighborhoodId)&house_id=\(houseId ?? "")&house_type=\(HouseType.secondHandHouse.rawValue)&search_source=\(searchSource.rawValue)",
-//            condition: nil)
         if self.relatedHouse {
-            ershouHouseListViewModel?.requestRelatedHouse(houseId: houseId ?? "")
+            if self.theHouseType.value == HouseType.rentHouse {
+                self.ershouHouseListViewModel?.requestRelatedRent(neightborhoodId: self.neighborhoodId, houseId: self.houseId)
+            } else {
+                self.ershouHouseListViewModel?.requestRelatedHouse(houseId: houseId ?? "")
+            }
         }else{
             if self.theHouseType.value == HouseType.rentHouse {
                 ershouHouseListViewModel?.requestRent(neightborhoodId: neighborhoodId, houseId: houseId ?? "")

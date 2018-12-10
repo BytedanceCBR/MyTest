@@ -96,14 +96,14 @@ class NIHSearchPanelViewModel: NSObject {
         }
         vc.onItemSelect
             .subscribe(onNext: { [unowned self] i in
-                EnvContext.shared.toast.showModeLoadingToast("正在切换城市")
+//                EnvContext.shared.toast.showModeLoadingToast("正在切换城市")
                 EnvContext.shared.client.currentCitySwitcher
                     .switchCity(cityId: i)
                     .subscribe(onNext: { (state) in
                         switch state {
-                        case .onFinishedRequestFilterConfig:
-                            EnvContext.shared.toast.dismissToast()
+                        case .onRequestCityList:
                             self.baseVC.navigationController?.popViewController(animated: true)
+                        case .onFinishedRequestFilterConfig:
                             FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
                             return
                         case .onError:

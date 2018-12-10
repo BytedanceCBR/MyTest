@@ -117,7 +117,6 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             } else {
                 self?.emptyMaskView.isHidden = true
             }
-            EnvContext.shared.toast.dismissToast()
         }
         
 
@@ -180,7 +179,6 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         }
         stayTimeParams = nil
         
-        EnvContext.shared.toast.dismissToast()
     }
 
     private func setTitle(houseType: HouseType) {

@@ -218,6 +218,63 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         pageableLoader?()
         
     }
+
+    //这个接口被两个问题调用，因此不能添加enter_from买点
+    func requestRelatedRent(query: String? = "", neightborhoodId: String? = nil, houseId: String? = nil) {
+        if EnvContext.shared.client.reachability.connection == .none {
+            // 无网络时直接返回空，不请求
+            self.processError()(nil)
+            return
+        }
+        oneTimeToast = createOneTimeToast()
+        let loader = pageRequestRelatedRent(query: query, neighborhoodId: neightborhoodId, houseId: houseId, searchId: searchId, count: 15)
+        pageableLoader = { [unowned self] in
+            loader()
+                .subscribe(onNext: { [unowned self] (response) in
+
+                    var result = ErshouHouseResult.Success
+                    if response == nil {
+                        result = ErshouHouseResult.BadData
+                    }
+
+                    if let data = response?.data {
+                        let items = data.items?.map({ (item) -> RentInnerItemEntity in
+                            var newItem = item
+                            newItem.fhSearchId = data.searchId
+                            return newItem
+                        })
+
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type") <|>
+                            self.traceParams
+                        let datas = parseRentHouseListRowItemNode(
+                            items,
+                            traceParams: params,
+                            disposeBag: self.disposeBag,
+                            sameNeighborhoodFollowUp: self.sameNeighborhoodFollowUp,
+                            houseSearchParams: nil,
+                            navVC: self.navVC)
+                        self.datas.accept(self.datas.value + datas)
+
+                        self.searchId = data.searchId
+                    }
+
+                    if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
+                        result = ErshouHouseResult.NoData
+                    }
+
+                    self.onDataLoaded?(response?.data?.hasMore ?? false, self.datas.value.count)
+                    self.onSuccess?(result)
+                    // self.oneTimeToast?(response?.data?.refreshTip)
+
+                    },
+                           onError: self.processError())
+                .disposed(by: self.disposeBag)
+        }
+        cleanData()
+        pageableLoader?()
+
+    }
     
     func requestRentHouseList(query: String, condition: String?) {
         if EnvContext.shared.client.reachability.connection == .none {

@@ -300,7 +300,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 params["tracerParams"] = transactionTrace
                 
                 params["bottomBarBinder"] = bottomBarBinder
-                
+                params["related_house"] = true
                 let userInfo = TTRouteUserInfo(info: params)
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }

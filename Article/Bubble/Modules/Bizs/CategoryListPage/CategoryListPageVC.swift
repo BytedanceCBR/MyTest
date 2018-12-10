@@ -146,6 +146,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         let re = UIView()
         re.backgroundColor = UIColor.white
         re.lu.addBottomBorder()
+        re.isHidden = true
         return re
     }()
 
@@ -465,7 +466,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.bringSubview(toFront: searchFilterPanel)
         self.view.bringSubview(toFront: searchSortBtnBG)
 
-        self.searchSortBtnBG.isHidden = true
     }
 
     func setupSortCondition() {

@@ -66,7 +66,7 @@ class CurrentCitySwitcher {
 
         case (.onFinishedRequestGeneralConfig, .onRequestFilterConfig):
             self.requestSearchCondition(cityId: switchToCityId)
-
+            self.finishedGeneralConfigAction()
         case let (.onRequestFilterConfig, .onFinishedRequestFilterConfig(response)):
             self.searchConfigResponse = response
             self.finishedFilterConfigAction()
@@ -113,28 +113,19 @@ class CurrentCitySwitcher {
         })
     }
 
-    func switchCityBy(lat: Double?, lng: Double?, gaodeCityId: String?) {
-        
-//        requestGeneralConfig(cityName: cityName,
-//                             cityId: nil,
-//                             gaodeCityId: gaodeCityId,
-//                             lat: lat,
-//                             lng: lng,
-//                             needCommonParams: false,
-//                             params: params ?? [:])
-    }
-
-    fileprivate func finishedFilterConfigAction() {
+    fileprivate func finishedGeneralConfigAction() {
         self.currentCityId = switchToCityId
         EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(self.currentCityId)
         if let currentCityId = self.currentCityId {
             EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: currentCityId)
         }
-        EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
-        
-        self.updateSearchCondition(response: searchConfigResponse)
         self.updateGeneralConfig(response: generalConfigRsponse)
+    }
+
+    fileprivate func finishedFilterConfigAction() {
+        EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
+        self.updateSearchCondition(response: searchConfigResponse)
     }
 
 
