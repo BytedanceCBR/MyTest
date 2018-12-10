@@ -45,6 +45,15 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
     return result
 }
 
+fileprivate func houseTypePlaceHolder() -> [SectionItem] {
+    var result: [SectionItem] = []
+    result.append(SectionItem(houseType: .secondHandHouse, label: "二手房"))
+    result.append(SectionItem(houseType: .rentHouse, label: "租房"))
+    result.append(SectionItem(houseType: .newHouse, label: "新房"))
+    result.append(SectionItem(houseType: .neighborhood, label: "小区"))
+    return result
+}
+
 fileprivate class FHFindHouseErrorViewModelGroup {
     private var group: [NHErrorViewModel] = []
     init() {
@@ -94,7 +103,7 @@ fileprivate class FHFindHouseCategoryPageView: UIView {
     fileprivate var errorVM : NHErrorViewModel?
 
     weak var collectionView: UICollectionView?
-    init(collectionView: UICollectionView, controler: FHFindHouseErrorViewModelGroup) {
+    init(collectionView: UICollectionView?, controler: FHFindHouseErrorViewModelGroup) {
         self.collectionView = collectionView
         super.init(frame: CGRect.zero)
         setupUI()
@@ -109,10 +118,10 @@ fileprivate class FHFindHouseCategoryPageView: UIView {
             collectionView.snp.makeConstraints({ (make) in
                 make.edges.equalToSuperview()
             })
-            addSubview(infoDisplay)
-            infoDisplay.snp.makeConstraints { (make) in
-                make.edges.equalToSuperview()
-            }
+        }
+        addSubview(infoDisplay)
+        infoDisplay.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
         }
     }
 
@@ -393,6 +402,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
 
     func setupSectionLabelByConfig() {
+        EnvContext.shared.client.loadSearchCondition()
         if let config = EnvContext.shared.client.configCacheSubject.value {
             let sections = houseTypeSectionByConfig(config: config)
             sections.forEach({ (item) in
@@ -413,14 +423,41 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 self.segmentedNav.setSelectedSegmentIndex(index: 0, animated: false)
             }
         } else {
-            self.segmentedNav.sectionTitleArray = []
+            if EnvContext.shared.client.reachability.connection == .none {
+                self.segmentedNav.sectionTitleArray = houseTypePlaceHolder().map { $0.label }
+            } else {
+                self.segmentedNav.sectionTitleArray = []
+            }
         }
+    }
+
+    func setSegmentNayBySections(sections: [SectionItem]) {
+
     }
 
     fileprivate func createPageViews() {
         containerView.subviews.forEach { (view) in
             view.removeFromSuperview()
         }
+
+        EnvContext.shared.client.loadSearchCondition()
+        //如果首次进入无网络，需要显示4个category。网络恢复后，拉取config会触发再次c刷新
+        if EnvContext.shared.client.reachability.connection == .none && EnvContext.shared.client.configCacheSubject.value == nil {
+            let pages = houseTypePlaceHolder().map { (item) -> FHFindHouseCategoryPageView in
+                let re = FHFindHouseCategoryPageView(collectionView: nil, controler: errorInfoDisplayController)
+                return re
+            }
+            pages.forEach { (view) in
+                containerView.addSubview(view)
+                pages.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+            }
+            pages.snp.makeConstraints { (make) in
+                make.top.bottom.width.height.equalToSuperview()
+            }
+            checkingNetworkStateAndShowNetstateInfo()
+            return
+        }
+
         if let config = EnvContext.shared.client.configCacheSubject.value {
             let items = houseTypeSectionByConfig(config: config)
             let pages = items.map { (item) -> FHFindHouseCategoryPageView in
@@ -503,16 +540,12 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         if EnvContext.shared.client.reachability.connection == .none {
             errorInfoDisplayController.onNetworkUnavailable()
             searchBtn.isHidden = true
-            searchBar.isHidden = true
         } else {
             if EnvContext.shared.client.configCacheSubject.value != nil {
                 errorInfoDisplayController.onRequestNormalData()
-                errorVM?.onRequestNormalData()
                 searchBtn.isHidden = false
-                searchBar.isHidden = false
             } else {
                 searchBtn.isHidden = true
-                searchBar.isHidden = true
                 errorInfoDisplayController.onNetworkUnavailable()
             }
         }

@@ -775,11 +775,6 @@ extension FWSegmentedControl {
     }
 
     fileprivate func notifyForSegmentChangeToIndex(index: Int) {
-        if EnvContext.shared.client.reachability.connection == .none
-        {
-            EnvContext.shared.toast.showToast("网络异常")
-            return
-        }
         if self.superview != nil {
             self.sendActions(for: .valueChanged)
         }
