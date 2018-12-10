@@ -346,7 +346,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     }
                 }
                 <- parseFlineNode(data.neighborhoodInfo == nil ? 0 : 6)
-                <- parseHeaderNode("均价走势")
+                <- parseHeaderNode("均价走势") {
+                    data.priceTrend != nil
+                }
                 <- parseNeighboorhoodPriceChartNode(data, traceExtension: traceExtension, navVC: self.navVC) { 
                     if let id = data.neighborhoodInfo?.id
                     {
@@ -372,7 +374,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         recordEvent(key: "click_price_trend", params: loadMoreParams)
                     }
                 }
-                <- parseFlineNode(6)
+                <- parseFlineNode(data.priceTrend == nil ? 0 : 6)
                 <- parseHeaderNode("小区成交历史(\(data.totalSalesCount ?? 0))", subTitle: "查看更多", showLoadMore: data.totalSales?.hasMore ?? false, adjustBottomSpace: -10, process: { [unowned self]  (traceParam) in
                     if let hasMore = data.totalSales?.hasMore, hasMore == true {
                         if let id = data.id {
