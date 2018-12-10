@@ -102,7 +102,7 @@ class CategorySectionView: UIView {
             maker.height.equalTo(20)
         }
         
-        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.8, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(1, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
@@ -114,20 +114,20 @@ class CategorySectionView: UIView {
                 self?.sectionTitleArray = resultArray.count == 0 ? [""] : resultArray
                 
                 //切换城市默认触发信号
-                if let defaulType = housetypelistV.first,let typeValue = HouseType(rawValue: defaulType)
+                if let defaulTypeValue = housetypelistV.first,let defaultType = HouseType(rawValue: defaulTypeValue)
                 {
-                    if let typeValueStr = self?.userSelectedCache?.object(forKey: "userdefaultselect") as? String
+                    if let cacheTypeValueStr = self?.userSelectedCache?.object(forKey: "userdefaultselect") as? String
                     {
-                        if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? typeValue.rawValue), housetypelistV.contains(Int(typeValueStr) ?? typeValue.rawValue)
+                        if let cacheUserSelectType = HouseType(rawValue: Int(cacheTypeValueStr) ?? defaulTypeValue), housetypelistV.contains(Int(cacheTypeValueStr) ?? defaulTypeValue)
                         {
-                            self?.houseTypeRelay.accept(userSelectType)
+                            self?.houseTypeRelay.accept(cacheUserSelectType)
                         }else
                         {
-                            self?.houseTypeRelay.accept(typeValue)
+                            self?.houseTypeRelay.accept(defaultType)
                         }
                     }else
                     {
-                        self?.houseTypeRelay.accept(typeValue)
+                        self?.houseTypeRelay.accept(defaultType)
                     }
                 }
                 
@@ -147,18 +147,18 @@ class CategorySectionView: UIView {
         
         segmentedControl.sectionTitleArray = sectionTitleArray
         
-        if let typeValueStr = self.userSelectedCache?.object(forKey: "userdefaultselect") as? String
+        let houseListArray: [Int] = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.housetypelist ?? []
+        
+        if let typeValueStr = self.userSelectedCache?.object(forKey: "userdefaultselect") as? String, let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? HouseType.secondHandHouse.rawValue), houseListArray.contains(userSelectType.rawValue)
         {
-            if let userSelectType = HouseType(rawValue: Int(typeValueStr) ?? HouseType.secondHandHouse.rawValue)
-            {
-                segmentedControl.selectedSegmentIndex = sectionTitleArray.index(of: matchHouseTypeName(houseTypeV: userSelectType)) ?? 0
-            }
+            segmentedControl.selectedSegmentIndex = sectionTitleArray.index(of: matchHouseTypeName(houseTypeV: userSelectType)) ?? 0
+            self.userSelectedCache?.setObject(String(userSelectType.rawValue) as NSCoding, forKey: "userdefaultselect")
         }else
         {
             segmentedControl.selectedSegmentIndex = 0
+            self.userSelectedCache?.setObject(String(houseListArray.first ?? 2) as NSCoding, forKey: "userdefaultselect")
         }
         
-        self.userSelectedCache?.setObject(String(self.houseTypeRelay.value.rawValue) as NSCoding, forKey: "userdefaultselect")
     }
     
     required init?(coder aDecoder: NSCoder) {
