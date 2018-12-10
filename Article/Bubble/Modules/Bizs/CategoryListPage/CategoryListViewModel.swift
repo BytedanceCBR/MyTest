@@ -522,7 +522,6 @@ class CategoryListViewModel: DetailPageViewModel {
         return { [unowned self] (hasMore, datas) in
             self.dataSource.isShowDefault = false
             self.dataSource.datas.accept(self.dataSource.datas.value + datas)
-            self.dataSource.isShowDefault = false
             self.offset = self.dataSource.datas.value.count
             self.tableView?.reloadData()
             if !scrollToTop {

@@ -1143,14 +1143,16 @@ extension CategoryListPageVC : FHMapSearchOpenUrlDelegate
 {
 
     func handleHouseListCallback(_ openUrl: String) {
-
+        // 如果懂地图回流的url没有变化，则不触发条件刷新
+        if let houseListOpenUrl = self.categoryListViewModel?.houseListOpenUrl, openUrl == houseListOpenUrl {
+            return
+        }
         let routeObj = TTRoute.shared()?.routeParamObj(with: URL(string: openUrl))
         self.queryParams = routeObj?.queryParams as? [String: Any]
         if let queryParams = self.queryParams {
             self.conditionFilterViewModel?.setSelectedItem(items: queryParams)
             self.conditionFilterViewModel?.pullConditionsFromPanels()
         }
-
     }
 
 }
