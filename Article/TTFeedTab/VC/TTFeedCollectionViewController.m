@@ -417,11 +417,13 @@ TTFeedCollectionCellDelegate>
             [dict setValue:category.categoryID forKey:@"category_name"];
             [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dict setValue:userDrag?@"flip":@"click" forKey:@"enter_type"];
+            
             if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
             {
                 [dict setValue:userDrag?@"flip":@"click_icon" forKey:@"enter_type"];
                 [FHHomeConfigManager sharedInstance].isTraceClickIcon = NO;
             }
+            
             [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
             
 
@@ -780,6 +782,10 @@ TTFeedCollectionCellDelegate>
 - (void)enterCategory:(TTCategory *)category isFlip:(BOOL)flip {
     if (category) {
         NSString *enterType = flip ? @"flip" : @"click";
+        if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
+        {
+            enterType = _userDrag?@"flip":@"click_icon";
+        }
         [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
     }
 }
