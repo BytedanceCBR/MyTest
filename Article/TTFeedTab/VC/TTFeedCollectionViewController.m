@@ -424,7 +424,7 @@ TTFeedCollectionCellDelegate>
                 [FHHomeConfigManager sharedInstance].isTraceClickIcon = NO;
             }
             
-            [TTCategoryStayTrackManager shareManager].enterType = userDrag?@"flip":@"click";
+            [FHHomeConfigManager sharedInstance].enterType = userDrag?@"flip":@"click";
 
             if ([category.categoryID isEqualToString:@"f_find_house"])
             {
@@ -790,8 +790,8 @@ TTFeedCollectionCellDelegate>
             enterType = _userDrag?@"flip":@"click_icon";
         }
         
-        [TTCategoryStayTrackManager shareManager].enterType = enterType;
-        
+        [FHHomeConfigManager sharedInstance].enterType = enterType;
+
         if (![category.categoryID isEqualToString:@"f_find_house"])
         {
             [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
