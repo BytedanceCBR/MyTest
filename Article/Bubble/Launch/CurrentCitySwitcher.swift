@@ -66,7 +66,7 @@ class CurrentCitySwitcher {
 
         case (.onFinishedRequestGeneralConfig, .onRequestFilterConfig):
             self.requestSearchCondition(cityId: switchToCityId)
-            self.finishedGeneralConfigAction()
+//            self.finishedGeneralConfigAction()
         case let (.onRequestFilterConfig, .onFinishedRequestFilterConfig(response)):
             self.searchConfigResponse = response
             self.finishedFilterConfigAction()
@@ -124,6 +124,13 @@ class CurrentCitySwitcher {
     }
 
     fileprivate func finishedFilterConfigAction() {
+        self.currentCityId = switchToCityId
+        EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(self.currentCityId)
+        if let currentCityId = self.currentCityId {
+            EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: currentCityId)
+        }
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
+        self.updateGeneralConfig(response: generalConfigRsponse)
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
         self.updateSearchCondition(response: searchConfigResponse)
     }
