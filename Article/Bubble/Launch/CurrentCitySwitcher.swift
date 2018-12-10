@@ -129,10 +129,11 @@ class CurrentCitySwitcher {
         if let currentCityId = self.currentCityId {
             EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: currentCityId)
         }
-        EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
-        self.updateGeneralConfig(response: generalConfigRsponse)
         EnvContext.shared.client.configCacheSubject.accept(searchConfigResponse?.data)
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(generalConfigRsponse?.data)
+
         self.updateSearchCondition(response: searchConfigResponse)
+        self.updateGeneralConfig(response: generalConfigRsponse)
     }
 
 
