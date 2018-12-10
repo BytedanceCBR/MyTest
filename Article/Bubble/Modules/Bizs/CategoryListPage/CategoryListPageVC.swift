@@ -755,7 +755,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.infoMaskView.isHidden = true
             } else {
                 self?.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
-                self?.resetConditionData()
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
@@ -827,7 +826,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     // MARK: 搜索请求
     func bindSearchRequest() {
         searchAndConditionFilterVM.queryCondition
-                .debounce(0.1, scheduler: MainScheduler.instance)
+                .debounce(0.2, scheduler: MainScheduler.instance)
                 .map { [unowned self] (result) -> String in
                     self.getQueryCondition(filterCondition: result)
                 }
@@ -921,7 +920,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     private func resetConditionData() {
-        resetConditionDisposeBag = DisposeBag()
+//        resetConditionDisposeBag = DisposeBag()
         Observable
             .zip(houseType, EnvContext.shared.client.configCacheSubject)
             .filter { (e) in
@@ -1011,7 +1010,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.conditionFilterViewModel?.pullConditionsFromPanels()
                 self.searchSortBtnBG.isHidden = false
             })
-            .disposed(by: resetConditionDisposeBag)
+            .disposed(by: disposeBag)
     }
 
 
