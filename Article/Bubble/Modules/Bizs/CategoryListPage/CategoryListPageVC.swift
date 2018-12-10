@@ -551,8 +551,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func fillAssociationalWord(queryParams: [String: Any]?) {
         if let queryParams = queryParams,
             let associationalWord = queryParams["full_text"] {
-            print("process: \(associationalWord)")
-            print("process: queryParams \(queryParams)")
             self.navBar.setSearchPlaceHolderText(text: getPlaceholderText(
                 inputText: associationalWord as? String,
                 inputField: self.navBar.searchInput))
@@ -567,11 +565,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         if let queryParams = queryParams,
             let placeholder = queryParams["placeholder"] as? String {
-            if placeholder.isEmpty {
-                self.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(self.houseType.value))
-            } else {
-                self.navBar.setSearchPlaceHolderText(text: placeholder)
-            }
+//            if placeholder.isEmpty {
+//                self.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(self.houseType.value))
+//            } else {
+//                self.navBar.setSearchPlaceHolderText(text: placeholder)
+//            }
             self.navBar.searchInput.text = nil
         }
     }
