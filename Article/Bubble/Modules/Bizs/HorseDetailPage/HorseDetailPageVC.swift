@@ -799,6 +799,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         var logPB = self.detailPageViewModel?.logPB ?? "be_null"
         logPB = self.logPB ?? logPB
         var params = EnvContext.shared.homePageParams <|>
+            self.traceParams <|>
+            toTracerParams("left_pic", key: "card_type") <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.logPB ?? logPB, key: "log_pb")
 
