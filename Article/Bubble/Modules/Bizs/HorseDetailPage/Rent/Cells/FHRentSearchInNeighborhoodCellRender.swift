@@ -75,7 +75,7 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
 //                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
-                toTracerParams("related_list", key: "page_type") <|>
+                toTracerParams("rent_detail", key: "page_type") <|>
                 toTracerParams("same_neighborhood", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []

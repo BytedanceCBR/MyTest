@@ -27,7 +27,6 @@ func parseRentHouseListRowItemNode(
     
     let params = traceParams <|>
         toTracerParams("rent", key: "house_type") <|>
-        //        toTracerParams("old_list", key: "page_type") <|>
         toTracerParams("left_pic", key: "card_type")
     let selectors = data?
         .filter { $0.id != nil }

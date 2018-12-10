@@ -246,7 +246,9 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            self.traceParams
+                            self.traceParams <|>
+                            toTracerParams("related_list", key: "enter_from") <|>
+                            toTracerParams("related_list", key: "page_type")
                         let datas = parseRentHouseListRowItemNode(
                             items,
                             traceParams: params,
@@ -380,7 +382,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         if ht == HouseType.rentHouse {
                             pageType = "rent_deta"
                         } else {
-                            pageType = "old_detail"
+                            //修复买点错误，35二手房周边房源列表
+                            pageType = "related_list"
                         }
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>

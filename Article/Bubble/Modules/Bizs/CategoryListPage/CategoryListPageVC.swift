@@ -920,7 +920,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     private func resetConditionData() {
-//        resetConditionDisposeBag = DisposeBag()
+        resetConditionDisposeBag = DisposeBag()
         Observable
             .zip(houseType, EnvContext.shared.client.configCacheSubject)
             .filter { (e) in
@@ -1010,7 +1010,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.conditionFilterViewModel?.pullConditionsFromPanels()
                 self.searchSortBtnBG.isHidden = false
             })
-            .disposed(by: disposeBag)
+            .disposed(by: resetConditionDisposeBag)
     }
 
 

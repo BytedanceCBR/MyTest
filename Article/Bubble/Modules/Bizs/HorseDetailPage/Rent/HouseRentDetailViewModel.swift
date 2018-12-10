@@ -301,6 +301,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 
                 params["bottomBarBinder"] = bottomBarBinder
                 params["related_house"] = true
+                params["page_type"] = "related_list"
                 let userInfo = TTRouteUserInfo(info: params)
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }

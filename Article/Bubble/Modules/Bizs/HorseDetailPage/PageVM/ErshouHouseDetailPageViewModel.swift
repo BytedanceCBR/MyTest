@@ -487,11 +487,11 @@ import RxCocoa
                                 toTracerParams("related", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams("old_detail", key: "page_type") <|>
                                 toTracerParams(self.searchId ?? "", key: "search_id") <|>
                                 toTracerParams(self.searchId ?? "", key: "origin_search_id") <|>
                                 toTracerParams("click", key: "enter_type") <|>
                                 toTracerParams("related", key: "element_from") <|>
+                                toTracerParams("related_list", key: "page_type") <|>
                                 toTracerParams("old_detail", key: "enter_from")
                             
                             
@@ -503,7 +503,7 @@ import RxCocoa
                                                 navVC: self.navVC,
                                                 searchSource: .oldDetail,
                                                 tracerParams: loadMoreParams ,
-                                                bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
+                                                bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("related_list", key: "page_type")))
                         }
                     })
                 <- parseErshouHouseDisclaimerNode(data)

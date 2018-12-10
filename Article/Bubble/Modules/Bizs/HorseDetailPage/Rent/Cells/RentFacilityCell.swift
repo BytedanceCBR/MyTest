@@ -42,7 +42,7 @@ class RentFacilityCell: BaseUITableViewCell {
 func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
                                tracer: HouseRentTracer) -> () -> TableSectionNode? {
     let facilities = model?.data?.facilities as? [FHRentDetailResponseDataFacilitiesModel]
-    let render = curry(fillRentFacilityCell)(facilities)
+    let render = oneTimeRender(curry(fillRentFacilityCell)(facilities))
     let params = EnvContext.shared.homePageParams <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_facility", key: "element_type") <|>
