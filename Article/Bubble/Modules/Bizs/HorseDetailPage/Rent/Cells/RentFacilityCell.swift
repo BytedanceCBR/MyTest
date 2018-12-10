@@ -86,7 +86,7 @@ func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?
             }
 
             if let url = model.iconUrl {
-                re.iconView.bd_setImage(with: URL(string: url))
+                re.iconView.bd_setImage(with: URL(string: url), options: BDImageRequestOptions.requestSetAnimationFade)
             }
             return re
         }) ?? []

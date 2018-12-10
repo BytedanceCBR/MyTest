@@ -74,7 +74,13 @@ class PropertyListCell: BaseUITableViewCell, RefreshableTableViewCell {
         rows.forEach { view in
             wrapperView.addSubview(view)
         }
-        rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: fixedSpacing, averageLayout:averageLayout)
+        if rows.count == 1 {
+            rows.first?.snp.makeConstraints({ (make) in
+                make.height.bottom.equalToSuperview()
+            })
+        } else {
+            rows.snp.distributeViewsAlong(axisType: .vertical, fixedSpacing: fixedSpacing, averageLayout:averageLayout)
+        }
         rows.snp.makeConstraints { maker in
             maker.width.equalToSuperview()
             maker.left.right.equalToSuperview()
