@@ -232,8 +232,8 @@ fileprivate class SystemItemCell: BaseUITableViewCell {
 
     var timeLabelBGView: UIView = {
         let re = UIView()
-        re.backgroundColor = color(0, 0, 0, 0.3)
-        re.layer.cornerRadius = 13.5
+        re.layer.cornerRadius = 4
+        re.backgroundColor = color(0, 0, 0, 0.1)
         return re
     }()
 
@@ -299,23 +299,23 @@ fileprivate class SystemItemCell: BaseUITableViewCell {
 
         self.contentView.addSubview(timeLabelBGView)
         timeLabelBGView.snp.makeConstraints { maker in
-            maker.top.equalTo(30)
+            maker.top.equalTo(20)
 //            maker.bottom.equalTo(-14)
             maker.centerX.equalToSuperview()
         }
 
         timeLabelBGView.addSubview(timeLabel)
         timeLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(4)
+            maker.top.equalTo(0)
             maker.left.equalTo(10)
             maker.right.equalTo(-10)
-            maker.bottom.equalTo(-4)
-            maker.height.equalTo(17)
+            maker.bottom.equalTo(0)
+            maker.height.equalTo(20)
          }
 
         self.contentView.addSubview(bubbleBGView)
         bubbleBGView.snp.makeConstraints { maker in
-            maker.top.equalTo(timeLabelBGView.snp.bottom).offset(14)
+            maker.top.equalTo(timeLabelBGView.snp.bottom).offset(10)
             maker.bottom.equalToSuperview()
             maker.left.equalTo(20)
             maker.right.equalTo(-20)
@@ -325,8 +325,7 @@ fileprivate class SystemItemCell: BaseUITableViewCell {
         titleLabel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.right.equalTo(-20)
-            maker.top.equalTo(14)
-            maker.height.equalTo(22)
+            maker.centerY.equalTo(20)
         }
 
         bubbleBGView.addSubview(majorImageView)
