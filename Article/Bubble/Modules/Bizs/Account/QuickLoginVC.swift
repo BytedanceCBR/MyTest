@@ -367,16 +367,6 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
         }
 
         view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { (maker) in
-
-            maker.top.equalTo(navBar.snp.bottom)
-            maker.left.right.equalToSuperview()
-            if #available(iOS 11, *) {
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50)
-            } else {
-                maker.bottom.equalTo(-50)
-            }
-        }
 
         scrollView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { maker in
@@ -465,6 +455,14 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
         setAgreementContent()
 
+        scrollView.snp.makeConstraints { (maker) in
+            
+            maker.top.equalTo(navBar.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalTo(agreementLabel.snp.top).offset(-20)
+
+        }
+        
         if let quickLoginViewModel = self.quickLoginViewModel {
             let paramsGetter = self.recordClickVerifyCode()
             sendVerifyCodeBtn.rx.tap
