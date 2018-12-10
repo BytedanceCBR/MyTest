@@ -147,7 +147,7 @@ class HomeListViewModel: DetailPageViewModel {
         {
             houseType.skip(1).subscribe(onNext:{ [weak self] (index) in
                 
-                self?.enterType = "switch"
+                self?.enterType = TTCategoryStayTrackManager.share().enterType.count > 0 ? TTCategoryStayTrackManager.share().enterType : "switch"
                 
                 self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
                 
@@ -610,7 +610,6 @@ class HomeListViewModel: DetailPageViewModel {
                         
                         recordEvent(key: TraceEventName.category_refresh, params: params)
                         self.reloadFromType = nil
-                        self.enterType = nil
                     }
                     
                     if let items = response?.data?.items {
