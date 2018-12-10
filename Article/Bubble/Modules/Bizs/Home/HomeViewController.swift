@@ -248,7 +248,7 @@ class HomeViewController: BaseViewController {
     
     @objc func didDisappear() {
 
-        let theEnterType = (self.detailPageViewModel?.enterType ?? self.enterType) ?? TTCategoryStayTrackManager.share().enterType
+        let theEnterType = TTCategoryStayTrackManager.share().enterType
         self.detailPageViewModel?.uploadTracker(isWithStayTime:true, stayTime: stayTimeParams,enterType: theEnterType as NSString?, currentHouseType: self.detailPageViewModel?.stayHouseTraceType ?? .neighborhood)
         
         if self.navigationController?.viewControllers.count ?? 0 > 1 {

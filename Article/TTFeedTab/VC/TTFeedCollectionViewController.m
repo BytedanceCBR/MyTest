@@ -424,8 +424,7 @@ TTFeedCollectionCellDelegate>
                 [FHHomeConfigManager sharedInstance].isTraceClickIcon = NO;
             }
             
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
-            
+            [TTCategoryStayTrackManager shareManager].enterType = userDrag?@"flip":@"click";
 
             if ([category.categoryID isEqualToString:@"f_find_house"])
             {
@@ -443,7 +442,11 @@ TTFeedCollectionCellDelegate>
                 [dict setValue:categoryName forKey:@"category_name"];
 
                 [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }else
+            {
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
             }
+                
 //            NSDictionary *dict =  [[EnvContext shared] homePageParams].paramsGetter([:])
             
             // 统计 - 进入订阅列表
@@ -786,13 +789,22 @@ TTFeedCollectionCellDelegate>
         {
             enterType = _userDrag?@"flip":@"click_icon";
         }
-        [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
+        
+        [TTCategoryStayTrackManager shareManager].enterType = enterType;
+        
+        if (![category.categoryID isEqualToString:@"f_find_house"])
+        {
+            [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
+        }
     }
 }
 
 - (void)leaveCategory:(TTCategory *)category {
     if (category) {
-        [[TTCategoryStayTrackManager shareManager] endTrackCategory:category.categoryID];
+        if (![category.categoryID isEqualToString:@"f_find_house"])
+        {
+            [[TTCategoryStayTrackManager shareManager] endTrackCategory:category.categoryID];
+        }
     }
 }
 
