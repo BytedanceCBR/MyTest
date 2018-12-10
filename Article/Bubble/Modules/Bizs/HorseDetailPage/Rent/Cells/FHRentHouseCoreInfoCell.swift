@@ -94,6 +94,7 @@ class FHRentHouseCoreInfoCell: BaseUITableViewCell {
         let width = (self.frame.width - leftPending * 2 - 2 * cubePending) / 3
         var offsetX: CGFloat = leftPending
         itemViews.forEach { (view) in
+            view.valueLabel.font = CommonUIStyle.Font.pingFangMedium(14)
             view.frame = CGRect(x: offsetX, y: 0, width: width, height: self.frame.height)
             offsetX = offsetX + cubePending + width
         }

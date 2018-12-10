@@ -140,6 +140,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     var allParams: [String: Any]?
 
+    var resetConditionDisposeBag: DisposeBag = DisposeBag()
+
     var searchSortBtnBG: UIView = {
         let re = UIView()
         re.backgroundColor = UIColor.white
@@ -271,11 +273,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             requestRetryText:"网络异常",
             requestNilDataText:"没有找到相关的信息，换个条件试试吧~",
             requestNilDataImage:"group-9",
-            isUserClickEnable:false,
+            isUserClickEnable:true,
             retryAction:{ [weak self] in
                 if let hasNone = self?.hasNone{
                     if !hasNone {
                         self?.searchAndConditionFilterVM.sendSearchRequest()
+                        self?.resetConditionData()
                     }
                 }
         })
@@ -462,7 +465,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.view.bringSubview(toFront: searchFilterPanel)
         self.view.bringSubview(toFront: searchSortBtnBG)
 
-
+        self.searchSortBtnBG.isHidden = true
     }
 
     func setupSortCondition() {
@@ -752,6 +755,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.infoMaskView.isHidden = true
             } else {
                 self?.infoMaskView.label.text = "没有找到相关的信息，换个条件试试吧~"
+                self?.resetConditionData()
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
@@ -917,6 +921,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     }
 
     private func resetConditionData() {
+        resetConditionDisposeBag = DisposeBag()
         Observable
             .zip(houseType, EnvContext.shared.client.configCacheSubject)
             .filter { (e) in
@@ -1004,8 +1009,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self.conditionFilterViewModel?.filterConditions = items.0
                 self.conditionFilterViewModel?.reloadConditionPanel()
                 self.conditionFilterViewModel?.pullConditionsFromPanels()
+                self.searchSortBtnBG.isHidden = false
             })
-            .disposed(by: disposeBag)
+            .disposed(by: resetConditionDisposeBag)
     }
 
 

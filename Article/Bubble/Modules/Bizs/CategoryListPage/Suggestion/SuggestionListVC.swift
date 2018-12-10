@@ -45,6 +45,10 @@ fileprivate func houseTypeSectionByConfig(config: SearchConfigResponseData) -> [
     return result
 }
 
+fileprivate func houseTypeSectionPlaceholder() -> [HouseType] {
+    return [.secondHandHouse, .rentHouse, .newHouse, .neighborhood]
+}
+
 fileprivate func defaultHoustType(config: SearchConfigResponseData?) -> HouseType {
     if let config = config {
         let items = houseTypeSectionByConfig(config: config)
@@ -557,6 +561,8 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
         if let config = EnvContext.shared.client.configCacheSubject.value {
             menuItems = houseTypeSectionByConfig(config: config)
+        } else if EnvContext.shared.client.reachability.connection == .none {
+            menuItems = houseTypeSectionPlaceholder()
         }
 
 //        if menuItems.count == 1 {
