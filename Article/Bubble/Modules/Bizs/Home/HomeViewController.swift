@@ -486,7 +486,7 @@ func searchBarPlaceholder(_ houseType: HouseType) -> String {
     case .secondHandHouse:
         return "请输入小区/商圈/地铁"
     case .rentHouse:
-        return "你想住在哪？"
+        return "请输入小区/商圈/地铁"
     default:
         return ""
     }
