@@ -203,22 +203,27 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         
         self.navBar.searchable = true
         
-        if let sugDelegate = paramObj?.allParams["sug_delegate"] as? FHHouseSuggestionDelegate {
-            if let _ = sugDelegate.suggestionSelected  {
-                self.onSuggestionSelected = { [weak sugDelegate](routeObj) in
-                    sugDelegate?.suggestionSelected?(routeObj)
-//                    self?.navigationController?.popViewController(animated: true)
-                }
-            }
-            self.filterConditionResetter = { [weak sugDelegate] in
-                sugDelegate?.resetCondition()
-            }
+        let delegate =  paramObj?.allParams["sug_delegate"]
+        if let sugDelegateTable = delegate as? NSHashTable<FHHouseSuggestionDelegate> {
             
-            self.navBar.backBtn.rx.tap
-                .subscribe(onNext: { [weak self , weak sugDelegate] void in
-                    sugDelegate?.backAction(self)
-                })
-                .disposed(by: self.disposeBag)
+            if let sugDelegate = sugDelegateTable.anyObject {
+                if let _ = sugDelegate.suggestionSelected  {
+                    self.onSuggestionSelected = { [weak sugDelegate](routeObj) in
+                        sugDelegate?.suggestionSelected?(routeObj)
+                        //                    self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                
+                self.filterConditionResetter = { [weak sugDelegate] in
+                    sugDelegate?.resetCondition()
+                }
+                
+                self.navBar.backBtn.rx.tap
+                    .subscribe(onNext: { [weak self , weak sugDelegate] void in
+                        sugDelegate?.backAction(self)
+                    })
+                    .disposed(by: self.disposeBag)
+            }
         }        
     }
     
