@@ -35,7 +35,7 @@ class ChatDetailListCell: BaseUITableViewCell {
     lazy var majorImageView: UIImageView = {
         let re = UIImageView()
         re.contentMode = .scaleAspectFill
-//        re.layer.cornerRadius = 4
+        re.layer.cornerRadius = 4
         re.layer.masksToBounds = true
         re.layer.borderWidth = 0.5
         re.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
