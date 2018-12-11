@@ -8,7 +8,6 @@
 #import "FHHomeConfigManager.h"
 #import <TTRoute.h>
 #import <TTArticleCategoryManager.h>
-#import "Bubble-Swift.h"
 
 @interface FHHomeConfigManager()
 
@@ -75,11 +74,6 @@
 - (void)updateConfigDataFromCache
 {
     
-}
-
-- (void)startUpdateAllConfig
-{
-    [[[EnvContext shared] client] onStart];
 }
 
 @end
