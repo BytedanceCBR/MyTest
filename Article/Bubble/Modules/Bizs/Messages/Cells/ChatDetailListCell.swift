@@ -257,14 +257,14 @@ class UserMsgSectionView: UIView {
     
     lazy var timeAreaBgView: UIView = {
         let re = UIView()
-        re.layer.cornerRadius = 12
-        re.backgroundColor = color(0, 0, 0, 0.3)
+        re.layer.cornerRadius = 4
+        re.backgroundColor = color(0, 0, 0, 0.1)
         return re
     }()
     
     lazy var tipsLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(15)
+        label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.text = ""
         return label
@@ -278,7 +278,7 @@ class UserMsgSectionView: UIView {
     
     lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangRegular(14)
+        label.font = CommonUIStyle.Font.pingFangRegular(12)
         label.textColor = hexStringToUIColor(hex: "#ffffff")
         label.text = ""
         return label
@@ -293,35 +293,34 @@ class UserMsgSectionView: UIView {
     init() {
         super.init(frame: CGRect.zero)
 
-        self.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        self.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         addSubview(timeAreaBgView)
         timeAreaBgView.snp.makeConstraints { (maker) in
             maker.centerX.equalToSuperview()
-            maker.top.equalTo(30)
-            maker.height.equalTo(24)
+            maker.top.equalTo(20)
+            maker.height.equalTo(20)
         }
         
         timeAreaBgView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
-            maker.height.equalTo(22)
-            maker.top.equalTo(4)
-            maker.bottom.equalTo(-4)
+            maker.left.equalTo(10)
+            maker.right.equalTo(-10)
+            maker.height.equalTo(20)
+            maker.top.equalTo(0)
+            maker.bottom.equalTo(0)
         }
 
         addSubview(tipsBgView)
         tipsBgView.snp.makeConstraints { (maker) in
-            maker.top.equalTo(timeAreaBgView.snp.bottom).offset(15)
+            maker.top.equalTo(timeAreaBgView.snp.bottom).offset(10)
             maker.bottom.left.right.equalToSuperview()
         }
 
         tipsBgView.addSubview(tipsLabel)
         tipsLabel.snp.makeConstraints { maker in
-            maker.left.equalTo(15)
-            maker.right.equalTo(-15)
-            maker.top.equalTo(18)
-            maker.bottom.equalTo(-17)
+            maker.left.equalTo(20)
+            maker.right.equalTo(-20)
+            maker.centerY.equalToSuperview()
         }
         self.addSubview(lineView)
         lineView.snp.makeConstraints { maker in
@@ -356,7 +355,7 @@ class UserMsgFooterOpenAllView: UIView {
     
     lazy var bottomMaskView: UIView = {
         let re = UIView()
-        re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        re.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         return re
     }()
     
@@ -377,14 +376,14 @@ class UserMsgFooterOpenAllView: UIView {
         addSubview(bottomMaskView)
         bottomMaskView.snp.makeConstraints { maker in
             maker.left.right.bottom.equalToSuperview()
-            maker.height.equalTo(6)
+            maker.height.equalTo(0)
         }
         
         addSubview(openAllBtn)
         openAllBtn.snp.makeConstraints { maker in
             maker.left.right.equalToSuperview()
-            maker.top.equalTo(6)
-            maker.bottom.equalTo(bottomMaskView.snp.top).offset(-6)
+            maker.top.equalTo(0)
+            maker.bottom.equalTo(bottomMaskView.snp.top) // .offset(-6)
         }
         
         addSubview(title)

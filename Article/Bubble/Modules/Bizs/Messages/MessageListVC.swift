@@ -164,7 +164,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         tableView.dataSource = tableListViewModel
         tableView.delegate = tableListViewModel
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
-        tableView.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
+        tableView.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
         tableView.separatorStyle = .none
 
         tableView.register(ChatDetailListCell.self, forCellReuseIdentifier: ChatDetailListCell.identifier)
@@ -429,17 +429,17 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 122
+        return 90
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if datas.value.count > section {
             let item = datas.value[section]
             if item.moreLabel?.isEmpty ?? true == false {
-                return 50
+                return 40
             }
         }
-        return 0
+        return CGFloat.leastNormalMagnitude
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -474,7 +474,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                 return view
             }
         }
-        return nil
+        return UIView()
     }
 
 
