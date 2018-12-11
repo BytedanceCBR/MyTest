@@ -513,10 +513,11 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
 
         self.tableViewModel.search = self.tableViewModel.search <|>
             toTracerParams(createQueryCondition(info), key: "search")
+        let pageType = self.tableViewModel.pageTypeString() //之前pagetype为
         let houseSearchParams = TracerParams.momoid() <|>
             toTracerParams(userInputText, key: "enter_query") <|>
             toTracerParams(userInputText, key: "search_query") <|>
-            toTracerParams(pageTypeString(self.houseType.value), key: "page_type") <|>
+            toTracerParams(pageType, key: "page_type") <|>
             toTracerParams("enter", key: "query_type")
 
         // 保存关键词搜索到历史记录
@@ -897,7 +898,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
         } else if isFromHome == EnterSuggestionType.enterSuggestionTypeHome {
             return "maintab"
         } else if isFromHome == EnterSuggestionType.enterSuggestionTypeRenting {
-            return "renting";
+            return "rent_list";
         } else {
             switch self.houseType.value {
             case .neighborhood:
