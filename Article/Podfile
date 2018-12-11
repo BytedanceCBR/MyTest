@@ -20,6 +20,7 @@ def appPods
     pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
     pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
+    pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
     pod 'SecGuard', '0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'

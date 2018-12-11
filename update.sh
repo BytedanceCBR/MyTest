@@ -2,8 +2,8 @@
 
 echo "========will update========="
 
-git submodule foreach git checkout feature/develop
-git submodule foreach git pull origin feature/develop
+git submodule foreach git checkout feature/list_to_oc
+git submodule foreach git pull origin feature/list_to_oc
 
 echo "========update done========="
 
