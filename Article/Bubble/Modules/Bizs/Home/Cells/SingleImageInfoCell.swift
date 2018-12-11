@@ -343,7 +343,8 @@ class CornerView: UIView {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageTopLeftLabelBgView.isHidden = true
-        
+        imageTopLeftLabel.text = nil
+
         majorTitle.snp.updateConstraints { maker in
             maker.left.right.top.equalToSuperview()
             maker.height.equalTo(20)
