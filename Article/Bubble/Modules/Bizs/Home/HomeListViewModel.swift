@@ -235,7 +235,7 @@ class HomeListViewModel: DetailPageViewModel {
         let categoryStartName = SSCommonLogic.feedStartCategory()
 
         if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
-            EnvContext.shared.client.generalBizconfig.load()
+            EnvContext.shared.client.generalBizconfig.updateConfig()
         }
     }
     
