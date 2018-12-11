@@ -62,7 +62,7 @@ func parseRentReleatedHouseListItemNode(
                 let theParams = tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams("rent", key: "house_type") <|>
-                    toTracerParams("slide", key: "card_type") <|>
+                    toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams("related_list", key: "page_type") <|>
                     toTracerParams("related", key: "element_type") <|>
                     toTracerParams(item.logPb as? [String : Any] ?? "be_null", key: "log_pb")
