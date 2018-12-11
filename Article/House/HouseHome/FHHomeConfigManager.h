@@ -30,8 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openCategoryFeedStart;
 
-- (void)startUpdateAllConfig;
-
 @end
 
 NS_ASSUME_NONNULL_END
