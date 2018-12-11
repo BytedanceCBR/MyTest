@@ -37,7 +37,14 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             }
         }
     }
-    
+
+    func displayDefaultPlaceholder() {
+        self.datas.accept(parseHousePlaceholderRowNode(nodeCount: 10)())
+        UIView.performWithoutAnimation { [weak self] in
+            self?.tableView?.reloadData()
+        }
+    }
+
     func request(neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -50,10 +57,14 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             houseId: houseId,
             searchId: searchId,
             count: 15)
+        var isFirstLoad = true
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
-                    
+                    if isFirstLoad {
+                        isFirstLoad = false
+                        self.cleanData()
+                    }
                     var result = ErshouHouseResult.Success
                     if response == nil {
                         result = ErshouHouseResult.BadData
@@ -75,9 +86,6 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             houseSearchParams: nil,
                             navVC: self.navVC)
                         self.datas.accept(self.datas.value + datas)
-                        
-                        
-                        
                     }
                     
                     if(self.datas.value.count == 0 && result != ErshouHouseResult.BadData){
@@ -92,7 +100,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                     onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
     }
 
@@ -103,13 +111,18 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
+
+        var isFirstLoad = true
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestErshouHouseSearch(query: query, searchId: searchId , suggestionParams: condition ?? "")
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
-                        
+                        if isFirstLoad {
+                            isFirstLoad = false
+                            self.cleanData()
+                        }
                         var result = ErshouHouseResult.Success
                         if response == nil {
                             result = ErshouHouseResult.BadData
@@ -158,7 +171,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         }())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
     }
 
@@ -169,12 +182,16 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
+        var isFirstload = true
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRentInSameNeighborhoodSearch(neighborhoodId: neightborhoodId,houseId: houseId, searchId: searchId, count: 15)
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
-                    
+                    if isFirstload {
+                       isFirstload = false
+                        self.cleanData()
+                    }
                     var result = ErshouHouseResult.Success
                     if response == nil {
                         result = ErshouHouseResult.BadData
@@ -214,24 +231,30 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
         
     }
 
     //这个接口被两个问题调用，因此不能添加enter_from买点
+    // 租房周边房源
     func requestRelatedRent(query: String? = "", neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
             self.processError()(nil)
             return
         }
+        var isFirstload = true
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRelatedRent(query: query, neighborhoodId: neightborhoodId, houseId: houseId, searchId: searchId, count: 15)
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
 
+                    if isFirstload {
+                        isFirstload = false
+                        self.cleanData()
+                    }
                     var result = ErshouHouseResult.Success
                     if response == nil {
                         result = ErshouHouseResult.BadData
@@ -247,7 +270,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
                             self.traceParams <|>
-                            toTracerParams("related_list", key: "enter_from") <|>
+                            toTracerParams("rent_detail", key: "enter_from") <|>
+                            toTracerParams("related", key: "element_from") <|>
                             toTracerParams("related_list", key: "page_type")
                         let datas = parseRentHouseListRowItemNode(
                             items,
@@ -273,7 +297,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
 
     }
@@ -285,13 +309,16 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             return
         }
         oneTimeToast = createOneTimeToast()
-        
+        var isFirstLoad = true
         let loader = pageRequestRentInSameNeighborhoodSearch(query: query, neighborhoodId: nil, houseId: nil, searchId: nil, count: 15)
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
-                        
+                        if isFirstLoad {
+                            isFirstLoad = false
+                            self.cleanData()
+                        }
                         var result = ErshouHouseResult.Success
                         if response == nil {
                             result = ErshouHouseResult.BadData
@@ -338,7 +365,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         }())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
     }
     
@@ -349,12 +376,16 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
+        var isFirstLoad = true
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestRelatedHouse(query: nil, houseId: houseId, searchId: self.searchId, condition: nil, count: 15)
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
-                    
+                    if isFirstLoad {
+                        isFirstLoad = false
+                        self.cleanData()
+                    }
                     var result = ErshouHouseResult.Success
                     if response == nil && self.datas.value.count == 0 {
                         result = ErshouHouseResult.BadData
@@ -424,7 +455,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                            onError: self.processError())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
         
     }
@@ -436,13 +467,16 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             return
         }
         oneTimeToast = createOneTimeToast()
-        
+        var isFirstLoad = true
         let loader = pageRequestRelatedHouse(query: query, houseId: houseId, searchId: self.searchId, count: 20)
         pageableLoader = { [unowned self] in
             loader()
                 .subscribe(
                     onNext: { [unowned self] (response) in
-                        
+                        if isFirstLoad {
+                            isFirstLoad = false
+                            self.cleanData()
+                        }
                         var result = ErshouHouseResult.Success
                         if response == nil {
                             result = ErshouHouseResult.BadData
@@ -481,7 +515,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         }())
                 .disposed(by: self.disposeBag)
         }
-        cleanData()
+        displayDefaultPlaceholder()
         pageableLoader?()
     }
 

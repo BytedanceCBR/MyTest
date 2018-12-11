@@ -50,6 +50,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
     var followStatus: BehaviorRelay<Result<Bool>>? = nil
     
     var relatedHouse = false
+    var hasFirstLoadData = false
     
     init(title: String?,
          neighborhoodId: String,
@@ -90,7 +91,14 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         
         let relatedHouse = (paramObj?.userInfo.allInfo["related_house"] as? Bool) ?? false
 
-        self.init(title: title, neighborhoodId: neighborhoodId, houseId: houseId, searchSource: searchSource, searchId: searchId, houseType: houseTypeValue , relatedHouse: relatedHouse , bottomBarBinder: bottomBarBinder)
+        self.init(title: title,
+                  neighborhoodId: neighborhoodId,
+                  houseId: houseId,
+                  searchSource: searchSource,
+                  searchId: searchId,
+                  houseType: houseTypeValue ,
+                  relatedHouse: relatedHouse ,
+                  bottomBarBinder: bottomBarBinder)
         self.tracerParams = traceParam
         self.followStatus = followStatus
     }
@@ -119,7 +127,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         ershouHouseListViewModel?.sameNeighborhoodFollowUp = self.sameNeighborhoodFollowUp
         ershouHouseListViewModel?.searchId = searchId
         ershouHouseListViewModel?.traceParams = self.tracerParams
-        
+        ershouHouseListViewModel?.displayDefaultPlaceholder()
         ershouHouseListViewModel?.datas
             .skip(1)
             .map { $0.count < 1 }
@@ -146,7 +154,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
             case .BadData:
                 self?.errorVM?.onRequestError(error: nil)
             }
-            self?.tt_endUpdataData()
+//            self?.tt_endUpdataData()
         }
 
         self.setupLoadmoreIndicatorView(tableView: tableView, disposeBag: disposeBag)
@@ -289,14 +297,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                 })
                 .disposed(by: disposeBag)
         
-        //第一次进入请求数据
-        if self.ershouHouseListViewModel?.datas.value.count == 0 {
-            self.tt_startUpdate()
-            self.requestData()
-        }
         self.tracerParams = tracerParams <|>
             toTracerParams(searchId ?? "be_null", key: "search_id")
-//        self.searchAndConditionFilterVM.sendSearchRequest()
         if relatedHouse {
             self.tracerParams = self.tracerParams <|>
             toTracerParams("related_list", key: "category_name")
@@ -350,6 +352,15 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
             }
         }
         
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        //第一次进入请求数据
+        if hasFirstLoadData == false {
+            self.requestData()
+            hasFirstLoadData = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

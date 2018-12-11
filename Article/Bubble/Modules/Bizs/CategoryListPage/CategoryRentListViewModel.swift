@@ -40,7 +40,8 @@ func parseRentHouseListRowItemNode(
                 disposeBag: disposeBag,
                 tracerParams: params <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams("be_null", key: "element_from") <|>
+                    //修复租房周边房源element_from应该上报related
+//                    toTracerParams("be_null", key: "element_from") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
                 houseSearchParams: houseSearchParams,
                 navVC: navVC)
@@ -166,7 +167,8 @@ func openRentHouseDetailPage(
                 right
             })
         }
-        tracer["element_from"] = "be_null"
+        //修复二手房相关房源go_detail买点不能报be_null
+//        tracer["element_from"] = "be_null"
         tracer["card_type"] = "left_pic"
         tracer["log_pb"] = logPB
 
