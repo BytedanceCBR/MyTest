@@ -82,6 +82,21 @@ class GeneralBizConfig {
         }
     }
     
+    func updateConfig()
+    {
+        if let searchConfigCache = searchConfigCache {
+            if !searchConfigCache.containsObject(forKey: "config") {
+                fetchConfiguration()
+            } else {
+                currentSelectCityId.accept(getCurrentSelectCityId())
+                generalCacheSubject.accept(generalCacheSubject.value)
+                if CLLocationManager.authorizationStatus() == .denied {
+                    fetchConfiguration()
+                }
+            }
+        }
+    }
+    
     func cityNameById() -> (Int?) -> String? {
         return { [weak self] (cityId) in
             if self?.generalCacheSubject.value == nil,
