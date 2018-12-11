@@ -71,8 +71,8 @@ fileprivate class SuggectionTableView : UITableView {
 
 class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitializeProtocol {
 
-    lazy var navBar: CategorySearchNavBar = {
-        let result = CategorySearchNavBar()
+    lazy var navBar: FHSuggestionSearchNavBar = {
+        let result = FHSuggestionSearchNavBar()
         result.setSearchPlaceHolderText(text: "二手房/租房/小区")
         result.searchable = true
         return result
