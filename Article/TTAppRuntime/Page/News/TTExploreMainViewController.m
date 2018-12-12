@@ -238,8 +238,30 @@
     [self.categorySelectorView refreshWithCategories:preFixedAndSubscribeCategories];
     
     self.collectionVC.pageCategories = preFixedAndSubscribeCategories;
-    TTCategory *model = [self.collectionVC currentCategory];
-    [self.categorySelectorView selectCategory:model];
+    TTCategory *modelCurrent = [self.collectionVC currentCategory];
+    TTCategory *modelDefault =[TTArticleCategoryManager categoryModelByCategoryID:[SSCommonLogic feedStartCategory]];
+    if (modelDefault) {
+        if ([[TTArticleCategoryManager sharedManager].allCategories containsObject:modelDefault])
+        {
+            [self.categorySelectorView selectCategory:modelDefault];
+            [self.collectionVC setCurrentIndex:[[TTArticleCategoryManager sharedManager].allCategories indexOfObject:modelDefault] scrollToPositionAnimated:NO];
+        }
+        else
+        {
+            [self.collectionVC setCurrentIndex:0 scrollToPositionAnimated:NO];
+            TTCategory *firstCategory = [TTArticleCategoryManager sharedManager].allCategories.firstObject;
+
+            if ([firstCategory isKindOfClass:[TTCategory class]])
+            {
+                [TTArticleCategoryManager setCurrentSelectedCategoryID:firstCategory.categoryID];
+                [self.categorySelectorView selectCategory:[TTArticleCategoryManager sharedManager].allCategories.firstObject];
+            }
+        }
+    }else
+    {
+        [self.categorySelectorView selectCategory:modelCurrent];
+    }
+    
 }
 
 - (void)categorySelectorView:(TTCategorySelectorView *)selectorView selectCategory:(TTCategory *)category

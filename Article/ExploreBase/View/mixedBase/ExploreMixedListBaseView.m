@@ -1028,6 +1028,11 @@ TTRefreshViewDelegate
         [[TTVAutoPlayManager sharedManager] continuePlayCachedMovie];
     }
     [[TTAdImpressionTracker sharedImpressionTracker] startTrackForce];
+    
+    //防止频道发生变化刷新推荐头部
+    if ([self.listView numberOfRowsInSection:0] > 0 && [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        [self.listView reloadData];
+    }
 }
 
 - (void)resumeTrackAdCellsInVisibleCells{
