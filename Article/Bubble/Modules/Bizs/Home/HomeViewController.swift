@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import Reachability
-class HomeViewController: BaseViewController {
+class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
 
     let tipViewHeight: CGFloat = 32
     
@@ -127,6 +127,10 @@ class HomeViewController: BaseViewController {
             self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
         }
         
+        self.detailPageViewModel?.endTTUpdateCallBack = { [weak self] in
+            self?.tt_endUpdataData()
+        }
+        
         self.detailPageViewModel?.onSuccess = {
             [weak self] (successType) in
             if(successType == .requestSuccessTypeNormal)
@@ -186,6 +190,15 @@ class HomeViewController: BaseViewController {
         
         view.backgroundColor = UIColor.white
         tableView.backgroundColor = .white
+        
+        if EnvContext.shared.client.generalBizconfig.searchConfigCache?.containsObject(forKey: "config") ?? false {
+            self.tt_endUpdataData()
+            self.tableView.isHidden = false
+        }else
+        {
+            self.tt_startUpdate()
+            self.tableView.isHidden = true
+        }
     }
     
     
@@ -357,11 +370,17 @@ class HomeViewController: BaseViewController {
         
         self.detailPageViewModel?.homeViewControllerWillAppear()
     }
+    
+    func tt_hasValidateData() -> Bool {
+        let isHasValidateData = EnvContext.shared.client.generalBizconfig.searchConfigCache?.containsObject(forKey: "config") ?? false
+        return isHasValidateData
+    }
 
     override var prefersStatusBarHidden: Bool {
         
         return false
     }
+    
     private func bindNetReachability() {
         let generalBizConfig = EnvContext.shared.client.generalBizconfig
         Observable

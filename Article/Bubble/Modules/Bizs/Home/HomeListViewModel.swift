@@ -121,6 +121,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     var listDataRequestDisposeBag = DisposeBag()
     
+    var endTTUpdateCallBack: (() -> Void)?
+    
     init(tableView: UITableView, navVC: UINavigationController?) {
         
         self.navVC = navVC
@@ -513,7 +515,8 @@ class HomeListViewModel: DetailPageViewModel {
                     }
                     self.tableView?.hasMore = self.getHasMore() //根据请求返回结果设置上拉状态
                     self.dataSource?.categoryView.segmentedControl.touchEnabled = true
-                    
+                    self.tableView?.isHidden = false
+                    self.endTTUpdateCallBack?()
                     if !self.isFirstEnterCategory
                     {
                         let enterTypeV = TTCategoryStayTrackManager.share().enterType ?? "switch"
@@ -1374,7 +1377,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         if datas.count == 0 || section != 1 {
             return 0
         } else {
-            return 25
+            return 30
         }
     }
     

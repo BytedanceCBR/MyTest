@@ -22,7 +22,7 @@ class GeneralBizConfig {
     
     static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"
     
-    lazy private var searchConfigCache: YYCache? = {
+    lazy var searchConfigCache: YYCache? = {
         YYCache(name: "general_config")
     }()
     

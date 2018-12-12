@@ -175,6 +175,7 @@ class ConditionFilterViewModel {
         if sortPanelView?.isHidden == true {
             self.conditionPanelView?.isHidden = false
             self.sortPanelView?.isHidden = false
+            self.searchSortBtn?.isSelected = true
         } else {
             self.conditionPanelView?.isHidden = true
             self.sortPanelView?.isHidden = true

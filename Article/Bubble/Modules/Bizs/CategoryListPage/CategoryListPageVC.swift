@@ -862,12 +862,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.stayTimeParams = self.tracerParams <|> traceStayTime()
     }
 
-//    fileprivate func pullAndRefresh() {
-//        let filterCondition = searchAndConditionFilterVM.queryCondition.value
-//        let query = getQueryCondition(filterCondition: filterCondition)
-//        requestData(query: query)
-//    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

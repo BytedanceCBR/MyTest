@@ -398,7 +398,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     func requestDetailData() {
 //        let task =
         FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
-            if model != nil {
+            if model != nil && error == nil {
                 self?.logPb = model?.data?.logPb as? [String : Any]
                 self?.searchId = self?.logPb?["search_id"] as? String
 
