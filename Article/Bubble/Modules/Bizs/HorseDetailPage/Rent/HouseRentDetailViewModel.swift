@@ -307,7 +307,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
         }
-
+        var newParams = params
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             tracer: self.houseRentTracer,
