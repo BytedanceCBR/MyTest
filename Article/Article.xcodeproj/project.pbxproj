@@ -3632,20 +3632,11 @@
 		D0F68CB81D800F6C00785B03 /* TTUnifyADVideoCategoryLargePicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F68CB71D800F6C00785B03 /* TTUnifyADVideoCategoryLargePicCell.m */; };
 		D0F68CBE1D811B4900785B03 /* TTVideoCellActionBar.m in Sources */ = {isa = PBXBuildFile; fileRef = D0F68CBD1D811B4900785B03 /* TTVideoCellActionBar.m */; };
 		D0FEF3361D4759A6006F031C /* ExploreLastReadCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */; };
+		D40CAF0121BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
+		D40CAF0221BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
+		D40CAF0321BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
 		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D481F83E21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
-		D481F83F21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
-		D481F84021A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */; };
-		D481F84821A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */; };
-		D481F84921A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */; };
-		D481F84A21A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */; };
-		D481F84D21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
-		D481F84E21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
-		D481F84F21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */; };
-		D481F87A21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
-		D481F87B21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
-		D481F87C21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */; };
 		D500CFA2205AABCF00FBDAF5 /* AKLoginTrafficViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */; };
 		D501684E2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
 		D501684F2089EC4B00B8F1C7 /* TTMessageNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168292089EC4A00B8F1C7 /* TTMessageNotificationManager.m */; };
@@ -8232,15 +8223,9 @@
 		D0F68CBD1D811B4900785B03 /* TTVideoCellActionBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCellActionBar.m; sourceTree = "<group>"; };
 		D0FEF3341D4759A6006F031C /* ExploreLastReadCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreLastReadCellView.h; sourceTree = "<group>"; };
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
+		D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBridgeImp.h; sourceTree = "<group>"; };
+		D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBridgeImp.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeHeaderTableViewCell.h; sourceTree = "<group>"; };
-		D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeHeaderTableViewCell.m; sourceTree = "<group>"; };
-		D481F84621A540F6007A6DE7 /* FHHomeConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeConfigManager.h; sourceTree = "<group>"; };
-		D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeConfigManager.m; sourceTree = "<group>"; };
-		D481F84B21A55D66007A6DE7 /* FHHomeCellHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeCellHelper.h; sourceTree = "<group>"; };
-		D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeCellHelper.m; sourceTree = "<group>"; };
-		D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeTableViewDelegate.h; sourceTree = "<group>"; };
-		D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeTableViewDelegate.m; sourceTree = "<group>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -15841,14 +15826,8 @@
 		D46DA52321A43B74009D50C7 /* HouseHome */ = {
 			isa = PBXGroup;
 			children = (
-				D481F83C21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.h */,
-				D481F83D21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m */,
-				D481F84621A540F6007A6DE7 /* FHHomeConfigManager.h */,
-				D481F84721A540F6007A6DE7 /* FHHomeConfigManager.m */,
-				D481F84B21A55D66007A6DE7 /* FHHomeCellHelper.h */,
-				D481F84C21A55D66007A6DE7 /* FHHomeCellHelper.m */,
-				D481F87821A56918007A6DE7 /* FHHomeTableViewDelegate.h */,
-				D481F87921A56918007A6DE7 /* FHHomeTableViewDelegate.m */,
+				D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */,
+				D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */,
 			);
 			path = HouseHome;
 			sourceTree = "<group>";
@@ -20157,7 +20136,6 @@
 				2DCDFB6F1F30B0E200098F4D /* TTNotePermissionGuideManager.m in Sources */,
 				A97DBCAF1F1332E50002B455 /* TTSpotLightTask.m in Sources */,
 				2DB9A6D71F29BB85005E4A06 /* TTAdResPreloadModel.m in Sources */,
-				D481F83E21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */,
 				ABBEA6FD1F334407005DAD27 /* Card+CoreDataClass.m in Sources */,
 				1B98CAC91AAC567000ECADCB /* BlockUsersListView.m in Sources */,
 				2D2557BB1E8271CE00FF96A7 /* TTMovieResolutionSelectView.m in Sources */,
@@ -20230,7 +20208,6 @@
 				3F765B2916DB563F0037C3E3 /* ArticleSaveRemoteOperation.m in Sources */,
 				A94D3B131E2E25F5003AE22B /* TTCategoryAddToFirstPageCellView.m in Sources */,
 				ABBF8E011F2D911B00FEC7BB /* TTCookieManager.m in Sources */,
-				D481F87A21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				FEE3025220590DF000072A34 /* AKActivityTabManager.m in Sources */,
 				F87697081F31D0DA00D59CA5 /* TTVideoRecommendView.m in Sources */,
 				C305DE351E6FB9DC001F4967 /* TTAricleDetailGroupUnifyADView.m in Sources */,
@@ -20328,6 +20305,7 @@
 				3090690A2015B55800764DE7 /* TTHotNewsCell.m in Sources */,
 				A9AFA40C1F0E3B9000C1E28D /* TTNewPanelController.m in Sources */,
 				B32FD30221A3B479007B9966 /* RentCycleImageCellRender.swift in Sources */,
+				D40CAF0121BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
 				A97DB89F1F1332DC0002B455 /* TTNotificationActionSyncManager.m in Sources */,
 				2DCAD02E1DDC237200EBF9CF /* ExploreVideoDetailPhoneLargePicADView.m in Sources */,
 				2DB9A56C1F20B01C005E4A06 /* TTCanvasBundleManager.m in Sources */,
@@ -20371,7 +20349,6 @@
 				486CB7F91ED574C20045D657 /* TTHorizontalCardCell.m in Sources */,
 				A97DBC2F1F1332E40002B455 /* TTCrashAttemptFixTask.m in Sources */,
 				A97DC10E1F1333320002B455 /* TTRGallery.m in Sources */,
-				D481F84821A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
 				760CF74A21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				B388CC7C2142652B00653188 /* ANRMonitor.swift in Sources */,
 				06E69A541B0ADD7C00A3EDCA /* STStringTokenizer.m in Sources */,
@@ -21052,7 +21029,6 @@
 				47A169091F9F3050004CE29E /* TTVDetailFollowRecommendView.m in Sources */,
 				61466A2F214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */,
 				FEB87AB81F6A7AE1005D3EEC /* TTBadgeTrackerHelper.m in Sources */,
-				D481F84D21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */,
 				B388CCF22142652C00653188 /* BubbleAlertController.swift in Sources */,
 				48114B521F3C351E00F9452A /* TTHTSVideoConfiguration.m in Sources */,
 				FEE3024D20590DF000072A34 /* TTStartupAKActivityTabTask.m in Sources */,
@@ -21615,6 +21591,7 @@
 				B373C9EF2174587A008F9905 /* TTHeaderView.m in Sources */,
 				B373C9F02174587A008F9905 /* SSADTrackInfoList.m in Sources */,
 				B373C9F12174587A008F9905 /* SingleImageInfoCell.swift in Sources */,
+				D40CAF0321BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
 				B373C9F22174587A008F9905 /* TTAdCanvasImageCell.m in Sources */,
 				B373C9F32174587A008F9905 /* TSVRecUserCardCollectionViewCell.m in Sources */,
 				B373C9F42174587A008F9905 /* TTVFeedListLiveBottomContainerView.m in Sources */,
@@ -21896,7 +21873,6 @@
 				B373CB032174587A008F9905 /* TTAdResPreloadModel.m in Sources */,
 				B373CB042174587A008F9905 /* Card+CoreDataClass.m in Sources */,
 				B373CB052174587A008F9905 /* BlockUsersListView.m in Sources */,
-				D481F84021A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */,
 				B373CB062174587A008F9905 /* TTMovieResolutionSelectView.m in Sources */,
 				B373CB072174587A008F9905 /* TTNotePermissionGuideFactory.m in Sources */,
 				B373CB082174587A008F9905 /* StockData.m in Sources */,
@@ -21969,7 +21945,6 @@
 				B373CB492174587A008F9905 /* AKActivityTabManager.m in Sources */,
 				B373CB4A2174587A008F9905 /* TTVideoRecommendView.m in Sources */,
 				B373CB4B2174587A008F9905 /* TTAricleDetailGroupUnifyADView.m in Sources */,
-				D481F87C21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				B373CB4C2174587A008F9905 /* TTVPlayerTipAdOldFinish.m in Sources */,
 				B373CB4D2174587A008F9905 /* TTVFeedCellForRowContext.m in Sources */,
 				B373CB4E2174587A008F9905 /* ExploreMoviePlayerControlView.m in Sources */,
@@ -22110,7 +22085,6 @@
 				B373CBD12174587A008F9905 /* TTRGallery.m in Sources */,
 				B373CBD22174587A008F9905 /* ANRMonitor.swift in Sources */,
 				B373CBD32174587A008F9905 /* STStringTokenizer.m in Sources */,
-				D481F84A21A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
 				760CF74C21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				B373CBD42174587A008F9905 /* ExploreCollectionCellView.m in Sources */,
 				B373CBD52174587A008F9905 /* TTPersonalHomeHeaderInfoView.m in Sources */,
@@ -22789,7 +22763,6 @@
 				B373CE582174587A008F9905 /* TTVDetailFollowRecommendView.m in Sources */,
 				B373CE592174587A008F9905 /* FHMultiImagesInfoCell.swift in Sources */,
 				B373CE5A2174587A008F9905 /* TTBadgeTrackerHelper.m in Sources */,
-				D481F84F21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */,
 				B373CE5C2174587A008F9905 /* BubbleAlertController.swift in Sources */,
 				B373CE5D2174587A008F9905 /* TTHTSVideoConfiguration.m in Sources */,
 				B373CE5E2174587A008F9905 /* TTStartupAKActivityTabTask.m in Sources */,
@@ -23352,6 +23325,7 @@
 				FEFA54A4205FB1A8001F50D8 /* TTHeaderView.m in Sources */,
 				FEFA54A6205FB1A8001F50D8 /* SSADTrackInfoList.m in Sources */,
 				B388CBDB2142652B00653188 /* SingleImageInfoCell.swift in Sources */,
+				D40CAF0221BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
 				FEFA54A7205FB1A8001F50D8 /* TTAdCanvasImageCell.m in Sources */,
 				FEFA54A8205FB1A8001F50D8 /* TSVRecUserCardCollectionViewCell.m in Sources */,
 				FEFA54A9205FB1A8001F50D8 /* TTVFeedListLiveBottomContainerView.m in Sources */,
@@ -23633,7 +23607,6 @@
 				FEFA55D5205FB1A8001F50D8 /* TTAdResPreloadModel.m in Sources */,
 				FEFA55D6205FB1A8001F50D8 /* Card+CoreDataClass.m in Sources */,
 				FEFA55D7205FB1A8001F50D8 /* BlockUsersListView.m in Sources */,
-				D481F83F21A50FD1007A6DE7 /* FHHomeHeaderTableViewCell.m in Sources */,
 				FEFA55D9205FB1A8001F50D8 /* TTMovieResolutionSelectView.m in Sources */,
 				FEFA55DB205FB1A8001F50D8 /* TTNotePermissionGuideFactory.m in Sources */,
 				FEFA55DC205FB1A8001F50D8 /* StockData.m in Sources */,
@@ -23706,7 +23679,6 @@
 				FEFA5620205FB1A8001F50D8 /* AKActivityTabManager.m in Sources */,
 				FEFA5621205FB1A8001F50D8 /* TTVideoRecommendView.m in Sources */,
 				FEFA5623205FB1A8001F50D8 /* TTAricleDetailGroupUnifyADView.m in Sources */,
-				D481F87B21A56918007A6DE7 /* FHHomeTableViewDelegate.m in Sources */,
 				FEFA5624205FB1A8001F50D8 /* TTVPlayerTipAdOldFinish.m in Sources */,
 				FEFA5625205FB1A8001F50D8 /* TTVFeedCellForRowContext.m in Sources */,
 				FEFA5626205FB1A8001F50D8 /* ExploreMoviePlayerControlView.m in Sources */,
@@ -23847,7 +23819,6 @@
 				FEFA56B6205FB1A8001F50D8 /* TTRGallery.m in Sources */,
 				B388CC7D2142652B00653188 /* ANRMonitor.swift in Sources */,
 				FEFA56B8205FB1A8001F50D8 /* STStringTokenizer.m in Sources */,
-				D481F84921A540F6007A6DE7 /* FHHomeConfigManager.m in Sources */,
 				760CF74B21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				FEFA56BA205FB1A8001F50D8 /* ExploreCollectionCellView.m in Sources */,
 				FEFA56BB205FB1A8001F50D8 /* TTPersonalHomeHeaderInfoView.m in Sources */,
@@ -24526,7 +24497,6 @@
 				FEFA5990205FB1A8001F50D8 /* TTVDetailFollowRecommendView.m in Sources */,
 				61466A30214A133D0023F721 /* FHMultiImagesInfoCell.swift in Sources */,
 				FEFA5992205FB1A8001F50D8 /* TTBadgeTrackerHelper.m in Sources */,
-				D481F84E21A55D66007A6DE7 /* FHHomeCellHelper.m in Sources */,
 				B388CCF32142652C00653188 /* BubbleAlertController.swift in Sources */,
 				FEFA5993205FB1A8001F50D8 /* TTHTSVideoConfiguration.m in Sources */,
 				FEFA5995205FB1A8001F50D8 /* TTStartupAKActivityTabTask.m in Sources */,

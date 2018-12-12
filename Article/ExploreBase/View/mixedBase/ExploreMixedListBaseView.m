@@ -1265,7 +1265,9 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            if (_fetchListManager.items.count > 0) {
+            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+            
+            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
                 return 1;
             }else
             {
