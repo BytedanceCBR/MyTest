@@ -1377,7 +1377,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         if datas.count == 0 || section != 1 {
             return 0
         } else {
-            return 25
+            return 30
         }
     }
     
