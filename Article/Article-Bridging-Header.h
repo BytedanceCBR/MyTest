@@ -110,4 +110,8 @@
 #import "FHRentDetailAPI.h"
 #import "FHRentDetailResponse.h"
 #import "TTFullScreenLoadingView.h"
+
+#import "FHHomeHeaderTableViewCell.h"
+#import "FHHomeCellHelper.h"
+
 #endif /* Article_Bridging_Header_h */

@@ -176,6 +176,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
 
     //这个接口被两个问题调用，因此不能添加enter_from买点
+    // 租房详情页 同小区房源
     func requestRent(neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -206,7 +207,11 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
 
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            self.traceParams
+                            self.traceParams <|>
+                            //修复v0.4a 74号买点问题
+                            toTracerParams("same_neighborhood_list", key: "page_type") <|>
+                            toTracerParams("be_null", key: "element_from") <|>
+                            toTracerParams("same_neighborhood_list", key: "enter_from")
                         let datas = parseRentHouseListRowItemNode(
                             items,
                             traceParams: params,

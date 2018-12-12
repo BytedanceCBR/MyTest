@@ -143,6 +143,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
+        //目前已经无法区分是否是push进入，需要彻底调查哪里将状态栏设置成黑色的
         if self.isFromSearch(routeParamObj: paramObj) {
             let params = TracerParams.momoid() <|>
                 toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
@@ -195,6 +196,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             }
             self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
             self.logPB = tracer["log_pb"] as? [String: Any]
+        } else {
+            self.isFromPush = true
+            self.houseRentTracer.enterFrom = "push"
+            self.logPB = paramObj?.allParams["log_pb"] as? [String : Any]
+            self.houseRentTracer.logPb = self.logPB
         }
         if let hsp = paramObj?.userInfo.allInfo["house_search_params"] as? [String : Any] {
             self.houseSearchParams = paramsOfMap(hsp)

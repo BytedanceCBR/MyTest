@@ -165,6 +165,7 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
+#import "Bubble-Swift.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -681,7 +682,9 @@ TTRefreshViewDelegate
                              [wself fetchFromLocal:![wself tt_hasValidateData] fromRemote:YES getMore:NO];
                              if (![FHHomeConfigManager sharedInstance].currentDataModel)
                              {
-                                 [[FHHomeConfigManager sharedInstance] startUpdateAllConfig];
+                                 if ([[EnvContext shared] respondsToSelector:@selector(client)] && [[[EnvContext shared] client] respondsToSelector:@selector(onStart)]) {
+                                     [[[EnvContext shared] client] onStart];
+                                 }
                              }
                          }];
     CGFloat barH = [SSCommonLogic articleNotifyBarHeight];
@@ -1262,7 +1265,9 @@ TTRefreshViewDelegate
             return 0;
         }
         if ([_categoryID isEqualToString:@"f_house_news"]) {
-            if (_fetchListManager.items.count > 0) {
+            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+            
+            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
                 return 1;
             }else
             {

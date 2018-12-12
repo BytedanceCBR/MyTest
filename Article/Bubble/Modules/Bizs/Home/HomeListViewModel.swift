@@ -129,6 +129,8 @@ class HomeListViewModel: DetailPageViewModel {
         self.cellFactory = cellFactory
         cellFactory.register(tableView: tableView)
         
+        tableView.register(FHHomeHeaderTableViewCell.self, forCellReuseIdentifier: "FHHomeHeaderTableViewCell")
+        
         let datas = self.generateDefaultSection()
         self.dataSource = FHFunctionListDataSourceDelegate(tableView: tableView,datasV:datas)
         
@@ -235,7 +237,12 @@ class HomeListViewModel: DetailPageViewModel {
         let categoryStartName = SSCommonLogic.feedStartCategory()
 
         if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
-            EnvContext.shared.client.generalBizconfig.load()
+            EnvContext.shared.client.generalBizconfig.updateConfig()
+        }
+        
+        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
+            self.tableView?.triggerPullDown()
+            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
         }
     }
     
@@ -332,10 +339,7 @@ class HomeListViewModel: DetailPageViewModel {
     //根据列表数据生成sectionnode
     func generateSectionNode(items: [HouseItemInnerEntity]?) -> [TableSectionNode]
     {
-        let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
-        
-        let entrys = config?.opData?.items
-        
+
         let homeCommonParams = EnvContext.shared.homePageParams <|>
             toTracerParams("maintab", key: "page_type") <|>
             toTracerParams("maintab_list", key: "element_type") <|>
@@ -348,7 +352,10 @@ class HomeListViewModel: DetailPageViewModel {
                 return newItem
             }
             let dataParser = DetailDataParser.monoid()
-                <- parseSpringboardNode(entrys ?? [],isNeedUpdateBoard: isNeedUpdateSpringBoard, disposeBag: self.disposeBag, navVC: self.navVC)
+//                <- parseSpringboardNode(entrys ?? [],isNeedUpdateBoard: isNeedUpdateSpringBoard, disposeBag: self.disposeBag, navVC: self.navVC)
+                <- parseFHHomeHeaderSectionNode(navVC: navVC, disposeBag: self.disposeBag){
+                    
+                }
                 <- parseFHHomeErshouHouseListItemNode(
                     self.dataSource?.categoryView.houseTypeRelay.value == HouseType.secondHandHouse ? theDataItems : [],
                     disposeBag: self.disposeBag,
@@ -741,6 +748,39 @@ class HomeListViewModel: DetailPageViewModel {
         return true
     }
     
+}
+
+func parseFHHomeHeaderSectionNode(
+    navVC: UINavigationController?,
+    disposeBag: DisposeBag,
+    callBack: @escaping () -> Void) -> () -> TableSectionNode {
+    return {
+        var selector: ((TracerParams) -> Void)?
+        var mapSelector: ((TracerParams) -> Void)?
+
+        let cellRender = curry(fillFHHomeHeaderCell)(disposeBag)(callBack)(mapSelector)
+        
+        return TableSectionNode(
+            items: [oneTimeRender(cellRender)],
+            selectors:  nil,
+            tracer: nil,
+            sectionTracer: nil,
+            label: "",
+            type: .node(identifier: "FHHomeHeaderTableViewCell"))
+    }
+}
+
+func fillFHHomeHeaderCell(
+    disposeBag: DisposeBag,
+    callBack: @escaping () -> Void,
+    selector: ((TracerParams) -> Void)?,
+    cell: UITableViewCell) -> Void {
+    if let theCell = cell as? FHHomeHeaderTableViewCell {
+        theCell.refreshUI()
+        let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
+        let entrys = config?.opData?.items
+        
+    }
 }
 
 func parseFHHomeNewHouseListItemNode(
@@ -1236,6 +1276,11 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "FHHomeHeaderTableViewCell") as? FHHomeHeaderTableViewCell ?? FHHomeHeaderTableViewCell()
+            cell.refreshUI()
+            return cell
+        }
         
         //控件展现打点
         if !recordIndexCache.contains(indexPath) {
@@ -1264,15 +1309,43 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         }
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+           return FHHomeCellHelper.heightForFHHomeHeaderCellViewType()
+        }
+        
+        if !tableView.fd_indexPathHeightCache.existsHeight(at: indexPath) {
+            var cellModel : FHCellModel?
+            
+            tableView.fd_heightForCell(withIdentifier: identifierByIndexPath(indexPath), cacheBy: indexPath) { [unowned self] (cell) in
+                
+                if indexPath.section < self.fhSections.count {
+                    let aSection = self.fhSections[indexPath.section]
+                    if indexPath.row < aSection.count {
+                        cellModel = aSection[indexPath.row]
+                    }
+                }
+                
+                if let cell = cell as? UITableViewCell {
+                    self.fillCellData(cell: cell, indexPath: indexPath, model: cellModel)
+                } else {
+                    assertionFailure()
+                }
+            }
+        }
+        return tableView.fd_indexPathHeightCache.height(for: indexPath)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         datas[indexPath.section].selectors?[indexPath.row](TracerParams.momoid() <|> toTracerParams(indexPath.row, key: "rank"))
-        
     }
     
     override func fillCellData(cell: UITableViewCell, indexPath: IndexPath, model: Any?) {
         if let cell = cell as? BaseUITableViewCell {
             datas[indexPath.section].items[indexPath.row](cell)
+        }else if let cell = cell as? FHHomeHeaderTableViewCell
+        {
+            cell.refreshUI()
         }
     }
     
@@ -1301,7 +1374,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         if datas.count == 0 || section != 1 {
             return 0
         } else {
-            return 50
+            return 25
         }
     }
     

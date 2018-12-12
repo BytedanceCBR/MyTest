@@ -688,7 +688,7 @@ TTFeedCollectionCellDelegate>
 //                startCategory = kNIHFindHouseCategoryID;
 //            }
             if (!startCategory) {
-                startCategory = kNIHFeedHouseMixedCategoryID;
+                startCategory = kNIHFindHouseCategoryID;
             }
             
             

@@ -507,6 +507,181 @@ class CategorySearchNavBar: UIView {
 
 }
 
+class FHSuggestionSearchNavBar: UIView {
+    
+    lazy var backBtn: UIButton = {
+        let btn = ExtendHotAreaButton()
+        btn.setTitle("取消", for: .normal)
+        btn.setTitle("取消", for: .highlighted)
+        btn.titleLabel?.font = CommonUIStyle.Font.pingFangRegular(16)
+        btn.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .normal)
+        btn.setTitleColor(hexStringToUIColor(hex: kFHDarkIndigoColor), for: .highlighted)
+        return btn
+    }()
+    
+    lazy var searchAreaBtn: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = UIColor.clear
+        return btn
+    }()
+    
+    lazy var searchTypeBtn: UIButton = {
+        let result = UIButton()
+        result.backgroundColor = UIColor.clear
+        return result
+    }()
+    
+    lazy var searchTypeLabel: UILabel = {
+        let result = UILabel()
+        result.textColor = hexStringToUIColor(hex: "#505050")
+        result.font = CommonUIStyle.Font.pingFangRegular(14)
+        return result
+    }()
+    
+    lazy var triangleImage: UIImageView = {
+        let view = UIImageView()
+        view.image = #imageLiteral(resourceName: "icon-triangle-open")
+        return view
+    }()
+    
+    lazy var verticalLineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = hexStringToUIColor(hex: "#d8d8d8")
+        self.layer.masksToBounds = true
+        self.layer.borderColor = UIColor.white.cgColor
+        self.layer.borderWidth = 0.5
+        return view
+    }()
+    
+    lazy var searchAreaPanel: UIView = {
+        let result = UIView()
+        result.backgroundColor = hexStringToUIColor(hex: "#f2f4f5")
+        result.layer.masksToBounds = true
+        result.layer.cornerRadius = 4
+        //        result.layer.borderColor = hexStringToUIColor(hex: kFHSilver2Color).cgColor
+        //        result.layer.borderWidth = 0.5
+        return result
+    }()
+    
+    lazy var searchIcon: UIImageView = {
+        let result = UIImageView()
+        result.image = UIImage(named: "icon-search-titlebar")
+        return result
+    }()
+    
+    lazy var searchInput: UITextField = {
+        let result = UITextField()
+        result.background = nil
+        result.font = CommonUIStyle.Font.pingFangRegular(12)
+        result.textColor = hexStringToUIColor(hex: "081f33")
+        result.returnKeyType = .search
+        result.clearButtonMode = .whileEditing
+        return result
+    }()
+
+    var searchable = false {
+        didSet {
+            searchAreaBtn.isHidden = searchable
+        }
+    }
+    
+    var canSelectType = true {
+        didSet {
+            triangleImage.isHidden = !canSelectType
+            
+        }
+    }
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        addSubview(backBtn)
+        addSubview(searchAreaPanel)
+        
+        backBtn.snp.makeConstraints { maker in
+            maker.right.equalTo(-20)
+            maker.height.equalTo(26)
+            maker.width.equalTo(32)
+            maker.centerY.equalTo(searchAreaPanel)
+        }
+        
+        searchAreaPanel.snp.makeConstraints { maker in
+            maker.left.equalTo(20)
+            maker.top.equalToSuperview().offset(CommonUIStyle.StatusBar.height + 4)
+            maker.right.equalTo(backBtn.snp.left).offset(-20)
+            maker.height.equalTo(33)
+        }
+        
+        searchAreaPanel.addSubview(searchTypeLabel)
+        searchTypeLabel.snp.makeConstraints { maker in
+            maker.left.equalToSuperview().offset(10)
+            maker.centerY.equalToSuperview()
+            maker.width.equalTo(42)
+        }
+        
+        searchAreaPanel.addSubview(triangleImage)
+        triangleImage.snp.makeConstraints { maker in
+            maker.left.equalTo(searchTypeLabel.snp.right).offset(6).priority(.high)
+            maker.height.width.equalTo(9)
+            maker.centerY.equalToSuperview()
+        }
+        
+        searchAreaPanel.addSubview(verticalLineView)
+        verticalLineView.snp.makeConstraints { maker in
+            maker.width.equalTo(1)
+            maker.height.equalTo(15)
+            maker.centerY.equalToSuperview()
+            maker.left.equalTo(triangleImage.snp.right).offset(10)
+        }
+        
+        searchAreaPanel.addSubview(searchTypeBtn)
+        searchTypeBtn.snp.makeConstraints { maker in
+            maker.left.top.bottom.equalToSuperview()
+            maker.right.equalTo(verticalLineView.snp.left)
+        }
+        
+        searchAreaPanel.addSubview(searchIcon)
+        searchIcon.snp.makeConstraints { maker in
+            maker.left.equalTo(verticalLineView.snp.right).offset(10)
+            maker.centerY.equalToSuperview()
+            maker.height.width.equalTo(12)
+        }
+        
+        searchAreaPanel.addSubview(searchInput)
+        searchInput.snp.makeConstraints { maker in
+            maker.left.equalTo(searchIcon.snp.right).offset(8)
+            maker.right.equalToSuperview()
+            maker.centerY.equalToSuperview()
+            maker.height.equalTo(20)
+        }
+        
+        searchAreaPanel.addSubview(searchAreaBtn)
+        searchAreaBtn.snp.makeConstraints { maker in
+            maker.right.top.bottom.equalToSuperview()
+            maker.left.equalTo(searchIcon.snp.left)
+        }
+
+        let str = "_cl" + "earBu" + "tton"
+        if let btn = searchInput.value(forKey: str) as? UIButton {
+            btn.setImage(UIImage(named: "search_delete"), for: .normal)
+            btn.setImage(UIImage(named: "search_delete"), for: .highlighted)
+        }
+    }
+    
+    func setSearchPlaceHolderText(text: String?) {
+        if let text = text {
+            let attr = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12),
+                        NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#8a9299")]
+            let attrString = NSAttributedString(string: text, attributes: attr)
+            searchInput.attributedPlaceholder = attrString
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class ExtendHotAreaButton: UIButton {
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

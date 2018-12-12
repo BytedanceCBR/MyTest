@@ -1,6 +1,6 @@
-github "Hearst-DD/ObjectMapper" "3.4.0"
+github "Hearst-DD/ObjectMapper" "3.4.1"
 github "JiongXing/PhotoBrowser" "1.4.0"
-github "ReactiveX/RxSwift" "4.3.1"
+github "ReactiveX/RxSwift" "4.4.0"
 github "SnapKit/SnapKit" "4.2.0"
 github "ashleymills/Reachability.swift" "v4.3.0"
 github "danielgindi/Charts" "v3.1.1"

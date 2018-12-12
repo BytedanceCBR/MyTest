@@ -49,7 +49,6 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
         toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
-
     return {
         if (model?.data?.facilities?.count ?? 0) != 0 {
             return TableSectionNode(
@@ -67,6 +66,10 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
 
 func fillRentFacilityCell(facilities: [FHRentDetailResponseDataFacilitiesModel]?, cell: BaseUITableViewCell) {
     if let theCell = cell as? RentFacilityCell {
+        //租房详情页设施cell尽有一个，不会被重用，因此需要保证仅渲染一次。
+        if theCell.facilityItemView.currentItems.count > 0 {
+            return
+        }
         for v in theCell.facilityItemView.subviews {
             v.removeFromSuperview()
         }

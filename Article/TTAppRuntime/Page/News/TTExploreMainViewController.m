@@ -483,7 +483,9 @@
     [dict setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
     [dict setValue:label forKey:@"refresh_type"];
 
-    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    if (![category.categoryID isEqualToString:@"f_find_house"]) {
+        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    }
 
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }
