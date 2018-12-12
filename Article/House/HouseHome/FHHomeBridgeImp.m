@@ -6,6 +6,7 @@
 //
 
 #import "FHHomeBridgeImp.h"
+#import "TTArticleCategoryManager.h"
 
 @implementation FHHomeBridgeImp
 
@@ -13,6 +14,13 @@
 {
     NSString * categoryStartName = [SSCommonLogic feedStartCategory];
     return categoryStartName;
+}
+
+
+- (NSString *)currentSelectCategoryName
+{
+    NSString * currentCategoryName = [TTArticleCategoryManager currentSelectedCategoryID];
+    return currentCategoryName;
 }
 
 @end

@@ -242,10 +242,10 @@ class HomeListViewModel: DetailPageViewModel {
             EnvContext.shared.client.generalBizconfig.updateConfig()
         }
         
-        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
-            self.tableView?.triggerPullDown()
-            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
-        }
+//        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
+//            self.tableView?.triggerPullDown()
+//            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
+//        }
     }
     
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
