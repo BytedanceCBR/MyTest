@@ -142,6 +142,12 @@ func parseMoreConditionItemLabel(label: String, nodePath: [Node]) -> ConditionIt
     }
 }
 
+fileprivate enum UserInputFocus {
+    case upperInput
+    case lowerInput
+    case noneInput
+}
+
 //TODO: fixbug 滚动栏跑偏
 class BubbleSelectCollectionView: BaseConditionPanelView {
 
@@ -194,6 +200,7 @@ class BubbleSelectCollectionView: BaseConditionPanelView {
     
     var headerViewType: AnyClass
     var queryWhenClean: Bool = true
+    fileprivate var currentUserInputState: UserInputFocus = .noneInput
 
     convenience init(nodes: [Node], resetBtnName: String = "不限条件", queryWhenClean: Bool = true) {
         self.init(nodes: nodes, headerView: BubbleCollectionSectionHeader.self)
@@ -657,9 +664,6 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             nodes: nodes,
             headerView: headerView,
             dataSource: dataSource)
-//        self.collectionView = PriceBubbleSelectCollectionView.createCollectionView()
-//        self.collectionView?.dataSource = dataSource
-//        self.collectionView?.delegate = dataSource
         if let ds = self.priceDataSource() {
             ds.onHeaderViewInit = { [weak self] in
                 self?.bindInputPanelObservable()
@@ -687,73 +691,53 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
             let rate = self.dataSource.nodes.first?.rate ?? 1
             ds.inputHeaderView?.priceInputView.lowerPriceTextField.placeholder = "最低价格 (\(getRateTextByRateValue(rate)))"
             ds.inputHeaderView?.priceInputView.upperPriceTextField.placeholder = "最高价格 (\(getRateTextByRateValue(rate)))"
-
-            ds.selectedIndexPaths
-                .skip(1)
-                .filter { $0.count != 0 }
-                .bind { [unowned ds] set in
-                    if let node = ds.selectedNodes().first, node.key != "rental_pay_period[]" {
-                        ds.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
-                        ds.inputHeaderView?.priceInputView.upperPriceTextField.resignFirstResponder()
-                        ds.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
-                        ds.inputHeaderView?.priceInputView.lowerPriceTextField.resignFirstResponder()
-                    }
-                }.disposed(by: disposeBag)
         }
 
         if let ds = self.priceDataSource() {
             if let inputHeaderView = ds.inputHeaderView {
                 Observable.combineLatest(inputHeaderView.priceInputView.upperPriceTextField.rx.text,
                                          inputHeaderView.priceInputView.lowerPriceTextField.rx.text)
-                    .filter { !($0.0?.isEmpty ?? true) && !($0.1?.isEmpty ?? true) }
-                    .debounce(0.2, scheduler: MainScheduler.asyncInstance)
+                    .filter { !($0.0?.trimmingCharacters(in: .whitespaces).isEmpty ?? true) ||
+                        !($0.1?.trimmingCharacters(in: .whitespaces).isEmpty ?? true) }
+//                    .debounce(0.2, scheduler: MainScheduler.asyncInstance)
                     .subscribe(onNext: { [unowned self, unowned ds] s in
                         if ds.selectedIndexPaths.value.count > 0 && !ds.isOnlySelected(key: "rental_pay_period[]"){
                             ds.selectedIndexPaths.accept(ds.unselectedIndexsExportFor(key: "rental_pay_period[]"))
-                            //                        ds.selectedIndexPaths.accept([])
                             if let collectionView = self.collectionView {
+                                self.markUserInputState()
                                 self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
+                                self.restoreUserInputState()
                             }
-                            ds.inputHeaderView?.priceInputView.upperPriceTextField.becomeFirstResponder()
                         }
                     })
                     .disposed(by: disposeBag)
             }
-
-
-//            ds.inputHeaderView?.priceInputView.upperPriceTextField.rx.text
-//                .filter { $0?.isEmpty == false }
-//                .subscribeOn(MainScheduler.asyncInstance)
-//                .subscribe(onNext: { [unowned self, unowned ds] s in
-//                    if ds.selectedIndexPaths.value.count > 0 {
-////                        ds.selectedIndexPaths.accept(ds.unselectedIndexsExportFor(key: "rental_pay_period[]"))
-//                        print(ds.unselectedIndexsExportFor(key: "rental_pay_period[]"))
-////                        ds.selectedIndexPaths.accept([])
-//                        if let collectionView = self.collectionView {
-//                            self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
-//                        }
-//                        ds.inputHeaderView?.priceInputView.upperPriceTextField.becomeFirstResponder()
-//                    }
-//                })
-//                .disposed(by: disposeBag)
-//            ds.inputHeaderView?.priceInputView.lowerPriceTextField.rx.text
-//                .filter { $0?.isEmpty == false }
-//                .subscribeOn(MainScheduler.asyncInstance)
-//                .subscribe(onNext: { [unowned self, unowned ds] s in
-//                    if ds.selectedIndexPaths.value.count > 0 {
-//                        print(ds.unselectedIndexsExportFor(key: "rental_pay_period[]"))
-////                        ds.selectedIndexPaths.accept(ds.unselectedIndexsExportFor(key: "rental_pay_period[]"))
-////                        ds.selectedIndexPaths.accept([])
-//                        if let collectionView = self.collectionView {
-//                            self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
-//                        }
-//                        ds.inputHeaderView?.priceInputView.lowerPriceTextField.becomeFirstResponder()
-//                    }
-//                })
-//                .disposed(by: disposeBag)
         }
         fillPriceInput?()
         fillPriceInput = nil
+    }
+
+    fileprivate func markUserInputState() {
+        if let ds = self.priceDataSource() {
+            if ds.inputHeaderView?.priceInputView.upperPriceTextField.isFirstResponder ?? false {
+                currentUserInputState = .upperInput
+            } else if ds.inputHeaderView?.priceInputView.lowerPriceTextField.isFirstResponder ?? false {
+                currentUserInputState = .lowerInput
+            }
+        }
+    }
+
+    fileprivate func restoreUserInputState() {
+        if let ds = self.priceDataSource() {
+            switch currentUserInputState {
+            case .upperInput:
+                ds.inputHeaderView?.priceInputView.upperPriceTextField.becomeFirstResponder()
+            case .lowerInput:
+                ds.inputHeaderView?.priceInputView.lowerPriceTextField.becomeFirstResponder()
+            default:
+                return
+            }
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -901,9 +885,6 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
 
     func processUserInputPrice(updateFilterOnly: Bool = false) {
         if let ds = priceDataSource() {
-//            let whitespace = NSCharacterSet.whitespacesAndNewlines
-//            let low = Int(ds.inputHeaderView?.priceInputView.lowerPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
-//            let upper = Int(ds.inputHeaderView?.priceInputView.upperPriceTextField.text?.trimmingCharacters(in: whitespace) ?? "0") ?? 0
             let nodes = self.selectedNodes()
             if updateFilterOnly {
                 self.conditionLabelSetter?(nodes)
@@ -1012,6 +993,26 @@ class PriceBubbleSelectDataSource: BubbleSelectDataSource , UICollectionViewDele
             return CGSize(width: UIScreen.main.bounds.width, height: 114)
         } else {
             return CGSize(width: UIScreen.main.bounds.width, height: 58)
+        }
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if nodes.count > indexPath.section {
+            let sub = nodes[indexPath.section]
+            if sub.children.count > indexPath.row {
+                let node = sub.children[indexPath.row]
+                self.cleanUserInput(node)
+            }
+        }
+        super.collectionView(collectionView, didSelectItemAt: indexPath)
+    }
+
+    fileprivate func cleanUserInput(_ node: Node) {
+        if node.key != "rental_pay_period[]" {
+            self.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
+            self.inputHeaderView?.priceInputView.upperPriceTextField.resignFirstResponder()
+            self.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+            self.inputHeaderView?.priceInputView.lowerPriceTextField.resignFirstResponder()
         }
     }
 }

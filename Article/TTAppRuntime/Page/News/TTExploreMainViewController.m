@@ -238,8 +238,30 @@
     [self.categorySelectorView refreshWithCategories:preFixedAndSubscribeCategories];
     
     self.collectionVC.pageCategories = preFixedAndSubscribeCategories;
-    TTCategory *model = [self.collectionVC currentCategory];
-    [self.categorySelectorView selectCategory:model];
+    TTCategory *modelCurrent = [self.collectionVC currentCategory];
+    TTCategory *modelDefault =[TTArticleCategoryManager categoryModelByCategoryID:[SSCommonLogic feedStartCategory]];
+    if (modelDefault) {
+        if ([[TTArticleCategoryManager sharedManager].allCategories containsObject:modelDefault])
+        {
+            [self.categorySelectorView selectCategory:modelDefault];
+            [self.collectionVC setCurrentIndex:[[TTArticleCategoryManager sharedManager].allCategories indexOfObject:modelDefault] scrollToPositionAnimated:NO];
+        }
+        else
+        {
+            [self.collectionVC setCurrentIndex:0 scrollToPositionAnimated:NO];
+            TTCategory *firstCategory = [TTArticleCategoryManager sharedManager].allCategories.firstObject;
+
+            if ([firstCategory isKindOfClass:[TTCategory class]])
+            {
+                [TTArticleCategoryManager setCurrentSelectedCategoryID:firstCategory.categoryID];
+                [self.categorySelectorView selectCategory:[TTArticleCategoryManager sharedManager].allCategories.firstObject];
+            }
+        }
+    }else
+    {
+        [self.categorySelectorView selectCategory:modelCurrent];
+    }
+    
 }
 
 - (void)categorySelectorView:(TTCategorySelectorView *)selectorView selectCategory:(TTCategory *)category
@@ -483,7 +505,9 @@
     [dict setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
     [dict setValue:label forKey:@"refresh_type"];
 
-    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    if (![category.categoryID isEqualToString:@"f_find_house"]) {
+        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    }
 
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }

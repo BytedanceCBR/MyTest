@@ -365,6 +365,22 @@ static bool isTTCommentPublishing = NO;
 
 #pragma mark - post comment
 
+- (NSString *)enterFromString{
+    
+    NSString * enterFrom = self.enterFrom;
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        return enterFrom;
+    }else{
+        if (![enterFrom isEqualToString:@"click_headline"] && ![enterFrom isEqualToString:@"click_favorite"]) {
+            
+            enterFrom = @"click_category";
+        }
+    }
+    
+    return enterFrom;
+}
+
 - (NSString *)categoryName {
     NSString *categoryName = self.categoryID;
     if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
@@ -406,7 +422,6 @@ static bool isTTCommentPublishing = NO;
                                                          }];
 
     NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
-    [paramsDict setValue:self.enterFrom  forKey:@"enter_from"];
     [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
     [paramsDict setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
     if (self.logPb) {
@@ -419,7 +434,8 @@ static bool isTTCommentPublishing = NO;
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
     if (self.enterFrom.length > 0) {
-        
+
+        [paramsDict setValue:[self enterFromString]  forKey:@"enter_from"];
         [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     }
     

@@ -61,7 +61,10 @@ func parseRentHouseListRowItemNode(
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 //                toTracerParams("be_null", key: "element_type") <|>
                 toTracerParams("rent", key: "house_type")
-            return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
+            return onceRecord(key: TraceEventName.house_show, params: theParams
+                .exclude("element_from")
+                .exclude("enter_from")
+                .exclude("enter_from"))
     }
     let count = data?.count ?? 0
     if let renders = data?.enumerated().map( { (index, item) in

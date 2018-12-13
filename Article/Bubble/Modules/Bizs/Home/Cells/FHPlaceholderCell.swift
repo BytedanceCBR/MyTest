@@ -14,10 +14,36 @@ class FHPlaceholderCell: BaseUITableViewCell {
     }
     
     lazy var majorImageView: UIImageView = {
-        let re = UIImageView(image: UIImage(named: UIScreen.main.bounds.size.width > 376 ? "house-invalid-name414" : "house-invalid-name"))
+        let re = UIImageView(image: UIImage(named: "house_cell_placeholder"))
         re.contentMode = .scaleAspectFill
+        re.layer.masksToBounds = true
         return re
     }()
+    
+    lazy var view1: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHPaleGreyColor)
+        return re
+    }()
+    
+    lazy var view2: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHPaleGreyColor)
+        return re
+    }()
+    
+    lazy var view3: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHPaleGreyColor)
+        return re
+    }()
+    
+    lazy var view4: UIView = {
+        let re = UIView()
+        re.backgroundColor = hexStringToUIColor(hex: kFHPaleGreyColor)
+        return re
+    }()
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -30,10 +56,44 @@ class FHPlaceholderCell: BaseUITableViewCell {
         self.contentView.addSubview(majorImageView)
         
         majorImageView.snp.makeConstraints { maker in
-            maker.right.equalTo(-20)
             maker.bottom.equalToSuperview()
             maker.left.equalTo(20)
             maker.top.equalTo(20)
+            maker.width.equalTo(114)
+            maker.height.equalTo(85)
+        }
+        
+        contentView.addSubview(view1)
+        contentView.addSubview(view2)
+        contentView.addSubview(view3)
+        contentView.addSubview(view4)
+        
+        view1.snp.makeConstraints { maker in
+            maker.left.equalTo(majorImageView.snp.right).offset(10)
+            maker.top.equalTo(majorImageView)
+            maker.right.equalTo(-20)
+            maker.height.equalTo(14)
+        }
+        
+        view2.snp.makeConstraints { maker in
+            maker.left.equalTo(view1)
+            maker.top.equalTo(view1.snp.bottom).offset(10)
+            maker.right.equalTo(-20 - 44)
+            maker.height.equalTo(8)
+        }
+        
+        view3.snp.makeConstraints { maker in
+            maker.left.equalTo(view1)
+            maker.top.equalTo(view2.snp.bottom).offset(15)
+            maker.right.equalTo(view2.snp.centerX).offset(10)
+            maker.height.equalTo(15)
+        }
+        
+        view4.snp.makeConstraints { maker in
+            maker.left.equalTo(view1)
+            maker.bottom.equalTo(majorImageView)
+            maker.right.equalTo(-20 - 65)
+            maker.height.equalTo(10)
         }
     }
     
@@ -52,34 +112,34 @@ class FHPlaceholderCell: BaseUITableViewCell {
 
 func fillHousePlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCell) {
   
-    if let theCell = cell as? FHPlaceholderCell {
-        
-        if isFirst {
-            theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(0)
-            }
-        }else {
-            theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(0)
-            }
-        }
-    }
+//    if let theCell = cell as? FHPlaceholderCell {
+//
+//        if isFirst {
+//            theCell.majorImageView.snp.updateConstraints { maker in
+//                maker.top.equalTo(0)
+//            }
+//        }else {
+//            theCell.majorImageView.snp.updateConstraints { maker in
+//                maker.top.equalTo(0)
+//            }
+//        }
+//    }
 }
 
 func fillHouseListPlaceholderItemCell(isFirst: Bool = false, cell: BaseUITableViewCell) {
     
-    if let theCell = cell as? FHPlaceholderCell {
-        
-        if isFirst {
-            theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(0)
-            }
-        }else {
-            theCell.majorImageView.snp.updateConstraints { maker in
-                maker.top.equalTo(0)
-            }
-        }
-    }
+//    if let theCell = cell as? FHPlaceholderCell {
+//
+//        if isFirst {
+//            theCell.majorImageView.snp.updateConstraints { maker in
+//                maker.top.equalTo(0)
+//            }
+//        }else {
+//            theCell.majorImageView.snp.updateConstraints { maker in
+//                maker.top.equalTo(0)
+//            }
+//        }
+//    }
 }
 
 func parseHousePlaceholderNode(nodeCount: Int = 5) -> () -> TableSectionNode? {

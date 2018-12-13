@@ -681,17 +681,15 @@ TTFeedCollectionCellDelegate>
 //                }
 //            }
             
-            // add by zjing 默认展示找房频道
+            // 默认展示频道
             startCategory = [SSCommonLogic feedStartCategory];
             
 //            if (!startCategory) {
 //                startCategory = kNIHFindHouseCategoryID;
 //            }
             if (!startCategory) {
-                startCategory = kNIHFeedHouseMixedCategoryID;
+                startCategory = kNIHFindHouseCategoryID;
             }
-            
-            
             
             if (startCategory) {
                 for (int i = 0; i < _pageCategories.count; ++i) {

@@ -1401,7 +1401,7 @@ CHECKOUT OPTIONS:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: 50678ca8f9a6c34c80089a8a1cfdb133c5402657
+    :commit: e4b69bd093640a386d8d9f5cd8e3daf833497a9c
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
@@ -1437,8 +1437,12 @@ SPEC CHECKSUMS:
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseDetail: dca81d6326acfc43803399629c7c3410f1b2093f
+<<<<<<< HEAD
   FHHouseHome: ca10d654d76542b77f424d063d974d379005088e
   FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
+=======
+  FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
+>>>>>>> feature/0_4_a
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e

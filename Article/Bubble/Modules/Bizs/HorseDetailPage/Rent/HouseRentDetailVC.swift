@@ -143,6 +143,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 EnvContext.shared.toast.dismissToast()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
+        //目前已经无法区分是否是push进入，需要彻底调查哪里将状态栏设置成黑色的
         if self.isFromSearch(routeParamObj: paramObj) {
             let params = TracerParams.momoid() <|>
                 toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
@@ -152,6 +153,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.limit ?? "be_null", key: "limit") <|>
                 toTracerParams(houseRentTracer.rank, key: "rank") <|>
                 toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
+                toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
             recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params  <|> traceStayTime()
@@ -195,6 +197,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             }
             self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
             self.logPB = tracer["log_pb"] as? [String: Any]
+        } else {
+            self.isFromPush = true
+            self.houseRentTracer.enterFrom = "push"
+            self.logPB = paramObj?.allParams["log_pb"] as? [String : Any]
+            self.houseRentTracer.logPb = self.logPB
         }
         if let hsp = paramObj?.userInfo.allInfo["house_search_params"] as? [String : Any] {
             self.houseSearchParams = paramsOfMap(hsp)
@@ -675,6 +682,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                                                                     success: {
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfirmTrace()
                         self.followUpViewModel.followHouseItem(houseType: .rentHouse,
                                                                followAction: .rentHouse,
                                                                followId: "\(self.houseId)",
@@ -706,6 +714,20 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                     params: tracerParams.exclude("element_type"))
 
         alert.showFrom(self.view)
+    }
+
+    func sendClickConfirmTrace()
+    {
+        let tracerParams = TracerParams.momoid() <|>
+            EnvContext.shared.homePageParams <|>
+            toTracerParams(houseRentTracer.pageType, key: "page_type") <|>
+            toTracerParams("left_pic", key: "card_type") <|>
+            toTracerParams(houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams(houseRentTracer.elementFrom, key: "element_from") <|>
+            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams(houseRentTracer.rank, key: "rank")
+        recordEvent(key: TraceEventName.click_confirm,
+                    params: tracerParams.exclude("element_type"))
     }
 
     deinit {

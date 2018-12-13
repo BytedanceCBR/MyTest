@@ -22,7 +22,7 @@ class GeneralBizConfig {
     
     static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"
     
-    lazy private var searchConfigCache: YYCache? = {
+    lazy var searchConfigCache: YYCache? = {
         YYCache(name: "general_config")
     }()
     
@@ -75,6 +75,21 @@ class GeneralBizConfig {
                 let generalConfig = GeneralConfigData(JSONString: generalPayload)
                 currentSelectCityId.accept(getCurrentSelectCityId())
                 generalCacheSubject.accept(generalConfig)
+                if CLLocationManager.authorizationStatus() == .denied {
+                    fetchConfiguration()
+                }
+            }
+        }
+    }
+    
+    func updateConfig()
+    {
+        if let searchConfigCache = searchConfigCache {
+            if !searchConfigCache.containsObject(forKey: "config") {
+                fetchConfiguration()
+            } else {
+                currentSelectCityId.accept(getCurrentSelectCityId())
+                generalCacheSubject.accept(generalCacheSubject.value)
                 if CLLocationManager.authorizationStatus() == .denied {
                     fetchConfiguration()
                 }

@@ -185,7 +185,9 @@ class CategoryListViewModel: DetailPageViewModel {
 //                .debug("requestNewHouseList")
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
                     cleanDataOnce()
-                    self.oneTimeToast?(response?.data?.refreshTip)
+                    if response?.data?.total ?? 0 > 0 {
+                        self.oneTimeToast?(response?.data?.refreshTip)
+                    }
                     self.houseSearchRecorder?(response?.data?.searchId)
                     if let data = response?.data {
                         self.houseListOpenUrl = data.houseListOpenUrl
@@ -252,6 +254,7 @@ class CategoryListViewModel: DetailPageViewModel {
 
         let loader = pageRequestErshouHouseSearch(query: query, suggestionParams: condition ?? "", needEncode: needEncode)
         oneTimeToast = createOneTimeToast()
+        
         let cleanDataOnce = once(apply: { [weak self] in
             self?.cleanData()
         })
@@ -260,8 +263,10 @@ class CategoryListViewModel: DetailPageViewModel {
         pageableLoader = { [unowned self] in
             loader()
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
-                        cleanDataOnce()
+                    cleanDataOnce()
+                    if response?.data?.total ?? 0 > 0 {
                         self.oneTimeToast?(response?.data?.refreshTip)
+                    }
                     if hasRecordSearch == false {
                         self.houseSearchRecorder?(response?.data?.searchId)
                         hasRecordSearch = true
@@ -339,7 +344,9 @@ class CategoryListViewModel: DetailPageViewModel {
             loader()
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
                     cleanDataOnce()
-                    self.oneTimeToast?(response?.data?.refreshTip)
+                    if response?.data?.total ?? 0 > 0 {
+                        self.oneTimeToast?(response?.data?.refreshTip)
+                    }
                     if let data = response?.data {
                         self.houseSearchRecorder?(response?.data?.searchId)
                         self.houseListOpenUrl = data.houseListOpenUrl
@@ -412,7 +419,9 @@ class CategoryListViewModel: DetailPageViewModel {
             loader()
                 .map { [unowned self] response -> (Bool, [TableRowNode]) in
                     cleanDataOnce()
-                    self.oneTimeToast?(response?.data?.refreshTip)
+                    if response?.data?.total ?? 0 > 0 {
+                        self.oneTimeToast?(response?.data?.refreshTip)
+                    }
                     if hasRecordSearch == false {
                         self.houseSearchRecorder?(response?.data?.searchId)
                         hasRecordSearch = true

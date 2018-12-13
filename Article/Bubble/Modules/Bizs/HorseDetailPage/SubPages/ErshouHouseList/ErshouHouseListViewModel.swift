@@ -176,6 +176,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
     }
 
     //这个接口被两个问题调用，因此不能添加enter_from买点
+    // 租房详情页 同小区房源
     func requestRent(neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -205,8 +206,12 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         })
 
                         let params = TracerParams.momoid() <|>
+                            self.traceParams <|>
                             toTracerParams("be_null", key: "element_type") <|>
-                            self.traceParams
+                            //修复v0.4a 74号买点问题
+                            toTracerParams("same_neighborhood_list", key: "page_type") <|>
+                            toTracerParams("be_null", key: "element_from") <|>
+                            toTracerParams("same_neighborhood_list", key: "enter_from")
                         let datas = parseRentHouseListRowItemNode(
                             items,
                             traceParams: params,
@@ -270,8 +275,9 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                         let params = TracerParams.momoid() <|>
                             toTracerParams("be_null", key: "element_type") <|>
                             self.traceParams <|>
-                            toTracerParams("rent_detail", key: "enter_from") <|>
-                            toTracerParams("related", key: "element_from") <|>
+                            //修复04a 36号买点
+                            toTracerParams("related_list", key: "enter_from") <|>
+                            toTracerParams("be_null", key: "element_from") <|>
                             toTracerParams("related_list", key: "page_type")
                         let datas = parseRentHouseListRowItemNode(
                             items,
@@ -308,6 +314,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
             self.processError()(nil)
             return
         }
+        // alpha
         oneTimeToast = createOneTimeToast()
         var isFirstLoad = true
         let loader = pageRequestRentInSameNeighborhoodSearch(query: query, neighborhoodId: nil, houseId: nil, searchId: nil, count: 15)
@@ -369,7 +376,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         pageableLoader?()
     }
     
-    
+    //二手房源租房相关房源
     func requestRelatedHouse( houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
@@ -593,6 +600,7 @@ func parseRelatedHouseListItemNode(
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             let finalParams = theParams
+                .exclude("category_name")
                 .exclude("element_from")
                 .exclude("enter_from")
             

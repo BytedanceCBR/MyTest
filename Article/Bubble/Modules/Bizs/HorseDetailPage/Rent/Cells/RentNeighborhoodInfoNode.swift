@@ -15,6 +15,7 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("neighborhood_detail", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type") <|>
+        toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams("rent_detail", key: "enter_from")
     
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
@@ -83,9 +84,11 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
         }
         if let lat = neighborhoodInfo?.gaodeLat,
             let lng = neighborhoodInfo?.gaodeLng {
-            theCell.setLocation(lat: lat, lng: lng)
-            theCell.lat = lat
-            theCell.lng = lng
+            if theCell.lat == nil {
+                theCell.setLocation(lat: lat, lng: lng)
+                theCell.lat = lat
+                theCell.lng = lng
+            }
         }
         if let schoolName = neighborhoodInfo?.schoolInfo?.schoolName {
             theCell.schoolLabel.text = schoolName

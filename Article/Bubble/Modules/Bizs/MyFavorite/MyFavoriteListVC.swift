@@ -44,6 +44,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     private let houseType: HouseType
     
     var tracerParams = TracerParams.momoid()
+    
+    var isChangeFromFollow: Bool?
 
     let disposeBag = DisposeBag()
 
@@ -125,6 +127,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         NotificationCenter.default.rx.notification(.followUpDidChange)
             .subscribe(onNext: { [weak self] (_) in
+                self?.isChangeFromFollow = true
                 self?.refreshRemoteData()
             })
             .disposed(by: disposeBag)
@@ -252,7 +255,6 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
                 categoryName = "rent_follow_list"
             }
             
-            
             self?.tracerParams = (self?.tracerParams ?? TracerParams.momoid()) <|>
                 EnvContext.shared.homePageParams <|>
                 toTracerParams(categoryName ?? "be_null", key: "category_name") <|>
@@ -265,7 +267,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             
             self?.tableView.mj_footer.endRefreshing()
             //增加
-            if let tracePram = self?.tracerParams
+            if let tracePram = self?.tracerParams , !(self?.isChangeFromFollow ?? false)
             {
                 recordEvent(key: TraceEventName.enter_category, params: tracePram)
             }

@@ -71,8 +71,8 @@ fileprivate class SuggectionTableView : UITableView {
 
 class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitializeProtocol {
 
-    lazy var navBar: CategorySearchNavBar = {
-        let result = CategorySearchNavBar()
+    lazy var navBar: FHSuggestionSearchNavBar = {
+        let result = FHSuggestionSearchNavBar()
         result.setSearchPlaceHolderText(text: "二手房/租房/小区")
         result.searchable = true
         return result
@@ -865,11 +865,27 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
                                      "enter_query": item.text ?? "be_null",
                                      "search_query": item.text ?? "be_null"]
 
+
+
+
             var infos: [String: Any] = [:]
             infos["houseSearch"] = houseSearchParams
             if let info = item.extinfo {
                 infos["suggestion"] = createQueryCondition(info)
             }
+
+            var tracer = [String : Any]()
+            let dict =  self.tracerParams.paramsGetter([:])
+            if let elementFrom = dict["element_from"] {
+                tracer["element_from"] = elementFrom
+            }
+            if let enterFrom = dict["enter_from"] {
+                tracer["enter_from"] = enterFrom
+            }
+
+            tracer["enter_type"] = "click"
+            infos["tracer"] = tracer
+
             let userInfo = TTRouteUserInfo(info: infos)
             let routerObj = TTRoute.shared()?.routeObj(withOpen: URL(string: jumpUrl), userInfo: userInfo)
             if self.onSuggestionSelected != nil {

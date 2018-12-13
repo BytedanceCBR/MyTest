@@ -240,7 +240,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.ttNeedIgnoreZoomAnimation = true
+        
         userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
             if let _ = value.newValue {
                 self?.view.endEditing(true)
@@ -276,9 +277,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             requestNilDataImage:"group-9",
             isUserClickEnable:true,
             retryAction:{ [weak self] in
-                if let hasNone = self?.hasNone{
-                    if !hasNone {
-                        self?.searchAndConditionFilterVM.sendSearchRequest()
+                if let hasNone = self?.hasNone, !hasNone{
+                    self?.conditionFilterViewModel?.pullConditionsFromPanels()
+                    if self?.conditionFilterViewModel?.conditionItemViews.count == 0 {
                         self?.resetConditionData()
                     }
                 }
@@ -465,7 +466,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.view.bringSubview(toFront: searchFilterPanel)
         self.view.bringSubview(toFront: searchSortBtnBG)
-
+        self.searchAndConditionFilterVM.onSortConditionChanged = { [weak self] (condition) in
+            if let condition = condition,
+                condition.rankType ?? "default" != "default" {
+                self?.traceHouseRank(searchId: self?.categoryListViewModel?.searchId, rankType: condition.rankType)
+            }
+        }
     }
 
     func setupSortCondition() {
@@ -704,13 +710,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 searchParams: houseSearchParams)
             self.categoryListViewModel?.houseSearch = houseSearchParams
         } else {
-            let houseSearchParams = ["search_query": "be_null",
-                                     "enter_query": "be_null"]
             self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
                 pageType: self.pageTypeString(),
                 houseSearchParams: TracerParams.momoid(),
-                searchParams: houseSearchParams)
-            self.categoryListViewModel?.houseSearch = houseSearchParams
+                searchParams: nil)
+//            self.categoryListViewModel?.houseSearch = houseSearchParams
         }
     }
 
@@ -756,14 +760,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
-            var rankType = "default"
-            if let node = self?.searchAndConditionFilterVM.searchSortCondition,
-                let theRankType = node.rankType {
-                rankType = theRankType
-            }
-            self?.traceHouseRank(
-                searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
-                rankType: rankType)
             self?.allParams?["houseSearch"] = nil
             self?.bindHouseSearchParams()
 
@@ -848,7 +844,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func requestData(query: String) {
         if EnvContext.shared.client.reachability.connection == .none
         {
-            EnvContext.shared.toast.showToast("网络异常")
+            self.categoryListViewModel?.cleanData()
+            self.errorVM?.onRequestInvalidNetWork()
             return
         }
         self.errorVM?.onRequest()
@@ -861,12 +858,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.tracerParams = self.tracerParams <|> theTracerParams
         self.stayTimeParams = self.tracerParams <|> traceStayTime()
     }
-
-//    fileprivate func pullAndRefresh() {
-//        let filterCondition = searchAndConditionFilterVM.queryCondition.value
-//        let query = getQueryCondition(filterCondition: filterCondition)
-//        requestData(query: query)
-//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -1110,11 +1101,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
-    fileprivate func traceHouseRank(searchId: String, rankType: String) {
+    fileprivate func traceHouseRank(searchId: String?, rankType: String?) {
         let params = EnvContext.shared.homePageParams <|>
-            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(searchId ?? "be_null", key: "search_id") <|>
             toTracerParams(pageTypeString(), key: "page_type") <|>
-            toTracerParams(rankType, key: "rank_type")
+            toTracerParams(rankType ?? "be_null", key: "rank_type")
         recordEvent(key: "house_rank", params: params)
     }
 

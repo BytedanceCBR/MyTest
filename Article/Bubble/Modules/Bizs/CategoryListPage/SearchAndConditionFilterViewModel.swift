@@ -28,9 +28,12 @@ class SearchAndConditionFilterViewModel {
 
     var houseType: String?
 
+    var onSortConditionChanged:((Node?) -> Void)?
+
     var searchSortCondition: Node? {
         didSet {
             queryCondition.accept(getConditions())
+            onSortConditionChanged?(searchSortCondition)
         }
     }
 

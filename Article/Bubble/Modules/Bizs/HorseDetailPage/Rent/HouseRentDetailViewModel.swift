@@ -160,9 +160,9 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         let action: () -> Void = { [weak self] in
             if let url = self?.detailData.value?.data?.houseOverview?.reportUrl,
                 !url.isEmpty {
-                self?.jumpToReportPage(url: "http://i.haoduofangs.com\(url)")
+                self?.jumpToReportPage(url: "\(EnvContext.networkConfig.host)\(url)")
             } else {
-                self?.jumpToReportPage(url: "http://i.haoduofangs.com/f100/client/feedback")
+                self?.jumpToReportPage(url: "\(EnvContext.networkConfig.host)/f100/client/feedback")
             }
 
         }
@@ -307,7 +307,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
         }
-
+        var newParams = params
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             tracer: self.houseRentTracer,
@@ -398,7 +398,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     func requestDetailData() {
 //        let task =
         FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
-            if model != nil {
+            if model != nil && error == nil {
                 self?.logPb = model?.data?.logPb as? [String : Any]
                 self?.searchId = self?.logPb?["search_id"] as? String
 
