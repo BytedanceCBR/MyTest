@@ -45,6 +45,7 @@ class HouseRentTracer {
         if !hasRecordGoDetail {
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams(self.pageType, key: "page_type") <|>
+                toTracerParams("rent", key: "house_type") <|>
                 toTracerParams(self.cardType, key: "card_type") <|>
                 toTracerParams(self.enterFrom, key: "enter_from") <|>
                 toTracerParams(self.elementFrom, key: "element_from") <|>

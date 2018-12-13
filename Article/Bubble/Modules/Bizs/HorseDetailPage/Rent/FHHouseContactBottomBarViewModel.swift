@@ -114,6 +114,17 @@ class FHHouseContactBottomBarViewModel {
                         theSearchId = searchId
 
                     }
+
+                    let paramsDict = self.traceParams?.paramsGetter([:])
+                    if self.logPb == nil {
+                        self.logPb = paramsDict?["log_pb"]
+                    }
+
+                    if let logPB = self.logPb as? [String: Any] {
+                        if self.searchId == nil {
+                            self.searchId = logPB["search_id"] as? String
+                        }
+                    }
                     self.callRealtorPhone(contactPhone: contactPhone,
                                           houseId: self.houseId,
                                           houseType: self.houseType,

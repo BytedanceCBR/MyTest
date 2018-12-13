@@ -153,6 +153,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.limit ?? "be_null", key: "limit") <|>
                 toTracerParams(houseRentTracer.rank, key: "rank") <|>
                 toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
+                toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
             recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params  <|> traceStayTime()
