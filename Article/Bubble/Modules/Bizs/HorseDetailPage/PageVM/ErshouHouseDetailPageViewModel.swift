@@ -445,6 +445,7 @@ import RxCocoa
                                 
                                 let params = theParams <|>
                                     paramsOfMap([EventKeys.category_name: HouseCategory.neighborhood_nearby_list.rawValue]) <|>
+                                    toTracerParams("be_null", key: "element_type") <|>
                                     toTracerParams("neighborhood_nearby", key: "element_from") <|>
                                     toTracerParams("old_detail", key: "enter_from") <|>
                                     toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
@@ -920,6 +921,7 @@ func parseErshouHouseListRowItemNode(
     disposeBag: DisposeBag,
     sameNeighborhoodFollowUp: BehaviorRelay<Result<Bool>>? = nil,
     houseSearchParams: TracerParams?,
+    elementType: String = "be_null",
     navVC: UINavigationController?) -> [TableRowNode] {
     // 二手房列表
     var traceDict = traceParams.paramsGetter([:])
@@ -956,7 +958,7 @@ func parseErshouHouseListRowItemNode(
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams("old", key: "house_type")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
@@ -988,6 +990,7 @@ func parseErshouRelatedHouseListItemNode(
     traceExtension: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    elementType: String = "be_null",
     navVC: UINavigationController?) ->  [TableRowNode] {
     
     var traceParmas = tracerParams.paramsGetter([:])
@@ -1009,7 +1012,6 @@ func parseErshouRelatedHouseListItemNode(
                 tracerParams: tracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    //                    toTracerParams("maintab", key: "enter_from") <|>
                     toTracerParams(elementFrom, key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
@@ -1034,6 +1036,7 @@ func parseErshouRelatedHouseListItemNode(
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
