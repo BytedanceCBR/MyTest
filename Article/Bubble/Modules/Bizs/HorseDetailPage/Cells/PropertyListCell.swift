@@ -148,11 +148,22 @@ class PropertyListRowView: UIView {
 
         valueLabel.snp.makeConstraints { maker in
             maker.left.equalTo(keyLabel.snp.right).offset(10)
-            maker.right.equalTo(-25)
+            maker.right.equalTo(-20)
             maker.top.equalTo(14)
             maker.bottom.equalTo(keyLabel)
         }
     }
+    
+    // 二手房以及租房详情页重新布局
+    func remakeLeftRightOffetConstraints(leftOffset:CGFloat = 20.0, rightOffset:CGFloat = -20.0) {
+        keyLabel.snp.updateConstraints { (maker) in
+            maker.left.equalTo(leftOffset)
+        }
+        valueLabel.snp.updateConstraints { (maker) in
+            maker.right.equalTo(rightOffset)
+        }
+    }
+    
     // 小区详情页布局
     func remakeValueLabelConstraints() {
         
@@ -164,7 +175,7 @@ class PropertyListRowView: UIView {
         }
         valueLabel.snp.remakeConstraints { maker in
             maker.left.equalToSuperview().offset(96)
-            maker.right.equalToSuperview().offset(-25)
+            maker.right.equalToSuperview().offset(-20)
             maker.top.equalToSuperview().offset(10)
             maker.height.equalTo(20)
             maker.bottom.equalTo(keyLabel)
@@ -311,11 +322,13 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
                     setRowValue(info, row)
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
+                    row.remakeLeftRightOffetConstraints(leftOffset: 20, rightOffset: -10)
                 } else {
                     let twoRow = twoValueView.last
                     let row = PropertyListRowView()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
+                    row.remakeLeftRightOffetConstraints(leftOffset: 10, rightOffset: -20)
                 }
             }
 
@@ -333,6 +346,7 @@ func fillPropertyListCell(_ infos: [ErshouHouseBaseInfo]?,_ hasOutLineInfo:Bool 
             let singleViews = groups[1].map { (info) -> UIView in
                 let re = PropertyListRowView()
                 setRowValue(info, re)
+                re.remakeLeftRightOffetConstraints(leftOffset: 20, rightOffset: -20)
                 return re
             }
 

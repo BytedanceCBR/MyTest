@@ -77,7 +77,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             newItem.fhSearchId = data.searchId
                             return newItem
                         })
-                        let params = TracerParams.momoid()
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type")
                         let datas = parseErshouHouseListRowItemNode(
                             items,
                             traceParams: params,
@@ -595,6 +596,7 @@ func parseRelatedHouseListItemNode(
             let (offset, item) = e
             let theParams = tracerParams <|>
                 toTracerParams(offset, key: "rank") <|>
+                toTracerParams("related", key: "element_type") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
