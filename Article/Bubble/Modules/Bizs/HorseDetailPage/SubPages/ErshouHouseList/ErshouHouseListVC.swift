@@ -272,7 +272,8 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                 .subscribe(onNext: { [unowned self] query in
                     if EnvContext.shared.client.reachability.connection == .none
                     {
-                        EnvContext.shared.toast.showToast("网络异常")
+                        self.ershouHouseListViewModel?.cleanData()
+                        self.errorVM?.onRequestInvalidNetWork()
                         return
                     }
                     self.errorVM?.onRequest()
@@ -328,7 +329,16 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
 
     private func setupErrorDisplay() {
         //增加error页
-        self.errorVM = NHErrorViewModel(errorMask:infoMaskView,requestRetryText:"网络异常",requestRetryImage:"group-4",requestNilDataText:"没有找到相关的信息，换个条件试试吧~",requestNilDataImage:"group-9",requestErrorText:"数据走丢了",requestErrorImage:"group-8")
+        self.errorVM = NHErrorViewModel(errorMask: infoMaskView,
+                                        requestRetryText:"网络异常",
+                                        requestRetryImage:"group-4",
+                                        requestNilDataText:"没有找到相关的信息，换个条件试试吧~",
+                                        requestNilDataImage:"group-9",
+                                        requestErrorText:"数据走丢了",
+                                        requestErrorImage:"group-8",
+                                        isUserClickEnable: true) { [weak self] in
+            self?.searchAndConditionFilterVM.sendSearchRequest()
+        }
         infoMaskView.isHidden = true
         view.addSubview(infoMaskView)
         infoMaskView.snp.makeConstraints { maker in

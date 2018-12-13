@@ -240,7 +240,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.ttNeedIgnoreZoomAnimation = true
+        
         userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
             if let _ = value.newValue {
                 self?.view.endEditing(true)
@@ -276,9 +277,9 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
             requestNilDataImage:"group-9",
             isUserClickEnable:true,
             retryAction:{ [weak self] in
-                if let hasNone = self?.hasNone{
-                    if !hasNone {
-                        self?.searchAndConditionFilterVM.sendSearchRequest()
+                if let hasNone = self?.hasNone, !hasNone{
+                    self?.conditionFilterViewModel?.pullConditionsFromPanels()
+                    if self?.conditionFilterViewModel?.conditionItemViews.count == 0 {
                         self?.resetConditionData()
                     }
                 }
@@ -704,13 +705,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 searchParams: houseSearchParams)
             self.categoryListViewModel?.houseSearch = houseSearchParams
         } else {
-            let houseSearchParams = ["search_query": "be_null",
-                                     "enter_query": "be_null"]
             self.categoryListViewModel?.houseSearchRecorder = self.recordHouseSearch(
                 pageType: self.pageTypeString(),
                 houseSearchParams: TracerParams.momoid(),
-                searchParams: houseSearchParams)
-            self.categoryListViewModel?.houseSearch = houseSearchParams
+                searchParams: nil)
+//            self.categoryListViewModel?.houseSearch = houseSearchParams
         }
     }
 
@@ -848,7 +847,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
     fileprivate func requestData(query: String) {
         if EnvContext.shared.client.reachability.connection == .none
         {
-            EnvContext.shared.toast.showToast("网络异常")
+            self.categoryListViewModel?.cleanData()
+            self.errorVM?.onRequestInvalidNetWork()
             return
         }
         self.errorVM?.onRequest()
