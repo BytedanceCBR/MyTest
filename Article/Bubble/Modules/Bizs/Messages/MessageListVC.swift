@@ -452,11 +452,7 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
 //                                                          "houseSearch": houseSearchParams])
                     
                     recordEvent(key: "click_recommend_loadmore", params: TracerParams.momoid())
-                    
 
-                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-                        toTracerParams("messagetab_recommend", key: "origin_from")
-                    
                     var tracerParams = TracerParams.momoid()
                     tracerParams = tracerParams <|>
                         toTracerParams("be_null", key: "element_from") <|>
