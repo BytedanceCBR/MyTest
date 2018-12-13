@@ -123,13 +123,13 @@ import RxCocoa
         }
         self.bindConditionChangeDelegate()
         self.conditionFilterViewModel?.conditionPanelWillDisplay = { [weak self] in
-            if self?.delegate?.responds(to: #selector(FHHouseFilterDelegate.onConditionWillPanelDisplay)) ?? false {
-                self?.delegate?.onConditionWillPanelDisplay()
+            if self?.delegate?.responds(to: #selector(FHHouseFilterDelegate.onConditionPanelWillDisplay)) ?? false {
+                self?.delegate?.onConditionPanelWillDisplay?()
             }
         }
         self.conditionFilterViewModel?.conditionPanelWillDisappear = { [weak self] in
             if self?.delegate?.responds(to: #selector(FHHouseFilterDelegate.onConditionPanelWillDisappear)) ?? false {
-                self?.delegate?.onConditionPanelWillDisappear()
+                self?.delegate?.onConditionPanelWillDisappear?()
             }
         }
     }
@@ -151,7 +151,7 @@ import RxCocoa
             .debounce(0.3, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] void in
                 self?.conditionFilterViewModel?.openOrCloseSortPanel()
-                self?.delegate?.onConditionWillPanelDisplay()
+                self?.delegate?.onConditionPanelWillDisplay?()
             })
             .disposed(by: disposeBag)
 
