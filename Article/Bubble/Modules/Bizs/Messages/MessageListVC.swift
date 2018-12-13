@@ -456,9 +456,17 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     var tracerParams = TracerParams.momoid()
                     tracerParams = tracerParams <|>
                         toTracerParams("be_null", key: "element_from") <|>
-                        toTracerParams("recommend_message_list", key: "enter_from") <|>
                         toTracerParams("click", key: "enter_type")
                     
+                    let listType = selectTraceParam(self.traceParams, key: "category_name")
+                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+                        
+                        tracerParams = tracerParams <|> toTracerParams("recommend_message_list", key: "enter_from")
+                        
+                    }else {
+                        tracerParams = tracerParams <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
+                    }
+
                     let paramsMap = tracerParams.paramsGetter([:])
                     let userInfo = TTRouteUserInfo(info: ["tracer": paramsMap])
                     if let moreDetail = item.moreDetal
