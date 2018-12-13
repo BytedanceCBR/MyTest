@@ -307,7 +307,6 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
         }
-        var newParams = params
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             tracer: self.houseRentTracer,
@@ -325,7 +324,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Parameter neighborhoodId: 小区id
     fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
         
-        let info: [String: Any] = ["source": "rent_detail"]
+        let info: [String: Any] = ["source": "rent_detail",
+                                   "log_pb": self.houseRentTracer.logPb ?? "be_null",
+                                   "enter_from": "rent_detail",
+                                   "search_id": self.houseRentTracer.searchId ?? "be_null",
+                                   "element_from": "neighborhood_detail"]
         let userInfo = TTRouteUserInfo(info: info)
         let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
         if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {

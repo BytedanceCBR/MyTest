@@ -304,6 +304,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             if let originSearchId = allParams["origin_search_id"] {
                 traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
             }
+        } else {
+            traceParams = traceParams <|>
+                toTracerParams(allParams["enter_from"] ?? "be_null", key: "enter_from") <|>
+                toTracerParams(allParams["element_from"] ?? "be_null", key: "element_from") <|>
+                toTracerParams(allParams["search_id"] ?? "be_null", key: "search_id")
         }
 
     }
