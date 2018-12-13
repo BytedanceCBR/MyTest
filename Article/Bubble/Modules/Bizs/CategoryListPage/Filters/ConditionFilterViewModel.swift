@@ -169,7 +169,7 @@ class ConditionFilterViewModel {
     }
 
     func openOrCloseSortPanel() {
-        self.closeConditionFilterPanel(index: -1)
+        self.closeConditionFilterPanelForOpneOrCloseSortPanel()
 
         setSortBtnSelected()
         if sortPanelView?.isHidden == true {
@@ -181,6 +181,40 @@ class ConditionFilterViewModel {
             self.sortPanelView?.isHidden = true
         }
     }
+
+    func closeConditionFilterPanelForOpneOrCloseSortPanel() {
+        if let view  = self.conditionItemViews.first(where: { $0.value.isDisplay })?.value {
+            view.onDismiss()
+            view.isHidden = true
+        }
+
+        self.conditionPanelView?.isHidden = true
+        self.conditionItemViews.enumerated().forEach { (e) in
+            let (offset, _) = e
+            self.setSearchFilterPanelState(index: offset, isExpand: false)
+        }
+    }
+
+    func closeConditionFilterPanel(index: Int) {
+        if let view  = self.conditionItemViews.first(where: { $0.value.isDisplay })?.value {
+            view.onDismiss()
+            view.isHidden = true
+        } else if self.conditionPanelView?.isHidden == false { //当且仅当能确定是排序面板被打开时，触发下面的逻辑
+            //补充这个逻辑，确保任何情况下，关闭面板可以重置搜索按钮状态
+            self.setSortBtnSelectedWhenClosePanel()
+            self.sortPanelView?.isHidden = true
+        }
+        self.conditionPanelView?.isHidden = true
+        if index == -1 { // 魔法数字，清除所有面板状态
+            self.conditionItemViews.enumerated().forEach { (e) in
+                let (offset, _) = e
+                self.setSearchFilterPanelState(index: offset, isExpand: false)
+            }
+        } else {
+            self.setSearchFilterPanelState(index: index, isExpand: false)
+        }
+    }
+
 
     func setSortBtnSelected() {
         let isHidden = self.sortPanelView?.isHidden ?? true
@@ -426,23 +460,6 @@ class ConditionFilterViewModel {
             parser: { nodes in
                 conditionLabelParser(categoryName, nodes)
             })(selectedNode)
-    }
-
-    func closeConditionFilterPanel(index: Int) {
-        if let view  = self.conditionItemViews.first(where: { $0.value.isDisplay })?.value {
-            view.onDismiss()
-            view.isHidden = true
-        }
-        self.conditionPanelView?.isHidden = true
-        if index == -1 { // 魔法数字，清除所有面板状态
-            self.conditionItemViews.enumerated().forEach { (e) in
-                let (offset, _) = e
-                self.setSearchFilterPanelState(index: offset, isExpand: false)
-            }
-        } else {
-            self.setSearchFilterPanelState(index: index, isExpand: false)
-        }
-
     }
 
     func reloadConditionPanel() -> Void {
