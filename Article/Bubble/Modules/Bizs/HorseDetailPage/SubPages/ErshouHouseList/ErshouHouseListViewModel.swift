@@ -77,7 +77,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             newItem.fhSearchId = data.searchId
                             return newItem
                         })
-                        let params = TracerParams.momoid()
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type")
                         let datas = parseErshouHouseListRowItemNode(
                             items,
                             traceParams: params,
