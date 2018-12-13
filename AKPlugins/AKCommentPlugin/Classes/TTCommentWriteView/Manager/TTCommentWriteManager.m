@@ -372,12 +372,28 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
 
 #pragma mark -- TTCommentWriteViewDelegate
 
+- (NSString *)enterFromString{
+    
+    NSString * enterFrom = self.enterFromStr;
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        return enterFrom;
+    }else{
+        if (![enterFrom isEqualToString:@"click_headline"] && ![enterFrom isEqualToString:@"click_favorite"]) {
+
+            enterFrom = @"click_category";
+        }
+    }
+
+    return enterFrom;
+}
+
 - (NSString *)categoryName {
     NSString *categoryName = self.categoryID;
     if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
         categoryName = [self.enterFromStr stringByReplacingOccurrencesOfString:@"click_" withString:@""];
     }else{
-        if (![self.enterFrom isEqualToString:@"click_headline"]) {
+        if (![self.enterFromStr isEqualToString:@"click_headline"]) {
             if ([categoryName hasPrefix:@"_"]) {
                 categoryName = [categoryName substringFromIndex:1];
             }
@@ -545,7 +561,6 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                                                                      }];
                 
                 NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
-                [paramsDict setValue:self.enterFromStr  forKey:@"enter_from"];
                 [paramsDict setValue:self.groupModel.groupID forKey:@"group_id"];
                 [paramsDict setValue:self.groupModel.itemID forKey:@"item_id"];
                 if (self.logPb) {
@@ -559,6 +574,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
                 if (self.enterFrom.length > 0) {
                     
+                    [paramsDict setValue:[self enterFromString]  forKey:@"enter_from"];
                     [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
                 }
                 
