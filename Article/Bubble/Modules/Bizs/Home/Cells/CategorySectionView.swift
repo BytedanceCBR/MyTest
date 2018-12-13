@@ -18,7 +18,7 @@ class CategorySectionView: UIView {
     
     lazy var categoryLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangMedium(20)
+        label.font = CommonUIStyle.Font.pingFangRegular(18)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.text = "为你推荐"
         return label
