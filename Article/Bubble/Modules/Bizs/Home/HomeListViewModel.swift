@@ -779,7 +779,7 @@ func fillFHHomeHeaderCell(
     selector: ((TracerParams) -> Void)?,
     cell: UITableViewCell) -> Void {
     if let theCell = cell as? FHHomeHeaderTableViewCell {
-        theCell.refreshUI()
+        theCell.refreshUI(FHHomeHeaderCellPositionType.forFindHouse)
         let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
         let entrys = config?.opData?.items
         
@@ -1281,7 +1281,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FHHomeHeaderTableViewCell") as? FHHomeHeaderTableViewCell ?? FHHomeHeaderTableViewCell()
-            cell.refreshUI()
+            cell.refreshUI(FHHomeHeaderCellPositionType.forFindHouse)
             return cell
         }
         
@@ -1348,7 +1348,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
             datas[indexPath.section].items[indexPath.row](cell)
         }else if let cell = cell as? FHHomeHeaderTableViewCell
         {
-            cell.refreshUI()
+            cell.refreshUI(FHHomeHeaderCellPositionType.forFindHouse)
         }
     }
     
