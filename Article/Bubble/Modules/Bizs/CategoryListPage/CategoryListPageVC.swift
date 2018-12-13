@@ -240,7 +240,8 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.ttNeedIgnoreZoomAnimation = true
+        
         userInteractionObv = self.view.observe(\.isUserInteractionEnabled, options: [.new]) { [weak self] (view, value) in
             if let _ = value.newValue {
                 self?.view.endEditing(true)
