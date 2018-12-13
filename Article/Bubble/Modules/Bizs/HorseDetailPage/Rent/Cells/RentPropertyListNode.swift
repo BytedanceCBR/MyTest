@@ -50,11 +50,13 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
                     setRowValue(info, row)
                     twoRow.addSubview(row)
                     twoValueView.append(twoRow)
+                    row.remakeLeftRightOffetConstraints(leftOffset: 20, rightOffset: -10)
                 } else {
                     let twoRow = twoValueView.last
                     let row = PropertyListRowView()
                     setRowValue(info, row)
                     twoRow?.addSubview(row)
+                    row.remakeLeftRightOffetConstraints(leftOffset: 10, rightOffset: -20)
                 }
             }
 
@@ -72,6 +74,7 @@ func fillRentPropertyListCell(_ infos: [ErshouHouseBaseInfo]?, cell: BaseUITable
             let singleViews = groups[1].map { (info) -> UIView in
                 let re = PropertyListRowView()
                 setRowValue(info, re)
+                re.remakeLeftRightOffetConstraints(leftOffset: 20, rightOffset: -20)
                 return re
             }
 
