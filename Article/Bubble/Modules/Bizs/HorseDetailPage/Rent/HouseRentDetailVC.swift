@@ -153,6 +153,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.limit ?? "be_null", key: "limit") <|>
                 toTracerParams(houseRentTracer.rank, key: "rank") <|>
                 toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
+                toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
             recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params  <|> traceStayTime()
@@ -681,6 +682,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                                                                     success: {
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
+                        self.sendClickConfirmTrace()
                         self.followUpViewModel.followHouseItem(houseType: .rentHouse,
                                                                followAction: .rentHouse,
                                                                followId: "\(self.houseId)",
@@ -712,6 +714,20 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                     params: tracerParams.exclude("element_type"))
 
         alert.showFrom(self.view)
+    }
+
+    func sendClickConfirmTrace()
+    {
+        let tracerParams = TracerParams.momoid() <|>
+            EnvContext.shared.homePageParams <|>
+            toTracerParams(houseRentTracer.pageType, key: "page_type") <|>
+            toTracerParams("left_pic", key: "card_type") <|>
+            toTracerParams(houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams(houseRentTracer.elementFrom, key: "element_from") <|>
+            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams(houseRentTracer.rank, key: "rank")
+        recordEvent(key: TraceEventName.click_confirm,
+                    params: tracerParams.exclude("element_type"))
     }
 
     deinit {

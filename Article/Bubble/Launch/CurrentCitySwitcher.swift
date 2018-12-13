@@ -186,6 +186,25 @@ class CurrentCitySwitcher {
         EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
     }
 
+
+    //定位切换城市后，调用搜索过滤器请求
+    func requestSearchFilterConfigForLocation() {
+        requestSearchConfig()
+            .timeout(10, scheduler: MainScheduler.instance)
+            .retry(10)
+            .subscribe(onNext: { (response) in
+                EnvContext.shared.client.configCacheSubject.accept(response?.data)
+                if response?.data != nil {
+                    EnvContext.shared.client.saveSearchConfigToCache(response: response)
+                }
+            }, onError: { (error) in
+                EnvContext.shared.toast.showToast("加载失败")
+                assertionFailure()
+            })
+            .disposed(by: requestBag)
+    }
+
+
 }
 
 protocol CitySwitcherListener {

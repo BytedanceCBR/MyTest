@@ -1064,11 +1064,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             let recordParams = EnvContext.shared.homePageParams <|>
                 detailParams <|>
                 searchParams <|>
+                toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
             recordEvent(key: "go_detail_search",
                         params: recordParams
                             .exclude("element_type")
                             .exclude("page_type"))
+            self.houseSearchParams = nil
         }
     }
 

@@ -853,7 +853,6 @@ func parseErshouHouseListItemNode(
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
-        records?.insert(elementShowOnceRecord(params:paramsElement), at: 0)
         
         let count = data?.count ?? 0
         if let renders = data?.enumerated().map({ (index, item) in
