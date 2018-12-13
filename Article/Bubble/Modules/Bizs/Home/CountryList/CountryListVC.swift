@@ -189,7 +189,7 @@ class CountryListVC: BaseViewController {
                     }
 
                     //TODO: 暂时的解决方案，需要也加入到switcher中去
-                    self.requestSearchFilterConfig()
+                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })
@@ -212,11 +212,17 @@ class CountryListVC: BaseViewController {
 
     func requestSearchFilterConfig() {
         requestSearchConfig()
-            .timeout(5, scheduler: MainScheduler.instance)
+            .debug("requestSearchFilterConfig")
+            .timeout(10, scheduler: MainScheduler.instance)
+            .retry(10)
             .subscribe(onNext: { (response) in
                 EnvContext.shared.client.configCacheSubject.accept(response?.data)
+                if response?.data != nil {
+                    EnvContext.shared.client.saveSearchConfigToCache(response: response)
+                }
             }, onError: { (error) in
                 EnvContext.shared.toast.showToast("加载失败")
+                assertionFailure()
             })
             .disposed(by: self.requestDisposeBag)
     }
