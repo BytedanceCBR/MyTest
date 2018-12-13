@@ -768,7 +768,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)feedbackFetch
 {
-    return [NSString stringWithFormat:@"%@/feedback/2/list/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/feedback/2/list/", [self channelBaseURL]];
 }
 
 + (NSString *)feedbackPostMsg

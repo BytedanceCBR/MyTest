@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.10)
+  - BDALog (0.1.9)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -613,14 +613,14 @@ PODS:
     - TTMonitor
     - TTUIWidget
   - TTAdSplashSDK (0.1.0)
-  - TTAppUpdateHelper/TTUpdateHelper (1.0.8):
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.4):
     - JSONModel
     - TTBaseLib/TTCategory
     - TTBaseLib/TTDeviceHelper
     - TTBaseLib/TTSandBoxHelper
     - TTBaseLib/TTUIResponderHelper
     - TTTracker
-  - TTAppUpdateHelper/TTUpdateView (1.0.8):
+  - TTAppUpdateHelper/TTUpdateView (1.0.4):
     - TTThemed
     - TTUIWidget
   - TTAudio (0.1.4):
@@ -1418,7 +1418,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 6a20aabf3bada246298524819282e831eecff717
+  BDALog: 9be2f58165da82182d43a5b74bab2826ceea143e
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1472,7 +1472,7 @@ SPEC CHECKSUMS:
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
-  TTAppUpdateHelper: a564135502ffa5c428dd41a84263e757aed3d502
+  TTAppUpdateHelper: d1a28f4825ef183967a2c2c2025db9abd8ba725f
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
