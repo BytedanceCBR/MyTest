@@ -15,6 +15,7 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("neighborhood_detail", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type") <|>
+        toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams("rent_detail", key: "enter_from")
     
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)

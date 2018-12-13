@@ -466,7 +466,12 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
         self.view.bringSubview(toFront: searchFilterPanel)
         self.view.bringSubview(toFront: searchSortBtnBG)
-
+        self.searchAndConditionFilterVM.onSortConditionChanged = { [weak self] (condition) in
+            if let condition = condition,
+                condition.rankType ?? "default" != "default" {
+                self?.traceHouseRank(searchId: self?.categoryListViewModel?.searchId, rankType: condition.rankType)
+            }
+        }
     }
 
     func setupSortCondition() {
@@ -755,14 +760,6 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                 self?.errorVM?.onRequestNilData()
                 self?.hasNone = true
             }
-            var rankType = "default"
-            if let node = self?.searchAndConditionFilterVM.searchSortCondition,
-                let theRankType = node.rankType {
-                rankType = theRankType
-            }
-            self?.traceHouseRank(
-                searchId: self?.categoryListViewModel?.originSearchId ?? "be_null",
-                rankType: rankType)
             self?.allParams?["houseSearch"] = nil
             self?.bindHouseSearchParams()
 
@@ -1104,11 +1101,11 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
     }
 
-    fileprivate func traceHouseRank(searchId: String, rankType: String) {
+    fileprivate func traceHouseRank(searchId: String?, rankType: String?) {
         let params = EnvContext.shared.homePageParams <|>
-            toTracerParams(searchId, key: "search_id") <|>
+            toTracerParams(searchId ?? "be_null", key: "search_id") <|>
             toTracerParams(pageTypeString(), key: "page_type") <|>
-            toTracerParams(rankType, key: "rank_type")
+            toTracerParams(rankType ?? "be_null", key: "rank_type")
         recordEvent(key: "house_rank", params: params)
     }
 
