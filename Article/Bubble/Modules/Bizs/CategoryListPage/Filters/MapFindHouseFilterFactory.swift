@@ -123,7 +123,14 @@ import RxCocoa
         }
         self.bindConditionChangeDelegate()
         self.conditionFilterViewModel?.conditionPanelWillDisplay = { [weak self] in
-            self?.delegate?.onConditionWillPanelDisplay()
+            if self?.delegate?.responds(to: #selector(FHHouseFilterDelegate.onConditionWillPanelDisplay)) ?? false {
+                self?.delegate?.onConditionWillPanelDisplay()
+            }
+        }
+        self.conditionFilterViewModel?.conditionPanelWillDisappear = { [weak self] in
+            if self?.delegate?.responds(to: #selector(FHHouseFilterDelegate.onConditionPanelWillDisappear)) ?? false {
+                self?.delegate?.onConditionPanelWillDisappear()
+            }
         }
     }
 

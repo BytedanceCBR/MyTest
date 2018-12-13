@@ -94,6 +94,7 @@ class ConditionFilterViewModel {
     let disposeBag = DisposeBag()
 
     var conditionPanelWillDisplay: (() -> Void)?
+    var conditionPanelWillDisappear: (() -> Void)?
 
     var currentSortCondition: String = "default"
 
@@ -173,10 +174,12 @@ class ConditionFilterViewModel {
 
         setSortBtnSelected()
         if sortPanelView?.isHidden == true {
+            conditionPanelWillDisplay?()
             self.conditionPanelView?.isHidden = false
             self.sortPanelView?.isHidden = false
             self.searchSortBtn?.isSelected = true
         } else {
+            conditionPanelWillDisappear?()
             self.conditionPanelView?.isHidden = true
             self.sortPanelView?.isHidden = true
         }
@@ -188,7 +191,11 @@ class ConditionFilterViewModel {
             view.isHidden = true
         }
 
-        self.conditionPanelView?.isHidden = true
+        if self.conditionPanelView?.isHidden == false {
+            conditionPanelWillDisappear?()
+            self.conditionPanelView?.isHidden = true
+        }
+
         self.conditionItemViews.enumerated().forEach { (e) in
             let (offset, _) = e
             self.setSearchFilterPanelState(index: offset, isExpand: false)
@@ -204,7 +211,11 @@ class ConditionFilterViewModel {
             self.setSortBtnSelectedWhenClosePanel()
             self.sortPanelView?.isHidden = true
         }
-        self.conditionPanelView?.isHidden = true
+
+        if self.conditionPanelView?.isHidden == false {
+            conditionPanelWillDisappear?()
+            self.conditionPanelView?.isHidden = true
+        }
         if index == -1 { // 魔法数字，清除所有面板状态
             self.conditionItemViews.enumerated().forEach { (e) in
                 let (offset, _) = e
@@ -415,6 +426,7 @@ class ConditionFilterViewModel {
             panel.onDisplay()
             self.setSearchFilterPanelState(index: index, isExpand: true)
         } else {
+            conditionPanelWillDisappear?()
             self.conditionPanelView?.isHidden = true
             panel.isHidden = true
             panel.onDismiss()
