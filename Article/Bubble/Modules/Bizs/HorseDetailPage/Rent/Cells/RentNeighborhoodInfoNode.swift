@@ -83,9 +83,11 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
         }
         if let lat = neighborhoodInfo?.gaodeLat,
             let lng = neighborhoodInfo?.gaodeLng {
-            theCell.setLocation(lat: lat, lng: lng)
-            theCell.lat = lat
-            theCell.lng = lng
+            if theCell.lat == nil {
+                theCell.setLocation(lat: lat, lng: lng)
+                theCell.lat = lat
+                theCell.lng = lng
+            }
         }
         if let schoolName = neighborhoodInfo?.schoolInfo?.schoolName {
             theCell.schoolLabel.text = schoolName
