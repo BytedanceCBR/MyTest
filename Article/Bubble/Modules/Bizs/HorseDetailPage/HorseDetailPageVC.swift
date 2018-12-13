@@ -320,6 +320,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 let tracer = userInfo["tracer"] as? [String: Any] {
                 self.isFromPush = isFromPushFlag
                 traceParams = traceParams <|>
+                    EnvContext.shared.homePageParams <|>
                     toTracerParams(tracer["enter_from"] ?? "be_null", key: "enter_from") <|>
                     toTracerParams(tracer["element_from"] ?? "be_null", key: "element_from") <|>
                     toTracerParams(tracer["search_id"] ?? "be_null", key: "search_id")
