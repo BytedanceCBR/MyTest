@@ -653,11 +653,11 @@ func highlightImgNameByIndex(_ index: Int) -> String {
     case 0:
         return "img-summary-graph-circle-blue"
     case 1:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_dark"
     case 2:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_gray"
     default:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_gray"
         
     }
 }
