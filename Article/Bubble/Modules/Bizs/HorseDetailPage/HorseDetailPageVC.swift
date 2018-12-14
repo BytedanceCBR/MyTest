@@ -146,8 +146,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
-        
         checkTraceParam(paramObj?.allParams)
+        self.checkoutPush(routeParamObj: paramObj)
         if let logPb = paramObj?.userInfo.allInfo["log_pb"] {
             traceParams = traceParams <|> toTracerParams(logPb , key: "log_pb");
         }
@@ -311,6 +311,21 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 toTracerParams(allParams["search_id"] ?? "be_null", key: "search_id")
         }
 
+    }
+
+    fileprivate func checkoutPush(routeParamObj paramObj: TTRouteParamObj?) {
+        if let paramObj = paramObj,
+        let userInfo = paramObj.userInfo.allInfo as? [String: Any] {
+            if let isFromPushFlag = userInfo["isFromPush"] as? Bool ,
+                let tracer = userInfo["tracer"] as? [String: Any] {
+                self.isFromPush = isFromPushFlag
+                traceParams = traceParams <|>
+                    EnvContext.shared.homePageParams <|>
+                    toTracerParams(tracer["enter_from"] ?? "be_null", key: "enter_from") <|>
+                    toTracerParams(tracer["element_from"] ?? "be_null", key: "element_from") <|>
+                    toTracerParams(tracer["search_id"] ?? "be_null", key: "search_id")
+            }
+        }
     }
     
 

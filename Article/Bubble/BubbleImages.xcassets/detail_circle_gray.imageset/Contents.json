@@ -2,17 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "img-summary-graph-circle-red.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "img-summary-graph-circle-red@2x.png",
+      "filename" : "detail_circle_gray@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "img-summary-graph-circle-red@3x.png",
+      "filename" : "detail_circle_gray@3x.png",
       "scale" : "3x"
     }
   ],

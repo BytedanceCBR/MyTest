@@ -553,6 +553,7 @@ func parseRelatedHouseListItemNode(
     traceExtension: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    elementType: String = "be_null",
     navVC: UINavigationController?) ->  [TableRowNode] {
     
     var traceParmas = tracerParams.paramsGetter([:])
@@ -596,7 +597,7 @@ func parseRelatedHouseListItemNode(
             let (offset, item) = e
             let theParams = tracerParams <|>
                 toTracerParams(offset, key: "rank") <|>
-                toTracerParams("related", key: "element_type") <|>
+                toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
