@@ -95,6 +95,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategory: Bool = true
     
+    var isHasLoadCategory: Bool = true
+    
     var isFirstEnterCategorySwitch: Bool = true
     
     var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //列表数据缓存
@@ -238,11 +240,12 @@ class HomeListViewModel: DetailPageViewModel {
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
 
-        if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
-            if categoryStartName != "f_find_house"
+        if categoryStartName == nil || categoryStartName == ""   {
+            if categoryStartName != "f_find_house" && self.isHasLoadCategory
             {
                 EnvContext.shared.client.generalBizconfig.updateConfig()
             }
+            self.isHasLoadCategory = false
         }
     }
     
