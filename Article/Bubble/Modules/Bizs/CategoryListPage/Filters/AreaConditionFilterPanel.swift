@@ -883,8 +883,8 @@ fileprivate class AreaConditionCell: UITableViewCell {
         selectedBackgroundView = bgView
         label.snp.makeConstraints { maker in
             maker.left.equalTo(15)
-            maker.top.equalTo(20)
-            maker.bottom.equalToSuperview()
+            maker.top.equalTo(10)
+            maker.bottom.equalTo(-10)
             maker.right.lessThanOrEqualTo(checkboxBtn.snp.left).offset(-5)
         }
 
