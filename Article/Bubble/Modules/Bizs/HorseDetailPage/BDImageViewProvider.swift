@@ -19,7 +19,10 @@ class BDImageViewProvider: PageViewProvider {
     var imageRequest: BDWebImageRequest?
 
     lazy private var imageView: UIImageView = {
-        UIImageView()
+        let imv = UIImageView()
+        imv.contentMode = .scaleAspectFill
+        imv.clipsToBounds = true
+        return imv
     }()
 
     init(imageSelector: ((Int) -> String)? = nil) {
