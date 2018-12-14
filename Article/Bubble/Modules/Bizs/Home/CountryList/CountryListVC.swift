@@ -183,7 +183,6 @@ class CountryListVC: BaseViewController {
 
                     }
 
-                    generalBizConfig.generalCacheSubject.accept(response?.data)
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                     }

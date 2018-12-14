@@ -32,6 +32,8 @@ class CategorySectionView: UIView {
     
     lazy var sectionTitleArray = [""]
     
+    var currentIndex: Int?
+    
     lazy var segmentedControl: FWSegmentedControl = {
         let re = FWSegmentedControl.segmentedWith(
             scType: SCType.text,
@@ -69,6 +71,18 @@ class CategorySectionView: UIView {
         self.backgroundColor = .white
         
         segmentedControl.indexChangeBlock = {[weak self] index in
+            
+            if EnvContext.shared.client.reachability.connection == .none
+            {
+                self?.updateSegementLayOut()
+                if let indexValue = self?.currentIndex
+                {
+                    self?.changeSegementIndex(index: indexValue)
+                }
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
+            
             if let titleArray = self?.sectionTitleArray
             {
                 if titleArray[index] == HouseType.secondHandHouse.stringValue()
@@ -92,7 +106,11 @@ class CategorySectionView: UIView {
                     self?.userSelectedCache?.setObject(String(HouseType.rentHouse.rawValue) as NSCoding, forKey: "userdefaultselect")
                 }
             }
+            
+            self?.currentIndex = index
         }
+        
+        
         
         addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints{ maker in
@@ -138,6 +156,11 @@ class CategorySectionView: UIView {
         
         updateSegementLayOut()
         
+    }
+    
+    func changeSegementIndex(index: Int)
+    {
+        segmentedControl.selectedSegmentIndex = index
     }
     
     func updateSegementLayOut() {
