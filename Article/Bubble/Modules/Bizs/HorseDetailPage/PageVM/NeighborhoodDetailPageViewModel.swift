@@ -585,6 +585,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         if let searchId = self.houseInSameNeighborhood.value?.data?.searchId {
                             params["searchId"] = searchId
                         }
+                        params["list_vc_type"] = 3 // FHNeighborListVCTypeNeighborOnSales
                     } else if houseType == "3" {
                         // 在租房源
                         element_from = "house_renting"
@@ -596,6 +597,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         if let searchId = self.rentHouseInSameNeighborhood.value?.data?.searchId {
                             params["searchId"] = searchId
                         }
+                        params["list_vc_type"] = 4 // FHNeighborListVCTypeNeighborOnRent
                     }
                 } else if openUrl.contains("neighborhood_sales_list") {
                     // 成交历史

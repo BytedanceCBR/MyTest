@@ -19,7 +19,8 @@
 "floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
 "message_detail_list"   = "_TtC6Bubble13MessageListVC";
 "message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
-"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
+//"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
+"house_list_in_neighborhood" = "FHNeighborListViewController";
 "neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
 "fh_webview"            = "_TtC6Bubble19FHWebViewController";
 "fh_house_detail_map"   = "_TtC6Bubble12LBSMapPageVC";

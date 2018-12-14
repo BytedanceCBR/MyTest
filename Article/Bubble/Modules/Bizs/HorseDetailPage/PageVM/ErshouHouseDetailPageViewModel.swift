@@ -553,16 +553,29 @@ func openErshouHouseList(
         followStatus: BehaviorRelay<Result<Bool>>? = nil,
         tracerParams: TracerParams = TracerParams.momoid(),
         bottomBarBinder: @escaping FollowUpBottomBarBinder) {
-    let listVC = ErshouHouseListVC(
-        title: title,
-        neighborhoodId: neighborhoodId,
-        houseId: houseId,
-        searchSource: searchSource,
-        searchId: searchId,
-        bottomBarBinder: bottomBarBinder)
-    listVC.followStatus = followStatus
-    listVC.tracerParams = tracerParams
-    navVC?.pushViewController(listVC, animated: true)
+    var params:[String:Any] = [:]
+    let theUrl = "snssdk1370://house_list_in_neighborhood"
+    params["neighborhoodId"] = neighborhoodId
+    params["houseId"] = houseId
+    params["house_type"] = HouseType.secondHandHouse.rawValue
+    params["title"] = title ?? "0套"
+    if let sId = searchId {
+        params["searchId"] = sId
+    }
+    if searchSource == .neighborhoodDetail {
+        params["list_vc_type"] = 5 // FHNeighborListVCTypeNeighborErshou
+    } else if searchSource == .oldDetail {
+        params["list_vc_type"] = 1 // FHNeighborListVCTypeErshouSameNeighbor
+    }
+    let tp = tracerParams
+    params["tracerParams"] = tp
+    
+    params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
+    params["followStatus"] = followStatus
+    params["bottomBarBinder"] = bottomBarBinder
+    
+    let userInfo = TTRouteUserInfo(info: params)
+    TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
 }
 
 //跳转到小区租房列表页
@@ -577,18 +590,32 @@ func openRentHouseList(
     followStatus: BehaviorRelay<Result<Bool>>? = nil,
     tracerParams: TracerParams = TracerParams.momoid(),
     bottomBarBinder: @escaping FollowUpBottomBarBinder) {
-            
-    let listVC = ErshouHouseListVC(
-        title: title,
-        neighborhoodId: neighborhoodId,
-        houseId: houseId,
-        searchSource: searchSource,
-        searchId: searchId,
-        houseType:HouseType.rentHouse,
-        bottomBarBinder: bottomBarBinder)
-    listVC.followStatus = followStatus
-    listVC.tracerParams = tracerParams 
-    navVC?.pushViewController(listVC, animated: true)
+    
+    var params:[String:Any] = [:]
+    let theUrl = "snssdk1370://house_list_in_neighborhood"
+    params["neighborhoodId"] = neighborhoodId
+    if let hId = houseId {
+        params["houseId"] = hId
+    }
+    params["house_type"] = HouseType.rentHouse.rawValue
+    params["title"] = title ?? "0套"
+    if let sId = searchId {
+        params["searchId"] = sId
+    }
+    if searchSource == .neighborhoodDetail {
+        params["list_vc_type"] = 6 // FHNeighborListVCTypeNeighborRent
+    } else if searchSource == .rentDetail {
+        params["list_vc_type"] = 7 // FHNeighborListVCTypeRentSameNeighbor
+    }
+    let tp = tracerParams
+    params["tracerParams"] = tp
+    
+    params["searchSource"] = SearchSourceKey.rentDetail.rawValue
+    params["followStatus"] = followStatus
+    params["bottomBarBinder"] = bottomBarBinder
+    
+    let userInfo = TTRouteUserInfo(info: params)
+    TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
 }
 
 //跳转到周边房源
@@ -605,19 +632,27 @@ func openAroundHouseList(
     tracerParams: TracerParams = TracerParams.momoid(),
     bottomBarBinder: @escaping FollowUpBottomBarBinder) {
     
-    let listVC = ErshouHouseListVC(
-        title: title,
-        neighborhoodId: neighborhoodId,
-        houseId: houseId,
-        searchSource: searchSource,
-        searchId: searchId,
-        houseType: houseType,
-        relatedHouse: true ,
-        bottomBarBinder: bottomBarBinder)
-    listVC.followStatus = followStatus   
+    var params:[String:Any] = [:]
+    let theUrl = "snssdk1370://house_list_in_neighborhood"
+    params["neighborhoodId"] = neighborhoodId
+    if let hId = houseId {
+        params["houseId"] = hId
+    }
+    params["house_type"] = HouseType.secondHandHouse.rawValue
+    params["title"] = title ?? "0套"
+    if let sId = searchId {
+        params["searchId"] = sId
+    }
+    params["list_vc_type"] = 2 // FHNeighborListVCTypeErshouNearBy
+    let tp = tracerParams
+    params["tracerParams"] = tp
     
-    listVC.tracerParams = tracerParams
-    navVC?.pushViewController(listVC, animated: true)
+    params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
+    params["followStatus"] = followStatus
+    params["bottomBarBinder"] = bottomBarBinder
+    
+    let userInfo = TTRouteUserInfo(info: params)
+    TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
 }
 
 

@@ -303,6 +303,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 params["bottomBarBinder"] = bottomBarBinder
                 params["related_house"] = true
                 params["page_type"] = "related_list"
+                params["list_vc_type"] = 8 // FHNeighborListVCTypeRentNearBy
                 let userInfo = TTRouteUserInfo(info: params)
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
