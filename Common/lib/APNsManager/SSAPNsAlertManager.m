@@ -435,8 +435,16 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     
                     return;
                 }
-                
-                [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+                NSDictionary* info = @{@"isFromPush": @(1),
+                                       @"tracer":@{@"enter_from": @"push",
+                                                   @"element_from": @"be_null",
+                                                   @"runk": @"be_null",
+                                                   @"card_type": @"be_null",
+//                                                   @"group_id": paramObj.allParams[@"group_id"],
+                                                   }};
+                [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
             }
             
         });

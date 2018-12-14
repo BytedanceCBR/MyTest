@@ -187,6 +187,10 @@ class CountryListVC: BaseViewController {
                     if let payload = response?.data?.toJSONString() {
                         self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
                     }
+                    
+                    EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(response?.data)
+                    
+                    EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
 
                     //TODO: 暂时的解决方案，需要也加入到switcher中去
                     EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()

@@ -239,13 +239,11 @@ class HomeListViewModel: DetailPageViewModel {
         let categoryStartName = SSCommonLogic.feedStartCategory()
 
         if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
-            EnvContext.shared.client.generalBizconfig.updateConfig()
+            if categoryStartName != "f_find_house"
+            {
+                EnvContext.shared.client.generalBizconfig.updateConfig()
+            }
         }
-        
-//        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
-//            self.tableView?.triggerPullDown()
-//            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
-//        }
     }
     
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {

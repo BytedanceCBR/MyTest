@@ -566,6 +566,7 @@ class BubbleCollectionCell: UICollectionViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         self.isSelected = false
         contentView.layer.masksToBounds = false
         contentView.layer.borderColor = hexStringToUIColor(hex: "#f4f5f6").cgColor
