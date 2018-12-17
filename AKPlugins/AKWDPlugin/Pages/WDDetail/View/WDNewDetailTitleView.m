@@ -222,6 +222,7 @@
     CGFloat destY = self.height / 2;
     CGFloat destAlpha = bShow ? 1 : 0;
     self.logoView.hidden = NO;
+    self.logoView.imageView.hidden = NO;
     //    dispatch_async(dispatch_get_main_queue(), ^{
     if (animated) {
         _isAnimating = YES;
