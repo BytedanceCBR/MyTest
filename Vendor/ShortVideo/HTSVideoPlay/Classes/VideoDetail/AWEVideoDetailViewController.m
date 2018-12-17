@@ -1024,10 +1024,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         [AWEVideoPlayAccountBridge fetchTTAccount];
         if (![AWEVideoPlayAccountBridge isLogin]) {
             @weakify(self);
+            
+            [[TTModuleBridge sharedInstance_tt] removeListener:self forKey:@"HTSLoginResult"];
             [[TTModuleBridge sharedInstance_tt] registerListener:self object:nil forKey:@"HTSLoginResult" withBlock:^(id  _Nullable params) {
                 completion([params[@"success"] boolValue]);
                 @strongify(self);
-                [[TTModuleBridge sharedInstance_tt] removeListener:self forKey:@"HTSLoginResult"];
             }];
             [AWEVideoPlayAccountBridge showLoginView];
             return YES;

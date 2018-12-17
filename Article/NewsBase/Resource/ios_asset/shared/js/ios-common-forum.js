@@ -359,7 +359,7 @@ try {
 i = JSON.parse(a.user_auth_info);
 } catch (o) {}
 n.author.auth_type = a.user_auth_info ? i.auth_type || 0 : "", n.author.auth_info = i.auth_info, 
-n.author.verifiedContent = false && n.author.auth_info || "", "is_subscribed" in t && (n.author.followState = t.is_subscribed ? "following" : ""),
+n.author.verifiedContent = a.user_verified && n.author.auth_info || "", "is_subscribed" in t && (n.author.followState = t.is_subscribed ? "following" : ""), 
 t.is_original && n.tags.push("原创"), t.category_name && (n.category_name = t.category_name), 
 t.log_pb && (n.log_pb = t.log_pb);
 },
@@ -732,7 +732,7 @@ var cooperateCardTmpl = function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="wenda-panel-co"><div class="wenda-cooperate"><div class="authorbar wenda clearfix"><a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
 data.useServerV && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
-__p += "</a>", data.showUserDecoration && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'), 
+__p += "</a>", false && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'),
 __p += '<div class="avatar-decoration avatar-night-mask"></div><div class="author-bar"><div class="name-link-wrap"><div class="name-link-w"><a class="author-name-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '">' + (null == (__t = data.author.name) ? "" : __t) + '<span class="cooper-tag">问答战略合作伙伴</span></a></div></div><a class="sub-title-w" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><span class="sub-title">' + (null == (__t = data.author.cooperate_text) ? "" : __t) + '</span></a></div></div><a class="cooperate-link" href="' + (null == (__t = data.author.cooperate_link) ? "" : __t) + '"><span class="txt">查看官方网站<em class="iconfont">&#xe644;</em></span></a></div></div>';
 return __p;
 };
@@ -811,7 +811,9 @@ a = !a));
 });
 }
 if ("is_show_bury" in e && e.is_show_bury && $("#bury").show().parent().removeClass("only-one").addClass("only-two"), 
-"is_concern_user" in e && change_following_state(!!e.is_concern_user), "ans_count" in e && ($("#total-answer-count").html(e.ans_count + "个回答").css("display", "inline-block"), 
+Page.h5_settings.is_liteapp && wenda_extra.wd_version < 3 && ToutiaoJSBridge.call("appInfo", {}, function(e) {
+1206 === e.aid && e.versionCode >= 631 && $(".bottom-buttons").hide();
+}), "is_concern_user" in e && change_following_state(!!e.is_concern_user), "ans_count" in e && ($("#total-answer-count").html(e.ans_count + "个回答").css("display", "inline-block"), 
 $("#total-answer-count-index").html("全部" + e.ans_count + "个回答")), "nice_ans_count" in e && "wenda_extra" in window && ("function" == typeof window.assignThroughWendaNiceanscount ? window.assignThroughWendaNiceanscount(e.nice_ans_count) : window.wenda_extra.nice_ans_count = e.nice_ans_count), 
 "question_schema" in e && e.question_schema && (window.wenda_extra.list_schema = e.question_schema), 
 "post_answer_schema" in e && e.post_answer_schema && $(".go-to-answer").attr("href", urlAddQueryParams(e.post_answer_schema, {
@@ -1588,9 +1590,9 @@ __p += "";
 for (var i = 0; i < data.length; i++) {
 var item = data[i];
 __p += '<div class="ms-item" it-is-user-id="' + (null == (__t = item.user_id) ? "" : __t) + '" data-index="' + (null == (__t = i + 1) ? "" : __t) + '" it-is-media-id="' + (null == (__t = item.media_id ? item.media_id : "") ? "" : __t) + '"><div class="ms-avatar"><div class="ms-avatar-wrap"><img class="ms-avatar-image" src="' + (null == (__t = item.avatar_url) ? "" : __t) + '"></div>', 
-useServerV && false && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
-__p += "</div>", Page.showUserDecoration && item.user_decoration && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'), 
-__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !useServerV && false ? " verified" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
+false && item.user_verified && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
+__p += "</div>", Page.showUserDecoration && false && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'),
+__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !false && item.user_verified ? " verified" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
 }
 __p += "";
 }
@@ -1826,7 +1828,7 @@ e.id == d && l.attr("is-concerned", Boolean(e.status)).html(e.status ? "查看�
 break;
 
 case "carousel_image_switch":
-"function" == typeof onCarouselImageSwitch && (Page.forum_extra && Page.forum_extra.thread_id == e.id ? onCarouselImageSwitch(e.status) : Page.wenda_extra && Page.wenda_extra.ansid == e.id ? onCarouselImageSwitch(e.status) : Page.statistics.group_id == e.id && onCarouselImageSwitch(e.status));
+"function" == typeof onCarouselImageSwitch && (Page.forum_extra && Page.forum_extra.thread_id == e.id ? onCarouselImageSwitch(e.status) : Page.wenda_extra && Page.wenda_extra.ansid == e.id ? !Page.wenda_extra.is_light && onCarouselImageSwitch(e.status) : Page.statistics.group_id == e.id && onCarouselImageSwitch(e.status));
 break;
 
 case "block_action":
@@ -2232,7 +2234,7 @@ __p += "", __p += "", "zhuanma" == data.article.type) __p += '<div class="zhuanm
 if (__p += '<div class="authorbar ' + (null == (__t = data.article.type) ? "" : __t) + '" id="profile">', 
 __p += '<a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
 data.useServerV && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
-__p += "</a>", data.showUserDecoration && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'), 
+__p += "</a>", false && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'),
 __p += '<a class="avatar-decoration avatar-night-mask pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"></a>', 
 __p += "", "wenda" === data.article.type ? __p += '<div class="wenda-info" style="display: ' + (null == (__t = data.author.isAuthorSelf ? "block" : "none") ? "" : __t) + ';"><span class="read-info brow-count"></span><span class="like-info digg-count-special"></span></div>' : "forum" === data.article.type && (__p += '<div class="wenda-info" style="display: ' + (null == (__t = data.author.isAuthorSelf ? "block" : "none") ? "" : __t) + ';"><span></span></div>'), 
 __p += "", __p += '<div class="author-function-buttons" style="display: ' + (null == (__t = data.author.isAuthorSelf || "wenda" === data.article.type && data.h5_settings.is_liteapp || "forum" === data.article.type && "following" === data.author.followState || data.hideFollowButton ? "none" : "block") ? "" : __t) + ';"><div class="mediasug-arrow-button iconfont"></div><button class="subscribe-button follow-button ' + (null == (__t = "followState" in data.author ? data.author.followState : "disabled") ? "" : __t) + " " + (null == (__t = data.isRedFocusButton ? "red-follow-button" : "") ? "" : __t) + " " + (null == (__t = data.focusButtonStyle) ? "" : __t) + '"data-user-id="' + (null == (__t = data.author.userId) ? "" : __t) + '"data-media-id="' + (null == (__t = data.author.mediaId) ? "" : __t) + '"id="subscribe"><i class="iconfont focusicon">&nbsp;</i><i class="redpack"></i></button></div>', 
@@ -2246,7 +2248,7 @@ __p += "";
 }
 __p += "</div>";
 }
-if (__p += "", data.useServerV || (__p += "", "" != data.author.verifiedContent && (__p),
+if (__p += "", data.useServerV || (__p += "", "" != data.author.verifiedContent && (__p += '<div class="iconfont verified-icon">&#xe600;</div>'), 
 __p += ""), __p += '<a class="author-name-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '">' + (null == (__t = data.author.name) ? "" : __t) + '</a></div></div><a class="sub-title-w" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="article-tags">', 
 data.tags.length > 0) {
 __p += "";
@@ -2391,6 +2393,11 @@ var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="pcard score-star" style="margin-top: 15px;"><div class="p-scorecard pcard-container pcard-vertical-border"><div class="pcard-clearfix score-wrapper"><div class="info-wrapper"><div class="title question pcard-h16 pcard-w1" style="margin-top: 3px;">' + (null == (__t = question) ? "" : __t) + '</div><div class="title thx-letter pcard-h16 pcard-w1" style="margin-top: 2px;">谢谢你为文章打分！</div></div><div class="star-wrap mt11"><span class="star" data-index="0" data-selected="false"></span><span class="star" data-index="1" data-selected="false"></span><span class="star" data-index="2" data-selected="false"></span><span class="star" data-index="3" data-selected="false"></span><span class="star" data-index="4" data-selected="false"></span></div><div class="info pcard-h12 pcard-w1 mt11" style="margin-bottom: 3px;">轻触打分</div></div><div class="pcard-clearfix result-wrapper"><div class="thx-press" style="margin-top: 2px;"><span class="press"></span></div><div class="pcard-h16 pcard-w1 mt8">感谢你的打分，你的打分对我们很重要！</div><a class="rescore-button pcard-h12 pcard-w1">重新打分</a></div></div></div>';
 return __p;
 },
+group_chat: function(obj) {
+var __t, __p = "";
+with (Array.prototype.join, obj || {}) __p += '<div class="pcard  aikan-qq"><div class="wrapper pcard-border"><div class="avatar"><img src="' + (null == (__t = data.coverImage) ? "" : __t) + '" alt="头像" class="image"></div><div class="pcard-h18 title">' + (null == (__t = data.qq_group_name) ? "" : __t) + '</div><div class="pcard-h14 supplement">' + (null == (__t = data.qq_group_desc) ? "" : __t) + '</div><div class="pcard-h14 dynamic">' + (null == (__t = data.people_num) ? "" : __t) + '</div><a class="pcard-h16 enter " href=' + (null == (__t = data.schema) ? "" : __t) + "><img class='qq-icon'src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAh1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9qkf8RAAAALHRSTlMA/PDj2MBbLfnm3c+Q9vLrnJZ9USYjIA0IxqqlhoRzTzQQC9+3oYhrYlM8KNw1y7UAAADhSURBVDjL1dPHFsIgEIVhIJBeNMYYe+/3/Z/PlUcJF4/b/Otvw8wgBti0ngdxMl9Hv9lsgXeL/Q/XpPiUPr3uoPGdnvngCHZnj2tlD8qGwxz9xhymDkz4BOFGpzkhMGRwQ2DN4IXAnD/abcTH7bZk96AILMhlXMHauDCjUDsuAm/XhyvwcrJoWtBzO/h62LD2wpUNT4Dk0NgwgDFEZQaVDeNyOmYrbBVsqCZiS+9xW9iwFaI7Oq46CNH8c+I3wVuTT8jqwsRyKuyoiwJ3fxGDd11KQBZVZrKkjKWMlQ7FoHoBHm5nLnqnuccAAAAASUVORK5CYII=\" />进入群聊</a></div></div>";
+return __p;
+},
 score_emoji: function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="pcard score-emoji ' + (null == (__t = 5 == style ? "has-title" : "") ? "" : __t) + '" style="margin-top: 15px"><div class="p-scorecard pcard-container ' + (null == (__t = 2 == style || 5 == style ? "pcard-vertical-top-border" : "") ? "" : __t) + ' "><div class="pcard-clearfix score-wrapper">', 
@@ -2502,6 +2509,14 @@ i.find(".tag").css("display", "none"), i.find(".sale").css("display", "none"), i
 i.find(".origin-price").removeClass("pcard-w-delete pcard-w9").addClass("pcard-w1");
 });
 } else i.find("#day").text(e.benefit_time <= e.time_now ? "0天" : Math.floor((e.benefit_time - e.time_now) / 86400) + "天");
+} else if ("group_chat" === t) {
+var c = e.data || {}, d = c.link ? c.link : "", _ = c.qq_link ? c.qq_link : "";
+e.coverImage = c.coverImage || "http://p3.pstatp.com/large/7bcf0002fa942ff0784d.png", 
+e.link = d, e.qq_link = _, e.qq_group_name = c.qq_group_name || "", e.qq_group_desc = c.qq_group_desc || "", 
+e.people_num = c.people_num || "", e.schema = client.isAndroid ? _ : "sslocal://webview?url=" + encodeURIComponent(d);
+var i = $(cardTemplateFunctions[t]({
+data: e
+}));
 } else var i = $(cardTemplateFunctions[t](e));
 i.on("click", ".button", function(t) {
 t.stopPropagation(), send_umeng_event("detail", "click_card_button", a);
@@ -2527,6 +2542,8 @@ enter_from: "widget_wtt",
 card_type: 1
 }
 }), location.href = this.dataset.href;
+}) : "group_chat" === t ? i.on("click", ".enter", function() {
+send_umeng_event("detail", "enter_group_chat", a);
 }) : i.on("click", function() {
 send_umeng_event("detail", "click_card_content", a);
 }), needCleanDoms.push(i), "wenda" === Page.article.type ? (isShowWendaFooter = 0, 
