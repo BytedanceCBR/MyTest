@@ -161,6 +161,8 @@ class HomeListViewModel: DetailPageViewModel {
                     self?.enterType = "switch"
                 }
                 
+                self?.tableView?.hasMore = self?.getHasMore() ?? true
+                
                 self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
                 
                 let origin_from = houseTypeString(houseType.value)
