@@ -56,6 +56,7 @@ static struct timeval commentTimeval;
 
 @property (nonatomic, strong) id<TTCommentManagerProtocol> commentManager;
 
+@property (nonatomic, weak) UIViewController *belongVC; // 当前view所属VC
 @end
 
 @implementation TTCommentWriteView
@@ -146,6 +147,8 @@ static struct timeval commentTimeval;
         self.hasRemovedFromWindow = YES;
         if ([navigationController isKindOfClass:[TTNavigationController class]]) {
             navigationController.topViewController.ttDisableDragBack = NO;
+            self.belongVC.ttDisableDragBack = NO;
+
         }
     }
     if (newWindow && self.hasRemovedFromWindow) {
@@ -154,6 +157,8 @@ static struct timeval commentTimeval;
         }
         if ([navigationController isKindOfClass:[TTNavigationController class]]) {
             navigationController.topViewController.ttDisableDragBack = YES;
+            self.belongVC.ttDisableDragBack = YES;
+
         }
     }
 }
@@ -226,6 +231,8 @@ static struct timeval commentTimeval;
     if ([viewController isKindOfClass:[TTNavigationController class]]) {
         TTNavigationController *navigationController = (TTNavigationController *)viewController;
         navigationController.topViewController.ttDisableDragBack = YES;
+        self.belongVC = navigationController.topViewController;
+        self.belongVC.ttDisableDragBack = YES;
     }
 
     // 图片评论二级页采用了 present 方式，不包含 statusBar
@@ -315,11 +322,14 @@ static struct timeval commentTimeval;
         self.backgroundView.alpha = 0.f;
         self.containerView.top = self.bottom;
     };
+    
+    __weak typeof(self)wself = self;
     void (^completion)(BOOL) = ^(BOOL finished) {
         UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.superview];
         if ([viewController isKindOfClass:[TTNavigationController class]]) {
             TTNavigationController * navigationController = (TTNavigationController *)viewController;
             navigationController.topViewController.ttDisableDragBack = NO;
+            wself.belongVC.ttDisableDragBack = NO;
         }
         [self removeFromSuperview];
     };
