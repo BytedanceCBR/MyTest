@@ -54,7 +54,7 @@ func fillRentNeighborhoodInfoCell(neighborhoodInfo: FHRentDetailResponseDataNeig
                 maker.height.equalTo(20)
             }
         }
-        theCell.nameValue.text = neighborhoodInfo?.areaName
+        theCell.nameValue.text = neighborhoodInfo?.districtName
         
         var imprId: String? = "be_null"
         var groupId: String? = "be_null"
