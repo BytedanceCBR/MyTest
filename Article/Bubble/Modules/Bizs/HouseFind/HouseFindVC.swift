@@ -242,13 +242,14 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                     self.houseType.accept(items[index].houseType)
                 }
 
-                let offset = self.pageControl?.pageOffsetXByIndex(index) ?? 0
-                self.containerView.contentOffset = CGPoint(x: offset, y: 0)
+
 
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
                 self.adjustVerticalPositionToTop()
 
             }
+            let offset = self.pageControl?.pageOffsetXByIndex(index) ?? 0
+            self.containerView.contentOffset = CGPoint(x: offset, y: 0)
         }
 
         houseType.skip(1).bind { [weak self] _ in
@@ -392,9 +393,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 self?.adjustSegmentNav()
                 self?.setupSectionLabelByConfig()
                 self?.createPageViews()
-                if let houseType = self?.houseType.value {
-                    self?.handleScroll(houseType: houseType)
+                if let containerView = self?.containerView {
+                    let offset = self?.pageControl?.pageOffsetXByIndex(0) ?? 0
+                    containerView.contentOffset = CGPoint(x: offset, y: 0)
                 }
+//                if let houseType = self?.houseType.value {
+//                    self?.handleScroll(houseType: houseType)
+//                }
             })
             .disposed(by: disposeBag)
     }
