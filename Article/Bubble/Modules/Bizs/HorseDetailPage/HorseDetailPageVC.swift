@@ -1120,8 +1120,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }
 
     deinit {
-//        print("release HorseDetailPageVC")
- //        self.closeANRMonitor()
+         UIApplication.shared.statusBarStyle = .default
     }
 
 

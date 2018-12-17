@@ -40,7 +40,7 @@ class SuggestionItemCell: UITableViewCell {
         secondaryLabel.snp.makeConstraints { maker in
             maker.top.equalTo(12)
             maker.right.equalToSuperview().offset(-20)
-            maker.left.equalTo(label.snp.right).offset(-20)
+            maker.left.equalTo(label.snp.right).offset(6)
             maker.width.greaterThanOrEqualTo(63)
         }
 

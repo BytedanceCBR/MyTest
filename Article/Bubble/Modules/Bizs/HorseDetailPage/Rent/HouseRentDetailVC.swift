@@ -734,6 +734,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         if let staySearchParams = staySearchParams {
             recordEvent(key: "stay_page_search", params: staySearchParams)
         }
+         UIApplication.shared.statusBarStyle = .default
     }
 
 }
