@@ -293,9 +293,13 @@ class CornerView: UIView {
     
     func updateLayoutCompoents(isShowTags: Bool)
     {
+        
+        if UIScreen.main.bounds.size.width < 330 {
+            majorTitle.font = CommonUIStyle.Font.pingFangRegular(14)
+        }
+        
         if isShowTags {
             self.majorTitle.numberOfLines = 1
-            
             majorTitle.snp.updateConstraints { maker in
                 maker.left.right.equalToSuperview()
                 maker.top.equalToSuperview().offset(-3)
