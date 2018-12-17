@@ -288,7 +288,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                         if self.theHouseType.value == HouseType.rentHouse {
                             self.ershouHouseListViewModel?.requestRentHouseList(query: query, condition: nil)
                         }else{
-                            self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                            self.ershouHouseListViewModel?.request(query: query, neightborhoodId: self.neighborhoodId, houseId: self.houseId ?? "")
                         }
                     }
                 }, onError: { error in

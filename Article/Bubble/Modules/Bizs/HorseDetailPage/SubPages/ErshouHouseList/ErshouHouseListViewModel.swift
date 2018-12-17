@@ -45,7 +45,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         }
     }
 
-    func request(neightborhoodId: String? = nil, houseId: String? = nil) {
+    func request(query:String? = nil ,neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
             self.processError()(nil)
@@ -53,6 +53,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         }
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestHouseInSameNeighborhoodSearch(
+            query:query,
             neighborhoodId: neightborhoodId,
             houseId: houseId,
             searchId: searchId,
