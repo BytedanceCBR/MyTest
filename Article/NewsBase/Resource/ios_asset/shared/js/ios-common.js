@@ -821,7 +821,7 @@ function wendaCooperateCard() {
 var cooperateCardTmpl = function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="wenda-panel-co"><div class="wenda-cooperate"><div class="authorbar wenda clearfix"><a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
-false && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
+false && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)),
 __p += "</a>", false && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'),
 __p += '<div class="avatar-decoration avatar-night-mask"></div><div class="author-bar"><div class="name-link-wrap"><div class="name-link-w"><a class="author-name-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '">' + (null == (__t = data.author.name) ? "" : __t) + '<span class="cooper-tag">问答战略合作伙伴</span></a></div></div><a class="sub-title-w" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><span class="sub-title">' + (null == (__t = data.author.cooperate_text) ? "" : __t) + '</span></a></div></div><a class="cooperate-link" href="' + (null == (__t = data.author.cooperate_link) ? "" : __t) + '"><span class="txt">查看官方网站<em class="iconfont">&#xe644;</em></span></a></div></div>';
 return __p;
