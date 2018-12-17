@@ -120,14 +120,18 @@ fileprivate class FHFindHouseCategoryPageView: UIView {
             })
             infoDisplay.snp.makeConstraints { (make) in
                 make.top.left.right.equalTo(collectionView)
-                print(CommonUIStyle.StatusBar.height)
-                print(CommonUIStyle.TabBar.height)
                 // 138 为顶部空间高度包括搜索框及分段导航
                 let viewHeight = UIScreen.main.bounds.height - CommonUIStyle.TabBar.height - 138
                 make.height.equalTo(viewHeight)
             }
         } else {
-            assertionFailure()
+            addSubview(infoDisplay)
+            infoDisplay.snp.makeConstraints { (make) in
+                make.top.left.right.equalToSuperview()
+                // 138 为顶部空间高度包括搜索框及分段导航
+                let viewHeight = UIScreen.main.bounds.height - CommonUIStyle.TabBar.height - 138
+                make.height.equalTo(viewHeight)
+            }
         }
     }
 
@@ -272,6 +276,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
+        if EnvContext.shared.client.reachability.connection == .none,
+            EnvContext.shared.client.configCacheSubject.value != nil {
+            createPageViews()
+        }
 
         EnvContext.shared.client.reachability.rx.reachabilityChanged
             .subscribe(onNext: { [weak self] (reachability) in
