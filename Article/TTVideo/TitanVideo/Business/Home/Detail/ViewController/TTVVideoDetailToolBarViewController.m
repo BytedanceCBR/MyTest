@@ -214,19 +214,14 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+    
+    // add by zjing safeArea
     CGFloat safeInsetBottom = 0;
-    CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
-
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        
         safeInsetBottom = 34;
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInsetBottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInsetBottom));
     }
-    CGRect frame = [self.view.superview convertRect:frameInWindow fromView:nil];
-    self.view.frame = frame;
-
-//    NSLog(@"zjing-frame:%@",[NSValue valueWithCGRect:frame]);
+    self.view.height = ExploreDetailGetToolbarHeight() + safeInsetBottom;
+    
     self.toolbarView.frame = self.view.bounds;
 }
 
