@@ -248,7 +248,7 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
         pointAnnotation.title = self.centerPointName
 
 
-        ([pointAnnotation] + poiData.value).forEach { annotation in
+        (poiData.value +  [pointAnnotation] ).forEach { annotation in
             mapView?.addAnnotation(annotation)
         }
     }
