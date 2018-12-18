@@ -319,12 +319,19 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         setupErrorDisplay()
         self.errorVM?.onRequestViewDidLoad()
         self.errorVM?.onRequest()
+        
+        self.bringFilterToFront()
     }
     
-    override func viewDidLayoutSubviews() {
+//    override func viewDidLayoutSubviews() {
+//        self.view.bringSubview(toFront: conditionPanelView)
+//        self.view.bringSubview(toFront: searchFilterPanel)
+//
+//    }
+    
+    private func bringFilterToFront(){
         self.view.bringSubview(toFront: conditionPanelView)
         self.view.bringSubview(toFront: searchFilterPanel)
-
     }
 
     private func setupErrorDisplay() {
@@ -344,6 +351,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         infoMaskView.snp.makeConstraints { maker in
             maker.edges.equalTo(tableView.snp.edges)
         }
+        self.bringFilterToFront()
     }
 
     fileprivate func requestData() {
