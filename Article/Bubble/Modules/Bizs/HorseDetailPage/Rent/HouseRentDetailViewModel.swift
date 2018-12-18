@@ -257,6 +257,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 //        })
         let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
         let params = TracerParams.momoid()
+        var count = 0
+        if let theCount = relatedErshouItems?.count {
+            count = theCount
+        }
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
         var tail:() -> TableSectionNode? = {
@@ -281,8 +285,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 
                 params["houseId"] = "\(self.houseId)"
                 params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
-                
-                params["title"] = "周边房源"
+
+                params["title"] = "周边房源(\(self.relateErshouHouseData.value?.data?.total ?? "0"))"
                 
                 if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                     params["searchId"] = searchId
