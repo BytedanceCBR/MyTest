@@ -208,8 +208,11 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
             leftAxis.drawBottomYLabelEntryEnabled = false
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.axisMaximum = maxValue
-            leftAxis.axisMinimum = minValue
+            if maxValue != minValue {
+                
+                leftAxis.axisMaximum = maxValue
+                leftAxis.axisMinimum = minValue
+            }
             leftAxis.setLabelCount(6, force: true)
             
             chartView.data = data
