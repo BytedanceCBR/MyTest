@@ -329,7 +329,17 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
 
             theCell.iconImageView.bd_setImage(with: URL(string: item.icon ?? ""), placeholder: UIImage(named: "default_image"))
             theCell.label.text = item.title
+            
+            var bottomOffset:CGFloat = 0
+            if (indexPath.row == datas.count - 1) {
+                bottomOffset = -20;
+            } else {
+                bottomOffset = 0;
+            }
 
+            theCell.iconImageView.snp.updateConstraints { (maker) in
+                maker.bottom.equalToSuperview().offset(bottomOffset)
+            }
         }
         return cell ?? ChatCell()
     }
