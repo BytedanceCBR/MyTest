@@ -463,7 +463,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
             if (applcation.canOpenURL(URL(string: "iosamap://")!) == true) {
                 let gaodeAction = UIAlertAction(title: "高德地图", style: .default, handler: {
                     (alert: UIAlertAction!) -> Void in
-                    let urlString = "iosamap://navi?sourceApplication=app名&backScheme=iosamap://&lat=\(centerStr.0)&lon=\(centerStr.1)&dev=0&style=2"
+//                    let urlString = "iosamap://navi?sourceApplication=app名&backScheme=iosamap://&lat=\(centerStr.0)&lon=\(centerStr.1)&dev=0&style=2"
+                    let urlString = "iosamap://path?sourceApplication=applicationName&sid=BGVIS1&did=BGVIS2&dlat=\(centerStr.0)&dlon=\(centerStr.1)&dev=0&t=0"
                     let url = URL(string:urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
                     applcation.openURL(url!)
                 })
