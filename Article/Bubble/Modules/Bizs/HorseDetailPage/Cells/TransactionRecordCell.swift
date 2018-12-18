@@ -174,23 +174,23 @@ func fillTransactionRecordCell(_ item: TotalSalesInnerItem,
         theCell.descLabel.text = "\(item.dealDate ?? ""),\(item.dataSource ?? "")"
         theCell.totalPriceLabel.text = item.pricing
         theCell.pricePreSqmLabel.text = item.pricingPerSqm
-        theCell.isTail = isLastCell
-        theCell.isFirstCell = isFirstCell
-        if isLastCell
-        {
-            theCell.descLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
-                maker.left.equalTo(20)
-                maker.bottom.equalToSuperview().offset(-21)
-                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
-            }
-        } else {
-            theCell.descLabel.snp.remakeConstraints { maker in
-                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
-                maker.left.equalTo(20)
-                maker.bottom.equalToSuperview().offset(-11)
-                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
-            }
-        }
+//        theCell.isTail = false
+//        theCell.isFirstCell = isFirstCell
+//        if isLastCell
+//        {
+//            theCell.descLabel.snp.remakeConstraints { maker in
+//                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
+//                maker.left.equalTo(20)
+//                maker.bottom.equalToSuperview().offset(-21)
+//                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
+//            }
+//        } else {
+//            theCell.descLabel.snp.remakeConstraints { maker in
+//                maker.top.equalTo(theCell.namelabel.snp.bottom).offset(5)
+//                maker.left.equalTo(20)
+//                maker.bottom.equalToSuperview().offset(-11)
+//                maker.right.equalTo(theCell.pricePreSqmLabel.snp.left).offset(-5)
+//            }
+//        }
     }
 }
