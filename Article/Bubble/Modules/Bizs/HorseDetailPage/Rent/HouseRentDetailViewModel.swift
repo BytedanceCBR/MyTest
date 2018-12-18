@@ -280,10 +280,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 
                 params["houseId"] = "\(self.houseId)"
                 params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
-                if let title = self.detailData.value?.data?.neighborhoodInfo?.name {
-                    let totalCount = self.relateErshouHouseData.value?.data?.total ?? "0"
-                    params["title"] = title+"(\(totalCount))"
-                }
+                
+                params["title"] = "周边房源"
                 
                 if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                     params["searchId"] = searchId
