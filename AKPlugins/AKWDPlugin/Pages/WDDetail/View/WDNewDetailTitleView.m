@@ -65,6 +65,7 @@
         logoView.hidden = YES;
         logoView.userInteractionEnabled = YES;
         logoView.enableBlackMaskView = YES;
+        logoView.imageView.hidden = YES;
         [logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
         [self addSubview:logoView];
         self.logoView = logoView;

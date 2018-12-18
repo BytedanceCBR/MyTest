@@ -350,7 +350,7 @@ link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_use
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (n.h5_settings.is_liteapp || !t.media_user_id) && (n.author.link = "sslocal://media_account?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
+}, (n.h5_settings.is_liteapp || !t.media_user_id) && (n.author.link = "sslocal://media?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
 var i = {
 auth_type: "",
 auth_info: ""
@@ -828,7 +828,7 @@ i = JSON.parse(e.gd_ext_json);
 i = {};
 }
 window.wenda_extra.gd_ext_json = i, "category_name" in i && "wenda" === Page.article.type && (Page.author.link = Page.author.link + "&category_name=" + i.category_name, 
-$(".author-avatar-link").attr("href", Page.author.link), $(".author-name-link").attr("href", Page.author.link), 
+$(".author-avatar-link").attr("href", Page.author.link), $(".author-name-link").attr("href", Page.author.link),
 $(".sub-title-w").attr("href", Page.author.link));
 }
 if (WendaRuleTip(e.tips_data || {}), (!("show_next" in e) || e.show_next) && ($(".serial").show(), 
@@ -1475,7 +1475,7 @@ source: "wenda_detail",
 profile_user_id: Page.author.userId
 }
 }), a = "detail_follow_card_wenda", i = wenda_extra.gd_ext_json ? wenda_extra.gd_ext_json.category_name : "", 
-o = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (i ? "&category_name=" + i : "");
+o = wenda_extra.ansid), window.location.href = "ss://pro?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (i ? "&category_name=" + i : "");
 }
 }
 
@@ -2267,7 +2267,7 @@ return __p;
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += "<footer>", data.wenda_extra && (__p += "", 
 data.wenda_extra.wd_version >= 3 ? (__p += '<div class="wd-footer"><a href="#" class="link-more" id="wd-link-more" style="display:none;">了解更多</a><div class="publish-datetime">' + (null == (__t = data.article.publishTime) ? "" : __t) + "</div>", 
-__p += data.wenda_extra.wd_version >= 6 ? '<a class="report no-icon" style="display:none" onclick="ToutiaoJSBridge.call(\'report\')">举报</a><span style="display:none" class="sep for-report" style="font-size:12px;">|</span><a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>', 
+__p += data.wenda_extra.wd_version >= 6 ? '<a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>', 
 __p += "</div>") : __p += '<div class="wenda-bottom clearfix"><div class="create-time">' + (null == (__t = data.article.publishTime) ? "" : __t) + '</div></div><div class="bottom-buttons only-one"><div id="digg" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib like" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b digg-count" realnum="0">赞</span></span></div><div id="bury" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib unlike" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '" style="display: none;"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b bury-count" realnum="0">踩</span></span></div></div>', 
 __p += ""), __p += "", data.novel_data ? (__p += "", data.novel_data.can_read ? (__p += "", 
 data.novel_data.show_new_keep_reading ? (__p += '<div class="serial special-serial">', 
@@ -2369,8 +2369,8 @@ weitoutiao: function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) {
 if (__p += '<div class="pcard forum"><div class="pcard-caption"><span class="pcard-h14 pcard-w1">微头条</span></div><div class="p-autocard pcard-container pcard-vertical-border" data-href="' + (null == (__t = data.open_url) ? "" : __t) + '" data-id="' + (null == (__t = data.id) ? "" : __t) + '" data-content="content"><div class="pcard-clearfix"><div class="header"><div class="authorbar" id="profile">', 
-__p += '<a class="author-avatar-link"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.user.avatar) ? "" : __t) + '"></div>', 
-data.useServerV && data.user.auth && (__p += "" + (null == (__t = buildServerVIcon2(data.user.auth.auth_type, "avatar_icon")) ? "" : __t)), 
+__p += '<a class="author-avatar-link"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.user.avatar) ? "" : __t) + '"></div>',
+data.useServerV && data.user.auth && (__p += "" + (null == (__t = buildServerVIcon2(data.user.auth.auth_type, "avatar_icon")) ? "" : __t)),
 __p += '</a><div class="author-bar"><div class="name-link-wrap"><div class="name-link-w"><a class="author-name-link">' + (null == (__t = data.user.name) ? "" : __t) + '</a></div></div><a class="sub-title-w"><span class="sub-title">' + (null == (__t = data.time_disp) ? "" : __t) + (null == (__t = data.user.auth.auth_info && data.time_disp ? "&nbsp;&middot;&nbsp;" : "") ? "" : __t) + (null == (__t = data.user.auth.auth_info) ? "" : __t) + '</span></a></div></div></div><div class="content">', 
 data.text && (__p += '<div class="title-outer"><div class="title-wrap"><div class="title"><span class="title-inner">' + (null == (__t = data.text) ? "" : _.escape(__t)) + "</span></div></div></div>"), 
 __p += "", "video" == data.content_type) __p += '<div class="images-wrap video" style="width:' + (null == (__t = data.img_width) ? "" : __t) + "px;height:" + (null == (__t = data.img_height) ? "" : __t) + 'px; margin-bottom: 10px;"><div class="images" style="width:' + (null == (__t = data.img_width) ? "" : __t) + "px;height:" + (null == (__t = data.img_height) ? "" : __t) + "px;background-image: url(" + (null == (__t = data.video.cover_url) ? "" : __t) + ');"></div><i class="custom-video-trigger"></i><i class="custom-video-duration"> ' + (null == (__t = data.video.duration_str) ? "" : __t) + " </i></div>"; else if ("image" == data.content_type) {

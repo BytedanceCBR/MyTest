@@ -332,11 +332,11 @@ publishTime: t.publish_stamp ? formatTime(1e3 * t.publish_stamp) : t.publish_tim
 userId: t.media_user_id,
 mediaId: a.id,
 name: a.name,
-link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + i.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
+link: "ss://pro?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + i.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://media_account?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
+}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://media?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
 var n = {
 auth_type: "",
 auth_info: ""
@@ -473,7 +473,7 @@ location.href = "sslocal://webview?nightbackground_disable=1&url=" + encodeURICo
 }), $("article").on("click", "a.link-at", function(e) {
 e.preventDefault();
 var t = $(this).attr("data-uid");
-t && (location.href = "sslocal://profile?uid=" + t + "&source=wenda_detail&refer=wenda");
+t && (location.href = "sslocal://pro?uid=" + t + "&source=wenda_detail&refer=wenda");
 });
 }
 
@@ -1565,7 +1565,7 @@ source: "wenda_detail",
 profile_user_id: Page.author.userId
 }
 }), a = "detail_follow_card_wenda", n = wenda_extra.gd_ext_json ? wenda_extra.gd_ext_json.category_name : "", 
-o = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
+o = wenda_extra.ansid), window.location.href = "ss://pro?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
 }
 }
 
@@ -2376,7 +2376,7 @@ return __p;
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += "<footer>", data.wenda_extra && (__p += "", 
 data.wenda_extra.wd_version >= 3 ? (__p += '<div class="wd-footer"><a href="#" class="link-more" id="wd-link-more" style="display:none;">了解更多</a><div class="publish-datetime">' + (null == (__t = data.article.publishTime) ? "" : __t) + "</div>", 
-__p += data.wenda_extra.wd_version >= 6 ? '<a class="report no-icon" style="display:none" onclick="ToutiaoJSBridge.call(\'report\')">举报</a><span style="display:none" class="sep for-report" style="font-size:12px;">|</span><a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>', 
+__p += data.wenda_extra.wd_version >= 6 ? '<a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>',
 __p += "</div>") : __p += '<div class="wenda-bottom clearfix"><div class="create-time">' + (null == (__t = data.article.publishTime) ? "" : __t) + '</div></div><div class="bottom-buttons only-one"><div id="digg" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib like" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b digg-count" realnum="0">赞</span></span></div><div id="bury" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib unlike" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '" style="display: none;"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b bury-count" realnum="0">踩</span></span></div></div>', 
 __p += ""), __p += "", data.novel_data ? (__p += "", data.novel_data.can_read ? (__p += "", 
 data.novel_data.show_new_keep_reading ? (__p += '<div class="serial special-serial">', 
