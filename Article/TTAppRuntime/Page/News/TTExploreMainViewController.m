@@ -42,7 +42,7 @@
 #import "TTAdSplashMediator.h"
 #import "TTPushAlertManager.h"
 #import "TTArticleSearchManager.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 //#import "TTContactsGuideManager.h"
 #import "TTTabBarProvider.h"
 #import "ExploreExtenstionDataHelper.h"
@@ -601,7 +601,7 @@
 - (void)ttFeedCollectionViewControllerWillBeginDragging:(UIScrollView *)scrollView
 {
     //按住RNCell滑动列表时需要主动调用RCTRootView的cancelTouches方法，否则松手后仍会触发点击事件
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
 }
 
 - (void)ttFeedCollectionViewControllerDidStartLoading:(TTFeedCollectionViewController *)vc

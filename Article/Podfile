@@ -361,15 +361,15 @@ def appPods
     'GIF',
     'WebP'
     ]
-    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
-    'Core',
-    'RCTText',
-    'RCTImage',
-    'RCTNetwork',
-    'RCTActionSheet',
-    'RCTWebSocket', # needed for debugging
-    ]
-    
+#    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
+#    'Core',
+#    'RCTText',
+#    'RCTImage',
+#    'RCTNetwork',
+#    'RCTActionSheet',
+#    'RCTWebSocket', # needed for debugging
+#    ]
+
 #    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
     #-----只越狱渠道接入-----
     #pod 'Appsee', '2.2'

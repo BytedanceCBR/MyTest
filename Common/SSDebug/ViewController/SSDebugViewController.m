@@ -59,7 +59,7 @@
 #import "TTDebugAssistant.h"
 #import <TTDebugAssistant/JIRAScreenshotManager.h>
 #endif
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import <TTSettingsManager/TTSettingsManager+SaveSettings.h>
 #import <AKWebViewBundlePlugin/TTDetailWebContainerDebugger.h>
 #import "TTVSettingsConfiguration.h"
@@ -507,12 +507,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         STTableViewCellItem *item0 = [[STTableViewCellItem alloc] initWithTitle:@"联机调试开关" target:self action:nil];
         item0.switchStyle = YES;
         item0.switchAction = @selector(toggleRNDevEnable:);
-        item0.checked = [TTRNBundleManager sharedManager].devEnable;
+//        item0.checked = [TTRNBundleManager sharedManager].devEnable;
         
         STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"调试host" target:self action:nil];
         item1.textFieldStyle = YES;
         item1.textFieldAction = @selector(setRNDevHost:);
-        item1.textFieldContent = [TTRNBundleManager sharedManager].devHost;
+//        item1.textFieldContent = [TTRNBundleManager sharedManager].devHost;
         
         STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"跳转Bundle(ReactDemo)" target:self action:@selector(goToRNPage)];
         
@@ -1265,11 +1265,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 #pragma mark - React Native调试
 - (void)toggleRNDevEnable:(UISwitch *)sw {
-    [TTRNBundleManager sharedManager].devEnable = sw.on;
+//    [TTRNBundleManager sharedManager].devEnable = sw.on;
 }
 
 - (void)setRNDevHost:(UITextField *)textField {
-    [TTRNBundleManager sharedManager].devHost = textField.text;
+//    [TTRNBundleManager sharedManager].devHost = textField.text;
 }
 
 - (void)goToRNPage {
