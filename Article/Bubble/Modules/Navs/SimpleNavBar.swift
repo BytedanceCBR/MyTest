@@ -413,7 +413,8 @@ class CategorySearchNavBar: UIView {
 
         searchAreaPanel.addSubview(searchAreaBtn)
         searchAreaBtn.snp.makeConstraints { maker in
-            maker.right.top.bottom.equalToSuperview()
+            maker.top.bottom.equalToSuperview()
+            maker.right.equalToSuperview().offset(-20)
             maker.left.equalTo(searchIcon.snp.left)
         }
         /*

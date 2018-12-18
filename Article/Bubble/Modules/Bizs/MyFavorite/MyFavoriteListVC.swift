@@ -215,7 +215,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             errorMask:emptyMaskView,
             requestRetryText:"网络异常",
             requestNilDataText:nilDataText,
-            requestNilDataImage:"group-4",
+            requestNilDataImage:"group-9",
             isUserClickEnable:false,retryAction:{
             [weak self] in
             if let houseType = self?.houseType{
