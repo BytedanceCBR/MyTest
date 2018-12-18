@@ -332,11 +332,11 @@ publishTime: t.publish_stamp ? formatTime(1e3 * t.publish_stamp) : t.publish_tim
 userId: t.media_user_id,
 mediaId: a.id,
 name: a.name,
-link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + i.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
+link: "ss://pro?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + i.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://media_account?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
+}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://media?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
 var n = {
 auth_type: "",
 auth_info: ""
@@ -473,7 +473,7 @@ location.href = "sslocal://webview?nightbackground_disable=1&url=" + encodeURICo
 }), $("article").on("click", "a.link-at", function(e) {
 e.preventDefault();
 var t = $(this).attr("data-uid");
-t && (location.href = "sslocal://profile?uid=" + t + "&source=wenda_detail&refer=wenda");
+t && (location.href = "sslocal://pro?uid=" + t + "&source=wenda_detail&refer=wenda");
 });
 }
 
@@ -1565,7 +1565,7 @@ source: "wenda_detail",
 profile_user_id: Page.author.userId
 }
 }), a = "detail_follow_card_wenda", n = wenda_extra.gd_ext_json ? wenda_extra.gd_ext_json.category_name : "", 
-o = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
+o = wenda_extra.ansid), window.location.href = "ss://pro?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
 }
 }
 
