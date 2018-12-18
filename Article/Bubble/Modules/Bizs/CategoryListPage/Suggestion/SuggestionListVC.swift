@@ -714,6 +714,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        //这里判断是否有用户输入，如果有且suggestion数据为0，则清空列表数据
+        if self.searchInputField?.text?.isEmpty ?? true == false && self.suggestions.value.count == 0 {
+            return 0
+        }
         return 1
     }
     
@@ -1049,7 +1053,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func itemSelector() -> (([SuggestionItem] , [SuggestionItem])) -> [SuggestionItem] {
-        return { (e) in
+        return { [weak self] (e) in
             let (suggestions, history) = e
             if suggestions.count > 0 {
                 return suggestions
