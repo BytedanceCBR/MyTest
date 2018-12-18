@@ -1131,9 +1131,7 @@ fileprivate func fillNormalItem(cell: UITableViewCell, item: SuggestionItem, hig
                 text = text + " (\(text2))"
             }
             let attrTextProcess = highlightedText(originalText: text, highlitedText: highlighted)
-//                    <*> commitText(commit: item.text2)
-
-            theCell.label.attributedText = attrTextProcess(attrText(text: text))
+            theCell.label.attributedText = attrTextProcess(attrNormalText(text: item.text ?? "", text2: item.text2 ?? ""))
         }
         theCell.secondaryLabel.text = "约\(item.count)套"
     }
@@ -1158,6 +1156,19 @@ typealias AttributedStringProcess = (NSMutableAttributedString) -> NSMutableAttr
 
 func attrText(text: String) -> NSMutableAttributedString {
     return NSMutableAttributedString(string: text)
+}
+
+func attrNormalText(text: String, text2:String) -> NSMutableAttributedString {
+    let attr = NSMutableAttributedString(string: text)
+    attr.yy_font = CommonUIStyle.Font.pingFangRegular(15)
+    attr.yy_color = hexStringToUIColor(hex: "#081f33")
+    if !text2.isEmpty {
+        let tempAttr = NSMutableAttributedString(string: " (\(text2))")
+        tempAttr.yy_font = CommonUIStyle.Font.pingFangRegular(15)
+        tempAttr.yy_color = hexStringToUIColor(hex: "#8a9299")
+        attr.append(tempAttr)
+    }
+    return attr
 }
 
 func highlightedText(
