@@ -227,6 +227,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
                                 neighborhoodId: id,
+                                houseId: "\(self.houseId)",
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .rentDetail,
