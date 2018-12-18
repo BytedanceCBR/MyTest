@@ -311,10 +311,11 @@ class CategorySearchNavBar: UIView {
     }()
     
     lazy var mapBtn : UIButton = {
-       let button = ExtendHotAreaButton()
+       let button = ExtendHotAreaButton(forScale: false)
         let img = UIImage(named: "navbar_showmap")
         button.setImage(img, for: .normal)
         button.setImage(img, for: .highlighted)
+        button.isHidden = true
         return button
     }()
 
@@ -490,7 +491,7 @@ class CategorySearchNavBar: UIView {
             return
         }
         mapBtn.isHidden = !show
-        let width = show ? 30 : 0
+        let width = show ? 25 : 0
         mapBtn.snp.updateConstraints { (maker) in
             maker.width.equalTo(width)
         }
@@ -689,12 +690,23 @@ class FHSuggestionSearchNavBar: UIView {
 
 class ExtendHotAreaButton: UIButton {
 
+    var isExtend:Bool = true
+    
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         var bounds = self.bounds
         let widthDelta = bounds.width
         let heightDelta = bounds.height
-        bounds = bounds.insetBy(dx: -1 * widthDelta, dy: -1 * heightDelta)
+        bounds = bounds.insetBy(dx: (isExtend ? -1 : (UIScreen.main.bounds.size.width < 330 ? -1 : 0)) * widthDelta, dy: (isExtend ? -1 : (UIScreen.main.bounds.size.width < 330 ? -1 : 0)) * heightDelta)
         return bounds.contains(point)
     }
-
+    
+    init(forScale: Bool = true) {
+        super.init(frame: CGRect.zero)
+        self.isExtend = forScale
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
