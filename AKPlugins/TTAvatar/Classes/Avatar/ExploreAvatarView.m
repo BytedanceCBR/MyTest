@@ -30,7 +30,6 @@
         self.imageView = [[TTImageView alloc] initWithFrame:self.bounds];
         self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.imageView];
-        self.imageView.hidden = YES;
         
         self.highlightedMaskView = [[SSThemedView alloc] initWithFrame:self.bounds];
         self.highlightedMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
