@@ -225,7 +225,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
     fileprivate func showEmptyInfo() {
         self.emptyMaskView.isHidden = false
         emptyMaskView.icon.image = UIImage(named:"empty_message")
-        self.emptyMaskView.label.text = "还没有关注的信息"
+        self.emptyMaskView.label.text = "阿哦～你还没有收到消息～"
         view.bringSubview(toFront: emptyMaskView)
         self.clearBadgeNumber()
     }
