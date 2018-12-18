@@ -361,7 +361,10 @@ def appPods
     'GIF',
     'WebP'
     ]
-#    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
+    
+    pod 'React', '0.55.4', :subspecs=>['RCTText', 'RCTImage']
+
+#    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.55.4', :subspecs => [
 #    'Core',
 #    'RCTText',
 #    'RCTImage',

@@ -518,6 +518,15 @@ PODS:
   - OpenSSL-Universal (1.0.1.20)
   - OpenUDID (0.1.0)
   - Protobuf (3.0.1-ttv)
+  - React/Core (0.55.4):
+    - Yoga (= 1.8.1)
+  - React/RCTImage (0.55.4):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTNetwork (0.55.4):
+    - React/Core
+  - React/RCTText (0.55.4):
+    - React/Core
   - ReactiveObjC (3.0.0)
   - RNCryptor-objc (3.0.5)
   - RSSwizzle (0.1.0)
@@ -1121,6 +1130,7 @@ PODS:
   - TTVTLIndexPathTools (0.4.4)
   - UITableView+FDTemplateLayoutCell (1.6)
   - UMengAnalytics (4.1.4)
+  - Yoga (1.8.1)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
@@ -1198,6 +1208,8 @@ DEPENDENCIES:
   - OHHTTPStubs (= 4.2.1)
   - OpenUDID (= 0.1.0)
   - Protobuf (= 3.0.1-ttv)
+  - React/RCTImage (= 0.55.4)
+  - React/RCTText (= 0.55.4)
   - ReactiveObjC (= 3.0.0)
   - RNCryptor-objc (= 3.0.5)
   - RSSwizzle (= 0.1.0)
@@ -1434,6 +1446,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 6f05fcf94f2c5f5114c56c5da02080c0f674419a
   OpenUDID: ee6ece43513e675030bd04fcfa97a8c1f16b69cb
   Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
+  React: 14e277fa4ad5a75a142bc1ab244641ad5f0e45e1
   ReactiveObjC: 185066f76d2c296cef213204fe1218461e58724b
   RNCryptor-objc: 9c0b03ebe2b563ac069f2d4d41e1d1db1e485ddc
   RSSwizzle: 2bf09a88678d5fe2246a6fee32505bf769a9a079
@@ -1505,12 +1518,13 @@ SPEC CHECKSUMS:
   TTVTLIndexPathTools: 997b28f180f2847b2da6b1bd340b87623f1429d3
   UITableView+FDTemplateLayoutCell: 3b65a6822f52d2e3cf6c442220307cb1ac192dc6
   UMengAnalytics: d318ff10358c323f18bd1cf4b2d8ac99e76bdefc
+  Yoga: 2088ec48bee81601e74ae63427017d720fade0ba
   YYCache: 7e176e4a8882e98b59da1a0108d1b4c189af4eef
   YYImage: 53144c062bb98bc2ea5a2551e29cf1afb97ad5df
   YYModel: b671b05b2a2d24cb8ad6ddceaa61b1daec459be9
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 587421c6e32ad27192721d099206749a59bfb4b5
+PODFILE CHECKSUM: 062294bc7cfa4a2bd89ba58322812085036149bb
 
 COCOAPODS: 1.4.0
