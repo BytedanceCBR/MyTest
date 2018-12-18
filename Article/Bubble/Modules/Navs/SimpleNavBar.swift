@@ -588,7 +588,6 @@ class FHSuggestionSearchNavBar: UIView {
     var canSelectType = true {
         didSet {
             triangleImage.isHidden = !canSelectType
-            
         }
     }
     
@@ -607,7 +606,12 @@ class FHSuggestionSearchNavBar: UIView {
         searchAreaPanel.snp.makeConstraints { maker in
             maker.left.equalTo(20)
             maker.top.equalToSuperview().offset(CommonUIStyle.StatusBar.height + 4)
-            maker.right.equalTo(backBtn.snp.left).offset(-20)
+            //如果是宅屏幕手机，则缩小input控件和取消按钮的边距
+            if UIScreen.main.bounds.width < 350 {
+                maker.right.equalTo(backBtn.snp.left).offset(-15)
+            } else {
+                maker.right.equalTo(backBtn.snp.left).offset(-20)
+            }
             maker.height.equalTo(33)
         }
         

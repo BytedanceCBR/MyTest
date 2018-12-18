@@ -1397,7 +1397,7 @@ CHECKOUT OPTIONS:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: e4b69bd093640a386d8d9f5cd8e3daf833497a9c
+    :commit: 36ec99d363c14f33b0c3e2033ef500403c23fc3a
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa

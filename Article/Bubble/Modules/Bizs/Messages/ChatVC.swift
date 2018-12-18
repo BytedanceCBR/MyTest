@@ -73,8 +73,11 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             if #available(iOS 11, *) {
-
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-49)
+                var bottomOffset = (49 + view.tt_safeAreaInsets.bottom)
+                if let tabBarItem = TTTabBarManager.shared().tabItem(withIdentifier: kFHouseMessageTabKey) {
+                    bottomOffset = tabBarItem.frame.height
+                }
+                maker.bottom.equalToSuperview().offset(-bottomOffset)
             } else {
                 maker.bottom.equalToSuperview().offset(-49)
             }

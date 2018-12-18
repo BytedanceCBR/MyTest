@@ -348,6 +348,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     [@"message_detail_list" isEqualToString:host] ||
     [@"message_system_list" isEqualToString:host] ||
     [@"house_list" isEqualToString:host] ||
+    [@"rent_detail" isEqualToString:host] ||
+    [@"renthouse_main" isEqualToString:host] ||
+    [@"mapfind_house" isEqualToString:host] ||
+    [@"mapfind_rent" isEqualToString:host] ||
+    [@"rent_main" isEqualToString:host] ||
     [@"main" isEqualToString:host];
 }
 
