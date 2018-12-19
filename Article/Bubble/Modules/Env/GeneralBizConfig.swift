@@ -18,6 +18,10 @@ func defaultCityId() -> String {
     
 }
 
+extension Notification.Name {
+    static let notifyGenConfigUpdate = Notification.Name("notify_gen_config_update")
+}
+
 class GeneralBizConfig {
     
     static let CONFIG_KEY_SELECT_CITY_ID = "config_key_select_city_id"
@@ -157,9 +161,12 @@ class GeneralBizConfig {
                     }
                 }
                 EnvContext.shared.client.fetchSearchConfig()
-                
+                let local = self.generalCacheSubject.value
+                let remote = response?.data
                 self.generalCacheSubject.accept(response?.data)
-                
+                if let local = local, let remote = remote {
+                    self.configDiff(local: local, remote: remote)
+                }
                 }, onError: { error in
                     //                print(error)
                     //                    assertionFailure("搜索配置请求异常")
@@ -221,6 +228,39 @@ class GeneralBizConfig {
         
         //TODO: add rent data
         return self.generalCacheSubject.value?.rentOpData?.toJSON()
+    }
+
+    fileprivate func configDiff(local: GeneralConfigData, remote: GeneralConfigData) {
+        if local.currentCityId == remote.currentCityId && getMd5StringFromConfig(local) != getMd5StringFromConfig(remote) {
+            NotificationCenter.default.post(name: .notifyGenConfigUpdate, object: nil)
+        }
+    }
+
+    fileprivate func getMd5StringFromConfig(_ config: GeneralConfigData) -> String {
+        var token = ""
+        config.opData?.items.forEach({ (i) in
+            token = token + (i.toJSONString() ?? "")
+        })
+        config.opData?.items.forEach({ (i) in
+            token = token + (i.toJSONString() ?? "")
+        })
+        config.housetypelist.forEach({ (i) in
+            token = token + "\(i)"
+        })
+        let md5Result = md5String(str: token)
+        return md5Result
+    }
+
+    fileprivate func md5String(str:String) -> String{
+        let cStr = str.cString(using: .utf8)
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 16)
+        CC_MD5(cStr!,(CC_LONG)(strlen(cStr!)), buffer)
+        let md5String = NSMutableString();
+        for i in 0 ..< 16{
+            md5String.appendFormat("%02x", buffer[i])
+        }
+        free(buffer)
+        return md5String as String
     }
     
 }
