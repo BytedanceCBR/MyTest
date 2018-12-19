@@ -799,7 +799,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
     override func setSelectedConditions(conditions: [String : Any]) {
         let ds = priceDataSource()
         ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
-        ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+        ds?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
         ds?.lowerInput = ""
         ds?.upperInput = ""
         super.setSelectedConditions(conditions: conditions)
@@ -818,7 +818,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         } else {
             let ds = priceDataSource()
             ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
-            ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+            ds?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
             ds?.lowerInput = ""
             ds?.upperInput = ""
         }
