@@ -36,7 +36,7 @@
             [SSCookieManager setSessionIDToCookie:sessionKey];
         }
         
-        [TTSandBoxHelper setAppFirstLaunch];
+       
         
 //        [FRLogicManager cleanInVersionFirstLaunch];
     }
@@ -45,6 +45,10 @@
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [[self class] handleFirstLaunchForCurrentVersion];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+     [TTSandBoxHelper setAppFirstLaunch];
 }
 
 @end
