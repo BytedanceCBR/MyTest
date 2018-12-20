@@ -9,4 +9,11 @@
 
 @implementation FHClient
 
+- (void)onStart
+{
+    
+    
+    
+}
+
 @end
