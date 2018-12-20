@@ -7,10 +7,10 @@
 
 #import "FHHouseFilterBridgeImp.h"
 #import "Bubble-Swift.h"
-
+#import "FHConditionFilterFactory.h"
 @interface FHHouseFilterBridgeImp()
 
-@property(nonatomic , strong) HouseFilterViewModel* houseFilterViewModel;
+@property(nonatomic , strong) FHConditionFilterViewModel* houseFilterViewModel;
 @property(nonatomic , assign) FHHouseType houseType;
 @end
 
@@ -32,15 +32,18 @@
             ht = HouseTypeSecondHandHouse;
             break;
     }
-    
-    MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:showAllCondition isSortable:showSort];
+    FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
+    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
+    _houseFilterViewModel = [factory createFilterPanelViewModel:ht
+                                                   allCondition:showAllCondition
+                                                     isSortable:showSort
+                                                         config:configs];
     return _houseFilterViewModel;
 }
 
 -(UIView *)filterPannel:(id)viewModel
 {
-    return [_houseFilterViewModel filterPanelView];
+    return [_houseFilterViewModel filterBar];
 }
 
 -(UIView *)filterBgView:(id)viewModel
@@ -60,7 +63,7 @@
 
 -(NSString *)getConditions
 {
-    return [_houseFilterViewModel getConditions];
+    return [_houseFilterViewModel conditionQueryString];
 }
 
 -(void)closeConditionFilterPanel

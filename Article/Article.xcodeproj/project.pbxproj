@@ -3548,6 +3548,8 @@
 		B389ECC02182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
 		B389ECC12182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
 		B389ECC22182BFE2003481D5 /* SortConditionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */; };
+		B3A377B021CB80970083C259 /* FHFilterConditionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A377AE21CB7D210083C259 /* FHFilterConditionParser.swift */; };
+		B3A377B121CB80980083C259 /* FHFilterConditionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A377AE21CB7D210083C259 /* FHFilterConditionParser.swift */; };
 		B3A73587214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A73588214F612F001A3953 /* SystemMessageListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A73586214F612F001A3953 /* SystemMessageListVC.swift */; };
 		B3A7358D214FAC4D001A3953 /* HouseFindVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */; };
@@ -8096,6 +8098,7 @@
 		B388CD172142678800653188 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
 		B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFindHouseFilterFactory.swift; sourceTree = "<group>"; };
 		B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortConditionPanel.swift; sourceTree = "<group>"; };
+		B3A377AE21CB7D210083C259 /* FHFilterConditionParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHFilterConditionParser.swift; sourceTree = "<group>"; };
 		B3A73586214F612F001A3953 /* SystemMessageListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageListVC.swift; sourceTree = "<group>"; };
 		B3A7358C214FAC4D001A3953 /* HouseFindVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindVC.swift; sourceTree = "<group>"; };
 		B3A7358F2150AA52001A3953 /* TTLaunchTracer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLaunchTracer.h; sourceTree = "<group>"; };
@@ -15133,6 +15136,7 @@
 				B388CA832142652900653188 /* MultiColumnTableSelectorPanel.swift */,
 				B389ECBB2181C3B6003481D5 /* MapFindHouseFilterFactory.swift */,
 				B389ECBF2182BFE2003481D5 /* SortConditionPanel.swift */,
+				B3A377AE21CB7D210083C259 /* FHFilterConditionParser.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -18570,6 +18574,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -18655,6 +18660,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerify.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18813,6 +18819,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -18897,6 +18904,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerify.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -19197,6 +19205,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -19281,6 +19290,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerify.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -21278,6 +21288,7 @@
 				B373C8B82174587A008F9905 /* TTVDetailRelatedVideoItem.m in Sources */,
 				B373C8B92174587A008F9905 /* ExploreMovieManager.m in Sources */,
 				B373C8BA2174587A008F9905 /* TTArticleDetailViewController+Share.m in Sources */,
+				B3A377B121CB80980083C259 /* FHFilterConditionParser.swift in Sources */,
 				B373C8BB2174587A008F9905 /* ArticleMomentHelper.m in Sources */,
 				B373C8BC2174587A008F9905 /* TTEditAccountNameView.m in Sources */,
 				B373C8BD2174587A008F9905 /* TTVMidInsertADTracker.m in Sources */,
@@ -23012,6 +23023,7 @@
 				FEFA533B205FB1A8001F50D8 /* TTVDetailRelatedVideoItem.m in Sources */,
 				FEFA533D205FB1A8001F50D8 /* ExploreMovieManager.m in Sources */,
 				FEFA533E205FB1A8001F50D8 /* TTArticleDetailViewController+Share.m in Sources */,
+				B3A377B021CB80970083C259 /* FHFilterConditionParser.swift in Sources */,
 				D50439DB2079B92C00DA4953 /* ArticleMomentHelper.m in Sources */,
 				FEFA533F205FB1A8001F50D8 /* TTEditAccountNameView.m in Sources */,
 				FEFA5340205FB1A8001F50D8 /* TTVMidInsertADTracker.m in Sources */,
