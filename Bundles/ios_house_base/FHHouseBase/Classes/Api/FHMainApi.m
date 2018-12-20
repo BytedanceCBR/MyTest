@@ -34,10 +34,31 @@
 //
     NSString *url = [[self host] stringByAppendingString:@"/f100/api/search_config"];
     
-    //TODO : add real data
-//    param = @{@"city_id":@"122"};
+    NSDictionary *commonParams = [TTNetworkManager shareInstance].commonParamsblock();
     
-    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+    NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
+
+    
+    if ([param[@"city_name"] isKindOfClass:[NSString class]]){
+        requestParam[@"city_name"] = param[@"city_name"];
+    }else
+    {
+        requestParam[@"city_name"] = nil;
+    }
+    
+    if ([param[@"city_id"] isKindOfClass:[NSString class]]) {
+        requestParam[@"city_id"] = param[@"city_id"];
+    }else
+    {
+        requestParam[@"city_id"] = nil;
+    }
+    
+    if ([param[@"gaode_city_id"] isKindOfClass:[NSString class]]) {
+        requestParam[@"gaode_city_id"] = param[@"gaode_city_id"];
+    }
+    
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj) {
         
         FHSearchConfigModel *model = nil;
         if (!error) {
@@ -64,17 +85,41 @@
 {
     NSString *url = QURL(@"/f100/api/config");
     
-    NSMutableDictionary *param = [NSMutableDictionary new];
+    NSDictionary *commonParams = [TTNetworkManager shareInstance].commonParamsblock();
+    
+    NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
+    
     if (cityId > 0) {
-        param[@"city_id"] = @(cityId);
+        [requestParam setValue:@(cityId) forKey:@"city_id"];
     }
     
-    param[@"gaode_city_id"] = gCityId?:@"";
-    param[@"gaode_lng"] = @(location.longitude);
-    param[@"gaode_lat"] = @(location.latitude);
-    param[@"gaode_city_name"] = gCityName?:@"";
+    if ([gCityName isKindOfClass:[NSString class]]){
+        requestParam[@"city_name"] = gCityName;
+    }else
+    {
+        requestParam[@"city_name"] = nil;
+    }
     
-    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+    if ([gCityId isKindOfClass:[NSString class]]) {
+        requestParam[@"city_id"] = gCityId;
+    }else
+    {
+        requestParam[@"city_id"] = nil;
+    }
+    
+    double longitude = location.longitude;
+    double latitude = location.latitude;
+
+    if (longitude != 0 && longitude != 0) {
+        requestParam[@"gaode_lng"] = @(longitude);
+        requestParam[@"gaode_lat"] = @(latitude);
+    }
+    
+    if ([gCityId isKindOfClass:[NSString class]]) {
+        requestParam[@"gaode_city_id"] = gCityId;
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj) {
         FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&error];
         if (completion) {
             completion(model,error);
