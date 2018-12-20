@@ -13,19 +13,30 @@
 
 @implementation FHSuggestionListViewController
 
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+//        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
+//        self.houseId = paramObj.userInfo.allInfo[@"houseId"];
+//        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
+//        self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+//        self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
+//        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
+//
+//        NSLog(@"%@\n", self.searchId);
+        NSLog(@"%@\n",paramObj.userInfo.allInfo);
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    [self setupUI];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)setupUI {
+    
 }
-*/
 
 @end
