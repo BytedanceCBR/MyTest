@@ -3602,7 +3602,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -7896,7 +7896,7 @@
 		B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentSearchInNeighborhoodCellRender.swift; sourceTree = "<group>"; };
 		B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentReleatedHouseCellRender.swift; sourceTree = "<group>"; };
 		B32FD34521A67A51007B9966 /* HouseRentAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentAPI.h; sourceTree = "<group>"; };
-		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; };
+		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
 		B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRelatedResponse.h; sourceTree = "<group>"; };
 		B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRelatedResponse.m; sourceTree = "<group>"; };
 		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
@@ -9126,7 +9126,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
