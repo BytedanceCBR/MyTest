@@ -323,7 +323,13 @@ static bool isTTCommentPublishing = NO;
 - (void)setupTextViewPlaceholder {
     NSString *placeholder = nil;
     if (isEmptyString(self.replyCommentModel.user.name)) {
-        placeholder = self.commentDetailModel.commentPlaceholder ?: kCommentInputPlaceHolder;
+        
+        if ([self.commentDetailModel respondsToSelector:@selector(commentPlaceholder)]) {
+            
+            placeholder = self.commentDetailModel.commentPlaceholder ?: kCommentInputPlaceHolder;
+        }else {
+            placeholder = kCommentInputPlaceHolder;
+        }
     } else {
         placeholder = [NSString stringWithFormat:@"回复 %@：", self.replyCommentModel.user.name];
     }

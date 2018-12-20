@@ -45,7 +45,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         }
     }
 
-    func request(neightborhoodId: String? = nil, houseId: String? = nil) {
+    func request(query:String? = nil ,neightborhoodId: String? = nil, houseId: String? = nil) {
         if EnvContext.shared.client.reachability.connection == .none {
             // 无网络时直接返回空，不请求
             self.processError()(nil)
@@ -53,6 +53,7 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
         }
         oneTimeToast = createOneTimeToast()
         let loader = pageRequestHouseInSameNeighborhoodSearch(
+            query:query,
             neighborhoodId: neightborhoodId,
             houseId: houseId,
             searchId: searchId,
@@ -77,7 +78,8 @@ class ErshouHouseListViewModel: BaseSubPageViewModel, TableViewTracer {
                             newItem.fhSearchId = data.searchId
                             return newItem
                         })
-                        let params = TracerParams.momoid()
+                        let params = TracerParams.momoid() <|>
+                            toTracerParams("be_null", key: "element_type")
                         let datas = parseErshouHouseListRowItemNode(
                             items,
                             traceParams: params,
@@ -552,6 +554,7 @@ func parseRelatedHouseListItemNode(
     traceExtension: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    elementType: String = "be_null",
     navVC: UINavigationController?) ->  [TableRowNode] {
     
     var traceParmas = tracerParams.paramsGetter([:])
@@ -595,6 +598,7 @@ func parseRelatedHouseListItemNode(
             let (offset, item) = e
             let theParams = tracerParams <|>
                 toTracerParams(offset, key: "rank") <|>
+                toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>

@@ -87,7 +87,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         contactIcon.isUserInteractionEnabled = false
         tapButton.snp.makeConstraints { (maker) in
             maker.top.left.equalTo(ownerLabel)
-            maker.bottom.right.equalTo(contactIcon)
+            maker.bottom.equalTo(contactIcon)
+            maker.right.equalTo(contactIcon).offset(10)
         }
 
         contentView.addSubview(disclaimerContent)
@@ -152,8 +153,8 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
             // 创建图片浏览器
             let browser = FHPhotoBrowser(photoLoader: BDWebImagePhotoLoader())
             // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
-            // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleccccNoHiding`。
-            browser.animationType = .scaleNoHiding
+            // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleNoHiding`。
+            browser.animationType = .fade
 
             // 浏览器协议实现者
             browser.photoBrowserDelegate = self

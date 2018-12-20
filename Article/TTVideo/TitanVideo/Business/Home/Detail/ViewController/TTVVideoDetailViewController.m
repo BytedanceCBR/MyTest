@@ -775,7 +775,12 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     {
         UIView *view = _toolbarVC.view;
-        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight());
+        // add by zjing safeArea
+        CGFloat safeAreaBottom = 0;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            safeAreaBottom = 34;
+        }
+        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight() + safeAreaBottom);
         view.bottom = self.view.height;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         [self.view addSubview:view];

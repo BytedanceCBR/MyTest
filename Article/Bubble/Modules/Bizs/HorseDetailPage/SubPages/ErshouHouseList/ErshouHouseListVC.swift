@@ -288,7 +288,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
                         if self.theHouseType.value == HouseType.rentHouse {
                             self.ershouHouseListViewModel?.requestRentHouseList(query: query, condition: nil)
                         }else{
-                            self.ershouHouseListViewModel?.requestErshouHouseList(query: query, condition: nil)
+                            self.ershouHouseListViewModel?.request(query: query, neightborhoodId: self.neighborhoodId, houseId: self.houseId ?? "")
                         }
                     }
                 }, onError: { error in
@@ -319,12 +319,19 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         setupErrorDisplay()
         self.errorVM?.onRequestViewDidLoad()
         self.errorVM?.onRequest()
+        
+        self.bringFilterToFront()
     }
     
-    override func viewDidLayoutSubviews() {
+//    override func viewDidLayoutSubviews() {
+//        self.view.bringSubview(toFront: conditionPanelView)
+//        self.view.bringSubview(toFront: searchFilterPanel)
+//
+//    }
+    
+    private func bringFilterToFront(){
         self.view.bringSubview(toFront: conditionPanelView)
         self.view.bringSubview(toFront: searchFilterPanel)
-
     }
 
     private func setupErrorDisplay() {
@@ -344,6 +351,7 @@ class ErshouHouseListVC: BaseSubPageViewController, PageableVC, TTRouteInitializ
         infoMaskView.snp.makeConstraints { maker in
             maker.edges.equalTo(tableView.snp.edges)
         }
+        self.bringFilterToFront()
     }
 
     fileprivate func requestData() {

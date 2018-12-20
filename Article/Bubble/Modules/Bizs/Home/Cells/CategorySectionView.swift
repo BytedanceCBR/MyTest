@@ -18,7 +18,7 @@ class CategorySectionView: UIView {
     
     lazy var categoryLabel: UILabel = {
         let label = UILabel()
-        label.font = CommonUIStyle.Font.pingFangMedium(20)
+        label.font = CommonUIStyle.Font.pingFangRegular(UIScreen.main.bounds.size.width > 330 ? 16 : 14)
         label.textColor = hexStringToUIColor(hex: "#081f33")
         label.text = "为你推荐"
         return label
@@ -31,6 +31,8 @@ class CategorySectionView: UIView {
     let houseTypeRelay = BehaviorRelay<HouseType>(value: .secondHandHouse)
     
     lazy var sectionTitleArray = [""]
+    
+    var currentIndex: Int?
     
     lazy var segmentedControl: FWSegmentedControl = {
         let re = FWSegmentedControl.segmentedWith(
@@ -69,6 +71,18 @@ class CategorySectionView: UIView {
         self.backgroundColor = .white
         
         segmentedControl.indexChangeBlock = {[weak self] index in
+            
+            if EnvContext.shared.client.reachability.connection == .none
+            {
+                self?.updateSegementLayOut()
+                if let indexValue = self?.currentIndex
+                {
+                    self?.changeSegementIndex(index: indexValue)
+                }
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
+            
             if let titleArray = self?.sectionTitleArray
             {
                 if titleArray[index] == HouseType.secondHandHouse.stringValue()
@@ -92,7 +106,11 @@ class CategorySectionView: UIView {
                     self?.userSelectedCache?.setObject(String(HouseType.rentHouse.rawValue) as NSCoding, forKey: "userdefaultselect")
                 }
             }
+            
+            self?.currentIndex = index
         }
+        
+        
         
         addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints{ maker in
@@ -102,7 +120,7 @@ class CategorySectionView: UIView {
             maker.height.equalTo(20)
         }
         
-        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(1, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.6, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
@@ -138,6 +156,22 @@ class CategorySectionView: UIView {
         
         updateSegementLayOut()
         
+        
+        NotificationCenter.default.rx.notification(.notifyGenConfigUpdate)
+            .subscribe(onNext: { [weak self] (_) in
+                if let dictValue = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.toJSON()
+                {
+                    FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+                    EnvContext.shared.client.generalBizconfig.updateConfig()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
+    func changeSegementIndex(index: Int)
+    {
+        segmentedControl.selectedSegmentIndex = index
     }
     
     func updateSegementLayOut() {

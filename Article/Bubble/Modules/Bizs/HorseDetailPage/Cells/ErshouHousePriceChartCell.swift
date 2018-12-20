@@ -337,8 +337,11 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
             leftAxis.drawBottomYLabelEntryEnabled = false
             leftAxis.drawTopYLabelEntryEnabled = true
             // 横轴的虚线
-            leftAxis.axisMaximum = maxValue
-            leftAxis.axisMinimum = minValue
+            if maxValue != minValue {
+                
+                leftAxis.axisMaximum = maxValue
+                leftAxis.axisMinimum = minValue
+            }
             leftAxis.setLabelCount(6, force: true)
             
             chartView.data = data
@@ -653,11 +656,11 @@ func highlightImgNameByIndex(_ index: Int) -> String {
     case 0:
         return "img-summary-graph-circle-blue"
     case 1:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_dark"
     case 2:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_gray"
     default:
-        return "img-summary-graph-circle-gray"
+        return "detail_circle_gray"
         
     }
 }

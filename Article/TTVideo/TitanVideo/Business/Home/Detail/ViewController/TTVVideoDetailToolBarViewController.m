@@ -214,6 +214,14 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+    
+    // add by zjing safeArea
+    CGFloat safeInsetBottom = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        safeInsetBottom = 34;
+    }
+    self.view.height = ExploreDetailGetToolbarHeight() + safeInsetBottom;
+    
     self.toolbarView.frame = self.view.bounds;
 }
 
@@ -1448,21 +1456,21 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 
 #pragma safeInset
 
-- (void)viewSafeAreaInsetsDidChange
-{
-    [super viewSafeAreaInsetsDidChange];
-    if (self.view.superview){
-        CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
-        UIEdgeInsets safeInset = self.view.safeAreaInsets;
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        if (ceil(ExploreDetailGetToolbarHeight() + safeInset.bottom) >= CGRectGetHeight(frameInWindow) &&
-            screenHeight == ceil(CGRectGetMaxY(frameInWindow))){
-            frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInset.bottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInset.bottom));
-            self.view.frame = [self.view.superview convertRect:frameInWindow fromView:nil];
-        }
-        self.toolbarView.frame = self.view.bounds;
-    }
-}
+//- (void)viewSafeAreaInsetsDidChange
+//{
+//    [super viewSafeAreaInsetsDidChange];
+//    if (self.view.superview){
+//        CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
+//        UIEdgeInsets safeInset = self.view.safeAreaInsets;
+//        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+//        if (ceil(ExploreDetailGetToolbarHeight() + safeInset.bottom) >= CGRectGetHeight(frameInWindow) &&
+//            screenHeight == ceil(CGRectGetMaxY(frameInWindow))){
+//            frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInset.bottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInset.bottom));
+//            self.view.frame = [self.view.superview convertRect:frameInWindow fromView:nil];
+//        }
+//        self.toolbarView.frame = self.view.bounds;
+//    }
+//}
 
 - (void)shareManager:(TTShareManager *)shareManager
        completedWith:(id<TTActivityProtocol>)activity

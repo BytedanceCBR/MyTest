@@ -113,15 +113,25 @@ fileprivate class FHFindHouseCategoryPageView: UIView {
 
     func setupUI() {
         if let collectionView = collectionView {
-
-            addSubview(collectionView )
+            addSubview(collectionView)
+            addSubview(infoDisplay)
             collectionView.snp.makeConstraints({ (make) in
                 make.edges.equalToSuperview()
             })
-        }
-        addSubview(infoDisplay)
-        infoDisplay.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
+            infoDisplay.snp.makeConstraints { (make) in
+                make.top.left.right.equalTo(collectionView)
+                // 138 为顶部空间高度包括搜索框及分段导航
+                let viewHeight = UIScreen.main.bounds.height - CommonUIStyle.TabBar.height - 138
+                make.height.equalTo(viewHeight)
+            }
+        } else {
+            addSubview(infoDisplay)
+            infoDisplay.snp.makeConstraints { (make) in
+                make.top.left.right.equalToSuperview()
+                // 138 为顶部空间高度包括搜索框及分段导航
+                let viewHeight = UIScreen.main.bounds.height - CommonUIStyle.TabBar.height - 138
+                make.height.equalTo(viewHeight)
+            }
         }
     }
 
@@ -140,8 +150,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     private var houseFilterDataSource: [HouseType: CollectionDataSource] = [:]
 
     private var houseFilterCollectionView: [HouseType: UICollectionView] = [:]
-
-    fileprivate var errorVM : NHErrorViewModel?
 
     fileprivate var pageControl: HouseFindPageControl?
 
@@ -199,13 +207,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         return re
     }()
 
-    private lazy var infoDisplay: EmptyMaskView = {
-        let re = EmptyMaskView()
-        re.isUserInteractionEnabled = true
-        re.isHidden = true
-        return re
-    }()
-
     let tapGesture: UITapGestureRecognizer = {
         let re = UITapGestureRecognizer()
         re.cancelsTouchesInView = false
@@ -229,10 +230,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         self.automaticallyAdjustsScrollViewInsets = false
         self.view.addSubview(segmentedNav)
 
-        errorVM = NHErrorViewModel(errorMask: infoDisplay) { [weak self] in
-            self?.requestHistory()
-        }
-
         containerView.addGestureRecognizer(tapGesture)
 
         setupViews()
@@ -245,13 +242,14 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                     self.houseType.accept(items[index].houseType)
                 }
 
-                let offset = self.pageControl?.pageOffsetXByIndex(index) ?? 0
-                self.containerView.contentOffset = CGPoint(x: offset, y: 0)
+
 
                 NotificationCenter.default.post(name: .findHouseHistoryCellReset, object: nil)
                 self.adjustVerticalPositionToTop()
 
             }
+            let offset = self.pageControl?.pageOffsetXByIndex(index) ?? 0
+            self.containerView.contentOffset = CGPoint(x: offset, y: 0)
         }
 
         houseType.skip(1).bind { [weak self] _ in
@@ -279,11 +277,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
-
-        self.view.addSubview(infoDisplay)
-        infoDisplay.snp.makeConstraints { (maker) in
-            maker.top.bottom.left.right.equalToSuperview()
+        if EnvContext.shared.client.reachability.connection == .none,
+            EnvContext.shared.client.configCacheSubject.value != nil {
+            createPageViews()
         }
+
         EnvContext.shared.client.reachability.rx.reachabilityChanged
             .subscribe(onNext: { [weak self] (reachability) in
                 if reachability.connection != .none {
@@ -322,6 +320,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
     fileprivate func setupViews() {
         let sideMargin = getSideMargin()
+        // 调整这里的高度，务必同时checkout每一个page内的errorInfoView的高度计算。
         segmentedNav.snp.makeConstraints { maker in
             maker.top.equalTo(40 + (CommonUIStyle.Screen.isIphoneX ? 6 : 0))
             maker.left.equalTo(sideMargin * CommonUIStyle.Screen.widthScale)
@@ -331,6 +330,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         }
 
         self.view.addSubview(searchBar)
+        // 调整这里的高度，务必同时checkout每一个page内的errorInfoView的高度计算。
         searchBar.snp.makeConstraints { maker in
             maker.top.equalTo(segmentedNav.snp.bottom).offset(16)
             maker.left.equalTo(20)
@@ -393,9 +393,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 self?.adjustSegmentNav()
                 self?.setupSectionLabelByConfig()
                 self?.createPageViews()
-                if let houseType = self?.houseType.value {
-                    self?.handleScroll(houseType: houseType)
+                if let containerView = self?.containerView {
+                    let offset = self?.pageControl?.pageOffsetXByIndex(0) ?? 0
+                    containerView.contentOffset = CGPoint(x: offset, y: 0)
                 }
+//                if let houseType = self?.houseType.value {
+//                    self?.handleScroll(houseType: houseType)
+//                }
             })
             .disposed(by: disposeBag)
     }
@@ -413,7 +417,6 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             })
             if let first = sections.first {
                 self.houseType.accept(first.houseType)
-                self.errorVM?.onRequestNormalData()
             }
 
             self.cleanAllDatasourceHistoryCache()

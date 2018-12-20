@@ -122,12 +122,16 @@ func pageRequestRelatedNeighborhoodSearch(neighborhoodId: String = "",
 
 
 func requestHouseInSameNeighborhoodSearch(
+        query:String? = nil ,
         neighborhoodId: String? = nil,
         houseId: String? = nil,
         searchId: String? = nil,
         count: Int = 5,
         offset: Int = 0) -> Observable<SameNeighborhoodHouseResponse?> {
-    let url = "\(EnvContext.networkConfig.host)/f100/api/same_neighborhood_house"
+    var url = "\(EnvContext.networkConfig.host)/f100/api/same_neighborhood_house"
+    if let theQuery = query {
+        url = "\(url)?\(theQuery)"
+    }
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
                     url: url,
@@ -152,6 +156,7 @@ func requestHouseInSameNeighborhoodSearch(
 }
 
 func pageRequestHouseInSameNeighborhoodSearch(
+        query:String? = nil ,
         neighborhoodId: String? = nil,
         houseId: String? = nil,
         searchId: String? = nil,
@@ -160,6 +165,7 @@ func pageRequestHouseInSameNeighborhoodSearch(
     var theSearchId = searchId
     return {
         requestHouseInSameNeighborhoodSearch(
+                query:query,
                 neighborhoodId: neighborhoodId,
                 houseId: houseId,
                 searchId: theSearchId,

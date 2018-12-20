@@ -401,8 +401,9 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
 
     private func displayNetworkError() -> (Bool) -> Void {
         return { [weak self] (isDisplay) in
-            UIApplication.shared.statusBarStyle = .default
-            self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
+            // add by zjing 会偷摸修改状态栏颜色，有问题找我，代码就这么被我注释掉了！！！
+//            UIApplication.shared.statusBarStyle = .default
+//            self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
         }
     }
     

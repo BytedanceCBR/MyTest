@@ -714,6 +714,10 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        //这里判断是否有用户输入，如果有且suggestion数据为0，则清空列表数据
+        if self.searchInputField?.text?.isEmpty ?? true == false && self.suggestions.value.count == 0 {
+            return 0
+        }
         return 1
     }
     
@@ -1049,7 +1053,7 @@ class SuggestionListTableViewModel: NSObject, UITableViewDelegate, UITableViewDa
     }
 
     func itemSelector() -> (([SuggestionItem] , [SuggestionItem])) -> [SuggestionItem] {
-        return { (e) in
+        return { [weak self] (e) in
             let (suggestions, history) = e
             if suggestions.count > 0 {
                 return suggestions
@@ -1131,9 +1135,7 @@ fileprivate func fillNormalItem(cell: UITableViewCell, item: SuggestionItem, hig
                 text = text + " (\(text2))"
             }
             let attrTextProcess = highlightedText(originalText: text, highlitedText: highlighted)
-//                    <*> commitText(commit: item.text2)
-
-            theCell.label.attributedText = attrTextProcess(attrText(text: text))
+            theCell.label.attributedText = attrTextProcess(attrNormalText(text: item.text ?? "", text2: item.text2 ?? ""))
         }
         theCell.secondaryLabel.text = "约\(item.count)套"
     }
@@ -1158,6 +1160,19 @@ typealias AttributedStringProcess = (NSMutableAttributedString) -> NSMutableAttr
 
 func attrText(text: String) -> NSMutableAttributedString {
     return NSMutableAttributedString(string: text)
+}
+
+func attrNormalText(text: String, text2:String) -> NSMutableAttributedString {
+    let attr = NSMutableAttributedString(string: text)
+    attr.yy_font = CommonUIStyle.Font.pingFangRegular(15)
+    attr.yy_color = hexStringToUIColor(hex: "#081f33")
+    if !text2.isEmpty {
+        let tempAttr = NSMutableAttributedString(string: " (\(text2))")
+        tempAttr.yy_font = CommonUIStyle.Font.pingFangRegular(15)
+        tempAttr.yy_color = hexStringToUIColor(hex: "#8a9299")
+        attr.append(tempAttr)
+    }
+    return attr
 }
 
 func highlightedText(

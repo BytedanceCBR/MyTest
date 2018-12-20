@@ -227,6 +227,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
                                 neighborhoodId: id,
+                                houseId: "\(self.houseId)",
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .rentDetail,
@@ -256,6 +257,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 //        })
         let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
         let params = TracerParams.momoid()
+        var count = 0
+        if let theCount = relatedErshouItems?.count {
+            count = theCount
+        }
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
         var tail:() -> TableSectionNode? = {
@@ -280,10 +285,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 
                 params["houseId"] = "\(self.houseId)"
                 params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
-                if let title = self.detailData.value?.data?.neighborhoodInfo?.name {
-                    let totalCount = self.relateErshouHouseData.value?.data?.total ?? "0"
-                    params["title"] = title+"(\(totalCount))"
-                }
+
+                params["title"] = "周边房源(\(self.relateErshouHouseData.value?.data?.total ?? "0"))"
                 
                 if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                     params["searchId"] = searchId
@@ -308,7 +311,6 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
         }
-        var newParams = params
         let result = parseRentReleatedHouseListItemNode(
             relatedErshouItems,
             tracer: self.houseRentTracer,
@@ -326,7 +328,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Parameter neighborhoodId: 小区id
     fileprivate func jumpToNeighborhoodDetailPage(neighborhoodId: String) {
         
-        let info: [String: Any] = ["source": "rent_detail"]
+        let info: [String: Any] = ["source": "rent_detail",
+                                   "log_pb": self.houseRentTracer.logPb ?? "be_null",
+                                   "enter_from": "rent_detail",
+                                   "search_id": self.houseRentTracer.searchId ?? "be_null",
+                                   "element_from": "neighborhood_detail"]
         let userInfo = TTRouteUserInfo(info: info)
         let jumpUrl = "fschema://neighborhood_detail?neighborhood_id=\(neighborhoodId)"
         if let url = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {

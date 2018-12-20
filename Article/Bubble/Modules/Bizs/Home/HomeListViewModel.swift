@@ -95,6 +95,8 @@ class HomeListViewModel: DetailPageViewModel {
     
     var isFirstEnterCategory: Bool = true
     
+    var isHasLoadCategory: Bool = true
+    
     var isFirstEnterCategorySwitch: Bool = true
     
     var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //列表数据缓存
@@ -159,6 +161,8 @@ class HomeListViewModel: DetailPageViewModel {
                     self?.enterType = "switch"
                 }
                 
+                self?.tableView?.hasMore = self?.getHasMore() ?? true
+                
                 self?.dataSource?.recordIndexCache = self?.itemsTraceCache[matchHouseTypeName(houseTypeV: index)] ?? []
                 
                 let origin_from = houseTypeString(houseType.value)
@@ -213,11 +217,15 @@ class HomeListViewModel: DetailPageViewModel {
             .bind { [unowned self] (_) in
                 //切换城市默认触发信号
                 self.resetHomeRecommendState()
+                
+                self.itemsSearchIdCache.removeAll()
+
                 self.tableView?.setContentOffset(CGPoint.zero, animated: false)
                 if EnvContext.shared.client.reachability.connection == .none
                 {
                     self.onSuccess?(.requestSuccessTypeInvalidNetWork)
                 }
+                
             }.disposed(by: disposeBag)
         
         //判断是否展示tabbar 到顶
@@ -238,14 +246,13 @@ class HomeListViewModel: DetailPageViewModel {
     {
         let categoryStartName = SSCommonLogic.feedStartCategory()
 
-        if isFirstEnterCategory || categoryStartName == nil || categoryStartName == ""   {
-            EnvContext.shared.client.generalBizconfig.updateConfig()
+        if categoryStartName == nil || categoryStartName == ""   {
+            if categoryStartName != "f_find_house" && self.isHasLoadCategory
+            {
+                EnvContext.shared.client.generalBizconfig.updateConfig()
+            }
+            self.isHasLoadCategory = false
         }
-        
-//        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
-//            self.tableView?.triggerPullDown()
-//            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
-//        }
     }
     
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
@@ -1377,7 +1384,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
         if datas.count == 0 || section != 1 {
             return 0
         } else {
-            return 30
+            return 35
         }
     }
     

@@ -73,8 +73,11 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             if #available(iOS 11, *) {
-
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-49)
+                var bottomOffset = (49 + view.tt_safeAreaInsets.bottom)
+                if let tabBarItem = TTTabBarManager.shared().tabItem(withIdentifier: kFHouseMessageTabKey) {
+                    bottomOffset = tabBarItem.frame.height
+                }
+                maker.bottom.equalToSuperview().offset(-bottomOffset)
             } else {
                 maker.bottom.equalToSuperview().offset(-49)
             }
@@ -225,7 +228,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
     fileprivate func showEmptyInfo() {
         self.emptyMaskView.isHidden = false
         emptyMaskView.icon.image = UIImage(named:"empty_message")
-        self.emptyMaskView.label.text = "还没有关注的信息"
+        self.emptyMaskView.label.text = "啊哦～你还没有收到消息～"
         view.bringSubview(toFront: emptyMaskView)
         self.clearBadgeNumber()
     }
@@ -326,7 +329,17 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
 
             theCell.iconImageView.bd_setImage(with: URL(string: item.icon ?? ""), placeholder: UIImage(named: "default_image"))
             theCell.label.text = item.title
+            
+            var bottomOffset:CGFloat = 0
+            if (indexPath.row == datas.count - 1) {
+                bottomOffset = -20;
+            } else {
+                bottomOffset = 0;
+            }
 
+            theCell.iconImageView.snp.updateConstraints { (maker) in
+                maker.bottom.equalToSuperview().offset(bottomOffset)
+            }
         }
         return cell ?? ChatCell()
     }

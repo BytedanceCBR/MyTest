@@ -84,7 +84,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         let label = UILabel()
         label.textAlignment = .center
         label.backgroundColor = hexStringToUIColor(hex: "#000000", alpha: 0.7)
-        label.text = "该房源已停售"
+        label.text = "停止出租"
         label.font = CommonUIStyle.Font.pingFangRegular(14)
         label.textColor = .white
         return label
@@ -734,6 +734,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         if let staySearchParams = staySearchParams {
             recordEvent(key: "stay_page_search", params: staySearchParams)
         }
+         UIApplication.shared.statusBarStyle = .default
     }
 
 }

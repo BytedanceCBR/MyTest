@@ -461,6 +461,15 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         __strong typeof(wself) self = wself;
         
         void (^DidSelectItem)() = ^() {
+            
+            if (self.viewControllers.count > self.lastSelectedIndex && self.lastSelectedIndex >= 0) {
+                TTNavigationController *lastNav = self.viewControllers[self.lastSelectedIndex];
+                lastNav.shouldIgnorePushingViewControllers = YES;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    lastNav.shouldIgnorePushingViewControllers = NO;
+                });
+            }
+            
             self.selectedIndex = index;
             if(![[self currentTabIdentifier] isEqualToString:[self lastTabIdentifier]]) {
                 [(((TTTabbar *)self.tabBar).tabItems[self.lastSelectedIndex]) setState:TTTabBarItemStateNormal];
