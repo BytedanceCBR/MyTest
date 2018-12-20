@@ -1,14 +1,13 @@
 //
-//  AreaFilterSelectPanel.m
-//  FHHouseBase
+//  FHSuggestionListNavBar.m
+//  FHHouseList
 //
-//  Created by leo on 2018/11/17.
-//  Copyright © 2018 com.haoduofangs. All rights reserved.
+//  Created by 张元科 on 2018/12/20.
 //
 
-#import "AreaFilterSelectPanel.h"
+#import "FHSuggestionListNavBar.h"
 
-@implementation AreaFilterSelectPanel
+@implementation FHSuggestionListNavBar
 
 /*
 // Only override drawRect: if you perform custom drawing.

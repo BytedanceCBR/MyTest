@@ -114,5 +114,6 @@
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHHomeCellHelper.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "FHFilterNodeModel.h"
 
 #endif /* Article_Bridging_Header_h */
