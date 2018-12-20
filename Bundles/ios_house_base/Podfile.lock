@@ -1,0 +1,44 @@
+PODS:
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Masonry (1.0.1)
+  - OCMock (2.0.1)
+  - ReactiveObjC (3.0.0)
+  - RXCollections (1.0)
+
+DEPENDENCIES:
+  - AFNetworking (~> 2.6)
+  - Masonry (= 1.0.1)
+  - OCMock (~> 2.0.1)
+  - ReactiveObjC (= 3.0.0)
+  - RXCollections
+
+SPEC CHECKSUMS:
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  OCMock: 7a839b55abfb78e8ec3bf6eaa3cdcc567ac71d2a
+  ReactiveObjC: ce79989e8684b9086b5f8d0c74bc7b81a8729c9e
+  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
+
+PODFILE CHECKSUM: 2e348e23184b13f4b19f6921ef6d3ad8da7f8ba5
+
+COCOAPODS: 1.4.0

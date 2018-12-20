@@ -1,0 +1,23 @@
+platform :ios, '8.0'
+
+target 'FHHouseBase' do
+  pod 'AFNetworking', '~> 2.6'
+  pod 'Masonry' , '1.0.1'
+  pod 'ReactiveObjC', '3.0.0'
+  pod 'RXCollections'
+  target 'FHHouseBaseTests' do
+      inherit! :search_paths
+      pod 'OCMock', '~> 2.0.1'
+  end
+end
+
+target 'Demo' do
+    pod 'AFNetworking', '~> 2.6'
+    pod 'Masonry' , '1.0.1'
+    pod 'ReactiveObjC', '3.0.0'
+    pod 'RXCollections'
+    target 'DemoTests' do
+        inherit! :search_paths
+        pod 'OCMock', '~> 2.0.1'
+    end
+end

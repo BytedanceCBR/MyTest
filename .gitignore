@@ -87,3 +87,4 @@ Frameworks/rust/Release/*
 *.swift.swp
 
 Article/Config/revision.h
+Bundles/*/Example/Pods

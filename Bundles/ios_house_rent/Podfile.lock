@@ -1,0 +1,37 @@
+PODS:
+  - FHCommonUI (0.1.0)
+  - JSONModel (1.8.0)
+  - Masonry (1.0.1)
+  - MJRefresh (3.1.15.7)
+  - ReactiveObjC (3.0.0)
+  - YYText (1.0.7)
+
+DEPENDENCIES:
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, branch `feature/develop`)
+  - JSONModel
+  - Masonry (= 1.0.1)
+  - MJRefresh
+  - ReactiveObjC (= 3.0.0)
+  - YYText
+
+EXTERNAL SOURCES:
+  FHCommonUI:
+    :branch: feature/develop
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+
+CHECKOUT OPTIONS:
+  FHCommonUI:
+    :commit: 40d5f463325b2ca7ac46db5317f45e9ad0a0dd43
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+
+SPEC CHECKSUMS:
+  FHCommonUI: c7b0fb8906149470c54d4ec863cda40183b558aa
+  JSONModel: df06b17a2bd9b06f25afeb3e8238af5b53f4a5b1
+  Masonry: ee38758f8fd3bc475d4d683d8ea436752eabb75a
+  MJRefresh: 2657684287cf4998d98c4ec55f17bde6308d173c
+  ReactiveObjC: 185066f76d2c296cef213204fe1218461e58724b
+  YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
+
+PODFILE CHECKSUM: 86dab7f59f5202efc924b3dbd74f5f7aefc2d778
+
+COCOAPODS: 1.4.0

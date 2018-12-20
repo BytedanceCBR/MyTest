@@ -1,0 +1,100 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.3):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - BDWebImage (0.2.8):
+    - BDWebImage/Core (= 0.2.8)
+    - BDWebImage/Decoder (= 0.2.8)
+    - BDWebImage/Download (= 0.2.8)
+  - BDWebImage/Core (0.2.8):
+    - YYCache
+  - BDWebImage/Decoder (0.2.8):
+    - BDWebImage/Core
+    - libwebp
+  - BDWebImage/Download (0.2.8):
+    - BDWebImage/Download/Chromium (= 0.2.8)
+    - BDWebImage/Download/DownloadBase (= 0.2.8)
+    - BDWebImage/Download/URLSession (= 0.2.8)
+  - BDWebImage/Download/Chromium (0.2.8):
+    - BDWebImage/Download/DownloadBase
+    - TTNetworkManager (< 3.0.0)
+  - BDWebImage/Download/DownloadBase (0.2.8):
+    - BDWebImage/Core
+  - BDWebImage/Download/URLSession (0.2.8):
+    - BDWebImage/Download/DownloadBase
+  - boringssl (0.0.7)
+  - FHCommonUI (0.1.0)
+  - Godzippa (1.1.2)
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
+    - libwebp/webp
+  - libwebp/dec (0.6.1):
+    - libwebp/core
+  - libwebp/demux (0.6.1):
+    - libwebp/core
+  - libwebp/dsp (0.6.1):
+    - libwebp/core
+  - libwebp/enc (0.6.1):
+    - libwebp/core
+  - libwebp/mux (0.6.1):
+    - libwebp/core
+  - libwebp/utils (0.6.1):
+    - libwebp/core
+  - libwebp/webp (0.6.1)
+  - TTNetworkManager (2.2.8.41):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+    - boringssl (~> 0.0.6)
+  - YYCache (1.0.4)
+
+DEPENDENCIES:
+  - BDWebImage (= 0.2.8)
+  - FHCommonUI (from `../`)
+
+EXTERNAL SOURCES:
+  FHCommonUI:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
+  AFNetworking: 2960888b0253924f773cc95d1fffdc363335be4f
+  BDWebImage: 177a48554fbd96b7cfecaab4d92633df7b694425
+  boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  FHCommonUI: 831a40d9e052bcf14eda133e66564681390f2a35
+  Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
+  libwebp: fbf61bba2dbac1d3d9369359ad101f3580458407
+  TTNetworkManager: 24b011e649be277c089e59840ed50656673b8946
+  YYCache: 7e176e4a8882e98b59da1a0108d1b4c189af4eef
+
+PODFILE CHECKSUM: 09b4f8d04a3faef11a057e7d4893905d16e0bc32
+
+COCOAPODS: 1.4.0
