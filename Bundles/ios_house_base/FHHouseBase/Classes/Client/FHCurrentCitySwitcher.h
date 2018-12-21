@@ -1,5 +1,5 @@
 //
-//  FHClient.h
+//  FHCurrentCitySwitcher.h
 //  AFgzipRequestSerializer
 //
 //  Created by 谢飞 on 2018/12/20.
@@ -9,9 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHClient : NSObject
-
-- (void)onStart;
+@interface FHCurrentCitySwitcher : NSObject
 
 @end
 

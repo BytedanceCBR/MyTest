@@ -114,7 +114,6 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
                     {
                         EnvContext.shared.client.generalBizconfig.fetchConfiguration()
                     }
-
             })
         
         self.detailPageViewModel?.onError = { [weak self] (error) in

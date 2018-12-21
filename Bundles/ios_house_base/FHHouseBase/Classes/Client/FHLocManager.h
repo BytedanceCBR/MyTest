@@ -6,6 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import <MAMapKit/MAMapKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
