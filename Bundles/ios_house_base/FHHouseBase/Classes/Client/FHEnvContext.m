@@ -7,8 +7,20 @@
 
 #import "FHEnvContext.h"
 #import "TTTrackerWrapper.h"
+#import "FHUtils.h"
 
 @implementation FHEnvContext
+
++ (instancetype)sharedInstance
+{
+    static id manager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [[self alloc] init];
+    });
+    
+    return manager;
+}
 
 + (void)recordEvent:(NSDictionary *)params andKey:(NSString *)traceKey
 {
@@ -24,6 +36,16 @@
     
     
     
+}
+
++ (NSString *)getCurrentUserDeaultCityName
+{
+    return [FHUtils contentForKey:kUserDefaultCityName];
+}
+
++ (void)setCurrentUserDeaultCityName:(NSString *)cityName
+{
+    [FHUtils setContent:cityName forKey:kUserDefaultCityName];
 }
 
 - (FHClient *)_client

@@ -15,6 +15,8 @@
 //字典是否为空
 #define kIsNSDictionary(dic) ([dic isKindOfClass:[NSDictionary class]])
 
+static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,strong)FHClient * client;
 
++ (instancetype)sharedInstance;
 /*
  *  埋点
  *  @param: param 参数
@@ -34,6 +37,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)recordEvent:(NSDictionary *)params andKey:(NSString *)traceKey;
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
+
++ (NSString *)getCurrentUserDeaultCityName;
+
++ (void)setCurrentUserDeaultCityName:(NSString *)cityName;
 
 @end
 
