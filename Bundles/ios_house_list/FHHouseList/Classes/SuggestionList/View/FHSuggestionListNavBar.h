@@ -11,6 +11,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSuggestionListNavBar : UIView
 
+@property (nonatomic, strong)   UIButton       *backBtn;
+
+@end
+
+@interface FHExtendHotAreaButton : UIButton
+
+@property (nonatomic, assign)   BOOL       isExtend;
+
 @end
 
 NS_ASSUME_NONNULL_END
