@@ -56,7 +56,7 @@
     [_houseFilterViewModel resetFilterConditionWithQueryParams:params updateFilterOnly:updateFilterOnly];
 }
 
--(void)setViewModel:(id)viewModel withDelegate:(id<FHHouseFilterDelegate>)delegate
+-(void)setViewModel:(id)viewModel withDelegate:(id<FHConditionFilterViewModelDelegate>)delegate
 {
     _houseFilterViewModel.delegate = delegate;
 }
@@ -73,7 +73,8 @@
 
 -(NSString *) getNoneFilterQueryParams:(NSDictionary *) params
 {
-    return [_houseFilterViewModel getNoneFilterQueryWithParams:params];
+    NSString *query =  [_houseFilterViewModel getNoneFilterQueryWithParams:params];
+    return query;
 }
 
 -(void)clearSortCondition
