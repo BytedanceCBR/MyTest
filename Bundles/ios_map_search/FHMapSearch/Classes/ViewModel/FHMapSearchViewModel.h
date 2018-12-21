@@ -10,14 +10,15 @@
 #import "FHMapSearchConfigModel.h"
 #import "FHMapSearchTipView.h"
 #import "FHMapSearchShowMode.h"
-#import "FHHouseFilterDelegate.h"
+#import "FHConditionPanelNodeSelection.h"
+#import "FHConditionFilterViewModel.h"
 
 @class FHMapSearchViewController;
 //@protocol HouseFilterViewModelDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate,FHHouseFilterDelegate> 
+@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate, FHConditionFilterViewModelDelegate>
 
 @property(nonatomic , weak) FHMapSearchViewController *viewController;
 @property(nonatomic , strong) MAMapView *mapView;

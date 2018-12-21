@@ -6,7 +6,23 @@
 //
 
 #import "FHGeneralBizConfig.h"
+#import <YYCache.h>
+
+static NSString *const kGeneralCacheName = @"general_config";
+static NSString *const kGeneralKey = @"config";
+
+@interface FHGeneralBizConfig ()
+@property (nonatomic, strong) YYCache *generalConfigCache;
+@end
 
 @implementation FHGeneralBizConfig
+
+- (YYCache *)generalConfigCache
+{
+    if (!_generalConfigCache) {
+        _generalConfigCache = [YYCache cacheWithName:kGeneralCacheName];
+    }
+    return _generalConfigCache;
+}
 
 @end
