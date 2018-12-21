@@ -30,27 +30,46 @@ class FHFilterConditionParser: NSObject {
         let model = FHFilterNodeModel()
         model.label = item.text ?? ""
         model.rate = item.rate
-        model.isSupportMulti = item.supportMulti
+        model.rowId = "\(item.tabId ?? 0)"
+
         if let options = item.options {
-            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options)
+            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options, supportMulti: nil)
+        } else {
+            model.children = []
         }
         return model
     }
 
-    static func convertConfigToFHFilterConditionModel(config: [SearchConfigOption]) -> [FHFilterNodeModel] {
+    static func convertConfigToFHFilterConditionModel(config: [SearchConfigOption], supportMulti: Bool?, parent: FHFilterNodeModel? = nil) -> [FHFilterNodeModel] {
         let result = config.map { (option) -> FHFilterNodeModel in
-            FHFilterConditionParser.convertFilterOptionToModel(option)
+            let re = FHFilterConditionParser.convertFilterOptionToModel(option, supportMutli: supportMulti, parent: parent)
+            if let supportMulti = supportMulti {
+                re.isSupportMulti = supportMulti
+            }
+            return re
         }
         return result
     }
 
-    static func convertFilterOptionToModel(_ item: SearchConfigOption) -> FHFilterNodeModel {
+    static func convertFilterOptionToModel(_ item: SearchConfigOption, supportMutli: Bool?, parent: FHFilterNodeModel? = nil) -> FHFilterNodeModel {
         let model = FHFilterNodeModel()
         model.label = item.text ?? ""
         model.rankType = item.rankType ?? ""
-        model.isSupportMulti = item.supportMulti ?? false
+        model.isEmpty = item.isEmpty
+        model.isNoLimit = item.isNoLimit
+        model.value = item.value as? String ?? ""
+        model.key = item.type ?? ""
+        model.parent = parent
+        if let supportMutli = supportMutli {
+            model.isSupportMulti = supportMutli
+        } else {
+            model.isSupportMulti = item.supportMulti ?? false
+        }
+
         if let options = item.options {
-            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options)
+            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options, supportMulti: model.isSupportMulti, parent: model)
+        } else {
+            model.children = []
         }
         return model
     }

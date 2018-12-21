@@ -108,17 +108,13 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
             requestErrorImage: "group-8",
             isUserClickEnable: true,
             retryAction: { [weak self] in
-                if EnvContext.shared.client.generalBizconfig.generalCacheSubject.value == nil {
                     if EnvContext.shared.client.reachability.connection == .none {
                         EnvContext.shared.toast.showToast("网络不给力,请稍后重试")
                     }else
                     {
                         EnvContext.shared.client.generalBizconfig.fetchConfiguration()
                     }
-                } else  {
-                    self?.detailPageViewModel?.requestData(houseId: -1, logPB: nil, showLoading: true)
-                }
-                
+
             })
         
         self.detailPageViewModel?.onError = { [weak self] (error) in
@@ -455,7 +451,7 @@ extension HomeViewController {
                     self.navigationController?.popViewController(animated: true)
                     EnvContext.shared.client.currentCitySwitcher
                         .switchCity(cityId: i)
-//                        .filter({ (s) -> Bool in
+//                        .filter({ () -> Bool in
 //                            s == CitySwitcherState.onFinishedRequestFilterConfig || s == CitySwitcherState.onError
 //                        })
                         .subscribe(onNext: { (state) in
