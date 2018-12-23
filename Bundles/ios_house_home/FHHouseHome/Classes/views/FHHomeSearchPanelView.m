@@ -196,8 +196,8 @@
     [self.categoryBgView addSubview:self.categoryLabel1];
 
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(9);
-        make.left.right.centerY.equalTo(self);
+        make.top.equalTo(self.categoryBgView).offset(9);
+        make.left.right.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
     }];
 
@@ -210,8 +210,8 @@
     [self.categoryBgView addSubview:self.categoryLabel2];
 
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(29);
-        make.left.right.equalTo(self);
+        make.top.equalTo(self.categoryBgView).offset(35);
+        make.left.right.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
     }];
 
@@ -226,6 +226,12 @@
 
 - (void)setUpRollScreenTimer
 {
+   if (timer)
+   {
+       [timer invalidate];
+       timer = nil;
+   }
+    
    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
 }
 
@@ -234,6 +240,8 @@
     if (self.categoryBgView.isHidden) {
         return;
     }
+    
+    NSLog(@"roll screen!!!!!!!");
     
     [UIView animateWithDuration:0.3 animations:^{
         self.categoryLabel1.alpha = 0;
@@ -271,7 +279,7 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
-    if (!_searchTitles) {
+    if (kIsNSArray(_searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {
             [self setUpRollScreenTimer];
