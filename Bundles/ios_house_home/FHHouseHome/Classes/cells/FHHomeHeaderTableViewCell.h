@@ -8,10 +8,11 @@
 #import <UIKit/UIKit.h>
 #import <FHHouseRent.h>
 #import "FHHomeCellHelper.h"
+#import "FHBaseTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHomeHeaderTableViewCell : UITableViewCell
+@interface FHHomeHeaderTableViewCell : FHBaseTableViewCell
 
 @property (nonatomic, strong) UITableView* contentTableView;
 @property (nonatomic, strong) FHRowsView* rowsView;

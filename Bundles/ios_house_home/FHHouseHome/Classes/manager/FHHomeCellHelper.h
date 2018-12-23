@@ -50,9 +50,14 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 + (Class)cellClassFromCellViewType:(FHHomeCellViewType)cellType;
 
 /**
- * 根据数据填充cell
+ * 根据数据填充头部cell
  */
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model;
+
+/**
+ * 根据数据填充首页列表cell
+ */
++ (void)configureHomeListCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model;
 
 /**
  * cell点击route跳转

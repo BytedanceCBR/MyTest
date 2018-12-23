@@ -7,12 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHomeViewController.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeListViewModel : NSObject
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
+
+- (void)requestRecommendHomeList;
 
 @end
 

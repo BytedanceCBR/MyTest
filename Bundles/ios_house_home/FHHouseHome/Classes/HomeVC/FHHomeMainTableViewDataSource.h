@@ -6,10 +6,12 @@
 //
 
 #import "JSONModel.h"
+#import <JSONModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainTableViewDataSource : JSONModel
+@property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 
 @end
 

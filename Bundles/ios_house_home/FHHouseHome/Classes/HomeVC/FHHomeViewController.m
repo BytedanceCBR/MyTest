@@ -50,29 +50,62 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.mainTableView.sectionHeaderHeight = 0;
     self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
     self.mainTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-    
+
     [self.view addSubview:self.mainTableView];
-    
+
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.mainTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
+        make.edges.equalTo(self.view);
     }];
-    
+
     [FHHomeCellHelper registerCells:self.mainTableView];
     
-//    WeakSelf;
-//    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-//        StrongSelf;
-//        [self reloadFHHomeHeaderCell];
-//    }];
+    //    WeakSelf;
+    //    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+    //        StrongSelf;
+    //        [self reloadFHHomeHeaderCell];
+    //    }];
     
     
     // Do any additional setup after loading the view.
 }
 
+- (void)willAppear
+{
+    NSLog(@"is connectd = %d",[FHEnvContext isNetworkConnected]);
+}
+
+- (void)didAppear
+{
+    
+}
+
+- (void)willDisappear
+{
+    
+}
+
+- (void)didDisappear
+{
+    
+}
+
+- (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
+{
+//    self.ttContentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
+//    tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
+//    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
+}
+
+- (void)pullAndRefresh
+{
+    
+}
+
+
 - (void)reloadFHHomeHeaderCell
 {
- 
+    
     
 }
 

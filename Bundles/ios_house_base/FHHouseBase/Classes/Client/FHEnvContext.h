@@ -48,6 +48,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)recordEvent:(NSDictionary *)params andKey:(NSString *)traceKey;
 
+/*
+  判断是否联网
+ */
++ (BOOL)isNetworkConnected;
+
+/*
+ 
+ */
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
 //获取当前保存的城市名称
