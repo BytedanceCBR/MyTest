@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHClient.h"
+#import "TTBaseMacro.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -15,8 +16,14 @@
 //字典是否为空
 #define kIsNSDictionary(dic) ([dic isKindOfClass:[NSDictionary class]])
 
+#define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
+#define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
+
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
+static NSString *const kUserDefaultCityId = @"kUserDefaultCityId";
+
+static NSString *const kTracerEventType = @"house_app2c_v2";
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-
 @property(nonatomic,strong)FHClient * client;
+
 
 + (instancetype)sharedInstance;
 /*
@@ -38,9 +45,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
-+ (NSString *)getCurrentUserDeaultCityName;
+//获取当前城市名称
++ (NSString *)getCurrentUserDeaultCityNameFromLocal;
 
-+ (void)setCurrentUserDeaultCityName:(NSString *)cityName;
+//保存当前城市名称
++ (void)saveCurrentUserDeaultCityName:(NSString *)cityName;
+
+//获取当前选中城市cityid
++ (NSString *)getCurrentSelectCityIdFromLocal;
+
+//保存当前城市id
++ (void)saveCurrentUserCityId:(NSString *)cityId;
 
 @end
 

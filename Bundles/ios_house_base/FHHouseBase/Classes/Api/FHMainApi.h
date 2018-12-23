@@ -11,6 +11,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "FHHouseRentModel.h"
 #import "FHSearchHouseModel.h"
+#import "FHHomeRollModel.h"
 
 @class TTHttpTask;
 
@@ -64,6 +65,19 @@ NS_ASSUME_NONNULL_BEGIN
  @return TTHttpTask
  */
 +(TTHttpTask *)queryData:(NSString *_Nullable)queryPath params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
+
+#pragma mark 找房频道首页相关 =================
+/**
+ 首页搜索框轮播
+ */
++(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
+
+
+/**
+ 首页推荐房源接口
+ */
++(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
 
 @end
 

@@ -15,7 +15,6 @@
     BOOL isHighlighted;
     NSTimer *timer;
 }
-@property(nonatomic, strong) UILabel * countryLabel;
 @property(nonatomic, strong) UIButton * changeCountryBtn;
 @property(nonatomic, strong) UIButton * searchBtn;
 @property(nonatomic, strong) UIImageView * triangleImage;
@@ -27,7 +26,6 @@
 @property(nonatomic, strong) UILabel * categoryLabel2;
 @property(nonatomic, strong) UIView * categoryBgView;
 @property(nonatomic, assign) NSUInteger searchTitleIndex;
-@property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
  
 @end
 
@@ -79,9 +77,9 @@
     label.font = [UIFont themeFontSemibold:14];
     label.textColor = [UIColor colorWithHexString:@"#081f33"];
     label.numberOfLines = 1;
-    if ([[FHEnvContext getCurrentUserDeaultCityName] isKindOfClass:[NSString class]])
+    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] isKindOfClass:[NSString class]])
     {
-        label.text = [FHEnvContext getCurrentUserDeaultCityName];
+        label.text = [FHEnvContext getCurrentSelectCityIdFromLocal];
     }else
     {
         label.text = @"深圳";

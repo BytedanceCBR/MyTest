@@ -15,7 +15,7 @@
 
 @class TTCategorySelectorView;
 @class TTSeachBarView;
-@class HomePageSearchPanel;
+@class FHHomeSearchPanelView;
 
 @protocol TTTopBarDelegate <NSObject>
 
@@ -28,7 +28,7 @@
 
 @property (nonatomic, weak) id<TTTopBarDelegate> delegate;
 @property (nonatomic, strong) NSString *tab;
-@property (nonatomic, strong) HomePageSearchPanel *pageSearchPanel;
+@property (nonatomic, strong) FHHomeSearchPanelView *pageSearchPanel;
 
 - (void)addTTCategorySelectorView:(TTCategorySelectorView *)selectorView delegate:(id<TTCategorySelectorViewDelegate>)delegate;
 

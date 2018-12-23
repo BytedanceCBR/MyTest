@@ -11,6 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeSearchPanelView : UIView
+{
+    
+}
+@property(nonatomic, strong) UILabel * countryLabel;
+@property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
 
 - (instancetype)initWithFrame:(CGRect)frame withHighlight:(BOOL)highlighted;
 

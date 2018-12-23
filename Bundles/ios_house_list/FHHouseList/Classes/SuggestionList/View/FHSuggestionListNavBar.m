@@ -14,7 +14,6 @@
 @interface FHSuggestionListNavBar ()
 
 @property (nonatomic, strong)   UIView       *searchAreaPanel;
-@property (nonatomic, strong)   UILabel       *searchTypeLabel;
 @property (nonatomic, strong)   UIImageView       *triangleImage;
 @property (nonatomic, strong)   UIView       *verticalLineView;
 @property (nonatomic, strong)   UIImageView       *searchIcon;
@@ -29,6 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setupUI];
+        [self setupData];
     }
     return self;
 }
@@ -90,8 +90,8 @@
     _verticalLineView = [[UIView alloc] init];
     _verticalLineView.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
     _verticalLineView.layer.masksToBounds = YES;
-//    _verticalLineView.layer.borderColor = [UIColor whiteColor].CGColor;
-//    _verticalLineView.layer.borderWidth = 0.5;
+    // _verticalLineView.layer.borderColor = [UIColor whiteColor].CGColor;
+    // _verticalLineView.layer.borderWidth = 0.5;
     [_searchAreaPanel addSubview:_verticalLineView];
     [_verticalLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(1);
@@ -128,6 +128,18 @@
     UIButton *btn = [_searchInput valueForKey:str];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
+}
+
+- (void)setupData {
+    [self setSearchPlaceHolderText:@"二手房/租房/小区"];
+}
+
+- (void)setSearchPlaceHolderText:(NSString *)text {
+    if (text.length > 0) {
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#8a9299"]};
+        NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
+        _searchInput.attributedPlaceholder = attrStr;
+    }
 }
 
 @end
