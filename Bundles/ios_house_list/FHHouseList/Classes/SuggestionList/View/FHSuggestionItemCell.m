@@ -9,15 +9,40 @@
 
 @implementation FHSuggestionItemCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+    }
+    return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+@end
 
-    // Configure the view for the selected state
+// --
+@implementation FHSuggestionNewHouseItemCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+    }
+    return self;
+}
+
+@end
+
+// --
+
+@implementation FHSuggectionTableView
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    if (self.handleTouch) {
+        self.handleTouch();
+    }
 }
 
 @end

@@ -17,7 +17,6 @@
 @property (nonatomic, strong)   UIImageView       *triangleImage;
 @property (nonatomic, strong)   UIView       *verticalLineView;
 @property (nonatomic, strong)   UIImageView       *searchIcon;
-@property (nonatomic, strong)   UITextField       *searchInput;
 
 @end
 
