@@ -15,6 +15,7 @@
 #import "FHSearchHouseModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHHouseRentModel.h"
+#import "FHHouseNeighborModel.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHCornerView.h"
 
@@ -36,6 +37,8 @@
 @property(nonatomic, strong) UILabel *imageTopLeftLabel;
 @property(nonatomic, strong) FHCornerView *imageTopLeftLabelBgView;
 
+@property(nonatomic, assign) CGFloat topMargin;
+@property(nonatomic, assign) CGFloat bottomMargin;
 
 @end
 
@@ -48,6 +51,9 @@
         
         self.isFirstCell = NO;
         self.isTail = NO;
+
+        self.topMargin = 20;
+        self.bottomMargin = 0;
 
         [self setupUI];
     }
@@ -157,6 +163,32 @@
     
 }
 
+-(void)refreshTopMargin:(CGFloat)top {
+    
+    if (top == self.topMargin) {
+        return;
+    }
+    self.topMargin = top;
+    [self.headView mas_updateConstraints:^(MASConstraintMaker *make) {
+        
+        make.height.mas_equalTo(@(self.topMargin));
+    }];
+}
+
+-(void)refreshBottomMargin:(CGFloat)bottom {
+    
+    if (bottom == self.bottomMargin) {
+        return;
+    }
+    self.bottomMargin = bottom;
+    [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
+        
+        make.height.mas_equalTo(@(self.bottomMargin));
+    }];
+
+}
+
+
 -(void)updateOriginPriceLabelConstraints:(NSString *)originPriceText {
 
     if (originPriceText.length > 0) {
@@ -240,33 +272,33 @@
 }
 
 -(void)prepareForReuse {
-    
+
     [super prepareForReuse];
-    
+
     self.imageTopLeftLabel.text = nil;
     self.imageTopLeftLabelBgView.hidden = YES;
 
-    [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self.infoPanel);
-        make.height.mas_equalTo(@20);
-    }];
-    [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.infoPanel);
-        make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(4);
-        make.height.mas_equalTo(@17);
-    }];
-    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.infoPanel);
-        make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(@15);
-    }];
-    [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoPanel);
-        make.top.mas_equalTo(self.areaLabel.mas_bottom).mas_offset(5);
-        make.height.mas_equalTo(@24);
-        make.width.mas_lessThanOrEqualTo(@130);
-    }];
-    
+//    [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.top.mas_equalTo(self.infoPanel);
+//        make.height.mas_equalTo(@20);
+//    }];
+//    [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.mas_equalTo(self.infoPanel);
+//        make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(4);
+//        make.height.mas_equalTo(@17);
+//    }];
+//    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.mas_equalTo(self.infoPanel);
+//        make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
+//        make.height.mas_equalTo(@15);
+//    }];
+//    [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.infoPanel);
+//        make.top.mas_equalTo(self.areaLabel.mas_bottom).mas_offset(5);
+//        make.height.mas_equalTo(@24);
+//        make.width.mas_lessThanOrEqualTo(@130);
+//    }];
+
 }
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -348,8 +380,6 @@
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displayDescription;
-    self.isFirstCell = isFirstCell;
-    self.isTail = isLastCell;
 
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (model.tags.count > 0) {
@@ -407,34 +437,34 @@
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displaySubtitle;
-    self.isTail = isLastCell;
-    self.isFirstCell = isFirstCell;
 
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (model.tags.count > 0) {
-        
-        NSMutableArray *attrTexts = @[];
-        
+
+        NSMutableArray *attrTexts = [NSMutableArray array];
+
         [model.tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
+
             FHSearchHouseDataItemsTagsModel *element = obj;
             if (element.content && element.textColor && element.backgroundColor) {
-                
-                NSAttributedString *attr = [self createTagAttrString:element.content isFirst:idx == 0 textColor:element.textColor backgroundColor:element.backgroundColor];
+
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
+                NSAttributedString *attr = [self createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
                 [attrTexts addObject:attr];
             }
         }];
-        
+
         __block CGFloat height = 0;
         [attrTexts enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
+
             NSAttributedString *attr = obj;
             [text appendAttributedString:attr];
-            
+
             YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 170, CGFLOAT_MAX) text:text];
             CGFloat lineHeight = tagLayout.textBoundingSize.height;
             if (lineHeight > height) {
-                
+
                 if (idx != 0) {
                     [text deleteCharactersInRange:NSMakeRange(text.length - attr.length, attr.length)];
                 }
@@ -443,7 +473,7 @@
                 }
             }
         }];
-        
+
     }
     self.areaLabel.attributedText = text;
     [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -451,7 +481,7 @@
     }];
     self.priceLabel.text = model.displayPrice;
     self.roomSpaceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.tags.firstObject;
+    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -475,20 +505,19 @@
     
     self.majorTitle.text = model.title;
     self.extendTitle.text = model.subtitle;
-    self.isTail = isLastCell;
-    self.isFirstCell = isFirstCell;
-    
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (model.tags.count > 0) {
         
-        NSMutableArray *attrTexts = @[];
-        
+        NSMutableArray *attrTexts = [NSMutableArray array];
+
         [model.tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSearchHouseDataItemsTagsModel *element = obj;
             if (element.content && element.textColor && element.backgroundColor) {
                 
-                NSAttributedString *attr = [self createTagAttrString:element.content isFirst:idx == 0 textColor:element.textColor backgroundColor:element.backgroundColor];
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
+                NSAttributedString *attr = [self createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
                 [attrTexts addObject:attr];
             }
         }];
@@ -519,7 +548,7 @@
     }];
     self.priceLabel.text = model.pricing;
     self.roomSpaceLabel.text = nil;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.tags.firstObject;
+    FHHouseRentDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -538,6 +567,45 @@
     
 }
 
+#pragma mark 小区
+- (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model {
+    
+    self.majorTitle.text = model.displayTitle;
+    self.extendTitle.text = model.displaySubtitle;
+    self.areaLabel.text = model.displayStatsInfo;
+    self.priceLabel.text = model.displayPrice;
+    FHHouseNeighborDataItemsImagesModel *imageModel = model.images.firstObject;
+    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+
+    self.imageTopLeftLabelBgView.hidden = YES;
+    [self updateOriginPriceLabelConstraints:nil];
+}
+
+-(void)updateWithHouseModel:(JSONModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+    
+    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
+        
+        FHNewHouseItemModel *theModel = (FHNewHouseItemModel *)model;
+        [self updateWithNewHouseModel:theModel isFirstCell:isFirstCell isLastCell:isLastCell];
+        
+    }else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        
+        FHSearchHouseDataItemsModel *theModel = (FHSearchHouseDataItemsModel *)model;
+        [self updateWithSecondHouseModel:theModel isFirstCell:isFirstCell isLastCell:isLastCell];
+        
+    }else if ([model isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        
+        FHHouseRentDataItemsModel *theModel = (FHHouseRentDataItemsModel *)model;
+        [self updateWithRentHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
+        
+    }
+    else if ([model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
+
+        FHHouseNeighborDataItemsModel *theModel = (FHHouseNeighborDataItemsModel *)model;
+        [self updateWithNeighborModel:theModel];
+
+    }
+}
 
 -(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
 

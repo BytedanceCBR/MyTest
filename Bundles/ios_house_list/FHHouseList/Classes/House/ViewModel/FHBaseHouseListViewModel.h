@@ -10,6 +10,7 @@
 #import "FHHouseType.h"
 #import "FHErrorView.h"
 #import <TTRoute.h>
+#import <FHHouseSuggestionDelegate.h>
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 对于二手房、租房等基础逻辑封装
  * 实现埋点接口
  */
-@interface FHBaseHouseListViewModel : NSObject <FHHouseFilterDelegate>
+@interface FHBaseHouseListViewModel : NSObject <FHHouseFilterDelegate,FHHouseSuggestionDelegate>
 
 //@property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
@@ -42,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithTableView:(UITableView *)tableView viewControler:(FHHouseListViewController *)vc routeParam:(TTRouteParamObj *)paramObj;
 
--(void)loadData:(BOOL)isRefresh withQuery:(NSString *)query condition:(NSString *)condition needEncode:(BOOL )needEncode;
+-(void)loadData:(BOOL)isRefresh;
 
 -(void)viewWillAppear:(BOOL)animated;
 

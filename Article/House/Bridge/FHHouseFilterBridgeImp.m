@@ -28,6 +28,7 @@
             break;
         case FHHouseTypeNeighborhood:
             ht = HouseTypeNeighborhood;
+            break;
         default:
             ht = HouseTypeSecondHandHouse;
             break;
