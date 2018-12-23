@@ -15,6 +15,9 @@
 //字典是否为空
 #define kIsNSDictionary(dic) ([dic isKindOfClass:[NSDictionary class]])
 
+#define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
+#define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
+
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
 
