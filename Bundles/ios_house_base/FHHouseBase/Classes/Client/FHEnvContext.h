@@ -25,6 +25,11 @@ static NSString *const kUserDefaultCityId = @"kUserDefaultCityId";
 
 static NSString *const kTracerEventType = @"house_app2c_v2";
 
+static NSString *const kFHBaseColorBlue = @"#299cff";
+
+
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
@@ -45,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
-//获取当前城市名称
+//获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal;
 
 //保存当前城市名称

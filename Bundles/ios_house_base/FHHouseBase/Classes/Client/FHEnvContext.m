@@ -38,12 +38,17 @@
     
 }
 
+//获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal
 {
-    return [FHUtils contentForKey:kUserDefaultCityName];
+    if (kIsNSString([FHUtils contentForKey:kUserDefaultCityName]))
+    {
+        return [FHUtils contentForKey:kUserDefaultCityName];
+    }
+    return @"深圳"; //无网默认
 }
 
-
+//保存当前城市名称
 + (void)saveCurrentUserDeaultCityName:(NSString *)cityName
 {
     [FHUtils setContent:cityName forKey:kUserDefaultCityName];

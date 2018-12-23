@@ -9,6 +9,8 @@
 #import "FHMainApi.h"
 #import "FHHomeConfigManager.h"
 #import "FHEnvContext.h"
+#import "ReactiveObjC.h"
+#import "TTRoute.h"
 
 @interface FHHomeSearchPanelViewModel ()
 
@@ -24,10 +26,32 @@
     self = [super init];
     if (self) {
         self.suspendSearchBar = panel;
+        [self bindCountryBtnClickAction];
+        [self bindSearchBtnClickAction];
         [self addListenerHomePullDown];
         [self addListenerConfigChanged];
     }
     return self;
+}
+
+- (void)bindCountryBtnClickAction
+{
+    [[[self.suspendSearchBar.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
+    {
+        NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",@"xxx"];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
+        
+        NSLog(@"tap Country btn");
+
+    }];
+}
+
+- (void)bindSearchBtnClickAction
+{
+    [[[self.suspendSearchBar.searchBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
+      {
+          NSLog(@"tap search btn");
+      }];
 }
 
 - (void)addListenerHomePullDown

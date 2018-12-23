@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
+
+@property(nonatomic, strong) UIButton * changeCountryBtn;
+@property(nonatomic, strong) UIButton * searchBtn;
 @property(nonatomic, strong) UILabel * countryLabel;
 @property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
 
