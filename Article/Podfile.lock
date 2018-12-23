@@ -1400,7 +1400,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 0265cde816fd7d020e2bad014768419fcd0b21df
+    :commit: 34fadeaa8c43e1e4e4a7a4aebf171d11d605dfea
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1450,7 +1450,7 @@ SPEC CHECKSUMS:
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
-  FLAnimatedImage: 1f8b26e5df0830341d5b969231a71891d5930daa
+  FLAnimatedImage: 09a3ee0b4246b03d85212884ccac54b5ffcd4945
   FLEX: b27e70410abfc79bc87de601581581a9cad7126d
   FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
   Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4

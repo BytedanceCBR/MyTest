@@ -26,7 +26,7 @@
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
-        pramsDict[@"event_type"] = @"house_app2c_v2";
+        pramsDict[@"event_type"] = kTracerEventType;
         [TTTrackerWrapper eventV3:traceKey params:pramsDict];
     }
 }
@@ -38,14 +38,27 @@
     
 }
 
-+ (NSString *)getCurrentUserDeaultCityName
++ (NSString *)getCurrentUserDeaultCityNameFromLocal
 {
     return [FHUtils contentForKey:kUserDefaultCityName];
 }
 
-+ (void)setCurrentUserDeaultCityName:(NSString *)cityName
+
++ (void)saveCurrentUserDeaultCityName:(NSString *)cityName
 {
     [FHUtils setContent:cityName forKey:kUserDefaultCityName];
+}
+
+//获取当前选中城市cityid
++ (NSString *)getCurrentSelectCityIdFromLocal
+{
+    return [FHUtils contentForKey:kUserDefaultCityId];
+}
+
+//保存当前城市id
++ (void)saveCurrentUserCityId:(NSString *)cityId
+{
+    [FHUtils setContent:cityId forKey:kUserDefaultCityId];
 }
 
 - (FHClient *)_client
