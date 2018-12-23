@@ -153,7 +153,6 @@
 
 
     [self.searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.searchIconBackView);
         make.centerY.centerX.equalTo(self.searchIconBackView);
         make.width.height.mas_equalTo(16);
     }];
@@ -225,7 +224,7 @@
     }];
 }
 
-- (void)setUpTimer
+- (void)setUpRollScreenTimer
 {
    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
 }
@@ -266,6 +265,23 @@
         self.categoryLabel1.text = _searchTitles[_searchTitleIndex];
         NSInteger tempIndex = (_searchTitleIndex + 1) % _searchTitles.count;
         self.categoryLabel2.text = _searchTitles[tempIndex];
+    }
+}
+
+- (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
+{
+    _searchTitles = searchTitles;
+    if (!_searchTitles) {
+        self.searchTitleIndex = 0;
+        if (_searchTitles.count  > 0) {
+            [self setUpRollScreenTimer];
+            self.categoryBgView.hidden = NO;
+            self.categoryPlaceholderLabel.hidden = YES;
+            [self updateTitleText];
+        } else {
+            self.categoryBgView.hidden = YES;
+            self.categoryPlaceholderLabel.hidden = NO;
+        }
     }
 }
 
