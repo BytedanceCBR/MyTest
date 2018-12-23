@@ -167,7 +167,6 @@
 
 @end
 
-
 @implementation  FHNewHouseListResponseModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName

@@ -48,6 +48,7 @@
 #import "ExploreExtenstionDataHelper.h"
 #import <TTAppUpdateHelper.h>
 #import "Bubble-Swift.h"
+#import "FHHomeSearchPanelViewModel.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -57,7 +58,7 @@
 @property (nonatomic, copy) NSString *lastRefreshedCategoryID;
 @property (nonatomic, assign) BOOL hasReloadData;
 @property (nonatomic, assign) BOOL hasShownCategoryView;
-@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) NSArray *guideControlArray;
 @property (nonatomic, strong) TTSeachBarView *searchBar;
@@ -211,7 +212,7 @@
 - (void)setupTopBar {
     [self.view addSubview:self.topBar];
     
-    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
     self.panelVM = panelVM;
 }
 

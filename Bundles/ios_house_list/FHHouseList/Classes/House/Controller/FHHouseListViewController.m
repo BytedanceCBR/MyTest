@@ -14,10 +14,7 @@
 #import "ArticleListNotifyBarView.h"
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
-#import "FHBaseHouseListViewModel.h"
-#import "FHSecondHouseListViewModel.h"
-#import "FHNeighborHouseListViewModel.h"
-#import "FHRentHouseListViewModel.h"
+#import "FHHouseListViewModel.h"
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 
@@ -85,32 +82,6 @@
     return [self.viewModel categoryName];
 }
 
--(FHBaseHouseListViewModel *)setupViewModel:(FHHouseType)houseType
-{
-    switch (self.houseType) {
-            case FHHouseTypeNewHouse:
-            return [[FHSecondHouseListViewModel alloc]initWithTableView:_tableView viewControler:self routeParam:self.paramObj];
-            break;
-            
-            case FHHouseTypeSecondHandHouse:
-            return [[FHSecondHouseListViewModel alloc]initWithTableView:_tableView viewControler:self routeParam:self.paramObj];
-            break;
-            
-            case FHHouseTypeRentHouse:
-            return [[FHRentHouseListViewModel alloc]initWithTableView:_tableView viewControler:self routeParam:self.paramObj];
-            break;
-            
-            case FHHouseTypeNeighborhood:
-            return [[FHNeighborHouseListViewModel alloc]initWithTableView:_tableView viewControler:self routeParam:self.paramObj];
-            break;
-        default:
-            return nil;
-            break;
-    }
-
-
-}
-
 -(NSString *)placeholderByHouseType:(FHHouseType)houseType {
     
     switch (houseType) {
@@ -171,7 +142,8 @@
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
     
-    self.viewModel = [self setupViewModel:self.houseType];
+    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
+    self.viewModel.viewModelDelegate = self;
     
     __weak typeof(self) wself = self;
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
@@ -263,7 +235,7 @@
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.containerView);
+        make.top.left.right.equalTo(self.tableView);
         make.height.mas_equalTo(32);
     }];
     
@@ -278,6 +250,8 @@
     [self initFilter];
 
     [self setupUI];
+
+
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
 
@@ -302,7 +276,7 @@
     self.testBtn.backgroundColor = [UIColor redColor];
     [self.view addSubview: self.testBtn];
     
-    [self.viewModel loadData:YES withQuery:@"house_type=2&empty%5B%5D=0&house_type=2" condition:nil needEncode:NO];
+    [self.viewModel loadData:YES];
 
 }
 
@@ -353,52 +327,46 @@
     [self.view addSubview:_containerView];
 
     self.automaticallyAdjustsScrollViewInsets = NO;
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
-    if (@available(iOS 11.0, *)) {
-        
-        _tableView.estimatedRowHeight = 0;
-        _tableView.estimatedSectionHeaderHeight = 0;
-        _tableView.estimatedSectionFooterHeight = 0;
-        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    }
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    [_containerView addSubview:_tableView];
-    
-    [self.view addSubview:self.navbar];
-    [self.view addSubview:self.filterBgControl];
-    [self.view addSubview:self.filterPanel];
-    
-    //notifyview
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-//    self.notifyBarView.hidden = YES;
 
+    [_containerView addSubview:self.tableView];
+    
     //error view
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
     
+    //notifyview
+    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.notifyBarView];
+
+    [self.view addSubview:self.navbar];
+    [self.view addSubview:self.filterBgControl];
+    [self.view addSubview:self.filterPanel];
+
     [self.view bringSubviewToFront:self.filterBgControl];
-    
+
+
 }
 
 #pragma mark - show notify
 
 -(void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    UIEdgeInsets inset = self.tableView.contentInset;
+    inset.top = self.notifyBarView.height;
+    self.tableView.contentInset = inset;
     
-    self.tableView.top = self.notifyBarView.height;
-    [UIView animateWithDuration:0.3 delay:1 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.tableView.top = 0;
-    } completion:^(BOOL finished) {
-        
-    }];
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            UIEdgeInsets inset = self.tableView.contentInset;
+            inset.top = 0;
+            self.tableView.contentInset = inset;
+        }];
+    });
+
 }
 
 -(void)showErrorMaskView
@@ -407,6 +375,29 @@
 //    [self.viewModel reloadData];
 }
 
+#pragma mark - lazy load
 
+-(UITableView *)tableView
+{
+    if (!_tableView) {
+        
+        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+        if (@available(iOS 11.0, *)) {
+            
+            _tableView.estimatedRowHeight = 0;
+            _tableView.estimatedSectionHeaderHeight = 0;
+            _tableView.estimatedSectionFooterHeight = 0;
+            self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            
+            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.showsVerticalScrollIndicator = NO;
+        
+    }
+    return _tableView;
+}
 
 @end

@@ -10,14 +10,13 @@
 #import "TTThemeConst.h"
 #import "UIFont+House.h"
 #import "FHEnvContext.h"
+#import "ReactiveObjC.h"
+
 @interface FHHomeSearchPanelView()
 {
     BOOL isHighlighted;
     NSTimer *timer;
 }
-@property(nonatomic, strong) UILabel * countryLabel;
-@property(nonatomic, strong) UIButton * changeCountryBtn;
-@property(nonatomic, strong) UIButton * searchBtn;
 @property(nonatomic, strong) UIImageView * triangleImage;
 @property(nonatomic, strong) UIView * verticalLineView;
 @property(nonatomic, strong) UIView * searchIconBackView;
@@ -27,7 +26,6 @@
 @property(nonatomic, strong) UILabel * categoryLabel2;
 @property(nonatomic, strong) UIView * categoryBgView;
 @property(nonatomic, assign) NSUInteger searchTitleIndex;
-@property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
  
 @end
 
@@ -53,7 +51,7 @@
         isHighlighted = NO;
         [self setPanelStyle];
         [self setupCountryLabel];
-        [self setupVerticalLine];
+       [self setupVerticalLine];
         [self setSearchArea];
     }
     
@@ -68,7 +66,7 @@
         self.backgroundColor = [UIColor whiteColor];
     }
     self.layer.borderWidth = 1;
-    self.layer.borderColor = [UIColor colorWithHexString:kFHColorClearBlue].CGColor;
+    self.layer.borderColor = [UIColor colorWithHexString:kFHBaseColorBlue].CGColor;
     self.layer.masksToBounds = true;
     self.layer.cornerRadius = 4;
 }
@@ -79,9 +77,9 @@
     label.font = [UIFont themeFontSemibold:14];
     label.textColor = [UIColor colorWithHexString:@"#081f33"];
     label.numberOfLines = 1;
-    if ([[FHEnvContext getCurrentUserDeaultCityName] isKindOfClass:[NSString class]])
+    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] isKindOfClass:[NSString class]])
     {
-        label.text = [FHEnvContext getCurrentUserDeaultCityName];
+        label.text = [FHEnvContext getCurrentSelectCityIdFromLocal];
     }else
     {
         label.text = @"深圳";
@@ -103,7 +101,7 @@
     
     
     [self.triangleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.countryLabel).offset(8);
+        make.left.equalTo(self.countryLabel.mas_right).offset(8);
         make.centerY.equalTo(self);
         make.height.width.mas_equalTo(10);
     }];
@@ -125,6 +123,10 @@
 
     
     self.changeCountryBtn = [UIButton new];
+     [[self.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
+       
+    }];
+     
     [self addSubview:self.changeCountryBtn];
     
     [self.changeCountryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -137,36 +139,35 @@
 {
     
     self.searchIconBackView = [UIView new];
-    self.searchIconBackView.backgroundColor =  [UIColor colorWithHexString:kFHColorClearBlue];
+    self.searchIconBackView.backgroundColor =  [UIColor colorWithHexString:kFHBaseColorBlue];
     [self addSubview:self.searchIconBackView];
-    
     
     [self.searchIconBackView  mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self);
         make.right.height.equalTo(self);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width / 375);
+        make.width.mas_equalTo(50 * [UIScreen mainScreen].bounds.size.width / 375);
     }];
     
     self.searchIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home-icon-search"]];
     [self.searchIconBackView addSubview:self.searchIcon];
-    
-    
+
+
     [self.searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.centerY.equalTo(self);
+        make.centerY.centerX.equalTo(self.searchIconBackView);
         make.width.height.mas_equalTo(16);
     }];
-    
-    
+
+
     self.categoryPlaceholderLabel = [UILabel new];
     self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
     self.categoryPlaceholderLabel.textColor =  [UIColor colorWithHexString:@"#8a9299"];
     self.categoryPlaceholderLabel.text = [UIScreen mainScreen].bounds.size.width < 375 ? @"输入小区/商圈/地铁" : @"请输入小区/商圈/地铁";
-    
+
     [self addSubview:self.categoryPlaceholderLabel];
-    
-    
+
+
     [self.categoryPlaceholderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.verticalLineView.mas_right);
+        make.left.equalTo(self.verticalLineView.mas_right).offset(10);
         make.height.mas_equalTo(20);
         make.centerY.equalTo(self);
         make.right.equalTo(self.searchIconBackView.mas_left).offset(-2);
@@ -176,54 +177,54 @@
     self.categoryBgView.clipsToBounds = true;
     self.categoryBgView.hidden = true;
     [self addSubview:self.categoryBgView];
-    
-    
+
+
     [self.categoryBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.verticalLineView.mas_right).offset(10);
         make.height.mas_equalTo(38);
         make.right.equalTo(self.searchIconBackView.mas_left).offset(-2);
         make.centerY.equalTo(self);
     }];
-    
-    
+
+
     self.categoryLabel1 = [UILabel new];
     self.categoryLabel1.font = [UIFont themeFontRegular:14];
     self.categoryLabel1.textColor = [UIColor colorWithHexString:@"#081f33"];
     self.categoryLabel1.text = @"";
-  
-    
+
+
     [self.categoryBgView addSubview:self.categoryLabel1];
-    
+
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(9);
         make.left.right.centerY.equalTo(self);
         make.height.mas_equalTo(20);
     }];
-    
-    
+
+
     self.categoryLabel2 = [UILabel new];
     self.categoryLabel2.font = [UIFont themeFontRegular:14];
     self.categoryLabel2.textColor = [UIColor colorWithHexString:@"#081f33"];
     self.categoryLabel2.text = @"";
-    
+
     [self.categoryBgView addSubview:self.categoryLabel2];
-    
+
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(29);
         make.left.right.equalTo(self);
         make.height.mas_equalTo(20);
     }];
-    
+
     self.searchBtn = [UIButton new];
     [self addSubview:self.searchBtn];
-    
+
     [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.verticalLineView.mas_right);
         make.top.bottom.right.equalTo(self);
     }];
 }
 
-- (void)setUpTimer
+- (void)setUpRollScreenTimer
 {
    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
 }
@@ -264,6 +265,23 @@
         self.categoryLabel1.text = _searchTitles[_searchTitleIndex];
         NSInteger tempIndex = (_searchTitleIndex + 1) % _searchTitles.count;
         self.categoryLabel2.text = _searchTitles[tempIndex];
+    }
+}
+
+- (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
+{
+    _searchTitles = searchTitles;
+    if (!_searchTitles) {
+        self.searchTitleIndex = 0;
+        if (_searchTitles.count  > 0) {
+            [self setUpRollScreenTimer];
+            self.categoryBgView.hidden = NO;
+            self.categoryPlaceholderLabel.hidden = YES;
+            [self updateTitleText];
+        } else {
+            self.categoryBgView.hidden = YES;
+            self.categoryPlaceholderLabel.hidden = NO;
+        }
     }
 }
 

@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHClient.h"
+#import "TTBaseMacro.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -20,6 +21,14 @@
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
+static NSString *const kUserDefaultCityId = @"kUserDefaultCityId";
+
+static NSString *const kTracerEventType = @"house_app2c_v2";
+
+static NSString *const kFHBaseColorBlue = @"#299cff";
+
+
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-
 @property(nonatomic,strong)FHClient * client;
+
 
 + (instancetype)sharedInstance;
 /*
@@ -41,9 +50,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
-+ (NSString *)getCurrentUserDeaultCityName;
+//获取当前保存的城市名称
++ (NSString *)getCurrentUserDeaultCityNameFromLocal;
 
-+ (void)setCurrentUserDeaultCityName:(NSString *)cityName;
+//保存当前城市名称
++ (void)saveCurrentUserDeaultCityName:(NSString *)cityName;
+
+//获取当前选中城市cityid
++ (NSString *)getCurrentSelectCityIdFromLocal;
+
+//保存当前城市id
++ (void)saveCurrentUserCityId:(NSString *)cityId;
 
 @end
 

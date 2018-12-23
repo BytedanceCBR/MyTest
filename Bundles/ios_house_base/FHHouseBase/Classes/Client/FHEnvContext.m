@@ -26,7 +26,7 @@
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
-        pramsDict[@"event_type"] = @"house_app2c_v2";
+        pramsDict[@"event_type"] = kTracerEventType;
         [TTTrackerWrapper eventV3:traceKey params:pramsDict];
     }
 }
@@ -38,14 +38,32 @@
     
 }
 
-+ (NSString *)getCurrentUserDeaultCityName
+//获取当前保存的城市名称
++ (NSString *)getCurrentUserDeaultCityNameFromLocal
 {
-    return [FHUtils contentForKey:kUserDefaultCityName];
+    if (kIsNSString([FHUtils contentForKey:kUserDefaultCityName]))
+    {
+        return [FHUtils contentForKey:kUserDefaultCityName];
+    }
+    return @"深圳"; //无网默认
 }
 
-+ (void)setCurrentUserDeaultCityName:(NSString *)cityName
+//保存当前城市名称
++ (void)saveCurrentUserDeaultCityName:(NSString *)cityName
 {
     [FHUtils setContent:cityName forKey:kUserDefaultCityName];
+}
+
+//获取当前选中城市cityid
++ (NSString *)getCurrentSelectCityIdFromLocal
+{
+    return [FHUtils contentForKey:kUserDefaultCityId];
+}
+
+//保存当前城市id
++ (void)saveCurrentUserCityId:(NSString *)cityId
+{
+    [FHUtils setContent:cityId forKey:kUserDefaultCityId];
 }
 
 - (FHClient *)_client

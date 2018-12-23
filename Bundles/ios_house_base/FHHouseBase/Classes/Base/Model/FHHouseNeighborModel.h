@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
+#import "FHBaseModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -76,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHHouseNeighborModel  : JSONModel
+@interface  FHHouseNeighborModel  : JSONModel <FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;

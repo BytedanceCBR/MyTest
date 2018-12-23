@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHNewHouseItemModel;
 @class FHSearchHouseDataItemsModel;
 @class FHHouseRentDataItemsModel;
+@class JSONModel;
 
 
 @interface FHSingleImageInfoCell : UITableViewCell
@@ -30,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell;
 
 -(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model  isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell;
+
+-(void)updateWithHouseModel:(JSONModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell;
+
+-(void)refreshTopMargin:(CGFloat)top;
+
+-(void)refreshBottomMargin:(CGFloat)bottom;
 
 @end
 

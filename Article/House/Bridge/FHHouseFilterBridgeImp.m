@@ -28,6 +28,7 @@
             break;
         case FHHouseTypeNeighborhood:
             ht = HouseTypeNeighborhood;
+            break;
         default:
             ht = HouseTypeSecondHandHouse;
             break;
@@ -85,6 +86,10 @@
 -(void)showBottomLine:(BOOL)show
 {
     [_houseFilterViewModel setFilterPanelBottomLineHidden:!show];
+}
+
+-(void)trigerConditionChanged {
+    [_houseFilterViewModel trigerConditionChanged];
 }
 
 @end

@@ -23,8 +23,8 @@
     
 }
 
--(void)loadData:(BOOL)isRefresh withQuery:(NSString *)query condition:(NSString *)condition needEncode:(BOOL )needEncode {
-    
+-(void)loadData:(BOOL)isRefresh {
+
 }
 
 -(void)onConditionChanged:(NSString *)condition
@@ -36,6 +36,22 @@
 {
     
 }
+
+#pragma mark - sug delegate
+-(void)suggestionSelected:(TTRouteObject *)routeObject {
+    
+}
+
+-(void)resetCondition {
+    
+}
+
+-(void)backAction:(UIViewController *)controller
+{
+    [controller.navigationController popViewControllerAnimated:YES];
+}
+
+
 
 -(void)showInputSearch {
     
