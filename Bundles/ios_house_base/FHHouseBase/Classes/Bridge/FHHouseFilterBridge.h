@@ -35,6 +35,8 @@
 
 -(void)showBottomLine:(BOOL)show;
 
+-(void)trigerConditionChanged;
+
 @end
 
 

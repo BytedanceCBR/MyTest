@@ -8,10 +8,14 @@
 #import "FHSuggestionListViewController.h"
 #import "FHSuggestionListNavBar.h"
 #import "TTDeviceHelper.h"
+#import "FHHouseType.h"
+#import "FHHouseTypeManager.h"
 
 @interface FHSuggestionListViewController ()
 
 @property (nonatomic, strong)     FHSuggestionListNavBar     *naviBar;
+@property (nonatomic, assign)     FHHouseType       houseType;
+
 
 @property (nonatomic, strong)     FHSuggestionListReturnBlock       wBlk;
 
@@ -25,7 +29,7 @@
 //        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
 //        self.houseId = paramObj.userInfo.allInfo[@"houseId"];
 //        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
-//        self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
 //        self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
 //        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
 //
@@ -57,6 +61,22 @@
         make.height.mas_equalTo(naviHeight);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
+    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
+    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+}
+
+- (void)setHouseType:(FHHouseType)houseType {
+    _houseType = houseType;
+    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
+    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
+    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
+    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
 }
 
 - (void)dealloc

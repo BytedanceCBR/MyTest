@@ -87,4 +87,8 @@
     [_houseFilterViewModel setFilterPanelBottomLineHidden:!show];
 }
 
+-(void)trigerConditionChanged {
+    [_houseFilterViewModel trigerConditionChanged];
+}
+
 @end
