@@ -245,4 +245,39 @@
     }];
 }
 
+
+#pragma mark 找房频道首页相关
++(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/home_page_roll_screen?");
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&error];
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
++(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
+{
+    NSString *url = QURL(@"/f100/api/v2/recommend?");
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (!completion) {
+            return ;
+        }
+        FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&error];
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
+
+
 @end
+

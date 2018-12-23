@@ -87,6 +87,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)endLoading;
 
+/**
+ * 控制器返回
+ */
+- (void)goBack;
+
 @end
 
 NS_ASSUME_NONNULL_END

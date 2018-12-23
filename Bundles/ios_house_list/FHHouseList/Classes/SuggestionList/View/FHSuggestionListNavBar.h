@@ -11,6 +11,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSuggestionListNavBar : UIView
 
+@property (nonatomic, strong)   UIButton       *backBtn;
+@property (nonatomic, strong)   UILabel       *searchTypeLabel;
+- (void)setSearchPlaceHolderText:(NSString *)text;
+
+@end
+
+@interface FHExtendHotAreaButton : UIButton
+
+@property (nonatomic, assign)   BOOL       isExtend;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -8,6 +8,9 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 
+/* 回跳到上一级页面，回传参数 */
+typedef void(^FHSuggestionListReturnBlock)(TTRouteObject *routeObject);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSuggestionListViewController : FHBaseViewController
