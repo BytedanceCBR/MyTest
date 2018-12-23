@@ -13,4 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSuggestionNewHouseItemCell : UITableViewCell
+
+@end
+
+@interface FHSuggectionTableView : UITableView
+
+@property (nonatomic, copy)     dispatch_block_t       handleTouch;
+
+@end
+
 NS_ASSUME_NONNULL_END

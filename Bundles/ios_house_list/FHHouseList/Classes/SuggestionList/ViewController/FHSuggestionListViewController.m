@@ -11,12 +11,17 @@
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHPopupMenuView.h"
+#import "FHSuggestionItemCell.h"
+#import "FHSuggestionListViewModel.h"
 
-@interface FHSuggestionListViewController ()
+@interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong)     FHSuggestionListNavBar     *naviBar;
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
+@property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
+@property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
+@property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 
 @property (nonatomic, strong)     FHSuggestionListReturnBlock       retBlk;
@@ -43,6 +48,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.retBlk(route);
         });
+        _viewModel = [[FHSuggestionListViewModel alloc] init];
     }
     return self;
 }
@@ -51,9 +57,15 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)setupUI {
+    [self setupNaviBar];
+    [self setupTableView];
+}
+
+- (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     _naviBar = [[FHSuggestionListNavBar alloc] init];
     [self.view addSubview:_naviBar];
@@ -70,6 +82,47 @@
         make.width.mas_equalTo(size.width);
     }];
     [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    _naviBar.searchInput.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)setupTableView {
+    self.historyTableView  = [self createTableView];
+    self.historyTableView.tag = 1;
+    
+    self.suggestTableView  = [self createTableView];
+    self.suggestTableView.tag = 2;
+    self.suggestTableView.hidden = YES;
+}
+
+- (FHSuggectionTableView *)createTableView {
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    __weak typeof(self) weakSelf = self;
+    tableView.handleTouch = ^{
+        [weakSelf.view endEditing:YES];
+    };
+    tableView.backgroundColor = UIColor.whiteColor;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (isIphoneX) {
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    [self.view addSubview:tableView];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.naviBar.mas_bottom);
+        make.bottom.mas_equalTo(self.view);
+    }];
+    tableView.delegate  = self.viewModel;
+    tableView.dataSource = self.viewModel;
+    [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
+    [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
+    if (@available(iOS 11.0 , *)) {
+        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    return tableView;
 }
 
 - (void)setHouseType:(FHHouseType)houseType {
@@ -114,8 +167,39 @@
     return item;
 }
 
+// 文本框文字变化，进行sug请求
+- (void)textFiledTextChangeNoti:(NSNotification *)noti {
+    NSInteger maxCount = 80;
+    NSString *text = self.naviBar.searchInput.text;
+    if (text.length > maxCount) {
+        text = [text substringToIndex:maxCount];
+        self.naviBar.searchInput.text = text;
+    }
+    //TODO: add by zyk 进行sug请求
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    if (self.popupMenuView) {
+        [self.popupMenuView removeFromSuperview];
+    }
+    return YES;
+}
+
+// 输入框执行搜索
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSString *userInputText = self.naviBar.searchInput.text;
+    NSLog(@"%@",userInputText);
+    return YES;
+}
+
+#pragma mark - dealloc
+
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"dealloc");
 }
 
