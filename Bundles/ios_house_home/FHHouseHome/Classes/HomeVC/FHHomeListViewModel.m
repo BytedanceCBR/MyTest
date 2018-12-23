@@ -6,10 +6,14 @@
 //
 
 #import "FHHomeListViewModel.h"
+#import "FHHomeMainTableViewDataSource.h"
+#import "FHHomeConfigManager.h"
 
 @interface FHHomeListViewModel()
 
 @property (nonatomic, strong) UITableView *tableViewV;
+
+@property (nonatomic, strong) FHHomeMainTableViewDataSource *dataSource;
 
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
 
@@ -23,9 +27,18 @@
     if (self) {
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
+        self.dataSource = [FHHomeMainTableViewDataSource new];
+        JSONModel *model = [FHHomeConfigManager sharedInstance].currentDataModel;
+        if (model) {
+            self.dataSource.modelsArray = @[model];
+        }
+        self.tableViewV.delegate = self.dataSource;
+        self.tableViewV.dataSource = self.dataSource;
     }
     return self;
 }
+
+
 
 
 

@@ -17,6 +17,7 @@
 #import "FHHouseListViewModel.h"
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHConditionFilterViewModel.h"
 
 #define kFilterBarHeight 44
 
@@ -141,6 +142,8 @@
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
+    
+    [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
     self.viewModel.viewModelDelegate = self;

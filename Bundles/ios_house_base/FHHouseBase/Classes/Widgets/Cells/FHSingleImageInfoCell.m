@@ -239,7 +239,13 @@
             make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(4);
             make.height.mas_equalTo(@17);
         }];
-        
+        [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.infoPanel);
+            make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
+            make.height.mas_equalTo(@15);
+            make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
+        }];
+
     }else {
         
         self.majorTitle.numberOfLines = 2;
@@ -423,7 +429,6 @@
         make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
     }];
     self.priceLabel.text = model.displayPricePerSqm;
-    self.roomSpaceLabel.text = model.displayPricePerSqm;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
@@ -545,6 +550,8 @@
     self.areaLabel.attributedText = text;
     [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
+        make.height.mas_equalTo(@15);
+
     }];
     self.priceLabel.text = model.pricing;
     self.roomSpaceLabel.text = nil;

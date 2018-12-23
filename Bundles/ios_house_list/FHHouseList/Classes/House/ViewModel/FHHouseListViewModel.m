@@ -626,11 +626,14 @@
         FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
-        JSONModel *model = self.houseList[indexPath.row];
-        [cell updateWithHouseModel:model isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
-        [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:isLastCell ? 20 : 0];
+//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
+        if (indexPath.row < self.houseList.count) {
+            
+            JSONModel *model = self.houseList[indexPath.row];
+            [cell updateWithHouseModel:model isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+            [cell refreshTopMargin: 20];
+            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        }
         return cell;
         
     }else {
@@ -652,7 +655,7 @@
     if (!self.showPlaceHolder) {
 
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
+//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
         return isLastCell ? 125 : 105;
 
     }

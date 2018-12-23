@@ -241,8 +241,6 @@
         return;
     }
     
-    NSLog(@"roll screen!!!!!!!");
-    
     [UIView animateWithDuration:0.3 animations:^{
         self.categoryLabel1.alpha = 0;
         self.categoryLabel2.alpha = 1;
