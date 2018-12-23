@@ -175,7 +175,12 @@
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;
     }
-    //TODO: add by zyk 进行sug请求
+    BOOL hasText = text.length > 0;
+    _suggestTableView.hidden = !hasText;
+    _historyTableView.hidden = hasText;
+    if (hasText) {
+        [self requestSuggestion:text];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
@@ -193,6 +198,28 @@
     NSString *userInputText = self.naviBar.searchInput.text;
     NSLog(@"%@",userInputText);
     return YES;
+}
+
+#pragma mark - Request
+
+// 历史记录
+- (void)requestHistoryFromRemote {
+    
+}
+
+// 删除历史记录
+- (void)requestDeleteHistory {
+    
+}
+
+// 猜你想搜
+- (void)requestGuessYouWantData {
+    
+}
+
+// sug建议
+- (void)requestSuggestion:(NSString *)text {
+    
 }
 
 #pragma mark - dealloc
