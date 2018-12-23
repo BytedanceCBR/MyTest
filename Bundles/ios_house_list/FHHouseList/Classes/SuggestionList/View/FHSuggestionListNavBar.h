@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UIButton       *backBtn;
 @property (nonatomic, strong)   UILabel       *searchTypeLabel;
+@property (nonatomic, strong)   UIButton       *searchTypeBtn;
 - (void)setSearchPlaceHolderText:(NSString *)text;
 
 @end

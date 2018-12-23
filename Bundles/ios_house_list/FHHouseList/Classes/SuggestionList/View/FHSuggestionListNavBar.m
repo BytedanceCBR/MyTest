@@ -100,6 +100,15 @@
         make.left.mas_equalTo(self.triangleImage.mas_right).offset(10);
     }];
     
+    // searchTypeBtn
+    _searchTypeBtn = [[UIButton alloc] init];
+    _searchTypeBtn.backgroundColor = UIColor.clearColor;
+    [_searchAreaPanel addSubview:_searchTypeBtn];
+    [_searchTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(self.searchAreaPanel);
+        make.right.mas_equalTo(self.verticalLineView.mas_left);
+    }];
+    
     // searchIcon
     _searchIcon = [[UIImageView alloc] init];
     _searchIcon.image = [UIImage imageNamed:@"icon-search-titlebar"];
