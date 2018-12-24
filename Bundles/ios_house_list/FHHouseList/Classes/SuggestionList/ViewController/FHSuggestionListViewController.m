@@ -13,6 +13,7 @@
 #import "FHPopupMenuView.h"
 #import "FHSuggestionListViewModel.h"
 #import "FHEnvContext.h"
+#import "ToastManager.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -57,6 +58,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
 }
 
 - (void)setupUI {
@@ -89,6 +91,7 @@
 - (void)setupTableView {
     self.historyTableView  = [self createTableView];
     self.historyTableView.tag = 1;
+    self.historyTableView.hidden = NO;
     
     self.suggestTableView  = [self createTableView];
     self.suggestTableView.tag = 2;
@@ -133,6 +136,8 @@
         make.width.mas_equalTo(size.width);
     }];
     self.viewModel.houseType = self.houseType;
+    // 网络请求
+    [self requestData];
 }
 
 - (void)searchTypeBtnClick:(UIButton *)btn {
@@ -205,19 +210,37 @@
 
 #pragma mark - Request
 
+// 执行网络请求
+- (void)requestData {
+    [self.viewModel clearHistoryTableView];
+    self.viewModel.loadRequestTimes = 0;
+    [self requestHistoryFromRemote];
+    [self requestGuessYouWantData];
+}
+
 // 历史记录
 - (void)requestHistoryFromRemote {
-    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        // TODO:add by zyk 有loadRequestTimes 自动加的逻辑需要处理吗？
+    } else {
+        [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
 }
 
 // 删除历史记录
 - (void)requestDeleteHistory {
-    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
 }
 
 // 猜你想搜
 - (void)requestGuessYouWantData {
-    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
 }
 
 // sug建议
