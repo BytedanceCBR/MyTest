@@ -22,6 +22,7 @@
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHSingleImageInfoCell.h"
 #import "FHPlaceHolderCell.h"
+#import "FHEnvContext.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -80,7 +81,8 @@ static NSMutableArray  * _Nullable identifierArr;
     self.headerType = type;
     
     NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+//    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
@@ -161,7 +163,9 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+//    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         

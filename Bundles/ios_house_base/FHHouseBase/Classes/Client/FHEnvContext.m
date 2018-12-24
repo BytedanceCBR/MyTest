@@ -9,6 +9,12 @@
 #import "TTTrackerWrapper.h"
 #import "FHUtils.h"
 #import "TTReachability.h"
+#import "YYCache.h"
+#import "FHGeneralBizConfig.h"
+
+@interface FHEnvContext ()
+@property (nonatomic, strong) FHGeneralBizConfig *generalBizConfig;
+@end
 
 @implementation FHEnvContext
 
@@ -32,6 +38,14 @@
     }
 }
 
+- (FHGeneralBizConfig *)generalBizConfig
+{
+    if (!_generalBizConfig) {
+        _generalBizConfig = [FHGeneralBizConfig new];
+    }
+    return _generalBizConfig;
+}
+
 + (BOOL)isNetworkConnected
 {
     return [TTReachability isNetworkConnected];
@@ -42,6 +56,11 @@
     
     
     
+}
+
+- (FHConfigDataModel *)getConfigFromLocal
+{
+    return [self.generalBizConfig getGeneralConfigFromLocal];
 }
 
 //获取当前保存的城市名称
