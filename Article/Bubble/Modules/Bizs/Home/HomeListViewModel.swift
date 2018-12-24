@@ -1321,7 +1321,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-           return FHHomeCellHelper.heightForFHHomeHeaderCellViewType()
+           return FHHomeCellHelper.sharedInstance().heightForFHHomeHeaderCellViewType()
         }
         
         if !tableView.fd_indexPathHeightCache.existsHeight(at: indexPath) {

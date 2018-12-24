@@ -1296,7 +1296,7 @@ TTRefreshViewDelegate
 //    }else {
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-        return [ExploreCellHelper heightForFHHomeHeaderCellViewType];
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }else
     {
         if (indexPath.row < [self listViewMaxModelIndex]) {

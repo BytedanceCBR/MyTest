@@ -22,6 +22,7 @@
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHSingleImageInfoCell.h"
 #import "FHPlaceHolderCell.h"
+#import "FHEnvContext.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -35,7 +36,8 @@ static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
 
-@property(nonatomic , strong) FHConfigDataModel *dataModel;
+@property(nonatomic , strong) FHConfigDataModel *previousDataModel;
+@property(nonatomic , assign) CGFloat headerHeight;
 
 @end
 
@@ -80,7 +82,11 @@ static NSMutableArray  * _Nullable identifierArr;
     self.headerType = type;
     
     NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
-    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (!dataModel) {
+        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+    }
+    
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
@@ -159,9 +165,20 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
-+ (CGFloat)heightForFHHomeHeaderCellViewType
+- (CGFloat)heightForFHHomeHeaderCellViewType
 {
-    FHConfigDataModel * dataModel = [FHHomeConfigManager sharedInstance].currentDataModel;
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (!dataModel) {
+        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+    }
+    
+    //如果数据无变化直接返回
+    if (self.previousDataModel == dataModel) {
+        return self.headerHeight;
+    }
+    
+    NSLog(@"xxxxx heightForFHHomeHeaderCellViewType");
+
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
@@ -200,6 +217,8 @@ static NSMutableArray  * _Nullable identifierArr;
             }
         }
     }
+    self.headerHeight = height;
+    self.previousDataModel = dataModel;
     return height;
 }
 
