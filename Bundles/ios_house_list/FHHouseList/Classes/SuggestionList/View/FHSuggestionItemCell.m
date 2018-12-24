@@ -10,6 +10,7 @@
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
+#import "FHSuggestionListNavBar.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -137,6 +138,43 @@
     [_sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(lineH);
+    }];
+}
+
+@end
+
+// --
+
+@implementation FHSuggestHeaderViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    // label
+    _label = [[UILabel alloc] init];
+    _label.text = @"历史记录";
+    _label.font = [UIFont themeFontMedium:14];
+    _label.textColor = [UIColor themeBlue1];
+    [self.contentView addSubview:_label];
+    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.mas_equalTo(20);
+        make.height.mas_equalTo(20);
+        make.bottom.mas_equalTo(self.contentView);
+    }];
+    // deleteBtn
+    _deleteBtn = [[FHExtendHotAreaButton alloc] init];
+    [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
+    [self.contentView addSubview:_deleteBtn];
+    [_deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.centerY.mas_equalTo(self.label);
     }];
 }
 

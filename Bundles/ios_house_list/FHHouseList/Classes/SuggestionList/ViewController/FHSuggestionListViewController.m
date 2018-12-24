@@ -100,7 +100,7 @@
 
 - (FHSuggectionTableView *)createTableView {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
         [weakSelf.view endEditing:YES];
@@ -121,6 +121,7 @@
     tableView.dataSource = self.viewModel;
     [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
     [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
+    [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }

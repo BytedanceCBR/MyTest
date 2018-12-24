@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSuggestHeaderViewCell : UITableViewCell
+
+@property (nonatomic, strong)   UILabel       *label;
+@property (nonatomic, strong)   UIButton       *deleteBtn;
+
+@end
+
 @interface FHSuggectionTableView : UITableView
 
 @property (nonatomic, copy)     dispatch_block_t       handleTouch;

@@ -9,6 +9,7 @@
 #import "FHSuggestionListViewController.h"
 #import "ToastManager.h"
 #import "FHHouseTypeManager.h"
+#import "FHGuessYouWantView.h"
 
 @interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -23,6 +24,7 @@
 @property (nonatomic, strong , nullable) NSMutableArray<FHGuessYouWantResponseDataDataModel> *guessYouWantData;
 
 @property (nonatomic, copy)     NSString       *highlightedText;
+@property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
 
 @end
 
@@ -34,6 +36,7 @@
         self.listController = viewController;
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
+        self.guessYouWantView = [[FHGuessYouWantView alloc] init];
     }
     return self;
 }
@@ -48,7 +51,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
-        return self.historyData.count;
+        return self.historyData.count > 0 ? self.historyData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
         return self.sugListData.count;
@@ -58,9 +61,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView.tag == 1) {
         // 历史记录
+        if (indexPath.row == 0) {
+            FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
+            headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            return headerCell;
+        }
         FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
-        if (indexPath.row < self.historyData.count) {
-            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row];
+        if (indexPath.row - 1 < self.historyData.count) {
+            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
             cell.label.attributedText = text1;
@@ -105,6 +113,35 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (tableView.tag == 1) {
+        // 历史记录
+        if (self.guessYouWantData.count > 0) {
+            return self.guessYouWantView;
+        }
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (tableView.tag == 1) {
+        // 历史记录
+        if (self.guessYouWantData.count > 0) {
+            return 138;
+        } else {
+            return CGFLOAT_MIN;
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词
+        return CGFLOAT_MIN;
+    }
+    return CGFLOAT_MIN;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
 }
 
 // 1、默认
