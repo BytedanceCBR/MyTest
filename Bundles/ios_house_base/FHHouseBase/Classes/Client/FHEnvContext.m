@@ -63,7 +63,10 @@
 //获取当前选中城市cityid
 + (NSString *)getCurrentSelectCityIdFromLocal
 {
-    return [FHUtils contentForKey:kUserDefaultCityId];
+    if (kIsNSString([FHUtils contentForKey:kUserDefaultCityId])) {
+        return [FHUtils contentForKey:kUserDefaultCityId];
+    }
+    return @"122";
 }
 
 //保存当前城市id

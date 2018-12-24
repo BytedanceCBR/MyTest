@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithSearchPanel:(FHHomeSearchPanelView *)panel;
 
+- (void)fetchSearchPanelRollData;
+
 -(void)requestPanelRollScreen:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
 
 @end

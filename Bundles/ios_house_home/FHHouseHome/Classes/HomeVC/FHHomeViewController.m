@@ -60,12 +60,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     
-    //    WeakSelf;
-    //    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-    //        StrongSelf;
-    //        [self reloadFHHomeHeaderCell];
-    //    }];
+    WeakSelf;
+    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        [self reloadFHHomeHeaderCell];
+    }];
     
+    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
     
     // Do any additional setup after loading the view.
 }
@@ -105,8 +106,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)reloadFHHomeHeaderCell
 {
-    
-    
+    [self.homeListViewModel reloadHomeListTable];
 }
 
 

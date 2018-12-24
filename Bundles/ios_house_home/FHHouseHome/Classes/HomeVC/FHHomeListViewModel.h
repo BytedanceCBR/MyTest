@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 
+- (void)reloadHomeListTable;
+
 - (void)requestRecommendHomeList;
 
 @end

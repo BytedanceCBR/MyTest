@@ -21,7 +21,7 @@
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
-static NSString *const kUserDefaultCityId = @"kUserDefaultCityId";
+static NSString *const kUserDefaultCityId = @"config_key_select_city_id";
 
 static NSString *const kTracerEventType = @"house_app2c_v2";
 

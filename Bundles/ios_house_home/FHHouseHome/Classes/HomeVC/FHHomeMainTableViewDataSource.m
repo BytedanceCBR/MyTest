@@ -34,6 +34,9 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return [FHHomeCellHelper heightForFHHomeHeaderCellViewType];
+    }
     JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
     [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
