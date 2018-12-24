@@ -49,6 +49,7 @@
 #import <TTAppUpdateHelper.h>
 #import "Bubble-Swift.h"
 #import "FHHomeSearchPanelViewModel.h"
+#import "FHEnvContext.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -214,6 +215,11 @@
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
     self.panelVM = panelVM;
+    
+    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
+    {
+        [self.panelVM fetchSearchPanelRollData];
+    }
 }
 
 // only get category when local storage only has default category

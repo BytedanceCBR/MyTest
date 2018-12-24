@@ -77,9 +77,9 @@
     label.font = [UIFont themeFontSemibold:14];
     label.textColor = [UIColor colorWithHexString:@"#081f33"];
     label.numberOfLines = 1;
-    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] isKindOfClass:[NSString class]])
+    if ([[FHEnvContext getCurrentUserDeaultCityNameFromLocal] isKindOfClass:[NSString class]])
     {
-        label.text = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }else
     {
         label.text = @"深圳";

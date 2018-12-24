@@ -28,10 +28,7 @@
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
-        JSONModel *model = [FHHomeConfigManager sharedInstance].currentDataModel;
-        if (model) {
-            self.dataSource.modelsArray = @[model];
-        }
+
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
     }
@@ -39,7 +36,14 @@
 }
 
 
-
+- (void)reloadHomeListTable
+{
+    JSONModel *model = [FHHomeConfigManager sharedInstance].currentDataModel;
+    if (model) {
+        self.dataSource.modelsArray = @[model];
+    }
+    [self.tableViewV reloadData];
+}
 
 
 @end

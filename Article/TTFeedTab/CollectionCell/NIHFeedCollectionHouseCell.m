@@ -18,8 +18,8 @@
 //@property (nonatomic, strong) ExploreMixedListView *listView;
 @property (nonatomic, strong) TTCategory *category;
 
-//@property (nonatomic, strong) FHHomeViewController *houseListViewController;
-@property (nonatomic, strong) HomeViewController *houseListViewController;
+@property (nonatomic, strong) FHHomeViewController *houseListViewController;
+//@property (nonatomic, strong) HomeViewController *houseListViewController;
 
 @end
 
@@ -76,14 +76,14 @@
     if ([TTDeviceHelper isPadDevice]) {
         topPadding = 64 + 44;
     }
-    self.houseListViewController = [[HomeViewController alloc] init];
+    self.houseListViewController = [[FHHomeViewController alloc] init];
 //    self.houseListViewController.delegate = self;
     UIViewController *viewController = self.sourceViewController;
     [viewController addChildViewController:self.houseListViewController];
     [self.contentView addSubview:self.houseListViewController.view];
     [self.houseListViewController didMoveToParentViewController:viewController];
-    [self.houseListViewController setListTopInset:topPadding BottomInset:bottomPadding];
-//    [self.houseListViewController setTopEdgesTop:topPadding andBottom:bottomPadding];
+//    [self.houseListViewController setListTopInset:topPadding BottomInset:bottomPadding];
+    [self.houseListViewController setTopEdgesTop:topPadding andBottom:bottomPadding];
 
     CGFloat statusBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     CGFloat topOffset = statusBarHeight + kTopSearchButtonHeight;

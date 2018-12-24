@@ -52,6 +52,10 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)registerCells:(UITableView *)tableView
 {
+    [tableView registerClass:[FHHomeHeaderTableViewCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeHeaderTableViewCell class])];
+    
+    [tableView registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
+    
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
@@ -553,7 +557,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)fillAllHomeHeaderCell:(FHHomeHeaderTableViewCell *)cell withModel:(FHConfigDataModel *)model
 {
-    cell.refreshUI;
+    [cell refreshUI:FHHomeHeaderCellPositionTypeForFindHouse];
 }
 
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
@@ -594,6 +598,10 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (NSString *)configIdentifier:(JSONModel *)model
 {
+    if ([model isKindOfClass:[FHConfigDataModel class]]) {
+        return NSStringFromClass([FHHomeHeaderTableViewCell class]);
+    }
+    
     if ([model isKindOfClass:[FHConfigDataOpDataModel class]]) {
         return NSStringFromClass([FHHomeEntrancesCell class]);
     }
