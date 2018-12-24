@@ -38,7 +38,7 @@
     NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
     NSArray<FHFilterNodeModel*>* sortConfig = nil;
     if (showSort) {
-        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht];
+        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
     }
     _houseFilterViewModel = [factory createFilterPanelViewModel:ht
                                                    allCondition:showAllCondition

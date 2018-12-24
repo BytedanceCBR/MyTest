@@ -94,6 +94,7 @@ func requestGeneralConfig(
     if let gaodeCityId = gaodeCityId {
         params["gaode_city_id"] = gaodeCityId
     }
+    params["cityId"] = "122"
     return requestGeneralConfig(params: params, needCommonParams: needCommonParams)
 }
 
