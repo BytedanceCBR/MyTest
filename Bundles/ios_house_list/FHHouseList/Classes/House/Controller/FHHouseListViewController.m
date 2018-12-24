@@ -42,16 +42,10 @@
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
 
-
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 @property (nonatomic , copy) NSString *suggestionParams; // sug
 @property (nonatomic , copy) NSString *queryString;
 @property (nonatomic , strong) NSDictionary *tracerDict; // 埋点
-@property (nonatomic , assign) BOOL isNeedEncode; // 是否需要encode URL
-
-
-@property (nonatomic , strong) UIButton *testBtn;
-
 
 @end
 
@@ -70,9 +64,20 @@
         self.tracerModel.categoryName = [self categoryName];
         self.tracerDict = [paramObj.userInfo.allInfo tt_dictionaryValueForKey:@"tracer"];
         NSDictionary *sugDict = [paramObj.userInfo.allInfo tt_dictionaryValueForKey:@"sugParams"];
-        self.associationalWord = [sugDict tt_stringValueForKey:@"associateWord"];
-        self.suggestionParams = [sugDict tt_stringValueForKey:@"sug"];
-
+//        self.associationalWord = [sugDict tt_stringValueForKey:@"associateWord"];
+//        self.suggestionParams = [sugDict tt_stringValueForKey:@"sug"];
+        
+        self.associationalWord = [self placeholderByHouseType:self.houseType];
+        NSString *fullText = paramObj.queryParams[@"full_text"];
+        NSString *displayText = paramObj.queryParams[@"display_text"];
+        
+        if (fullText.length > 0) {
+            
+            self.associationalWord = fullText;
+        }else if (displayText.length > 0) {
+            
+            self.associationalWord = displayText;
+        }
         
     }
     return self;
@@ -169,7 +174,10 @@
         [wself.houseFilterBridge setFilterConditions:params];
         [wself.houseFilterBridge trigerConditionChanged];
     };
-    
+    _viewModel.sugSelectBlock = ^(TTRouteObject * _Nonnull routeObject) {
+        
+        [wself handleSugSelection:routeObject];
+    };
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
 //        [wself showNotify:message];
     };
@@ -188,6 +196,35 @@
         make.height.mas_equalTo(0.5);
     }];
 
+}
+
+#pragma mark 处理sug带回的houseType，导航栏placeholder，筛选器
+-(void)handleSugSelection:(TTRouteObject *)routeObject {
+    
+    NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
+    if (houseTypeStr.integerValue != self.houseType) {
+        
+        self.houseType = houseTypeStr.integerValue;
+        self.viewModel.houseType = self.houseType;
+        self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+
+    }
+    NSString *placeholder = [self placeholderByHouseType:self.houseType];
+    NSString *fullText = routeObject.paramObj.queryParams[@"full_text"];
+    NSString *displayText = routeObject.paramObj.queryParams[@"display_text"];
+
+    if (fullText.length > 0) {
+
+        placeholder = fullText;
+    }else if (displayText.length > 0) {
+        
+        placeholder = displayText;
+    }
+    [self refreshNavBar:self.houseType placeholder:placeholder];
+
+    [self.houseFilterBridge setFilterConditions:routeObject.paramObj.queryParams];
+    [self.houseFilterBridge trigerConditionChanged];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -252,79 +289,42 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     [self initNavbar];
     [self initFilter];
 
     [self setupUI];
 
-
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
 
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
-    
-    //    if (self.configModel.mapOpenUrl.length > 0) {
-    //
-    //        NSURL *url = [NSURL URLWithString:self.configModel.mapOpenUrl];
-    //        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-    //        [bridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.allParams updateFilterOnly:NO];
-    //
-    //    }else if (self.configModel.conditionParams) {
-    //        [bridge resetFilter:self.houseFilterViewModel withQueryParams:_configModel.conditionParams updateFilterOnly:NO];
-    //    }
-    
-    [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:_viewModel];
-    
-    // add by zjing for test
-//    self.testBtn = [[UIButton alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [self.testBtn addTarget:self action:@selector(testBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    self.testBtn.backgroundColor = [UIColor redColor];
-    [self.view addSubview: self.testBtn];
-    
     [self.houseFilterViewModel trigerConditionChanged];
 
 }
 
--(FHHouseType)randomHouseType {
+-(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder {
     
-    FHHouseType houseType = arc4random() % 5;
-    return houseType;
-}
--(void)testBtnDidClick:(UIButton *)btn {
-    
-    FHHouseType houseType = [self randomHouseType];
     if (houseType == FHHouseTypeRentHouse || houseType == FHHouseTypeSecondHandHouse) {
         
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
     }else {
-        [self.navbar refreshNavbarType:FHFakeInputNavbarTypeDefault];
 
+        [self.navbar refreshNavbarType:FHFakeInputNavbarTypeDefault];
     }
-    if (self.associationalWord.length > 0) {
-        
-        self.navbar.placeHolder = self.associationalWord;
-    }else {
-        
-        self.navbar.placeHolder = [self placeholderByHouseType:houseType];
-    }
-    [btn setTitle:[NSString stringWithFormat:@"houseType: %d",houseType] forState:UIControlStateNormal];
-    
+    self.navbar.placeHolder = placeholder;
+    self.associationalWord = placeholder;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         [self.view endEditing:YES];
     }
 }
 
--(void)dealloc
-{
-//    [self tryCallbackOpenUrl];
-    
+-(void)dealloc {
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
@@ -352,7 +352,6 @@
     [self.view addSubview:self.filterPanel];
 
     [self.view bringSubviewToFront:self.filterBgControl];
-
 
 }
 
@@ -405,7 +404,7 @@
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
-        
+
     }
     return _tableView;
 }

@@ -10,6 +10,7 @@
 #import "FHHomeCellHelper.h"
 #import <UITableView+FDTemplateLayoutCell.h>
 #import "FHPlaceHolderCell.h"
+#import "FHEnvContext.h"
 
 static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
 static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
@@ -36,7 +37,10 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
-        JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
+        JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if (!model) {
+            model = [[FHEnvContext sharedInstance] getConfigFromLocal];
+        }
         NSString *identifier = [FHHomeCellHelper configIdentifier:model];
         
         FHHomeBaseTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -58,7 +62,7 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
-        return [FHHomeCellHelper heightForFHHomeHeaderCellViewType];
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
     if (self.showPlaceHolder) {

@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHClient.h"
 #import "TTBaseMacro.h"
+#import "FHHomeConfigManager.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -54,9 +55,26 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isNetworkConnected;
 
 /*
+  app启动调用
+ */
+- (void)onStartApp;
+
+/*
+  config变化更新cache
+ */
+- (void)updateConfigCache;
+
+/*
  
  */
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
+
+//从缓存中获取config数据
+- (FHConfigDataModel *)getConfigFromCache;
+
+//从本地磁盘获取config数据
+- (FHConfigDataModel *)getConfigFromLocal;
+
 
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal;

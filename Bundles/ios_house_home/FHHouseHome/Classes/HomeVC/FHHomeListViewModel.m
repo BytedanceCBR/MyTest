@@ -9,6 +9,7 @@
 #import "FHHomeMainTableViewDataSource.h"
 #import "FHHomeConfigManager.h"
 #import "FHHomeSectionHeader.h"
+#import "FHEnvContext.h"
 
 @interface FHHomeListViewModel()
 
@@ -36,7 +37,7 @@
         self.dataSource.showPlaceHolder = YES;
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
-        
+
         self.tableViewV.hasMore = YES;
         
         // 下拉刷新，修改tabbar条和请求数据
@@ -54,11 +55,15 @@
 
 - (void)reloadHomeListTable
 {
-    JSONModel *model = [FHHomeConfigManager sharedInstance].currentDataModel;
-    if (model) {
-        self.dataSource.modelsArray = @[model];
-    }
-    [self.tableViewV reloadData];
+//    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//    if (!dataModel) {
+//        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+//    }
+    self.dataSource.showPlaceHolder = NO;
+    [self.tableViewV reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+//    if (self.dataModel) {
+//        self.dataSource.modelsArray = @[dataModel];
+//    }
 }
 
 

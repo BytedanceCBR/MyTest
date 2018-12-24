@@ -34,7 +34,6 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , copy) NSString *searchId;
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
@@ -622,9 +621,12 @@
     allInfo[@"houseSearch"] = houseSearchDict;
     allInfo[@"tracer"] = tracerDict;
     
-    if (self.setConditionsBlock) {
+    NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
+    self.houseType = houseTypeStr.integerValue;
+    
+    if (self.sugSelectBlock) {
         
-        self.setConditionsBlock(routeObject.paramObj.queryParams);
+        self.sugSelectBlock(routeObject);
     }
 
 }
@@ -733,14 +735,97 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     id model = self.houseList[indexPath.row];
-    if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
-        FHSearchHouseDataItemsModel *houseModel = (FHSearchHouseDataItemsModel *)model;
-//        if (self.listController.showHouseDetailBlock) {
-//            self.listController.showHouseDetailBlock(model,indexPath.row);
-//        }
+    
+    if (indexPath.row < self.houseList.count) {
+        
+        switch (self.houseType) {
+            case FHHouseTypeNewHouse:
+                [self jump2NewDetailPage:indexPath];
+                break;
+            case FHHouseTypeSecondHandHouse:
+                [self jump2OldDetailPage:indexPath];
+                break;
+            case FHHouseTypeRentHouse:
+                [self jump2RentDetailPage:indexPath];
+                break;
+            case FHHouseTypeNeighborhood:
+                [self jump2NeighborDetailPage:indexPath];
+                break;
+            default:
+                break;
+        }
     }
 }
 
+#pragma mark - 详情页跳转
+-(void)jump2NewDetailPage:(NSIndexPath *)indexPath {
+    
+    id model = self.houseList[indexPath.row];
+    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
+
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        FHNewHouseItemModel *theModel = (FHNewHouseItemModel *)model;
+        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    
+}
+
+-(void)jump2OldDetailPage:(NSIndexPath *)indexPath {
+    
+    id model = self.houseList[indexPath.row];
+    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        
+        FHSearchHouseDataItemsModel *theModel = (FHSearchHouseDataItemsModel *)model;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid]];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+-(void)jump2RentDetailPage:(NSIndexPath *)indexPath {
+    
+    id model = self.houseList[indexPath.row];
+    if ([model isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        
+        FHHouseRentDataItemsModel *theModel = (FHHouseRentDataItemsModel *)model;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id]];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+-(void)jump2NeighborDetailPage:(NSIndexPath *)indexPath {
+    
+    id model = self.houseList[indexPath.row];
+    if ([model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
+        
+        FHHouseNeighborDataItemsModel *theModel = (FHHouseNeighborDataItemsModel *)model;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id]];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
 
 
 @end
