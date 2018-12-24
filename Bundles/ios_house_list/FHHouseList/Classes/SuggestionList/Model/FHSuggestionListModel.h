@@ -7,11 +7,12 @@
 
 #import <Foundation/Foundation.h>
 #import "JSONModel.h"
+#import "FHBaseModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 // FHSuggestionClearHistoryResponseModel
-@interface  FHSuggestionClearHistoryResponseModel  : JSONModel
+@interface  FHSuggestionClearHistoryResponseModel  : JSONModel <FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
@@ -74,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionResponseModel  : JSONModel
+@interface  FHSuggestionResponseModel  : JSONModel  <FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
@@ -109,7 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionSearchHistoryResponseModel  : JSONModel
+@interface  FHSuggestionSearchHistoryResponseModel  : JSONModel<FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
@@ -143,7 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHGuessYouWantResponseModel  : JSONModel
+@interface  FHGuessYouWantResponseModel  : JSONModel<FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;

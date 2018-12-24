@@ -11,16 +11,14 @@
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHPopupMenuView.h"
-#import "FHSuggestionItemCell.h"
 #import "FHSuggestionListViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong)     FHSuggestionListNavBar     *naviBar;
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
-@property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
-@property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 
@@ -41,14 +39,15 @@
 //        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
 //
 //        NSLog(@"%@\n", self.searchId);
-        NSLog(@"%@\n",paramObj.userInfo.allInfo);
-        _retBlk = paramObj.userInfo.allInfo[@"callback_block"];
-        NSLog(@"_wBlk:%@",_retBlk);
-        TTRouteObject *route = nil;//= [[TTRoute sharedRoute] routeObjWithOpenURL:NSURL URLWithString:paramObj userInfo:paramObj];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.retBlk(route);
-        });
-        _viewModel = [[FHSuggestionListViewModel alloc] init];
+//        NSLog(@"%@\n",paramObj.userInfo.allInfo);
+//        _retBlk = paramObj.userInfo.allInfo[@"callback_block"];
+//        NSLog(@"_wBlk:%@",_retBlk);
+//        TTRouteObject *route = nil;//= [[TTRoute sharedRoute] routeObjWithOpenURL:NSURL URLWithString:paramObj userInfo:paramObj];
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            self.retBlk(route);
+//        });
+        _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
+        _viewModel.houseType = self.houseType;
     }
     return self;
 }
@@ -133,6 +132,7 @@
     [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(size.width);
     }];
+    self.viewModel.houseType = self.houseType;
 }
 
 - (void)searchTypeBtnClick:(UIButton *)btn {
@@ -180,6 +180,9 @@
     _historyTableView.hidden = hasText;
     if (hasText) {
         [self requestSuggestion:text];
+    } else {
+        // 清空sug列表数据
+        [self.viewModel clearSugTableView];
     }
 }
 
@@ -219,7 +222,8 @@
 
 // sug建议
 - (void)requestSuggestion:(NSString *)text {
-    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
 }
 
 #pragma mark - dealloc
