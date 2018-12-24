@@ -11,9 +11,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSuggestionItemCell : UITableViewCell
 
+@property (nonatomic, strong)   UILabel       *label;
+@property (nonatomic, strong)   UILabel       *secondaryLabel;
+
 @end
 
 @interface FHSuggestionNewHouseItemCell : UITableViewCell
+
+@property (nonatomic, strong)   UILabel       *label;
+@property (nonatomic, strong)   UILabel       *secondaryLabel;
+@property (nonatomic, strong)   UILabel       *subLabel;
+@property (nonatomic, strong)   UILabel       *secondarySubLabel;
 
 @end
 

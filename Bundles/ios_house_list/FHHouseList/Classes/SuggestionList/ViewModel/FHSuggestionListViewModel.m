@@ -62,13 +62,33 @@
         }
         return cell;
     } else if (tableView.tag == 2) {
-        // 联想词
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
-        if (indexPath.row < self.sugListData.count) {
-            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-            cell.textLabel.text = model.text;
+        // 联想词列表
+        if (self.houseType == FHHouseTypeNewHouse) {
+            // 新房
+            FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
+            if (indexPath.row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                cell.label.text = model.text;
+                cell.subLabel.text = model.text2;
+                cell.secondaryLabel.text = model.tips;
+                cell.secondarySubLabel.text = model.tips2;
+            }
+            return cell;
+        } else {
+            FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+            if (indexPath.row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                if (model.text.length > 0) {
+                    NSString *text = model.text;
+                    if (model.text2.length > 0) {
+                        text = [NSString stringWithFormat:@"%@ (%@)", text, model.text2];
+                    }
+                    cell.label.text = text;
+                }
+                cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
+            }
+            return cell;
         }
-        return cell;
     }
 }
 
