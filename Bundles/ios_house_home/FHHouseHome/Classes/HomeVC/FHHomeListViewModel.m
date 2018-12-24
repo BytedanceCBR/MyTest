@@ -8,14 +8,17 @@
 #import "FHHomeListViewModel.h"
 #import "FHHomeMainTableViewDataSource.h"
 #import "FHHomeConfigManager.h"
+#import "FHHomeSectionHeader.h"
 
 @interface FHHomeListViewModel()
 
 @property (nonatomic, strong) UITableView *tableViewV;
-
+@property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, strong) FHHomeMainTableViewDataSource *dataSource;
 
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
+
+@property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 
 @end
 
@@ -25,12 +28,25 @@
 {
     self = [super init];
     if (self) {
+        self.categoryView = [FHHomeSectionHeader new];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
-
+        self.dataSource.categoryView = self.categoryView;
+        self.dataSource.showPlaceHolder = YES;
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
+        
+        self.tableViewV.hasMore = YES;
+        
+        // 下拉刷新，修改tabbar条和请求数据
+        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
+            
+        }];
+        
+        [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
+            
+        }];
     }
     return self;
 }

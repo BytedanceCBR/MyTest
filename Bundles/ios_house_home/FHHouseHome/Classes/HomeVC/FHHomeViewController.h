@@ -7,10 +7,12 @@
 
 #import "FHBaseViewController.h"
 #import "TTVideoFeedListParameter.h"
+#import "UIView+Refresh_ErrorHandler.h"
+#import "UIScrollView+Refresh.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHomeViewController : FHBaseViewController
+@interface FHHomeViewController : FHBaseViewController <UIViewControllerErrorHandler>
 
 @property (nonatomic, strong)NSString *baseView;
 

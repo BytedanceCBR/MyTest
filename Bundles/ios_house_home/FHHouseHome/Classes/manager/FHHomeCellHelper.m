@@ -20,6 +20,8 @@
 #import <TTTracker.h>
 #import "TTDeviceHelper.h"
 #import "FHHomeHeaderTableViewCell.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHPlaceHolderCell.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -53,6 +55,10 @@ static NSMutableArray  * _Nullable identifierArr;
 + (void)registerCells:(UITableView *)tableView
 {
     [tableView registerClass:[FHHomeHeaderTableViewCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeHeaderTableViewCell class])];
+    
+    [tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+    
+    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     
     [tableView registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
