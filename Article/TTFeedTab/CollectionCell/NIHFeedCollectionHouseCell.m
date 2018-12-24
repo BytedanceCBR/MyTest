@@ -11,12 +11,14 @@
 #import "TTCategory.h"
 #import "Bubble-Swift.h"
 #import "TTTopBar.h"
+#import "FHHomeViewController.h"
 #import "UIScrollView+Refresh.h"
 
 @interface NIHFeedCollectionHouseCell () // <ExploreMixedListBaseViewDelegate>
 //@property (nonatomic, strong) ExploreMixedListView *listView;
 @property (nonatomic, strong) TTCategory *category;
 
+//@property (nonatomic, strong) FHHomeViewController *houseListViewController;
 @property (nonatomic, strong) HomeViewController *houseListViewController;
 
 @end
@@ -66,7 +68,6 @@
 - (void)configHouseListVC
 {
     if (self.houseListViewController) {
-        [self.houseListViewController prepareForReuse];
         return;
     }
     CGFloat topPadding = 0;
@@ -82,6 +83,7 @@
     [self.contentView addSubview:self.houseListViewController.view];
     [self.houseListViewController didMoveToParentViewController:viewController];
     [self.houseListViewController setListTopInset:topPadding BottomInset:bottomPadding];
+//    [self.houseListViewController setTopEdgesTop:topPadding andBottom:bottomPadding];
 
     CGFloat statusBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     CGFloat topOffset = statusBarHeight + kTopSearchButtonHeight;

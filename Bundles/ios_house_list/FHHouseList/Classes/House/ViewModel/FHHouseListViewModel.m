@@ -23,8 +23,9 @@
 #import <UIScrollView+Refresh.h>
 #import "FHSearchFilterOpenUrlModel.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "FHMapSearchOpenUrlDelegate.h"
 
-@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
 @property(nonatomic , strong) FHErrorView *maskView;
 
@@ -43,7 +44,8 @@
 @property (nonatomic , assign) BOOL isRefresh;
 @property (nonatomic , copy) NSString *query;
 @property (nonatomic , copy) NSString *condition;
-@property (nonatomic , assign) BOOL needEncode;
+
+@property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
 
 @end
 
@@ -109,18 +111,12 @@
     NSString *query = [_filterOpenUrlMdodel query];
     NSInteger offset = 0;
 
-    BOOL needEncode = self.needEncode;
-
     NSMutableDictionary *param = [NSMutableDictionary new];
 
     NSString *searchId = self.searchId;
 
     // add by zjing for test
     NSLog(@"zjing query: %@, search id: %@",query, searchId);
-    if (needEncode) {
-
-        query = [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    }
     
     if (isRefresh) {
         
@@ -211,6 +207,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -283,6 +280,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -355,6 +353,7 @@
             
             wself.searchId = houseModel.searchId;
             self.showPlaceHolder = NO;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -428,6 +427,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -460,6 +460,7 @@
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
@@ -530,7 +531,7 @@
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
-    NSDictionary *dict = @{@"house_type":@(FHHouseTypeSecondHandHouse) ,
+    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
                            @"from_home":@(3), // list
                            @"sug_delegate":sugDelegateTable
@@ -542,8 +543,64 @@
     
 }
 
+#pragma mark 地图找房
 -(void)showMapSearch {
     
+    if (self.mapFindHouseOpenUrl.length > 0) {
+        // FIXME: zjing log
+//        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
+//        var query = ""
+//        if  !openUrl.contains("enter_category") {
+//            query = "enter_category=\(catName)"
+//        }
+//        if !openUrl.contains("origin_from") {
+//            query = "\(query)&origin_from=\(originFrom)"
+//        }
+//
+//        if !openUrl.contains("origin_search_id") {
+//            query = "\(query)&origin_search_id=\(originSearchId)"
+//        }
+//        if !openUrl.contains("enter_from"){
+//            query = "\(query)&enter_from=\(catName)"
+//        }
+//        if !openUrl.contains("element_from"){
+//            query = "\(query)&element_from=\(elementName)"
+//        }
+//        if !openUrl.contains("search_id"){
+//            query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
+//        }
+//
+//
+//        if query.count > 0 {
+//            openUrl = "\(openUrl)&\(query)"
+//        }
+        
+        //需要重置非过滤器条件，以及热词placeholder
+        self.closeConditionFilter();
+
+        NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        
+        NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
+        [hashMap addObject:self];
+        dict[OPENURL_CALLBAK] = hashMap;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+
+}
+
+#pragma mark - map url delegate
+-(void)handleHouseListCallback:(NSString *)openUrl {
+    
+    if ([self.houseListOpenUrl isEqualToString:openUrl]) {
+        return;
+    }
+    TTRouteParamObj *routeObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
+    if (self.setConditionsBlock) {
+        
+        self.setConditionsBlock(routeObj.queryParams);
+    }
     
 }
 
@@ -551,7 +608,7 @@
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     // FIXME: by zjing log
     //JUMP to cat list page
-    [self.listVC.navigationController popViewControllerAnimated:NO];
+    [self.listVC.navigationController popViewControllerAnimated:YES];
     
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     NSMutableDictionary *tracerDict = [self baseLogParam];
@@ -565,12 +622,11 @@
     allInfo[@"houseSearch"] = houseSearchDict;
     allInfo[@"tracer"] = tracerDict;
     
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:allInfo];
-    
-    routeObject.paramObj.userInfo = userInfo;
-    //    self.fi
-    [[TTRoute sharedRoute] openURLByPushViewController:routeObject.paramObj.sourceURL userInfo:routeObject.paramObj.userInfo];
-    
+    if (self.setConditionsBlock) {
+        
+        self.setConditionsBlock(routeObject.paramObj.queryParams);
+    }
+
 }
 
 -(void)resetCondition {
@@ -626,11 +682,14 @@
         FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
-        JSONModel *model = self.houseList[indexPath.row];
-        [cell updateWithHouseModel:model isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
-        [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:isLastCell ? 20 : 0];
+//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
+        if (indexPath.row < self.houseList.count) {
+            
+            JSONModel *model = self.houseList[indexPath.row];
+            [cell updateWithHouseModel:model isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+            [cell refreshTopMargin: 20];
+            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        }
         return cell;
         
     }else {
@@ -652,7 +711,7 @@
     if (!self.showPlaceHolder) {
 
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
+//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
         return isLastCell ? 125 : 105;
 
     }

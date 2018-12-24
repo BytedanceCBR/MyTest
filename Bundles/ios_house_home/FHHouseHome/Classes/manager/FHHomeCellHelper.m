@@ -19,6 +19,7 @@
 #import "FHHouseBridgeManager.h"
 #import <TTTracker.h>
 #import "TTDeviceHelper.h"
+#import "FHHomeHeaderTableViewCell.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -209,6 +210,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
 }
 
+#pragma mark 填充数据 fill data =======================
+
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
 {
     FHHomeEntrancesCell *cellEntrance = cell;
@@ -333,11 +336,6 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [cellEntrance setNeedsLayout];
     [cellEntrance layoutIfNeeded];
-    
-}
-
-- (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param
-{
     
 }
 
@@ -552,9 +550,16 @@ static NSMutableArray  * _Nullable identifierArr;
     };
 }
 
+
++ (void)fillAllHomeHeaderCell:(FHHomeHeaderTableViewCell *)cell withModel:(FHConfigDataModel *)model
+{
+    cell.refreshUI;
+}
+
 + (void)configureCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
 {
     cell.fd_enforceFrameLayout = NO; //
+    
     if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
         [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model];
     }
@@ -569,6 +574,23 @@ static NSMutableArray  * _Nullable identifierArr;
     }
 }
 
+
+/**
+ * 根据数据填充首页列表cell
+ */
++ (void)configureHomeListCell:(FHHomeBaseTableCell *)cell withJsonModel:(JSONModel *)model
+{
+    if([cell isKindOfClass:[FHHomeHeaderTableViewCell class]] && [model isKindOfClass:[FHConfigDataModel class]])
+    {
+        [self fillAllHomeHeaderCell:(FHHomeHeaderTableViewCell *)cell withModel:(FHConfigDataModel *)model];
+    }
+}
+
+
+- (void)openRouteUrl:(NSString *)url andParams:(NSDictionary *)param
+{
+    
+}
 
 + (NSString *)configIdentifier:(JSONModel *)model
 {

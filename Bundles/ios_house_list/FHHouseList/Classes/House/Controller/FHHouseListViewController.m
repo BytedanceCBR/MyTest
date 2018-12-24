@@ -17,10 +17,11 @@
 #import "FHHouseListViewModel.h"
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHConditionFilterViewModel.h"
 
 #define kFilterBarHeight 44
 
-@interface FHHouseListViewController ()<TTRouteInitializeProtocol,FHHouseListViewModelDelegate>
+@interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
 @property (nonatomic , strong) UIView *containerView;
@@ -36,7 +37,7 @@
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 
-@property (nonatomic , strong) FHBaseHouseListViewModel *viewModel;
+@property (nonatomic , strong) FHHouseListViewModel *viewModel;
 
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -142,6 +143,8 @@
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
     
+    [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
+    
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
     self.viewModel.viewModelDelegate = self;
     
@@ -160,6 +163,11 @@
     
     _viewModel.getConditions = ^NSString * _Nonnull{
         return [wself.houseFilterBridge getConditions];
+    };
+    _viewModel.setConditionsBlock = ^(NSDictionary * _Nonnull params) {
+        
+        [wself.houseFilterBridge setFilterConditions:params];
+        [wself.houseFilterBridge trigerConditionChanged];
     };
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
@@ -276,7 +284,7 @@
     self.testBtn.backgroundColor = [UIColor redColor];
     [self.view addSubview: self.testBtn];
     
-    [self.viewModel loadData:YES];
+    [self.houseFilterViewModel trigerConditionChanged];
 
 }
 
@@ -374,6 +382,8 @@
     //
 //    [self.viewModel reloadData];
 }
+
+
 
 #pragma mark - lazy load
 

@@ -8,6 +8,7 @@
 #import "FHEnvContext.h"
 #import "TTTrackerWrapper.h"
 #import "FHUtils.h"
+#import "TTReachability.h"
 
 @implementation FHEnvContext
 
@@ -29,6 +30,11 @@
         pramsDict[@"event_type"] = kTracerEventType;
         [TTTrackerWrapper eventV3:traceKey params:pramsDict];
     }
+}
+
++ (BOOL)isNetworkConnected
+{
+    return [TTReachability isNetworkConnected];
 }
 
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key

@@ -26,7 +26,7 @@
 #import "UIColor+Theme.h"
 #import <UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
-
+#import "FHMapSearchOpenUrlDelegate.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -490,4 +490,3 @@
 
 @end
 
-NSString *const OPENURL_CALLBAK = @"openurl_callback";;

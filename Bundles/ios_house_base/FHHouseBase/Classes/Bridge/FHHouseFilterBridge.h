@@ -37,6 +37,11 @@
 
 -(void)trigerConditionChanged;
 
+@optional
+
+-(void)setFilterConditions:(NSDictionary*)params;
+
+
 @end
 
 
