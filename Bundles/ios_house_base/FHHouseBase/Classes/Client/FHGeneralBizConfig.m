@@ -8,6 +8,7 @@
 #import "FHGeneralBizConfig.h"
 #import <YYCache.h>
 #import "FHUtils.h"
+#import "FHHomeConfigManager.h"
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -25,6 +26,17 @@ static NSString *const kGeneralKey = @"config";
     }
     return _generalConfigCache;
 }
+
+- (void)onStartAppGeneralCache
+{
+    self.configCache = [self getGeneralConfigFromLocal];
+}
+
+- (void)updataCurrentConfigCache
+{
+    self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
+}
+
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal
 {

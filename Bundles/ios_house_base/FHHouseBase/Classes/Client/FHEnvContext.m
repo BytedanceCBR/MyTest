@@ -14,6 +14,8 @@
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) FHGeneralBizConfig *generalBizConfig;
+@property (nonatomic, strong) TTReachability *reachability;
+
 @end
 
 @implementation FHEnvContext
@@ -56,6 +58,23 @@
     
     
     
+}
+
+- (void)onStartApp
+{
+    [self.reachability startNotifier];
+    
+    [self.generalBizConfig onStartAppGeneralCache];
+}
+
+- (void)updateConfigCache
+{
+    [self.generalBizConfig updataCurrentConfigCache];
+}
+
+- (FHConfigDataModel *)getConfigFromCache
+{
+    return self.generalBizConfig.configCache;
 }
 
 - (FHConfigDataModel *)getConfigFromLocal
@@ -101,4 +120,13 @@
     }
     return _client;
 }
+
+- (TTReachability *)reachability
+{
+    if (!_reachability) {
+        _reachability = [TTReachability new];
+    }
+    return _reachability;
+}
+
 @end

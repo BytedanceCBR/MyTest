@@ -59,7 +59,8 @@
 @property (nonatomic, copy) NSString *lastRefreshedCategoryID;
 @property (nonatomic, assign) BOOL hasReloadData;
 @property (nonatomic, assign) BOOL hasShownCategoryView;
-@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+//@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) NSArray *guideControlArray;
 @property (nonatomic, strong) TTSeachBarView *searchBar;
@@ -213,13 +214,14 @@
 - (void)setupTopBar {
     [self.view addSubview:self.topBar];
     
-    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+//    FHHomeSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
     self.panelVM = panelVM;
     
-    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
-    {
-        [self.panelVM fetchSearchPanelRollData];
-    }
+//    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
+//    {
+//        [self.panelVM fetchSearchPanelRollData];
+//    }
 }
 
 // only get category when local storage only has default category

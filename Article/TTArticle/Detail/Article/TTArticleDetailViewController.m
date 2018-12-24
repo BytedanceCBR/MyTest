@@ -1213,6 +1213,7 @@
             if ([natantView isKindOfClass:[TTDetailNatantRewardView class]]) {
                 TTDetailNatantRewardView *rewardView = (TTDetailNatantRewardView *)natantView;
                 rewardView.goDetailLabel = self.detailModel.clickLabel;
+                rewardView.hidden = YES;
                 TTActionSheetSourceType source = TTActionSheetSourceTypeDislike;
                 NSString *trackSource = nil;
                 NSString *style = nil;
@@ -1295,7 +1296,8 @@
             break;
         }
         CASE (@"TTDetailNatantRewardView") {
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
+            paddingHeight = 0;
+//            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
             break;
         }
         CASE (@"ExploreDetailADContainerView") {

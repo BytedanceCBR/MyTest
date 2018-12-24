@@ -29,6 +29,7 @@
 #import "TTAlphaThemedButton.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "FHHomeSearchPanelView.h"
+#import "Bubble-Swift.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 
@@ -109,7 +110,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
      [self.backgroundImageView addSubview:_searchBarImageView];
      */
     
-    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+//    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
     [self.backgroundImageView addSubview:_pageSearchPanel];
     
     /*

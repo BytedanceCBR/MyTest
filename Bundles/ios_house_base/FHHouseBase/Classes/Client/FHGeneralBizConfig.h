@@ -11,6 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHGeneralBizConfig : NSObject
+@property (nonatomic, strong) FHConfigDataModel *configCache;
+
+- (void)updataCurrentConfigCache;
+
+- (void)onStartAppGeneralCache;
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal;
 

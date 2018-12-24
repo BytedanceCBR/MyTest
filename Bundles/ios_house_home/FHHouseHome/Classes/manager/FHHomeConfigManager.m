@@ -8,6 +8,7 @@
 #import "FHHomeConfigManager.h"
 #import <TTRoute.h>
 #import <TTArticleCategoryManager.h>
+#import "FHEnvContext.h"
 
 @interface FHHomeConfigManager()
 
@@ -49,6 +50,7 @@
             FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
             self.currentDataModel = dataModel;
             self.currentDictionary = configDict;
+            [[FHEnvContext sharedInstance] updateConfigCache];
             [self.configDataReplay sendNext:dataModel];
         }
     }
