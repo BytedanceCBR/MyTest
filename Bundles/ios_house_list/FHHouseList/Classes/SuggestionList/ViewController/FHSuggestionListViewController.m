@@ -35,7 +35,7 @@
 //        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
 //        self.houseId = paramObj.userInfo.allInfo[@"houseId"];
 //        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
-        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+//        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
 //        self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
 //        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
 //
@@ -47,8 +47,9 @@
 //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //            self.retBlk(route);
 //        });
+        _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
-        _viewModel.houseType = self.houseType;
+        _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];;
     }
     return self;
 }
@@ -133,6 +134,9 @@
 }
 
 - (void)setHouseType:(FHHouseType)houseType {
+    if (_houseType == houseType) {
+        return;
+    }
     _houseType = houseType;
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
