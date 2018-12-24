@@ -33,11 +33,16 @@
             ht = HouseTypeSecondHandHouse;
             break;
     }
+
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
     NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
+    NSArray<FHFilterNodeModel*>* sortConfig = nil;
+    if (showSort) {
+        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
+    }
     _houseFilterViewModel = [factory createFilterPanelViewModel:ht
                                                    allCondition:showAllCondition
-                                                     isSortable:showSort
+                                                        sortConfig: sortConfig
                                                          config:configs];
     return _houseFilterViewModel;
 }
@@ -90,6 +95,11 @@
 
 -(void)trigerConditionChanged {
     [_houseFilterViewModel trigerConditionChanged];
+}
+
+-(void)setFilterConditions:(NSDictionary*)params {
+    
+    [_houseFilterViewModel setFilterConditions:params];
 }
 
 @end

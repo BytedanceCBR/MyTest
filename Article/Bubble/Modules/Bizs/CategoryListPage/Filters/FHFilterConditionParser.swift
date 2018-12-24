@@ -8,6 +8,18 @@
 import Foundation
 @objc
 class FHFilterConditionParser: NSObject {
+
+    @objc
+    static func getSortConfigByHouseType(houseType: HouseType) -> [FHFilterNodeModel] {
+        let config = sortConfigByHouseType(houseType: houseType)
+        if let config = config {
+            let result = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: config)
+            return result
+        } else {
+            return []
+        }
+    }
+
     @objc
     static func getConfigByHouseType(houseType: HouseType) -> [FHFilterNodeModel] {
         let config = filterConfigByHouseType(houseType: houseType)
@@ -87,6 +99,22 @@ class FHFilterConditionParser: NSObject {
             return searchConfigs?.neighborhoodFilter
         default:
             return searchConfigs?.filter
+        }
+    }
+
+    static func sortConfigByHouseType(houseType: HouseType) -> [SearchConfigFilterItem]? {
+        let searchConfigs = EnvContext.shared.client.configCacheSubject.value
+        switch houseType {
+        case .secondHandHouse:
+            return searchConfigs?.filterOrder
+        case .rentHouse:
+            return searchConfigs?.rentFilterOrder
+        case .newHouse:
+            return searchConfigs?.courtFilterOrder
+        case .neighborhood:
+            return searchConfigs?.neighborhoodFilterOrder
+        default:
+            return searchConfigs?.filterOrder
         }
     }
 }

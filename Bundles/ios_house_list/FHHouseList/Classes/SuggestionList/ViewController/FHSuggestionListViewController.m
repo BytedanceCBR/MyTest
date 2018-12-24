@@ -124,6 +124,10 @@
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+    tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    tableView.estimatedSectionFooterHeight = 0;
+    tableView.estimatedSectionHeaderHeight = 0;
+    
     return tableView;
 }
 
@@ -212,6 +216,12 @@
 
 // 执行网络请求
 - (void)requestData {
+    // Sug
+    NSString *text = self.naviBar.searchInput.text;
+    if (text.length > 0) {
+         [self requestSuggestion:text];
+    }
+    // 历史记录 + 猜你想搜
     [self.viewModel clearHistoryTableView];
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];

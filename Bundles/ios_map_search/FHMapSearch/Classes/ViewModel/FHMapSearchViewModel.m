@@ -860,6 +860,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }    
 }
 
+-(void)mapInitComplete:(MAMapView *)mapView
+{
+    [self requestHouses:NO showTip:YES];
+}
+
 -(BOOL)shouldRequest:(CLLocationCoordinate2D )currentCenter
 {
     CGPoint ccenter = [_mapView convertCoordinate:currentCenter toPointToView:_mapView];
@@ -938,7 +943,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             return;
         }
         if (self.showMode != FHMapSearchShowModeMap) {
-            //TODO: add condition into houselit bubble
             [self.houseListViewController.viewModel reloadingHouseData:condition];
             self.needReload = YES;
         }else{

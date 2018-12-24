@@ -117,5 +117,7 @@
 #import "FHFilterNodeModel.h"
 
 #import "FHEnvContext.h"
+#import "FHMapSearchOpenUrlDelegate.h"
+
 
 #endif /* Article_Bridging_Header_h */
