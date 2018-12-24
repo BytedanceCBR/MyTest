@@ -8,7 +8,10 @@
 #ifndef FHMapSearchOpenUrlDelegate_h
 #define FHMapSearchOpenUrlDelegate_h
 
+#define OPENURL_CALLBAK @"openurl_callback"
+
 @protocol FHMapSearchOpenUrlDelegate <NSObject>
+
 
 @required
 -(void)handleHouseListCallback:(NSString *)openUrl;

@@ -92,4 +92,9 @@
     [_houseFilterViewModel trigerConditionChanged];
 }
 
+-(void)setFilterConditions:(NSDictionary*)params {
+    
+    [_houseFilterViewModel setFilterConditions:params];
+}
+
 @end

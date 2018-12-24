@@ -23,8 +23,9 @@
 #import <UIScrollView+Refresh.h>
 #import "FHSearchFilterOpenUrlModel.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "FHMapSearchOpenUrlDelegate.h"
 
-@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
 
 @property(nonatomic , strong) FHErrorView *maskView;
 
@@ -43,7 +44,8 @@
 @property (nonatomic , assign) BOOL isRefresh;
 @property (nonatomic , copy) NSString *query;
 @property (nonatomic , copy) NSString *condition;
-@property (nonatomic , assign) BOOL needEncode;
+
+@property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
 
 @end
 
@@ -109,18 +111,12 @@
     NSString *query = [_filterOpenUrlMdodel query];
     NSInteger offset = 0;
 
-    BOOL needEncode = self.needEncode;
-
     NSMutableDictionary *param = [NSMutableDictionary new];
 
     NSString *searchId = self.searchId;
 
     // add by zjing for test
     NSLog(@"zjing query: %@, search id: %@",query, searchId);
-    if (needEncode) {
-
-        query = [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    }
     
     if (isRefresh) {
         
@@ -211,6 +207,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -283,6 +280,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -355,6 +353,7 @@
             
             wself.searchId = houseModel.searchId;
             self.showPlaceHolder = NO;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -428,6 +427,7 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
 
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
@@ -460,6 +460,7 @@
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
@@ -542,8 +543,37 @@
     
 }
 
+#pragma mark 地图找房
 -(void)showMapSearch {
     
+    if (self.mapFindHouseOpenUrl.length > 0) {
+        
+        //需要重置非过滤器条件，以及热词placeholder
+        self.closeConditionFilter();
+
+        NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        
+        NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
+        [hashMap addObject:self];
+        dict[OPENURL_CALLBAK] = hashMap;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+
+}
+
+#pragma mark - map url delegate
+-(void)handleHouseListCallback:(NSString *)openUrl {
+    
+    if ([self.houseListOpenUrl isEqualToString:openUrl]) {
+        return;
+    }
+    TTRouteParamObj *routeObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
+    if (self.setConditionsBlock) {
+        
+        self.setConditionsBlock(routeObj.queryParams);
+    }
     
 }
 
