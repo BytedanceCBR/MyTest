@@ -11,16 +11,15 @@
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHPopupMenuView.h"
-#import "FHSuggestionItemCell.h"
 #import "FHSuggestionListViewModel.h"
+#import "FHEnvContext.h"
+#import "ToastManager.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong)     FHSuggestionListNavBar     *naviBar;
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
-@property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
-@property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 
@@ -41,14 +40,15 @@
 //        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
 //
 //        NSLog(@"%@\n", self.searchId);
-        NSLog(@"%@\n",paramObj.userInfo.allInfo);
-        _retBlk = paramObj.userInfo.allInfo[@"callback_block"];
-        NSLog(@"_wBlk:%@",_retBlk);
-        TTRouteObject *route = nil;//= [[TTRoute sharedRoute] routeObjWithOpenURL:NSURL URLWithString:paramObj userInfo:paramObj];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.retBlk(route);
-        });
-        _viewModel = [[FHSuggestionListViewModel alloc] init];
+//        NSLog(@"%@\n",paramObj.userInfo.allInfo);
+//        _retBlk = paramObj.userInfo.allInfo[@"callback_block"];
+//        NSLog(@"_wBlk:%@",_retBlk);
+//        TTRouteObject *route = nil;//= [[TTRoute sharedRoute] routeObjWithOpenURL:NSURL URLWithString:paramObj userInfo:paramObj];
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            self.retBlk(route);
+//        });
+        _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
+        _viewModel.houseType = self.houseType;
     }
     return self;
 }
@@ -58,6 +58,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
 }
 
 - (void)setupUI {
@@ -90,6 +91,7 @@
 - (void)setupTableView {
     self.historyTableView  = [self createTableView];
     self.historyTableView.tag = 1;
+    self.historyTableView.hidden = NO;
     
     self.suggestTableView  = [self createTableView];
     self.suggestTableView.tag = 2;
@@ -133,6 +135,9 @@
     [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(size.width);
     }];
+    self.viewModel.houseType = self.houseType;
+    // 网络请求
+    [self requestData];
 }
 
 - (void)searchTypeBtnClick:(UIButton *)btn {
@@ -180,6 +185,9 @@
     _historyTableView.hidden = hasText;
     if (hasText) {
         [self requestSuggestion:text];
+    } else {
+        // 清空sug列表数据
+        [self.viewModel clearSugTableView];
     }
 }
 
@@ -202,24 +210,43 @@
 
 #pragma mark - Request
 
+// 执行网络请求
+- (void)requestData {
+    [self.viewModel clearHistoryTableView];
+    self.viewModel.loadRequestTimes = 0;
+    [self requestHistoryFromRemote];
+    [self requestGuessYouWantData];
+}
+
 // 历史记录
 - (void)requestHistoryFromRemote {
-    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        // TODO:add by zyk 有loadRequestTimes 自动加的逻辑需要处理吗？
+    } else {
+        [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
 }
 
 // 删除历史记录
 - (void)requestDeleteHistory {
-    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
 }
 
 // 猜你想搜
 - (void)requestGuessYouWantData {
-    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
 }
 
 // sug建议
 - (void)requestSuggestion:(NSString *)text {
-    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
 }
 
 #pragma mark - dealloc
