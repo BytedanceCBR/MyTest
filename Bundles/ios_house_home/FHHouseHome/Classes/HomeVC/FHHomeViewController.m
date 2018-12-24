@@ -109,6 +109,13 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.homeListViewModel reloadHomeListTable];
 }
 
+- (BOOL)tt_hasValidateData
+{
+    return YES;
+}
+
+
+
 
 /*
  #pragma mark - Navigation
