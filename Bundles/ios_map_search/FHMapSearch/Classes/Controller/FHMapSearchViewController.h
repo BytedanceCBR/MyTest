@@ -12,8 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *const OPENURL_CALLBAK ;
-
 typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 @class SearchConfigFilterItem;
@@ -45,11 +43,6 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 @end
 
 
-@protocol FHMapSearchOpenUrlDelegate <NSObject>
 
-@required
--(void)handleHouseListCallback:(NSString *)openUrl;
-
-@end
 
 NS_ASSUME_NONNULL_END

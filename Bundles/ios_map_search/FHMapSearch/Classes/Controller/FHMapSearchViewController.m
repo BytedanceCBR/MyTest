@@ -26,7 +26,7 @@
 #import "UIColor+Theme.h"
 #import <UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
-
+#import "FHMapSearchOpenUrlDelegate.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -303,8 +303,6 @@
     [self.navBar setTitle:self.title];
     [self.view bringSubviewToFront:self.navBar];
 
-    // 新筛选器调整后，进入界面首次callback请求需要有相应的VC触发
-    [self.houseFilterBridge trigerConditionChanged];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -492,4 +490,3 @@
 
 @end
 
-NSString *const OPENURL_CALLBAK = @"openurl_callback";;

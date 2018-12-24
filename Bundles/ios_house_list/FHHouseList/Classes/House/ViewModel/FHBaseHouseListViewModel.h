@@ -10,7 +10,6 @@
 #import "FHHouseType.h"
 #import "FHErrorView.h"
 #import <TTRoute.h>
-#import <FHHouseSuggestionDelegate.h>
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
@@ -24,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 对于二手房、租房等基础逻辑封装
  * 实现埋点接口
  */
-@interface FHBaseHouseListViewModel : NSObject <FHHouseFilterDelegate,FHHouseSuggestionDelegate>
+@interface FHBaseHouseListViewModel : NSObject <FHHouseFilterDelegate>
 
 //@property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
@@ -32,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^clearSortCondition)();
 @property(nonatomic , copy) NSString * (^getConditions)();
 @property(nonatomic , copy) void (^showNotify)(NSString *message);
+@property(nonatomic , copy) void (^setConditionsBlock)(NSDictionary *params);
 
 @property(nonatomic , weak) id<FHHouseListViewModelDelegate> viewModelDelegate;
 
