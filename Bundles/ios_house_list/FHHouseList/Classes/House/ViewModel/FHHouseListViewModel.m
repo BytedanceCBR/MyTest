@@ -25,7 +25,7 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "FHMapSearchOpenUrlDelegate.h"
 
-@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
+@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
 @property(nonatomic , strong) FHErrorView *maskView;
 
@@ -531,7 +531,7 @@
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
-    NSDictionary *dict = @{@"house_type":@(FHHouseTypeSecondHandHouse) ,
+    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
                            @"from_home":@(3), // list
                            @"sug_delegate":sugDelegateTable
@@ -547,6 +547,33 @@
 -(void)showMapSearch {
     
     if (self.mapFindHouseOpenUrl.length > 0) {
+        // FIXME: zjing log
+//        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
+//        var query = ""
+//        if  !openUrl.contains("enter_category") {
+//            query = "enter_category=\(catName)"
+//        }
+//        if !openUrl.contains("origin_from") {
+//            query = "\(query)&origin_from=\(originFrom)"
+//        }
+//
+//        if !openUrl.contains("origin_search_id") {
+//            query = "\(query)&origin_search_id=\(originSearchId)"
+//        }
+//        if !openUrl.contains("enter_from"){
+//            query = "\(query)&enter_from=\(catName)"
+//        }
+//        if !openUrl.contains("element_from"){
+//            query = "\(query)&element_from=\(elementName)"
+//        }
+//        if !openUrl.contains("search_id"){
+//            query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
+//        }
+//
+//
+//        if query.count > 0 {
+//            openUrl = "\(openUrl)&\(query)"
+//        }
         
         //需要重置非过滤器条件，以及热词placeholder
         self.closeConditionFilter();
@@ -581,7 +608,7 @@
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     // FIXME: by zjing log
     //JUMP to cat list page
-    [self.listVC.navigationController popViewControllerAnimated:NO];
+    [self.listVC.navigationController popViewControllerAnimated:YES];
     
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     NSMutableDictionary *tracerDict = [self baseLogParam];
@@ -595,12 +622,11 @@
     allInfo[@"houseSearch"] = houseSearchDict;
     allInfo[@"tracer"] = tracerDict;
     
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:allInfo];
-    
-    routeObject.paramObj.userInfo = userInfo;
-    //    self.fi
-    [[TTRoute sharedRoute] openURLByPushViewController:routeObject.paramObj.sourceURL userInfo:routeObject.paramObj.userInfo];
-    
+    if (self.setConditionsBlock) {
+        
+        self.setConditionsBlock(routeObject.paramObj.queryParams);
+    }
+
 }
 
 -(void)resetCondition {

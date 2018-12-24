@@ -37,22 +37,6 @@
     
 }
 
-#pragma mark - sug delegate
--(void)suggestionSelected:(TTRouteObject *)routeObject {
-    
-}
-
--(void)resetCondition {
-    
-}
-
--(void)backAction:(UIViewController *)controller
-{
-    [controller.navigationController popViewControllerAnimated:YES];
-}
-
-
-
 -(void)showInputSearch {
     
 }
