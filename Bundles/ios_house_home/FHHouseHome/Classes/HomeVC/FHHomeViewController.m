@@ -61,8 +61,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [FHHomeCellHelper registerCells:self.mainTableView];
     
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-    
-    // Do any additional setup after loading the view.
+        // Do any additional setup after loading the view.
 }
 
 - (void)willAppear

@@ -64,6 +64,7 @@
     _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
+    _segmentedControl.isNeedNetworkCheck = YES;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:14],NSFontAttributeName,

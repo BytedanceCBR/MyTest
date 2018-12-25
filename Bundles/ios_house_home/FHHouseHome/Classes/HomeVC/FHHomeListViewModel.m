@@ -12,8 +12,17 @@
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
 #import "FHHouseType.h"
+#import "FHHomeHouseModel.h"
 
 @interface FHHomeListViewModel()
+
+//var itemsDataCache: [String : [HouseItemInnerEntity]] = [:] //列表数据缓存
+//
+//var itemsSearchIdCache: [String : String] = [:] //searchid缓存
+//
+//var isItemsHasMoreCache: [String : Bool] = [:] //has more缓存
+//
+//var itemsTraceCache: [String : [IndexPath]] = [:] //埋点上报缓存
 
 @property (nonatomic, strong) UITableView *tableViewV;
 @property (nonatomic, assign) BOOL showPlaceHolder;
@@ -21,7 +30,10 @@
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) FHHouseType currentHouseType;
-
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <FHHomeHouseDataItemsModel *> *>* itemsDataCache;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
 @end
 
 @implementation FHHomeListViewModel
@@ -30,6 +42,8 @@
 {
     self = [super init];
     if (self) {
+        [self initItemsCaches];
+        
         self.categoryView = [FHHomeSectionHeader new];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
@@ -70,6 +84,14 @@
         }];
     }
     return self;
+}
+
+- (void)initItemsCaches
+{
+    self.itemsDataCache = [NSMutableArray new];
+    self.itemsSearchIdCache = [NSMutableArray new];
+    self.isItemsHasMoreCache = [NSMutableArray new];
+    self.itemsTraceCache = [NSMutableArray new];
 }
 
 - (void)requestOriginData
