@@ -11,16 +11,22 @@
 #import <UITableView+FDTemplateLayoutCell.h>
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
-
-static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
-static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
-
+#import "FHSingleImageInfoCell.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 
 @end
 
 @implementation FHHomeMainTableViewDataSource
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
+    }
+    return self;
+}
 
 #pragma mark - UITableViewDataSource
 
@@ -32,7 +38,10 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
     if (section == kFHHomeListHeaderBaseViewSection) {
         return 1;
     }
-    return 10;
+    if (self.showPlaceHolder) {
+        return 10;
+    }
+    return _modelsArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,15 +62,26 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
             return cell;
         }
         //to do 房源cell
-        return [UITableViewCell new];
+        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+        BOOL isFirstCell = (indexPath.row == 0);
+        BOOL isLastCell = (indexPath.row == self.modelsArray.count - 1);
+        if (indexPath.row < self.modelsArray.count) {
+            
+            JSONModel *model = self.modelsArray[indexPath.row];
+            JSONModel *modelSerach = [[FHSearchHouseDataItemsModel alloc] initWithDictionary:model.toDictionary error:nil];
+            [cell updateWithHouseModel:modelSerach isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+            [cell refreshTopMargin: 20];
+            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        }
+        return cell;
     }
-
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
+        NSLog(@"header height = %f",[[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]);
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
@@ -101,7 +121,7 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
     if (section == kFHHomeListHeaderBaseViewSection) {
         return 0;
     }
-    return 35;
+    return kFHHomeHeaderViewSectionHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

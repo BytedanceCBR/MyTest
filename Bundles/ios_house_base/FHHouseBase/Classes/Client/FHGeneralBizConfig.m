@@ -12,9 +12,12 @@
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
+static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 
 @interface FHGeneralBizConfig ()
 @property (nonatomic, strong) YYCache *generalConfigCache;
+@property (nonatomic, strong) YYCache *userSelectCache;
+
 @end
 
 @implementation FHGeneralBizConfig
@@ -27,6 +30,14 @@ static NSString *const kGeneralKey = @"config";
     return _generalConfigCache;
 }
 
+- (YYCache *)userSelectCache
+{
+    if (!_userSelectCache) {
+        _userSelectCache = [YYCache cacheWithName:kUserDefaultSelectKey];
+    }
+    return _userSelectCache;
+}
+
 - (void)onStartAppGeneralCache
 {
     self.configCache = [self getGeneralConfigFromLocal];
@@ -35,6 +46,22 @@ static NSString *const kGeneralKey = @"config";
 - (void)updataCurrentConfigCache
 {
     self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
+}
+
+- (void)updateUserSelectIndex:(NSNumber *)indexNum
+{
+    if ([indexNum isKindOfClass:[NSNumber class]]) {
+        [self.userSelectCache setObject:indexNum forKey:kUserDefaultSelectKey];
+    }
+}
+
+- (NSNumber *)getUserSelectIndexDiskCache
+{
+    NSObject *objectIndex = [self.userSelectCache objectForKey:kUserDefaultSelectKey];
+    if ([objectIndex isKindOfClass:[NSNumber class]]) {
+        return  objectIndex;
+    }
+   return  @(0);
 }
 
 

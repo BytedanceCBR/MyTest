@@ -9,6 +9,10 @@
 #import <JSONModel.h>
 #import "FHHomeSectionHeader.h"
 
+static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
+static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
+static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainTableViewDataSource : JSONModel
