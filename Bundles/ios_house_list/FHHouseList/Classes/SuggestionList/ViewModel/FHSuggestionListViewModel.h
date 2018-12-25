@@ -15,7 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSuggestionListViewModel : NSObject
 
 @property (nonatomic, assign)     FHHouseType       houseType;
+@property (nonatomic, strong)   NSDictionary       *homePageRollDic;
 @property (nonatomic, assign)   NSInteger       loadRequestTimes; // 历史记录和猜你想搜都回来才需要更新列表
+@property (nonatomic, strong)   NSMutableDictionary       *historyShowTracerDic; // 埋点key记录
+@property (nonatomic, assign)   NSInteger       associatedCount;
+
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 - (void)clearSugTableView;
 - (void)clearHistoryTableView;

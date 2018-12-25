@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong)   UIButton       *deleteBtn;
 
+@property (nonatomic, copy)     dispatch_block_t       delClick;
+
 @end
 
 @interface FHSuggectionTableView : UITableView

@@ -176,6 +176,13 @@
         make.right.mas_equalTo(-20);
         make.centerY.mas_equalTo(self.label);
     }];
+    [_deleteBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)buttonClick:(UIButton *)btn {
+    if (self.delClick) {
+        self.delClick();
+    }
 }
 
 @end

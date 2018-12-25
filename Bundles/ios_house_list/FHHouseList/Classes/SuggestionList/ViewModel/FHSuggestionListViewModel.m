@@ -10,6 +10,8 @@
 #import "ToastManager.h"
 #import "FHHouseTypeManager.h"
 #import "FHGuessYouWantView.h"
+#import "FHUserTracker.h"
+#import "FHHouseTypeManager.h"
 
 @interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -36,11 +38,95 @@
         self.listController = viewController;
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
-        self.guessYouWantView = [[FHGuessYouWantView alloc] init];
+        self.historyShowTracerDic = [NSMutableDictionary new];
+        self.associatedCount = 0;
+        [self setupGuessYouWantView];
     }
     return self;
 }
 
+- (void)setupGuessYouWantView {
+    self.guessYouWantView = [[FHGuessYouWantView alloc] init];
+    __weak typeof(self) wself = self;
+    self.guessYouWantView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
+        [wself guessYouWantItemClick:model];
+    };
+}
+
+// 猜你想搜点击
+- (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+    
+}
+
+// 历史记录Cell点击
+- (void)historyCellClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model rank:(NSInteger)rank {
+    
+    // 点击埋点
+    NSDictionary *tracerDic = @{
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                @"rank":@(rank),
+                                @"show_type":@"list"
+                                };
+    [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
+}
+
+// 联想词Cell点击
+- (void)associateWordCellClick:(FHSuggestionResponseDataModel *)model rank:(NSInteger)rank {
+    
+    // 点击埋点
+    NSString *impr_id = model.logPb.imprId.length > 0 ? model.logPb.imprId : @"be_null";
+    NSDictionary *tracerDic = @{
+                                @"word_text":model.text.length > 0 ? model.text : @"be_null",
+                                @"associate_cnt":@(self.associatedCount),
+                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+                                @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
+                                @"element_type":@"search",
+                                @"impr_id":impr_id,
+                                @"rank":@(rank)
+                                };
+    [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
+}
+
+// 删除历史记录按钮点击
+- (void)deleteHisttoryBtnClick {
+    [self.listController requestDeleteHistory];
+}
+
+// 联想词埋点
+- (void)associateWordShow {
+    NSMutableArray *wordList = [NSMutableArray new];
+    for (NSInteger index = 0; index < self.sugListData.count; index ++) {
+        FHSuggestionResponseDataModel *item = self.sugListData[index];
+        NSDictionary *dic = @{
+                              @"text":item.text.length > 0 ? item.text : @"be_null",
+                              @"word_id":item.info.wordid.length > 0 ? item.info.wordid : @"be_null",
+                              @"rank":@(index)
+                              };
+        [wordList addObject:dic];
+    }
+    NSError *error = NULL;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:wordList options:NSJSONReadingAllowFragments error:&error];
+    NSString *wordListStr = @"";
+    if (data && error == NULL) {
+        wordListStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    NSString *impr_id = @"be_null";
+    if (self.sugListData.count > 0) {
+        FHSuggestionResponseDataModel *item = self.sugListData[0];
+        impr_id = item.logPb.imprId.length > 0 ? item.logPb.imprId : @"be_null";
+    }
+    
+    NSDictionary *tracerDic = @{
+                                @"word_list":wordListStr.length > 0 ? wordListStr : @"be_null",
+                                @"associate_cnt":@(self.associatedCount),
+                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+                                @"word_cnt":@(wordList.count),
+                                @"element_type":@"search",
+                                @"impr_id":impr_id
+                                };
+    [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
+}
 
 #pragma mark - tableview delegate
 
@@ -64,6 +150,10 @@
         if (indexPath.row == 0) {
             FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
             headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            __weak typeof(self) wself = self;
+            headerCell.delClick = ^{
+                [wself deleteHisttoryBtnClick];
+            };
             return headerCell;
         }
         FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
@@ -113,6 +203,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (tableView.tag == 1) {
+        // 历史记录
+        if (indexPath.row - 1 < self.historyData.count) {
+            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
+            [self historyCellClick:model rank:indexPath.row - 1];
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词
+        if (indexPath.row < self.sugListData.count) {
+            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+            [self associateWordCellClick:model rank:indexPath.row];
+        }
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -129,7 +232,7 @@
     if (tableView.tag == 1) {
         // 历史记录
         if (self.guessYouWantData.count > 0) {
-            return 138;
+            return self.guessYouWantView.guessYouWangtViewHeight;
         } else {
             return CGFLOAT_MIN;
         }
@@ -142,6 +245,30 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return CGFLOAT_MIN;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == 1) {
+        // 历史记录 search_history_show 埋点
+        if (indexPath.row - 1 < self.historyData.count) {
+            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
+            NSInteger rank = indexPath.row - 1;
+            NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
+            if (!self.historyShowTracerDic[recordKey]) {
+                // 埋点
+                self.historyShowTracerDic[recordKey] = @(YES);
+                NSDictionary *tracerDic = @{
+                                            @"word":model.text.length > 0 ? model.text : @"be_null",
+                                            @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                            @"rank":@(rank),
+                                            @"show_type":@"list"
+                                            };
+                [FHUserTracker writeEvent:@"search_history_show" params:tracerDic];
+            }
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
+    }
 }
 
 // 1、默认
@@ -228,8 +355,6 @@
             // 构建数据源
             wself.historyData = model.data.data;
             [wself reloadHistoryTableView];
-//            // 刷新数据
-//            // 埋点？
         } else {
             
         }
@@ -247,12 +372,42 @@
             // 构建数据源
             [wself.guessYouWantData removeAllObjects];
             if (model.data.data.count > 0) {
-                [wself.guessYouWantData addObjectsFromArray:model.data.data];
+                // 把外部传入的搜索词放到第一个位置
+                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data];
+                NSString *text = self.homePageRollDic[@"text"];
+                NSInteger houseType  = [self.homePageRollDic[@"house_type"] integerValue];
+                if (text.length > 0 && houseType == self.houseType) {
+                    NSInteger index = 0;
+                    FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
+                    tempModel.text = text;
+                    tempModel.openUrl = self.homePageRollDic[@"open_url"];
+                    tempModel.guessSearchId = self.homePageRollDic[@"guess_search_id"];
+                    tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
+                    for (FHGuessYouWantResponseDataDataModel *obj in tempData) {
+                        if ([obj.text isEqualToString:text]) {
+                            tempModel = obj;
+                            [tempData removeObjectAtIndex:index];
+                            break;
+                        }
+                        index += 1;
+                    }
+                    // 猜你想搜：第一行展示长度大于第二行-逻辑
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:text array:tempData count:1];
+                    
+                    [tempData insertObject:tempModel atIndex:0];
+                } else {
+                    // 猜你想搜：第一行展示长度大于第二行-逻辑
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:text array:tempData count:1];
+                }
+                [wself.guessYouWantData addObjectsFromArray:tempData];
+                wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
+            } else {
+                wself.guessYouWantView.guessYouWantItems = NULL;
             }
-            [wself reloadHistoryTableView];
         } else {
-            
+            wself.guessYouWantView.guessYouWantItems = NULL;
         }
+        [wself reloadHistoryTableView];
     }];
 }
 
@@ -261,14 +416,15 @@
         [self.sugHttpTask cancel];
     }
     self.highlightedText = query;
+    self.associatedCount += 1;
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.sugListData = model.data;
             [wself reloadSugTableView];
-            // 刷新数据
-            // 埋点？
+            // 埋点 associate_word_show
+            [wself associateWordShow];
         } else {
             
         }

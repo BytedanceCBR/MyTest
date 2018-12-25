@@ -6,10 +6,31 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHSuggestionListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^FHGuessYouWantItemClick)(FHGuessYouWantResponseDataDataModel *model);
+
 @interface FHGuessYouWantView : UIView
+
+@property (nonatomic, copy)     FHGuessYouWantItemClick       clickBlk;
+@property (nonatomic, assign)   CGFloat       guessYouWangtViewHeight; // 默认是128，2行
+@property (nonatomic, strong)   NSArray<FHGuessYouWantResponseDataDataModel>       *guessYouWantItems;
+
+- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(NSString *)firstText array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count;
+
+@end
+
+@interface FHGuessYouWantButton : UIButton
+
+@property (nonatomic, strong)   UILabel       *label;
+
+@end
+
+@interface NSArray (FHSort)
+
+- (NSArray *)fh_randomArray;
 
 @end
 
