@@ -76,7 +76,7 @@ static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
     }];
     return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
      */
-    return 105;
+    return 60;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
