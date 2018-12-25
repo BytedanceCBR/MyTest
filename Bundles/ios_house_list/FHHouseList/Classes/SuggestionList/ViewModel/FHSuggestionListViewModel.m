@@ -129,7 +129,7 @@
     if (tableView.tag == 1) {
         // 历史记录
         if (self.guessYouWantData.count > 0) {
-            return 138;
+            return self.guessYouWantView.guessYouWangtViewHeight;
         } else {
             return CGFLOAT_MIN;
         }
@@ -247,12 +247,19 @@
             // 构建数据源
             [wself.guessYouWantData removeAllObjects];
             if (model.data.data.count > 0) {
+                // 把外部传入的搜索词放到第一个位置
+                
+                [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:model.data.data count:1];
+                
                 [wself.guessYouWantData addObjectsFromArray:model.data.data];
+                wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
+            } else {
+                wself.guessYouWantView.guessYouWantItems = NULL;
             }
-            [wself reloadHistoryTableView];
         } else {
-            
+            wself.guessYouWantView.guessYouWantItems = NULL;
         }
+        [wself reloadHistoryTableView];
     }];
 }
 
