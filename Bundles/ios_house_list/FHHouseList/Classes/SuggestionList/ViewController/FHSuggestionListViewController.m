@@ -63,8 +63,7 @@
             self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
-        // 5、tracer（TRACER_KEY）
-        // self.tracerDict 字典
+        // 5、tracer（TRACER_KEY）: self.tracerDict 字典
     }
     return self;
 }
@@ -176,6 +175,8 @@
         make.width.mas_equalTo(size.width);
     }];
     self.viewModel.houseType = self.houseType;
+    // 清空埋点key
+    [self.viewModel.historyShowTracerDic removeAllObjects];
     // 网络请求
     [self requestData];
 }
