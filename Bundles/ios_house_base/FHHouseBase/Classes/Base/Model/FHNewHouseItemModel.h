@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
+#import "FHHouseListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,36 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol FHNewHouseItemImagesModel<NSObject>
-
-@end
-
-
-@interface  FHNewHouseItemImagesModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
-
-@protocol FHNewHouseItemTagsModel<NSObject>
-
-@end
-
-
-@interface  FHNewHouseItemTagsModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
-
 
 @protocol FHFeedNewHouseRawDataItemsModel<NSObject>
 
@@ -88,13 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseItemModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) NSArray<FHNewHouseItemTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *houseId;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) NSArray<FHNewHouseItemImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHNewHouseItemCoreInfoModel *coreInfo ;
 

@@ -16,6 +16,7 @@
 #import "FHNewHouseItemModel.h"
 
 #import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 #import "FHPlaceHolderCell.h"
 #import "FHHouseListViewController.h"
 #import "TTReachability.h"
@@ -28,6 +29,7 @@
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
 @property(nonatomic , strong) FHErrorView *maskView;
+@property(nonatomic , strong) UILabel *majorTitle;
 
 @property(nonatomic, weak) FHHouseListViewController *listVC;
 @property(nonatomic, weak) UITableView *tableView;
@@ -103,7 +105,7 @@
 
 }
 
-
+#pragma mark - 网络请求
 -(void)loadData:(BOOL)isRefresh
 {
 
@@ -206,9 +208,17 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            if (isRefresh) {
+                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+            }
             wself.houseListOpenUrl = houseModel.houseListOpenUrl;
+            [houseModel.items enumerateObjectsUsingBlock:^(FHNewHouseItemModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.houseModel = obj;
+                [wself.houseList addObject:cellModel];
+            }];
 
-            [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             [wself updateTableViewWithMoreData:houseModel.hasMore];
             
@@ -279,9 +289,16 @@
             
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
+            if (isRefresh) {
+                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+            }
             wself.houseListOpenUrl = houseModel.houseListOpenUrl;
-
-            [wself.houseList addObjectsFromArray:houseModel.items];
+            [houseModel.items enumerateObjectsUsingBlock:^(FHHouseNeighborDataItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.neighborModel = obj;
+                [wself.houseList addObject:cellModel];
+            }];
             [wself.tableView reloadData];
             [wself updateTableViewWithMoreData:houseModel.hasMore];
             
@@ -353,8 +370,16 @@
             wself.searchId = houseModel.searchId;
             self.showPlaceHolder = NO;
             wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
-
-            [wself.houseList addObjectsFromArray:houseModel.items];
+            if (isRefresh) {
+                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+            }
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
+            [houseModel.items enumerateObjectsUsingBlock:^(FHHouseRentDataItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.rentModel = obj;
+                [wself.houseList addObject:cellModel];
+            }];
             [wself.tableView reloadData];
             [wself updateTableViewWithMoreData:houseModel.hasMore];
             
@@ -427,8 +452,17 @@
             wself.searchId = houseModel.searchId;
             wself.showPlaceHolder = NO;
             wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            if (isRefresh) {
+                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+            }
+            wself.houseListOpenUrl = houseModel.houseListOpenUrl;
 
-            [wself.houseList addObjectsFromArray:houseModel.items];
+            [houseModel.items enumerateObjectsUsingBlock:^(FHSearchHouseDataItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.secondModel = obj;
+                [wself.houseList addObject:cellModel];
+            }];
             [wself.tableView reloadData];
             [wself updateTableViewWithMoreData:houseModel.hasMore];
             
@@ -456,6 +490,15 @@
     }];
     
     self.requestTask = task;
+}
+
+-(CGSize)titleSizeByTitle:(NSString *)title isShowTags:(BOOL)isShowTags {
+    
+    self.majorTitle.text = title;
+    self.majorTitle.numberOfLines = isShowTags ? 1 : 2;
+    CGSize fitSize = [self.majorTitle sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width * ([UIScreen mainScreen].bounds.size.width > 376 ? 0.61 : [UIScreen mainScreen].bounds.size.width > 321 ? 0.56 : 0.48), 0)];
+    
+    return fitSize;
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -595,10 +638,11 @@
     if ([self.houseListOpenUrl isEqualToString:openUrl]) {
         return;
     }
-    TTRouteParamObj *routeObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
-    if (self.setConditionsBlock) {
+    
+    if (self.houseListOpenUrlUpdateBlock) {
         
-        self.setConditionsBlock(routeObj.queryParams);
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
+        self.houseListOpenUrlUpdateBlock(routeParamObj);
     }
     
 }
@@ -687,8 +731,8 @@
 //        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
         if (indexPath.row < self.houseList.count) {
             
-            JSONModel *model = self.houseList[indexPath.row];
-            [cell updateWithHouseModel:model isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
             [cell refreshBottomMargin:isLastCell ? 20 : 0];
         }
@@ -760,28 +804,28 @@
 #pragma mark - 详情页跳转
 -(void)jump2NewDetailPage:(NSIndexPath *)indexPath {
     
-    id model = self.houseList[indexPath.row];
-    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        FHNewHouseItemModel *theModel = (FHNewHouseItemModel *)model;
-        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    if (cellModel.houseModel) {
         
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    FHNewHouseItemModel *theModel = cellModel.houseModel;
+    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                           @"tracer": traceParam
+                           };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
 
 -(void)jump2OldDetailPage:(NSIndexPath *)indexPath {
     
-    id model = self.houseList[indexPath.row];
-    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    if (cellModel.secondModel) {
         
-        FHSearchHouseDataItemsModel *theModel = (FHSearchHouseDataItemsModel *)model;
+        FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -791,14 +835,15 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid]];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+
 }
 
 -(void)jump2RentDetailPage:(NSIndexPath *)indexPath {
     
-    id model = self.houseList[indexPath.row];
-    if ([model isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    if (cellModel.rentModel) {
         
-        FHHouseRentDataItemsModel *theModel = (FHHouseRentDataItemsModel *)model;
+        FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -808,14 +853,15 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id]];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+
 }
 
 -(void)jump2NeighborDetailPage:(NSIndexPath *)indexPath {
     
-    id model = self.houseList[indexPath.row];
-    if ([model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    if (cellModel.neighborModel) {
         
-        FHHouseNeighborDataItemsModel *theModel = (FHHouseNeighborDataItemsModel *)model;
+        FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -825,6 +871,18 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id]];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+
+}
+
+-(UILabel *)majorTitle {
+    
+    if (!_majorTitle) {
+        
+        _majorTitle = [[UILabel alloc]init];
+        _majorTitle.font = [UIFont themeFontRegular:16];
+        _majorTitle.textColor = [UIColor themeBlack];
+    }
+    return _majorTitle;
 }
 
 

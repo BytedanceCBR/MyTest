@@ -178,6 +178,11 @@
         
         [wself handleSugSelection:routeObject];
     };
+    _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+        
+        [wself handleListOpenUrlUpdate:paramObj];
+    };
+    
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
 //        [wself showNotify:message];
     };
@@ -199,6 +204,25 @@
 }
 
 #pragma mark 处理sug带回的houseType，导航栏placeholder，筛选器
+-(void)handleListOpenUrlUpdate:(TTRouteParamObj *)paramObj {
+
+    NSString *placeholder = [self placeholderByHouseType:self.houseType];
+    NSString *fullText = paramObj.queryParams[@"full_text"];
+    NSString *displayText = paramObj.queryParams[@"display_text"];
+    
+    if (fullText.length > 0) {
+        
+        placeholder = fullText;
+    }else if (displayText.length > 0) {
+        
+        placeholder = displayText;
+    }
+    [self refreshNavBar:self.houseType placeholder:placeholder];
+    
+    [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
+//    [self.houseFilterBridge trigerConditionChanged];
+    
+}
 -(void)handleSugSelection:(TTRouteObject *)routeObject {
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
@@ -209,22 +233,8 @@
         self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
 
     }
-    NSString *placeholder = [self placeholderByHouseType:self.houseType];
-    NSString *fullText = routeObject.paramObj.queryParams[@"full_text"];
-    NSString *displayText = routeObject.paramObj.queryParams[@"display_text"];
-
-    if (fullText.length > 0) {
-
-        placeholder = fullText;
-    }else if (displayText.length > 0) {
-        
-        placeholder = displayText;
-    }
-    [self refreshNavBar:self.houseType placeholder:placeholder];
-
-    [self.houseFilterBridge setFilterConditions:routeObject.paramObj.queryParams];
-    [self.houseFilterBridge trigerConditionChanged];
     
+    [self handleListOpenUrlUpdate:routeObject.paramObj];
 }
 
 -(void)viewWillAppear:(BOOL)animated

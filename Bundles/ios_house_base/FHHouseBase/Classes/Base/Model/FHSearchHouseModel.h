@@ -8,22 +8,13 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
+#import "FHHouseListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHSearchHouseDataItemsModel<NSObject>
 
 @end
-
-
-//@interface  FHSearchHouseDataItemsLogPbModel  : JSONModel
-//
-//@property (nonatomic, copy , nullable) NSString *imprId;
-//@property (nonatomic, copy , nullable) NSString *groupId;
-//@property (nonatomic, copy , nullable) NSString *aNewTag;
-//@property (nonatomic, copy , nullable) NSString *searchId;
-//
-//@end
 
 
 @protocol FHSearchHouseDataItemsBaseInfoModel<NSObject>
@@ -37,16 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 
 @end
-
-
-//@interface  FHSearchHouseDataItemsNeighborhoodInfoLogPbModel  : JSONModel
-//
-//@property (nonatomic, copy , nullable) NSString *imprId;
-//@property (nonatomic, copy , nullable) NSString *groupId;
-//@property (nonatomic, copy , nullable) NSString *searchId;
-//
-//@end
-
 
 @protocol FHSearchHouseDataItemsNeighborhoodInfoImagesModel<NSObject>
 
@@ -116,38 +97,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 
 @end
-
-
-@protocol FHSearchHouseDataItemsTagsModel<NSObject>
-
-@end
-
-
-@interface  FHSearchHouseDataItemsTagsModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
-
-@end
-
-
-@protocol FHSearchHouseDataItemsHouseImageModel<NSObject>
-
-@end
-
-
-@interface  FHSearchHouseDataItemsHouseImageModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
-
 
 @protocol FHSearchHouseDataItemsRecommendReasonsModel<NSObject>
 

@@ -66,26 +66,6 @@
 @end
 
 
-@implementation  FHHouseNeighborDataItemsImagesModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"urlList": @"url_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHHouseNeighborModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName

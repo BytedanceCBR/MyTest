@@ -8,26 +8,11 @@
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
+#import "FHHouseListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseNeighborDataItemsModel<NSObject>
-
-@end
-
-
-@protocol FHHouseNeighborDataItemsImagesModel<NSObject>
-
-@end
-
-
-@interface  FHHouseNeighborDataItemsImagesModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
 
 @end
 
@@ -55,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
-@property (nonatomic, strong , nullable) NSArray<FHHouseNeighborDataItemsImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *displayStatsInfo;
 @property (nonatomic, strong , nullable) FHHouseNeighborDataItemsBaseInfoMapModel *baseInfoMap ;

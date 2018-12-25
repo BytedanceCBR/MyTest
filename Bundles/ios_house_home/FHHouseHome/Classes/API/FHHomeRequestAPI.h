@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)requestRecommendFirstTime:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
 
+
++ (void)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

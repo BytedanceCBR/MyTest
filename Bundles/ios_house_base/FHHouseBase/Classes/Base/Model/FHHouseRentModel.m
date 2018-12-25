@@ -31,26 +31,6 @@
 @end
 
 
-@implementation  FHHouseRentDataItemsHouseImageModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"urlList": @"url_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHHouseRentDataItemsHouseImageTagModel
 
 + (JSONKeyMapper*)keyMapper
@@ -82,25 +62,25 @@
 @end
 
 
-@implementation  FHHouseRentDataItemsTagsModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"backgroundColor": @"background_color",
-                           @"textColor": @"text_color",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHHouseRentDataItemsTagsModel
+//
+//+ (JSONKeyMapper*)keyMapper
+//{
+//    NSDictionary *dict = @{
+//                           @"backgroundColor": @"background_color",
+//                           @"textColor": @"text_color",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 
 @implementation  FHHouseRentDataModel

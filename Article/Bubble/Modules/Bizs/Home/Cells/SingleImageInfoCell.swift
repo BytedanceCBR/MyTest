@@ -588,7 +588,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.isFirstCell = isFirstCell
 
         let text = NSMutableAttributedString()
-        if let tags = item.tags as? [FHNewHouseItemTagsModel] {
+        if let tags = item.tags as? [FHSearchHouseDataItemsTagsModel] {
             let  attrTexts = tags.enumerated().map ({ (arg) -> NSAttributedString  in
                 let (offset, element) = arg
                 return createTagAttrString(
@@ -623,7 +623,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         }
         cell.priceLabel.text = item.displayPricePerSqm
         cell.roomSpaceLabel.text = ""
-        let houseImags  = model.images as? [FHNewHouseItemImagesModel]
+        let houseImags  = model.images as? [FHSearchHouseDataItemsHouseImageModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         cell.updateOriginPriceLabelConstraints(originPriceText: nil)
         cell.updateLayoutCompoents(isShowTags: text.string.count > 0)
@@ -640,7 +640,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.isFirstCell = isFirstCell
         
         let text = NSMutableAttributedString()
-        if let tags = model.tags as? [FHHouseRentDataItemsTagsModel] {
+        if let tags = model.tags as? [FHSearchHouseDataItemsTagsModel] {
             let  attrTexts = tags.enumerated().map ({ (arg) -> NSAttributedString  in
                 let (offset, element) = arg
                 return createTagAttrString(
@@ -676,7 +676,7 @@ extension SingleImageInfoCell : FHHouseSingleImageInfoCellBridgeDelegate{
         cell.priceLabel.text = model.pricing
         
         cell.roomSpaceLabel.text = nil
-        let houseImags  = model.houseImage as? [FHHouseRentDataItemsHouseImageModel]
+        let houseImags  = model.houseImage as? [FHSearchHouseDataItemsHouseImageModel]
         cell.majorImageView.bd_setImage(with: URL(string: houseImags?.first?.url ?? ""), placeholder: #imageLiteral(resourceName: "default_image"))
         if let houseImageTag = model.houseImageTag,
             let backgroundColor = houseImageTag.backgroundColor,

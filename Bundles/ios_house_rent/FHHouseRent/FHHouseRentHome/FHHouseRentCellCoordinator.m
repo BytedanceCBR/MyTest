@@ -26,7 +26,7 @@
         theCell.priceLabel.text = model.pricing;
         if (model.tags.count > 0) {
             NSMutableArray *tags = [NSMutableArray new];
-            for (FHHouseRentDataItemsTagsModel *tag in model.tags) {
+            for (FHSearchHouseDataItemsTagsModel *tag in model.tags) {
                 FHTagItem *item = [FHTagItem instanceWithText:tag.content withColor:tag.textColor withBgColor:tag.backgroundColor];
                 [tags addObject:item];
             }

@@ -64,12 +64,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     WeakSelf;
     [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        StrongSelf;
+     StrongSelf;
         //过滤多余刷新
-//  if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache]) {
-//     return ;
-//  }
-        [self reloadFHHomeHeaderCell];
+      if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache]) {
+         return ;
+      }
+      [self reloadFHHomeHeaderCell];
     }];
     
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];

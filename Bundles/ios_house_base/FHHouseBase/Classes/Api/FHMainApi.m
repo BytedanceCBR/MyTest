@@ -262,7 +262,7 @@
     }];
 }
 
-+(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
++(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
 {
     NSString *url = QURL(@"/f100/api/v2/recommend?");
     
@@ -270,7 +270,7 @@
         if (!completion) {
             return ;
         }
-        FHHomeRollModel *model = (FHHomeRollModel *)[self generateModel:obj class:[FHHomeRollModel class] error:&error];
+        FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&error];
         if (completion) {
             completion(model,error);
         }
