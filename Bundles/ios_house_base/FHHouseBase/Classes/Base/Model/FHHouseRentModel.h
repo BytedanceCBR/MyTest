@@ -7,40 +7,11 @@
 
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHHouseListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseRentDataItemsModel<NSObject>
-
-@end
-
-@protocol FHHouseRentDataItemsHouseImageModel<NSObject>
-
-@end
-
-
-@interface  FHHouseRentDataItemsHouseImageModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-
-@end
-
-
-@protocol FHHouseRentDataItemsTagsModel<NSObject>
-
-@end
-
-
-@interface  FHHouseRentDataItemsTagsModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *backgroundColor;
-@property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, copy , nullable) NSString *textColor;
 
 @end
 
@@ -62,8 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, strong , nullable) NSArray<FHHouseRentDataItemsHouseImageModel> *houseImage;
-@property (nonatomic, strong , nullable) NSArray<FHHouseRentDataItemsTagsModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, copy , nullable) NSString *houseType;

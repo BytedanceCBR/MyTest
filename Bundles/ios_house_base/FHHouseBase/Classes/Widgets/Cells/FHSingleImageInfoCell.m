@@ -418,7 +418,7 @@
     }];
     self.priceLabel.text = model.pricing;
     self.roomSpaceLabel.text = nil;
-    FHHouseRentDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
+    FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
@@ -444,7 +444,7 @@
     self.extendTitle.text = model.displaySubtitle;
     self.areaLabel.text = model.displayStatsInfo;
     self.priceLabel.text = model.displayPrice;
-    FHHouseNeighborDataItemsImagesModel *imageModel = model.images.firstObject;
+    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
 
     self.imageTopLeftLabelBgView.hidden = YES;
