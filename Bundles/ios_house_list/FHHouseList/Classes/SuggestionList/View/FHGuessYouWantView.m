@@ -10,6 +10,7 @@
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
+#import "FHUserTracker.h"
 
 @interface FHGuessYouWantView ()
 
@@ -100,7 +101,8 @@
             isFirtItem = NO;
             leftView = button;
             [_tempViews addObject:button];
-            // TODO: add by zyk 记得埋点添加
+            // TODO: add by zyk 记得埋点添加，应该还有问题，原因是当sug list显示的时候上报了 猜你想搜的数据埋点
+            [self trackShowEventData:item rank:button.tag];
         }
         currentIndex += 1;
     }
@@ -209,9 +211,51 @@
         if (_clickBlk) {
             FHGuessYouWantResponseDataDataModel *model = self.guessYouWantItems[tag];
             self.clickBlk(model);
-            // TODO: add by zyk 埋点添加
+            [self trackClickEventData:model rank:tag];
         }
     }
+}
+
+- (void)trackShowEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
+    NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    NSDictionary *tracerDic = @{
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
+                                @"rank":@(rank),
+                                @"word_type":wordType
+                                };
+    [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+}
+
+- (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
+    NSString *wordType = [self wordTypeFor:model.guessSearchType];
+    NSDictionary *tracerDic = @{
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"word_id":model.guessSearchId.length > 0 ? model.guessSearchId : @"be_null",
+                                @"rank":@(rank),
+                                @"word_type":wordType
+                                };
+    [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
+}
+
+- (NSString *)wordTypeFor:(NSString *)guessSearchType {
+    NSInteger type = [guessSearchType integerValue];
+    NSString *retStr = @"";
+    switch (type) {
+        case 1:
+            retStr = @"operation";
+            break;
+        case 2:
+            retStr = @"hot";
+            break;
+        case 3:
+            retStr = @"history";
+            break;
+        default:
+            retStr = @"be_null";
+            break;
+    }
+    return retStr;
 }
 
 @end

@@ -397,7 +397,7 @@
                     [tempData insertObject:tempModel atIndex:0];
                 } else {
                     // 猜你想搜：第一行展示长度大于第二行-逻辑
-                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:text array:tempData count:1];
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:tempData count:1];
                 }
                 [wself.guessYouWantData addObjectsFromArray:tempData];
                 wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
