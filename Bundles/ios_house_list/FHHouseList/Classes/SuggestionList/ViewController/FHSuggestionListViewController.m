@@ -22,8 +22,12 @@
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
+@property (nonatomic, assign)   FHEnterSuggestionType       fromSource;
 
-@property (nonatomic, strong)     FHSuggestionListReturnBlock       retBlk;
+@property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
+
+@property (nonatomic, strong)   NSDictionary       *homePageRollDic;
+@property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 
 @end
 
@@ -32,24 +36,35 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-//        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
-//        self.houseId = paramObj.userInfo.allInfo[@"houseId"];
-//        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
-//        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
-//        self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
-//        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
-//
-//        NSLog(@"%@\n", self.searchId);
-//        NSLog(@"%@\n",paramObj.userInfo.allInfo);
-//        _retBlk = paramObj.userInfo.allInfo[@"callback_block"];
-//        NSLog(@"_wBlk:%@",_retBlk);
-//        TTRouteObject *route = nil;//= [[TTRoute sharedRoute] routeObjWithOpenURL:NSURL URLWithString:paramObj userInfo:paramObj];
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            self.retBlk(route);
-//        });
+        // 1、from_home
+        self.fromSource = [paramObj.userInfo.allInfo[@"from_home"] integerValue];
+        // 2、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
-        _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];;
+        _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        // 3、sug_delegate 代理
+        /*
+         NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+         [sugDelegateTable addObject:self];
+         @"sug_delegate":sugDelegateTable
+         */
+        NSHashTable<FHHouseSuggestionDelegate> *sug_delegate = paramObj.userInfo.allInfo[@"sug_delegate"];
+        self.suggestDelegate = sug_delegate.anyObject;
+        // 4、homepage_roll_data 首页轮播词
+        /*homepage_roll_data:{
+         "text":"",
+         "guess_search_id":"",
+         "house_type":2,
+         "open_url":""
+         }
+         */
+        id dic = paramObj.userInfo.allInfo[@"homepage_roll_data"];
+        if (dic) {
+            self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
+            self.viewModel.homePageRollDic = self.homePageRollDic;
+        }
+        // 5、tracer（TRACER_KEY）
+        // self.tracerDict 字典
     }
     return self;
 }
@@ -57,9 +72,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.canSearchWithRollData = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // TODO：add by zyk 统计时长埋点
+    if (self.homePageRollDic) {
+        NSString *text = self.homePageRollDic[@"text"];
+        if (text.length > 0) {
+            [self.naviBar setSearchPlaceHolderText:text];
+            self.canSearchWithRollData = YES;
+        }
+    }
 }
 
 - (void)setupUI {
@@ -137,6 +165,9 @@
     if (_houseType == houseType) {
         return;
     }
+    if (self.canSearchWithRollData) {
+        self.canSearchWithRollData = NO;
+    }
     _houseType = houseType;
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
@@ -213,7 +244,11 @@
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSString *userInputText = self.naviBar.searchInput.text;
+    NSLog(@"%@",self.suggestDelegate);
+    
     NSLog(@"%@",userInputText);
+    
+    
     return YES;
 }
 
