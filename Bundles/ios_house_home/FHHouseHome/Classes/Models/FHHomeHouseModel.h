@@ -123,15 +123,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHHomeHouseDataItemsFloorpanListListLogPbModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, copy , nullable) NSString *searchId;
-
-@end
-
-
 @interface  FHHomeHouseDataItemsFloorpanListListSaleStatusModel  : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
@@ -160,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHHomeHouseDataItemsFloorpanListListModel  : JSONModel
 
-@property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListListLogPbModel *logPb ;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListListSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
@@ -222,16 +213,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-@interface  FHHomeHouseDataItemsLogPbModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, copy , nullable) NSString *searchId;
-
-@end
-
-
 @interface  FHHomeHouseDataItemsModel  : JSONModel
 
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsCommentModel *comment ;
@@ -241,10 +222,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsGlobalPricingModel *globalPricing ;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsTimelineModel *timeline ;
-@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *idx;
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, copy , nullable) NSString *displayDescription;
+@property (nonatomic, copy , nullable) NSString *displaySameneighborhoodTitle;
+@property (nonatomic, copy , nullable) NSString *displaySubtitle;
+@property (nonatomic, copy , nullable) NSString *displayBuiltYear;
+@property (nonatomic, copy , nullable) NSString *pricingPerSqmValue;
+@property (nonatomic, copy , nullable) NSString *displayPrice;
+@property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsContactModel *contact ;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListModel *floorpanList ;
@@ -253,8 +240,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
-@property (nonatomic, strong , nullable) FHHomeHouseDataItemsLogPbModel *logPb ;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *searchId;
+//租房相关
+@property (nonatomic, copy , nullable) NSString *pricing;
+
 
 @end
 

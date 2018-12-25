@@ -55,15 +55,8 @@
 
 - (void)reloadHomeListTable
 {
-//    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-//    if (!dataModel) {
-//        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
-//    }
     self.dataSource.showPlaceHolder = NO;
     [self.tableViewV reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-//    if (self.dataModel) {
-//        self.dataSource.modelsArray = @[dataModel];
-//    }
 }
 
 
