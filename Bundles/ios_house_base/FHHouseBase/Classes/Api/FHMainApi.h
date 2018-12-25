@@ -12,6 +12,7 @@
 #import "FHHouseRentModel.h"
 #import "FHSearchHouseModel.h"
 #import "FHHomeRollModel.h"
+#import "FHHomeHouseModel.h"
 
 @class TTHttpTask;
 
@@ -77,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  首页推荐房源接口
  */
-+(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
++(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 @end
 

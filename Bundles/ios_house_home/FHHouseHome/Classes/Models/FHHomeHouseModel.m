@@ -30,28 +30,6 @@
 @end
 
 
-@implementation  FHHomeHouseDataItemsLogPbModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"imprId": @"impr_id",
-                           @"groupId": @"group_id",
-                           @"searchId": @"search_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
 @implementation  FHHomeHouseDataItemsGlobalPricingModel
 
 + (JSONKeyMapper*)keyMapper
@@ -347,6 +325,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"idx": @"id",
                            @"userStatus": @"user_status",
                            @"globalPricing": @"global_pricing",
                            @"logPb": @"log_pb",
@@ -354,6 +333,12 @@
                            @"uploadAt": @"upload_at",
                            @"displayDescription": @"display_description",
                            @"searchId": @"search_id",
+                           @"displaySubtitle": @"display_subtitle",
+                           @"displaySameneighborhoodTitle": @"display_same_neighborhood_title",
+                           @"pricing": @"pricing",
+                           @"subtitle": @"subtitle",
+                           @"displayBuiltYear": @"display_built_year",
+                           @"displayPrice": @"display_price",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
                            @"cellStyle": @"cell_style",
@@ -436,26 +421,3 @@
 }
 
 @end
-
-
-@implementation  FHHomeHouseDataItemsFloorpanListListLogPbModel
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"imprId": @"impr_id",
-                           @"groupId": @"group_id",
-                           @"searchId": @"search_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
