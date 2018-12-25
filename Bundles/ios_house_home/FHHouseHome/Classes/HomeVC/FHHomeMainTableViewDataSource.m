@@ -69,7 +69,7 @@
             
             JSONModel *model = self.modelsArray[indexPath.row];
             JSONModel *modelSerach = [[FHSearchHouseDataItemsModel alloc] initWithDictionary:model.toDictionary error:nil];
-            [cell updateWithHouseModel:modelSerach isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+//            [cell updateWithHouseModel:modelSerach isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
             [cell refreshTopMargin: 20];
             [cell refreshBottomMargin:isLastCell ? 20 : 0];
         }
