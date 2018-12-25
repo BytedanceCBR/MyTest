@@ -48,11 +48,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.isFirstCell = NO;
-        self.isTail = NO;
-
         self.topMargin = 20;
-        self.bottomMargin = 0;
+        self.bottomMargin = 10;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         [self setupUI];
@@ -67,7 +64,7 @@
     [self.headView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.right.top.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(@14);
+        make.height.mas_equalTo(@(self.topMargin));
     }];
     
     [self.contentView addSubview:self.bottomView];
@@ -76,17 +73,19 @@
     [self.majorImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.mas_equalTo(@20);
-        make.top.mas_equalTo(self.headView.mas_bottom).mas_offset(3);
+        make.top.mas_equalTo(self.headView.mas_bottom);
         make.width.mas_equalTo(@114);
         make.height.mas_equalTo(85);
 
     }];
     
+//    [self.majorImageView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.top.mas_equalTo(self.majorImageView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(@1);
+        make.height.mas_equalTo(@(self.bottomMargin));
     }];
     
     UIView *infoPanel = [[UIView alloc]init];
@@ -96,7 +95,6 @@
         make.left.mas_equalTo(self.majorImageView.mas_right).offset(12);
         make.top.mas_equalTo(self.majorImageView);
         make.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(@91);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
     }];
     
@@ -281,7 +279,6 @@
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displaySubtitle;
-    self.isTail = isLastCell;
     
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
 
@@ -307,7 +304,7 @@
 }
 
 #pragma mark 新房
--(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displayDescription;
@@ -323,7 +320,7 @@
 }
 
 #pragma mark 二手房
--(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model {
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displaySubtitle;
@@ -338,7 +335,7 @@
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
         self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabel.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
         self.imageTopLeftLabelBgView.hidden = NO;
     }else {
         
@@ -351,7 +348,7 @@
 }
 
 #pragma mark 租房
--(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model  isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model {
     
     self.majorTitle.text = model.title;
     self.extendTitle.text = model.subtitle;
@@ -365,7 +362,7 @@
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
         self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabel.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
         self.imageTopLeftLabelBgView.hidden = NO;
     }else {
         
@@ -405,13 +402,13 @@
     switch (cellModel.houseType) {
         case FHHouseTypeNewHouse:
             
-            [self updateWithNewHouseModel:cellModel.houseModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithNewHouseModel:cellModel.houseModel];
             break;
         case FHHouseTypeSecondHandHouse:
-            [self updateWithSecondHouseModel:cellModel.secondModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithSecondHouseModel:cellModel.secondModel];
             break;
         case FHHouseTypeRentHouse:
-            [self updateWithRentHouseModel:cellModel.rentModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithRentHouseModel:cellModel.rentModel];
             break;
         case FHHouseTypeNeighborhood:
             [self updateWithNeighborModel:cellModel.neighborModel];
@@ -421,40 +418,6 @@
     }
     
     
-}
-
-
-
-
-
--(void)setIsFirstCell:(BOOL)isFirstCell {
-    
-    _isFirstCell = isFirstCell;
-    
-    if (self.headView.superview == nil) {
-        return;
-    }
-    CGFloat height = isFirstCell ? 0 : 14;
-    [self.headView mas_updateConstraints:^(MASConstraintMaker *make) {
-        
-        make.height.mas_equalTo(@(height));
-    }];
-    [self updateConstraintsIfNeeded];
-}
-
--(void)setIsTail:(BOOL)isTail {
-    
-    _isTail = isTail;
-    
-    if (self.bottomView.superview == nil) {
-        return;
-    }
-    CGFloat height = isTail ? 20 : 0;
-    [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-        
-        make.height.mas_equalTo(@(height));
-    }];
-    [self updateConstraintsIfNeeded];
 }
 
 -(UIImageView *)majorImageView {

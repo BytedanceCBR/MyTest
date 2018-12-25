@@ -340,7 +340,7 @@
 
 -(void)setupUI {
     
-    _containerView = [[UIView alloc] init];
+    _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
 
     self.automaticallyAdjustsScrollViewInsets = NO;
