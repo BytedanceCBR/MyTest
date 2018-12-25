@@ -16,16 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-//@interface  FHSearchHouseDataItemsLogPbModel  : JSONModel
-//
-//@property (nonatomic, copy , nullable) NSString *imprId;
-//@property (nonatomic, copy , nullable) NSString *groupId;
-//@property (nonatomic, copy , nullable) NSString *aNewTag;
-//@property (nonatomic, copy , nullable) NSString *searchId;
-//
-//@end
-
-
 @protocol FHSearchHouseDataItemsBaseInfoModel<NSObject>
 
 @end
@@ -37,16 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 
 @end
-
-
-//@interface  FHSearchHouseDataItemsNeighborhoodInfoLogPbModel  : JSONModel
-//
-//@property (nonatomic, copy , nullable) NSString *imprId;
-//@property (nonatomic, copy , nullable) NSString *groupId;
-//@property (nonatomic, copy , nullable) NSString *searchId;
-//
-//@end
-
 
 @protocol FHSearchHouseDataItemsNeighborhoodInfoImagesModel<NSObject>
 
