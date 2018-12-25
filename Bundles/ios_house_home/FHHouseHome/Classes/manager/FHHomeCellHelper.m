@@ -177,7 +177,6 @@ static NSMutableArray  * _Nullable identifierArr;
         return self.headerHeight;
     }
     
-    NSLog(@"xxxxx heightForFHHomeHeaderCellViewType");
 
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
