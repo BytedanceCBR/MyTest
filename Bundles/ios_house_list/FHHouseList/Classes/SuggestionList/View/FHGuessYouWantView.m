@@ -122,14 +122,96 @@
     // 计算猜你想搜高度
     if (array.count <= 0) {
         self.guessYouWangtViewHeight = CGFLOAT_MIN;
+        return NULL;
     } else {
         self.guessYouWangtViewHeight = 128; // 一行是89
     }
-    return array;
+    NSInteger   line = 1;
+    CGFloat     firstWordLength = [self guessYouWantTextLength:firstText];
+    CGFloat     firstLineLen = firstWordLength + 10;
+    CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    NSInteger   secondLineLen = 0;
+    remainWidth -= (firstWordLength + 10);
+    if (firstText.length == 0) {
+        firstLineLen = 0;
+        remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    }
+    NSMutableArray *vArray = [array mutableCopy];
+    NSMutableArray<FHGuessYouWantResponseDataDataModel>       *retArray = [NSMutableArray new];
+    
+    while (vArray.count > 0) {
+        FHGuessYouWantResponseDataDataModel *item = [vArray firstObject];
+        if (item.text.length > 0) {
+            CGFloat len = [self guessYouWantTextLength:item.text];
+            if (len > remainWidth) {
+                NSInteger findIndex = -1;
+                if (remainWidth >= 24) {
+                    for (int index = 0; index < vArray.count;  index++) {
+                        // 找满足长度的数据
+                        FHGuessYouWantResponseDataDataModel *remainItem = vArray[index];
+                        CGFloat remainLen = [self guessYouWantTextLength:remainItem.text];
+                        if (remainLen <= remainWidth) {
+                            // 找到
+                            findIndex = index;
+                            remainWidth -= (remainLen + 10);
+                            if (line == 1) {
+                                firstLineLen += (remainLen + 10);
+                            } else if (line == 2) {
+                                secondLineLen += (remainLen + 10);
+                            }
+                            [vArray removeObjectAtIndex:findIndex];
+                            [retArray addObject:remainItem];
+                            break;
+                        }
+                    }
+                }
+                if (findIndex >= 0) {
+                    continue;
+                } else {
+                    if (line >= 2) {
+                        break;
+                    }
+                    line += 1;
+                    remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+                }
+            }
+            remainWidth -= (len + 10);
+            if (line == 1) {
+                firstLineLen += (len + 10);
+            } else if (line == 2) {
+                secondLineLen += (len + 10);
+            }
+        }
+        [vArray removeObjectAtIndex:0];
+        [retArray addObject:item];
+    }
+    if (line >= 2) {
+        self.guessYouWangtViewHeight = 128;
+    } else {
+        self.guessYouWangtViewHeight = 89;
+    }
+
+    if (firstLineLen >= secondLineLen) {
+        return retArray;
+    } else {
+        if (count > 8) {
+            [retArray removeLastObject];
+            return retArray;
+        }
+        NSArray *tempArray = [array fh_randomArray];
+        return [self firstLineGreaterThanSecond:firstText array:tempArray count:count + 1];
+    }
 }
 
 - (void)buttonClick:(FHGuessYouWantButton *)btn {
-    
+    NSInteger tag = btn.tag;
+    if (tag >= 0 && tag < self.guessYouWantItems.count) {
+        if (_clickBlk) {
+            FHGuessYouWantResponseDataDataModel *model = self.guessYouWantItems[tag];
+            self.clickBlk(model);
+            // TODO: add by zyk 埋点添加
+        }
+    }
 }
 
 @end
@@ -163,6 +245,30 @@
         make.width.mas_lessThanOrEqualTo(120);
         make.height.mas_equalTo(17);
     }];
+}
+
+@end
+
+@implementation NSArray (FHSort)
+
+- (NSArray *)fh_randomArray {
+    // 转为可变数组
+    NSMutableArray * tmp = self.mutableCopy;
+    // 获取数组长度
+    NSInteger count = tmp.count;
+    // 开始循环
+    while (count > 0) {
+        // 获取随机角标
+        NSInteger index = arc4random_uniform((int)(count - 1));
+        // 获取角标对应的值
+        id value = tmp[index];
+        // 交换数组元素位置
+        tmp[index] = tmp[count - 1];
+        tmp[count - 1] = value;
+        count--;
+    }
+    // 返回打乱顺序之后的数组
+    return tmp.copy;
 }
 
 @end

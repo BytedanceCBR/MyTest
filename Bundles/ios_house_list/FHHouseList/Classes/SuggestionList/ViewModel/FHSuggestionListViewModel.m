@@ -36,11 +36,38 @@
         self.listController = viewController;
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
-        self.guessYouWantView = [[FHGuessYouWantView alloc] init];
+        [self setupGuessYouWantView];
     }
     return self;
 }
 
+- (void)setupGuessYouWantView {
+    self.guessYouWantView = [[FHGuessYouWantView alloc] init];
+    __weak typeof(self) wself = self;
+    self.guessYouWantView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
+        [wself guessYouWantItemClick:model];
+    };
+}
+
+// 猜你想搜点击
+- (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+    
+}
+
+// 历史记录Cell点击
+- (void)historyCellClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model {
+    NSLog(@"%@",model);
+}
+
+// 联想词Cell点击
+- (void)associateWordCellClick:(FHSuggestionResponseDataModel *)model {
+    NSLog(@"%@",model);
+}
+
+// 删除历史记录按钮点击
+- (void)deleteHisttoryBtnClick {
+    [self.listController requestDeleteHistory];
+}
 
 #pragma mark - tableview delegate
 
@@ -64,6 +91,10 @@
         if (indexPath.row == 0) {
             FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
             headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            __weak typeof(self) wself = self;
+            headerCell.delClick = ^{
+                [wself deleteHisttoryBtnClick];
+            };
             return headerCell;
         }
         FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
@@ -113,6 +144,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (tableView.tag == 1) {
+        // 历史记录
+        if (indexPath.row - 1 < self.historyData.count) {
+            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
+            [self historyCellClick:model];
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词
+        if (indexPath.row < self.sugListData.count) {
+            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+            [self associateWordCellClick:model];
+        }
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -249,9 +293,9 @@
             if (model.data.data.count > 0) {
                 // 把外部传入的搜索词放到第一个位置
                 
-                [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:model.data.data count:1];
+                NSArray *modelData = [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:model.data.data count:1];
                 
-                [wself.guessYouWantData addObjectsFromArray:model.data.data];
+                [wself.guessYouWantData addObjectsFromArray:modelData];
                 wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
             } else {
                 wself.guessYouWantView.guessYouWantItems = NULL;
