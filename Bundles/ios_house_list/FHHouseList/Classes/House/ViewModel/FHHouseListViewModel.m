@@ -197,6 +197,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -278,6 +279,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -358,6 +360,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -440,6 +443,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
