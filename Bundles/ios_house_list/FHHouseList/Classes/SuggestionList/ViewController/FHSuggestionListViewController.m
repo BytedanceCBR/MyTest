@@ -170,7 +170,7 @@
     _houseType = houseType;
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
-    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
+    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 21)];
     [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(size.width);
     }];

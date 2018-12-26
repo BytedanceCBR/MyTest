@@ -81,7 +81,7 @@
     _triangleImage.image = [UIImage imageNamed:@"icon-triangle-open"];
     [_searchAreaPanel addSubview:_triangleImage];
     [_triangleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchTypeLabel.mas_right).offset(6).priorityHigh();
+        make.left.mas_equalTo(self.searchTypeLabel.mas_right).offset(6);
         make.height.width.mas_equalTo(9);
         make.centerY.mas_equalTo(self.searchAreaPanel);
     }];
