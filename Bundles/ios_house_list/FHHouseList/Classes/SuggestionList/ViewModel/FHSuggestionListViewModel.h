@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;
+- (NSString *)createQueryCondition:(NSDictionary *)conditionDic;
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 - (void)clearSugTableView;

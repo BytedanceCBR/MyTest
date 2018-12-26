@@ -269,18 +269,34 @@
     // 拼接URL
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
-    NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
-    NSDictionary *infos = @{@"houseSearch":houseSearchParams};
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    if (self.suggestDelegate != NULL) {
+        NSDictionary *infos = @{
+                                @"houseSearch":houseSearchParams
+                                };
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    } else {
+        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
+        NSDictionary *infos = @{@"houseSearch":houseSearchParams,
+                               @"tracer": self.tracerDict
+                               };
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    }
+    
+    /*
     // 两种跳转方式
     if (self.suggestDelegate != NULL) {
+        NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+        NSDictionary *infos = @{@"houseSearch":houseSearchParams};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
         // 回传数据，外部pop 页面
         TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:jumpUrl] userInfo:userInfo];
         if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
             [self.suggestDelegate suggestionSelected:obj];
         }
     } else {
+         NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
         // 拿到所需参数，跳转
         // NSString *condition = [NSString stringWithFormat:@"&full_text=%@",userInputText];
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
@@ -293,8 +309,30 @@
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
     [self dismissSelfVCIfNeeded];
-    
+    */
     return YES;
+}
+
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
+    NSString *openUrl = jumpUrl;
+    if (openUrl.length <= 0) {
+        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
+    }
+    if (self.suggestDelegate != NULL) {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        // 回传数据，外部pop 页面
+        TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:openUrl] userInfo:userInfo];
+        if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
+            [self.suggestDelegate suggestionSelected:obj];
+        }
+    } else {
+        // 拿到所需参数，跳转
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        
+        NSURL *url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    [self dismissSelfVCIfNeeded];
 }
 
 // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
@@ -302,20 +340,6 @@
     if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab) {
         [self removeFromParentViewController];
     }
-}
-
-- (NSString *)createQueryCondition:(NSDictionary *)conditionDic {
-    NSString *retStr = @"";
-    if ([conditionDic isKindOfClass:[NSString class]]) {
-        retStr = conditionDic;
-        return retStr;
-    }
-    NSError *error = NULL;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:conditionDic options:NSJSONReadingAllowFragments error:&error];
-    if (data && error == NULL) {
-        retStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    }
-    return retStr;
 }
 
 #pragma mark - Request

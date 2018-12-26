@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestDeleteHistory;
 
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos;
+
 @end
 
 NS_ASSUME_NONNULL_END

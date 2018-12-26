@@ -55,12 +55,44 @@
 
 // 猜你想搜点击
 - (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
-    
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (placeHolder.length > 0) {
+            jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
+        }
+        NSString *queryType = @"hot"; // 猜你想搜
+        NSString *pageType = [self pageTypeString];
+        NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+        NSDictionary *houseSearchParams = @{
+                                            @"enter_query":queryText,
+                                            @"search_query":queryText,
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"houseSearch"] = houseSearchParams;
+        if (model.extinfo) {
+            infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
+        }
+        NSMutableDictionary *tracer = [NSMutableDictionary new];
+        tracer[@"enter_type"] = @"click";
+        if (self.listController.tracerDict != NULL) {
+            if (self.listController.tracerDict[@"element_from"]) {
+                tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+            }
+            if (self.listController.tracerDict[@"enter_from"]) {
+                tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+            }
+        }
+        infos[@"tracer"] = tracer;
+
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
+    }
 }
 
 // 历史记录Cell点击
 - (void)historyCellClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model rank:(NSInteger)rank {
-    
     // 点击埋点
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
@@ -69,6 +101,41 @@
                                 @"show_type":@"list"
                                 };
     [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
+    
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (placeHolder.length > 0) {
+            jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
+        }
+    }
+    NSString *queryType = @"history"; // 历史记录
+    NSString *pageType = [self pageTypeString];
+    NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":queryText,
+                                        @"search_query":queryText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":queryType
+                                        };
+    
+    NSMutableDictionary *infos = [NSMutableDictionary new];
+    infos[@"houseSearch"] = houseSearchParams;
+    if (model.extinfo) {
+        infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
+    }
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+    if (self.listController.tracerDict != NULL) {
+        if (self.listController.tracerDict[@"element_from"]) {
+            tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+        }
+        if (self.listController.tracerDict[@"enter_from"]) {
+            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        }
+    }
+    infos[@"tracer"] = tracer;
+    
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
 // 联想词Cell点击
@@ -86,6 +153,43 @@
                                 @"rank":@(rank)
                                 };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
+    
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (placeHolder.length > 0) {
+            jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
+        }
+    }
+    NSString *queryType = @"associate"; // 联想词
+    NSString *pageType = [self pageTypeString];
+    NSString *inputStr = self.highlightedText.length > 0 ? self.highlightedText : @"be_null";
+    NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":inputStr,
+                                        @"search_query":queryText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":queryType
+                                        };
+    
+    NSMutableDictionary *infos = [NSMutableDictionary new];
+    infos[@"houseSearch"] = houseSearchParams;
+    if (model.info) {
+        NSDictionary *dic = [model.info toDictionary];
+        infos[@"suggestion"] = [self createQueryCondition:dic];
+    }
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+    if (self.listController.tracerDict != NULL) {
+        if (self.listController.tracerDict[@"element_from"]) {
+            tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+        }
+        if (self.listController.tracerDict[@"enter_from"]) {
+            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        }
+    }
+    infos[@"tracer"] = tracer;
+    
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
 // 删除历史记录按钮点击
@@ -126,6 +230,20 @@
                                 @"impr_id":impr_id
                                 };
     [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
+}
+
+- (NSString *)createQueryCondition:(NSDictionary *)conditionDic {
+    NSString *retStr = @"";
+    if ([conditionDic isKindOfClass:[NSString class]]) {
+        retStr = conditionDic;
+        return retStr;
+    }
+    NSError *error = NULL;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:conditionDic options:NSJSONReadingAllowFragments error:&error];
+    if (data && error == NULL) {
+        retStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return retStr;
 }
 
 - (NSString *)pageTypeString {
