@@ -160,12 +160,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _mapView.showsIndoorMapControl = false;
         _mapView.rotateCameraEnabled = false;
         _mapView.delegate = self;
+        _mapView.customizeUserLocationAccuracyCircleRepresentation = true;
         _mapView.runLoopMode = NSDefaultRunLoopMode;
+        _mapView.desiredAccuracy = kCLLocationAccuracyHundredMeters;
         
         _mapView.zoomLevel = _configModel.resizeLevel;
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
-        representation.showsAccuracyRing = NO;
+        representation.showsAccuracyRing = YES;
         [_mapView updateUserLocationRepresentation:representation];
         
         CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};
@@ -710,6 +712,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [FHUserTracker writeEvent:@"stay_mapfind" params:param];
 }
 
+//-(void)checkAccuracy
+//{
+//    if(self.mapView.userLocationAccuracyCircle.radius > 100 ) {
+//        [self.mapView.userLocationAccuracyCircle setRadius:100];
+//        [self.mapView rendererForOverlay:self.mapView.userLocationAccuracyCircle];
+//    }
+//}
+//
+//- (void)mapViewDidStopLocatingUser:(MAMapView *)mapView
+//{
+//    [self checkAccuracy];
+//}
+
+
 - (void)mapViewDidFinishLoadingMap:(MAMapView *)mapView
 {
     if (!self.mapViewRegionSuccess) {
@@ -857,6 +873,28 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //强制显示导航栏，增加保护
         [self.viewController showNavTopViews:1 animated:NO];        
     }    
+}
+
+- (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
+{
+    if (overlay == mapView.userLocationAccuracyCircle) {
+        
+        if ([overlay isKindOfClass:[MACircle class]]) {
+            MACircle *circle = (MACircle *)overlay;
+            if (circle.radius > 100) {
+                [circle setRadius:1000];
+            }
+        }
+        
+        MACircleRenderer *accuracyCircleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
+        
+        accuracyCircleRenderer.lineWidth    = 1.f;
+        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
+        accuracyCircleRenderer.fillColor    = RGBA(41, 156 ,255 , 0.3);
+        
+        return accuracyCircleRenderer;
+    }
+    return nil;
 }
 
 -(void)mapInitComplete:(MAMapView *)mapView
