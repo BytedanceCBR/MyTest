@@ -434,7 +434,8 @@ PODS:
     - TTPlayerSDK (~> 2.8)
     - TTPreloaderSDK (~> 1.4.12)
     - TTVideoEngine (~> 1.8)
-  - ios_house_filter (0.1.0)
+  - ios_house_filter (0.1.0):
+    - JSONModel
   - JSONModel (1.7.0-private)
   - KVOController (1.2.0)
   - libextobjc (0.4.1):
@@ -1400,7 +1401,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: f4817a1991a0c457330826ec81ec57072638b800
+    :commit: 965a5f08ab39f3f437c5535bd22802e24a2ee201
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1457,7 +1458,7 @@ SPEC CHECKSUMS:
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
-  ios_house_filter: bab7ebffdf1555cb10bca8d3829b15d134b548a4
+  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: 978886965ffa3f719042c14840dbf65513b9c541
   libextobjc: 9ab0bd8ba6bc7a947067ad233fd9cd3a5b7a817a
