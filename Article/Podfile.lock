@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.12)
+  - BDALog (0.1.13)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -670,6 +670,13 @@ PODS:
     - TTPlatformBaseLib
     - TTPlatformUIModel
     - TTTracker
+  - TTBridgeUnify/TTBridge (0.3.19)
+  - TTBridgeUnify/TTBridgeAuthManager (0.3.19):
+    - TTBridgeUnify/TTBridge
+    - TTNetworkManager
+  - TTBridgeUnify/WebView (0.3.19):
+    - TTBridgeUnify/TTBridge
+    - TTBridgeUnify/TTBridgeAuthManager
   - TTDebugAssistant (0.2.31):
     - MBProgressHUD
     - RSSwizzle (~> 0.1.0)
@@ -1243,6 +1250,9 @@ DEPENDENCIES:
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
   - TTBatchItemAction (= 0.1.7)
+  - TTBridgeUnify/TTBridge (= 0.3.19)
+  - TTBridgeUnify/TTBridgeAuthManager (= 0.3.19)
+  - TTBridgeUnify/WebView (= 0.3.19)
   - TTDebugAssistant (= 0.2.31)
   - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
@@ -1401,7 +1411,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 965a5f08ab39f3f437c5535bd22802e24a2ee201
+    :commit: 4c2a12e4a80f58cd1e7aa6de36fe099d6aafc30a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1431,7 +1441,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
+  BDALog: 54aee45a65093ffafdbe747b0b00f3c26cdc1ea5
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1492,6 +1502,7 @@ SPEC CHECKSUMS:
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
   TTBatchItemAction: 259f7f729555c8dead78087322aef619fb08c031
+  TTBridgeUnify: 386fa527a843cbbb1a0436bd55a2d837999261b1
   TTDebugAssistant: 33defeaa56e80776a781e5ffbe149cae2fb44e52
   TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
@@ -1551,6 +1562,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 593bb2c69f07a065286b31ab16b2f5c8f634dc0a
+PODFILE CHECKSUM: 406359fc8920ae49c12f9e29433a943d6a43960f
 
 COCOAPODS: 1.4.0

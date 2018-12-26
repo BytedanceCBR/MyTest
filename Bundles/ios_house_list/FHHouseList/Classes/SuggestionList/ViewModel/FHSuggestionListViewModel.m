@@ -358,6 +358,7 @@
             return headerCell;
         }
         FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if (indexPath.row - 1 < self.historyData.count) {
             FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
@@ -380,6 +381,7 @@
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
             FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
@@ -394,6 +396,7 @@
             return cell;
         } else {
             FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSString *originText = model.text;
