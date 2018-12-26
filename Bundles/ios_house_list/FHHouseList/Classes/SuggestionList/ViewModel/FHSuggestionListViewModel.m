@@ -162,6 +162,16 @@
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
             cell.label.attributedText = text1;
+            if (indexPath.row - 1 == self.sugListData.count - 1) {
+                // 末尾
+                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(cell.contentView).offset(-20);
+                }];
+            } else {
+                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(cell.contentView).offset(0);
+                }];
+            }
         }
         return cell;
     } else if (tableView.tag == 2) {
@@ -195,6 +205,16 @@
                 }
                 cell.label.attributedText = [self processHighlighted:resultText originText:originText textColorHex:@"#299cff" fontSize:15.0];
                 cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
+                if (indexPath.row == self.sugListData.count - 1) {
+                    // 末尾
+                    [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.bottom.mas_equalTo(cell.contentView).offset(-20);
+                    }];
+                } else {
+                    [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.bottom.mas_equalTo(cell.contentView).offset(0);
+                    }];
+                }
             }
             return cell;
         }
