@@ -45,7 +45,7 @@ class FHFilterConditionParser: NSObject {
         model.rowId = "\(item.tabId ?? 0)"
 
         if let options = item.options {
-            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options, supportMulti: nil)
+            model.children = FHFilterConditionParser.convertConfigToFHFilterConditionModel(config: options, supportMulti: nil, parent: model)
         } else {
             model.children = []
         }
@@ -72,6 +72,9 @@ class FHFilterConditionParser: NSObject {
         model.value = item.value as? String ?? ""
         model.key = item.type ?? ""
         model.parent = parent
+        if let parent = parent {
+            model.rate = parent.rate
+        }
         if let supportMutli = supportMutli {
             model.isSupportMulti = supportMutli
         } else {
