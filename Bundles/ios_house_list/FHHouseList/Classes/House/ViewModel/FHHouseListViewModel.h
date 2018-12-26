@@ -22,6 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj);
 
+#pragma mark - log相关
+@property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
+
+
 @end
 
 NS_ASSUME_NONNULL_END

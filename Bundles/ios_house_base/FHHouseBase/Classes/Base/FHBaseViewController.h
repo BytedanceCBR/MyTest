@@ -9,6 +9,7 @@
 #import "TTRoute.h"
 #import "FHNavBarView.h"
 #import "FHErrorView.h"
+#import "UIViewController+Track.h"
 
 extern NSString *const TRACER_KEY ;
 extern NSString *const VCTITLE_KEY ;
