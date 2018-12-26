@@ -19,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   NSInteger       loadRequestTimes; // 历史记录和猜你想搜都回来才需要更新列表
 @property (nonatomic, strong)   NSMutableDictionary       *historyShowTracerDic; // 埋点key记录
 @property (nonatomic, assign)   NSInteger       associatedCount;
+@property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
+
+- (NSString *)pageTypeString;
+- (NSString *)categoryNameByHouseType;
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 - (void)clearSugTableView;

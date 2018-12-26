@@ -128,6 +128,80 @@
     [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
 }
 
+- (NSString *)pageTypeString {
+    NSString *retPageTypeStr = @"";
+    switch (self.fromPageType) {
+        case FHEnterSuggestionTypeHome:
+            retPageTypeStr = @"maintab";
+            break;
+        case FHEnterSuggestionTypeRenting:
+            retPageTypeStr = @"rent_list";
+            break;
+        case FHEnterSuggestionTypeFindTab:
+            switch (self.houseType) {
+                case FHHouseTypeNeighborhood:
+                    retPageTypeStr = @"findtab_neighborhood";
+                    break;
+                case FHHouseTypeNewHouse:
+                    retPageTypeStr = @"findtab_new";
+                    break;
+                case FHHouseTypeSecondHandHouse:
+                    retPageTypeStr = @"findtab_old";
+                    break;
+                case FHHouseTypeRentHouse:
+                    retPageTypeStr = @"findtab_rent";
+                    break;
+                default:
+                     retPageTypeStr = @"findtab_old";
+                    break;
+            }
+            break;
+        case FHEnterSuggestionTypeList:
+            switch (self.houseType) {
+                case FHHouseTypeNeighborhood:
+                    retPageTypeStr = @"neighborhood_list";
+                    break;
+                case FHHouseTypeNewHouse:
+                    retPageTypeStr = @"new_list";
+                    break;
+                case FHHouseTypeSecondHandHouse:
+                    retPageTypeStr = @"old_list";
+                    break;
+                case FHHouseTypeRentHouse:
+                    retPageTypeStr = @"rent_list";
+                    break;
+                default:
+                    retPageTypeStr = @"old_list";
+                    break;
+            }
+            break;
+        default:
+            retPageTypeStr = @"maintab";
+            break;
+    }
+    return retPageTypeStr;
+}
+
+- (NSString *)categoryNameByHouseType {
+    switch (self.houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

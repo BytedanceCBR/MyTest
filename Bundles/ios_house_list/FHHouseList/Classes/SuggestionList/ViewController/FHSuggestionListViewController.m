@@ -42,6 +42,7 @@
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
         _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        _viewModel.fromPageType = self.fromSource;
         // 3、sug_delegate 代理
         /*
          NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -79,7 +80,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // TODO：add by zyk 统计时长埋点
     if (self.homePageRollDic) {
         NSString *text = self.homePageRollDic[@"text"];
         if (text.length > 0) {
@@ -245,12 +245,77 @@
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSString *userInputText = self.naviBar.searchInput.text;
-    NSLog(@"%@",self.suggestDelegate);
     
-    NSLog(@"%@",userInputText);
+    // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
+    NSString *rollText = self.homePageRollDic[@"text"];
+    if (self.canSearchWithRollData) {
+        if (userInputText.length <= 0 && rollText.length > 0) {
+            userInputText = rollText;
+        }
+    }
+    // 保存关键词搜索到历史记录
+    NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (tempStr.length > 0) {
+        // TODO: 不应该是直接就进入历史记录了吗？？
+    }
     
+    NSString *pageType = [self.viewModel pageTypeString];
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":userInputText,
+                                        @"search_query":userInputText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":@"enter"
+                                        };
+    // 拼接URL
+    NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+    NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
+    NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    NSDictionary *infos = @{@"houseSearch":houseSearchParams};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+    
+    // 两种跳转方式
+    if (self.suggestDelegate != NULL) {
+        // 回传数据，外部pop 页面
+        TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:jumpUrl] userInfo:userInfo];
+        if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
+            [self.suggestDelegate suggestionSelected:obj];
+        }
+    } else {
+        // 拿到所需参数，跳转
+        // NSString *condition = [NSString stringWithFormat:@"&full_text=%@",userInputText];
+        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
+        NSDictionary *dict = @{@"houseSearch":houseSearchParams,
+                               @"tracer": self.tracerDict
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:jumpUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    [self dismissSelfVCIfNeeded];
     
     return YES;
+}
+
+// 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
+- (void)dismissSelfVCIfNeeded {
+    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab) {
+        [self removeFromParentViewController];
+    }
+}
+
+- (NSString *)createQueryCondition:(NSDictionary *)conditionDic {
+    NSString *retStr = @"";
+    if ([conditionDic isKindOfClass:[NSString class]]) {
+        retStr = conditionDic;
+        return retStr;
+    }
+    NSError *error = NULL;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:conditionDic options:NSJSONReadingAllowFragments error:&error];
+    if (data && error == NULL) {
+        retStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return retStr;
 }
 
 #pragma mark - Request
