@@ -31,7 +31,6 @@
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
 
-@property (nonatomic , strong) UIView *filterBgContainer;
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
@@ -220,12 +219,12 @@
     
     [self initFilter];
     
-    [self.filterBgContainer addSubview:self.filterBgControl];
+    [self.view addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
-
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.filterBgContainer);
+        make.left.bottom.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -301,12 +300,9 @@
         make.height.mas_equalTo(height);
     }];
     
-    [self.filterBgContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
-    }];
-    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.filterBgContainer);
     }];
     
     [self.errorMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -405,18 +401,15 @@
     [self.view addSubview:self.notifyBarView];
 
     [self.view addSubview:self.navbar];
-    
-    _filterBgContainer = [[UIView alloc]init];
-    [self.view addSubview:_filterBgContainer];
-    
-    [_filterBgContainer addSubview:self.filterBgControl];
+
+    [self.view addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];
     [self.view addSubview:_filterContainerView];
 
     [_filterContainerView addSubview:self.filterPanel];
 
-    [self.view bringSubviewToFront:_filterBgContainer];
+    [self.view bringSubviewToFront:self.filterBgControl];
 
 }
 
