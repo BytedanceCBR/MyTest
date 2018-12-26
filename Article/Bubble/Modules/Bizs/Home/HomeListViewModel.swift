@@ -335,7 +335,6 @@ class HomeListViewModel: DetailPageViewModel {
     //生成默认加载图
     func generateDefaultSection() -> [TableSectionNode]
     {
-        
         let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
         
         let entrys = config?.opData?.items
