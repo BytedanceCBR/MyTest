@@ -2,7 +2,7 @@
 // Prefix header for all source files of the 'Article' target in the 'Article' project
 //
 
-#import <Availability.h>
+//#import <Availability.h>
 
 #ifndef __IPHONE_3_0
 #warning "This project uses features only available in iOS SDK 3.0 and later."

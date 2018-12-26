@@ -149,7 +149,7 @@ def appPods
     pod 'TTReporter', '0.2.1'
     #-----头条号---
     pod 'TTAdModule', '0.1.25'
-    pod 'TTAdSplashSDK', '0.1.0'
+    pod 'TTAdSplashSDK', '0.4.1'
 
     pod 'TTEntry', '0.1.6'
     
