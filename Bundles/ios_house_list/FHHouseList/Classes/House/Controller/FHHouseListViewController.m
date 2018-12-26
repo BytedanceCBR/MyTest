@@ -174,9 +174,14 @@
         [wself.houseFilterBridge setFilterConditions:params];
         [wself.houseFilterBridge trigerConditionChanged];
     };
-    _viewModel.sugSelectBlock = ^(TTRouteObject * _Nonnull routeObject) {
+    _viewModel.getAllQueryString = ^NSString * _Nonnull{
         
-        [wself handleSugSelection:routeObject];
+       return [wself.houseFilterBridge getAllQueryString];
+    };
+
+    _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+        
+        [wself handleSugSelection:paramObj];
     };
     _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
         
@@ -219,21 +224,22 @@
     [self refreshNavBar:self.houseType placeholder:placeholder];
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
-//    [self.houseFilterBridge trigerConditionChanged];
     
 }
--(void)handleSugSelection:(TTRouteObject *)routeObject {
+-(void)handleSugSelection:(TTRouteParamObj *)paramObj {
     
-    NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
+    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
     if (houseTypeStr.integerValue != self.houseType) {
         
         self.houseType = houseTypeStr.integerValue;
         self.viewModel.houseType = self.houseType;
-        self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
-
+//        self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+        [self initFilter];
     }
     
-    [self handleListOpenUrlUpdate:routeObject.paramObj];
+    [self handleListOpenUrlUpdate:paramObj];
+    [self.houseFilterBridge trigerConditionChanged];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated

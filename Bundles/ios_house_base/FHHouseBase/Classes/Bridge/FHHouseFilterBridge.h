@@ -41,7 +41,8 @@
 
 -(void)setFilterConditions:(NSDictionary*)params;
 
-
+#pragma mark 获取所有query条件，包括condition和非condition
+-(NSString *)getAllQueryString;
 @end
 
 

@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^showNotify)(NSString *message);
 @property(nonatomic , copy) void (^setConditionsBlock)(NSDictionary *params);
 
+@property(nonatomic , copy) NSString * (^getAllQueryString)();
+
 @property(nonatomic , weak) id<FHHouseListViewModelDelegate> viewModelDelegate;
 
 -(NSString *)categoryName;

@@ -47,7 +47,6 @@
 @property (nonatomic , copy) NSString *condition;
 
 @property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
-
 @end
 
 
@@ -529,12 +528,18 @@
 -(void)onConditionChanged:(NSString *)condition
 {
     NSLog(@"zjing - onConditionChanged condition-%@",condition);
-    if ([self.condition isEqualToString:condition]) {
+    
+    NSString *allQuery = @"";
+    if (self.getAllQueryString) {
+        
+        allQuery = self.getAllQueryString();
+    }
+
+    if ([self.condition isEqualToString:allQuery]) {
         return;
     }
-    
-    self.condition = condition;
-    [self.filterOpenUrlMdodel overwriteFliter:condition];
+    self.condition = allQuery;
+    [self.filterOpenUrlMdodel overwriteFliter:self.condition];
 
     self.showPlaceHolder = NO;
     self.isRefresh = YES;
@@ -674,7 +679,7 @@
     
     if (self.sugSelectBlock) {
         
-        self.sugSelectBlock(routeObject);
+        self.sugSelectBlock(routeObject.paramObj);
     }
 
 }
