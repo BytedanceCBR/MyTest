@@ -84,6 +84,9 @@
             if (self.listController.tracerDict[@"enter_from"]) {
                 tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
             }
+            if (self.listController.tracerDict[@"origin_from"]) {
+                tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+            }
         }
         infos[@"tracer"] = tracer;
 
@@ -131,6 +134,9 @@
         }
         if (self.listController.tracerDict[@"enter_from"]) {
             tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        }
+        if (self.listController.tracerDict[@"origin_from"]) {
+            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
     infos[@"tracer"] = tracer;
@@ -185,6 +191,9 @@
         }
         if (self.listController.tracerDict[@"enter_from"]) {
             tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        }
+        if (self.listController.tracerDict[@"origin_from"]) {
+            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
     infos[@"tracer"] = tracer;

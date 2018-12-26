@@ -131,6 +131,7 @@ class NIHSearchPanelViewModel: NSObject {
             rollText = self.suspendSearchBar.searchTitles[self.suspendSearchBar.searchTitleIndex]
         }
         self.recordClickHouseSearch(rollText: rollText)
+        /*
         let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeHome)
 
         let tracerParams = TracerParams.momoid() <|>
@@ -168,6 +169,33 @@ class NIHSearchPanelViewModel: NSObject {
                 associationalWord: (associationalWord?.isEmpty ?? true) ? nil : associationalWord,
                 houseSearchParams: hsp,
                 tracerParams: paramsWithCategoryType)
+        }
+ */
+        
+        // 埋点参数需要添加通用参数
+        let tracerParams = TracerParams.momoid() <|>
+            toTracerParams("click", key: "enter_type") <|>
+            toTracerParams("maintab_search", key: "element_from") <|>
+            toTracerParams("maintab", key: "enter_from") <|>
+            toTracerParams("be_null", key: "log_pb") <|>
+            toTracerParams("maintab_search", key: "origin_from")
+        
+        var infos:[String:Any] = [:]
+        infos["house_type"] = HouseType.secondHandHouse.rawValue
+        infos["tracer"] = tracerParams.paramsGetter([:])
+        infos["from_home"] = 1
+        let index = self.suspendSearchBar.searchTitleIndex
+        if index >= 0 && index < self.homePageRollScreen.count {
+            let homePageRollData = self.homePageRollScreen[index]
+            let homePageRollDataDic = ["text":homePageRollData.text ?? "",
+                                       "guess_search_id":homePageRollData.guessSearchId ?? "",
+                                       "house_type":homePageRollData.houseType,
+                                       "open_url":homePageRollData.openUrl ?? ""] as [String : Any]
+            infos["homepage_roll_data"] = homePageRollDataDic
+        }
+        let userInfo = TTRouteUserInfo(info: infos)
+        if let url = URL(string: "sslocal://sug_list") {
+            TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
         }
     }
 
