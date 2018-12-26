@@ -9,14 +9,12 @@
 #import "UIFont+House.h"
 #import "TTDeviceHelper.h"
 #import "UIColor+Theme.h"
-#import "HMSegmentedControl.h"
 #import "FHEnvContext.h"
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
 @property (nonatomic, strong) NSArray <NSString *> * sectionTitleArray;
 @property (nonatomic, assign) NSInteger currentIndex;
-@property (nonatomic, strong) HMSegmentedControl *segmentedControl;
 
 @end
 
@@ -76,6 +74,13 @@
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    WeakSelf;
+    _segmentedControl.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        if (self.clickIndexCallBack) {
+            self.clickIndexCallBack(index);
+        }
+    };
     [self addSubview:self.segmentedControl];
 }
 

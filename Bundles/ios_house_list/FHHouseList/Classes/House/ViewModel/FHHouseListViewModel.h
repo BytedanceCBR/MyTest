@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *houseListOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
 
-@property(nonatomic , copy) void (^sugSelectBlock)(TTRouteObject *routeObject);
-@property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *routeObject);
+@property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
+@property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj);
 
 @end
 

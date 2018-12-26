@@ -50,7 +50,6 @@
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 @property(nonatomic , strong) FHHouseRentDataModel *currentRentDataModel;
-@property(nonatomic , assign) BOOL conditionCalled;
 @property(nonatomic , copy)  NSString *conditionFilter;
 @property(nonatomic , strong) NSString *suggestion;
 @property(nonatomic , strong) NSDictionary *houseSearchDict;
@@ -372,10 +371,6 @@
 
 -(void)onConditionChanged:(NSString *)condition
 {
-    if (!_conditionCalled) {
-        _conditionCalled = YES;
-        return;
-    }
     if ([self.conditionFilter isEqualToString:condition]) {
         return;
     }
