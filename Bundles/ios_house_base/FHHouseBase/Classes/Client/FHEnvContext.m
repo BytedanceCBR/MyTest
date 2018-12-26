@@ -13,6 +13,7 @@
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
+@property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @end
 
 @implementation FHEnvContext
@@ -124,6 +125,30 @@
         _reachability = [TTReachability new];
     }
     return _reachability;
+}
+
+- (FHClientHomeParamsModel *)commonPageModel
+{
+    if (!_commonPageModel) {
+        _commonPageModel = [FHClientHomeParamsModel new];
+    }
+    return _commonPageModel;
+}
+
+- (FHClientHomeParamsModel *)getCommonParams
+{
+    return self.commonPageModel;
+}
+
+- (void)updateOriginFrom:(NSString *)originFrom originSearchId:(NSString *)originSearchid
+{
+    if (kIsNSString(originFrom)) {
+        self.commonPageModel.originFrom = originFrom;
+    }
+    
+    if (kIsNSString(originSearchid)) {
+        self.commonPageModel.originSearchId = originSearchid;
+    }
 }
 
 @end

@@ -162,7 +162,7 @@ static NSString *s_oldAgent = nil;
     {
         netType = @"2G";
     }
-    
+    [ua appendFormat:@" ManyHouse/%@", marketingVersionNumber];
     [ua appendFormat:@" JsSdk/%@", @"2.0"];
     [ua appendFormat:@" NetType/%@", netType];
     [ua appendFormat:@" (%@ %@ %f)", appName, marketingVersionNumber, [TTDeviceHelper OSVersionNumber]];
