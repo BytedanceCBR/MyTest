@@ -769,21 +769,24 @@
     if (!self.showPlaceHolder) {
 
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        
-        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-        if (height < 1) {
+        if (indexPath.row < self.houseList.count) {
+
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+            if (height < 1) {
+                
+                height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
+                    
+                    [cell updateWithHouseCellModel:cellModel];
+                    [cell refreshTopMargin: 20];
+                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    
+                }];
+            }
             
-            height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-                
-                [cell updateWithHouseCellModel:cellModel];
-                [cell refreshTopMargin: 20];
-                [cell refreshBottomMargin:isLastCell ? 20 : 0];
-                
-            }];
+            return height;
         }
         
-        return height;
     }
 
     return 105;
