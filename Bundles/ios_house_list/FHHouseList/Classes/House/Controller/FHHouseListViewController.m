@@ -15,6 +15,7 @@
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
 #import "FHHouseListViewModel.h"
+
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
@@ -29,6 +30,7 @@
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
+
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
@@ -149,9 +151,24 @@
     
     [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
-    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
     self.viewModel.viewModelDelegate = self;
+    [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
+    
+    [bridge showBottomLine:NO];
+    
+    UIView *bottomLine = [[UIView alloc] init];
+    bottomLine.backgroundColor = [UIColor themeGray6];
+    [self.filterPanel addSubview:bottomLine];
+    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.and.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(0.5);
+    }];
 
+
+}
+
+-(void)setupViewModelBlock {
+    
     __weak typeof(self) wself = self;
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
@@ -175,9 +192,9 @@
     };
     _viewModel.getAllQueryString = ^NSString * _Nonnull{
         
-       return [wself.houseFilterBridge getAllQueryString];
+        return [wself.houseFilterBridge getAllQueryString];
     };
-
+    
     _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
         
         [wself handleSugSelection:paramObj];
@@ -188,40 +205,23 @@
     };
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
-//        [wself showNotify:message];
+        //        [wself showNotify:message];
     };
     
-    [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
-//    _filterBgControl.hidden = YES;
-    
-    [bridge showBottomLine:NO];
-    
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(0.5);
-    }];
-
 }
 
 -(void)resetFilter:(TTRouteParamObj *)paramObj {
 
     [_filterBgControl removeFromSuperview];
-    
-    self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
-    self.filterPanel = [self.houseFilterBridge filterPannel:self.houseFilterViewModel];
-    self.filterBgControl = [self.houseFilterBridge filterBgView:self.houseFilterViewModel];
-    
-    [self.view addSubview:self.filterBgControl];
-    
     [self.filterContainerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
     }];
+    
+    [self initFilter];
+    
+    [self.view addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
-    [self.view bringSubviewToFront:self.filterBgControl];
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
@@ -231,6 +231,7 @@
         make.edges.mas_equalTo(self.filterContainerView);
     }];
     
+
     self.viewModel.houseType = self.houseType;
     [self.houseFilterViewModel setFilterConditions:paramObj.queryParams];
     [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
@@ -339,7 +340,11 @@
     [super viewDidLoad];
 
     [self initNavbar];
+    
+    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
+
     [self initFilter];
+    [self setupViewModelBlock];
 
     [self setupUI];
 
@@ -396,6 +401,7 @@
     [self.view addSubview:self.notifyBarView];
 
     [self.view addSubview:self.navbar];
+
     [self.view addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];

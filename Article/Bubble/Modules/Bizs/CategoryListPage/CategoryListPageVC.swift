@@ -183,6 +183,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         self.navBar.isShowTypeSelector = false
 
         self.resetFilterCondition(routeParamObj: paramObj)
+  
         //暂时在这里需要检测一下是否配置已经被加载
         if EnvContext.shared.client.configCacheSubject.value == nil {
             EnvContext.shared.client.loadSearchCondition()
@@ -611,8 +612,10 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
                     tableView.contentInset = inset
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000), execute: {
                         UIView.animate(withDuration: 0.3, animations: {
-                            inset.top = 0
-                            tableView.contentInset = inset
+                            if var toInsets = self?.tableView.contentInset {
+                                toInsets.top = 0
+                                tableView.contentInset = toInsets
+                            }
                         })
                     })
                 }

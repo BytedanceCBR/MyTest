@@ -13,6 +13,7 @@
 #import "FHHomeRequestAPI.h"
 #import "FHHouseType.h"
 #import "FHHomeHouseModel.h"
+#import "TTURLUtils.h"
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -82,6 +83,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
+            
+//            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+//            urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr];
+//            NSURL *url = [TTURLUtils URLWithString:urlStr];
+//            [[TTRoute sharedRoute] openURLByPushViewController:url];
+//            return ;
+//
             StrongSelf;
             if (configDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [configDataModel.houseTypeList objectAtIndex:indexValue];

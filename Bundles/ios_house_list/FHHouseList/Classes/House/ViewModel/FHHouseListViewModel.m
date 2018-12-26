@@ -81,7 +81,7 @@
         
         // add by zjing for test
         
-        self.condition = paramObj.allParams[@"suggestion"];
+        self.condition = [self.filterOpenUrlMdodel query];
 
     }
     return self;
@@ -108,7 +108,10 @@
 -(void)loadData:(BOOL)isRefresh
 {
 
-    NSString *query = [_filterOpenUrlMdodel query];
+//    NSString *query = [_filterOpenUrlMdodel query];
+    
+    NSString *query = self.condition;
+
     NSInteger offset = 0;
 
     NSMutableDictionary *param = [NSMutableDictionary new];

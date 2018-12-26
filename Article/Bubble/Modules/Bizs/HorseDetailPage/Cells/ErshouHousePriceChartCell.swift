@@ -757,6 +757,10 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: Trace
                     theCell.priceUpTrend.image = UIImage(named: "ion-arrow-down-a-ionicons")
                 }
             }
+        }else {
+            
+            theCell.priceUpValueLabel.text = "持平"
+            theCell.monthUpTrend.isHidden = true
         }
 
         if let monthUp = data.neighborhoodInfo?.monthUp {

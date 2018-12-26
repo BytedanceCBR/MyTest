@@ -12,6 +12,7 @@
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
 #import "TTBaseMacro.h"
+#import "TTURLUtils.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -67,7 +68,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (!configModel) {
         [self tt_startUpdate];
     }
-    
+
 }
 
 - (void)willAppear
@@ -107,9 +108,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     return YES;
 }
-
-
-
 
 /*
  #pragma mark - Navigation
