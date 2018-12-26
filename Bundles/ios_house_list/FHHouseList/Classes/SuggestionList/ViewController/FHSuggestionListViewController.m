@@ -186,6 +186,7 @@
                        @(FHHouseTypeRentHouse),
                        @(FHHouseTypeNewHouse),
                        @(FHHouseTypeNeighborhood),];
+    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     //TODO: add by zyk configCcache中数据获取
     NSMutableArray *menuItems = [[NSMutableArray alloc] init];
     [items enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -254,10 +255,11 @@
         }
     }
     // 保存关键词搜索到历史记录
+    /*
     NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (tempStr.length > 0) {
-        // TODO: 不应该是直接就进入历史记录了吗？？
     }
+     */
     
     NSString *pageType = [self.viewModel pageTypeString];
     NSDictionary *houseSearchParams = @{
@@ -283,33 +285,6 @@
                                };
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
     }
-    
-    /*
-    // 两种跳转方式
-    if (self.suggestDelegate != NULL) {
-        NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
-        NSDictionary *infos = @{@"houseSearch":houseSearchParams};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-        // 回传数据，外部pop 页面
-        TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:jumpUrl] userInfo:userInfo];
-        if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
-            [self.suggestDelegate suggestionSelected:obj];
-        }
-    } else {
-         NSString * jumpUrl  = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
-        // 拿到所需参数，跳转
-        // NSString *condition = [NSString stringWithFormat:@"&full_text=%@",userInputText];
-        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
-        NSDictionary *dict = @{@"houseSearch":houseSearchParams,
-                               @"tracer": self.tracerDict
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *url = [NSURL URLWithString:jumpUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-    [self dismissSelfVCIfNeeded];
-    */
     return YES;
 }
 
@@ -394,7 +369,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    NSLog(@"dealloc");
 }
 
 @end
