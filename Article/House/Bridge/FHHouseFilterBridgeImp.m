@@ -102,4 +102,9 @@
     [_houseFilterViewModel setFilterConditions:params];
 }
 
+-(NSString *)getAllQueryString
+{
+    return [_houseFilterViewModel allQueryString];
+}
+
 @end

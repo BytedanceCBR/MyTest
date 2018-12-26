@@ -30,7 +30,7 @@
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
 @property (nonatomic , strong) UIControl *filterBgControl;
-@property (nonatomic , strong) id houseFilterViewModel;
+@property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 
 @property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
@@ -146,13 +146,12 @@
     self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
-    self.houseFilterViewModel = bridge;
     
     [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
     self.viewModel.viewModelDelegate = self;
-    
+
     __weak typeof(self) wself = self;
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];
@@ -207,6 +206,37 @@
 
 }
 
+-(void)resetFilter:(TTRouteParamObj *)paramObj {
+
+    [_filterBgControl removeFromSuperview];
+    
+    self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+    self.filterPanel = [self.houseFilterBridge filterPannel:self.houseFilterViewModel];
+    self.filterBgControl = [self.houseFilterBridge filterBgView:self.houseFilterViewModel];
+    
+    [self.view addSubview:self.filterBgControl];
+    
+    [self.filterContainerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj removeFromSuperview];
+    }];
+    [self.filterContainerView addSubview:self.filterPanel];
+    
+    [self.view bringSubviewToFront:self.filterBgControl];
+    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+    }];
+    
+    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.filterContainerView);
+    }];
+    
+    self.viewModel.houseType = self.houseType;
+    [self.houseFilterViewModel setFilterConditions:paramObj.queryParams];
+    [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
+
+    
+}
 #pragma mark 处理sug带回的houseType，导航栏placeholder，筛选器
 -(void)handleListOpenUrlUpdate:(TTRouteParamObj *)paramObj {
 
@@ -232,9 +262,8 @@
     if (houseTypeStr.integerValue != self.houseType) {
         
         self.houseType = houseTypeStr.integerValue;
-        self.viewModel.houseType = self.houseType;
-//        self.houseFilterViewModel = [self.houseFilterBridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
-        [self initFilter];
+        [self resetFilter:paramObj];
+
     }
     
     [self handleListOpenUrlUpdate:paramObj];
@@ -272,7 +301,7 @@
     
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterPanel.mas_bottom);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
     [self.errorMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -284,13 +313,17 @@
         make.top.mas_equalTo(self.navbar.mas_bottom);
     }];
     
-    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(self.containerView);
         make.height.mas_equalTo(@44);
     }];
     
+    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.filterContainerView);
+    }];
+    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.filterPanel.mas_bottom);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
@@ -364,7 +397,11 @@
 
     [self.view addSubview:self.navbar];
     [self.view addSubview:self.filterBgControl];
-    [self.view addSubview:self.filterPanel];
+    
+    _filterContainerView = [[UIView alloc]init];
+    [self.view addSubview:_filterContainerView];
+
+    [_filterContainerView addSubview:self.filterPanel];
 
     [self.view bringSubviewToFront:self.filterBgControl];
 
