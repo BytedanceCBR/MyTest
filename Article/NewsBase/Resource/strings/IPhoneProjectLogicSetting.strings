@@ -17,7 +17,7 @@
 "neighborhood_detail"   = "_TtC6Bubble17HorseDetailPageVC";
 "new_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
 "rent_detail"           = "_TtC6Bubble17HouseRentDetailVC";
-"sug_list"              = "_TtC6Bubble16SuggestionListVC";
+"sug_list"              = "FHSuggestionListViewController";
 
 "floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
 "message_detail_list"   = "_TtC6Bubble13MessageListVC";

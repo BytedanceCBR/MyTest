@@ -10,6 +10,7 @@
 #import "TTBaseMacro.h"
 #import "FHHomeConfigManager.h"
 #import "FHGeneralBizConfig.h"
+#import "FHClientModel.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -89,6 +90,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
+
+
+- (FHClientHomeParamsModel *)getCommonParams;
+
+- (void)updateOriginFrom:(NSString *)originFrom originSearchId:(NSString *)originSearchid;
 
 @end
 

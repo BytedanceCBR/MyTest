@@ -42,6 +42,7 @@
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
         _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        _viewModel.fromPageType = self.fromSource;
         // 3、sug_delegate 代理
         /*
          NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -79,7 +80,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // TODO：add by zyk 统计时长埋点
     if (self.homePageRollDic) {
         NSString *text = self.homePageRollDic[@"text"];
         if (text.length > 0) {
@@ -186,6 +186,7 @@
                        @(FHHouseTypeRentHouse),
                        @(FHHouseTypeNewHouse),
                        @(FHHouseTypeNeighborhood),];
+    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     //TODO: add by zyk configCcache中数据获取
     NSMutableArray *menuItems = [[NSMutableArray alloc] init];
     [items enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -245,12 +246,75 @@
 // 输入框执行搜索
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSString *userInputText = self.naviBar.searchInput.text;
-    NSLog(@"%@",self.suggestDelegate);
     
-    NSLog(@"%@",userInputText);
+    // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
+    NSString *rollText = self.homePageRollDic[@"text"];
+    if (self.canSearchWithRollData) {
+        if (userInputText.length <= 0 && rollText.length > 0) {
+            userInputText = rollText;
+        }
+    }
+    // 保存关键词搜索到历史记录
+    /*
+    NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (tempStr.length > 0) {
+    }
+     */
     
+    NSString *pageType = [self.viewModel pageTypeString];
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":userInputText,
+                                        @"search_query":userInputText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":@"enter"
+                                        };
+    // 拼接URL
+    NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+    NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
     
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    if (self.suggestDelegate != NULL) {
+        NSDictionary *infos = @{
+                                @"houseSearch":houseSearchParams
+                                };
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    } else {
+        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
+        NSDictionary *infos = @{@"houseSearch":houseSearchParams,
+                               @"tracer": self.tracerDict
+                               };
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    }
     return YES;
+}
+
+- (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
+    NSString *openUrl = jumpUrl;
+    if (openUrl.length <= 0) {
+        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,queryText,placeholder];
+    }
+    if (self.suggestDelegate != NULL) {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        // 回传数据，外部pop 页面
+        TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:openUrl] userInfo:userInfo];
+        if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
+            [self.suggestDelegate suggestionSelected:obj];
+        }
+    } else {
+        // 拿到所需参数，跳转
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        
+        NSURL *url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    [self dismissSelfVCIfNeeded];
+}
+
+// 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
+- (void)dismissSelfVCIfNeeded {
+    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab) {
+        [self removeFromParentViewController];
+    }
 }
 
 #pragma mark - Request
@@ -305,7 +369,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    NSLog(@"dealloc");
 }
 
 @end
