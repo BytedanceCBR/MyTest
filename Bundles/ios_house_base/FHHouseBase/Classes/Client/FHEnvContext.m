@@ -10,12 +10,9 @@
 #import "FHUtils.h"
 #import "TTReachability.h"
 #import "YYCache.h"
-#import "FHGeneralBizConfig.h"
 
 @interface FHEnvContext ()
-@property (nonatomic, strong) FHGeneralBizConfig *generalBizConfig;
 @property (nonatomic, strong) TTReachability *reachability;
-
 @end
 
 @implementation FHEnvContext

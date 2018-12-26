@@ -12,10 +12,6 @@
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
 #import "FHHouseSingleImageInfoCellBridgeDelegate.h"
-//#import "FHSearchHouseModel.h"
-//#import "FHNewHouseItemModel.h"
-//#import "FHHouseRentModel.h"
-//#import "FHHouseNeighborModel.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHCornerView.h"
 #import "FHSingleImageInfoCellModel.h"
@@ -43,8 +39,6 @@
 @property(nonatomic, assign) CGFloat topMargin;
 @property(nonatomic, assign) CGFloat bottomMargin;
 
-@property(nonatomic, assign) CGSize titleSize;
-
 @end
 
 @implementation FHSingleImageInfoCell
@@ -54,11 +48,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.isFirstCell = NO;
-        self.isTail = NO;
-
         self.topMargin = 20;
-        self.bottomMargin = 0;
+        self.bottomMargin = 10;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         [self setupUI];
@@ -73,25 +64,28 @@
     [self.headView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.right.top.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(@14);
+        make.height.mas_equalTo(@(self.topMargin));
     }];
     
     [self.contentView addSubview:self.bottomView];
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.top.mas_equalTo(self.contentView).mas_offset(105);
-        make.left.right.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(@10);
-    }];
     
     [self.contentView addSubview:self.majorImageView];
     [self.majorImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.mas_equalTo(@20);
-        make.top.mas_equalTo(self.headView.mas_bottom).mas_offset(3);
+        make.top.mas_equalTo(self.headView.mas_bottom);
         make.width.mas_equalTo(@114);
         make.height.mas_equalTo(85);
 
+    }];
+    
+//    [self.majorImageView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(self.majorImageView.mas_bottom);
+        make.left.right.bottom.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(@(self.bottomMargin));
     }];
     
     UIView *infoPanel = [[UIView alloc]init];
@@ -100,14 +94,14 @@
     [infoPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.majorImageView.mas_right).offset(12);
         make.top.mas_equalTo(self.majorImageView);
-        make.bottom.mas_equalTo(self.bottomView.mas_top);
-        make.height.mas_equalTo(@91);
+        make.bottom.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
     }];
     
     [infoPanel addSubview:self.majorTitle];
     [self.majorTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(infoPanel);
+        make.left.right.mas_equalTo(infoPanel);
+        make.top.mas_equalTo(infoPanel).mas_offset(-5);
         make.height.mas_equalTo(@22);
     }];
     
@@ -120,7 +114,8 @@
     
     [infoPanel addSubview:self.areaLabel];
     [self.areaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(infoPanel);
+        make.left.mas_equalTo(infoPanel).mas_offset(-3);
+        make.right.mas_equalTo(infoPanel);
         make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
         make.height.mas_equalTo(@15);
     }];
@@ -195,18 +190,13 @@
 }
 
 
--(void)updateOriginPriceLabelConstraints:(NSString *)originPriceText {
+-(void)updateOriginPriceLabelConstraints:(NSAttributedString *)originPriceAttrStr {
 
-    if (originPriceText.length > 0) {
-        
-        NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPriceText];
-        [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPriceText.length)];
-        [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray] range:NSMakeRange(0, originPriceText.length)];
-        self.originPriceLabel.attributedText = attri;
+    if (originPriceAttrStr.string.length > 0) {
 
+        self.originPriceLabel.attributedText = originPriceAttrStr;
         CGFloat offset = [TTDeviceHelper isScreenWidthLarge320] ? 20 : 15;
         self.originPriceLabel.hidden = NO;
-//        self.originPriceLabel.text = originPriceText;
         [self.originPriceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.priceLabel.mas_right).mas_offset(6);
             make.height.mas_equalTo(@17);
@@ -230,57 +220,43 @@
     
 }
 
--(void)updateLayoutCompoents:(BOOL)isShowTags {
+-(void)updateLayoutComponents:(BOOL)isShowTags {
+
+    CGSize fitSize = self.cellModel.titleSize;
+    self.majorTitle.numberOfLines = isShowTags ? 1 : 2;
 
     if (isShowTags) {
         
-        self.majorTitle.numberOfLines = 1;
         [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.infoPanel).mas_offset(-3);
-            make.height.mas_equalTo(@20);
+            
+            make.top.mas_equalTo(self.infoPanel).mas_offset(-5);
+            make.height.mas_equalTo(@22);
         }];
-        [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(4);
-            make.height.mas_equalTo(@17);
-        }];
-        [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
-            make.height.mas_equalTo(@15);
-            make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
-        }];
-
+        
     }else {
         
-        self.majorTitle.numberOfLines = 2;
-        CGSize fitSize = self.titleSize;
-//        CGSize fitSize = [self.majorTitle sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width * ([UIScreen mainScreen].bounds.size.width > 376 ? 0.61 : [UIScreen mainScreen].bounds.size.width > 321 ? 0.56 : 0.48), 0)];
         [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.infoPanel).mas_offset(fitSize.height < 30 ? 0 : -5);
-            make.height.mas_equalTo(fitSize.height < 30 ? @20 : @50);
+            
+            make.top.mas_equalTo(self.infoPanel).mas_offset(fitSize.height < 30 ? -4 : -6);
+            make.height.mas_equalTo(fitSize.height < 30 ? @22 : @50);
         }];
-        [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(fitSize.height < 30 ? 4 : 1);
-            make.height.mas_equalTo(@17);
-        }];
-        [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(0);
-            make.height.mas_equalTo(@0);
-        }];
-        [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.areaLabel.mas_bottom).mas_offset(0);
-            make.height.mas_equalTo(@24);
-            make.width.mas_lessThanOrEqualTo(@130);
-        }];
-        
-        
     }
+    
+    [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(fitSize.height < 30 ? 4 : 1);
+    }];
+    
+    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(isShowTags ? 5 : 0);
+        make.height.mas_equalTo(isShowTags ? @15 : @0);
+    }];
+    
+    [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.mas_equalTo(self.areaLabel.mas_bottom).mas_offset(isShowTags ? 5 : 0);
+    }];
 
 }
 
@@ -290,27 +266,6 @@
 
     self.imageTopLeftLabel.text = nil;
     self.imageTopLeftLabelBgView.hidden = YES;
-
-//    [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.top.mas_equalTo(self.infoPanel);
-//        make.height.mas_equalTo(@20);
-//    }];
-//    [self.extendTitle mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(self.infoPanel);
-//        make.top.mas_equalTo(self.majorTitle.mas_bottom).mas_offset(4);
-//        make.height.mas_equalTo(@17);
-//    }];
-//    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(self.infoPanel);
-//        make.top.mas_equalTo(self.extendTitle.mas_bottom).mas_offset(5);
-//        make.height.mas_equalTo(@15);
-//    }];
-//    [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.infoPanel);
-//        make.top.mas_equalTo(self.areaLabel.mas_bottom).mas_offset(5);
-//        make.height.mas_equalTo(@24);
-//        make.width.mas_lessThanOrEqualTo(@130);
-//    }];
 
 }
 
@@ -324,13 +279,9 @@
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displaySubtitle;
-    self.isTail = isLastCell;
     
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
 
-    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
-    }];
     self.priceLabel.text = model.displayPrice;
     self.roomSpaceLabel.text = model.displayPricePerSqm;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
@@ -347,42 +298,34 @@
         self.imageTopLeftLabelBgView.hidden = YES;
     }
 
-    [self updateOriginPriceLabelConstraints:model.originPrice];
-    [self updateLayoutCompoents:self.cellModel.tagsAttrStr.string.length > 0];
+    [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
+    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     
 }
 
 #pragma mark 新房
--(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displayDescription;
-
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
 
-//    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
-//    }];
     self.priceLabel.text = model.displayPricePerSqm;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
-//    [self updateOriginPriceLabelConstraints:nil];
-//    [self updateLayoutCompoents:text.string.length > 0];
+    [self updateOriginPriceLabelConstraints:nil];
+    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     
 }
 
 #pragma mark 二手房
--(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model {
     
     self.majorTitle.text = model.displayTitle;
     self.extendTitle.text = model.displaySubtitle;
-
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
 
-    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
-    }];
     self.priceLabel.text = model.displayPrice;
     self.roomSpaceLabel.text = model.displayPricePerSqm;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
@@ -392,30 +335,24 @@
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
         self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabel.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
         self.imageTopLeftLabelBgView.hidden = NO;
     }else {
         
         self.imageTopLeftLabelBgView.hidden = YES;
     }
     
-    [self updateOriginPriceLabelConstraints:model.originPrice];
-    [self updateLayoutCompoents:self.cellModel.tagsAttrStr.string.length > 0];
+    [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
+    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     
 }
 
 #pragma mark 租房
--(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model  isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
+-(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model {
     
     self.majorTitle.text = model.title;
     self.extendTitle.text = model.subtitle;
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoPanel).mas_offset(-3);
-        make.height.mas_equalTo(@15);
-
-    }];
     self.priceLabel.text = model.pricing;
     self.roomSpaceLabel.text = nil;
     FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
@@ -425,7 +362,7 @@
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
         self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabel.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
         self.imageTopLeftLabelBgView.hidden = NO;
     }else {
         
@@ -433,7 +370,7 @@
     }
     
     [self updateOriginPriceLabelConstraints:nil];
-    [self updateLayoutCompoents:text.string.length > 0];
+    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     
 }
 
@@ -444,38 +381,16 @@
     self.extendTitle.text = model.displaySubtitle;
     self.areaLabel.text = model.displayStatsInfo;
     self.priceLabel.text = model.displayPrice;
+    
+    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.infoPanel);
+    }];
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
 
     self.imageTopLeftLabelBgView.hidden = YES;
     [self updateOriginPriceLabelConstraints:nil];
 }
-
-//-(void)updateWithHouseModel:(JSONModel *)model isFirstCell:(BOOL)isFirstCell isLastCell:(BOOL)isLastCell {
-//
-//    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-//
-//        FHNewHouseItemModel *theModel = (FHNewHouseItemModel *)model;
-//        [self updateWithNewHouseModel:theModel isFirstCell:isFirstCell isLastCell:isLastCell];
-//
-//    }else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-//
-//        FHSearchHouseDataItemsModel *theModel = (FHSearchHouseDataItemsModel *)model;
-//        [self updateWithSecondHouseModel:theModel isFirstCell:isFirstCell isLastCell:isLastCell];
-//
-//    }else if ([model isKindOfClass:[FHHouseRentDataItemsModel class]]) {
-//
-//        FHHouseRentDataItemsModel *theModel = (FHHouseRentDataItemsModel *)model;
-//        [self updateWithRentHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
-//
-//    }
-//    else if ([model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
-//
-//        FHHouseNeighborDataItemsModel *theModel = (FHHouseNeighborDataItemsModel *)model;
-//        [self updateWithNeighborModel:theModel];
-//
-//    }
-//}
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel {
     
@@ -487,13 +402,13 @@
     switch (cellModel.houseType) {
         case FHHouseTypeNewHouse:
             
-            [self updateWithNewHouseModel:cellModel.houseModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithNewHouseModel:cellModel.houseModel];
             break;
         case FHHouseTypeSecondHandHouse:
-            [self updateWithSecondHouseModel:cellModel.secondModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithSecondHouseModel:cellModel.secondModel];
             break;
         case FHHouseTypeRentHouse:
-            [self updateWithRentHouseModel:cellModel.rentModel isFirstCell:isFirstCell isLastCell:isLastCell];
+            [self updateWithRentHouseModel:cellModel.rentModel];
             break;
         case FHHouseTypeNeighborhood:
             [self updateWithNeighborModel:cellModel.neighborModel];
@@ -503,40 +418,6 @@
     }
     
     
-}
-
-
-
-
-
--(void)setIsFirstCell:(BOOL)isFirstCell {
-    
-    _isFirstCell = isFirstCell;
-    
-    if (self.headView.superview == nil) {
-        return;
-    }
-    CGFloat height = isFirstCell ? 0 : 14;
-    [self.headView mas_updateConstraints:^(MASConstraintMaker *make) {
-        
-        make.height.mas_equalTo(@(height));
-    }];
-    [self updateConstraintsIfNeeded];
-}
-
--(void)setIsTail:(BOOL)isTail {
-    
-    _isTail = isTail;
-    
-    if (self.bottomView.superview == nil) {
-        return;
-    }
-    CGFloat height = isTail ? 20 : 0;
-    [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-        
-        make.height.mas_equalTo(@(height));
-    }];
-    [self updateConstraintsIfNeeded];
 }
 
 -(UIImageView *)majorImageView {

@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize titleSize;
 
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;
+@property (nonatomic, strong , nullable, readonly) NSAttributedString *originPriceAttrStr;
 
 @end
 

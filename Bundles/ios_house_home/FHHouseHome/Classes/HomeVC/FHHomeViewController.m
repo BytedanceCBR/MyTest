@@ -60,21 +60,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     [FHHomeCellHelper registerCells:self.mainTableView];
     
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-
-    WeakSelf;
-    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-     StrongSelf;
-        //过滤多余刷新
-      if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache]) {
-         return ;
-      }
-      [self reloadFHHomeHeaderCell];
-    }];
-    
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
-    
-    // Do any additional setup after loading the view.
+        // Do any additional setup after loading the view.
 }
 
 - (void)willAppear
@@ -109,11 +96,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     
 }
 
-
-- (void)reloadFHHomeHeaderCell
-{
-    [self.homeListViewModel reloadHomeListTable];
-}
 
 - (BOOL)tt_hasValidateData
 {

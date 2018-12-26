@@ -9,6 +9,7 @@
 #import "FHClient.h"
 #import "TTBaseMacro.h"
 #import "FHHomeConfigManager.h"
+#import "FHGeneralBizConfig.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -37,7 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-@property(nonatomic,strong)FHClient * client;
+@property (nonatomic,strong)FHClient * client;
+@property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
 
 
 + (instancetype)sharedInstance;

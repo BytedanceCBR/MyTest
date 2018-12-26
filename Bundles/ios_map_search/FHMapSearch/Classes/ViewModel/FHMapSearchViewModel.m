@@ -57,7 +57,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) CGFloat lastRecordZoomLevel; //for statistics
 @property(nonatomic , assign) CLLocationCoordinate2D lastRequestCenter;
 @property(nonatomic , assign) BOOL firstEnterLogAdded;
-@property(nonatomic , copy) NSString *originCondition;
 @property(nonatomic , assign) BOOL needReload;
 @property(nonatomic , copy) NSString *houseListOpenUrl;//返回列表页时的openurl
 //@property(nonatomic , copy) NSString *mapFindHouseOpenUrl;
@@ -166,7 +165,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _mapView.zoomLevel = _configModel.resizeLevel;
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
-        representation.showsAccuracyRing = YES;
+        representation.showsAccuracyRing = NO;
         [_mapView updateUserLocationRepresentation:representation];
         
         CLLocationCoordinate2D center = {_configModel.centerLatitude.floatValue,_configModel.centerLongitude.floatValue};
@@ -927,11 +926,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //-(void)onConditionChangedWithCondition:(NSString *)condition
 -(void)onConditionChanged:(NSString *)condition
 {
-    if (!_originCondition) {
-        _originCondition = condition;
-    }else{
-        [self.lastBubble overwriteFliter:condition];
-    }
+    [self.lastBubble overwriteFliter:condition];
     
     if (![self.filterConditionParams isEqualToString:condition]) {
         self.filterConditionParams = condition;

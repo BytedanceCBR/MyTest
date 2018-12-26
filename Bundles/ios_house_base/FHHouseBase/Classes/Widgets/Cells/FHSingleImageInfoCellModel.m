@@ -14,6 +14,9 @@
 @interface FHSingleImageInfoCellModel ()
 
 @property (nonatomic, strong , nullable, readwrite) NSAttributedString *tagsAttrStr;
+@property (nonatomic, strong , nullable, readwrite) NSAttributedString *originPriceAttrStr;
+
+@property (nonatomic, strong) UILabel *majorTitle;
 
 @end
 
@@ -36,7 +39,9 @@
     _houseModel = houseModel;
     _houseType = FHHouseTypeNewHouse;
     _houseId = houseModel.houseId;
-    _tagsAttrStr = [self tagsStringWithModel:houseModel.tags];
+    _tagsAttrStr = [self tagsStringWithTagList:houseModel.tags];
+    _titleSize = [self titleSizeWithTagList:houseModel.tags titleStr:houseModel.displayTitle];
+    _originPriceAttrStr = nil;
 
 }
 
@@ -45,7 +50,9 @@
     _secondModel = secondModel;
     _houseType = FHHouseTypeSecondHandHouse;
     _houseId = secondModel.hid;
-    _tagsAttrStr = [self tagsStringWithModel:secondModel.tags];
+    _tagsAttrStr = [self tagsStringWithTagList:secondModel.tags];
+    _titleSize = [self titleSizeWithTagList:secondModel.tags titleStr:secondModel.displayTitle];
+    _originPriceAttrStr = [self originPriceAttr:secondModel.originPrice];
 
 }
 
@@ -54,9 +61,10 @@
     _rentModel = rentModel;
     _houseType = FHHouseTypeRentHouse;
     _houseId = rentModel.id;
-    _tagsAttrStr = [self tagsStringWithModel:rentModel.tags];
+    _tagsAttrStr = [self tagsStringWithTagList:rentModel.tags];
+    _titleSize = [self titleSizeWithTagList:rentModel.tags titleStr:rentModel.title];
+    _originPriceAttrStr = nil;
 
-    
 }
 
 -(void)setNeighborModel:(FHHouseNeighborDataItemsModel *)neighborModel {
@@ -65,9 +73,42 @@
     _houseType = FHHouseTypeNeighborhood;
     _houseId = neighborModel.id;
     _tagsAttrStr = nil;
+    _titleSize = [self titleSizeWithTagList:nil titleStr:neighborModel.displayTitle];
+    _originPriceAttrStr = nil;
+
 }
 
--(NSAttributedString *)tagsStringWithModel:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList {
+
+-(NSAttributedString *)originPriceAttr:(NSString *)originPrice {
+    
+    if (originPrice.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
+    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
+    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray] range:NSMakeRange(0, originPrice.length)];
+    return attri;
+}
+
+
+
+
+-(CGSize)titleSizeWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList titleStr:(NSString *)titleStr {
+    
+    if (tagList.count < 1) {
+        
+        self.majorTitle.numberOfLines = 2;
+    }else {
+        self.majorTitle.numberOfLines = 1;
+    }
+    self.majorTitle.text = titleStr;
+    CGSize fitSize = [self.majorTitle sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width * ([UIScreen mainScreen].bounds.size.width > 376 ? 0.61 : [UIScreen mainScreen].bounds.size.width > 321 ? 0.56 : 0.48), 0)];
+    return fitSize;
+
+}
+
+
+-(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList {
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -123,6 +164,17 @@
     [attributeText yy_setTextBackgroundBorder:border range:substringRange];
     return attributeText;
     
+}
+
+-(UILabel *)majorTitle {
+    
+    if (!_majorTitle) {
+        
+        _majorTitle = [[UILabel alloc]init];
+        _majorTitle.font = [UIFont themeFontRegular:16];
+        _majorTitle.textColor = [UIColor themeBlack];
+    }
+    return _majorTitle;
 }
 
 

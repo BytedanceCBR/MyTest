@@ -190,7 +190,6 @@
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
 //    _filterBgControl.hidden = YES;
     
-    [bridge resetFilter:self.houseFilterViewModel withQueryParams:nil updateFilterOnly:NO];
     [bridge showBottomLine:NO];
     
     UIView *bottomLine = [[UIView alloc] init];
@@ -341,7 +340,7 @@
 
 -(void)setupUI {
     
-    _containerView = [[UIView alloc] init];
+    _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
 
     self.automaticallyAdjustsScrollViewInsets = NO;

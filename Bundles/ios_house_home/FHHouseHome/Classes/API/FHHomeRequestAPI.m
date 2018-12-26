@@ -6,17 +6,29 @@
 //
 
 #import "FHHomeRequestAPI.h"
+#import "FHMainApi.h"
+#import "FHHomeHouseModel.h"
 
 @implementation FHHomeRequestAPI
 
-+ (void)requestRecommendFirstTime:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
++ (void)requestRecommendFirstTime:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
 {
-    
+    [FHMainApi requestHomeRecommend:param completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+        if (!completion) {
+            return ;
+        }
+        completion(model,error);
+    }];
 }
 
-+ (void)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
++ (void)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
 {
-    
+    [FHMainApi requestHomeRecommend:param completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+        if (!completion) {
+            return ;
+        }
+        completion(model,error);
+    }];
 }
 
 @end

@@ -10,12 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHomeHouseModel;
+
 @interface FHHomeRequestAPI : NSObject
 
-+ (void)requestRecommendFirstTime:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
++ (void)requestRecommendFirstTime:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 
-+ (void)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion;
++ (void)requestRecommendForLoadMore:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 @end
 

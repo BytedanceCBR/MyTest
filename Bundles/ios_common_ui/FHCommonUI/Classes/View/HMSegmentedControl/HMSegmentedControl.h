@@ -64,6 +64,12 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
 @property (nonatomic, strong) NSArray<UIImage *> *sectionSelectedImages;
 
 /**
+  增加是否需要判断网络
+ */
+@property (nonatomic, assign) BOOL isNeedNetworkCheck;
+
+
+/**
  Provide a block to be executed when selected index is changed.
  
  Alternativly, you could use `addTarget:action:forControlEvents:`

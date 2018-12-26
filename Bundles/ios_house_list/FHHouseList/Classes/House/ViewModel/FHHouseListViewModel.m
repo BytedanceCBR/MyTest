@@ -197,6 +197,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -278,6 +279,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -358,6 +360,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -440,6 +443,7 @@
                     }
                 }
             }
+            [wself.tableView.mj_footer endRefreshing];
             return;
         }
         
@@ -757,9 +761,21 @@
     if (!self.showPlaceHolder) {
 
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
-        return isLastCell ? 125 : 105;
-
+        
+        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+        if (height < 1) {
+            
+            height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
+                
+                [cell updateWithHouseCellModel:cellModel];
+                [cell refreshTopMargin: 20];
+                [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                
+            }];
+        }
+        
+        return height;
     }
 
     return 105;
@@ -778,26 +794,30 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    id model = self.houseList[indexPath.row];
-    
     if (indexPath.row < self.houseList.count) {
         
-        switch (self.houseType) {
-            case FHHouseTypeNewHouse:
-                [self jump2NewDetailPage:indexPath];
-                break;
-            case FHHouseTypeSecondHandHouse:
-                [self jump2OldDetailPage:indexPath];
-                break;
-            case FHHouseTypeRentHouse:
-                [self jump2RentDetailPage:indexPath];
-                break;
-            case FHHouseTypeNeighborhood:
-                [self jump2NeighborDetailPage:indexPath];
-                break;
-            default:
-                break;
+        id model = self.houseList[indexPath.row];
+        
+        if (indexPath.row < self.houseList.count) {
+            
+            switch (self.houseType) {
+                case FHHouseTypeNewHouse:
+                    [self jump2NewDetailPage:indexPath];
+                    break;
+                case FHHouseTypeSecondHandHouse:
+                    [self jump2OldDetailPage:indexPath];
+                    break;
+                case FHHouseTypeRentHouse:
+                    [self jump2RentDetailPage:indexPath];
+                    break;
+                case FHHouseTypeNeighborhood:
+                    [self jump2NeighborDetailPage:indexPath];
+                    break;
+                default:
+                    break;
+            }
         }
+        
     }
 }
 
