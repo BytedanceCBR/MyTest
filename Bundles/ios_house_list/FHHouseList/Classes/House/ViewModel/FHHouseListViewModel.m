@@ -86,10 +86,6 @@
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         
         [self configTableView];
-        
-        // add by zjing for test
-        
-        self.condition = [self.filterOpenUrlMdodel query];
 
     }
     return self;
@@ -241,6 +237,7 @@
                 [wself addCategoryRefreshLog];
             }
             wself.houseListOpenUrl = houseModel.houseListOpenUrl;
+
             [houseModel.items enumerateObjectsUsingBlock:^(FHNewHouseItemModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -426,6 +423,8 @@
                 [wself addCategoryRefreshLog];
             }
             wself.houseListOpenUrl = houseModel.houseListOpenUrl;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+
             [houseModel.items enumerateObjectsUsingBlock:^(FHHouseRentDataItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -519,6 +518,7 @@
                 [wself addCategoryRefreshLog];
             }
             wself.houseListOpenUrl = houseModel.houseListOpenUrl;
+            wself.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
 
             [houseModel.items enumerateObjectsUsingBlock:^(FHSearchHouseDataItemsModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
