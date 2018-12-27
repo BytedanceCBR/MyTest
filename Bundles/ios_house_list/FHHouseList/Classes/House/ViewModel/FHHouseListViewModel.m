@@ -40,6 +40,7 @@
 @property (nonatomic , copy, nullable) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
+@property (nonatomic , copy) NSDictionary *houseSearchDic;
 
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
@@ -88,7 +89,9 @@
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         
-        self.originFrom = paramObj.allParams[@"origin_from"];
+        self.originFrom = self.listVC.tracerModel.originFrom;
+        self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
+        NSLog(@"%@",self.houseSearchDic);
         
         [self configTableView];
 
@@ -614,21 +617,11 @@
 
 #pragma mark - nav 点击事件
 -(void)showInputSearch {
-    
-    // FIXME: by zjing log
-    //    [self addClickSearchLog];
     if (self.closeConditionFilter) {
         self.closeConditionFilter();
     }
-    
-//    SETTRACERKV(UT_ORIGIN_FROM,@"renting_search");
-    
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-    //    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
-    
-    NSMutableDictionary *traceParam = [self baseLogParam];
-    //    traceParam[@"element_from"] = @"renting_search";
-    //    traceParam[@"page_type"] = @"renting";
+    [self addClickHouseSearchLog];
+    NSMutableDictionary *traceParam = self.listVC.tracerDict;
     
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -718,28 +711,17 @@
 
 #pragma mark - sug delegate
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
-    // FIXME: by zjing log
-    //JUMP to cat list page
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
-    NSMutableDictionary *tracerDict = [self baseLogParam];
-    [tracerDict addEntriesFromDictionary:allInfo[@"houseSearch"]];
-    //    tracerDict[@"category_name"] = @"rent_list";
-    //    tracerDict[UT_ELEMENT_FROM] = @"renting_search";
-    //    tracerDict[@"page_type"] = @"renting";
-    
-    NSMutableDictionary *houseSearchDict = [[NSMutableDictionary alloc] initWithDictionary:allInfo[@"houseSearch"]];
-    //    houseSearchDict[@"page_type"] = @"renting";
-    allInfo[@"houseSearch"] = houseSearchDict;
-    allInfo[@"tracer"] = tracerDict;
+    if (allInfo[@"houseSearch"]) {
+        self.houseSearchDic = allInfo[@"houseSearch"];
+    }
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
     self.houseType = houseTypeStr.integerValue;
     
     if (self.sugSelectBlock) {
-        
         self.sugSelectBlock(routeObject.paramObj);
     }
-
 }
 
 -(void)resetCondition {
@@ -1027,7 +1009,7 @@
             return @"old_list";
             break;
         case FHHouseTypeRentHouse:
-            return @"renting";
+            return @"rent_list";
             break;
         case FHHouseTypeNeighborhood:
             return @"neighborhood_list";
@@ -1097,6 +1079,35 @@
 
 }
 
+- (void)addClickHouseSearchLog {
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"hot_word"] = @"be_null";
+    params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    
+    TRACK_EVENT(@"click_house_search",params);
+}
+
+- (void)addHouseSearchLog {
+    NSMutableDictionary *params = [self.houseSearchDic mutableCopy];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"house_type"] = [self houseTypeString];
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    /*
+     {
+     "enter_query" = "\U4e8c\U4e03";
+     "page_type" = "old_list";
+     "query_type" = history;
+     "search_query" = "\U4e8c\U4e03";
+     }
+     */
+    NSLog(@"%@",params);
+    int i = 0;
+//    TRACK_EVENT(@"house_search",params);
+}
 
 -(NSDictionary *)categoryLogDict {
     
