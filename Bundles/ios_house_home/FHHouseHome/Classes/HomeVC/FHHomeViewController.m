@@ -23,12 +23,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 @interface FHHomeViewController ()
 
-@property (nonatomic, strong) UITableView *mainTableView;
-
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
-
 @property (nonatomic, assign) BOOL isClickTab;
-
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 
 @end
@@ -64,8 +60,12 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self];
         // Do any additional setup after loading the view.
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    
     FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
     if (!configModel) {
+        self.mainTableView.hidden = YES;
         [self tt_startUpdate];
     }
 
@@ -106,7 +106,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (BOOL)tt_hasValidateData
 {
-    return YES;
+    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+    return configModel != nil;
 }
 
 /*

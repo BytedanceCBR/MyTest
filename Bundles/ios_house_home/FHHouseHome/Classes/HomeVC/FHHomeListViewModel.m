@@ -82,14 +82,15 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self updateCategoryViewSegmented:isFirstChange];
             
             [self requestOriginData];
-
+            
             isFirstChange = NO;
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-            if (configDataModel.houseTypeList.count > indexValue) {
-                NSNumber *numberType = [configDataModel.houseTypeList objectAtIndex:indexValue];
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if (currentDataModel.houseTypeList.count > indexValue) {
+                NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
                 if ([numberType isKindOfClass:[NSNumber class]]) {
                     self.currentHouseType = [numberType integerValue];
                 }
@@ -168,6 +169,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self reloadHomeTableHouseSection:model.data.items];
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        
+        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+            self.homeViewController.mainTableView.hidden = NO;
+            [self.homeViewController tt_endUpdataData];
+        }
     }];
 }
 
@@ -220,6 +226,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+            self.homeViewController.mainTableView.hidden = NO;
+            [self.homeViewController tt_endUpdataData];
+        }
     }];
 }
 
