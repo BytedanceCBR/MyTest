@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *originPriceAttrStr;
 
+-(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
+
 @end
 
 NS_ASSUME_NONNULL_END

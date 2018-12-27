@@ -7,6 +7,26 @@
 
 #import "FHHomeHouseModel.h"
 
+@implementation FHHomeHouseImageTagModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"backgroundColor": @"background_color",
+                           @"idx": @"id",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 
 //for implementation
 @implementation  FHHomeHouseDataItemsFloorpanListModel
@@ -342,9 +362,11 @@
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
                            @"cellStyle": @"cell_style",
+                           @"houseImageTag": @"house_image_tag",
                            @"floorpanList": @"floorpan_list",
                            @"houseType": @"house_type",
                            @"coreInfo": @"core_info",
+                           @"houseImage": @"house_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

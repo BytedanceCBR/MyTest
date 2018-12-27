@@ -83,25 +83,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
-            
-            NSString *urlStr = @"http://10.1.10.250:8080/#/test";
-//            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-//            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
-            
-            NSString *unencodedString = urlStr;
-            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                      (CFStringRef)unencodedString,
-                                                                      NULL,
-                                                                      (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                      kCFStringEncodingUTF8));
-
-        
-            urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-    
-            NSURL *url = [TTURLUtils URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
-            return ;
-//
             StrongSelf;
             if (configDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [configDataModel.houseTypeList objectAtIndex:indexValue];
@@ -291,7 +272,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
-    
+    self.dataSource.currentHouseType = self.currentHouseType;
+
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];
@@ -304,8 +286,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
-    
-    NSLog(@"models oucnt = %d", models.count);
+    self.dataSource.currentHouseType = self.currentHouseType;
+    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
 
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
@@ -318,6 +300,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)reloadHomeTableForSwitchFromCache:(NSArray <JSONModel *> *)models
 {
     if (kIsNSArray(models)) {
+        self.dataSource.modelsArray = models;
+        self.dataSource.currentHouseType = self.currentHouseType;
+        NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
         self.dataSource.modelsArray = models;
         [self.tableViewV reloadData];
     }
