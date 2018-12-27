@@ -84,11 +84,23 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             
+            NSString *urlStr = @"http://10.1.10.250:8080/#/test?";
 //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-//            urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr];
-//            NSURL *url = [TTURLUtils URLWithString:urlStr];
-//            [[TTRoute sharedRoute] openURLByPushViewController:url];
-//            return ;
+//            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+            
+            NSString *unencodedString = urlStr;
+            NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                      (CFStringRef)unencodedString,
+                                                                      NULL,
+                                                                      (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                      kCFStringEncodingUTF8));
+
+        
+            urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+            NSURL *url = [TTURLUtils URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            return ;
 //
             StrongSelf;
             if (configDataModel.houseTypeList.count > indexValue) {
@@ -170,6 +182,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:model.data.items];
     }];
 }
+
 
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType
 {
@@ -292,6 +305,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     
+    NSLog(@"models oucnt = %d", models.count);
+
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
 //        [UIView performWithoutAnimation:^{

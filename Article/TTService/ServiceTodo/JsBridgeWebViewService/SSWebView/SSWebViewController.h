@@ -20,6 +20,8 @@
 - (void)requestWithURL:(NSURL *)url;
 - (void)setDismissType:(SSWebViewDismissType)type;
 
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isControl;
+
 /// 如果有adid，则上报impression
 @property (nonatomic, copy) NSString        *adID;
 @property (nonatomic, copy) NSString        *logExtra;

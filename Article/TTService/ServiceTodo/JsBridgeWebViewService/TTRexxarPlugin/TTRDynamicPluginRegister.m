@@ -30,12 +30,14 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.config" for:@"config"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
 
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.fetch" for:@"fetch"];
+
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.login" for:@"login"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.isLogin" for:@"is_login"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.handleNavBack" for:@"handleNavBack"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.disableDragBack" for:@"disableDragBack"];

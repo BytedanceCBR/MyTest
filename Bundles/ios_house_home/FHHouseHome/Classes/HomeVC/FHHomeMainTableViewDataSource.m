@@ -12,6 +12,12 @@
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
 #import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
+#import "FHSearchHouseModel.h"
+#import "FHNewHouseItemModel.h"
+#import "FHHouseRentModel.h"
+#import "FHHouseNeighborModel.h"
+#import "FHHouseType.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 
@@ -68,8 +74,11 @@
         if (indexPath.row < self.modelsArray.count) {
             
             JSONModel *model = self.modelsArray[indexPath.row];
-            JSONModel *modelSerach = [[FHSearchHouseDataItemsModel alloc] initWithDictionary:model.toDictionary error:nil];
-//            [cell updateWithHouseModel:modelSerach isFirstCell:indexPath.row == 0 isLastCell:isLastCell];
+            FHSearchHouseDataItemsModel *houseModel = [[FHSearchHouseDataItemsModel alloc] initWithDictionary:model.toDictionary error:nil];
+            FHSingleImageInfoCellModel *modelUpdate = [[FHSingleImageInfoCellModel alloc] init];
+            modelUpdate.secondModel = houseModel;
+            modelUpdate.houseType = FHHouseTypeSecondHandHouse;
+            [cell updateWithHouseCellModel:modelUpdate];
             [cell refreshTopMargin: 20];
             [cell refreshBottomMargin:isLastCell ? 20 : 0];
         }
