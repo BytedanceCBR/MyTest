@@ -72,7 +72,6 @@
         self.associationalWord = [self placeholderByHouseType:self.houseType];
         NSString *fullText = paramObj.queryParams[@"full_text"];
         NSString *displayText = paramObj.queryParams[@"display_text"];
-        
         if (fullText.length > 0) {
             
             self.associationalWord = fullText;
@@ -80,7 +79,7 @@
             
             self.associationalWord = displayText;
         }
-        
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -262,9 +261,10 @@
     NSString *houseTypeStr = paramObj.allParams[@"house_type"];
     if (houseTypeStr.integerValue != self.houseType) {
         
+        self.viewModel.isEnterCategory = YES;
         self.houseType = houseTypeStr.integerValue;
         [self resetFilter:paramObj];
-
+        
     }
     
     [self handleListOpenUrlUpdate:paramObj];
