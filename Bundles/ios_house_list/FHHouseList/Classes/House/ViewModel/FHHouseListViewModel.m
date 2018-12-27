@@ -899,8 +899,11 @@
     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
     if (cellModel.houseModel) {
         
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
         FHNewHouseItemModel *theModel = cellModel.houseModel;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -919,6 +922,9 @@
         
         FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -937,6 +943,9 @@
         
         FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -955,6 +964,9 @@
         
         FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -1038,6 +1050,11 @@
     }
 }
 
+-(NSString *)elementTypeString {
+    
+    return @"be_null";
+
+}
 
 #pragma mark house_show log
 -(void)addHouseShowLog:(NSIndexPath *)indexPath {
