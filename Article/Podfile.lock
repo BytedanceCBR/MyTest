@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.12)
+  - BDALog (0.1.13)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -1411,7 +1411,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 20bb6071178c5c6dcf64eb723c16f201a123b58a
+    :commit: 784dbc1ea6395025c7e1fc0197e134310cde0c89
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1441,7 +1441,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
+  BDALog: 54aee45a65093ffafdbe747b0b00f3c26cdc1ea5
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
