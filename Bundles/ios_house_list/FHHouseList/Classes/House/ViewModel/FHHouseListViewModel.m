@@ -192,27 +192,11 @@
         if (!wself) {
             return ;
         }
+
         FHNewHouseListDataModel *houseModel = model.data;
         if (error) {
-            //add error toast
-            if (error.code != NSURLErrorCancelled) {
-                //不是主动取消
-                if (!isRefresh) {
-                    
-                    [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
-                    [wself showMaskView:NO];
-                    
-                }else {
-                    if (![TTReachability isNetworkConnected]) {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
-                    }else {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                    }
-                }
-            }
-            [wself.tableView.mj_footer endRefreshing];
+            
+            [wself processError:error];
             return;
         }
         
@@ -286,28 +270,11 @@
         if (!wself) {
             return ;
         }
-        wself.showPlaceHolder = NO;
+
         FHHouseNeighborDataModel *houseModel = model.data;
         if (error) {
-            //add error toast
-            if (error.code != NSURLErrorCancelled) {
-                //不是主动取消
-                if (!isRefresh) {
-                    
-                    [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
-                    [wself showMaskView:NO];
-                    
-                }else {
-                    if (![TTReachability isNetworkConnected]) {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
-                    }else {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                    }
-                }
-            }
-            [wself.tableView.mj_footer endRefreshing];
+            
+            [wself processError:error];
             return;
         }
         
@@ -382,25 +349,8 @@
         }
         FHHouseRentDataModel *houseModel = model.data;
         if (error) {
-            //add error toast
-            if (error.code != NSURLErrorCancelled) {
-                //不是主动取消
-                if (!isRefresh) {
-                    
-                    [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
-                    [wself showMaskView:NO];
-                    
-                }else {
-                    if (![TTReachability isNetworkConnected]) {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
-                    }else {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                    }
-                }
-            }
-            [wself.tableView.mj_footer endRefreshing];
+            
+            [wself processError:error];
             return;
         }
         
@@ -478,25 +428,8 @@
         }
         FHSearchHouseDataModel *houseModel = model.data;
         if (error) {
-            //add error toast
-            if (error.code != NSURLErrorCancelled) {
-                //不是主动取消
-                if (!isRefresh) {
-                    
-                    [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
-                    [wself showMaskView:NO];
-                    
-                }else {
-                    if (![TTReachability isNetworkConnected]) {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
-                    }else {
-                        
-                        [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                    }
-                }
-            }
-            [wself.tableView.mj_footer endRefreshing];
+            
+            [wself processError:error];
             return;
         }
         
@@ -550,8 +483,6 @@
             [wself.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
 
-        self.showPlaceHolder = NO;
-
         if (isRefresh && wself.houseList.count > 0) {
             [wself.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
@@ -571,6 +502,31 @@
         [self.tableView.mj_footer endRefreshing];
     }
 }
+
+-(void)processError:(NSError *)error {
+
+    //add error toast
+    if (error.code != NSURLErrorCancelled) {
+        //不是主动取消
+        if (!self.isRefresh) {
+            
+            [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
+            [self showMaskView:NO];
+            
+        }else {
+            if (![TTReachability isNetworkConnected]) {
+                
+                [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+            }else {
+                
+                [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            }
+        }
+    }
+    [self.tableView.mj_footer endRefreshing];
+    
+}
+
 
 -(void)showMaskView:(BOOL)show
 {
@@ -601,7 +557,7 @@
     self.showPlaceHolder = NO;
     self.isRefresh = YES;
     [self.tableView triggerPullDown];
-    [self loadData:YES];
+    [self loadData:self.isRefresh];
     
 }
 

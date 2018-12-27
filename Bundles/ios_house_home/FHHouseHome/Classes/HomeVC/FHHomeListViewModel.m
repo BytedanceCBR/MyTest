@@ -97,6 +97,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
+            self.tableViewV.hasMore = [self.isItemsHasMoreCache[cacheKey] boolValue];
+
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
                 if (modelsCache != nil && kIsNSArray(modelsCache) && modelsCache.count !=0) {
@@ -174,6 +176,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.homeViewController.mainTableView.hidden = NO;
             [self.homeViewController tt_endUpdataData];
         }
+        
+        self.tableViewV.hasMore = model.data.hasMore;
     }];
 }
 
@@ -230,6 +234,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.homeViewController.mainTableView.hidden = NO;
             [self.homeViewController tt_endUpdataData];
         }
+        
+        self.tableViewV.hasMore = model.data.hasMore;
     }];
 }
 
