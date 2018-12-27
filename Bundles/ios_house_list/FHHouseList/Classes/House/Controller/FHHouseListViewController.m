@@ -198,9 +198,12 @@
         
         [wself handleSugSelection:paramObj];
     };
-    _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+    _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj, BOOL isFromMap) {
         
         [wself handleListOpenUrlUpdate:paramObj];
+        if (isFromMap) {
+            [wself.houseFilterViewModel trigerConditionChanged];
+        }
     };
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
@@ -259,7 +262,7 @@
 -(void)handleSugSelection:(TTRouteParamObj *)paramObj {
     
     NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-    if (houseTypeStr.integerValue != self.houseType) {
+    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
         
         self.viewModel.isEnterCategory = YES;
         self.houseType = houseTypeStr.integerValue;

@@ -271,6 +271,13 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     return self;
 }
 
+- (void)setUpBackBtnControl:(NSNumber *)isControl
+{
+    if (isControl) {
+        self.backButton.userInteractionEnabled = NO;
+    }
+}
+
 - (void)setupAdInfo
 {
     if (self.adID.longLongValue > 0) {
@@ -925,6 +932,13 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [dict setValue:[extraDict JSONRepresentation] forKey:@"ad_extra_data"];
         [TTTrackerWrapper eventData:dict];
         
+    }
+}
+
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl
+{
+    if ([isWebControl respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isWebControl = [isWebControl boolValue];
     }
 }
 

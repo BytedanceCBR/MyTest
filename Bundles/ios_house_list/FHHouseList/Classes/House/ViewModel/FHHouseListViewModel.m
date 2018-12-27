@@ -49,6 +49,7 @@
 @property (nonatomic , copy) NSString *condition;
 
 @property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
+@property(nonatomic , strong) NSMutableDictionary *houseShowCache;
 
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
@@ -232,7 +233,7 @@
                 
             }
             if (isRefresh) {
-                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+                [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
             }
@@ -326,7 +327,7 @@
 
             }
             if (isRefresh) {
-                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+                [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
             }
@@ -418,7 +419,7 @@
 
             }
             if (isRefresh) {
-                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+                [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
             }
@@ -513,7 +514,7 @@
 
             }
             if (isRefresh) {
-                [wself handleHouseListCallback:houseModel.houseListOpenUrl];
+                [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
             }
@@ -692,6 +693,15 @@
 
 }
 
+-(void)refreshHouseListUrlCallback:(NSString *)openUrl {
+
+    if (self.houseListOpenUrlUpdateBlock) {
+        
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
+        self.houseListOpenUrlUpdateBlock(routeParamObj, NO);
+    }
+}
+
 #pragma mark - map url delegate
 -(void)handleHouseListCallback:(NSString *)openUrl {
     
@@ -702,7 +712,7 @@
     if (self.houseListOpenUrlUpdateBlock) {
         
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
-        self.houseListOpenUrlUpdateBlock(routeParamObj);
+        self.houseListOpenUrlUpdateBlock(routeParamObj, YES);
     }
     
 }
@@ -711,7 +721,6 @@
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     // FIXME: by zjing log
     //JUMP to cat list page
-    
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     NSMutableDictionary *tracerDict = [self baseLogParam];
     [tracerDict addEntriesFromDictionary:allInfo[@"houseSearch"]];
@@ -953,6 +962,14 @@
 }
 
 #pragma mark - 埋点相关
+-(NSMutableDictionary *)houseShowCache {
+    
+    if (!_houseShowCache) {
+        _houseShowCache = [NSMutableDictionary dictionary];
+    }
+    return _houseShowCache;
+}
+
 -(NSString *)categoryName {
     
     switch (self.houseType) {

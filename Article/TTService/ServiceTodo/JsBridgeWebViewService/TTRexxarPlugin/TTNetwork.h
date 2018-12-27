@@ -10,6 +10,6 @@
 #import <TTRexxar/TTRDynamicPlugin.h>
 
 @interface TTNetwork : TTRDynamicPlugin
-
+TTR_EXPORT_HANDLER(fetch)
 TTR_EXPORT_HANDLER(commonParams)
 @end
