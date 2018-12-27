@@ -935,4 +935,11 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl
+{
+    if ([isWebControl respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isWebControl = [isWebControl boolValue];
+    }
+}
+
 @end

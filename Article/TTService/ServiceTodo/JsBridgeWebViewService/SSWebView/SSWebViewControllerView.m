@@ -460,6 +460,13 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
         [self.ssWebContainer.ssWebView goBack];
     } else {
+        
+        if (self.isWebControl) {
+            [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"ToutiaoJSBridge.trigger('close');"
+                                                                completionHandler:nil];
+            return;
+        }
+        
         if (self.viewController.navigationController) {
             if (self.viewController.navigationController.viewControllers.count == 1 && self.viewController.navigationController.presentingViewController) {
                 [self.viewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
@@ -473,6 +480,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
 }
+
 
 - (void) backViewControllerActionFired:(id) sender {
     [self.viewController.navigationController popViewControllerAnimated:YES];

@@ -19,8 +19,7 @@
 - (void)requestWithURLString:(NSString *)urlString;
 - (void)requestWithURL:(NSURL *)url;
 - (void)setDismissType:(SSWebViewDismissType)type;
-
-- (void)setUpBackBtnControlForWeb:(NSNumber *)isControl;
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl;
 
 /// 如果有adid，则上报impression
 @property (nonatomic, copy) NSString        *adID;
