@@ -140,6 +140,41 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+// 统一处理网络数据返回
+- (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
+    if (model != NULL && error == NULL) {
+        BOOL hasMore = NO;
+        NSString *searchId = @"";
+        NSArray *items = NULL;
+        if ([model isKindOfClass:[FHSameNeighborhoodHouseResponse class]]) {
+            searchId = ((FHSameNeighborhoodHouseResponse *)model).data.searchId;
+            hasMore = ((FHSameNeighborhoodHouseResponse *)model).data.hasMore;
+            items = ((FHSameNeighborhoodHouseResponse *)model).data.items;
+        } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
+            searchId = ((FHHouseRentModel *)model).data.searchId;
+            hasMore = ((FHHouseRentModel *)model).data.hasMore;
+            items = ((FHHouseRentModel *)model).data.items;
+        } else if ([model isKindOfClass:[FHRelatedHouseResponse class]]) {
+            searchId = ((FHRelatedHouseResponse *)model).data.searchId;
+            hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
+            items = ((FHRelatedHouseResponse *)model).data.items;
+        }
+        
+        if (items.count > 0) {
+            self.listController.hasValidateData = YES;
+            [self.listController.emptyView hideEmptyView];
+            [self.houseList addObjectsFromArray:items];
+            [self.tableView reloadData];
+            [self updateTableViewWithMoreData:hasMore];
+            self.searchId = searchId;
+        } else {
+            [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
+        }
+    } else {
+        [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
+    }
+}
+
 #pragma mark - Request
 
 - (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId houseId:(NSString *)houseId offset:(NSInteger)offset
@@ -149,20 +184,7 @@
     }
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestHouseInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHSameNeighborhoodHouseResponse class] completion:^(FHSameNeighborhoodHouseResponse * _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            if (model.data.items.count > 0) {
-                wself.listController.hasValidateData = YES;
-                [wself.listController.emptyView hideEmptyView];
-                [wself.houseList addObjectsFromArray:model.data.items];
-                [wself.tableView reloadData];
-                [wself updateTableViewWithMoreData:model.data.hasMore];
-                wself.searchId = model.data.searchId;
-            } else {
-                [wself processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
-            }
-        } else {
-            [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
-        }
+        [wself processQueryData:model error:error];
     }];
 }
 
@@ -172,20 +194,7 @@
     }
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestRentInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            if (model.data.items.count > 0) {
-                wself.listController.hasValidateData = YES;
-                [wself.listController.emptyView hideEmptyView];
-                [wself.houseList addObjectsFromArray:model.data.items];
-                [wself.tableView reloadData];
-                [wself updateTableViewWithMoreData:model.data.hasMore];
-                wself.searchId = model.data.searchId;
-            } else {
-                [wself processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
-            }
-        } else {
-            [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
-        }
+        [wself processQueryData:model error:error];
     }];
 }
 
@@ -196,20 +205,7 @@
     __weak typeof(self) wself = self;
     // condition添加请求参数到url后面
     self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            if (model.data.items.count > 0) {
-                wself.listController.hasValidateData = YES;
-                [wself.listController.emptyView hideEmptyView];
-                [wself.houseList addObjectsFromArray:model.data.items];
-                [wself.tableView reloadData];
-                [wself updateTableViewWithMoreData:model.data.hasMore];
-                wself.searchId = model.data.searchId;
-            } else {
-                [wself processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
-            }
-        } else {
-            [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
-        }
+        [wself processQueryData:model error:error];
     }];
 }
 
@@ -219,20 +215,7 @@
     }
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            if (model.data.items.count > 0) {
-                wself.listController.hasValidateData = YES;
-                [wself.listController.emptyView hideEmptyView];
-                [wself.houseList addObjectsFromArray:model.data.items];
-                [wself.tableView reloadData];
-                [wself updateTableViewWithMoreData:model.data.hasMore];
-                wself.searchId = model.data.searchId;
-            } else {
-                [wself processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
-            }
-        } else {
-            [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
-        }
+        [wself processQueryData:model error:error];
     }];
 }
 
