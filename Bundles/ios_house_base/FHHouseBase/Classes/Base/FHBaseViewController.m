@@ -223,6 +223,26 @@
 
 @end
 
+NSHashTable *wrap_weak(NSObject * obj)
+{
+    if (!obj) {
+        return nil;
+    }
+    
+    NSHashTable *table = [NSHashTable weakObjectsHashTable];
+    [table addObject:obj];
+    return table;
+}
+NSObject *unwrap_weak(NSHashTable *table)
+{
+    if([table isKindOfClass:[NSHashTable class]]){
+        NSHashTable *t = (NSHashTable *)table;
+        return [t anyObject];
+    }
+    return nil;
+}
+
+
 
 NSString *const TRACER_KEY = @"tracer";
 NSString *const VCTITLE_KEY = @"title";

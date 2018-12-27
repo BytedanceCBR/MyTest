@@ -14,6 +14,9 @@
 extern NSString *const TRACER_KEY ;
 extern NSString *const VCTITLE_KEY ;
 
+#define WRAP_WEAK(obj) wrap_weak(obj)
+#define UNWRAP_WEAK(table)  unwrap_weak(table)
+
 @protocol FHUITracerProtocol <NSObject>
 
 -(NSString *)categoryName;
