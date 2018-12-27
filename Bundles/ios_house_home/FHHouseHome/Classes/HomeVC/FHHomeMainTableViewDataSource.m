@@ -74,8 +74,8 @@
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
             [cell updateHomeHouseCellModel:model andType:self.currentHouseType];
-//            [cell refreshTopMargin: 20];
-//            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+            [cell refreshTopMargin: 20];
+            [cell refreshBottomMargin:isLastCell ? 20 : 0];
         }
         return cell;
     }
