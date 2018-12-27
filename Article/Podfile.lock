@@ -1411,7 +1411,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 20bb6071178c5c6dcf64eb723c16f201a123b58a
+    :commit: 8ed3155d2401ef309ec91a134678bfaa6645bc4b
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
