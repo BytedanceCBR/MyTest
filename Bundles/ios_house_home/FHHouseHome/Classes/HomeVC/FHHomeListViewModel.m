@@ -154,6 +154,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     WeakSelf;
     [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        
+        if (model.data.items.count == 0) {
+            [self.homeViewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+            return;
+        }
+        
         NSString *cahceKey = [self getCurrentHouseTypeChacheKey];
         if (kIsNSString(cahceKey)) {
             self.itemsDataCache[cahceKey] = model.data.items;
@@ -172,12 +178,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:model.data.items];
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         
-        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
-            self.homeViewController.mainTableView.hidden = NO;
-            [self.homeViewController tt_endUpdataData];
-        }
-        
+        [self checkLoadingAndEmpty];
+
         self.tableViewV.hasMore = model.data.hasMore;
+        
+        self.hasShowedData = YES;
     }];
 }
 
@@ -230,12 +235,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
-        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
-            self.homeViewController.mainTableView.hidden = NO;
-            [self.homeViewController tt_endUpdataData];
-        }
-        
         self.tableViewV.hasMore = model.data.hasMore;
+        
+        [self checkLoadingAndEmpty];
     }];
 }
 
@@ -312,6 +314,15 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         default:
             return @"";
             break;
+    }
+}
+
+- (void)checkLoadingAndEmpty
+{
+    if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+        [self.homeViewController.emptyView hideEmptyView];
+        self.homeViewController.mainTableView.hidden = NO;
+        [self.homeViewController tt_endUpdataData];
     }
 }
 

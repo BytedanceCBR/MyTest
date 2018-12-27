@@ -13,6 +13,7 @@
 #import "FHHomeConfigManager.h"
 #import "TTBaseMacro.h"
 #import "TTURLUtils.h"
+#import "ToastManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -42,7 +43,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     } else {
         // Fallback on earlier versions
     }
-
+    
     self.mainTableView.sectionFooterHeight = 0;
     self.mainTableView.sectionHeaderHeight = 0;
     self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
@@ -69,11 +70,37 @@ static CGFloat const kSectionHeaderHeight = 38;
         [self tt_startUpdate];
     }
 
+    [self addDefaultEmptyViewFullScreen];
+}
+
+- (void)retryLoadData
+{
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    //to do request config xiefei.xf
+    if (configDataModel == nil) {
+        
+    }else
+    {
+        
+    }
+    [self.homeListViewModel requestOriginData];
 }
 
 - (void)willAppear
 {
-    NSLog(@"is connectd = %d",[FHEnvContext isNetworkConnected]);
+    if (![FHEnvContext isNetworkConnected]) {
+        if (self.homeListViewModel.hasShowedData) {
+            [[ToastManager manager] showToast:@"网络异常"];
+        }else
+        {
+            [self.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+        }
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)didAppear

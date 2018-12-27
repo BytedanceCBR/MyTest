@@ -71,6 +71,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @param emptyEdgeInsets 默认是UIEdgeInsetsZero，显示位置是从导航栏底部开始，暂时支持top和bottom的Inset设置
  */
 - (void)addDefaultEmptyViewWithEdgeInsets:(UIEdgeInsets)emptyEdgeInsets;
+
+/**
+ * 添加默认空页面，全屏,忽略导航栏
+ */
+- (void)addDefaultEmptyViewFullScreen;
+
 /**
  * 默认空页面时，点击重试调用，自己创建的空页面不回调此方法
  */
