@@ -235,6 +235,7 @@
                 
             }
             if (isRefresh) {
+                [wself addHouseSearchLog];
                 [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
@@ -329,6 +330,7 @@
 
             }
             if (isRefresh) {
+                [wself addHouseSearchLog];
                 [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
@@ -421,6 +423,7 @@
 
             }
             if (isRefresh) {
+                [wself addHouseSearchLog];
                 [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
@@ -516,6 +519,7 @@
 
             }
             if (isRefresh) {
+                [wself addHouseSearchLog];
                 [wself refreshHouseListUrlCallback:houseModel.houseListOpenUrl];
             }else {
                 [wself addCategoryRefreshLog];
@@ -1096,17 +1100,7 @@
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
-    /*
-     {
-     "enter_query" = "\U4e8c\U4e03";
-     "page_type" = "old_list";
-     "query_type" = history;
-     "search_query" = "\U4e8c\U4e03";
-     }
-     */
-    NSLog(@"%@",params);
-    int i = 0;
-//    TRACK_EVENT(@"house_search",params);
+    TRACK_EVENT(@"house_search",params);
 }
 
 -(NSDictionary *)categoryLogDict {
