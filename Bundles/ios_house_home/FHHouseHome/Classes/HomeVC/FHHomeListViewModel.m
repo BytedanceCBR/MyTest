@@ -84,7 +84,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             
-            NSString *urlStr = @"http://10.1.10.250:8080/#/test?";
+            NSString *urlStr = @"http://10.1.10.250:8080/#/test";
 //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
 //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
             
