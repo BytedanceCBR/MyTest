@@ -155,8 +155,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         
+        if (!model || error) {
+            [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            return;
+        }
+        
         if (model.data.items.count == 0) {
-            [self.homeViewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
             return;
         }
         
