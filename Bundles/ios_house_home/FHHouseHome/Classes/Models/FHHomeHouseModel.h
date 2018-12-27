@@ -30,6 +30,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface  FHHomeHouseImageTagModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *idx;
+@property (nonatomic, copy , nullable) NSString *textColor;
+
+@end
+
 
 @interface  FHHomeHouseDataItemsCommentModel  : JSONModel
 
@@ -219,6 +228,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsUserStatusModel *userStatus ;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, strong , nullable) FHHomeHouseImageTagModel *houseImageTag ;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsGlobalPricingModel *globalPricing ;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsTimelineModel *timeline ;
@@ -239,6 +249,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsCoreInfoModel *coreInfo ;
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsImagesModel> *houseImage;
+
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *searchId;

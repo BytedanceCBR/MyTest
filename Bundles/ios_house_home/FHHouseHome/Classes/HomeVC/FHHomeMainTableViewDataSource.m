@@ -72,13 +72,8 @@
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.modelsArray.count - 1);
         if (indexPath.row < self.modelsArray.count) {
-            
             JSONModel *model = self.modelsArray[indexPath.row];
-            FHSearchHouseDataItemsModel *houseModel = [[FHSearchHouseDataItemsModel alloc] initWithDictionary:model.toDictionary error:nil];
-            FHSingleImageInfoCellModel *modelUpdate = [[FHSingleImageInfoCellModel alloc] init];
-            modelUpdate.secondModel = houseModel;
-            modelUpdate.houseType = FHHouseTypeSecondHandHouse;
-            [cell updateWithHouseCellModel:modelUpdate];
+            [cell updateHomeHouseCellModel:model andType:self.currentHouseType];
             [cell refreshTopMargin: 20];
             [cell refreshBottomMargin:isLastCell ? 20 : 0];
         }

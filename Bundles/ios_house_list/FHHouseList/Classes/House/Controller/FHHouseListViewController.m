@@ -443,12 +443,21 @@
 //    [self.viewModel reloadData];
 }
 
+#pragma mark - TTUIViewControllerTrackProtocol
 
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayCategoryLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
 
 #pragma mark - lazy load
 
--(UITableView *)tableView
-{
+-(UITableView *)tableView {
     if (!_tableView) {
         
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
