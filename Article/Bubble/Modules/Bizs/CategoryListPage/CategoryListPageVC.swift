@@ -723,7 +723,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
 
     func bindLoadMore() {
         
-        let footer: NIHRefreshCustomFooter = NIHRefreshCustomFooter { [weak self] in
+        let footer: FHRefreshCustomFooter = FHRefreshCustomFooter { [weak self] in
             self?.loadData()
         }
 

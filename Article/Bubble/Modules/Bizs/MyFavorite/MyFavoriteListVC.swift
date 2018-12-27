@@ -96,7 +96,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         setUpErrorVM()
 
-        let footer: NIHRefreshCustomFooter = NIHRefreshCustomFooter { [weak self] in
+        let footer: FHRefreshCustomFooter = FHRefreshCustomFooter { [weak self] in
             self?.loadMore()
         }
         

@@ -732,27 +732,7 @@ class HomeListViewModel: DetailPageViewModel {
         self.recordFollowEvent(traceParam)
         
     }
-    
-    private func openCategoryList(
-        houseType: HouseType,
-        traceParams: TracerParams,
-        condition: @escaping (String) -> String) {
-        let vc = CategoryListPageVC(isOpenConditionFilter: true)
-        vc.tracerParams = traceParams
-        vc.houseType.accept(houseType)
-        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
-            condition($0)
-        }
-        vc.navBar.isShowTypeSelector = false
-        navVC?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [unowned self] void in
-                self.navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-    }
 
-    
     func isDataAvailable() -> Bool {
         return true
     }

@@ -9,7 +9,7 @@
 #import <MJRefresh.h>
 #import <UIViewAdditions.h>
 #import <Masonry.h>
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "FHSearchHouseModel.h"
 #import "FHHouseAreaHeaderView.h"
 #import "FHMapSearchHouseListViewController.h"
@@ -34,7 +34,7 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHMapSearchDataListModel *neighbor;
 @property(nonatomic , strong) NSString *searchId;
-@property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , assign) NSTimeInterval startTimestamp;
 @property(nonatomic , weak)   TTHttpTask * requestTask;
 @property(nonatomic , assign) BOOL enteredFullListPage;
@@ -73,7 +73,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     __weak typeof(self) wself = self;
-    self.refreshFooter = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadHouseData:NO];
     }];
     self.tableView.mj_footer = _refreshFooter;

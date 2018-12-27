@@ -10,7 +10,7 @@
 #import "FHNeighborViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
@@ -30,7 +30,7 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 
-@property (nonatomic, strong) NIHRefreshCustomFooter *refreshFooter;
+@property (nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 
 // 过滤器filter
 @property (nonatomic , strong) UIView *filterContainerView;
@@ -131,7 +131,7 @@
     }
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     __weak typeof(self) wself = self;
-    self.refreshFooter = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMore];
     }];
     self.tableView.mj_footer = _refreshFooter;

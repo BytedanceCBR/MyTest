@@ -45,7 +45,7 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "MJRefresh.h"
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "TTAddressBookService.h"
 #import "TTContactsNetworkManager.h"
 #import "TTDeviceHelper.h"

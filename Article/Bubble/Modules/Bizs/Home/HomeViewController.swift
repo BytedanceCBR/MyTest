@@ -471,30 +471,6 @@ extension HomeViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    private func openCategoryList(
-        houseType: HouseType,
-        condition: String,
-            query: String,
-        associationalWord: String? = nil,
-        tracerParams: TracerParams) {
-        let vc = CategoryListPageVC(
-            isOpenConditionFilter: true,
-            associationalWord: associationalWord)
-        vc.tracerParams = tracerParams
-        vc.houseType.accept(houseType)
-        vc.suggestionParams = condition
-        vc.queryString = query
-        vc.navBar.isShowTypeSelector = false
-        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
-        let nav = self.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    EnvContext.shared.toast.dismissToast()
-                    nav?.popViewController(animated: true)
-                })
-                .disposed(by: disposeBag)
-    }
 }
 
 func searchBarPlaceholder(_ houseType: HouseType) -> String {

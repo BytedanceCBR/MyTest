@@ -12,7 +12,7 @@
 #import "FHNeighborListModel.h"
 #import "FHHouseBridgeManager.h"
 #import "FHHouseSingleImageInfoCellBridgeDelegate.h"
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 
 
 #define kPlaceholderCellId @"placeholder_cell_id"

@@ -131,46 +131,6 @@ class NIHSearchPanelViewModel: NSObject {
             rollText = self.suspendSearchBar.searchTitles[self.suspendSearchBar.searchTitleIndex]
         }
         self.recordClickHouseSearch(rollText: rollText)
-        /*
-        let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeHome)
-
-        let tracerParams = TracerParams.momoid() <|>
-            toTracerParams("click", key: "enter_type") <|>
-            toTracerParams("maintab_search", key: "element_from") <|>
-            toTracerParams("maintab", key: "enter_from") <|>
-            toTracerParams("be_null", key: "log_pb")
-
-        vc.tracerParams = tracerParams
-        
-        let index = self.suspendSearchBar.searchTitleIndex
-        if index >= 0 && index < self.homePageRollScreen.count {
-            vc.homePageRollData = self.homePageRollScreen[index]
-        }
-
-        let nav = self.baseVC.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [weak nav] void in
-                EnvContext.shared.toast.dismissToast()
-                nav?.popViewController(animated: true)
-            })
-            .disposed(by: self.disposeBag)
-        vc.onSuggestSelect = { [weak self, unowned vc] (query, condition, associationalWord, houseSearchParams) in
-
-
-            let paramsWithCategoryType = tracerParams <|>
-                toTracerParams(categoryEnterNameByHouseType(houseType: vc.houseType.value), key: "category_name")
-            let hsp = houseSearchParams <|>
-                toTracerParams("maintab", key: "page_type")
-            self?.openCategoryList(
-                houseType: vc.houseType.value,
-                condition: condition ?? "",
-                query: query,
-                associationalWord: (associationalWord?.isEmpty ?? true) ? nil : associationalWord,
-                houseSearchParams: hsp,
-                tracerParams: paramsWithCategoryType)
-        }
- */
         
         // 埋点参数需要添加通用参数
         let tracerParams = TracerParams.momoid() <|>
@@ -205,39 +165,7 @@ class NIHSearchPanelViewModel: NSObject {
             toTracerParams(rollText, key: "hot_word")
         recordEvent(key: "click_house_search", params: params)
     }
-    
-    
-    private func openCategoryList(
-        houseType: HouseType,
-        condition: String,
-        query: String,
-        associationalWord: String? = nil,
-        houseSearchParams: TracerParams,
-        tracerParams: TracerParams) {
-        let vc = CategoryListPageVC(
-            isOpenConditionFilter: true,
-            associationalWord: associationalWord)
-        vc.allParams = ["houseSearch": houseSearchParams.paramsGetter([:])]
-        vc.tracerParams = tracerParams
-        vc.houseType.accept(houseType)
-        vc.suggestionParams = condition
-        vc.queryString = query
-        vc.navBar.isShowTypeSelector = false
-        if associationalWord?.isEmpty ?? true {
-            vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
-        } else {
-            vc.navBar.setSearchPlaceHolderText(text: associationalWord)
-        }
-        let nav = self.baseVC.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [weak nav] void in
-                EnvContext.shared.toast.dismissToast()
-                nav?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-    }
-    
+
     func registerPullDownNoti() {
         // TTRefreshView+HomePage 进行下拉以及是否是首页判断
         NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in

@@ -7,7 +7,7 @@
 
 #import "FHHouseListViewModel.h"
 #import <MJRefresh.h>
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "TTHttpTask.h"
 #import "FHHouseListAPI.h"
 #import "FHSearchHouseModel.h"
@@ -34,7 +34,7 @@
 @property(nonatomic, weak) FHHouseListViewController *listVC;
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic , strong) NSMutableArray *houseList;
-@property(nonatomic , strong) NIHRefreshCustomFooter *refreshFooter;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , weak) TTHttpTask * requestTask;
 @property (nonatomic , copy) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
@@ -97,7 +97,7 @@
     self.tableView.dataSource = self;
     
     __weak typeof(self)wself = self;
-    self.refreshFooter = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
         [wself loadData:wself.isRefresh];
     }];

@@ -11,7 +11,7 @@
 #import <UIScrollView+Refresh.h>
 #import "FHSearchFilterOpenUrlModel.h"
 #import <TTRoute.h>
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "FHHouseBridgeManager.h"
 #import "FHUserTracker.h"
 #import <FHHouseSuggestionDelegate.h>
@@ -88,7 +88,7 @@
         [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
         
         __weak typeof(self) wself = self;
-        NIHRefreshCustomFooter *footer = [NIHRefreshCustomFooter footerWithRefreshingBlock:^{
+        FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [wself requestData:NO];
         }];
         _tableView.mj_footer = footer;

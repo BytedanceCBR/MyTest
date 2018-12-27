@@ -535,21 +535,7 @@ fileprivate func openTTRouterUrl(
                 TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
             }
         }
-        
-//        let vc = CategoryListPageVC(isOpenConditionFilter: true)
-//        vc.tracerParams = tracerParams <|> params
-//        vc.houseType.accept(houseType)
-//        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
-//        vc.navBar.isShowTypeSelector = false
-//        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
-//
-//        navVC?.pushViewController(vc, animated: true)
-//        vc.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { void in
-//                EnvContext.shared.toast.dismissToast()
-//                navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
+
     }
 }
 

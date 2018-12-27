@@ -19,7 +19,7 @@ protocol PageableVC: class {
 extension PageableVC {
 
     func setupLoadmoreIndicatorView(tableView: UITableView, disposeBag: DisposeBag) {
-        let footer: NIHRefreshCustomFooter = NIHRefreshCustomFooter { [weak self] in
+        let footer: FHRefreshCustomFooter = FHRefreshCustomFooter { [weak self] in
             self?.loadMore()
         }
         
