@@ -7,9 +7,8 @@
 */
 
 // f100
-"house_list"            = "_TtC6Bubble18CategoryListPageVC";
-//"house_list"            = "FHHouseListViewController"; // add by zjing for test
-//"house_list1"            = "FHHouseListViewController"; // add by zjing for test
+//"house_list"            = "_TtC6Bubble18CategoryListPageVC";
+"house_list"            = "FHHouseListViewController";
 
 "flogin"                = "_TtC6Bubble12QuickLoginVC";
 "aboutUs"               = "_TtC6Bubble19AboutViewController";
