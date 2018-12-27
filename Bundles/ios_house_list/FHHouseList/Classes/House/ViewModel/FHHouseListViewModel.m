@@ -37,7 +37,7 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , copy) NSString *searchId;
+@property (nonatomic , copy, nullable) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
 
@@ -123,26 +123,6 @@
 #pragma mark - 网络请求
 -(void)loadData:(BOOL)isRefresh
 {
-
-//    NSString *query = [_filterOpenUrlMdodel query];
-    
-    NSString *query = self.condition;
-
-    NSInteger offset = 0;
-
-    NSMutableDictionary *param = [NSMutableDictionary new];
-
-    NSString *searchId = self.searchId;
-
-    if (isRefresh) {
-        
-        self.tableView.mj_footer.hidden = YES;
-        [self.houseList removeAllObjects];
-        [self.houseShowCache removeAllObjects];
-    }else {
-        offset = self.houseList.count;
-    }
-    
     if (![TTReachability isNetworkConnected]) {
         if (isRefresh) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -153,6 +133,23 @@
         }
         return;
     }
+    
+    NSString *query = self.condition;
+    NSInteger offset = 0;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+
+    if (isRefresh) {
+        
+        self.tableView.mj_footer.hidden = YES;
+        [self.houseList removeAllObjects];
+        [self.houseShowCache removeAllObjects];
+        self.searchId = nil;
+    }else {
+        offset = self.houseList.count;
+    }
+    
+    NSString *searchId = self.searchId;
+
     
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
