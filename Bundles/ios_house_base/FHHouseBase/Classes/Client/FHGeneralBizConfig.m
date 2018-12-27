@@ -48,14 +48,14 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
 }
 
-- (void)updateUserSelectIndex:(NSNumber *)indexNum
+- (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {
     if ([indexNum isKindOfClass:[NSNumber class]]) {
         [self.userSelectCache setObject:indexNum forKey:kUserDefaultSelectKey];
     }
 }
 
-- (NSNumber *)getUserSelectIndexDiskCache
+- (NSNumber *)getUserSelectTypeDiskCache
 {
     NSObject *objectIndex = [self.userSelectCache objectForKey:kUserDefaultSelectKey];
     if ([objectIndex isKindOfClass:[NSNumber class]]) {

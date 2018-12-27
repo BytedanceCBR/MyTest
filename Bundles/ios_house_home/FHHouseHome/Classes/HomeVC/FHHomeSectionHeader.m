@@ -11,6 +11,8 @@
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"
 
+static const float kSegementedOneWidth = 50;
+
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
 @property (nonatomic, strong) NSArray <NSString *> * sectionTitleArray;
@@ -91,7 +93,7 @@
     }
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - 55 * titles.count, 15, 55 * titles.count, 20);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - 10, 15, kSegementedOneWidth * titles.count, 20);
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
@@ -103,7 +105,7 @@
     {
         _segmentedControl.selectedSegmentIndex = _segmentedControl.selectedSegmentIndex;
     }
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - 55 * titles.count, 15, 55 * titles.count, 20);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10), 15, kSegementedOneWidth * titles.count, 20);
 }
 /*
  // Only override drawRect: if you perform custom drawing.

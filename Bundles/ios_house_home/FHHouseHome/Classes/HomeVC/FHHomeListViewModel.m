@@ -50,20 +50,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.showPlaceHolder = YES;
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
-
+        
         self.tableViewV.hasMore = YES;
         
         WeakSelf;
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
             StrongSelf;
-            
+            [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
         }];
         
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
             [self resetAllCacheData];
-            [self requestOriginData];
+            [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -77,15 +77,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             [self reloadHomeTableHeaderSection];
             
-            [self updateCategoryViewSegmented];
+            [self resetAllCacheData];
+            
+            [self updateCategoryViewSegmented:isFirstChange];
+            
+            [self requestOriginData];
             
             isFirstChange = NO;
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-            if (configDataModel.houseTypeList.count > indexValue) {
-                NSNumber *numberType = [configDataModel.houseTypeList objectAtIndex:indexValue];
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if (currentDataModel.houseTypeList.count > indexValue) {
+                NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
                 if ([numberType isKindOfClass:[NSNumber class]]) {
                     self.currentHouseType = [numberType integerValue];
                 }
@@ -98,10 +103,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
                 }else
                 {
+                    [self reloadHomeTableHeaderSection];
                     [self requestOriginData];
                 }
             }else
             {
+                [self reloadHomeTableHeaderSection];
                 [self requestOriginData];
             }
         };
@@ -141,7 +148,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     }
     [requestDictonary setValue:@(20) forKey:@"count"];
     self.categoryView.segmentedControl.userInteractionEnabled = NO;
-
+    
     WeakSelf;
     [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
@@ -161,6 +168,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.categoryView.segmentedControl.userInteractionEnabled = YES;
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self reloadHomeTableHouseSection:model.data.items];
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        
+        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+            self.homeViewController.mainTableView.hidden = NO;
+            [self.homeViewController tt_endUpdataData];
+        }
     }];
 }
 
@@ -175,16 +188,48 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         offsetValue = self.itemsDataCache[cahceKey].count;
     }
     [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
-    [requestDictonary setValue:@"2" forKey:@"house_type"];
+    [requestDictonary setValue:@(self.currentHouseType) forKey:@"house_type"];
     [requestDictonary setValue:@(20) forKey:@"count"];
-    [requestDictonary setValue:@(20) forKey:@"search_id"];
+    
+    if (pullType == FHHomePullTriggerTypePullUp) {
+        if (kIsNSString(self.itemsSearchIdCache[cahceKey])) {
+            [requestDictonary setValue:self.itemsSearchIdCache[cahceKey] forKey:@"search_id"];
+        }
+    }
     
     self.categoryView.segmentedControl.userInteractionEnabled = NO;
     WeakSelf;
     [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
+        NSMutableArray *modelsCache =[[NSMutableArray alloc] initWithArray:self.itemsDataCache[cacheKey]];
+        if (kIsNSString(cahceKey)) {
+            if (pullType == FHHomePullTriggerTypePullUp) {
+                self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+            }else
+            {
+                self.itemsDataCache[cacheKey] = model.data.items;
+            }
+        }
+        
+        if (kIsNSString(cahceKey)) {
+            self.itemsSearchIdCache[cacheKey] = model.data.searchId;
+        }
+        
+        if (kIsNSString(cahceKey) && model.data.hasMore != nil) {
+            self.isItemsHasMoreCache[cacheKey] = @(model.data.hasMore);
+        }
         
         self.categoryView.segmentedControl.userInteractionEnabled = YES;
+        [self.tableViewV finishPullDownWithSuccess:YES];
+        [self.tableViewV finishPullUpWithSuccess:YES];
+        [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
+        
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+            self.homeViewController.mainTableView.hidden = NO;
+            [self.homeViewController tt_endUpdataData];
+        }
     }];
 }
 
@@ -195,20 +240,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.isItemsHasMoreCache removeAllObjects];
 }
 
-- (void)updateCategoryViewSegmented
+- (void)updateCategoryViewSegmented:(BOOL)isFirstChange
 {
-    NSNumber *numberIndex = [[FHEnvContext sharedInstance].generalBizConfig getUserSelectIndexDiskCache];
+    NSNumber *userSelectType = [[FHEnvContext sharedInstance].generalBizConfig getUserSelectTypeDiskCache];
     NSInteger indexValue = 0;
-    if ([numberIndex isKindOfClass:[NSNumber class]]) {
-        indexValue = [numberIndex integerValue];
-    }
-    [self.categoryView updateSegementedTitles:[self matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
     NSArray *houstTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
-    if (houstTypeList.count > indexValue) {
-        NSNumber *numberType = [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList objectAtIndex:indexValue];
-        if ([numberType isKindOfClass:[NSNumber class]]) {
-            self.currentHouseType = [numberType integerValue];
-        }
+    
+    if ([houstTypeList containsObject:userSelectType]) {
+        indexValue = [houstTypeList indexOfObject:userSelectType];
+        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
+        self.currentHouseType = [userSelectType integerValue];
     }else
     {
         if (houstTypeList.count > 0 && [houstTypeList.firstObject respondsToSelector:@selector(integerValue)]) {
@@ -218,8 +259,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.currentHouseType = FHHouseTypeSecondHandHouse;
         }
     }
-
-    [self requestOriginData];
+    
+    [self.categoryView updateSegementedTitles:[self matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
 }
 
 - (NSArray <NSString *>*)matchHouseSegmentedTitleArray
@@ -273,11 +314,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     self.dataSource.showPlaceHolder = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
-
+    
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];
-//        [self.tableViewV reloadSections:[NSIndexSet indexSetWithIndex:kFHHomeListHeaderBaseViewSection] withRowAnimation:UITableViewRowAnimationNone];
         }];
     }
 }
@@ -288,12 +328,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
     NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
-
+    
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
-//        [UIView performWithoutAnimation:^{
-//            [self.tableViewV reloadSections:[NSIndexSet indexSetWithIndex:kFHHomeListHouseBaseViewSection] withRowAnimation:UITableViewRowAnimationNone];
-//        }];
     }
 }
 
@@ -302,7 +339,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (kIsNSArray(models)) {
         self.dataSource.modelsArray = models;
         self.dataSource.currentHouseType = self.currentHouseType;
-        NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
         self.dataSource.modelsArray = models;
         [self.tableViewV reloadData];
     }

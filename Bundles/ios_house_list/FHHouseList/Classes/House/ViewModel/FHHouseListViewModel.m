@@ -376,7 +376,7 @@
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:nil offset:offset searchId:searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;
@@ -885,8 +885,11 @@
     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
     if (cellModel.houseModel) {
         
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
         FHNewHouseItemModel *theModel = cellModel.houseModel;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -905,6 +908,9 @@
         
         FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -923,6 +929,9 @@
         
         FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -941,6 +950,9 @@
         
         FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = [cellModel logPb];
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -1024,6 +1036,11 @@
     }
 }
 
+-(NSString *)elementTypeString {
+    
+    return @"be_null";
+
+}
 
 #pragma mark house_show log
 -(void)addHouseShowLog:(NSIndexPath *)indexPath {

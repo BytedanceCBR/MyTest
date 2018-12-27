@@ -80,8 +80,6 @@
 
     }];
     
-//    [self.majorImageView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-    
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.top.mas_equalTo(self.majorImageView.mas_bottom);
@@ -102,7 +100,7 @@
     [infoPanel addSubview:self.majorTitle];
     [self.majorTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(infoPanel);
-        make.top.mas_equalTo(infoPanel).mas_offset(-5);
+        make.top.mas_equalTo(infoPanel).mas_offset(-3);
         make.height.mas_equalTo(@22);
     }];
     
@@ -152,13 +150,13 @@
         make.left.mas_equalTo(self.majorImageView);
         make.top.mas_equalTo(self.majorImageView).mas_offset(0.5);
         make.height.mas_equalTo(@17);
-        make.width.mas_lessThanOrEqualTo(@48);
+        make.width.mas_equalTo(@48);
     }];
     
     [self.imageTopLeftLabelBgView addSubview:self.imageTopLeftLabel];
     [self.imageTopLeftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(@1);
-        make.right.mas_equalTo(@(-1));
+        make.left.mas_equalTo(@0);
+        make.right.mas_equalTo(@0);
         make.center.mas_equalTo(self.imageTopLeftLabelBgView);
     }];
     
@@ -230,7 +228,7 @@
         
         [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
             
-            make.top.mas_equalTo(self.infoPanel).mas_offset(-5);
+            make.top.mas_equalTo(self.infoPanel).mas_offset(-3);
             make.height.mas_equalTo(@22);
         }];
         
@@ -238,7 +236,7 @@
         
         [self.majorTitle mas_updateConstraints:^(MASConstraintMaker *make) {
             
-            make.top.mas_equalTo(self.infoPanel).mas_offset(fitSize.height < 30 ? -4 : -6);
+            make.top.mas_equalTo(self.infoPanel).mas_offset(fitSize.height < 30 ? -3 : -6);
             make.height.mas_equalTo(fitSize.height < 30 ? @22 : @50);
         }];
     }
@@ -291,7 +289,9 @@
     if (houseType == FHHouseTypeSecondHandHouse) {
         FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
         [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-        
+        self.extendTitle.text = commonModel.displaySubtitle;
+        self.priceLabel.text = commonModel.displayPrice;
+        self.roomSpaceLabel.text = commonModel.displayPricePerSqm;
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
             
             self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
