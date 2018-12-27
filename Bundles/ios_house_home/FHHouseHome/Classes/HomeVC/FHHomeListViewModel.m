@@ -154,6 +154,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     WeakSelf;
     [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        
+        if (!model || error) {
+            [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            return;
+        }
+        
+        if (model.data.items.count == 0) {
+            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+            return;
+        }
+        
         NSString *cahceKey = [self getCurrentHouseTypeChacheKey];
         if (kIsNSString(cahceKey)) {
             self.itemsDataCache[cahceKey] = model.data.items;
@@ -172,12 +183,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:model.data.items];
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         
-        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
-            self.homeViewController.mainTableView.hidden = NO;
-            [self.homeViewController tt_endUpdataData];
-        }
-        
+        [self checkLoadingAndEmpty];
+
         self.tableViewV.hasMore = model.data.hasMore;
+        
+        self.hasShowedData = YES;
     }];
 }
 
@@ -230,12 +240,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
-        if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
-            self.homeViewController.mainTableView.hidden = NO;
-            [self.homeViewController tt_endUpdataData];
-        }
-        
         self.tableViewV.hasMore = model.data.hasMore;
+        
+        [self checkLoadingAndEmpty];
     }];
 }
 
@@ -312,6 +319,15 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         default:
             return @"";
             break;
+    }
+}
+
+- (void)checkLoadingAndEmpty
+{
+    if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
+        [self.homeViewController.emptyView hideEmptyView];
+        self.homeViewController.mainTableView.hidden = NO;
+        [self.homeViewController tt_endUpdataData];
     }
 }
 

@@ -61,12 +61,6 @@
                                                                                                                          @"code": error?@(0): @(1),
                                                                                                                          @"beginReqNetTime": startTime
                                                                                                                          });
-                                                                
-                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
-                                                                                                @"status": @(response.statusCode),
-                                                                                                @"code": error?@(0): @(1),
-                                                                                                @"beginReqNetTime": startTime
-                                                                                                });
                                                             }
                                                             
                                                         }];
