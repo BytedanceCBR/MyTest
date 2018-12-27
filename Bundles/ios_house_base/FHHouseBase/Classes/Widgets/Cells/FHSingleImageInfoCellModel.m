@@ -78,7 +78,72 @@
 
 }
 
+#pragma mark - log
+-(NSString *)imprId {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return self.houseModel.imprId;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return self.secondModel.imprId;
+            break;
+        case FHHouseTypeRentHouse:
+            return self.rentModel.imprId;
+            break;
+        case FHHouseTypeNeighborhood:
+            return self.neighborModel.imprId;
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+-(NSString *)groupId {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return self.houseModel.houseId;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return self.secondModel.hid;
+            break;
+        case FHHouseTypeRentHouse:
+            return self.rentModel.id;
+            break;
+        case FHHouseTypeNeighborhood:
+            return self.neighborModel.id;
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+-(nullable NSDictionary *)logPb {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return self.houseModel.logPb;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return self.secondModel.logPb;
+            break;
+        case FHHouseTypeRentHouse:
+            return self.rentModel.logPb;
+            break;
+        case FHHouseTypeNeighborhood:
+            return self.neighborModel.logPb;
+            break;
+        default:
+            return nil;
+            break;
+    }
+}
 
+
+
+
+#pragma UI处理
 -(NSAttributedString *)originPriceAttr:(NSString *)originPrice {
     
     if (originPrice.length < 1) {

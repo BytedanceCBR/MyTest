@@ -33,11 +33,13 @@
 
 @property(nonatomic, weak) FHHouseListViewController *listVC;
 @property(nonatomic, weak) UITableView *tableView;
+
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , weak) TTHttpTask * requestTask;
 @property (nonatomic , copy) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
+@property (nonatomic , copy) NSString *originFrom;
 
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
@@ -86,6 +88,8 @@
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         
+        self.originFrom = paramObj.allParams[@"origin_from"];
+        
         [self configTableView];
 
     }
@@ -130,13 +134,11 @@
 
     NSString *searchId = self.searchId;
 
-    // add by zjing for test
-    NSLog(@"zjing query: %@, search id: %@",query, searchId);
-    
     if (isRefresh) {
         
         self.tableView.mj_footer.hidden = YES;
         [self.houseList removeAllObjects];
+        [self.houseShowCache removeAllObjects];
     }else {
         offset = self.houseList.count;
     }
@@ -579,7 +581,7 @@
 #pragma mark filter条件改变
 -(void)onConditionChanged:(NSString *)condition
 {
-    NSLog(@"zjing - onConditionChanged condition-%@",condition);
+//    NSLog(@"zjing - onConditionChanged condition-%@",condition);
     
     NSString *allQuery = @"";
     if (self.getAllQueryString) {
@@ -796,7 +798,7 @@
         FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        NSLog(@"zjing - islast %ld,indexPath %@",isLastCell,indexPath);
+
         if (indexPath.row < self.houseList.count) {
             
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -817,7 +819,15 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self addHouseShowLog:indexPath];
+    if (indexPath.row < self.houseList.count) {
+
+        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        if (cellModel.groupId.length > 0 && ![self.houseShowCache.allKeys containsObject:cellModel.groupId]) {
+            
+            [self addHouseShowLog:indexPath];
+            self.houseShowCache[cellModel.groupId] = @"1";
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -863,8 +873,6 @@
 
     if (indexPath.row < self.houseList.count) {
         
-        id model = self.houseList[indexPath.row];
-        
         if (indexPath.row < self.houseList.count) {
             
             switch (self.houseType) {
@@ -894,16 +902,16 @@
     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
     if (cellModel.houseModel) {
         
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        FHNewHouseItemModel *theModel = cellModel.houseModel;
+        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    FHNewHouseItemModel *theModel = cellModel.houseModel;
-    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                           @"tracer": traceParam
-                           };
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
 
@@ -991,6 +999,81 @@
     }
 }
 
+-(NSString *)houseTypeString {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)pageTypeString {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"renting";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+
+#pragma mark house_show log
+-(void)addHouseShowLog:(NSIndexPath *)indexPath {
+    
+    if (self.houseList.count < 1 || indexPath.row >= self.houseList.count) {
+        return;
+    }
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+
+    if (!cellModel) {
+        return;
+    }
+    
+    NSString *originFrom = self.originFrom ? : @"be_null";
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+    tracerDict[@"card_type"] = @"left_pic";
+    tracerDict[@"page_type"] = [self pageTypeString];
+    tracerDict[@"element_type"] = @"be_null";
+    tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
+    tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? : @"";
+    tracerDict[@"rank"] = @(indexPath.row);
+    tracerDict[@"origin_from"] = @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+    tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+
+    [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+
+}
+
+
 #pragma mark category log
 -(void)addEnterCategoryLog {
 
@@ -1006,11 +1089,17 @@
 
 -(void)addStayCategoryLog {
     
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     NSTimeInterval duration = self.listVC.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [self.listVC tt_resetStayTime];
+
 }
+
 
 -(NSDictionary *)categoryLogDict {
     
@@ -1024,6 +1113,16 @@
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     
     return tracerDict;
+}
+
+-(NSString *)stayPageEvent {
+    
+    return @"enter_category";
+}
+
+-(NSDictionary *)stayPageParams {
+    
+    return [self categoryLogDict];
 }
 
 
