@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum;
 
-- (NSNumber *)getUserSelectIndexDiskCache;
+- (NSNumber *)getUserSelectTypeDiskCache;
 
 - (void)onStartAppGeneralCache;
 

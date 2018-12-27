@@ -55,7 +55,7 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     }
 }
 
-- (NSNumber *)getUserSelectIndexDiskCache
+- (NSNumber *)getUserSelectTypeDiskCache
 {
     NSObject *objectIndex = [self.userSelectCache objectForKey:kUserDefaultSelectKey];
     if ([objectIndex isKindOfClass:[NSNumber class]]) {
