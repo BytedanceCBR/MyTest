@@ -276,24 +276,62 @@
 }
 
 #pragma mark 首页
+
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
     self.majorTitle.text = commonModel.displayTitle;
     self.extendTitle.text = commonModel.displayDescription;
-    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
+    NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:commonModel.tags];
+    self.areaLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
     FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
-        [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
-    }else
-    {
+        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
+        [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
         
+        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+            
+            self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+            self.imageTopLeftLabel.text = commonModel.houseImageTag.text;
+            self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+            self.imageTopLeftLabelBgView.hidden = NO;
+        }else {
+            
+            self.imageTopLeftLabelBgView.hidden = YES;
+        }
+        
+        [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
+    }else if(houseType == FHHouseTypeRentHouse)
+    {
+        self.majorTitle.text = commonModel.title;
+        self.extendTitle.text = commonModel.subtitle;
+        self.priceLabel.text = commonModel.pricing;
+        self.roomSpaceLabel.text = nil;
+        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
+        [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+        
+        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+            
+            self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+            self.imageTopLeftLabel.text = commonModel.houseImageTag.text;
+            self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+            self.imageTopLeftLabelBgView.hidden = NO;
+        }else {
+            
+            self.imageTopLeftLabelBgView.hidden = YES;
+        }
+        
+        [self updateOriginPriceLabelConstraints:nil];
     }
-    [self updateOriginPriceLabelConstraints:nil];
-    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
+    else
+    {
+        [self updateOriginPriceLabelConstraints:nil];
+    }
+    
+    [self updateLayoutComponents:attributeString.string.length > 0];
 }
 
 #pragma mark 二手房

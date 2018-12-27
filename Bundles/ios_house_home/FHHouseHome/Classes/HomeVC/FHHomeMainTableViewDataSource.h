@@ -8,6 +8,7 @@
 #import "JSONModel.h"
 #import <JSONModel.h>
 #import "FHHomeSectionHeader.h"
+#import "FHHouseType.h"
 
 static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
 static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
+@property (nonatomic, assign) FHHouseType currentHouseType;
 @end
 
 NS_ASSUME_NONNULL_END
