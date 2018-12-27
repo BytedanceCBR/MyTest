@@ -160,8 +160,15 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 - (void)handleNavBackWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     NSLog(@"param = %@",param);
-    
-    controller.ttDisableDragBack = YES;
+    NSNumber *numberH5 = param[@"h5"];
+    BOOL isWebControl = NO;
+    if ([numberH5 respondsToSelector:@selector(boolValue)]) {
+        isWebControl = [numberH5 boolValue];
+    }
+    if ([controller respondsToSelector:@selector(setUpBackBtnControlForWeb:)]) {
+        [controller performSelector:@selector(setUpBackBtnControlForWeb:) withObject:@(isWebControl)];
+    }
+    controller.ttDisableDragBack = NO;
 }
 
 @end
