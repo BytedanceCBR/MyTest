@@ -300,6 +300,7 @@
         if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
             [self.suggestDelegate suggestionSelected:obj];
         }
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
         // 拿到所需参数，跳转
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];

@@ -663,7 +663,6 @@
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     // FIXME: by zjing log
     //JUMP to cat list page
-    [self.listVC.navigationController popViewControllerAnimated:YES];
     
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     NSMutableDictionary *tracerDict = [self baseLogParam];
