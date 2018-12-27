@@ -291,7 +291,9 @@
     if (houseType == FHHouseTypeSecondHandHouse) {
         FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
         [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-        
+        self.extendTitle.text = commonModel.displaySubtitle;
+        self.priceLabel.text = commonModel.displayPrice;
+        self.roomSpaceLabel.text = commonModel.displayPricePerSqm;
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
             
             self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
