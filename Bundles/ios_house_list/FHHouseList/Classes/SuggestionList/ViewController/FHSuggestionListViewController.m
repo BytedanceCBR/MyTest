@@ -17,7 +17,6 @@
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, strong)     FHSuggestionListNavBar     *naviBar;
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
@@ -87,6 +86,11 @@
             self.canSearchWithRollData = YES;
         }
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.naviBar resignFirstResponder];
 }
 
 - (void)setupUI {

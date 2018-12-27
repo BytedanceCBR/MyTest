@@ -17,6 +17,7 @@
 @property (nonatomic, strong)   UIImageView       *triangleImage;
 @property (nonatomic, strong)   UIView       *verticalLineView;
 @property (nonatomic, strong)   UIImageView       *searchIcon;
+@property (nonatomic, strong)   UIView       *bottomLineView;
 
 @end
 
@@ -67,7 +68,7 @@
     }];
     // searchTypeLabel
     _searchTypeLabel = [[UILabel alloc] init];
-    _searchTypeLabel.textColor = [UIColor colorWithHexString:@"#505050"];
+    _searchTypeLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
     _searchTypeLabel.font = [UIFont themeFontRegular:14];
     [_searchAreaPanel addSubview:_searchTypeLabel];
     [_searchTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -121,13 +122,14 @@
     // searchInput
     _searchInput = [[UITextField alloc] init];
     _searchInput.background = NULL;
-    _searchInput.font = [UIFont themeFontRegular:12];
+    _searchInput.font = [UIFont themeFontRegular:14];
     _searchInput.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _searchInput.tintColor = [UIColor colorWithHexString:@"#081f33"];
     _searchInput.returnKeyType = UIReturnKeySearch;
     _searchInput.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_searchAreaPanel addSubview:_searchInput];
     [_searchInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchIcon.mas_right).offset(8);
+        make.left.mas_equalTo(self.searchIcon.mas_right).offset(7);
         make.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.searchAreaPanel);
         make.right.mas_equalTo(self.searchAreaPanel);
@@ -136,6 +138,14 @@
     UIButton *btn = [_searchInput valueForKey:str];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
+    _bottomLineView = [[UIView alloc] init];
+    _bottomLineView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    [self addSubview:_bottomLineView];
+    [_bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(0.5);
+        make.bottom.mas_equalTo(self);
+    }];
 }
 
 - (void)setupData {
@@ -144,7 +154,7 @@
 
 - (void)setSearchPlaceHolderText:(NSString *)text {
     if (text.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#8a9299"]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
         _searchInput.attributedPlaceholder = attrStr;
     }

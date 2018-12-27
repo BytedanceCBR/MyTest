@@ -27,6 +27,7 @@
 
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
+@property (nonatomic, assign)   BOOL       hasShowKeyboard;
 
 @end
 
@@ -40,6 +41,7 @@
         self.guessYouWantData = [NSMutableArray new];
         self.historyShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
+        self.hasShowKeyboard = NO;
         [self setupGuessYouWantView];
     }
     return self;
@@ -562,6 +564,10 @@
 
 - (void)reloadHistoryTableView {
     if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 2) {
+        if (!self.hasShowKeyboard) {
+            [self.listController.naviBar.searchInput becomeFirstResponder];
+            self.hasShowKeyboard = YES;
+        }
         [self.listController.historyTableView reloadData];
     }
 }
