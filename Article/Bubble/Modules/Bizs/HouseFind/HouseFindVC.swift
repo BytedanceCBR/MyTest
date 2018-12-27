@@ -561,6 +561,28 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func bindJumpSearchVC() {
         searchBar.tapGesture.rx.event
             .subscribe(onNext: { [unowned self] (_) in
+                
+                // 新修改入口
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("findtab_search", key: "origin_from")
+                // 埋点参数需要添加通用参数
+                let tracerParams = TracerParams.momoid() <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("findtab_search", key: "element_from") <|>
+                    toTracerParams("findtab", key: "enter_from") <|>
+                    toTracerParams("be_null", key: "log_pb") <|>
+                    toTracerParams("findtab_search", key: "origin_from")
+                
+                var infos:[String:Any] = [:]
+                infos["house_type"] = self.houseType.value.rawValue
+                infos["tracer"] = tracerParams.paramsGetter([:])
+                infos["from_home"] = 2
+                let userInfo = TTRouteUserInfo(info: infos)
+                if let url = URL(string: "sslocal://sug_list") {
+                    TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
+                }
+                
+                /*
                 let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeFindTab)
 
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -606,6 +628,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                         houseSearchParams: houseSearchParams.paramsGetter([:]),
                         tracerParams: paramsWithCategoryType)
                 }
+ */
 
                 // click_house_search
                 self.recordClickHouseSearch()
