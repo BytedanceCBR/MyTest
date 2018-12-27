@@ -15,6 +15,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHCornerView.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "FHHomeHouseModel.h"
 
 @interface FHSingleImageInfoCell () <FHHouseSingleImageInfoCellBridgeDelegate>
 
@@ -274,6 +275,27 @@
     return YES;
 }
 
+#pragma mark 首页
+-(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
+{
+    self.majorTitle.text = commonModel.displayTitle;
+    self.extendTitle.text = commonModel.displayDescription;
+    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
+    
+    self.priceLabel.text = commonModel.displayPricePerSqm;
+    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
+    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+    
+    if (houseType == FHHouseTypeSecondHandHouse) {
+        [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
+    }else
+    {
+        
+    }
+    [self updateOriginPriceLabelConstraints:nil];
+    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
+}
+
 #pragma mark 二手房
 - (void)updateWithModel:(FHSearchHouseDataItemsModel *)model isLastCell:(BOOL)isLastCell {
     
@@ -341,7 +363,7 @@
         
         self.imageTopLeftLabelBgView.hidden = YES;
     }
-    
+
     [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
     [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     

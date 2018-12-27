@@ -15,6 +15,7 @@ TTR_EXPORT_HANDLER(close)
 TTR_EXPORT_HANDLER(open)
 TTR_EXPORT_HANDLER(openHotsoon)
 TTR_EXPORT_HANDLER(openApp)
+TTR_EXPORT_HANDLER(handleNavBack)
 
 // 禁用滑动返回
 TTR_EXPORT_HANDLER(disableDragBack)
