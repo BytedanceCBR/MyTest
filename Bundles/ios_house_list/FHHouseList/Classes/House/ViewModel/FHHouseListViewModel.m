@@ -91,7 +91,6 @@
         
         self.originFrom = self.listVC.tracerModel.originFrom;
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
-        NSLog(@"%@",self.houseSearchDic);
         
         [self configTableView];
 
@@ -1066,7 +1065,10 @@
 }
 
 - (void)addHouseSearchLog {
-    NSMutableDictionary *params = [self.houseSearchDic mutableCopy];
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    if (self.houseSearchDic) {
+        [params addEntriesFromDictionary:self.houseSearchDic];
+    }
     params[@"page_type"] = [self pageTypeString];
     params[@"house_type"] = [self houseTypeString];
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
