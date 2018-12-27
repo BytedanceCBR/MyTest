@@ -555,7 +555,6 @@
     self.condition = allQuery;
     [self.filterOpenUrlMdodel overwriteFliter:self.condition];
 
-    self.showPlaceHolder = NO;
     self.isRefresh = YES;
     [self.tableView triggerPullDown];
     [self loadData:self.isRefresh];
