@@ -930,7 +930,7 @@
     tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"";
     tracerDict[@"rank"] = @(indexPath.row);
-    tracerDict[@"origin_from"] = @"be_null";
+    tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
 

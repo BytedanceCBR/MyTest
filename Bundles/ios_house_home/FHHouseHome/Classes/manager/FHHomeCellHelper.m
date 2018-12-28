@@ -335,9 +335,11 @@ static NSMutableArray  * _Nullable identifierArr;
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+                [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
             }else
             {
                 [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+                [dictTrace setValue:@"be_null" forKey:@"origin_from"];
             }
             
             NSDictionary *userInfoDict = @{@"tracer":dictTrace};
