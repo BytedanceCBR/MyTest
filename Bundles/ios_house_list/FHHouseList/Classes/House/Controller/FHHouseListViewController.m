@@ -279,12 +279,15 @@
 {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -354,7 +357,6 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
 
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
     [self.houseFilterViewModel trigerConditionChanged];
 
@@ -379,11 +381,6 @@
         [self.view endEditing:YES];
     }
 }
-
--(void)dealloc {
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-}
-
 
 -(void)setupUI {
     
