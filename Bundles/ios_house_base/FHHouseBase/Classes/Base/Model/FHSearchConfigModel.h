@@ -606,22 +606,51 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHSearchFilterConfigOption <NSObject>
+
+@end
+
+@interface  FHSearchFilterConfigOption: JSONModel
+
+@property (nonatomic, strong , nullable) NSNumber *supportMulti;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigOption> *options;
+@property (nonatomic, copy , nullable) NSString *type;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *value;
+@property (nonatomic, strong , nullable) NSNumber *isEmpty;
+@property (nonatomic, strong , nullable) NSNumber *isNoLimit;
+@property (nonatomic, copy , nullable) NSString *rankType;
+@end
+
+@protocol FHSearchFilterConfigItem <NSObject>
+
+@end
+
+@interface FHSearchFilterConfigItem  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *tabId;
+@property (nonatomic, copy , nullable) NSString *tabStyle;
+@property (nonatomic, strong , nullable) NSNumber *supportMulti;
+@property (nonatomic, strong, nullable) NSNumber *rate;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigOption> *options;
+@end
 
 @interface  FHSearchConfigModel  : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigSearchTabNeighborhoodFilterModel> *searchTabNeighborhoodFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigRentFilterOrderModel> *rentFilterOrder;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigSearchTabCourtFilterModel> *searchTabCourtFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigNeighborhoodFilterModel> *neighborhoodFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigSearchTabRentFilterModel> *searchTabRentFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigFilterModel> *filter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigSearchTabFilterModel> *searchTabFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigCourtFilterModel> *courtFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigHouseFilterOrderModel> *houseFilterOrder;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigRentFilterModel> *rentFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigNeighborhoodFilterOrderModel> *neighborhoodFilterOrder;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigSaleHistoryFilterModel> *saleHistoryFilter;
-@property (nonatomic, strong , nullable) NSArray<FHSearchConfigCourtFilterOrderModel> *courtFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabCourtFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *neighborhoodFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabRentFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *filter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *houseFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *neighborhoodFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *saleHistoryFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilterOrder;
 
 @end
 
