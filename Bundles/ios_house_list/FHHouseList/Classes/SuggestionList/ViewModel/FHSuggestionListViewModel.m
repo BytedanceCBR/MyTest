@@ -364,7 +364,7 @@
         if (indexPath.row - 1 < self.historyData.count) {
             FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-            NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
+            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColorHex:@"#081f33" fontSize:15.0];
             cell.label.attributedText = text1;
             if (indexPath.row - 1 == self.sugListData.count - 1) {
                 // 末尾

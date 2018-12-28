@@ -73,6 +73,20 @@
     self.emptyEdgeInsets = emptyEdgeInsets;
 }
 
+- (void)addDefaultEmptyViewFullScreen
+{
+    _emptyView = [[FHErrorView alloc] init];
+    _emptyView.hidden = YES;
+    [self.view addSubview:_emptyView];
+    [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    __weak typeof(self) wself = self;
+    _emptyView.retryBlock = ^{
+        [wself retryLoadData];
+    };
+}
+
 - (void)_setupEmptyView {
     _emptyView = [[FHErrorView alloc] init];
     _emptyView.hidden = YES;

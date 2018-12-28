@@ -317,12 +317,11 @@
 
 -(void)showInputSearch
 {
+    SETTRACERKV(UT_ORIGIN_FROM,@"renting_search");
     [self addClickSearchLog];
     if (self.closeConditionFilter) {
         self.closeConditionFilter();
     }
-    
-    SETTRACERKV(UT_ORIGIN_FROM,@"renting_search");
     
 //    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
 //    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
@@ -869,6 +868,7 @@
     params[@"page_type"] = @"renting";
     params[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";
     params[@"hot_word"] = @"be_null";
+    params[@"origin_from"] = @"renting_search";
     
     TRACK_EVENT(@"click_house_search",params);
 }

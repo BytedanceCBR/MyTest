@@ -55,18 +55,17 @@
                                                       autoResume:YES
                                                         callback:^(NSError *error, id obj, TTHttpResponse *response) {
                                                             if (callback) {
-//                                                                response.allHeaderFields
-                                                                callback(error? TTBridgeMsgFailed: TTBridgeMsgSuccess, @{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
+                                                                callback(error? TTBridgeMsgFailed: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
                                                                                                                          @"status": @(response.statusCode),
                                                                                                                          @"code": error?@(0): @(1),
                                                                                                                          @"beginReqNetTime": startTime
                                                                                                                          });
                                                                 
-                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
-                                                                                                @"status": @(response.statusCode),
-                                                                                                @"code": error?@(0): @(1),
-                                                                                                @"beginReqNetTime": startTime
-                                                                                                });
+//                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
+//                                                                                                @"status": @(response.statusCode),
+//                                                                                                @"code": error?@(0): @(1),
+//                                                                                                @"beginReqNetTime": startTime
+//                                                                                                });
                                                             }
                                                             
                                                         }];
