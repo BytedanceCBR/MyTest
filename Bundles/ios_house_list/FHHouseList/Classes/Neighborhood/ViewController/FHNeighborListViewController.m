@@ -53,7 +53,7 @@
         self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
         self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
         
-        NSLog(@"%@\n", self.searchId);
+        NSLog(@"%@\n", paramObj.queryParams);
         NSLog(@"%@\n",paramObj.userInfo.allInfo);
     }
     return self;
@@ -102,7 +102,7 @@
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
     
-    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
