@@ -558,10 +558,10 @@ static NSMutableArray  * _Nullable identifierArr;
     cell.trendView.clickedRightCallback = ^{
         
         // logpb处理
-        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
-        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
-        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
-        
+//        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+//        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
+//        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+//
         if (model.mapOpenUrl.length > 0) {
             
             NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];
