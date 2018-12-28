@@ -219,14 +219,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         NSMutableArray *modelsCache =[[NSMutableArray alloc] initWithArray:self.itemsDataCache[cacheKey]];
         if (kIsNSString(cahceKey)) {
             if (pullType == FHHomePullTriggerTypePullUp) {
-                self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+                if (model && model.data.items.count > 0) {
+                    self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+                }
             }else
             {
                 self.itemsDataCache[cacheKey] = model.data.items;
             }
         }
         
-        if (kIsNSString(cahceKey)) {
+        if (kIsNSString(cahceKey) && model.data.searchId) {
             self.itemsSearchIdCache[cacheKey] = model.data.searchId;
         }
         
@@ -365,5 +367,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV reloadData];
     }
 }
+
 
 @end
