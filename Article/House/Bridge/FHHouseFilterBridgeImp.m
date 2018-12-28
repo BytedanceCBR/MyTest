@@ -8,6 +8,9 @@
 #import "FHHouseFilterBridgeImp.h"
 #import "Bubble-Swift.h"
 #import "FHConditionFilterFactory.h"
+#import "FHSearchConfigModel.h"
+#import "FHFilterModelParser.h"
+#import "FHEnvContext.h"
 @interface FHHouseFilterBridgeImp()
 
 @property(nonatomic , strong) FHConditionFilterViewModel* houseFilterViewModel;
@@ -34,15 +37,30 @@
             break;
     }
 
+
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
-    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
+
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        if (@available(iOS 11.0, *)) {
+            factory.safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+//    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
+//    NSArray<FHFilterNodeModel*>* sortConfig = nil;
+//    if (showSort) {
+//        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
+//    }
+
+    NSArray<FHFilterNodeModel*>* configs = [FHFilterModelParser getConfigByHouseType:houseType];
     NSArray<FHFilterNodeModel*>* sortConfig = nil;
     if (showSort) {
-        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
+        sortConfig = [FHFilterModelParser getSortConfigByHouseType:houseType].firstObject.children.firstObject.children;
     }
     _houseFilterViewModel = [factory createFilterPanelViewModel:ht
                                                    allCondition:showAllCondition
-                                                        sortConfig: sortConfig
+                                                     sortConfig:sortConfig
                                                          config:configs];
     return _houseFilterViewModel;
 }

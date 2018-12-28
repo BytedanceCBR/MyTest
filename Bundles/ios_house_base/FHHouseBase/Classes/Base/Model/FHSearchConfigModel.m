@@ -837,4 +837,44 @@
 @end
 
 
+@implementation FHSearchFilterConfigOption
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"supportMulti": @"support_multi",
+                           @"isEmpty": @"is_empty",
+                           @"rankType": @"rank_type",
+                           @"isNoLimit": @"is_no_limit",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHSearchFilterConfigItem
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"supportMulti": @"support_multi",
+                           @"tabId": @"tab_id",
+                           @"tabStyle": @"tab_style",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
