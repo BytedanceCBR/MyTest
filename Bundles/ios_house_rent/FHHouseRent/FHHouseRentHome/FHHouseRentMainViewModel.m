@@ -65,6 +65,9 @@
 @property(nonatomic , assign) CGFloat headerHeight;
 @property(nonatomic , assign) BOOL needLogHouseSearch;
 
+@property(nonatomic , copy) NSString *originSearchId;
+@property(nonatomic , assign) BOOL isFirstLoad;
+
 @end
 
 
@@ -103,6 +106,8 @@
         _showHouseDict = [NSMutableDictionary new];
         
         viewController.tracerModel.originSearchId = nil;
+        
+        self.isFirstLoad = YES;
         
     }
     return self;
@@ -269,7 +274,7 @@
        
         wself.currentRentDataModel = model.data;
         wself.searchId = model.data.searchId;
-        
+
         if (isHead) {
             [wself.houseList removeAllObjects];
         }
@@ -296,9 +301,11 @@
             [wself showErrorMask:YES tip:tip enableTap:NO showReload:NO];
         }
         wself.viewController.tracerModel.searchId = model.data.searchId;
-        if (wself.viewController.tracerModel.originSearchId.length == 0) {
+        if (wself.isFirstLoad) {
             wself.viewController.tracerModel.originSearchId = model.data.searchId ?:@"be_null";
+            wself.originSearchId = model.data.searchId;
             [wself addEnterLog];
+            wself.isFirstLoad = NO;
         }
        
        if (wself.needLogHouseSearch) {
@@ -810,12 +817,12 @@
      */
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-    NSDictionary *houseParams = [envBridge homePageParamsMap];
+//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+//    NSDictionary *houseParams = [envBridge homePageParamsMap];
     [param addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
-    [param addEntriesFromDictionary:houseParams];
-    
-//    param[@"search_id"] = self.searchId ?: @"be_null";
+//    [param addEntriesFromDictionary:houseParams];
+    param[@"origin_search_id"] = self.originSearchId ?: @"be_null";
+    param[@"search_id"] = self.searchId ?: @"be_null";
     param[@"enter_from"] = @"renting";
     
     return param;
