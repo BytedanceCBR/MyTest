@@ -84,7 +84,7 @@ static NSMutableArray  * _Nullable identifierArr;
     NSMutableArray <JSONModel *>*modelsArray = [NSMutableArray new];
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
-        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+        dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     }
     
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
@@ -169,7 +169,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
-        dataModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+        dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     }
     
     //如果数据无变化直接返回

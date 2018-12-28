@@ -97,6 +97,7 @@
                            @"houseTypeList": @"house_type_list",
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
+                           @"filter": @"filter",
                            @"rentOpData": @"rent_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",

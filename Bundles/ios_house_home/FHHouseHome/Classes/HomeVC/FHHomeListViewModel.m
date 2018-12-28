@@ -87,6 +87,21 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
+            
+//             NSString *urlStr = @"http://10.1.10.250:8080/test";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+//             NSString *unencodedString = urlStr;
+//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//             (CFStringRef)unencodedString,
+//             NULL,
+//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//             kCFStringEncodingUTF8));
+//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+//             NSURL *url = [TTURLUtils URLWithString:urlStr];
+//             [[TTRoute sharedRoute] openURLByPushViewController:url];
+//             return ;
+            
             StrongSelf;
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
@@ -219,14 +234,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         NSMutableArray *modelsCache =[[NSMutableArray alloc] initWithArray:self.itemsDataCache[cacheKey]];
         if (kIsNSString(cahceKey)) {
             if (pullType == FHHomePullTriggerTypePullUp) {
-                self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+                if (model && model.data.items.count > 0) {
+                    self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+                }
             }else
             {
                 self.itemsDataCache[cacheKey] = model.data.items;
             }
         }
         
-        if (kIsNSString(cahceKey)) {
+        if (kIsNSString(cahceKey) && model.data.searchId) {
             self.itemsSearchIdCache[cacheKey] = model.data.searchId;
         }
         
@@ -365,5 +382,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV reloadData];
     }
 }
+
 
 @end

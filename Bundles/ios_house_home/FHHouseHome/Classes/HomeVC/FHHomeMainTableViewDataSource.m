@@ -18,9 +18,10 @@
 #import "FHHouseRentModel.h"
 #import "FHHouseNeighborModel.h"
 #import "FHHouseType.h"
+#import "TTRoute.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
-
+@property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
 @end
 
 @implementation FHHomeMainTableViewDataSource
@@ -30,6 +31,7 @@
     self = [super init];
     if (self) {
         [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
+        self.traceRecordDict = [NSMutableDictionary new];
     }
     return self;
 }
@@ -54,7 +56,7 @@
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
         JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
         if (!model) {
-            model = [[FHEnvContext sharedInstance] getConfigFromLocal];
+            model = [[FHEnvContext sharedInstance] readConfigFromLocal];
         }
         NSString *identifier = [FHHomeCellHelper configIdentifier:model];
         
@@ -92,24 +94,48 @@
     if (self.showPlaceHolder) {
         return 105;
     }
-    /*
-    JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
-    NSString *identifier = [FHHomeCellHelper configIdentifier:model];
-    [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
-        [FHHomeCellHelper configureHomeListCell:cell withJsonModel:model];
-    }];
-    return [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-     */
     return 105;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
-//    [FHHomeCellHelper handleCellShowLogWithModel:model];
+    FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
+//    [FHHomeCellHelper handleCellShowLogWithModel:model.idx];
+     if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
+     {
+         return;
+     }else
+     {
+         if (cellModel.idx) {
+             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
+
+             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+             
+             NSMutableDictionary *tracerDict = @{}.mutableCopy;
+             tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+             tracerDict[@"card_type"] = @"left_pic";
+             tracerDict[@"page_type"] = [self pageTypeString];
+             tracerDict[@"element_type"] = @"be_null";
+             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
+             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
+             tracerDict[@"search_id"] = cellModel.searchId ? : @"";
+             tracerDict[@"rank"] = @(indexPath.row);
+             tracerDict[@"origin_from"] = @"be_null";
+             tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+             
+             [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
+             
+         }
+     }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self jumpToDetailPage:indexPath];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -136,6 +162,87 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return NO;
+}
+
+#pragma mark - 详情页跳转
+-(void)jumpToDetailPage:(NSIndexPath *)indexPath {
+    
+    if (self.modelsArray.count > indexPath.row) {
+        FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageTypeString];
+        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"log_pb"] = theModel.logPb;
+        NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *jumpUrl = nil;
+        
+        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+        }else if(self.currentHouseType == FHHouseTypeNewHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
+        }else if(self.currentHouseType == FHHouseTypeRentHouse)
+        {
+            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
+        }
+        
+        if (jumpUrl != nil) {
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
+    }
+    
+}
+
+-(NSString *)pageTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)houseTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)elementTypeString {
+    
+    return @"be_null";
+    
 }
 
 @end
