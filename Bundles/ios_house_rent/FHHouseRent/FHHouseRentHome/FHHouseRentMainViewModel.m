@@ -988,6 +988,7 @@
     param[@"log_pb"] = model.logPb;
     param[@"rank"] = @(indexPath.row);
     param[@"search_id"] = self.searchId;
+    param[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";;
     
     param[@"enter_from"] = nil;
     
