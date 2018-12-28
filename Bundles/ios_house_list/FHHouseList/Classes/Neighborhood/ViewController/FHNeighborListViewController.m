@@ -14,6 +14,11 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
+#import "FHConditionFilterFactory.h"
+#import "SSNavigationBar.h"
+#import "UIView+Refresh_ErrorHandler.h"
+#import "UIViewController+NavbarItem.h"
+#import "UIViewController+NavigationBarStyle.h"
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
 
@@ -70,6 +75,7 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:YES];
+    self.ttNeedHideBottomLine = YES;
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
@@ -140,9 +146,6 @@
 
 - (void)setupData {
     __weak typeof(self) wself = self;
-//    _viewModel.resetConditionBlock = ^(NSDictionary *condition){
-//        [wself.houseFilterBridge resetFilter:wself.houseFilterViewModel withQueryParams:condition updateFilterOnly:YES];
-//    };
     
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];

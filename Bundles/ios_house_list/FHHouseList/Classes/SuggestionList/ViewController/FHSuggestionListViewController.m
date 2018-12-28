@@ -14,6 +14,7 @@
 #import "FHSuggestionListViewModel.h"
 #import "FHEnvContext.h"
 #import "ToastManager.h"
+#import "TTNavigationController.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -75,6 +76,10 @@
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.naviBar.searchInput resignFirstResponder];
+    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -91,6 +96,11 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.naviBar resignFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.naviBar.searchInput resignFirstResponder];
 }
 
 - (void)setupUI {
