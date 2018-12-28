@@ -865,6 +865,11 @@ static TTLocationManager *_sharedManager;
     return needAlert;
 }
 
+- (NSNumber *)getLocationResult
+{
+    return @(_feedback.op_type);
+}
+
 - (void)processLocationCommand:(TTLocationCommandItem *)commandItem {
     NSDate *date = commandItem.date;
     if (commandItem && date) {

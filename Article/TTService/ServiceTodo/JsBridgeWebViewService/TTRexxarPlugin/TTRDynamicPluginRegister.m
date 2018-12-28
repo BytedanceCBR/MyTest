@@ -53,7 +53,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.openCommodity" for:@"openCommodity"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.callNativePhone" for:@"callNativePhone"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"get_address"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"getAddress"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.toast" for:@"toast"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.alert" for:@"alert"];

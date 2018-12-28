@@ -25,6 +25,7 @@
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeConfigManager alloc] init];
         manager.configDataReplay = [RACReplaySubject subject];
+        manager.searchConfigDataReplay = [RACReplaySubject subject];
     });
     return manager;
 }
@@ -52,6 +53,7 @@
             self.currentDictionary = configDict;
             [[FHEnvContext sharedInstance] updateConfigCache];
             [self.configDataReplay sendNext:dataModel];
+            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
         }
     }
 }

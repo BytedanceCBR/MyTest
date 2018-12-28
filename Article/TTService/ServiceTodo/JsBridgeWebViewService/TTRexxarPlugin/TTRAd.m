@@ -116,6 +116,7 @@
     [locationDict setValue:@(placemarkItem.coordinate.latitude) forKey:@"latitude"];
     [locationDict setValue:@(placemarkItem.coordinate.longitude) forKey:@"longitude"];
     [locationDict setValue:placemarkItem.city forKey:@"locality"];
+    [locationDict setValue:[[TTLocationManager sharedManager] getLocationResult] forKey:@"code"];
     [locationDict setValue:placemarkItem.district forKey:@"sub_locality"];
     NSString* provice = placemarkItem.province;
     if (isEmptyString(provice)) {
@@ -125,7 +126,7 @@
         }
     }
     [locationDict setValue:provice forKey:@"province"];
-    callback(TTRJSBMsgSuccess, @{@"address_info": locationDict});
+    callback(TTRJSBMsgSuccess, @{@"address_info": locationDict,@"code": [[TTLocationManager sharedManager] getLocationResult]});
 }
 
 

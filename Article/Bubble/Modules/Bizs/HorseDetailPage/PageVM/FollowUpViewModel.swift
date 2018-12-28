@@ -248,7 +248,7 @@ class FollowUpViewModel {
                         }else if response?.data?.followStatus ?? 0 == 1 {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {
-                                EnvContext.shared.toast.showToast("提交成功")
+                                EnvContext.shared.toast.showToast("提交成功，经纪人将尽快与您联系")
                             }
                         }
                         NotificationCenter.default.post(name: .followUpDidChange, object: nil)

@@ -44,31 +44,50 @@
         return;
     }
     
+    /*
+     if (callback) {
+     callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
+     @"status": @(response.statusCode),
+     @"code": error?@(0): @(1),
+     @"beginReqNetTime": startTime
+     });
+     }
+     */
+    
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
-    [[TTNetworkManager shareInstance] requestForJSONWithResponse:url
-                                                          params:params
-                                                          method:method
-                                                needCommonParams:needCommonParams
-                                                     headerField:header
-                                               requestSerializer:nil
-                                              responseSerializer:nil
-                                                      autoResume:YES
-                                                        callback:^(NSError *error, id obj, TTHttpResponse *response) {
-                                                            if (callback) {
-                                                                callback(error? TTBridgeMsgFailed: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
-                                                                                                                         @"status": @(response.statusCode),
-                                                                                                                         @"code": error?@(0): @(1),
-                                                                                                                         @"beginReqNetTime": startTime
-                                                                                                                         });
-                                                                
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (callback && [obj isKindOfClass:[NSData class]]) {
+            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding] ? : @"",
+                                                      @"status": @(response.statusCode),
+                                                      @"code": error?@(0): @(1),
+                                                      @"beginReqNetTime": startTime
+                                                      });
+        }
+    }];
+//    :url
+//                                                          params:params
+//                                                          method:method
+//                                                needCommonParams:needCommonParams
+//                                                     headerField:header
+//                                               requestSerializer:nil
+//                                              responseSerializer:nil
+//                                                      autoResume:YES
+//                                                        callback:^(NSError *error, id obj, TTHttpResponse *response) {
+//                                                            if (callback) {
+//                                                                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
+//                                                                                                                         @"status": @(response.statusCode),
+//                                                                                                                         @"code": error?@(0): @(1),
+//                                                                                                                         @"beginReqNetTime": startTime
+//                                                                                                                         });
+    
 //                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
 //                                                                                                @"status": @(response.statusCode),
 //                                                                                                @"code": error?@(0): @(1),
 //                                                                                                @"beginReqNetTime": startTime
 //                                                                                                });
-                                                            }
-                                                            
-                                                        }];
+//                                                            }
+//
+//                                                        }];
 }
 
 @end

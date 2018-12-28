@@ -92,6 +92,7 @@ typedef NS_ENUM(NSInteger, TTLocationCommandResult) {
 
 - (TTPlacemarkItem *)getPlacemarkItem;
 
+- (NSNumber *)getLocationResult;
 
 - (void)regeocodeWithCompletionHandler:(void(^)(NSArray *placemarks))completionHandler;
 
