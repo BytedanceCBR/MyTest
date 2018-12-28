@@ -17,7 +17,7 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 @interface FHHomeListViewModel : NSObject
 @property (nonatomic, assign) BOOL hasShowedData;
-@property (nonatomic, strong) NSString *enterType;
+@property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 
