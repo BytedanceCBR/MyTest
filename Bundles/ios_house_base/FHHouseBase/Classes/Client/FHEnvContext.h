@@ -11,6 +11,7 @@
 #import "FHHomeConfigManager.h"
 #import "FHGeneralBizConfig.h"
 #import "FHClientModel.h"
+#import "FHSearchConfigModel.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -50,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param: traceKey key
  *  @param: searchId 请求id
  */
-+ (void)recordEvent:(NSDictionary *)params andKey:(NSString *)traceKey;
++ (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey;
 
 /*
   判断是否联网
@@ -76,8 +77,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (FHConfigDataModel *)getConfigFromCache;
 
 //从本地磁盘获取config数据
-- (FHConfigDataModel *)getConfigFromLocal;
+- (FHConfigDataModel *)readConfigFromLocal;
 
+//从缓存中获取搜索配置
+- (FHSearchConfigModel *)getSearchConfigFromCache;
+
+//从本地磁盘中获取搜索配置
+- (FHSearchConfigModel *)readSearchConfigFromLocal;
 
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal;
@@ -90,6 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
+
 
 
 - (FHClientHomeParamsModel *)getCommonParams;

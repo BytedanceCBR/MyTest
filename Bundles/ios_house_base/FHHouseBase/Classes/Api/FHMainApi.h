@@ -21,10 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMainApi : NSObject
 
 /*
- * search config
+ * search config 废弃，接口合并
+ 
+ +(TTHttpTask *_Nullable)getSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *_Nullable model , NSError *_Nullable error))completion;
  */
-+(TTHttpTask *_Nullable)getSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *_Nullable model , NSError *_Nullable error))completion;
-
 
 /*
  city_id, gaode_city_id, gaode_lng, gaode_lat, gaode_city_name
