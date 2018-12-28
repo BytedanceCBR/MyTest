@@ -32,14 +32,15 @@
         self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
-            self.tracerModel = (FHTracerModel *)tracer;            
+            self.tracerModel = (FHTracerModel *)tracer;
+            self.tracerDict = [NSMutableDictionary new];
+            if (self.tracerModel.toDictionary) {
+                [self.tracerDict addEntriesFromDictionary:self.tracerModel.toDictionary];
+            }
         }else if([tracer isKindOfClass:[NSDictionary class]]){
             self.tracerDict = [NSMutableDictionary new];
             [self.tracerDict addEntriesFromDictionary:tracer];
             self.tracerModel = [[FHTracerModel alloc]initWithDictionary:self.tracerDict error:nil];
-            if (self.tracerModel.originFrom.length == 0) {
-                self.tracerModel.originFrom = [[[FHHouseBridgeManager sharedInstance] envContextBridge] homePageParamsMap][@"origin_from"];
-            }
         }
     }
     return self;

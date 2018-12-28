@@ -930,7 +930,7 @@
     tracerDict[@"impr_id"] = [cellModel imprId] ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"";
     tracerDict[@"rank"] = @(indexPath.row);
-    tracerDict[@"origin_from"] = @"be_null";
+    tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
 
@@ -979,6 +979,9 @@
     NSMutableDictionary *params = [NSMutableDictionary new];
     if (self.houseSearchDic) {
         [params addEntriesFromDictionary:self.houseSearchDic];
+    } else {
+        // house_search 上报时机是通过搜索（搜索页面）进入的搜索列表页，而通过搜索点击tab进入的不上报当前埋点
+        return;
     }
     params[@"page_type"] = [self pageTypeString];
     params[@"house_type"] = [self houseTypeString];
