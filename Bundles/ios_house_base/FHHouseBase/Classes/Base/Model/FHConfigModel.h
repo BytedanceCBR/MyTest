@@ -7,6 +7,7 @@
 
 #import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
+#import "FHSearchConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -255,6 +256,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opData2 ;
+@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataEntryInfoModel> *entryInfo;

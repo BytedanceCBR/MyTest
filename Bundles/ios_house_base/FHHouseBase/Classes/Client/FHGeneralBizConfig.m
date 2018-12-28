@@ -16,6 +16,7 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 
 @interface FHGeneralBizConfig ()
 @property (nonatomic, strong) YYCache *generalConfigCache;
+@property (nonatomic, strong) YYCache *searchConfigCache;
 @property (nonatomic, strong) YYCache *userSelectCache;
 
 @end
@@ -30,6 +31,14 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     return _generalConfigCache;
 }
 
+- (YYCache *)searchConfigCache
+{
+    if (!_searchConfigCache) {
+        _searchConfigCache = [YYCache cacheWithName:kGeneralKey];
+    }
+    return _searchConfigCache;
+}
+
 - (YYCache *)userSelectCache
 {
     if (!_userSelectCache) {
@@ -41,6 +50,7 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 - (void)onStartAppGeneralCache
 {
     self.configCache = [self getGeneralConfigFromLocal];
+    self.configCache.filter = [self getSearchConfigFromLocal];
 }
 
 - (void)updataCurrentConfigCache
@@ -73,6 +83,27 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
         if ([configModel isKindOfClass:[FHConfigDataModel class]]) {
+            configModel.filter = [self getSearchConfigFromLocal];
+            return configModel;
+        }else
+        {
+            return nil;
+        }
+    }else
+    {
+        return nil;
+    }
+}
+//临时方案
+- (FHSearchConfigModel *)getSearchConfigFromLocal
+{
+    NSString *configJsonStr = [self.searchConfigCache objectForKey:@"search_config"];
+    NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
+    
+    if ([configDict isKindOfClass:[NSDictionary class]]) {
+        FHSearchConfigModel *configModel = [[FHSearchConfigModel alloc] initWithDictionary:configDict error:nil];
+        if ([configModel isKindOfClass:[FHSearchConfigModel class]]) {
+            self.configCache.filter = configModel;
             return configModel;
         }else
         {

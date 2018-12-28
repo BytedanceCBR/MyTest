@@ -16,14 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHConfigAPI : NSObject
 
 /*
- *  请求筛选器c配置
- *  @param: param 请求参数
- *  @param: completion 请求回调
- */
-+(TTHttpTask *_Nullable)requestSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *_Nullable model , NSError *_Nullable error))completion;
-
-
-/*
  *  请求通用城市配置
  *  @param: param 请求参数
  *  @param: completion 请求回调

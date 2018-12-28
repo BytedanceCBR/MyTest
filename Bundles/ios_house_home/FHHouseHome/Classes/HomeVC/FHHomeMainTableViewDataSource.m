@@ -56,7 +56,7 @@
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
         JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
         if (!model) {
-            model = [[FHEnvContext sharedInstance] getConfigFromLocal];
+            model = [[FHEnvContext sharedInstance] readConfigFromLocal];
         }
         NSString *identifier = [FHHomeCellHelper configIdentifier:model];
         
@@ -98,9 +98,35 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
-//    [FHHomeCellHelper handleCellShowLogWithModel:model];
+    FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
+//    [FHHomeCellHelper handleCellShowLogWithModel:model.idx];
+     if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
+     {
+         return;
+     }else
+     {
+         if (cellModel.idx) {
+             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
 
+             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+             
+             NSMutableDictionary *tracerDict = @{}.mutableCopy;
+             tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+             tracerDict[@"card_type"] = @"left_pic";
+             tracerDict[@"page_type"] = [self pageTypeString];
+             tracerDict[@"element_type"] = @"be_null";
+             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
+             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
+             tracerDict[@"search_id"] = cellModel.searchId ? : @"";
+             tracerDict[@"rank"] = @(indexPath.row);
+             tracerDict[@"origin_from"] = @"be_null";
+             tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+             
+             [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
+             
+         }
+     }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -185,6 +211,27 @@
             break;
         case FHHouseTypeNeighborhood:
             return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)houseTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
             break;
         default:
             return @"be_null";

@@ -64,7 +64,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+    FHConfigModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     if (!configModel) {
         self.mainTableView.hidden = YES;
         [self tt_startUpdate];
@@ -101,6 +101,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    FHSearchConfigModel *searchConfig = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
+    
 }
 
 - (void)didAppear
@@ -133,7 +136,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (BOOL)tt_hasValidateData
 {
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromLocal];
+    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
     return configModel != nil;
 }
 

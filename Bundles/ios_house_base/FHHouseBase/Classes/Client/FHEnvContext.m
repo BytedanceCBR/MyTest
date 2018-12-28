@@ -29,7 +29,7 @@
     return manager;
 }
 
-+ (void)recordEvent:(NSDictionary *)params andKey:(NSString *)traceKey
++ (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey
 {
     if (kIsNSString(traceKey) && kIsNSDictionary(params)) {
         NSMutableDictionary *pramsDict = [[NSMutableDictionary alloc] initWithDictionary:params];
@@ -54,8 +54,6 @@
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key
 {
     
-    
-    
 }
 
 - (void)onStartApp
@@ -75,9 +73,24 @@
     return self.generalBizConfig.configCache;
 }
 
-- (FHConfigDataModel *)getConfigFromLocal
+- (FHConfigDataModel *)readConfigFromLocal
 {
     return [self.generalBizConfig getGeneralConfigFromLocal];
+}
+
+- (FHSearchConfigModel *)getSearchConfigFromCache
+{
+    if (!self.generalBizConfig.configCache.filter) {
+        return [self readSearchConfigFromLocal];
+    }
+    return self.generalBizConfig.configCache.filter;
+}
+
+- (FHSearchConfigModel *)readSearchConfigFromLocal
+{
+    FHSearchConfigModel * searchConfig = [self.generalBizConfig getSearchConfigFromLocal];
+    self.generalBizConfig.configCache.filter = searchConfig;
+    return [self.generalBizConfig getSearchConfigFromLocal];
 }
 
 //获取当前保存的城市名称
