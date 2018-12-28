@@ -601,37 +601,6 @@
     [controller.navigationController popViewControllerAnimated:YES];
 }
 
-
-
-#pragma mark - log
-
--(NSMutableDictionary *)baseLogParam
-{
-    /*
-     1. event_type：house_app2c_v2
-     2. category_name（列表名）：renting（租房大类页）
-     3. enter_from（列表入口）：maintab（首页）
-     4. enter_type（进入列表方式）：click（点击）
-     5. element_from（组件入口）：maintab_icon（首页icon）
-     6. search_id
-     7. origin_from：renting_list（租房大类页推荐列表）
-     8. origin_search_id
-     9. stay_time（停留时长，单位毫秒）
-     */
-    
-    NSMutableDictionary *param = [NSMutableDictionary new];
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-//    NSDictionary *houseParams = [envBridge homePageParamsMap];
-    //    [param addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
-//    [param addEntriesFromDictionary:houseParams];
-    
-    //    param[@"search_id"] = self.searchId ?: @"be_null";
-    param[@"enter_from"] = @"old";
-    
-    return param;
-}
-
-
 #pragma mark - UITableViewDelegate
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
