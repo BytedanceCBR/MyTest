@@ -18,13 +18,6 @@
 
 @implementation FHConfigAPI
 
-+(TTHttpTask *_Nullable)requestSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *_Nullable model , NSError *_Nullable error))completion
-{
-    return  [FHMainApi getSearchConfig:param completion:^(FHSearchConfigModel * _Nullable model, NSError * _Nullable error) {
-        completion(model,error);
-    }];
-}
-
 + (TTHttpTask *_Nullable )requestGeneralConfig:(NSInteger )cityId gaodeLocation:(CLLocationCoordinate2D)location gaodeCityId:(NSString *)gCityId gaodeCityName:(NSString *)gCityName completion:(void(^)(FHConfigModel* _Nullable model , NSError *_Nullable  error))completion
 {
    return  [FHMainApi getConfig:cityId gaodeLocation:location gaodeCityId:gCityId gaodeCityName:gCityName completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {

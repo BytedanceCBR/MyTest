@@ -29,6 +29,7 @@
 
 #pragma mark - config
 
+/*
 +(TTHttpTask *)getSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *model , NSError *error))completion
 {
 //
@@ -76,6 +77,7 @@
     }];
     
 }
+ */
 
 /*
  city_id, gaode_city_id, gaode_lng, gaode_lat, gaode_city_name
