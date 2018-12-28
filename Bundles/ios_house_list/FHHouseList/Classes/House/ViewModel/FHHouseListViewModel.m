@@ -979,6 +979,9 @@
     NSMutableDictionary *params = [NSMutableDictionary new];
     if (self.houseSearchDic) {
         [params addEntriesFromDictionary:self.houseSearchDic];
+    } else {
+        // house_search 上报时机是通过搜索（搜索页面）进入的搜索列表页，而通过搜索点击tab进入的不上报当前埋点
+        return;
     }
     params[@"page_type"] = [self pageTypeString];
     params[@"house_type"] = [self houseTypeString];
