@@ -867,7 +867,7 @@ static TTLocationManager *_sharedManager;
 
 - (NSNumber *)getLocationResult
 {
-    return @(_feedback.op_type);
+    return @(self.placemarkItem.coordinate.longitude != 0);
 }
 
 - (void)processLocationCommand:(TTLocationCommandItem *)commandItem {

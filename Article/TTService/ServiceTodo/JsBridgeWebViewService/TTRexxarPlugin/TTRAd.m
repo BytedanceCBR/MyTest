@@ -112,11 +112,12 @@
 - (void)getAddressWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
     NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithCapacity:5];
+    
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    NSLog(@"latitude = %f,longitude = %f",placemarkItem.coordinate.latitude, placemarkItem.coordinate.longitude);
     [locationDict setValue:@(placemarkItem.coordinate.latitude) forKey:@"latitude"];
     [locationDict setValue:@(placemarkItem.coordinate.longitude) forKey:@"longitude"];
     [locationDict setValue:placemarkItem.city forKey:@"locality"];
-    [locationDict setValue:[[TTLocationManager sharedManager] getLocationResult] forKey:@"code"];
     [locationDict setValue:placemarkItem.district forKey:@"sub_locality"];
     NSString* provice = placemarkItem.province;
     if (isEmptyString(provice)) {

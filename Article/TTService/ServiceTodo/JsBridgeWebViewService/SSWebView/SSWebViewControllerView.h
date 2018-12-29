@@ -49,6 +49,7 @@ typedef enum SSWebViewDismissType{
 @property (nonatomic, assign)BOOL shouldShowShareAction;
 @property (nonatomic, assign)BOOL shouldDisableHash; // 是否需要拼接hash
 @property (nonatomic, assign)BOOL isWebControl; // 是否web控制返回按钮
+@property (nonatomic, assign)BOOL isShowCloseWebBtn; // 是否显示关闭x按钮
 
 @property (nonatomic, copy)NSString *shareTitle;
 @property (nonatomic, copy)NSString *shareDesc;

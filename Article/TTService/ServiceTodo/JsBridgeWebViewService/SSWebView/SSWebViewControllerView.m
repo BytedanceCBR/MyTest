@@ -92,6 +92,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.shouldInterceptAutoJump = [SSCommonLogic shouldAutoJumpControlEnabled];
         
         self.isRepostWeitoutiaoFromWeb = NO;
+        self.isShowCloseWebBtn = YES;
         
         SSNavigationBar *navigationBar = [[SSNavigationBar alloc] initWithFrame:[self frameForTitleBarView]];
         self.navigationBar = navigationBar;
@@ -452,11 +453,22 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     [super themeChanged:notification];
 }
 
+- (void)showCloseButton
+{
+    NSLog(@"canGoBack = %d",self.ssWebContainer.ssWebView.canGoBack);
+    if (self.isShowCloseWebBtn) {
+        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
+    }else
+    {
+        [self.backButtonView showCloseButton:self.isShowCloseWebBtn];
+    }
+}
+
 - (void)backWebViewActionFired:(id) sender {
     
-    if (![self.backButtonView isCloseButtonShowing]) {
-        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
-    }
+//    if (![self.backButtonView isCloseButtonShowing]) {
+        [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
+//    }
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
         [self.ssWebContainer.ssWebView goBack];
     } else {
@@ -597,8 +609,9 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     BOOL result = YES;
+    NSLog(@"request url = %@",[request URL]);
     
-    if ([self.ssWebContainer.ssWebView canGoBack]) {
+    if ([self.ssWebContainer.ssWebView canGoBack] && self.isShowCloseWebBtn) {
         [self.backButtonView showCloseButton:YES];
     }
     

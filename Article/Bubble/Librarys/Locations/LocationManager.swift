@@ -98,6 +98,12 @@ import RxCocoa
 
                     }
                 }
+                TTLocationManager.shared()?.placemarkItem()?.coordinate.latitude = location?.coordinate.latitude ?? 0.0;
+                TTLocationManager.shared()?.placemarkItem()?.coordinate.longitude = location?.coordinate.longitude ?? 0.0;
+                TTLocationManager.shared()?.placemarkItem()?.city = reGeocode?.city;
+                TTLocationManager.shared()?.placemarkItem()?.district = reGeocode?.district;
+
+//                [TTLocationManager sharedManager].placemarkItem.coordinate
 
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()
