@@ -96,7 +96,9 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
     }
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
-
+    if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,13 +107,25 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     FHSearchConfigModel *searchConfig = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
     
+    [self scrollToTopEnable:YES];
 }
 
 - (void)pullAndRefresh
 {
-    
+    [self.mainTableView triggerPullDown];
+//    detailPageViewModel?.reloadFromType = reloadFromType
+//    tableView.triggerPullDown()
 }
 
+- (void)scrollToTopEnable:(BOOL)enable
+{
+    self.mainTableView.scrollsToTop = enable;
+}
+
+- (void)scrollToTopAnimated:(BOOL)animated
+{
+//    [self.tableView setContentOffset:CGPointMake(0, self.mainTableView.customTopOffset - self.mainTableView.contentInset.top) animated:animated];
+}
 
 //- (void)scroll
 
