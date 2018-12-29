@@ -53,7 +53,7 @@
     if (self) {
         self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
         self.houseId = paramObj.userInfo.allInfo[@"houseId"];
-        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
+        self.searchId = paramObj.userInfo.allInfo[@"searchId"]; // add by zyk 外部的searchId无用，每次使用网络返回的searchId
         self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
         self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
         self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];

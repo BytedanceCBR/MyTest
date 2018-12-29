@@ -13,7 +13,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseSingleImageInfoCellBridgeDelegate.h"
 #import "FHRefreshCustomFooter.h"
-
+#import "ToastManager.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -70,12 +70,14 @@
         [self.listController.emptyView hideEmptyView];
         if (tips.length > 0) {
             // Toast
+            [[ToastManager manager] showToast:tips];
         }
     } else {
         self.listController.hasValidateData = NO;
         [self.listController.emptyView showEmptyWithType:maskViewType];
         if (tips.length > 0) {
             // Toast
+            [[ToastManager manager] showToast:tips];
         }
     }
     [self updateTableViewWithMoreData:self.lastHasMore];
