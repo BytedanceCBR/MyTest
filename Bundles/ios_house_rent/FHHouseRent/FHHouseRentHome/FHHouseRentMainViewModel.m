@@ -976,7 +976,7 @@
     
     _showHouseDict[model.id] = @(1);
     
-    NSMutableDictionary *param = [self baseLogParam];
+    NSDictionary *baseParam = [self baseLogParam];
     
     /*
      "1. event_type：house_app2c_v2
@@ -992,17 +992,18 @@
      11. origin_search_id"
      */
     
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"house_type"] = @"rent";
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"renting";
     param[@"element_type"] = @"be_null";
+    param[@"group_id"] = model.id;
     param[@"impr_id"] = model.imprId;
-    param[@"log_pb"] = model.logPb;
-    param[@"rank"] = @(indexPath.row);
     param[@"search_id"] = self.searchId;
-    param[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";;
-    
-    param[@"enter_from"] = nil;
+    param[@"rank"] = @(indexPath.row);
+    param[@"log_pb"] = model.logPb;
+    param[@"origin_from"] = baseParam[@"origin_from"] ? : @"be_null";;
+    param[@"origin_search_id"] = self.viewController.tracerModel.originSearchId ? : @"be_null";;
     
     TRACK_EVENT(@"house_show", param);
 }

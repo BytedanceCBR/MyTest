@@ -298,15 +298,19 @@
 
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"house_type"] = @"new";
-    param[@"log_pb"] = model.logPb ? : @"be_null";
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"element_type"] = @"mix_list";
+    param[@"group_id"] = model.houseId;
+    param[@"impr_id"] = model.imprId;
+    param[@"search_id"] = model.searchId;
+
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
+    param[@"log_pb"] = model.logPb ? : @"be_null";
 
     [FHUserTracker writeEvent:@"house_show" params:param];
     
@@ -316,16 +320,19 @@
     
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"house_type"] = @"old";
-    param[@"log_pb"] = model.logPb ? : @"be_null";
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"element_type"] = @"mix_list";
+    param[@"group_id"] = model.hid;
+    param[@"impr_id"] = model.imprId;
+    param[@"search_id"] = model.searchId;
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
-    
+    param[@"log_pb"] = model.logPb ? : @"be_null";
+
     [FHUserTracker writeEvent:@"house_show" params:param];
 }
 
@@ -334,16 +341,18 @@
     
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"house_type"] = @"rent";
-    param[@"log_pb"] = model.logPb ? : @"be_null";
-
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"maintab";
     param[@"element_type"] = @"mix_list";
+    param[@"group_id"] = model.id;
+    param[@"impr_id"] = model.imprId;
+    param[@"search_id"] = model.searchId;
     param[@"rank"] = @(index);
     
     param[@"origin_from"] = @"mix_list";
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     param[@"origin_search_id"] = searchId ? : @"be_null";
+    param[@"log_pb"] = model.logPb ? : @"be_null";
 
     [FHUserTracker writeEvent:@"house_show" params:param];
     

@@ -85,6 +85,7 @@
                            @"displayDescription": @"display_description",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
+                           @"searchId": @"search_id",
                            @"houseId": @"id",
                            @"houseType": @"house_type",
                            @"coreInfo": @"core_info",
