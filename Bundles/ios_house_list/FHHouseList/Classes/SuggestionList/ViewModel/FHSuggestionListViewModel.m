@@ -425,6 +425,8 @@
             return cell;
         }
     }
+    
+    return [[UITableViewCell alloc]init];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
