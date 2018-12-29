@@ -37,6 +37,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.handleNavBack" for:@"handleNavBack"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];

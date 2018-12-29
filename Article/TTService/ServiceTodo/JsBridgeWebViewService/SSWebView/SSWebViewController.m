@@ -702,6 +702,24 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
+- (void)setupCloseCallBackPreviousVC:(NSDictionary *)params
+{
+    NSString *jsCodeStr = [NSString stringWithFormat:@"ToutiaoJSBridge.trigger('pageResult',%@);",[params tt_JSONRepresentation]];
+    [self.ssWebView.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:jsCodeStr
+                                                        completionHandler:nil];
+}
+
+- (void)setupOpenPageTagStr:(NSString *)tagStr
+{
+    self.tagStr = tagStr;
+}
+
+- (NSString *)getOpenPageTagStr
+{
+    return _tagStr;
+}
+
+
 - (void)refreshBackButtonPosition
 {
     CGRect frame = self.view.frame;
@@ -939,6 +957,13 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 {
     if ([isWebControl respondsToSelector:@selector(boolValue)]) {
         self.ssWebView.isWebControl = [isWebControl boolValue];
+    }
+}
+
+- (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow
+{
+    if ([isShow respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isShowCloseWebBtn = [isShow boolValue];
     }
 }
 
