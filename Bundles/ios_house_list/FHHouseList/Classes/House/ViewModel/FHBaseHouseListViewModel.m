@@ -18,9 +18,13 @@
     return @"be_null";
 }
 
--(instancetype)initWithTableView:(UITableView *)tableView viewControler:(FHHouseListViewController *)vc routeParam:(TTRouteParamObj *)paramObj {
-    
-    
+-(instancetype)initWithTableView:(UITableView *)tableView viewControler:(FHHouseListViewController *)vc routeParam:(TTRouteParamObj *)paramObj
+{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;    
 }
 
 -(void)loadData:(BOOL)isRefresh {

@@ -446,9 +446,28 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
     }
     
     func creatOptionMenu() {
+        
+
+        
         let applcation = UIApplication.shared
         let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if let centerStr = centerPointStr.value {
+            
+            var urlString = "qqmap://map/routeplan?from=我的位置&type=drive&tocoord=\(centerStr.0),\(centerStr.1)&to=\(""))&coord_type=1&policy=0"
+            print("qq : \(urlString)")
+            
+            urlString = "iosamap://path?sourceApplication=applicationName&sid=BGVIS1&did=BGVIS2&dlat=\(centerStr.0)&dlon=\(centerStr.1)&dev=0&t=0"
+            print("gaode : \(urlString)")
+            
+            urlString = "comgooglemaps://?x-source=app名&x-success=comgooglemaps://&saddr=&daddr=\(centerStr.0),\(centerStr.1)&directionsmode=driving"
+            print("google: \(urlString)")
+            
+            urlString = "baidumap://map/direction?origin={{我的位置}}&destination=latlng:\(centerStr.0),\(centerStr.1)|name=\("")&mode=driving&coord_type=gcj02"
+            print("baidu: \(urlString)")
+            
+            
+            
+            
             if (applcation.canOpenURL(URL(string: "qqmap://")!) == true) {
                 let qqAction = UIAlertAction(title: "腾讯地图", style: .default, handler: {
                     (alert: UIAlertAction!) -> Void in
