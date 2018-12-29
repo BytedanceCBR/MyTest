@@ -322,12 +322,12 @@ def appPods
     'Account',
     'WeChatAccount'
     #    'SinaWeiboAccount',
-    'TencentQQAccount',
+    #    'TencentQQAccount',
     #    'TencentWBAccount',
     #    'RenRenAccount',
     #    'TianYiAccount',
     #    'TTAwemeAccount',
-    'TTHotsoonAccount'
+    #    'TTHotsoonAccount'
     ]
     #-----账号登录UI库-----
     pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
