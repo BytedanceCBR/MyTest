@@ -724,6 +724,9 @@
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
+        traceParam[@"origin_from"] = self.originFrom;
+        traceParam[@"origin_search_id"] = self.originSearchId;
+
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -745,6 +748,9 @@
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
+        traceParam[@"origin_from"] = self.originFrom;
+        traceParam[@"origin_search_id"] = self.originSearchId;
+
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -766,6 +772,9 @@
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
+        traceParam[@"origin_from"] = self.originFrom;
+        traceParam[@"origin_search_id"] = self.originSearchId;
+
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
@@ -787,6 +796,9 @@
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
+        traceParam[@"origin_from"] = self.originFrom;
+        traceParam[@"origin_search_id"] = self.originSearchId;
+
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
                                };
