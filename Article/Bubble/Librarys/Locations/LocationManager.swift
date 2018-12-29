@@ -102,8 +102,16 @@ import RxCocoa
                 TTLocationManager.shared()?.placemarkItem()?.coordinate.longitude = location?.coordinate.longitude ?? 0.0;
                 TTLocationManager.shared()?.placemarkItem()?.city = reGeocode?.city;
                 TTLocationManager.shared()?.placemarkItem()?.district = reGeocode?.district;
-
-//                [TTLocationManager sharedManager].placemarkItem.coordinate
+                
+                var amapInfo: [String : Any] = [:];
+                
+                amapInfo["sub_locality"] = reGeocode?.district;
+                amapInfo["locality"] = reGeocode?.city
+                amapInfo["latitude"] = location?.coordinate.latitude ?? 0.0
+                amapInfo["longitude"] = location?.coordinate.longitude ?? 0.0
+                
+                TTLocationManager.shared().setUpAmapInfo(amapInfo)
+                
 
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()

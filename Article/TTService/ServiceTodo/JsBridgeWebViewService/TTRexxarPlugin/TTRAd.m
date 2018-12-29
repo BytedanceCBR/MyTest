@@ -111,14 +111,9 @@
 
 - (void)getAddressWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
-    NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithCapacity:5];
+    NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithDictionary:[[TTLocationManager sharedManager] getAmapInfo]];
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
-    NSLog(@"latitude = %f,longitude = %f",placemarkItem.coordinate.latitude, placemarkItem.coordinate.longitude);
-    [locationDict setValue:@(placemarkItem.coordinate.latitude) forKey:@"latitude"];
-    [locationDict setValue:@(placemarkItem.coordinate.longitude) forKey:@"longitude"];
-    [locationDict setValue:placemarkItem.city forKey:@"locality"];
-    [locationDict setValue:placemarkItem.district forKey:@"sub_locality"];
     NSString* provice = placemarkItem.province;
     if (isEmptyString(provice)) {
         provice = [TTLocationManager sharedManager].baiduPlacemarkItem.province;
@@ -126,8 +121,9 @@
             provice = [TTLocationManager sharedManager].amapPlacemarkItem.province;
         }
     }
+    
     [locationDict setValue:provice forKey:@"province"];
-    callback(TTRJSBMsgSuccess, @{@"address_info": locationDict,@"code": [[TTLocationManager sharedManager] getLocationResult]});
+    callback(TTRJSBMsgSuccess, @{@"address_info": locationDict,@"code": @(locationDict[@"latitude"] != nil && [locationDict[@"latitude"] integerValue] != 0)});
 }
 
 
