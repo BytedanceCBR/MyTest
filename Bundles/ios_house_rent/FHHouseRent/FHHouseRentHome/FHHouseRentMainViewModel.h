@@ -51,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 //-(void)notifyChange:(BOOL)show headerHeight:(CGFloat)height;
 
 -(UIImage *)contentSnapshot;
+-(void)addStayLog;
 
 @end
 

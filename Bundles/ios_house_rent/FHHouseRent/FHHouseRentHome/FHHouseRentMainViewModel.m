@@ -30,6 +30,7 @@
 #import "FHBaseViewController.h"
 #import <TTHttpTask.h>
 #import <FHRentArticleListNotifyBarView.h>
+#import "UIViewController+Track.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kFilterBarHeight 44
@@ -59,7 +60,7 @@
 @property(nonatomic , weak) TTHttpTask *requestTask;
 
 //for log
-@property(nonatomic , strong) NSDate *startDate;
+//@property(nonatomic , strong) NSDate *startDate;
 @property(nonatomic , strong) NSMutableDictionary *showHouseDict;
 @property(nonatomic , strong) NSMutableDictionary *stayTraceDict;
 @property(nonatomic , assign) CGFloat headerHeight;
@@ -364,7 +365,7 @@
 
 -(void)viewWillAppear
 {
-    self.startDate = [NSDate date];
+//    self.startDate = [NSDate date];
 }
 
 -(void)viewWillDisapper
@@ -882,9 +883,8 @@
 
 -(void)addStayLog
 {
-    NSTimeInterval duration = [[NSDate date]timeIntervalSinceDate:self.startDate];
-    
-    if (duration > 24*60*60) {
+    NSTimeInterval duration = self.viewController.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
         return;
     }
     
@@ -903,11 +903,11 @@
 //    NSMutableDictionary *param = [self.viewController.tracerModel logDict];//[NSMutableDictionary new];
 //    [param addEntriesFromDictionary:self.tracerDict];
 //    param[@"search_id"] = self.searchId;
-    self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration*1000];
+    self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration];
 //    param[@"category_name"] = @"renting";
     
     TRACK_EVENT(@"stay_category", self.stayTraceDict);
-    
+    [self.viewController tt_resetStayTime];
     /*
      1. event_type：house_app2c_v2
      2. category_name（列表名）：renting（租房大类页）
