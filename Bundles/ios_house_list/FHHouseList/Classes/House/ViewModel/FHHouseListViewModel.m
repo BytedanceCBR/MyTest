@@ -26,7 +26,7 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "FHMapSearchOpenUrlDelegate.h"
 #import "FHUserTracker.h"
-
+#import "FHHouseBridgeManager.h"
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
 @property(nonatomic , strong) FHErrorView *maskView;
@@ -324,6 +324,9 @@
         if (self.isFirstLoad) {
             self.originSearchId = searchId;
             self.isFirstLoad = NO;
+            if (searchId.length > 0 ) {
+                SETTRACERKV(UT_ORIGIN_SEARCH_ID, searchId);
+            }
         }
         self.showPlaceHolder = NO;
         if (self.isEnterCategory) {
@@ -509,40 +512,63 @@
 
 #pragma mark 地图找房
 -(void)showMapSearch {
+    /*
+    1. event_type：house_app2c_v2
+    2. click_type: 点击类型,{'地图找房': 'map', '房源列表': 'list'}
+    3. category_name：category名,{'二手房列表页': 'old_list'}
+    4. enter_from：category入口,{'首页': 'maintab', '找房tab': 'findtab'}
+    5. enter_type：进入category方式,{'点击': 'click'}
+    6. element_from：组件入口,{'首页搜索': 'maintab_search', '首页icon': 'maintab_icon', '找房tab开始找房': 'findtab_find', '找房tab搜索': 'findtab_search'}
+    7. search_id
+    8. origin_from
+    9. origin_search_id
+     */
     
     if (self.mapFindHouseOpenUrl.length > 0) {
-        // FIXME: zjing log
-//        recordEvent(key: TraceEventName.click_switch_mapfind, params: params)
-//        var query = ""
-//        if  !openUrl.contains("enter_category") {
-//            query = "enter_category=\(catName)"
-//        }
-//        if !openUrl.contains("origin_from") {
-//            query = "\(query)&origin_from=\(originFrom)"
-//        }
-//
-//        if !openUrl.contains("origin_search_id") {
-//            query = "\(query)&origin_search_id=\(originSearchId)"
-//        }
-//        if !openUrl.contains("enter_from"){
-//            query = "\(query)&enter_from=\(catName)"
-//        }
-//        if !openUrl.contains("element_from"){
-//            query = "\(query)&element_from=\(elementName)"
-//        }
-//        if !openUrl.contains("search_id"){
-//            query = "\(query)&search_id=\(categoryListViewModel?.originSearchId ?? "be_null")"
-//        }
-//
-//
-//        if query.count > 0 {
-//            openUrl = "\(openUrl)&\(query)"
-//        }
+
+        NSMutableString *openUrl = self.mapFindHouseOpenUrl;
+        NSMutableDictionary *param = [self categoryLogDict].mutableCopy;
+        param[@"click_type"] = @"list";
+        TRACK_EVENT(@"click_switch_mapfind", param);
+        
+        NSMutableString *query = @"".mutableCopy;
+        if (![self.mapFindHouseOpenUrl containsString:@"enter_category"]) {
+            [query appendString:[NSString stringWithFormat:@"enter_category=%@",[self categoryName]]];
+
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"origin_from"]) {
+            [query appendString:[NSString stringWithFormat:@"&origin_from=%@",self.listVC.tracerModel.originFrom ? : @"be_null"]];
+
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"origin_search_id"]) {
+            [query appendString:[NSString stringWithFormat:@"&origin_search_id=%@",self.originSearchId ? : @"be_null"]];
+
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"enter_from"]) {
+            [query appendString:[NSString stringWithFormat:@"&enter_from=%@",self.listVC.tracerModel.enterFrom ? : @"be_null"]];
+            
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"enter_type"]) {
+            [query appendString:[NSString stringWithFormat:@"&enter_type=%@",self.listVC.tracerModel.enterType ? : @"be_null"]];
+            
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"element_from"]) {
+            [query appendString:[NSString stringWithFormat:@"&element_from=%@",self.listVC.tracerModel.elementFrom ? : @"be_null"]];
+            
+        }
+        if (![self.mapFindHouseOpenUrl containsString:@"search_id"]) {
+            [query appendString:[NSString stringWithFormat:@"&search_id=%@",self.searchId ? : @"be_null"]];
+            
+        }
+        if (query.length > 0) {
+            
+            openUrl = [NSString stringWithFormat:@"%@&%@",openUrl,query];
+        }
         
         //需要重置非过滤器条件，以及热词placeholder
         self.closeConditionFilter();
 
-        NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
+        NSURL *url = [NSURL URLWithString:openUrl];
         NSMutableDictionary *dict = @{}.mutableCopy;
         
         NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
@@ -726,6 +752,7 @@
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
+        traceParam[@"search_id"] = self.searchId;
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -750,6 +777,7 @@
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
+        traceParam[@"search_id"] = self.searchId;
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -774,6 +802,7 @@
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
+        traceParam[@"search_id"] = self.searchId;
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -798,6 +827,7 @@
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
+        traceParam[@"search_id"] = self.searchId;
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
