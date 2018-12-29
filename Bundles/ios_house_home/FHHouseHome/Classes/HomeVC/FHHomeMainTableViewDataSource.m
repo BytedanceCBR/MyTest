@@ -19,6 +19,7 @@
 #import "FHHouseNeighborModel.h"
 #import "FHHouseType.h"
 #import "TTRoute.h"
+#import "FHHomeConfigManager.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -242,6 +243,16 @@
     
     return @"be_null";
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }else
+    {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 @end

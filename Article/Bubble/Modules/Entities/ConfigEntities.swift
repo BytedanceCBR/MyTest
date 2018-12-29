@@ -32,6 +32,7 @@ struct GeneralConfigData: Mappable {
     var opData: OpData?
     var opData2: Any?
     var cityStats: Any?
+    var filter: Any?
     var banners: [Banner]?
     var reviewInfo: ConfigReviewInfo?
     var mapSearch : MapSearch?
@@ -44,6 +45,7 @@ struct GeneralConfigData: Mappable {
     mutating func mapping(map: Map) {
         hotCityList <- map["hot_city_list"]
         cityList <- map["city_list"]
+        filter <- map["filter"]
         entryList <- map["entry_info"]
         currentCityId <- map["current_city_id"]
         currentCityName <- map["current_city_name"]
