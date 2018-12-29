@@ -758,18 +758,30 @@
 
 #pragma mark - 详情页跳转
 -(void)jump2NewDetailPage:(NSIndexPath *)indexPath {
-    
+    /*
+    1. event_type：house_app2c_v2
+    2. page_type（详情页类型）：rent_detail（租房详情页）
+    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    4. enter_from（详情页入口）：rent_list（租房列表页）
+    5. element_from：be_null
+     logpb
+    9. rank
+    10. origin_from：renting_all（租房大类页全部房源icon），renting_joint（租房大类页合租icon），renting_fully（租房大类页整租icon），renting_apartment（租房大类页公寓icon），maintab_search（首页搜索），findtab_find（找房tab开始找房），findtab_search（找房tab搜索），renting_search（租房大类页搜索）
+    11. origin_search_id
+    */
     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
     if (cellModel.houseModel) {
         
         FHNewHouseItemModel *theModel = cellModel.houseModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"card_type"] = @"left_pic";
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
         traceParam[@"search_id"] = self.searchId;
+        traceParam[@"rank"] = @(indexPath.row);
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -789,12 +801,14 @@
         
         FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"card_type"] = @"left_pic";
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
         traceParam[@"search_id"] = self.searchId;
+        traceParam[@"rank"] = @(indexPath.row);
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -814,12 +828,14 @@
         
         FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"card_type"] = @"left_pic";
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
         traceParam[@"search_id"] = self.searchId;
+        traceParam[@"rank"] = @(indexPath.row);
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
@@ -839,12 +855,14 @@
         
         FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"card_type"] = @"left_pic";
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = [cellModel logPb];
         traceParam[@"origin_from"] = self.originFrom;
         traceParam[@"origin_search_id"] = self.originSearchId;
         traceParam[@"search_id"] = self.searchId;
+        traceParam[@"rank"] = @(indexPath.row);
 
         NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                                @"tracer": traceParam
