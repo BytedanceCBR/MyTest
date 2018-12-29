@@ -459,7 +459,9 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                         toTracerParams("messagetab", key: "enter_from") <|>
                         toTracerParams("click", key: "enter_type")
 
-                    let paramsMap = tracerParams.paramsGetter([:])
+                    var paramsMap = tracerParams.paramsGetter([:])
+                    paramsMap["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
+                    paramsMap["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
                     let userInfo = TTRouteUserInfo(info: ["tracer": paramsMap])
                     if let moreDetail = item.moreDetal
                     {
