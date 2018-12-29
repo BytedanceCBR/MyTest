@@ -118,6 +118,7 @@
 
 #import "FHEnvContext.h"
 #import "FHMapSearchOpenUrlDelegate.h"
+#import "TTLocationManager.h"
 
 
 #endif /* Article_Bridging_Header_h */
