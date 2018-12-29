@@ -63,7 +63,6 @@
 @property(nonatomic , strong) NSMutableDictionary *showHouseDict;
 @property(nonatomic , strong) NSMutableDictionary *stayTraceDict;
 @property(nonatomic , assign) CGFloat headerHeight;
-@property(nonatomic , assign) BOOL needLogHouseSearch;
 
 @property(nonatomic , copy) NSString *originSearchId;
 @property(nonatomic , assign) BOOL isFirstLoad;
@@ -308,11 +307,6 @@
             wself.isFirstLoad = NO;
         }
        
-       if (wself.needLogHouseSearch) {
-           [wself addHouseSearch];
-           wself.needLogHouseSearch = NO;
-       }
-       
        wself.tableView.mj_footer.hidden = (wself.houseList.count == 0);
        
        if (isHead && wself.houseList.count > 0) {
@@ -384,7 +378,6 @@
     self.tableView.scrollEnabled = YES;
     
     self.conditionFilter = condition;
-    self.needLogHouseSearch = YES;
     
     [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
@@ -946,20 +939,6 @@
     
     TRACK_EVENT(@"category_refresh", param);
 }
-
--(void)addHouseSearch
-{
-    NSMutableDictionary *param = [self baseLogParam];
-        
-    param[@"page_type"] = @"renting";
-    param[@"house_type"] = @"rent";
-    param[@"query_type"] = @"filter";
-    param[@"enter_query"] = @"";
-    param[@"search_query"] = @"";
-    
-    TRACK_EVENT(@"house_search", param);
-}
-
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath
 {

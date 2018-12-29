@@ -41,6 +41,7 @@
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
 @property (nonatomic , copy) NSDictionary *houseSearchDic;
+@property(nonatomic , assign) BOOL canChangeHouseSearchDic;// houseSearchDic[@"query_type"] = @"filter"
 
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
@@ -77,6 +78,7 @@
     self = [super init];
     if (self) {
 
+        _canChangeHouseSearchDic = YES;
         _listVC = vc;
         self.houseList = [NSMutableArray array];
         self.showPlaceHolder = YES;
@@ -141,7 +143,21 @@
     NSMutableDictionary *param = [NSMutableDictionary new];
 
     if (isRefresh) {
-        
+        if (!_isFirstLoad && _canChangeHouseSearchDic) {
+            if (self.houseSearchDic.count <= 0) {
+                // pageType 默认就是 [self pageTypeString]
+                self.houseSearchDic = @{
+                                        @"enter_query":@"be_null",
+                                        @"search_query":@"be_null",
+                                        @"page_type": [self pageTypeString],
+                                        @"query_type":@"filter"
+                                        };
+            } else {
+                NSMutableDictionary *dic = [self.houseSearchDic mutableCopy];
+                dic[@"query_type"] = @"filter";
+                self.houseSearchDic = dic;
+            }
+        }
         self.tableView.mj_footer.hidden = YES;
         [self.houseShowCache removeAllObjects];
         self.searchId = nil;
@@ -583,6 +599,7 @@
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         self.houseSearchDic = allInfo[@"houseSearch"];
+        self.canChangeHouseSearchDic = NO; // 禁止修改house_search埋点数据
     }
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
@@ -949,15 +966,15 @@
     if (self.houseSearchDic) {
         [params addEntriesFromDictionary:self.houseSearchDic];
     } else {
-        // house_search 上报时机是通过搜索（搜索页面）进入的搜索列表页，而通过搜索点击tab进入的不上报当前埋点
+        // house_search 上报时机是通过搜索（搜索页面）进入的搜索列表页，而通过搜索点击tab进入的不上报当前埋点，过滤器重新选择后也上报
         return;
     }
-    params[@"page_type"] = [self pageTypeString];
     params[@"house_type"] = [self houseTypeString];
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_search",params);
+    self.canChangeHouseSearchDic = YES;
 }
 
 -(NSDictionary *)categoryLogDict {
