@@ -331,13 +331,15 @@
         self.closeConditionFilter();
     }
     
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-//    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
+    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
     
     NSMutableDictionary *traceParam = [self baseLogParam];
     traceParam[@"element_from"] = @"renting_search";
     traceParam[@"page_type"] = @"renting";
-    
+    traceParam[@"origin_from"] = @"renting_search";
+    traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
@@ -540,8 +542,8 @@
     
     SETTRACERKV(UT_ORIGIN_FROM, @"renting_list");
     
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-//    [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
+    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
     
     NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
     tracer[@"card_type"] = @"left_pic";
@@ -549,6 +551,9 @@
     tracer[@"enter_from"] = @"renting";
     tracer[@"log_pb"] = model.logPb;
     tracer[@"rank"] = @(indexPath.row);
+    tracer[@"origin_from"] = @"renting_list";
+    tracer[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", model.id]];
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
