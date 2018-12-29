@@ -30,6 +30,7 @@
 #import "FHBaseViewController.h"
 #import <TTHttpTask.h>
 #import <FHRentArticleListNotifyBarView.h>
+#import "UIViewController+Track.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kFilterBarHeight 44
@@ -59,7 +60,7 @@
 @property(nonatomic , weak) TTHttpTask *requestTask;
 
 //for log
-@property(nonatomic , strong) NSDate *startDate;
+//@property(nonatomic , strong) NSDate *startDate;
 @property(nonatomic , strong) NSMutableDictionary *showHouseDict;
 @property(nonatomic , strong) NSMutableDictionary *stayTraceDict;
 @property(nonatomic , assign) CGFloat headerHeight;
@@ -324,13 +325,15 @@
         self.closeConditionFilter();
     }
     
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-//    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
+    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    [envBridge setTraceValue:@"renting_search" forKey:@"origin_from"];
     
     NSMutableDictionary *traceParam = [self baseLogParam];
     traceParam[@"element_from"] = @"renting_search";
     traceParam[@"page_type"] = @"renting";
-    
+    traceParam[@"origin_from"] = @"renting_search";
+    traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
@@ -358,7 +361,7 @@
 
 -(void)viewWillAppear
 {
-    self.startDate = [NSDate date];
+//    self.startDate = [NSDate date];
 }
 
 -(void)viewWillDisapper
@@ -532,8 +535,8 @@
     
     SETTRACERKV(UT_ORIGIN_FROM, @"renting_list");
     
-//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-//    [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
+    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
     
     NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
     tracer[@"card_type"] = @"left_pic";
@@ -541,6 +544,9 @@
     tracer[@"enter_from"] = @"renting";
     tracer[@"log_pb"] = model.logPb;
     tracer[@"rank"] = @(indexPath.row);
+    tracer[@"origin_from"] = @"renting_list";
+    tracer[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", model.id]];
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
@@ -875,9 +881,8 @@
 
 -(void)addStayLog
 {
-    NSTimeInterval duration = [[NSDate date]timeIntervalSinceDate:self.startDate];
-    
-    if (duration > 24*60*60) {
+    NSTimeInterval duration = self.viewController.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
         return;
     }
     
@@ -896,11 +901,11 @@
 //    NSMutableDictionary *param = [self.viewController.tracerModel logDict];//[NSMutableDictionary new];
 //    [param addEntriesFromDictionary:self.tracerDict];
 //    param[@"search_id"] = self.searchId;
-    self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration*1000];
+    self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration];
 //    param[@"category_name"] = @"renting";
     
     TRACK_EVENT(@"stay_category", self.stayTraceDict);
-    
+    [self.viewController tt_resetStayTime];
     /*
      1. event_type：house_app2c_v2
      2. category_name（列表名）：renting（租房大类页）
@@ -950,7 +955,7 @@
     
     _showHouseDict[model.id] = @(1);
     
-    NSMutableDictionary *param = [self baseLogParam];
+    NSDictionary *baseParam = [self baseLogParam];
     
     /*
      "1. event_type：house_app2c_v2
@@ -966,17 +971,18 @@
      11. origin_search_id"
      */
     
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"house_type"] = @"rent";
     param[@"card_type"] = @"left_pic";
     param[@"page_type"] = @"renting";
     param[@"element_type"] = @"be_null";
+    param[@"group_id"] = model.id;
     param[@"impr_id"] = model.imprId;
-    param[@"log_pb"] = model.logPb;
-    param[@"rank"] = @(indexPath.row);
     param[@"search_id"] = self.searchId;
-    param[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";;
-    
-    param[@"enter_from"] = nil;
+    param[@"rank"] = @(indexPath.row);
+    param[@"log_pb"] = model.logPb;
+    param[@"origin_from"] = baseParam[@"origin_from"] ? : @"be_null";;
+    param[@"origin_search_id"] = self.viewController.tracerModel.originSearchId ? : @"be_null";;
     
     TRACK_EVENT(@"house_show", param);
 }

@@ -23,6 +23,7 @@
 #import "UIViewAdditions.h"
 #import "FHTracerModel.h"
 #import <UIViewController+NavigationBarStyle.h>
+#import "UIViewController+Track.h"
 
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
@@ -60,6 +61,7 @@
         self.hidesBottomBarWhenPushed = YES;
         self.paramObj = paramObj;
         self.tracerModel.categoryName = [self categoryName];
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -311,6 +313,18 @@
             wself.tableView.contentInset = toinsets;
         }];
     });
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 #pragma mark - for filter keyboard show

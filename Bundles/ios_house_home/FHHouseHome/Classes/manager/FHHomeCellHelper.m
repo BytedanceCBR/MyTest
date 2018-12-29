@@ -334,11 +334,11 @@ static NSMutableArray  * _Nullable identifierArr;
             
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
-//                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
                 [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
             }else
             {
-//                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
                 [dictTrace setValue:@"be_null" forKey:@"origin_from"];
             }
             
@@ -502,12 +502,12 @@ static NSMutableArray  * _Nullable identifierArr;
             
             NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
             if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
-//                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
                 [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
 
             }else
             {
-//                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"school_operation" forKey:@"origin_from"];
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"school_operation" forKey:@"origin_from"];
                 [dictTrace setValue:@"school_operation" forKey:@"origin_from"];
 
             }
@@ -558,10 +558,10 @@ static NSMutableArray  * _Nullable identifierArr;
     cell.trendView.clickedRightCallback = ^{
         
         // logpb处理
-//        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
-//        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
-//        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
-//
+        id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+        [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
+        [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+
         if (model.mapOpenUrl.length > 0) {
             
             NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];

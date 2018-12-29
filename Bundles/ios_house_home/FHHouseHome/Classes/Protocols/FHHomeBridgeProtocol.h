@@ -14,7 +14,7 @@
 
 - (NSString *)currentSelectCategoryName;
 
-
+- (void)isShowTabbarScrollToTop:(BOOL)scrollToTop;
 @end
 
 #endif /* FHHomeBridgeProtocol_h */
