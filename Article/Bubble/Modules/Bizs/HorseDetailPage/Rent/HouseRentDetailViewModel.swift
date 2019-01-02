@@ -298,13 +298,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                     toTracerParams(element_from, key: "element_from") <|>
                     toTracerParams("click", key: "enter_type")
                 
-                params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
-                //            params["followStatus"] = self.followStatus
-                
                 params["tracerParams"] = transactionTrace
-                
-                params["bottomBarBinder"] = bottomBarBinder
-                params["related_house"] = true
+                params["tracer"] = transactionTrace.paramsGetter([:])
                 params["page_type"] = "related_list"
                 params["list_vc_type"] = 8 // FHNeighborListVCTypeRentNearBy
                 let userInfo = TTRouteUserInfo(info: params)
