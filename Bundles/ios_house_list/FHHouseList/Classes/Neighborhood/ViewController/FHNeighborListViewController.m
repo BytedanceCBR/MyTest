@@ -50,7 +50,7 @@
         /*
          origin_from
          origin_search_id
-         (page_type)category_name：same_neighborhood_list & related_list
+         category_name：same_neighborhood_list & related_list ((page_type))
          enter_from:rent_detail（租房详情页）,小区详情页，二手房详情页
          element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
          $$ search_id:外部的searchId无用，每次使用网络返回的searchId
@@ -59,6 +59,7 @@
         self.houseId = paramObj.userInfo.allInfo[@"houseId"];
         self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
         self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }

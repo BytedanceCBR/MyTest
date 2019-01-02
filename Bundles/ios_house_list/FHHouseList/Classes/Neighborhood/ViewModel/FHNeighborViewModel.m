@@ -111,7 +111,6 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
-        NSLog(@"-----:%@",[model class]);
         if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
             FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
             [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell  updateWithRentHouseModel:rentModel isFirstCell:NO isLastCell:isLastCell];
@@ -283,7 +282,7 @@
     NSString *origin_from = self.listController.tracerDict[@"origin_from"];
     NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
     NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:self.listController.houseType];
-    NSString *page_type = self.listController.tracerDict[@"page_type"];
+    NSString *page_type = self.listController.tracerDict[@"category_name"];
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"house_type"] = house_type ? : @"be_null";
@@ -342,7 +341,7 @@
     tracerDict[@"search_id"] = self.searchId.length > 0 ? self.searchId : @"be_null";
     NSString *enter_type = self.listController.tracerDict[@"enter_type"];
     tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
-    NSString *category_name = self.listController.tracerDict[@"page_type"];
+    NSString *category_name = self.listController.tracerDict[@"category_name"];
     tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
     NSString *enter_from = self.listController.tracerDict[@"enter_from"];
     tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";

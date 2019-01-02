@@ -490,7 +490,7 @@ import RxCocoa
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("click", key: "enter_type") <|>
                                 toTracerParams("related", key: "element_from") <|>
-                                toTracerParams("related_list", key: "page_type") <|>
+                                toTracerParams("related_list", key: "category_name") <|>
                                 toTracerParams("old_detail", key: "enter_from")
                             
                             
