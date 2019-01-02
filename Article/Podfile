@@ -244,7 +244,7 @@ def appPods
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
-    pod 'TTPushManager', '0.0.13.4'
+    pod 'TTPushManager', '0.0.10'
     pod 'TTReachability', '0.1.8'
     pod 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----

@@ -992,7 +992,7 @@ PODS:
     - TTPlatformBaseLib
     - TTTracker
     - TTUIWidget
-  - TTPushManager (0.0.13.4)
+  - TTPushManager (0.0.10)
   - TTPushSDK (0.1.1):
     - TTNetworkManager (< 3)
     - TTPlatformBaseLib/TTURLDomainHelper
@@ -1295,7 +1295,7 @@ DEPENDENCIES:
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
-  - TTPushManager (= 0.0.13.4)
+  - TTPushManager (= 0.0.10)
   - TTPushSDK (= 0.1.1)
   - TTReachability (= 0.1.8)
   - TTReporter (= 0.2.1)
@@ -1545,7 +1545,7 @@ SPEC CHECKSUMS:
   TTPlayerSDK: ddf454156e94681632063317c1bd68a5e8369f2e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
-  TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
+  TTPushManager: 708ba9dcc3849570f2b02cd04fc8aeeba1a562c0
   TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
   TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
@@ -1578,6 +1578,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 770d1b7b4deae090f9306fc61515d2d7f28942ae
+PODFILE CHECKSUM: 011e0de48bbad4ea298d91851ba4dbec972ae107
 
 COCOAPODS: 1.4.0
