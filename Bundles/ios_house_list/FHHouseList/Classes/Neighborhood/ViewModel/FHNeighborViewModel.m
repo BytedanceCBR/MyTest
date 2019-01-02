@@ -16,6 +16,8 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -50,12 +52,9 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"testcell"];
+    
+    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
-
-    id<FHHouseCellsBridge> bridge = [[FHHouseBridgeManager sharedInstance] cellsBridge];
-    Class cellClass = [bridge singleImageCellClass];
-    [_tableView registerClass:cellClass forCellReuseIdentifier:kSingleImageCellId];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -108,19 +107,13 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
-        if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
-            FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell  updateWithRentHouseModel:rentModel isFirstCell:NO isLastCell:isLastCell];
-        } else {
-            SEL sel = @selector(updateWithModel:isLastCell:);
-            if ([cell respondsToSelector:sel]) {
-                FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithModel:item isLastCell:isLastCell];
-            }
-        }
+        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        [cell updateWithHouseCellModel:cellModel];
+        [cell refreshTopMargin: 20];
+        [cell refreshBottomMargin:isLastCell ? 20 : 0];
         return cell;
     } else {
         // PlaceholderCell
@@ -132,6 +125,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"----------:willDisplayCell : %ld",indexPath.row);
     if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
         NSInteger rank = indexPath.row - 1;
         NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
@@ -157,6 +151,20 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+-(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
+    
+    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
+    
+    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
+        cellModel.secondModel = obj;
+    } else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
+        cellModel.rentModel = obj;
+    }
+    return cellModel;
+}
+
 // 统一处理网络数据返回
 - (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
     if (model != NULL && error == NULL) {
@@ -176,12 +184,19 @@
             hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
             items = ((FHRelatedHouseResponse *)model).data.items;
         }
-        
-        self.searchId = searchId;
+        if (searchId.length > 0) {
+            self.searchId = searchId;
+        }
         if (items.count > 0) {
             self.listController.hasValidateData = YES;
             [self.listController.emptyView hideEmptyView];
-            [self.houseList addObjectsFromArray:items];
+            // 转换模型类型
+            [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+                if (cellModel) {
+                    [self.houseList addObject:cellModel];
+                }
+            }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
         } else {
@@ -251,33 +266,15 @@
     if (!self.listController.hasValidateData) {
         return;
     }
-    id cellModel = self.houseList[indexPath.row];
+    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
     
     if (!cellModel) {
         return;
     }
     
-    NSString *groupId = @"be_null";
-    NSString *imprId = @"be_null";
-    NSDictionary *logPb = NULL;
-    if ([cellModel isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        // 二手房
-        FHSearchHouseDataItemsModel* tempModel = (FHSearchHouseDataItemsModel *)cellModel;
-        logPb = tempModel.logPb;
-        imprId = tempModel.imprId;
-        groupId = tempModel.hid;
-    } else if ([cellModel isKindOfClass:[FHHouseRentDataItemsModel class]]) {
-        // 租房
-        FHHouseRentDataItemsModel* tempModel = (FHHouseRentDataItemsModel *)cellModel;
-        logPb = tempModel.logPb;
-        imprId = tempModel.imprId;
-        groupId = tempModel.id;
-    } else {
-        logPb = @"be_null";
-        imprId = @"be_null";
-        groupId = NULL;
-    }
-    
+    NSString *groupId = cellModel.groupId;
+    NSString *imprId = cellModel.imprId;
+    NSDictionary *logPb = cellModel.logPb;
     
     NSString *origin_from = self.listController.tracerDict[@"origin_from"];
     NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
