@@ -10,10 +10,15 @@
 #import "FHUtils.h"
 #import "TTReachability.h"
 #import "YYCache.h"
+#import "FHLocManager.h"
+#import "TTInstallIDManager.h"
+#import "BDAccountConfiguration.h"
+#import "BDAccount+Configuration.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
+@property (nonatomic, strong)NSMutableDictionary *commonRequestParam;
 @end
 
 @implementation FHEnvContext
@@ -56,11 +61,99 @@
     
 }
 
+- (void)updateRequestCommonParams
+{
+    //初始化公共请求参数
+    NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:self.commonRequestParam];
+    
+    
+    requestParam[@"app_id"] = @"1370";
+    requestParam[@"aid"] = @"1370";
+    
+    requestParam[@"channel"] = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
+    requestParam[@"app_name"] = @"f100";
+    requestParam[@"source"] = @"app";
+    
+    NSInteger cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (cityId > 0) {
+        [requestParam setValue:@(cityId) forKey:@"city_id"];
+    }
+    
+    double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
+    double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
+    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
+    NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
+
+    
+    if (longitude != 0 && longitude != 0) {
+        requestParam[@"gaode_lng"] = @(longitude);
+        requestParam[@"gaode_lat"] = @(latitude);
+    }
+    
+    if ([gCityId isKindOfClass:[NSString class]]) {
+        requestParam[@"gaode_city_id"] = gCityId;
+    }
+    
+    if ([gCityName isKindOfClass:[NSString class]]){
+        requestParam[@"city_name"] = gCityName;
+    }else
+    {
+        requestParam[@"city_name"] = nil;
+    }
+    
+    self.commonRequestParam = requestParam;
+}
+
+- (NSDictionary *)getRequestCommonParams
+{
+    if (!_commonRequestParam) {
+        [self updateRequestCommonParams];
+    }
+    return _commonRequestParam;
+}
+
 - (void)onStartApp
 {
+    //开始网络监听通知
     [self.reachability startNotifier];
     
+    //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
+    
+    //更新公共参数
+    [self updateRequestCommonParams];
+    
+    //开始定位
+    [self startLocation];
+    
+    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
+        
+        BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
+        conf.domain = [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance baseUrl];
+        conf.getDeviceIdBlock = ^NSString * _Nonnull{
+            return deviceID;
+        };
+        
+        conf.getInstallIdBlock = ^NSString * _Nonnull{
+            return installID;
+        };
+        
+        conf.SSAppId = @"1370";
+        
+        conf.networkParamsHandler = ^NSDictionary * _Nonnull{
+            return [NSDictionary new];
+        };
+        
+        [BDAccount sharedAccount].accountConf = conf;
+
+    }];
+}
+
+- (void)startLocation
+{
+    [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
+    
+    [[FHLocManager sharedInstance] requestCurrentLocation:YES];
 }
 
 - (void)updateConfigCache

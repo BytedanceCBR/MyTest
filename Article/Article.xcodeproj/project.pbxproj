@@ -3566,6 +3566,10 @@
 		B3BDFAA221460CBD00C948FC /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388CD06214266B200653188 /* Charts.framework */; };
 		B3BDFAA421460CCD00C948FC /* libMJRefresh.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3BDFAA321460CCD00C948FC /* libMJRefresh.a */; };
 		B3C18BBC21AD3282005CF234 /* FHHouseShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */; };
+		B3C259FA21DC5694001489D5 /* FHAgentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C259F921DC5694001489D5 /* FHAgentListCell.swift */; };
+		B3C259FB21DC5694001489D5 /* FHAgentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C259F921DC5694001489D5 /* FHAgentListCell.swift */; };
+		B3C259FD21DCA0F5001489D5 /* FHPhoneCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C259FC21DCA0F5001489D5 /* FHPhoneCallViewModel.swift */; };
+		B3C259FE21DCA0F5001489D5 /* FHPhoneCallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C259FC21DCA0F5001489D5 /* FHPhoneCallViewModel.swift */; };
 		C2036D7E1F288E5300ECFA51 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		C212227E1F4F0CF00036101E /* TTShortVideoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BB79DA1F4578CB002C2EEF /* TTShortVideoHelper.m */; };
 		C22374101F5428E50005E844 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
@@ -3602,7 +3606,7 @@
 		C3B8229C201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B8229B201EC1A500E57A24 /* TTExploreLoadMoreTipCell.m */; };
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -8107,6 +8111,8 @@
 		B3BDFA9B21460C9000C948FC /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = Carthage/Build/iOS/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
 		B3BDFAA321460CCD00C948FC /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseShareViewModel.swift; sourceTree = "<group>"; };
+		B3C259F921DC5694001489D5 /* FHAgentListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHAgentListCell.swift; sourceTree = "<group>"; };
+		B3C259FC21DCA0F5001489D5 /* FHPhoneCallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHPhoneCallViewModel.swift; sourceTree = "<group>"; };
 		B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.release.xcconfig"; sourceTree = "<group>"; };
 		C0B392A9E342CCCDCA90EB90 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		C2036D7C1F288E5300ECFA51 /* TTQQSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTQQSDKRegister.h; sourceTree = "<group>"; };
@@ -9126,7 +9132,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10823,6 +10829,7 @@
 				6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */,
 				6124ECCF21B018930009359A /* FHSameHouseItemListCell.swift */,
 				6124ECD321B1249E0009359A /* FHOpenAllView.swift */,
+				B3C259F921DC5694001489D5 /* FHAgentListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -10950,6 +10957,7 @@
 				3DF3635321A29D9E0097FCB6 /* DetailPageViewModel.swift */,
 				3DF3635421A29D9E0097FCB6 /* NewHouseDetailPageViewModel.swift */,
 				3DF3635521A29D9E0097FCB6 /* ErshouHouseDetailPageViewModel.swift */,
+				B3C259FC21DCA0F5001489D5 /* FHPhoneCallViewModel.swift */,
 			);
 			path = PageVM;
 			sourceTree = "<group>";
@@ -21403,6 +21411,7 @@
 				B373C9252174587A008F9905 /* TTVShareAction.m in Sources */,
 				B373C9262174587A008F9905 /* TTVideoShareMovie.m in Sources */,
 				B373C9272174587A008F9905 /* TTVideoCommon.m in Sources */,
+				B3C259FE21DCA0F5001489D5 /* FHPhoneCallViewModel.swift in Sources */,
 				B373C9282174587A008F9905 /* SSLoadMoreCell.m in Sources */,
 				B373C9292174587A008F9905 /* ArticleMobileChangeViewController.m in Sources */,
 				B373C92A2174587A008F9905 /* TTServerDateCalibrator.m in Sources */,
@@ -21604,6 +21613,7 @@
 				61FAA1F721AE7FE4007ED05F /* FHFeedHouseCellHelper.m in Sources */,
 				B373C9EC2174587A008F9905 /* SSLocationPickerController.m in Sources */,
 				B373C9ED2174587A008F9905 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				B3C259FB21DC5694001489D5 /* FHAgentListCell.swift in Sources */,
 				B373C9EE2174587A008F9905 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				B373C9EF2174587A008F9905 /* TTHeaderView.m in Sources */,
 				B373C9F02174587A008F9905 /* SSADTrackInfoList.m in Sources */,
@@ -23138,6 +23148,7 @@
 				FEFA53B3205FB1A8001F50D8 /* TTVShareAction.m in Sources */,
 				FEFA53B5205FB1A8001F50D8 /* TTVideoShareMovie.m in Sources */,
 				FEFA53B6205FB1A8001F50D8 /* TTVideoCommon.m in Sources */,
+				B3C259FD21DCA0F5001489D5 /* FHPhoneCallViewModel.swift in Sources */,
 				FEFA53B7205FB1A8001F50D8 /* SSLoadMoreCell.m in Sources */,
 				FEFA53B8205FB1A8001F50D8 /* ArticleMobileChangeViewController.m in Sources */,
 				FEFA53B9205FB1A8001F50D8 /* TTServerDateCalibrator.m in Sources */,
@@ -23339,6 +23350,7 @@
 				61FAA1F621AE7FE4007ED05F /* FHFeedHouseCellHelper.m in Sources */,
 				FEFA549E205FB1A8001F50D8 /* SSLocationPickerController.m in Sources */,
 				FEFA549F205FB1A8001F50D8 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
+				B3C259FA21DC5694001489D5 /* FHAgentListCell.swift in Sources */,
 				FEFA54A2205FB1A8001F50D8 /* ExploreVideoDetailAppLargePicADView.m in Sources */,
 				FEFA54A4205FB1A8001F50D8 /* TTHeaderView.m in Sources */,
 				FEFA54A6205FB1A8001F50D8 /* SSADTrackInfoList.m in Sources */,

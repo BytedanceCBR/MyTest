@@ -120,6 +120,7 @@ func getHouseDetailCellFactory() -> UITableViewCellFactory {
             .addCellClass(cellType: FHHeaderSegmentCell.self)
             .addCellClass(cellType: FHSameHouseItemListCell.self)
             .addCellClass(cellType: FHRentHouseCoreInfoCell.self)
+            .addCellClass(cellType: FHAgentListCell.self)
 
 
 }

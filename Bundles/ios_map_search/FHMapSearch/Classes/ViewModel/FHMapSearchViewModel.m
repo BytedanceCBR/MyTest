@@ -81,16 +81,19 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _lastRecordZoomLevel = configModel.resizeLevel;
         
         if (self.configModel.mapOpenUrl) {
-            _lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:self.configModel.mapOpenUrl];
-            if (_lastBubble) {
-                if (_lastBubble.resizeLevel > 1) {
-                    _configModel.resizeLevel = _lastBubble.resizeLevel;
+            //            _lastBubble = [FHMapSearchBubbleModel bubbleFromUrl:self.configModel.mapOpenUrl];
+            dispatch_async(dispatch_get_main_queue(), ^{                
+                [self updateBubble:self.configModel.mapOpenUrl];
+                if (_lastBubble) {
+                    if (_lastBubble.resizeLevel > 1) {
+                        _configModel.resizeLevel = _lastBubble.resizeLevel;
+                    }
+                    _configModel.centerLatitude = [@(_lastBubble.centerLatitude) description];
+                    _configModel.centerLongitude = [@(_lastBubble.centerLongitude) description];
+                    
+                    _configModel.houseType = _lastBubble.houseType;
                 }
-                _configModel.centerLatitude = [@(_lastBubble.centerLatitude) description];
-                _configModel.centerLongitude = [@(_lastBubble.centerLongitude) description];
-                
-                _configModel.houseType = _lastBubble.houseType;
-            }
+            });
         }
         if ([_configModel.centerLatitude floatValue] < 1 || [_configModel.centerLongitude floatValue] < 1) {
             CLLocationCoordinate2D location = [[FHMainManager sharedInstance] currentLocation];

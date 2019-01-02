@@ -98,11 +98,6 @@ import RxCocoa
 
                     }
                 }
-                TTLocationManager.shared()?.placemarkItem()?.coordinate.latitude = location?.coordinate.latitude ?? 0.0;
-                TTLocationManager.shared()?.placemarkItem()?.coordinate.longitude = location?.coordinate.longitude ?? 0.0;
-                TTLocationManager.shared()?.placemarkItem()?.city = reGeocode?.city;
-                TTLocationManager.shared()?.placemarkItem()?.district = reGeocode?.district;
-                
                 var amapInfo: [String : Any] = [:];
                 
                 amapInfo["sub_locality"] = reGeocode?.district;
@@ -111,7 +106,6 @@ import RxCocoa
                 amapInfo["longitude"] = location?.coordinate.longitude ?? 0.0
                 
                 TTLocationManager.shared().setUpAmapInfo(amapInfo)
-                
 
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()
@@ -127,7 +121,6 @@ import RxCocoa
                         self?.currentCity.accept(reGeocode)
                     }
                 }
-                
 
                 self?.currentLocation.accept(location)
         })
