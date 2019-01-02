@@ -19,6 +19,7 @@
 #import "FHHouseNeighborModel.h"
 #import "FHHouseType.h"
 #import "TTRoute.h"
+#import "FHHomeConfigManager.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -99,7 +100,6 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
-//    [FHHomeCellHelper handleCellShowLogWithModel:model.idx];
      if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
      {
          return;
@@ -110,7 +110,7 @@
 
              NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
              
-             NSMutableDictionary *tracerDict = @{}.mutableCopy;
+             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
              tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
              tracerDict[@"card_type"] = @"left_pic";
              tracerDict[@"page_type"] = [self pageTypeString];
@@ -119,7 +119,7 @@
              tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
              tracerDict[@"search_id"] = cellModel.searchId ? : @"";
              tracerDict[@"rank"] = @(indexPath.row);
-             tracerDict[@"origin_from"] = @"be_null";
+             tracerDict[@"origin_from"] = [FHEnvContext sharedInstance].getCommonParams.originFrom;
              tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
              tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
              
@@ -169,7 +169,7 @@
     
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = [self elementTypeString];
         traceParam[@"log_pb"] = theModel.logPb;
@@ -243,6 +243,16 @@
     
     return @"be_null";
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }else
+    {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 @end

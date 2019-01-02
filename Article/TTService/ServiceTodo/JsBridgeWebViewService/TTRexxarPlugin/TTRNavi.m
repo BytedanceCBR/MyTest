@@ -18,7 +18,29 @@
 TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)closeWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-        UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
+    NSLog(@"param=%@",param);
+    UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
+    
+    //close page回传上一个bVC
+    if (controller.navigationController.viewControllers.count >= 2) {
+        UIViewController *previousVC = controller.navigationController.viewControllers[controller.navigationController.viewControllers.count - 2];
+        NSMutableDictionary * resultDict = [NSMutableDictionary new];
+        [resultDict setValue:param forKey:@"data"];
+        if ([previousVC respondsToSelector:@selector(getOpenPageTagStr)]) {
+            NSString *tagStr = [previousVC performSelector:@selector(getOpenPageTagStr) withObject:nil];
+            [resultDict setValue:tagStr  forKey:@"tag"];
+        }
+
+        if ([previousVC respondsToSelector:@selector(setupCloseCallBackPreviousVC:)]) {
+            [previousVC performSelector:@selector(setupCloseCallBackPreviousVC:) withObject:resultDict];
+        }
+    }
+
+    
+//    for (int i = 0; i < controller.navigationController.viewControllers.count; i++) {
+//
+//    }
+
     __block __strong __typeof(webview)strongWebview = webview;
         if(topVC.navigationController) {
             [topVC.navigationController popViewControllerAnimated:YES];
@@ -33,6 +55,21 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
             }];
         }
     callback(TTRJSBMsgSuccess, @{@"code": @1});
+}
+
+- (void)openPageWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSLog(@"open page parma = %@",param);
+    
+    if ([controller respondsToSelector:@selector(setupOpenPageTagStr:)] && param[@"tag"]) {
+        [controller performSelector:@selector(setupOpenPageTagStr:) withObject:param[@"tag"]];
+    }
+    NSString * urlStr = [param objectForKey:@"route"];
+    if (!isEmptyString(urlStr)) {
+        [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:urlStr]];
+        callback(TTRJSBMsgSuccess, @{@"code": @1});
+        return;
+    }
 }
 
 - (void)openWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
@@ -159,16 +196,28 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)handleNavBackWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
-    NSLog(@"param = %@",param);
     NSNumber *numberH5 = param[@"h5"];
+    NSNumber *numberShowClose = param[@"showClose"];
+    NSLog(@"show param H5 = %d, show close = %d",[numberH5 integerValue],[numberShowClose integerValue]);
+
     BOOL isWebControl = NO;
     if ([numberH5 respondsToSelector:@selector(boolValue)]) {
         isWebControl = [numberH5 boolValue];
     }
+    
+    BOOL isShowCloseBtn= YES;
+    if ([numberShowClose respondsToSelector:@selector(boolValue)]) {
+        isShowCloseBtn = [numberShowClose boolValue];
+    }
+    
     if ([controller respondsToSelector:@selector(setUpBackBtnControlForWeb:)]) {
         [controller performSelector:@selector(setUpBackBtnControlForWeb:) withObject:@(isWebControl)];
     }
-    controller.ttDisableDragBack = NO;
+    if ([controller respondsToSelector:@selector(setUpCloseBtnControlForWeb:)]) {
+        [controller performSelector:@selector(setUpCloseBtnControlForWeb:) withObject:@(isShowCloseBtn)];
+    }
+    
+//    controller.ttDisableDragBack = NO;
 }
 
 @end

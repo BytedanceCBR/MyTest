@@ -14,13 +14,12 @@
 #import "TTBaseMacro.h"
 #import "TTURLUtils.h"
 #import "ToastManager.h"
+#import "FHTracerModel.h"
+#import "TTCategoryStayTrackManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
-
-
-
 
 @interface FHHomeViewController ()
 
@@ -43,7 +42,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     } else {
         // Fallback on earlier versions
     }
-    
+        
     self.mainTableView.sectionFooterHeight = 0;
     self.mainTableView.sectionHeaderHeight = 0;
     self.mainTableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
@@ -96,6 +95,10 @@ static CGFloat const kSectionHeaderHeight = 38;
             [self.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
         }
     }
+    self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
+    if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -104,7 +107,42 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     FHSearchConfigModel *searchConfig = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
     
+    [self scrollToTopEnable:YES];
 }
+
+- (void)pullAndRefresh
+{
+    [self.mainTableView triggerPullDown];
+//    detailPageViewModel?.reloadFromType = reloadFromType
+//    tableView.triggerPullDown()
+}
+
+- (void)scrollToTopEnable:(BOOL)enable
+{
+    self.mainTableView.scrollsToTop = enable;
+}
+
+- (void)scrollToTopAnimated:(BOOL)animated
+{
+//    [self.tableView setContentOffset:CGPointMake(0, self.mainTableView.customTopOffset - self.mainTableView.contentInset.top) animated:animated];
+}
+
+//- (void)scroll
+
+//@objc func pullAndRefresh() {
+//
+//    detailPageViewModel?.reloadFromType = reloadFromType
+//    tableView.triggerPullDown()
+//}
+//
+//@objc func scrollToTopEnable(_ enable: Bool) {
+//
+//    tableView.scrollsToTop = enable
+//}
+//
+//@objc func scrollToTopAnimated(_ animated: Bool) {
+//    tableView.setContentOffset(CGPoint.zero, animated: animated)
+//}
 
 - (void)didAppear
 {
@@ -118,7 +156,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)didDisappear
 {
-    
+    [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
@@ -128,10 +166,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 //    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 }
 
-- (void)pullAndRefresh
-{
-    
-}
+//- (void)pullAndRefresh
+//{
+//
+//}
 
 
 - (BOOL)tt_hasValidateData

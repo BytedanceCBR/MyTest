@@ -14,6 +14,11 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
+#import "FHConditionFilterFactory.h"
+#import "SSNavigationBar.h"
+#import "UIView+Refresh_ErrorHandler.h"
+#import "UIViewController+NavbarItem.h"
+#import "UIViewController+NavigationBarStyle.h"
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
 
@@ -48,12 +53,12 @@
     if (self) {
         self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
         self.houseId = paramObj.userInfo.allInfo[@"houseId"];
-        self.searchId = paramObj.userInfo.allInfo[@"searchId"];
+        self.searchId = paramObj.userInfo.allInfo[@"searchId"]; // add by zyk 外部的searchId无用，每次使用网络返回的searchId
         self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
         self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
         self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
         
-        NSLog(@"%@\n", self.searchId);
+        NSLog(@"%@\n", paramObj.queryParams);
         NSLog(@"%@\n",paramObj.userInfo.allInfo);
     }
     return self;
@@ -70,6 +75,7 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:YES];
+    self.ttNeedHideBottomLine = YES;
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
@@ -102,7 +108,7 @@
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
     
-    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
@@ -140,9 +146,6 @@
 
 - (void)setupData {
     __weak typeof(self) wself = self;
-//    _viewModel.resetConditionBlock = ^(NSDictionary *condition){
-//        [wself.houseFilterBridge resetFilter:wself.houseFilterViewModel withQueryParams:condition updateFilterOnly:YES];
-//    };
     
     _viewModel.conditionNoneFilterBlock = ^NSString * _Nullable(NSDictionary * _Nonnull params) {
         return [wself.houseFilterBridge getNoneFilterQueryParams:params];

@@ -7,6 +7,8 @@
 
 #import "FHHomeBridgeImp.h"
 #import "TTArticleCategoryManager.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 
 @implementation FHHomeBridgeImp
 
@@ -21,6 +23,20 @@
 {
     NSString * currentCategoryName = [TTArticleCategoryManager currentSelectedCategoryID];
     return currentCategoryName;
+}
+
+- (void)isShowTabbarScrollToTop:(BOOL)scrollToTop
+{
+    TTTabBarItem * currentTabbar = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kTTTabHomeTabKey];
+    
+    if (scrollToTop)
+    {
+        [currentTabbar setTitle:@"回到顶部"];
+        [currentTabbar setNormalImage:[UIImage imageNamed:@"tab-home"] highlightedImage:[UIImage imageNamed:@"ic-tab-return-normal"] loadingImage:[UIImage imageNamed:@"tab-home_press"]];
+    }else {
+        [currentTabbar setTitle:@"首页"];
+        [currentTabbar setNormalImage:[UIImage imageNamed:@"tab-home"] highlightedImage:[UIImage imageNamed:@"tab-home_press"] loadingImage:[UIImage imageNamed:@"tab-home_press"]];
+    }
 }
 
 @end

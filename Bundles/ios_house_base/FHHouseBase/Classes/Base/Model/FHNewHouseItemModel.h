@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseId;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong , nullable) FHNewHouseItemCoreInfoModel *coreInfo ;

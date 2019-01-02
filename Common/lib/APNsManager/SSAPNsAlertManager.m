@@ -421,33 +421,37 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             } else {
                 
                 // push对消息特殊处理
-                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
-//                    if (![TTAccountManager isLogin]) {
-//                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-//                            if (type == TTAccountAlertCompletionEventTypeDone) {
-//                                //登录成功 走发送逻辑
-//                                if ([TTAccountManager isLogin]) {
-//                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                                    [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-//                                }
-//                            }
-//                        }];
-//                    } else
-//                    {
-                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-//                    }
-                    
-                    return;
-                }
+//                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
+////                    if (![TTAccountManager isLogin]) {
+////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+////                            if (type == TTAccountAlertCompletionEventTypeDone) {
+////                                //登录成功 走发送逻辑
+////                                if ([TTAccountManager isLogin]) {
+////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+////                                    [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+////                                }
+////                            }
+////                        }];
+////                    } else
+////                    {
+//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+//                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+////                    }
+//
+//                    return;
+//                }
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
                                                    @"element_from": @"be_null",
                                                    @"runk": @"be_null",
                                                    @"card_type": @"be_null",
+                                                   @"origin_from": @"push",
+                                                   @"origin_search_id": @"be_null"
 //                                                   @"group_id": paramObj.allParams[@"group_id"],
                                                    }};
                 [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+                [[EnvContext shared] setTraceValueWithValue:@"be_null" key:@"origin_search_id"];
+
                 TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
                 [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
             }

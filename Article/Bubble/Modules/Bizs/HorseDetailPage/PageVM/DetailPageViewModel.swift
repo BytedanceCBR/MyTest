@@ -277,7 +277,7 @@ extension DetailPageViewModel {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {
                                 
-                                EnvContext.shared.toast.showToast("提交成功")
+                                EnvContext.shared.toast.showToast("提交成功，经纪人将尽快与您联系")
                             }
                         }
                         self?.followStatus.accept(.success(true))

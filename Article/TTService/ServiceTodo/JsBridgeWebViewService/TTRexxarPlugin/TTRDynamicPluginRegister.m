@@ -37,6 +37,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.handleNavBack" for:@"handleNavBack"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
@@ -53,7 +54,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.openCommodity" for:@"openCommodity"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.callNativePhone" for:@"callNativePhone"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"get_address"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"getAddress"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.toast" for:@"toast"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.alert" for:@"alert"];

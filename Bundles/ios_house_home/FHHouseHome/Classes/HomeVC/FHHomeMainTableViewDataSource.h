@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) FHHouseType currentHouseType;
+
+-(NSString *)pageTypeString;
+
 @end
 
 NS_ASSUME_NONNULL_END

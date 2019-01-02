@@ -9,8 +9,15 @@
 #import "FHHomeViewController.h"
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
+    FHHomeCategoryTraceTypeEnter = 1, //enter
+    FHHomeCategoryTraceTypeStay = 2, //stay
+    FHHomeCategoryTraceTypeRefresh = 3  //刷新
+};
+
 @interface FHHomeListViewModel : NSObject
 @property (nonatomic, assign) BOOL hasShowedData;
+@property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 
@@ -19,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestRecommendHomeList;
 
 - (void)requestOriginData;
+
+- (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType;
 
 @end
 

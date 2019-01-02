@@ -345,6 +345,7 @@
         // 联想词
         return self.sugListData.count;
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -425,6 +426,8 @@
             return cell;
         }
     }
+    
+    return [[UITableViewCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -532,6 +535,7 @@
     } else {
         return text;
     }
+    return text;
 }
 
 #pragma mark - reload

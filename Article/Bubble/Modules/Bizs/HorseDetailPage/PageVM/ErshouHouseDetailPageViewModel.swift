@@ -647,6 +647,7 @@ func openAroundHouseList(
     params["list_vc_type"] = 2 // FHNeighborListVCTypeErshouNearBy
     let tp = tracerParams
     params["tracerParams"] = tp
+    params["tracer"] = tp.paramsGetter([:])
     
     params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
     params["followStatus"] = followStatus

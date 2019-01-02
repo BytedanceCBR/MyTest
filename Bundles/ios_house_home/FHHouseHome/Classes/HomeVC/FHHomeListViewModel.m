@@ -14,6 +14,8 @@
 #import "FHHouseType.h"
 #import "FHHomeHouseModel.h"
 #import "TTURLUtils.h"
+#import "FHTracerModel.h"
+#import "TTCategoryStayTrackManager.h"
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -28,6 +30,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) FHHomeViewController *homeViewController;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) FHHouseType currentHouseType;
+@property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <FHHomeHouseDataItemsModel *> *>* itemsDataCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
@@ -52,7 +55,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.dataSource = self.dataSource;
         
         self.tableViewV.hasMore = YES;
-        
+        self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
+
         WeakSelf;
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
@@ -86,21 +90,24 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             isFirstChange = NO;
         }];
         
+        [[FHHomeConfigManager sharedInstance].searchConfigDataReplay subscribeNext:^(id  _Nullable searchConfigModel) {
+            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
+        }];
+        
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
-            
-//             NSString *urlStr = @"http://10.1.10.250:8080/test";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
-//             NSString *unencodedString = urlStr;
-//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//             (CFStringRef)unencodedString,
-//             NULL,
-//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-//             kCFStringEncodingUTF8));
-//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-//             NSURL *url = [TTURLUtils URLWithString:urlStr];
-//             [[TTRoute sharedRoute] openURLByPushViewController:url];
-//             return ;
+             NSString *urlStr = @"http://10.1.10.250:8080/test";
+             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+             NSString *unencodedString = urlStr;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+             (CFStringRef)unencodedString,
+             NULL,
+             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+             kCFStringEncodingUTF8));
+             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             NSURL *url = [TTURLUtils URLWithString:urlStr];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+             return ;
             
             StrongSelf;
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -116,8 +123,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
+                
+                [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
+                self.enterType = @"switch";
+
                 if (modelsCache != nil && kIsNSArray(modelsCache) && modelsCache.count !=0) {
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
+                    [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
                 }else
                 {
                     [self reloadHomeTableHeaderSection];
@@ -189,6 +201,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.itemsSearchIdCache[cahceKey] = model.data.searchId;
         }
         
+        
         if (kIsNSString(cahceKey) && model.data.hasMore != nil) {
             self.isItemsHasMoreCache[cahceKey] = @(model.data.hasMore);
         }
@@ -203,12 +216,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.hasMore = model.data.hasMore;
         
         self.hasShowedData = YES;
+        
+        [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:model.data.searchId];
+        
+        [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
     }];
 }
 
 
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType
 {
+    self.currentPullType = pullType;
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSString *cahceKey = [self getCurrentHouseTypeChacheKey];
@@ -260,6 +278,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.hasMore = model.data.hasMore;
         
         [self checkLoadingAndEmpty];
+        
+        [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
     }];
 }
 
@@ -381,7 +401,39 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.modelsArray = models;
         [self.tableViewV reloadData];
     }
+    [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
 }
 
+- (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
+{
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    self.homeViewController.tracerModel.enterFrom = @"maintab";
+    self.homeViewController.tracerModel.elementFrom = @"maintab_list";
+    
+    tracerDict[@"category_name"] = [self.dataSource pageTypeString] ? : @"be_null";
+    tracerDict[@"enter_from"] = @"maintab";
+    tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
+    tracerDict[@"element_from"] = @"maintab_list";
+    tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
+    tracerDict[@"origin_from"] = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+    tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+    
+    
+    if (traceType == FHHomeCategoryTraceTypeEnter) {
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
+    }else if (traceType == FHHomeCategoryTraceTypeStay)
+    {
+        NSTimeInterval duration = self.homeViewController.ttTrackStayTime * 1000.0;
+        if (duration) {
+            [tracerDict setValue:@(duration) forKey:@"stay_time"];
+        }
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
+    }else if (traceType == FHHomeCategoryTraceTypeRefresh)
+    {
+        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : @"pull");
+        [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
+    }
+
+}
 
 @end

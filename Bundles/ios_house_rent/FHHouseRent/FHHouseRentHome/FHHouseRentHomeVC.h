@@ -7,6 +7,8 @@
 //
 
 #import <FHBaseViewController.h>
+#import "UIViewController+Track.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRentHomeVC : FHBaseViewController
