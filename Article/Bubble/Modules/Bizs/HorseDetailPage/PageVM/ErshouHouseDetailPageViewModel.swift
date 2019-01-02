@@ -488,8 +488,6 @@ import RxCocoa
                                 toTracerParams("related", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams(self.searchId ?? "", key: "search_id") <|>
-                                toTracerParams(self.searchId ?? "", key: "origin_search_id") <|>
                                 toTracerParams("click", key: "enter_type") <|>
                                 toTracerParams("related", key: "element_from") <|>
                                 toTracerParams("related_list", key: "page_type") <|>
@@ -570,10 +568,7 @@ func openErshouHouseList(
     }
     let tp = tracerParams
     params["tracerParams"] = tp
-    
-    params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
-    params["followStatus"] = followStatus
-    params["bottomBarBinder"] = bottomBarBinder
+    params["tracer"] = tp.paramsGetter([:])
     
     let userInfo = TTRouteUserInfo(info: params)
     TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
@@ -610,10 +605,7 @@ func openRentHouseList(
     }
     let tp = tracerParams
     params["tracerParams"] = tp
-    
-    params["searchSource"] = SearchSourceKey.rentDetail.rawValue
-    params["followStatus"] = followStatus
-    params["bottomBarBinder"] = bottomBarBinder
+    params["tracer"] = tp.paramsGetter([:])
     
     let userInfo = TTRouteUserInfo(info: params)
     TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
@@ -648,10 +640,6 @@ func openAroundHouseList(
     let tp = tracerParams
     params["tracerParams"] = tp
     params["tracer"] = tp.paramsGetter([:])
-    
-    params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
-    params["followStatus"] = followStatus
-    params["bottomBarBinder"] = bottomBarBinder
     
     let userInfo = TTRouteUserInfo(info: params)
     TTRoute.shared().openURL(byPushViewController: URL(string: theUrl),userInfo:userInfo)
