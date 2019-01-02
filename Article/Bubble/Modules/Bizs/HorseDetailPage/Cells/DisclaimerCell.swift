@@ -84,7 +84,7 @@ func fillErshouHouseDisclaimerCell(model: Disclaimer?, contact: FHHouseDetailCon
             attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
             disclaimer.richText.forEach { item in
                 attrText.yy_setTextHighlight(
-                    rangeOfArray(item.highlightRange),
+                    rangeOfArray(item.highlightRange, originalLength: text.count),
                     color: hexStringToUIColor(hex: "#299cff"),
                     backgroundColor: nil,
                     userInfo: nil,
@@ -188,7 +188,7 @@ func fillDisclaimerCell(disclaimer: Disclaimer?, cell: BaseUITableViewCell) -> V
             attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
             disclaimer.richText.forEach { item in
                 attrText.yy_setTextHighlight(
-                    rangeOfArray(item.highlightRange),
+                    rangeOfArray(item.highlightRange, originalLength: text.count),
                     color: hexStringToUIColor(hex: "#299cff"),
                     backgroundColor: nil,
                     userInfo: nil,
@@ -210,9 +210,13 @@ func fillDisclaimerCell(disclaimer: Disclaimer?, cell: BaseUITableViewCell) -> V
     }
 }
 
-fileprivate func rangeOfArray(_ range: [Int]?) -> NSRange {
+fileprivate func rangeOfArray(_ range: [Int]?, originalLength: Int) -> NSRange {
     if let range = range, range.count == 2 {
-        return NSRange(location: range[0], length: range[1] - range[0])
+        if originalLength > range[0] && originalLength > range[1] && range[1] > range[0] {
+            return NSRange(location: range[0], length: range[1] - range[0])
+        } else {
+            return NSRange(location: 0, length: 0)
+        }
     } else {
         return NSRange(location: 0, length: 0)
     }

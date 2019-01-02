@@ -209,7 +209,7 @@ PODS:
     - TTPlatformUIModel
     - TTSettingsManager (>= 0.3)
     - TTUGCFoundation/TTUGCActionDataService
-  - BDTBasePlayer (0.3.48):
+  - BDTBasePlayer (0.3.47):
     - Aspects
     - KVOController
     - libextobjc
@@ -255,6 +255,9 @@ PODS:
     - BDWebImage/Core
   - BDWebImage/Download/URLSession (0.2.2):
     - BDWebImage/Download/DownloadBase
+  - BDWebImage/Monitor (0.2.2):
+    - BDWebImage/Core
+    - TTMonitor
   - BDWebImage/SDAdapter (0.2.2):
     - BDWebImage/Core
     - BDWebImage/Decoder
@@ -547,7 +550,7 @@ PODS:
     - SDWebImage/Core
   - SecGuard (0.8.10.1):
     - TTNetworkManager
-  - SSZipArchive (1.6.2)
+  - SSZipArchive (1.6.3)
   - TSVToolkit (0.1.2):
     - ReactiveObjC (~> 3.0)
   - TTABManager (0.0.7):
@@ -695,8 +698,8 @@ PODS:
     - TTBaseLib
     - TTThemed
     - TTUIWidget
-  - TTEntityBase (0.2.1):
-    - FMDB (= 2.6.2)
+  - TTEntityBase (0.2.4):
+    - FMDB (~> 2.6.2)
   - TTEntry (0.1.6):
     - TTEntityBase
     - TTInstallService
@@ -704,25 +707,25 @@ PODS:
     - TTNewsAccountBusiness (~> 0.2)
     - TTPlatformBaseLib
     - TTUIWidget
-  - TTFFmpeg (1.2.5):
-    - TTFFmpeg/libavcodec (= 1.2.5)
-    - TTFFmpeg/libavdevice (= 1.2.5)
-    - TTFFmpeg/libavfilter (= 1.2.5)
-    - TTFFmpeg/libavformat (= 1.2.5)
-    - TTFFmpeg/libavresample (= 1.2.5)
-    - TTFFmpeg/libavutil (= 1.2.5)
-    - TTFFmpeg/libpostproc (= 1.2.5)
-    - TTFFmpeg/libswresample (= 1.2.5)
-    - TTFFmpeg/libswscale (= 1.2.5)
-  - TTFFmpeg/libavcodec (1.2.5)
-  - TTFFmpeg/libavdevice (1.2.5)
-  - TTFFmpeg/libavfilter (1.2.5)
-  - TTFFmpeg/libavformat (1.2.5)
-  - TTFFmpeg/libavresample (1.2.5)
-  - TTFFmpeg/libavutil (1.2.5)
-  - TTFFmpeg/libpostproc (1.2.5)
-  - TTFFmpeg/libswresample (1.2.5)
-  - TTFFmpeg/libswscale (1.2.5)
+  - TTFFmpeg (1.4.3):
+    - TTFFmpeg/libavcodec (= 1.4.3)
+    - TTFFmpeg/libavdevice (= 1.4.3)
+    - TTFFmpeg/libavfilter (= 1.4.3)
+    - TTFFmpeg/libavformat (= 1.4.3)
+    - TTFFmpeg/libavresample (= 1.4.3)
+    - TTFFmpeg/libavutil (= 1.4.3)
+    - TTFFmpeg/libpostproc (= 1.4.3)
+    - TTFFmpeg/libswresample (= 1.4.3)
+    - TTFFmpeg/libswscale (= 1.4.3)
+  - TTFFmpeg/libavcodec (1.4.3)
+  - TTFFmpeg/libavdevice (1.4.3)
+  - TTFFmpeg/libavfilter (1.4.3)
+  - TTFFmpeg/libavformat (1.4.3)
+  - TTFFmpeg/libavresample (1.4.3)
+  - TTFFmpeg/libavutil (1.4.3)
+  - TTFFmpeg/libpostproc (1.4.3)
+  - TTFFmpeg/libswresample (1.4.3)
+  - TTFFmpeg/libswscale (1.4.3)
   - TTFlowStatisticsManager (0.0.8):
     - JSONModel
     - TTBaseLib
@@ -976,9 +979,10 @@ PODS:
     - TTImage
     - TTRoute
     - TTUIWidget
-  - TTPlayerSDK (2.9.3.14):
+  - TTPlayerSDK (2.9.9.10):
+    - boringssl
     - TTFFmpeg (~> 1.0)
-  - TTPreloaderSDK (1.4.16):
+  - TTPreloaderSDK (1.4.20-rc.0):
     - TTPlayerSDK (~> 2.0)
   - TTPushAuthorizationManager (0.1.3):
     - TTBaseLib
@@ -988,7 +992,7 @@ PODS:
     - TTPlatformBaseLib
     - TTTracker
     - TTUIWidget
-  - TTPushManager (0.0.10)
+  - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1):
     - TTNetworkManager (< 3)
     - TTPlatformBaseLib/TTURLDomainHelper
@@ -1111,22 +1115,24 @@ PODS:
     - TTThemed
   - TTVideo (1.1.1):
     - TTPlayerSDK
-  - TTVideoEngine (1.8.3.8):
+  - TTVideoEngine (1.9.3.24):
     - TTPlayerSDK (~> 2.8)
-  - TTVideoService (0.1.40):
-    - TTVideoService/Core (= 0.1.40)
-  - TTVideoService/Core (0.1.40):
+  - TTVideoService (0.1.71):
+    - TTVideoService/Core (= 0.1.71)
+  - TTVideoService/Core (0.1.71):
     - JSONModel
     - libextobjc (>= 0.4)
     - Protobuf
+    - ReactiveObjC
     - TTNetworkManager
     - TTPersistence
     - TTPlatformBaseLib/TTURLDomainHelper
     - TTReachability
     - TTServiceKit (>= 0.4.1)
+    - TTSettingsManager
     - TTTracker
     - YYCache (>= 1.0.4)
-  - TTVideoService/TTBusinessService (0.1.40)
+  - TTVideoService/TTBusinessService (0.1.71)
   - TTVTableViewItem (0.1.0):
     - TTThemed
   - TTVTableViewProtocolInterceptor (0.1.2):
@@ -1172,13 +1178,17 @@ DEPENDENCIES:
   - BDAccount/TencentQQ (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/WeChat (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDTArticle (= 0.2.3)
-  - BDTBasePlayer (= 0.3.48)
+  - BDTBasePlayer (from `git@code.byted.org:TTIOS/BDTBasePlayer`, branch `0.3.48-bugfix`)
   - BDTExploreOrderedData (= 0.1.6)
   - BDTFactoryConfigurator (= 0.1.0)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
   - BDWebImage/Core (= 0.2.2)
   - BDWebImage/Decoder (= 0.2.2)
   - BDWebImage/Download (= 0.2.2)
+  - BDWebImage/Download/Chromium (= 0.2.2)
+  - BDWebImage/Download/DownloadBase (= 0.2.2)
+  - BDWebImage/Download/URLSession (= 0.2.2)
+  - BDWebImage/Monitor (= 0.2.2)
   - BDWebImage/SDAdapter (= 0.2.2)
   - CHTCollectionViewWaterfallLayout (= 0.9.5)
   - Crashlytics (= 3.7.2)
@@ -1235,7 +1245,7 @@ DEPENDENCIES:
   - SDWebImage/GIF (= 4.4.1)
   - SDWebImage/WebP (= 4.4.1)
   - SecGuard (= 0.8.10.1)
-  - SSZipArchive (= 1.6.2)
+  - SSZipArchive (= 1.6.3)
   - TSVToolkit (= 0.1.2)
   - TTABManager (= 0.0.7)
   - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
@@ -1261,9 +1271,9 @@ DEPENDENCIES:
   - TTDialogDirector/PhotoLibrary (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/UserNotification (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDiggButton (from `../AKPlugins/AKDiggButton`)
-  - TTEntityBase (= 0.2.1)
+  - TTEntityBase (= 0.2.4)
   - TTEntry (= 0.1.6)
-  - TTFFmpeg (= 1.2.5)
+  - TTFFmpeg (= 1.4.3)
   - TTFlowStatisticsManager (= 0.0.8)
   - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
   - TTImage (= 0.8.0)
@@ -1282,10 +1292,10 @@ DEPENDENCIES:
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
   - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, branch `dev_bubble`)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
-  - TTPlayerSDK (= 2.9.3.14)
-  - TTPreloaderSDK (= 1.4.16)
+  - TTPlayerSDK (= 2.9.9.10)
+  - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
-  - TTPushManager (= 0.0.10)
+  - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1)
   - TTReachability (= 0.1.8)
   - TTReporter (= 0.2.1)
@@ -1313,9 +1323,9 @@ DEPENDENCIES:
   - TTVContainerScrollView (= 0.1.2)
   - TTVerifyKit (= 0.3.0)
   - TTVideo (= 1.1.1)
-  - TTVideoEngine (= 1.8.3.8)
-  - TTVideoService (= 0.1.40)
-  - TTVideoService/TTBusinessService (= 0.1.40)
+  - TTVideoEngine (= 1.9.3.24)
+  - TTVideoService (= 0.1.71)
+  - TTVideoService/TTBusinessService (= 0.1.71)
   - TTVTableViewItem (= 0.1.0)
   - TTVTableViewProtocolInterceptor (= 0.1.2)
   - TTVTLIndexPathTools (= 0.4.4)
@@ -1338,6 +1348,9 @@ EXTERNAL SOURCES:
   BDAccount:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
+  BDTBasePlayer:
+    :branch: 0.3.48-bugfix
+    :git: git@code.byted.org:TTIOS/BDTBasePlayer
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
   FHCommonUI:
@@ -1410,8 +1423,11 @@ CHECKOUT OPTIONS:
   BDAccount:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
+  BDTBasePlayer:
+    :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
+    :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: 0764c2e2613055ee7395e6cdda9ef71bda905667
+    :commit: aa124d69b0fc221ebecf850cfc23cad45dd8d096
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1443,7 +1459,7 @@ SPEC CHECKSUMS:
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
   BDALog: 54aee45a65093ffafdbe747b0b00f3c26cdc1ea5
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
-  BDTBasePlayer: 91540a29321a2275c37cafb6dff85a6731326b49
+  BDTBasePlayer: 2556db5b8358fe78dcb8f793793bf693e2a76adb
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
   BDTFactoryConfigurator: 1ee2028af5006409976ff725d18e602d680de165
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
@@ -1489,7 +1505,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 2bf09a88678d5fe2246a6fee32505bf769a9a079
   SDWebImage: 7d9faa33fa14c9b9604c7fbedd4a314f5db1558a
   SecGuard: d65a7fea766205b39ff1e1ae7ac2abaf1f01bfbd
-  SSZipArchive: b20c738ef5d2504fbd3cea9105c699fd6d21b4c3
+  SSZipArchive: 896def204e56339f9bf6d40903b45f3a1c1bfd69
   TSVToolkit: 2e7da7aa00ee6c5c498bdd075989bf23036dee91
   TTABManager: 6a5cb47d33221ec84c21382790fdc4f1bb497c03
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
@@ -1506,9 +1522,9 @@ SPEC CHECKSUMS:
   TTDebugAssistant: 33defeaa56e80776a781e5ffbe149cae2fb44e52
   TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
-  TTEntityBase: 2a3c254d18dfdb80e7f4f0c4ab5b19b35a5763fa
+  TTEntityBase: bb3ef3988e1bb86be42de379f040658dc498b6d7
   TTEntry: 2c9d04c401b8f74ad078e570b1bf206c0bd78393
-  TTFFmpeg: 5308e3b13de50e4d0a3f796972299b6c1a4002f0
+  TTFFmpeg: 2f37fd999e494d0eb943e2848dfde3d971cb493d
   TTFlowStatisticsManager: ac76a85b82cba6da6011af5814ed3e9e1e47e995
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
   TTImage: 6de58ab30a1db172bdcc292d65d629756e21cff2
@@ -1526,10 +1542,10 @@ SPEC CHECKSUMS:
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
   TTPlatformBaseLib: 289c001877787e8a9c37f7ed5c01e734f3c704b2
   TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
-  TTPlayerSDK: 47f24a5d30223e072ec7fbf27af3e2ae83d763b9
-  TTPreloaderSDK: 733b12e6405545ad494818bfe3095c036abb1838
+  TTPlayerSDK: ddf454156e94681632063317c1bd68a5e8369f2e
+  TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
-  TTPushManager: 708ba9dcc3849570f2b02cd04fc8aeeba1a562c0
+  TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
   TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
@@ -1549,8 +1565,8 @@ SPEC CHECKSUMS:
   TTVContainerScrollView: 1394e59f3b600cbf764a0f7697f3282f494a6fa1
   TTVerifyKit: cc38d6605f2cc02585c6632e711310ef828ce569
   TTVideo: dae14d8b5c4426ee458257eae45b0cd13b4cb02c
-  TTVideoEngine: 6a02e42372cdff140cd97195633eb4d5e1b8e0e8
-  TTVideoService: 1f1e94d56218260dd8b8191b467d5e31d66fa7f3
+  TTVideoEngine: 3ec46606abf9bac1135332cf1986ce5b04092e90
+  TTVideoService: a9407e617942e27bfbc94877fc40c2a59d495a62
   TTVTableViewItem: 121318eeac5dfe05606ee2f86655afffcd73a4bd
   TTVTableViewProtocolInterceptor: 51b6f0a6caf309ca10b93aeaea6471ecfeac81df
   TTVTLIndexPathTools: 997b28f180f2847b2da6b1bd340b87623f1429d3
@@ -1562,6 +1578,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 406359fc8920ae49c12f9e29433a943d6a43960f
+PODFILE CHECKSUM: 770d1b7b4deae090f9306fc61515d2d7f28942ae
 
 COCOAPODS: 1.4.0
