@@ -18582,7 +18582,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
-				"${PODS_ROOT}/../../../lab/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -18827,7 +18827,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
-				"${PODS_ROOT}/../../../lab/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -19213,7 +19213,7 @@
 				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
-				"${PODS_ROOT}/../../../lab/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
