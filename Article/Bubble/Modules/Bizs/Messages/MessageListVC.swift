@@ -403,7 +403,18 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                 theCell.isTail = (indexPath.row == items.count - 1) ? true : false
 
                 theCell.majorImageView.bd_setImage(with: URL(string: data.images?.first?.url ?? ""), placeholder:UIImage(named: "default_image"))
-
+                
+                if let houseImageTag = data.houseImageTag,
+                    let backgroundColor = houseImageTag.backgroundColor,
+                    let textColor = houseImageTag.textColor {
+                    theCell.imageTopLeftLabel.textColor = hexStringToUIColor(hex: textColor)
+                    theCell.imageTopLeftLabel.text = houseImageTag.text
+                    theCell.imageTopLeftLabelBgView.backgroundColor = hexStringToUIColor(hex: backgroundColor)
+                    theCell.imageTopLeftLabelBgView.isHidden = false
+                } else {
+                    theCell.imageTopLeftLabelBgView.isHidden = true
+                }
+                
                 if data.status == 1 { // 已下架
                     theCell.priceLabel.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
                 } else {
