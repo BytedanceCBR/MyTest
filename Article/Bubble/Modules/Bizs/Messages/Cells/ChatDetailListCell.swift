@@ -32,6 +32,22 @@ class ChatDetailListCell: BaseUITableViewCell {
         }
     }
     
+    lazy var imageTopLeftLabel: UILabel = {
+        let re = UILabel()
+        re.text = "新上"
+        re.textAlignment = .center
+        re.textColor = UIColor.white
+        re.font = CommonUIStyle.Font.pingFangRegular(10)
+        return re
+    }()
+    
+    lazy var imageTopLeftLabelBgView: CornerView = {
+        let re = CornerView()
+        re.backgroundColor = hexStringToUIColor(hex: "#ff5b4c")
+        re.isHidden = true
+        return re
+    }()
+    
     lazy var majorImageView: UIImageView = {
         let re = UIImageView()
         re.contentMode = .scaleAspectFill
@@ -118,6 +134,21 @@ class ChatDetailListCell: BaseUITableViewCell {
 //            maker.bottom.equalTo(bottomView.snp.top)
             maker.width.equalTo(114)
             maker.height.equalTo(85)
+        }
+        
+        contentView.addSubview(imageTopLeftLabelBgView)
+        imageTopLeftLabelBgView.snp.makeConstraints { (maker) in
+            maker.left.equalTo(majorImageView.snp.left).offset(0)
+            maker.top.equalTo(majorImageView.snp.top).offset(0.5)
+            maker.height.equalTo(17)
+            maker.width.equalTo(48)
+        }
+        
+        imageTopLeftLabelBgView.addSubview(imageTopLeftLabel)
+        imageTopLeftLabel.snp.makeConstraints { (maker) in
+            maker.left.equalTo(0)
+            maker.right.equalTo(0)
+            maker.center.equalToSuperview()
         }
         
         let infoPanel = UIView()
@@ -223,6 +254,8 @@ class ChatDetailListCell: BaseUITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageTopLeftLabelBgView.isHidden = true
+        imageTopLeftLabel.text = nil
         
         majorTitle.snp.updateConstraints { maker in
             maker.left.right.top.equalToSuperview()
