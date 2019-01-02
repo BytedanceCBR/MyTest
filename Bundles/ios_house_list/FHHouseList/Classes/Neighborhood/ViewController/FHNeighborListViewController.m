@@ -19,6 +19,7 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "TTDeviceHelper.h"
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
 
@@ -140,11 +141,13 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+        _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMore];
@@ -195,6 +198,8 @@
 }
 
 - (void)realRequestWithOffset:(NSInteger)offset {
+    // 是否是第一次请求
+    self.viewModel.firstRequestData = (offset == 0 ? YES : NO);
     if (self.neighborListVCType == FHNeighborListVCTypeErshouSameNeighbor ||
         self.neighborListVCType == FHNeighborListVCTypeNeighborOnSales ||
         self.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {

@@ -13,10 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborViewModel : FHBaseHouseListViewModel
 
-@property(nonatomic , strong) NSMutableArray *houseList;
+@property (nonatomic , strong) NSMutableArray *houseList;
 @property (nonatomic , copy) NSString *searchId;
 @property (nonatomic , copy) NSString *condition; // 过滤条件
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowTracerDic; // 埋点key记录
+@property (nonatomic, assign)   BOOL       firstRequestData;
 
 -(instancetype)initWithController:(FHNeighborListViewController *)viewController tableView:(UITableView *)tableView;
 

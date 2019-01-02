@@ -18,6 +18,7 @@
 #import "FHHouseTypeManager.h"
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -42,6 +43,7 @@
         self.tableView = tableView;
         self.lastHasMore = NO;
         self.hasEnterCategory = NO;
+        self.firstRequestData = YES;
         self.houseShowTracerDic = [NSMutableDictionary new];
         [self configTableView];
     }
@@ -137,6 +139,29 @@
     }
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.listController.hasValidateData) {
+        
+        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+        if (indexPath.row < self.houseList.count) {
+            
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+            if (height < 1) {
+                height = [tableView fd_heightForCellWithIdentifier:kSingleImageCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
+                    [cell updateWithHouseCellModel:cellModel];
+                    [cell refreshTopMargin: 20];
+                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                }];
+            }
+            return height;
+        }
+    }
+    
+    return 105;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
@@ -206,6 +231,9 @@
         if (!self.hasEnterCategory) {
             [self addEnterCategoryLog];
             self.hasEnterCategory = YES;
+        }
+        if (self.firstRequestData && self.houseList.count > 0) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
     } else {
         [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
