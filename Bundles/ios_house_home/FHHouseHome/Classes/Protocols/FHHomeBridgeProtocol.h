@@ -14,7 +14,11 @@
 
 - (NSString *)currentSelectCategoryName;
 
+- (NSString *)baseUrl;
+
 - (void)isShowTabbarScrollToTop:(BOOL)scrollToTop;
+
+- (void)setUpLocationInfo:(NSDictionary *)dict;
 @end
 
 #endif /* FHHomeBridgeProtocol_h */

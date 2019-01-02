@@ -15,6 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLocManager : NSObject
 
+@property (nonatomic, strong)AMapLocationManager * locMgr;
+@property (nonatomic, strong)AMapLocationReGeocode * currentReGeocode;
+@property (nonatomic, strong)CLLocation * currentLocaton;
+
++(instancetype)sharedInstance;
+
+- (void)requestCurrentLocation:(BOOL)showAlert;
+
+- (void)setUpLocManagerLocalInfo;
+
 @end
+
 
 NS_ASSUME_NONNULL_END

@@ -134,6 +134,7 @@ class GeneralBizConfig {
     }
     
     func fetchConfiguration() {
+//        return
         disposeBagConfig = DisposeBag()
         requestGeneralConfig(cityId: nil,
                              gaodeCityId: locationManager?.currentCity.value?.citycode,

@@ -9,6 +9,8 @@
 #import "TTArticleCategoryManager.h"
 #import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
+#import "TTLocationManager.h"
+#import "CommonURLSetting.h"
 
 @implementation FHHomeBridgeImp
 
@@ -18,6 +20,10 @@
     return categoryStartName;
 }
 
+- (NSString *)baseUrl
+{
+    return [CommonURLSetting baseURL];
+}
 
 - (NSString *)currentSelectCategoryName
 {
@@ -39,4 +45,8 @@
     }
 }
 
+- (void)setUpLocationInfo:(NSDictionary *)dict
+{
+    [[TTLocationManager sharedManager] setUpAmapInfo:dict];
+}
 @end

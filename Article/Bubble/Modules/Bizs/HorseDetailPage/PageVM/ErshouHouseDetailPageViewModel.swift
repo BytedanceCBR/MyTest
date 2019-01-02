@@ -352,6 +352,7 @@ import RxCocoa
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
                 <- parsePropertyListNode(data)
+                <- parseAgentListCellGroup()
                 <- parseFlineNode(data.baseInfo != nil ? 6: 0)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
@@ -512,6 +513,13 @@ import RxCocoa
         } else {
             return DetailDataParser.monoid().parser
         }
+    }
+
+    func parseAgentListCellGroup() -> () -> [TableSectionNode]? {
+        let header = combineParser(left: parseFlineNode(),
+                                   right: parseHeaderNode("推荐经纪人", adjustBottomSpace: -10))
+        return parseNodeWrapper(preNode: header,
+                                wrapedNode: parseAgentListCell())
     }
 
     fileprivate func openFloorPanDetailPage(
@@ -699,8 +707,13 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
                     cell: tempRefreshCell,
                     indexPath: indexPath,
                     tableView: tableView)
+            } else if let refreshCell = cell as? FHAgentListCell {
+                let tempRefreshCell = refreshCell
+                processRefreshableTableAgentListCell(cell: tempRefreshCell,
+                                                     indexPath: indexPath,
+                                                     tableView: tableView)
             }
-            
+
             datas[indexPath.section].items[indexPath.row](cell)
             return cell
         default:
@@ -725,7 +738,23 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
             tableView?.endUpdates()
         }
     }
-    
+
+    fileprivate func processRefreshableTableAgentListCell(
+        cell: FHAgentListCell,
+        indexPath: IndexPath,
+        tableView: UITableView) {
+        let tempCell = cell
+        tempCell.refreshCallback = { [weak tableView, weak tempCell] in
+            tableView?.beginUpdates()
+            if let refreshCell = tempCell {
+                let tempRefreshCell = refreshCell
+                self.datas[indexPath.section].items[indexPath.row](refreshCell)
+                tempRefreshCell.setNeedsUpdateConstraints()
+            }
+            tableView?.endUpdates()
+        }
+    }
+
     fileprivate func changePriceChartFoldState()
     {
         self.priceChartFoldState = !self.priceChartFoldState

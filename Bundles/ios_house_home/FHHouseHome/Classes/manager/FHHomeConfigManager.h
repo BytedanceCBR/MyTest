@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, FHHomeHeaderCellPositionType) {
 //从原有数据源接收数据
 - (void)acceptConfigDictionary:(NSDictionary *)configDict;
 
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel;
+
+
 - (void)currentNeedRequestConfig:(NSString *)cityId cityGeoCode:(NSString *)cityCode lat:(double)latValue lon:(double)lonValue cityName:(NSString *)cityName;
 
 - (void)updateConfigDataFromCache;

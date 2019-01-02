@@ -154,7 +154,9 @@ class CountryListVC: BaseViewController {
 
             let lat = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.latitude
             let lng = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.longitude
+            
             let params = TTNetworkManager.shareInstance()?.commonParamsblock() as? [String: Any]
+            
             let locationResponseObv: Observable<GeneralConfigResponse?> = requestGeneralConfig(cityName: cityName,
                                                                                                cityId: nil,
                                                                                                gaodeCityId: gaodeCityId,
