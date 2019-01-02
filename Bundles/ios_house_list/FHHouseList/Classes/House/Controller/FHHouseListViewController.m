@@ -287,6 +287,8 @@
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
 
 }
 
@@ -347,7 +349,7 @@
 
     [self initNavbar];
     
-    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView viewControler:self routeParam:self.paramObj];
+    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
 
     [self initFilter];
     [self setupViewModelBlock];
@@ -444,7 +446,8 @@
 
 - (void)trackEndedByAppWillEnterBackground {
     
-    [self.viewModel addStayCategoryLog];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
 }
 
 - (void)trackStartedByAppWillEnterForground {

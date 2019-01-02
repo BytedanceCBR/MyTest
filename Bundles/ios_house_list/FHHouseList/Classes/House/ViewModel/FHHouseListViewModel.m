@@ -18,7 +18,7 @@
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHPlaceHolderCell.h"
-#import "FHHouseListViewController.h"
+//#import "FHHouseListViewController.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
 #import <UIScrollView+Refresh.h>
@@ -31,7 +31,7 @@
 
 @property(nonatomic , strong) FHErrorView *maskView;
 
-@property(nonatomic, weak) FHHouseListViewController *listVC;
+//@property(nonatomic, weak) FHHouseListViewController *listVC;
 @property(nonatomic, weak) UITableView *tableView;
 
 @property(nonatomic , strong) NSMutableArray *houseList;
@@ -54,6 +54,7 @@
 
 @property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
 @property(nonatomic , strong) NSMutableDictionary *houseShowCache;
+@property(nonatomic , strong) FHTracerModel *tracerModel;
 
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
@@ -73,13 +74,12 @@
     };
 }
 
--(instancetype)initWithTableView:(UITableView *)tableView viewControler:(FHHouseListViewController *)vc routeParam:(TTRouteParamObj *)paramObj {
+-(instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj {
 
     self = [super init];
     if (self) {
 
         _canChangeHouseSearchDic = YES;
-        _listVC = vc;
         self.houseList = [NSMutableArray array];
         self.showPlaceHolder = YES;
         self.isRefresh = YES;
@@ -90,14 +90,20 @@
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
-        
-        self.originFrom = self.listVC.tracerModel.originFrom;
+
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         
         [self configTableView];
 
     }
     return self;
+}
+
+-(void)setTracerModel:(FHTracerModel *)tracerModel {
+    
+    _tracerModel = tracerModel;
+    self.originFrom = tracerModel.originFrom;
+
 }
 
 -(void)configTableView
@@ -121,7 +127,6 @@
     
     [super viewWillDisappear:animated];
     
-    [self addStayCategoryLog];
 }
 
 #pragma mark - 网络请求
@@ -509,8 +514,8 @@
         self.closeConditionFilter();
     }
     [self addClickHouseSearchLog];
-    NSMutableDictionary *traceParam = self.listVC.tracerDict;
     
+    NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
@@ -553,7 +558,7 @@
 
         }
         if (![self.mapFindHouseOpenUrl containsString:@"origin_from"]) {
-            [query appendString:[NSString stringWithFormat:@"&origin_from=%@",self.listVC.tracerModel.originFrom ? : @"be_null"]];
+            [query appendString:[NSString stringWithFormat:@"&origin_from=%@",self.tracerModel.originFrom ? : @"be_null"]];
 
         }
         if (![self.mapFindHouseOpenUrl containsString:@"origin_search_id"]) {
@@ -561,15 +566,15 @@
 
         }
         if (![self.mapFindHouseOpenUrl containsString:@"enter_from"]) {
-            [query appendString:[NSString stringWithFormat:@"&enter_from=%@",self.listVC.tracerModel.enterFrom ? : @"be_null"]];
+            [query appendString:[NSString stringWithFormat:@"&enter_from=%@",self.tracerModel.enterFrom ? : @"be_null"]];
             
         }
         if (![self.mapFindHouseOpenUrl containsString:@"enter_type"]) {
-            [query appendString:[NSString stringWithFormat:@"&enter_type=%@",self.listVC.tracerModel.enterType ? : @"be_null"]];
+            [query appendString:[NSString stringWithFormat:@"&enter_type=%@",self.tracerModel.enterType ? : @"be_null"]];
             
         }
         if (![self.mapFindHouseOpenUrl containsString:@"element_from"]) {
-            [query appendString:[NSString stringWithFormat:@"&element_from=%@",self.listVC.tracerModel.elementFrom ? : @"be_null"]];
+            [query appendString:[NSString stringWithFormat:@"&element_from=%@",self.tracerModel.elementFrom ? : @"be_null"]];
             
         }
         if (![self.mapFindHouseOpenUrl containsString:@"search_id"]) {
@@ -998,16 +1003,15 @@
     [FHUserTracker writeEvent:@"category_refresh" params:tracerDict];
 }
 
--(void)addStayCategoryLog {
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     
-    NSTimeInterval duration = self.listVC.ttTrackStayTime * 1000.0;
+    NSTimeInterval duration = stayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
         return;
     }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
-    [self.listVC tt_resetStayTime];
 
 }
 
@@ -1041,11 +1045,11 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
-    tracerDict[@"enter_from"] = self.listVC.tracerModel.enterFrom ? : @"be_null";
-    tracerDict[@"enter_type"] = self.listVC.tracerModel.enterType ? : @"be_null";
-    tracerDict[@"element_from"] = self.listVC.tracerModel.elementFrom ? : @"be_null";
+    tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
+    tracerDict[@"enter_type"] = self.tracerModel.enterType ? : @"be_null";
+    tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
-    tracerDict[@"origin_from"] = self.listVC.tracerModel.originFrom ? : @"be_null";
+    tracerDict[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     
     return tracerDict;

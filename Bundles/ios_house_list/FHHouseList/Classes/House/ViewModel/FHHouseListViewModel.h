@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - log相关
 @property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
 
--(void)addStayCategoryLog;
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime;
 
 @end
 

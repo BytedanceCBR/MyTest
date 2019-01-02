@@ -10,6 +10,7 @@
 #import "FHHouseType.h"
 #import "FHErrorView.h"
 #import <TTRoute.h>
+#import "FHTracerModel.h"
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
@@ -38,12 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHHouseListViewModelDelegate> viewModelDelegate;
 
 -(NSString *)categoryName;
+-(void)setTracerModel:(FHTracerModel *)tracerModel;
 
 -(void)reloadData;
 
 -(void)setMaskView:(FHErrorView *)maskView;
 
--(instancetype)initWithTableView:(UITableView *)tableView viewControler:(FHHouseListViewController *)vc routeParam:(TTRouteParamObj *)paramObj;
+-(instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj;
 
 -(void)loadData:(BOOL)isRefresh;
 
