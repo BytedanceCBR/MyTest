@@ -64,6 +64,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onStartApp;
 
 /*
+   更新公共参数
+*/
+
+- (void)updateRequestCommonParams;
+
+/*
+ 获取请求公共参数
+ */
+- (NSDictionary *)getRequestCommonParams;
+
+/*
   config变化更新cache
  */
 - (void)updateConfigCache;
@@ -98,6 +109,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
 
+/*
+ 获取首页埋点公共参数
+*/
 
 - (FHClientHomeParamsModel *)getCommonParams;
 

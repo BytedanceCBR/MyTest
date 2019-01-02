@@ -101,14 +101,7 @@
     {
         requestParam[@"city_name"] = nil;
     }
-    
-    if ([gCityId isKindOfClass:[NSString class]]) {
-        requestParam[@"city_id"] = gCityId;
-    }else
-    {
-        requestParam[@"city_id"] = nil;
-    }
-    
+
     double longitude = location.longitude;
     double latitude = location.latitude;
 

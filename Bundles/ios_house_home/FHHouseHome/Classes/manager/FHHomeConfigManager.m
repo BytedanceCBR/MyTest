@@ -58,6 +58,19 @@
     }
 }
 
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
+{
+    if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
+        if (![configModel.toDictionary isEqualToDictionary:self.currentDictionary]) {
+            self.currentDataModel = configModel;
+            self.currentDictionary = configModel.toDictionary;
+            [[FHEnvContext sharedInstance] updateConfigCache];
+            [self.configDataReplay sendNext:configModel];
+            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
+        }
+    }
+}
+
 - (void)openCategoryFeedStart
 {
     
