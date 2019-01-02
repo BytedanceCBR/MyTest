@@ -12,7 +12,7 @@ class FHPhoneCallViewModel: NSObject {
 
     func bindCallBtn(btn: UIButton, disposeBag: DisposeBag) {
         btn.rx.tap
-            .debug()
+            .debug("bindCallBtn")
             .bind { [weak self] () in
 
             }

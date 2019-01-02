@@ -1223,7 +1223,7 @@ DEPENDENCIES:
   - Heimdallr/Utility (= 0.4.21)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
+  - ios_house_filter (from `../../lab/ios_house_filter`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0)
   - libextobjc (= 0.4.1)
@@ -1372,8 +1372,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/develop
-    :git: git@code.byted.org:fproject/ios_house_filter.git
+    :path: ../../lab/ios_house_filter
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1426,9 +1425,6 @@ CHECKOUT OPTIONS:
   BDTBasePlayer:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
-  ios_house_filter:
-    :commit: aa124d69b0fc221ebecf850cfc23cad45dd8d096
-    :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1484,7 +1480,7 @@ SPEC CHECKSUMS:
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
-  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
+  ios_house_filter: 4a57f6aaac57b956747bcb0df24da13af5ff5b89
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: 978886965ffa3f719042c14840dbf65513b9c541
   libextobjc: 9ab0bd8ba6bc7a947067ad233fd9cd3a5b7a817a
@@ -1578,6 +1574,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 011e0de48bbad4ea298d91851ba4dbec972ae107
+PODFILE CHECKSUM: fa466b5268b9864419c786daef864aba106b5e61
 
 COCOAPODS: 1.4.0
