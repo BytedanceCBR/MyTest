@@ -167,34 +167,34 @@ class CountryListVC: BaseViewController {
             locationResponseObv
                 .subscribe(onNext: { [unowned self] response in
 
-                    let params = (self.dataSource.tracerParams ?? TracerParams.momoid()) <|>
-                        toTracerParams("location", key: "query_type") <|>
-                        toTracerParams(response?.data?.currentCityName ?? "be_null", key: "city")
-
-                    recordEvent(key: "city_filter", params: params)
-
-                    let generalBizConfig = EnvContext.shared.client.generalBizconfig
-                    // 只在用户没有选择城市时才回设置城市
-                    if let currentCityId = response?.data?.currentCityId {
-                        if let theCityId = generalBizConfig.currentSelectCityId.value, theCityId != currentCityId {
-                            generalBizConfig.currentSelectCityId.accept(Int(currentCityId))
-                            generalBizConfig.setCurrentSelectCityId(cityId: Int(currentCityId))
-                        }
-                        self.navigationController?.popViewController(animated: true)
-                        FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
-
-                    }
-
-                    if let payload = response?.data?.toJSONString() {
-                        self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
-                    }
-                    
-                    EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(response?.data)
-                    
-                    EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
-
-                    //TODO: 暂时的解决方案，需要也加入到switcher中去
-                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
+//                    let params = (self.dataSource.tracerParams ?? TracerParams.momoid()) <|>
+//                        toTracerParams("location", key: "query_type") <|>
+//                        toTracerParams(response?.data?.currentCityName ?? "be_null", key: "city")
+//
+//                    recordEvent(key: "city_filter", params: params)
+//
+//                    let generalBizConfig = EnvContext.shared.client.generalBizconfig
+//                    // 只在用户没有选择城市时才回设置城市
+//                    if let currentCityId = response?.data?.currentCityId {
+//                        if let theCityId = generalBizConfig.currentSelectCityId.value, theCityId != currentCityId {
+//                            generalBizConfig.currentSelectCityId.accept(Int(currentCityId))
+//                            generalBizConfig.setCurrentSelectCityId(cityId: Int(currentCityId))
+//                        }
+//                        self.navigationController?.popViewController(animated: true)
+//                        FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
+//
+//                    }
+//
+//                    if let payload = response?.data?.toJSONString() {
+//                        self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
+//                    }
+//
+//                    EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(response?.data)
+//
+//                    EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
+//
+//                    //TODO: 暂时的解决方案，需要也加入到switcher中去
+//                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })

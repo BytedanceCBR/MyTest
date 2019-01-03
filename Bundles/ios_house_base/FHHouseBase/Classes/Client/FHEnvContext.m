@@ -61,6 +61,11 @@
     
 }
 
+- (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
 - (void)updateRequestCommonParams
 {
     //初始化公共请求参数
@@ -164,6 +169,11 @@
     [self.generalBizConfig updataCurrentConfigCache];
 }
 
+- (FHConfigDataModel *)saveGeneralConfig
+{
+    
+}
+
 - (FHConfigDataModel *)getConfigFromCache
 {
     return self.generalBizConfig.configCache;
@@ -172,21 +182,6 @@
 - (FHConfigDataModel *)readConfigFromLocal
 {
     return [self.generalBizConfig getGeneralConfigFromLocal];
-}
-
-- (FHSearchConfigModel *)getSearchConfigFromCache
-{
-    if (!self.generalBizConfig.configCache.filter) {
-        return [self readSearchConfigFromLocal];
-    }
-    return self.generalBizConfig.configCache.filter;
-}
-
-- (FHSearchConfigModel *)readSearchConfigFromLocal
-{
-    FHSearchConfigModel * searchConfig = [self.generalBizConfig getSearchConfigFromLocal];
-    self.generalBizConfig.configCache.filter = searchConfig;
-    return [self.generalBizConfig getSearchConfigFromLocal];
 }
 
 //获取当前保存的城市名称

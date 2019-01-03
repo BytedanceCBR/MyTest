@@ -55,7 +55,42 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 
 - (void)updataCurrentConfigCache
 {
-    self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
+    if ([FHHomeConfigManager sharedInstance].currentDataModel) {
+        self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
+    }
+}
+
+- (void)saveCurrentConfigCache:(FHConfigModel *)configValue
+{
+    self.configCache = configValue;
+    
+    NSLog(@"dict = %@",configValue.toDictionary);
+//    self.searchConfigCache = [FHSearchConfigModel new];
+//    self.searchConfigCache.filter = configValue.data.filter;
+//    self.searchConfigCache.searchTabNeighborhoodFilter = configValue.data.searchTabNeighborhoodFilter;
+//    self.searchConfigCache.rentFilterOrder = configValue.data.rentFilterOrder;
+//    self.searchConfigCache.searchTabCourtFilter = configValue.data.searchTabCourtFilter;
+//    self.searchConfigCache.neighborhoodFilter = configValue.data.neighborhoodFilter;
+//    self.searchConfigCache.searchTabRentFilter = configValue.data.searchTabRentFilter;
+//    self.searchConfigCache.searchTabFilter = configValue.data.searchTabFilter;
+//    self.searchConfigCache.courtFilter = configValue.data.courtFilter;
+//    self.searchConfigCache.houseFilterOrder = configValue.data.houseFilterOrder;
+//    self.searchConfigCache.rentFilter = configValue.data.rentFilter;
+//    self.searchConfigCache.neighborhoodFilterOrder = configValue.data.neighborhoodFilterOrder;
+//    self.searchConfigCache.saleHistoryFilter = configValue.data.saleHistoryFilter;
+//    self.searchConfigCache.courtFilterOrder = configValue.data.courtFilterOrder;
+
+//    NSLog(@"search_config = %@",configValue.data.filter.toJSONString);
+//
+//    if ([configValue.data.filter.toJSONString isEqualToString:[NSString class]]) {
+//        [self.generalConfigCache setObject:configValue.data.filter.toJSONString forKey:@"search_config"];
+//    }
+//
+//    NSLog(@"config = %@",configValue.data.filter.toJSONString);
+//
+//    if ([configValue.data.toJSONString isEqualToString:[NSString class]]) {
+//        [self.generalConfigCache setObject:configValue.data.toJSONString forKey:@"config"];
+//    }
 }
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum

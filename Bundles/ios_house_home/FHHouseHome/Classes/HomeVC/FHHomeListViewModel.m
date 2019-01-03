@@ -91,7 +91,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         [[FHHomeConfigManager sharedInstance].searchConfigDataReplay subscribeNext:^(id  _Nullable searchConfigModel) {
-            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
+            
+//            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {

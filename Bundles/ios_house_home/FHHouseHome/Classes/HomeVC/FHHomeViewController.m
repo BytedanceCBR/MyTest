@@ -105,8 +105,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     
-    FHSearchConfigModel *searchConfig = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
-    
     [self scrollToTopEnable:YES];
 }
 
@@ -174,7 +172,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (BOOL)tt_hasValidateData
 {
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
+    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     return configModel != nil;
 }
 

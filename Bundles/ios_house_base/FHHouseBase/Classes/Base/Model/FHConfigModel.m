@@ -97,7 +97,6 @@
                            @"houseTypeList": @"house_type_list",
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
-                           @"filter": @"filter",
                            @"rentOpData": @"rent_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",
@@ -108,6 +107,18 @@
                            @"reviewInfo": @"review_info",
                            @"cityStats": @"city_stats",
                            @"userPhone": @"user_phone",
+                           @"searchTabNeighborhoodFilter": @"search_tab_neighborhood_filter",
+                           @"searchTabCourtFilter": @"search_tab_court_filter",
+                           @"neighborhoodFilter": @"neighborhood_filter",
+                           @"searchTabRentFilter": @"search_tab_rent_filter",
+                           @"courtFilterOrder": @"court_filter_order",
+                           @"searchTabFilter": @"search_tab_filter",
+                           @"rentFilterOrder": @"rent_filter_order",
+                           @"houseFilterOrder": @"house_filter_order",
+                           @"neighborhoodFilterOrder": @"neighborhood_filter_order",
+                           @"rentFilter": @"rent_filter",
+                           @"courtFilter": @"court_filter",
+                           @"saleHistoryFilter": @"sale_history_filter",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

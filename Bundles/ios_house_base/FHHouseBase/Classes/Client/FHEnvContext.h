@@ -84,17 +84,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
+
+//保存config数据
+- (void)saveGeneralConfig:(FHConfigModel *)model;
+
 //从缓存中获取config数据
 - (FHConfigDataModel *)getConfigFromCache;
 
 //从本地磁盘获取config数据
 - (FHConfigDataModel *)readConfigFromLocal;
-
-//从缓存中获取搜索配置
-- (FHSearchConfigModel *)getSearchConfigFromCache;
-
-//从本地磁盘中获取搜索配置
-- (FHSearchConfigModel *)readSearchConfigFromLocal;
 
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal;
