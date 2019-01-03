@@ -17,8 +17,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseListViewModelDelegate;
-
-@class FHHouseListViewController;
 /*
  * 房子列表页基础 viewmodel
  * 对于二手房、租房等基础逻辑封装

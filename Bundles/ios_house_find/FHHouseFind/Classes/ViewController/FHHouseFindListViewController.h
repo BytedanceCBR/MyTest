@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseFindListViewController : UIViewController
+@interface FHHouseFindListViewController : FHBaseViewController
 
 @end
 
