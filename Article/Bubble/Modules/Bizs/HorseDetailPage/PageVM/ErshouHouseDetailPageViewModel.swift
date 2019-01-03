@@ -76,7 +76,11 @@ import RxCocoa
 
     weak var infoMaskView: EmptyMaskView?
 
-    var traceParams = TracerParams.momoid()
+    var traceParams = TracerParams.momoid() {
+        didSet {
+            tracerModel = getTraceModelFromTraceParams(traceParams: traceParams)
+        }
+    }
 
     var isRecordRelated: Bool = false
 
@@ -85,6 +89,9 @@ import RxCocoa
     var sameNeighborhoodFollowUp = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
     var recordRowIndex: Set<IndexPath> = []
+
+    private var tracerModel: HouseRentTracer?
+
 
     init(
         tableView: UITableView,
@@ -352,7 +359,7 @@ import RxCocoa
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
                 <- parsePropertyListNode(data)
-                <- parseAgentListCellGroup()
+                <- parseAgentListCellGroup(data ,traceModel: tracerModel)
                 <- parseFlineNode(data.baseInfo != nil ? 6: 0)
                 <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
@@ -513,11 +520,18 @@ import RxCocoa
         }
     }
 
-    func parseAgentListCellGroup() -> () -> [TableSectionNode]? {
+    fileprivate func getTraceModelFromTraceParams(traceParams: TracerParams) -> HouseRentTracer {
+        let result = HouseRentTracer(pageType: "old_detail", houseType: "old", cardType: "")
+        let maps = traceParams.paramsGetter([:])
+        result.rank = maps["rank"] as? String ?? "0"
+        return result
+    }
+
+    func parseAgentListCellGroup(_ data: ErshouHouseData, traceModel: HouseRentTracer? = nil) -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(),
                                    right: parseHeaderNode("推荐经纪人", adjustBottomSpace: -10))
         return parseNodeWrapper(preNode: header,
-                                wrapedNode: parseAgentListCell())
+                                wrapedNode: parseAgentListCell(data: data, traceModel: tracerModel))
     }
 
     fileprivate func openFloorPanDetailPage(
