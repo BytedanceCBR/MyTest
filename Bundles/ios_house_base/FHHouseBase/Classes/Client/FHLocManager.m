@@ -159,6 +159,8 @@
             [FHEnvContext saveCurrentUserDeaultCityName:model.data.currentCityName];
             
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
+            
+            
  
             if (model.data) {
                 [[FHHomeConfigManager sharedInstance] acceptConfigDataModel:model.data];

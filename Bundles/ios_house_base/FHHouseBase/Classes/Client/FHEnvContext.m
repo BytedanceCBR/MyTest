@@ -18,7 +18,7 @@
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong)NSMutableDictionary *commonRequestParam;
+@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
 @end
 
 @implementation FHEnvContext
@@ -161,17 +161,12 @@
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:YES];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (void)updateConfigCache
 {
     [self.generalBizConfig updataCurrentConfigCache];
-}
-
-- (FHConfigDataModel *)saveGeneralConfig
-{
-    
 }
 
 - (FHConfigDataModel *)getConfigFromCache

@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @property (nonatomic,strong)FHClient * client;
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
+@property (nonatomic, assign) BOOL isSameToLocCity;
 
 
 + (instancetype)sharedInstance;
