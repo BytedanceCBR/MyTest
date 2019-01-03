@@ -184,11 +184,7 @@
     self.hasValidateData = NO;
     self.viewModel.searchId = NULL;
     [self.tableView reloadData];
-    // 开始加载
-    if (needLoading) {
-        [self startLoading];
-    }
-
+    
     [self realRequestWithOffset:0];
 }
 
