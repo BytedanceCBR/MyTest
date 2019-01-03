@@ -18,12 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AMapLocationManager * locMgr;
 @property (nonatomic, strong) AMapLocationReGeocode * currentReGeocode;
 @property (nonatomic, strong) CLLocation * currentLocaton;
+@property (nonatomic, assign) BOOL isSameToLocCity;
 
 +(instancetype)sharedInstance;
 
 - (void)requestCurrentLocation:(BOOL)showAlert;
 
-- (void)checkUserLocationStatus
+- (void)checkUserLocationStatus;
 
 - (void)setUpLocManagerLocalInfo;
 
