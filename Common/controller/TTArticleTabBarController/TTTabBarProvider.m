@@ -118,14 +118,14 @@ static NSString *lastTabIdentifier;
         // add by zjing for test
         UIViewController *houseFindVC = nil;
 
-        if (1) {
-            houseFindVC = [[FHHouseFindListViewController alloc]init];
-
-        }else {
-           houseFindVC = [[HouseFindVC alloc] init];
-
-        }
-        return houseFindVC;
+//        if (1) {
+//            houseFindVC = [[FHHouseFindListViewController alloc]init];
+//
+//        }else {
+//           houseFindVC = [[HouseFindVC alloc] init];
+//
+//        }
+        return [[HouseFindVC alloc] init];
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
         ChatVC* vc = [[ChatVC alloc] init];
