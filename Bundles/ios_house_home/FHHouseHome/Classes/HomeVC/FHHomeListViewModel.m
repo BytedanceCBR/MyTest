@@ -95,7 +95,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
-
             StrongSelf;
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
@@ -370,6 +369,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 - (void)reloadHomeTableHouseSection:(NSArray <JSONModel *> *)models
 {
+    if (models.count == 0) {
+        return;
+    }
+    
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;

@@ -140,6 +140,7 @@ class CurrentCitySwitcher {
 
     // MARK: 城市列表配置，首页频道配置q
     fileprivate func doRequestGeneralConfig(cityId: Int?) {
+        
         requestGeneralConfig(cityId: "\(cityId ?? 122)", needCommonParams: false)
             .timeout(5, scheduler: MainScheduler.instance)
             .subscribe(onNext: { (response) in

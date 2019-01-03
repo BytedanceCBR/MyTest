@@ -61,6 +61,8 @@ func requestGeneralConfig(
     lng: Double? = nil,
     needCommonParams: Bool = true,
     params: [String: Any] = [:]) -> Observable<GeneralConfigResponse?> {
+    
+    
     var params: [String: Any] = params
     let block = TTNetworkManager.shareInstance()?.commonParamsblock
     let commonParams = block?()
@@ -102,7 +104,7 @@ func requestGeneralConfig(params: [String: Any], needCommonParams: Bool = true) 
 
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "\(EnvContext.networkConfig.host)/f100/api/config",
+                    url: "\(EnvContext.networkConfig.host)/f100/v2/api/config",
                     params: params,
                     method: "GET",
                     needCommonParams: needCommonParams)

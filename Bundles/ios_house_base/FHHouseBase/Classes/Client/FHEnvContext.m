@@ -74,9 +74,12 @@
     requestParam[@"app_name"] = @"f100";
     requestParam[@"source"] = @"app";
     
-    NSInteger cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (cityId > 0) {
-        [requestParam setValue:@(cityId) forKey:@"city_id"];
+    //获取city_id
+    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if (cityId > 0) {
+            [requestParam setValue:@(cityId) forKey:@"city_id"];
+        }
     }
     
     double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;

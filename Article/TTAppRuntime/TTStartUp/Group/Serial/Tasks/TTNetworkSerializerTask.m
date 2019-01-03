@@ -28,6 +28,7 @@
 #import "FHHomeConfigManager.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
+#import "FHEnvContext.h"
 
 @implementation TTNetworkSerializerTask
 
@@ -164,6 +165,8 @@
         }
 
         NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
+//        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];
         }];
