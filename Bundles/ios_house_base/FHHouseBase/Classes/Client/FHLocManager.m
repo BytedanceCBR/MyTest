@@ -156,6 +156,8 @@
             
             [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
             
+            [FHEnvContext saveCurrentUserDeaultCityName:model.data.currentCityName];
+            
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
  
             if (model.data) {

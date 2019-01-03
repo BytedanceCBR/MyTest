@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal;
 
-- (FHSearchConfigModel *)getSearchConfigFromLocal;
-
 @end
 
 NS_ASSUME_NONNULL_END

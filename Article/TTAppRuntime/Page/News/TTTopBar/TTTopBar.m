@@ -110,8 +110,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
      [self.backgroundImageView addSubview:_searchBarImageView];
      */
     
-//    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
-    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
+    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+//    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
     [self.backgroundImageView addSubview:_pageSearchPanel];
     
     /*

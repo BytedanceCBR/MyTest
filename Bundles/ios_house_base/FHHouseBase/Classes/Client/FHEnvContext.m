@@ -176,7 +176,12 @@
 
 - (FHConfigDataModel *)getConfigFromCache
 {
-    return self.generalBizConfig.configCache;
+    if (self.generalBizConfig.configCache) {
+        return self.generalBizConfig.configCache;
+    }else
+    {
+        return [self readConfigFromLocal];
+    }
 }
 
 - (FHConfigDataModel *)readConfigFromLocal
