@@ -53,7 +53,7 @@
             self.currentDictionary = configDict;
             [[FHEnvContext sharedInstance] updateConfigCache];
             [self.configDataReplay sendNext:dataModel];
-            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
+//            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
         }
     }
 }
@@ -66,7 +66,7 @@
             self.currentDictionary = configModel.toDictionary;
             [[FHEnvContext sharedInstance] updateConfigCache];
             [self.configDataReplay sendNext:configModel];
-            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
+//            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
         }
     }
 }

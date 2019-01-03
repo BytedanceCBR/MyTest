@@ -18,7 +18,7 @@
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong)NSMutableDictionary *commonRequestParam;
+@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
 @end
 
 @implementation FHEnvContext
@@ -59,6 +59,11 @@
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key
 {
     
+}
+
+- (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
 }
 
 - (void)updateRequestCommonParams
@@ -156,7 +161,7 @@
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:YES];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (void)updateConfigCache
@@ -166,27 +171,17 @@
 
 - (FHConfigDataModel *)getConfigFromCache
 {
-    return self.generalBizConfig.configCache;
+    if (self.generalBizConfig.configCache) {
+        return self.generalBizConfig.configCache;
+    }else
+    {
+        return [self readConfigFromLocal];
+    }
 }
 
 - (FHConfigDataModel *)readConfigFromLocal
 {
     return [self.generalBizConfig getGeneralConfigFromLocal];
-}
-
-- (FHSearchConfigModel *)getSearchConfigFromCache
-{
-    if (!self.generalBizConfig.configCache.filter) {
-        return [self readSearchConfigFromLocal];
-    }
-    return self.generalBizConfig.configCache.filter;
-}
-
-- (FHSearchConfigModel *)readSearchConfigFromLocal
-{
-    FHSearchConfigModel * searchConfig = [self.generalBizConfig getSearchConfigFromLocal];
-    self.generalBizConfig.configCache.filter = searchConfig;
-    return [self.generalBizConfig getSearchConfigFromLocal];
 }
 
 //获取当前保存的城市名称

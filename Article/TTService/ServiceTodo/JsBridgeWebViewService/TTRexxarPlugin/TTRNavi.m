@@ -18,7 +18,6 @@
 TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)closeWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSLog(@"param=%@",param);
     UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
     
     //close page回传上一个bVC
@@ -59,8 +58,6 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)openPageWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
-    NSLog(@"open page parma = %@",param);
-    
     if ([controller respondsToSelector:@selector(setupOpenPageTagStr:)] && param[@"tag"]) {
         [controller performSelector:@selector(setupOpenPageTagStr:) withObject:param[@"tag"]];
     }
@@ -198,7 +195,6 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 {
     NSNumber *numberH5 = param[@"h5"];
     NSNumber *numberShowClose = param[@"showClose"];
-    NSLog(@"show param H5 = %d, show close = %d",[numberH5 integerValue],[numberShowClose integerValue]);
 
     BOOL isWebControl = NO;
     if ([numberH5 respondsToSelector:@selector(boolValue)]) {

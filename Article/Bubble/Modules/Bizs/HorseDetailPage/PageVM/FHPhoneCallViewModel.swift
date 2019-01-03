@@ -10,13 +10,31 @@ import RxSwift
 import RxCocoa
 class FHPhoneCallViewModel: NSObject {
 
-    func bindCallBtn(btn: UIButton, disposeBag: DisposeBag) {
+//    func bindCallBtn(btn: UIButton,
+//                     rank: String,
+//                     traceModel: HouseRentTracer,
+//                     contact: FHHouseDetailContact,
+//                     disposeBag: DisposeBag) {
+        func bindCallBtn(btn: UIButton,
+                         disposeBag: DisposeBag) {
         btn.rx.tap
-            .debug("bindCallBtn")
             .bind { [weak self] () in
 
             }
             .disposed(by: disposeBag)
+    }
+
+    func traceCall(rank: String, contact: FHHouseDetailContact, traceModel: HouseRentTracer) {
+        let params = TracerParams.momoid() <|>
+            toTracerParams(traceModel.pageType, key: "page_type") <|>
+            toTracerParams(traceModel.elementFrom, key: "element_from") <|>
+            toTracerParams(traceModel.rank, key: "rank") <|>
+            toTracerParams(contact.realtorId ?? "be_null", key: "realthor_id") <|>
+            toTracerParams(traceModel.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams("detail_related", key: "realtor_position") <|>
+            toTracerParams(traceModel.enterFrom, key: "enter_from")
+        // 谢飞不打，我就不打has_auth
+        recordEvent(key: "click_call", params: params)
     }
 
     func callRealtorPhone(contactPhone: FHHouseDetailContact?,

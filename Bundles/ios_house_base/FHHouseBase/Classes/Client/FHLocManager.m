@@ -146,9 +146,21 @@
         }
         
         [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            
+            if (![model isKindOfClass:[FHConfigModel class]]) {
+                
+                return ;
+            }
+            
+            [[FHEnvContext sharedInstance] saveGeneralConfig:model];
+            
             [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
             
+            [FHEnvContext saveCurrentUserDeaultCityName:model.data.currentCityName];
+            
             [[FHEnvContext sharedInstance] updateRequestCommonParams];
+            
+            
  
             if (model.data) {
                 [[FHHomeConfigManager sharedInstance] acceptConfigDataModel:model.data];

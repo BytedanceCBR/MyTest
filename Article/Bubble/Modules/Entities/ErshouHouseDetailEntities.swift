@@ -125,7 +125,7 @@ struct ErshouHouseData: Mappable {
     var logPB: [String: Any]?
     var shareInfo: ShareInfo?
     var pricingPerSqmValue: Int = 1
-    
+    var recommendedRealtors: [FHHouseDetailContact]?
     var contact: FHHouseDetailContact?
     var status: Int? // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
     
@@ -144,6 +144,7 @@ struct ErshouHouseData: Mappable {
         baseInfo <- map["base_info"]
         neighborhoodInfo <- map["neighborhood_info"]
         contact <- map["contact"]
+        recommendedRealtors <- map["recommended_realtors"]
         priceTrend <- map["price_trend"]
         housePriceRange <- map["house_price_range"]
         housePriceRank <- map["house_pricing_rank"]
