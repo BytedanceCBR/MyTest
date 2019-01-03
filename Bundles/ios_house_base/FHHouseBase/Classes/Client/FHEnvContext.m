@@ -18,7 +18,7 @@
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong)NSMutableDictionary *commonRequestParam;
+@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
 @end
 
 @implementation FHEnvContext
@@ -61,6 +61,11 @@
     
 }
 
+- (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
 - (void)updateRequestCommonParams
 {
     //初始化公共请求参数
@@ -74,9 +79,12 @@
     requestParam[@"app_name"] = @"f100";
     requestParam[@"source"] = @"app";
     
-    NSInteger cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (cityId > 0) {
-        [requestParam setValue:@(cityId) forKey:@"city_id"];
+    //获取city_id
+    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if (cityId > 0) {
+            [requestParam setValue:@(cityId) forKey:@"city_id"];
+        }
     }
     
     double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
@@ -153,7 +161,7 @@
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:YES];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (void)updateConfigCache
@@ -163,27 +171,17 @@
 
 - (FHConfigDataModel *)getConfigFromCache
 {
-    return self.generalBizConfig.configCache;
+    if (self.generalBizConfig.configCache) {
+        return self.generalBizConfig.configCache;
+    }else
+    {
+        return [self readConfigFromLocal];
+    }
 }
 
 - (FHConfigDataModel *)readConfigFromLocal
 {
     return [self.generalBizConfig getGeneralConfigFromLocal];
-}
-
-- (FHSearchConfigModel *)getSearchConfigFromCache
-{
-    if (!self.generalBizConfig.configCache.filter) {
-        return [self readSearchConfigFromLocal];
-    }
-    return self.generalBizConfig.configCache.filter;
-}
-
-- (FHSearchConfigModel *)readSearchConfigFromLocal
-{
-    FHSearchConfigModel * searchConfig = [self.generalBizConfig getSearchConfigFromLocal];
-    self.generalBizConfig.configCache.filter = searchConfig;
-    return [self.generalBizConfig getSearchConfigFromLocal];
 }
 
 //获取当前保存的城市名称

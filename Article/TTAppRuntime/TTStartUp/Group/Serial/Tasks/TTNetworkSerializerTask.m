@@ -28,6 +28,7 @@
 #import "FHHomeConfigManager.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
+#import "FHEnvContext.h"
 
 @implementation TTNetworkSerializerTask
 
@@ -152,10 +153,9 @@
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         
         // add by zjing f_city_name
-        FHConfigDataModel *configModel = [[FHHomeConfigManager sharedInstance] currentDataModel];
+        FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         NSString *cityName = configModel.currentCityName;
         if (cityName.length > 0) {
-            
             [commonParams setValue:cityName forKey:@"f_city_name"];
         }
 
@@ -163,7 +163,9 @@
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
         }
 
-        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
+//        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
+        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];
         }];

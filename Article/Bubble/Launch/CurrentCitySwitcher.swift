@@ -140,20 +140,21 @@ class CurrentCitySwitcher {
 
     // MARK: 城市列表配置，首页频道配置q
     fileprivate func doRequestGeneralConfig(cityId: Int?) {
-        requestGeneralConfig(cityId: "\(cityId ?? 122)", needCommonParams: false)
-            .timeout(5, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { (response) in
-                self.generalConfigRsponse = response
-                if let response = response {
-                    self.state.accept(.onFinishedRequestGeneralConfig(response))
-                } else {
-                    self.state.accept(.onError(nil))
-                }
-                self.generalConfigRsponse = response
-            }, onError: { (error) in
-                self.state.accept(.onError(error))
-            })
-            .disposed(by: requestBag)
+        
+//        requestGeneralConfig(cityId: "\(cityId ?? 122)", needCommonParams: false)
+//            .timeout(5, scheduler: MainScheduler.instance)
+//            .subscribe(onNext: { (response) in
+//                self.generalConfigRsponse = response
+//                if let response = response {
+//                    self.state.accept(.onFinishedRequestGeneralConfig(response))
+//                } else {
+//                    self.state.accept(.onError(nil))
+//                }
+//                self.generalConfigRsponse = response
+//            }, onError: { (error) in
+//                self.state.accept(.onError(error))
+//            })
+//            .disposed(by: requestBag)
     }
 
     // MARK: 搜索条件配置

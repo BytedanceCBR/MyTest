@@ -31,6 +31,7 @@
 #import <TTHttpTask.h>
 #import <FHRentArticleListNotifyBarView.h>
 #import "UIViewController+Track.h"
+#import "FHEnvContext.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kFilterBarHeight 44
@@ -122,7 +123,13 @@
 
 -(void)setupHeader
 {
-    NSDictionary *dict = [[[FHHouseBridgeManager sharedInstance] envContextBridge] appConfigRentOpData];
+//    NSDictionary *dict = [[[FHHouseBridgeManager sharedInstance] envContextBridge] appConfigRentOpData];
+    
+    NSDictionary *dict = nil;
+    if ([[[FHEnvContext sharedInstance] getConfigFromCache].rentOpData respondsToSelector:@selector(toDictionary)]) {
+        dict =  [[FHEnvContext sharedInstance] getConfigFromCache].rentOpData.toDictionary;
+    }
+    
     _rentModel = [[FHConfigDataRentOpDataModel alloc] initWithDictionary:dict error:nil];
     
     _iconsHeaderView =  [[FHSpringboardView alloc] initWithRowCount:MAX_ICON_COUNT];

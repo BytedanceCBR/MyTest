@@ -256,7 +256,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opData2 ;
-@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
+//@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataEntryInfoModel> *entryInfo;
@@ -269,6 +269,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataBannersModel> *banners;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataCityStatsModel> *cityStats;
 @property (nonatomic, copy , nullable) NSString *userPhone;
+
+
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabCourtFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *neighborhoodFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabRentFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *filter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *houseFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *neighborhoodFilterOrder;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *saleHistoryFilter;
+@property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilterOrder;
 
 @end
 

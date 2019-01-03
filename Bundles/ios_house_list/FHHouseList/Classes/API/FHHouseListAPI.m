@@ -66,7 +66,6 @@
     }
     paramDic[@"exclude_id[]"] = houseId ?: @"";
     paramDic[@"rent_id"] = houseId ?: @"";
-    paramDic[@"neighborhood_id"] = neighborhoodId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeRentHouse);
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);

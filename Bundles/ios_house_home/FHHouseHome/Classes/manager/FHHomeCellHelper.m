@@ -458,7 +458,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 itemView.titleLabel.text = itemModel.title;
             }
             [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 12 : 8);
+                make.top.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 10 : 8);
             }];
         }
         
@@ -478,7 +478,7 @@ static NSMutableArray  * _Nullable identifierArr;
             }
             
             [itemView.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(-6);
+                make.bottom.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? -10 : -8);
             }];
         }
         itemView.backgroundColor = [UIColor whiteColor];

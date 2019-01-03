@@ -18,7 +18,6 @@
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHPlaceHolderCell.h"
-//#import "FHHouseListViewController.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
 #import <UIScrollView+Refresh.h>
@@ -31,7 +30,6 @@
 
 @property(nonatomic , strong) FHErrorView *maskView;
 
-//@property(nonatomic, weak) FHHouseListViewController *listVC;
 @property(nonatomic, weak) UITableView *tableView;
 
 @property(nonatomic , strong) NSMutableArray *houseList;

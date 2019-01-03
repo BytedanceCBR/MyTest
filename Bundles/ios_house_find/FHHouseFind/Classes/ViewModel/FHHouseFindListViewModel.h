@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindListViewModel : NSObject
 
+-(instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+
 @end
 
 NS_ASSUME_NONNULL_END

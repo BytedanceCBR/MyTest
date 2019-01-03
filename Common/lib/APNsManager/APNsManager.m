@@ -182,7 +182,7 @@ static APNsManager *_sharedManager = nil;
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
                                                    @"element_from": @"be_null",
-                                                   @"runk": @"be_null",
+                                                   @"rank": @"be_null",
                                                    @"card_type": @"be_null",
                                                    @"origin_from": @"push",
                                                    @"origin_search_id": @"be_null"

@@ -49,25 +49,25 @@ class GeneralBizConfig {
     init(locationManager: LocationManager) {
         
         self.locationManager = locationManager
-        // 监控城市列表选择
-        currentSelectCityId
-            .skip(1)
-            //            .ifEmpty(default: 122)
-            .filter { $0 != nil }
-            .distinctUntilChanged()
-            .subscribe(onNext: { [unowned self] (cityId) in
-                if let item = self.cityItemById()(cityId) {
-                    self.cityHistoryDataSource.addHistory(item: item, maxSaveCount: 10)
-                    //TODO leo
-                    //                    if let generalConfig = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value {
-                    //                        if let currentCityId = generalConfig.currentCityId, Int(currentCityId) != cityId {
-                    //                            self.fetchConfiguration()
-                    //                        }
-                    //                    }
-                    EnvContext.shared.client.currentCitySwitcher.onSetCurrentCityId(cityId: cityId)
-                }
-            })
-            .disposed(by: disposeBag)
+//        // 监控城市列表选择
+//        currentSelectCityId
+//            .skip(1)
+//            //            .ifEmpty(default: 122)
+//            .filter { $0 != nil }
+//            .distinctUntilChanged()
+//            .subscribe(onNext: { [unowned self] (cityId) in
+//                if let item = self.cityItemById()(cityId) {
+//                    self.cityHistoryDataSource.addHistory(item: item, maxSaveCount: 10)
+//                    //TODO leo
+//                    //                    if let generalConfig = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value {
+//                    //                        if let currentCityId = generalConfig.currentCityId, Int(currentCityId) != cityId {
+//                    //                            self.fetchConfiguration()
+//                    //                        }
+//                    //                    }
+//                    EnvContext.shared.client.currentCitySwitcher.onSetCurrentCityId(cityId: cityId)
+//                }
+//            })
+//            .disposed(by: disposeBag)
     }
     
     func load() {
@@ -134,7 +134,7 @@ class GeneralBizConfig {
     }
     
     func fetchConfiguration() {
-//        return
+        return
         disposeBagConfig = DisposeBag()
         requestGeneralConfig(cityId: nil,
                              gaodeCityId: locationManager?.currentCity.value?.citycode,

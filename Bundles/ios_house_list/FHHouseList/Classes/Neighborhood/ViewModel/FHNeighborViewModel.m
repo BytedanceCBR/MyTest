@@ -89,6 +89,55 @@
     [self updateTableViewWithMoreData:self.lastHasMore];
 }
 
+-(void)jump2DetailPage:(NSIndexPath *)indexPath {
+    if (indexPath.row >= self.houseList.count) {
+        return;
+    }
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    if (cellModel) {
+        NSString *origin_from = self.listController.tracerDict[@"origin_from"];
+        NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+        NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:self.listController.houseType];
+        NSString *page_type = self.listController.tracerDict[@"category_name"];
+        NSString *urlStr = NULL;
+        if (self.listController.houseType == FHHouseTypeSecondHandHouse) {
+            // 二手房
+            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+            if (theModel) {
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
+            }
+        } else if (self.listController.houseType == FHHouseTypeRentHouse) {
+            // 租房
+            FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+            if (theModel) {
+                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
+            }
+        } else {
+            urlStr = @"";
+        }
+        if (urlStr.length > 0) {
+            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"card_type"] = @"left_pic";
+            traceParam[@"enter_from"] = page_type ? : @"be_null";
+            traceParam[@"element_from"] = @"be_null";
+            traceParam[@"log_pb"] = [cellModel logPb];
+            traceParam[@"origin_from"] = origin_from ? : @"be_null";
+            traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
+            traceParam[@"search_id"] = self.searchId;
+            traceParam[@"rank"] = @(indexPath.row);
+            
+            NSDictionary *dict = @{@"house_type":@(self.listController.houseType) ,
+                                   @"tracer": traceParam
+                                   };
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -127,7 +176,6 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"----------:willDisplayCell : %ld",indexPath.row);
     if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
         NSInteger rank = indexPath.row - 1;
         NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
@@ -174,6 +222,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self jump2DetailPage:indexPath];
 }
 
 -(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
