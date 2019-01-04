@@ -92,3 +92,4 @@
 "rent_main"  =  "FHHouseRentHomeVC";
 
 "webview_oc"           = "FHWebviewViewController";
+"city_list"            = "FHCityListViewController";
