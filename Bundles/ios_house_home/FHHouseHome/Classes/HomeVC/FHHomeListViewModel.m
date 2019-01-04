@@ -109,20 +109,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
             
-             NSString *urlStr = @"http://10.1.10.250:8080/test";
-             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
-             NSString *unencodedString = urlStr;
-             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-             (CFStringRef)unencodedString,
-             NULL,
-             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-             kCFStringEncodingUTF8));
-             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-             NSURL *url = [TTURLUtils URLWithString:urlStr];
-             [[TTRoute sharedRoute] openURLByPushViewController:url];
-             return ;
-            
+//             NSString *urlStr = @"http://10.1.10.250:8080/test";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+//             NSString *unencodedString = urlStr;
+//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//             (CFStringRef)unencodedString,
+//             NULL,
+//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//             kCFStringEncodingUTF8));
+//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+//             NSURL *url = [TTURLUtils URLWithString:urlStr];
+//             [[TTRoute sharedRoute] openURLByPushViewController:url];
+//             return ;
+//            
             
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
