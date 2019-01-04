@@ -11,6 +11,8 @@
 #import "UIFont+House.h"
 #import "FHEnvContext.h"
 #import "ReactiveObjC.h"
+#import "FHHouseType.h"
+#import "TTRoute.h"
 
 @interface FHHomeSearchPanelView()
 {
@@ -106,6 +108,22 @@
         make.height.width.mas_equalTo(10);
     }];
     
+}
+
+- (void)updateCountryLabelLayout:(NSString *)labelText
+{
+    [self.countryLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.centerY.equalTo(self);
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(labelText.length * 14);
+    }];
+    
+//    [self.triangleImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.countryLabel.mas_right).offset(8);
+//        make.centerY.equalTo(self);
+//        make.height.width.mas_equalTo(10);
+//    }];
 }
 
 - (void)setupVerticalLine
@@ -217,11 +235,32 @@
 
     self.searchBtn = [UIButton new];
     [self addSubview:self.searchBtn];
-
+    [self.searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.verticalLineView.mas_right);
         make.top.bottom.right.equalTo(self);
     }];
+}
+
+- (void)searchBtnClick
+{
+    
+    NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+    tracerParams[@"enter_type"] = @"click";
+    tracerParams[@"element_from"] = @"maintab_search";
+    tracerParams[@"maintab"] = @"enter_from";
+    tracerParams[@"be_null"] = @"log_pb";
+    tracerParams[@"maintab_search"] = @"origin_from";
+
+    
+    NSMutableDictionary *infos = [NSMutableDictionary new];
+    infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    infos[@"tracer"] = tracerParams;
+    infos[@"from_home"] = @(1);
+
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://sug_list"] userInfo:userInfo];
+
 }
 
 - (void)setUpRollScreenTimer

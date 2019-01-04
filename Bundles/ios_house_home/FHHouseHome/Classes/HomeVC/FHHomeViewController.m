@@ -16,6 +16,7 @@
 #import "ToastManager.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
+#import "FHLocManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -63,7 +64,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     if (!configModel) {
         self.mainTableView.hidden = YES;
         [self tt_startUpdate];
@@ -99,6 +100,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
+    
+//    [[FHLocManager sharedInstance] showCitySwitchAlert:@"北京"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -172,7 +175,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (BOOL)tt_hasValidateData
 {
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     return configModel != nil;
 }
 

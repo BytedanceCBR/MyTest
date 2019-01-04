@@ -613,6 +613,9 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 params["tracerParams"] = tracePramas
                 params["tracer"] = tracePramas.paramsGetter([:])
                 
+                let bottomBarBinder = self.bindBottomView(params: TracerParams.momoid())
+                params["bottomBarBinder"] = bottomBarBinder
+                
                 let userInfo = TTRouteUserInfo(info: params)
                 TTRoute.shared().openURL(byPushViewController: theUrl,userInfo:userInfo)
             }

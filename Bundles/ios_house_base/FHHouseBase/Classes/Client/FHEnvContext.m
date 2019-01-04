@@ -14,6 +14,7 @@
 #import "TTInstallIDManager.h"
 #import "BDAccountConfiguration.h"
 #import "BDAccount+Configuration.h"
+#import "FHURLSettings.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -25,10 +26,11 @@
 
 + (instancetype)sharedInstance
 {
-    static id manager = nil;
+    static FHEnvContext * manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
+        manager.configDataReplay = [RACReplaySubject subject];
     });
     
     return manager;
@@ -137,7 +139,7 @@
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
-        conf.domain = [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance baseUrl];
+        conf.domain = [FHURLSettings baseURL];
         conf.getDeviceIdBlock = ^NSString * _Nonnull{
             return deviceID;
         };
@@ -157,16 +159,32 @@
     }];
 }
 
+- (void)acceptConfigDictionary:(NSDictionary *)configDict
+{
+    if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
+        FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
+        self.generalBizConfig.configCache = dataModel;
+        [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
+        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+        [self.configDataReplay sendNext:dataModel];
+    }
+}
+
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
+{
+    if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
+        self.generalBizConfig.configCache = configModel;
+        [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
+        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+        [self.configDataReplay sendNext:configModel];
+    }
+}
+
 - (void)startLocation
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
     [[FHLocManager sharedInstance] requestCurrentLocation:NO];
-}
-
-- (void)updateConfigCache
-{
-    [self.generalBizConfig updataCurrentConfigCache];
 }
 
 - (FHConfigDataModel *)getConfigFromCache

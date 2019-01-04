@@ -31,11 +31,13 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
 }
 
 + (NSString*)versionName{
-    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [[NSBundle  mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 + (NSString*)buildVersion{
-    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    //    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    
     if (buildVersion) {
         return [buildVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
     }

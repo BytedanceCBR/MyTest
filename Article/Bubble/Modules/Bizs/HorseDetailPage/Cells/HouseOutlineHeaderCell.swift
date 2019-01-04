@@ -66,7 +66,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
             .subscribe(onNext: {[weak self] (void) in
                 if let urlStr = self?.reportUrl {
                     if let ershouHouseData = self?.ershouHouseData,
-                        let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+                    let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
 
                         var traceParam = EnvContext.shared.homePageParams <|>
                         toTracerParams("old_detail", key: "page_type")

@@ -341,7 +341,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     fileprivate func jumpToReportPage(url: String) {
         if let jumpUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
-            let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+            let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
             
             let tp = EnvContext.shared.homePageParams <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
