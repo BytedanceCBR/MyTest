@@ -993,7 +993,7 @@ PODS:
     - TTPlatformBaseLib
     - TTTracker
     - TTUIWidget
-  - TTPushManager (0.0.10)
+  - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1):
     - TTNetworkManager (< 3)
     - TTPlatformBaseLib/TTURLDomainHelper
@@ -1225,7 +1225,7 @@ DEPENDENCIES:
   - Heimdallr/Utility (= 0.4.21)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
+  - ios_house_filter (from `../../lab/ios_house_filter`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0)
   - libextobjc (= 0.4.1)
@@ -1297,7 +1297,7 @@ DEPENDENCIES:
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
-  - TTPushManager (= 0.0.10)
+  - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1)
   - TTReachability (= 0.1.8)
   - TTReporter (= 0.2.1)
@@ -1376,8 +1376,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/develop
-    :git: git@code.byted.org:fproject/ios_house_filter.git
+    :path: ../../lab/ios_house_filter
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1430,9 +1429,6 @@ CHECKOUT OPTIONS:
   BDTBasePlayer:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
-  ios_house_filter:
-    :commit: 214eb13d6c5ed01bdbfcccf2ec26b28cab11cfc7
-    :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1489,7 +1485,7 @@ SPEC CHECKSUMS:
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
-  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
+  ios_house_filter: 4a57f6aaac57b956747bcb0df24da13af5ff5b89
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: 978886965ffa3f719042c14840dbf65513b9c541
   libextobjc: 9ab0bd8ba6bc7a947067ad233fd9cd3a5b7a817a
@@ -1550,7 +1546,7 @@ SPEC CHECKSUMS:
   TTPlayerSDK: ddf454156e94681632063317c1bd68a5e8369f2e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
-  TTPushManager: 708ba9dcc3849570f2b02cd04fc8aeeba1a562c0
+  TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
   TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
@@ -1583,6 +1579,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: b1b36d69df8c2a3da889e513d54f32d3519acbe6
+PODFILE CHECKSUM: 98b48d64d48b908103e26fe03ff40334967880e9
 
 COCOAPODS: 1.4.0
