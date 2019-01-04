@@ -10,29 +10,41 @@ import RxSwift
 import RxCocoa
 class FHPhoneCallViewModel: NSObject {
 
-//    func bindCallBtn(btn: UIButton,
-//                     rank: String,
-//                     traceModel: HouseRentTracer,
-//                     contact: FHHouseDetailContact,
-//                     disposeBag: DisposeBag) {
-        func bindCallBtn(btn: UIButton,
-                         disposeBag: DisposeBag) {
+    func bindCallBtn(btn: UIButton,
+                     rank: String,
+                     houseId: Int64,
+                     houseType: HouseType,
+                     traceModel: HouseRentTracer?,
+                     contact: FHHouseDetailContact,
+                     disposeBag: DisposeBag) {
         btn.rx.tap
             .bind { [weak self] () in
+                self?.traceCall(rank: rank,
+                                contact: contact,
+                                traceModel: traceModel)
+                let searchId = traceModel?.searchId ?? "be_null"
 
+                self?.callRealtorPhone(contactPhone: contact,
+                                       houseId: houseId,
+                                       houseType: houseType,
+                                       searchId: searchId,
+                                       imprId: "",
+                                       disposeBag: disposeBag)
             }
             .disposed(by: disposeBag)
     }
 
-    func traceCall(rank: String, contact: FHHouseDetailContact, traceModel: HouseRentTracer) {
+    func traceCall(rank: String,
+                   contact: FHHouseDetailContact,
+                   traceModel: HouseRentTracer?) {
         let params = TracerParams.momoid() <|>
-            toTracerParams(traceModel.pageType, key: "page_type") <|>
-            toTracerParams(traceModel.elementFrom, key: "element_from") <|>
-            toTracerParams(traceModel.rank, key: "rank") <|>
+            toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
+            toTracerParams(traceModel?.elementFrom ?? "be_null", key: "element_from") <|>
+            toTracerParams(traceModel?.rank ?? "be_null", key: "rank") <|>
             toTracerParams(contact.realtorId ?? "be_null", key: "realthor_id") <|>
-            toTracerParams(traceModel.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams(traceModel?.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams("detail_related", key: "realtor_position") <|>
-            toTracerParams(traceModel.enterFrom, key: "enter_from")
+            toTracerParams(traceModel?.enterFrom ?? "be_null", key: "enter_from")
         // 谢飞不打，我就不打has_auth
         recordEvent(key: "click_call", params: params)
     }
