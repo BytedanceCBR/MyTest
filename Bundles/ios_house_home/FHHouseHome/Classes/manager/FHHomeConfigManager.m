@@ -83,9 +83,7 @@
     self.isNeedTriggerPullDownUpdateFowFindHouse = NO;
     if ([categoryStartName isEqualToString:@"f_find_house"] ) {
         if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(currentSelectCategoryName)]) {
-            if (![[[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] currentSelectCategoryName] isEqualToString:@"f_find_house"]) {
-                self.isNeedTriggerPullDownUpdateFowFindHouse = YES;
-            }
+            self.isNeedTriggerPullDownUpdateFowFindHouse = YES;
         }
     }else
     {

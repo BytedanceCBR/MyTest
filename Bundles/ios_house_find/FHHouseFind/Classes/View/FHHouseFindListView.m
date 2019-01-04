@@ -49,17 +49,16 @@
     return self;
 }
 
-- (void)updateDataWithOpenUrl:(NSString *)openUrl
+- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl
 {
-    if ([_openUrl isEqualToString:openUrl]) {
-        return;
-    }
     _openUrl = openUrl;
+    _houseType = houseType;
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     [self setupViewModelBlock];
     [self resetFilter:self.paramObj];
     [self setupConstraints];
+    [self.houseFilterBridge trigerConditionChanged];
 }
 
 - (void)initFilter

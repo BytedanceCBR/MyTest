@@ -11,6 +11,7 @@ class HouseRentTracer {
     var logPb: Any?
     var pageType: String
     var houseType: String
+    var houseId: Int64
     var stayPageParams: TracerParams?
     var cardType: String
     var enterFrom: String
@@ -39,6 +40,7 @@ class HouseRentTracer {
         self.searchId = "be_null"
         self.groupId = "be_null"
         self.originFrom = "be_null"
+        self.houseId = -1
     }
 
     func recordGoDetail() {

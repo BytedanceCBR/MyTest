@@ -34,10 +34,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <FHHomeHouseDataItemsModel *> *>* itemsDataCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
-
+@property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
+@property (nonatomic, assign) NSTimeInterval stayTime;
 @end
 
 @implementation FHHomeListViewModel
@@ -122,8 +123,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 //             NSURL *url = [TTURLUtils URLWithString:urlStr];
 //             [[TTRoute sharedRoute] openURLByPushViewController:url];
 //             return ;
-//            
-            
+//
+            [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
+
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
@@ -138,12 +140,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
                 
-                [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
                 self.enterType = @"switch";
-
+                
                 if (modelsCache != nil && kIsNSArray(modelsCache) && modelsCache.count !=0) {
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
-                    [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
+                    self.stayTime = [self getCurrentTime];
+                    [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
                 }else
                 {
                     [self reloadHomeTableHeaderSection];
@@ -160,6 +162,32 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     return self;
 }
 
+-(NSString *)pageTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+- (NSTimeInterval)getCurrentTime
+{
+    return  [[NSDate date] timeIntervalSince1970];
+}
+
 - (NSString *)getCurrentHouseTypeChacheKey
 {
     return [self matchHouseString:self.currentHouseType];
@@ -169,6 +197,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     self.itemsDataCache = [NSMutableDictionary new];
     self.itemsSearchIdCache = [NSMutableDictionary new];
+    self.originSearchIdCache = [NSMutableDictionary new];
     self.isItemsHasMoreCache = [NSMutableDictionary new];
     self.itemsTraceCache = [NSMutableDictionary new];
 }
@@ -217,6 +246,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         
         if (kIsNSString(cahceKey)) {
+            self.originSearchIdCache[cahceKey] = model.data.searchId;
+        }
+        
+        
+        if (kIsNSString(cahceKey)) {
             self.itemsSearchIdCache[cahceKey] = model.data.searchId;
         }
         
@@ -236,7 +270,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.hasShowedData = YES;
         
-        [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:model.data.searchId];
+        [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:model.data.searchId];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
@@ -245,6 +279,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        
+        self.stayTime = [self getCurrentTime];
     }];
 }
 
@@ -286,6 +322,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
         }
         
+        if (kIsNSString(cahceKey) && pullType == FHHomePullTriggerTypePullDown) {
+            self.originSearchIdCache[cahceKey] = model.data.searchId;
+        }
+        
         if (kIsNSString(cahceKey) && model.data.searchId) {
             self.itemsSearchIdCache[cacheKey] = model.data.searchId;
         }
@@ -319,6 +359,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     [self.itemsDataCache removeAllObjects];
     [self.itemsSearchIdCache removeAllObjects];
+    [self.originSearchIdCache removeAllObjects];
     [self.isItemsHasMoreCache removeAllObjects];
 }
 
@@ -451,17 +492,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     tracerDict[@"enter_type"] = self.enterType ? : @"be_null";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.itemsSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
-    tracerDict[@"origin_from"] = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
-    tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+    tracerDict[@"origin_from"] = [self.dataSource pageTypeString]  ? : @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchIdCache[[self matchHouseString:self.currentHouseType]] ? : @"be_null";
     
     
     if (traceType == FHHomeCategoryTraceTypeEnter) {
         [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     }else if (traceType == FHHomeCategoryTraceTypeStay)
     {
-        NSTimeInterval duration = self.homeViewController.ttTrackStayTime * 1000.0;
+        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
         if (duration) {
-            [tracerDict setValue:@(duration) forKey:@"stay_time"];
+            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
         }
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }else if (traceType == FHHomeCategoryTraceTypeRefresh)

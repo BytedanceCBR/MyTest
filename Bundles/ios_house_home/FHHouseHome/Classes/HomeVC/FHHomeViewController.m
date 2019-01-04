@@ -125,6 +125,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 //    [[FHLocManager sharedInstance] showCitySwitchAlert:@"北京"];
 }
 
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -134,7 +135,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)pullAndRefresh
 {
-    [self.mainTableView triggerPullDown];
+    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
+    }else
+    {
+        [self.mainTableView triggerPullDown];
+    }
+    
 //    detailPageViewModel?.reloadFromType = reloadFromType
 //    tableView.triggerPullDown()
 }
@@ -209,5 +216,16 @@ static CGFloat const kSectionHeaderHeight = 38;
  // Pass the selected object to the new view controller.
  }
  */
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
 
 @end

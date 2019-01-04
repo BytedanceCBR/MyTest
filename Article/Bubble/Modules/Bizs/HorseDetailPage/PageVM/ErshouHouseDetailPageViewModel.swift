@@ -194,6 +194,7 @@ import RxCocoa
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         self.houseId = houseId
+        self.tracerModel?.houseId = houseId
         if showLoading {
             self.showMessageAlert?("正在加载")
         }

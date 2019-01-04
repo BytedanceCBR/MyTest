@@ -60,7 +60,7 @@ fileprivate class ExpandItemView: UIView {
 
 }
 
-fileprivate class ItemView: UIView {
+fileprivate class ItemView: UIControl {
 
     lazy var avator: UIImageView = {
         let re = UIImageView()
@@ -178,7 +178,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     lazy var arrowIcon: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "arrowicon-feed-2")
+        re.image = UIImage(named: "defaultAvatar")
         return re
     }()
 
@@ -205,7 +205,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     weak var photoBrowser: PhotoBrowser?
 
-    var headerImages: [FHRentDetailResponseDataHouseImageModel] = []
+    fileprivate var headerImages: [FHImageItem] = []
     open override class var identifier: String {
         return "FHAgentListCell"
     }
@@ -292,13 +292,15 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
     }
 
     func updateByExpandingState() {
-        if self.isExpanding {
-            self.containerView.snp.updateConstraints { (make) in
-                make.height.equalTo(66 * self.itemCount)
-            }
-        } else {
-            self.containerView.snp.updateConstraints { (make) in
-                make.height.equalTo(66  * 3)
+        if self.itemCount > 3 {
+            if self.isExpanding {
+                self.containerView.snp.updateConstraints { (make) in
+                    make.height.equalTo(66 * self.itemCount)
+                }
+            } else {
+                self.containerView.snp.updateConstraints { (make) in
+                    make.height.equalTo(66  * 3)
+                }
             }
         }
     }
@@ -335,7 +337,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
             numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 30
             browser.plugins.append(numberPageControlPlugin)
             browser.cellPlugins = [RawImageButtonPlugin()]
-            let plugin = FHPhotoBrowserShowAllPlugin(titles: headerImages.map { $0.name ?? "" } )
+            let plugin = FHPhotoBrowserShowAllPlugin(titles: headerImages.map { $0.title ?? "" } )
             plugin.overlayView.imageNameLabel.isHidden = false
             browser.plugins.append(plugin)
 
@@ -352,6 +354,24 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
     }
 
+    func openPhotoByContact(contact: FHHouseDetailContact) -> () -> Void {
+        return { [weak self] in
+            var headers:[FHImageItem] = []
+            if (contact.businessLicense?.isEmpty ?? true) == false,
+                let businessLicense = contact.businessLicense {
+                let item = FHImageItem(url: businessLicense, title: "营业执照")
+                headers.append(item)
+            }
+            if (contact.certificate?.isEmpty ?? true) == false,
+                let certificate = contact.certificate {
+                let item = FHImageItem(url: certificate, title: "从业人员信息卡")
+                headers.append(item)
+            }
+            self?.headerImages = headers
+            self?.openPhoto()
+        }
+    }
+
     fileprivate func traceRealtorClickMore() {
         if let traceModel = traceModel {
             let params = TracerParams.momoid() <|>
@@ -365,7 +385,20 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
 }
 
+fileprivate class FHImageItem {
+    var url: String
+    var title: String
+    init(url: String, title: String) {
+        self.url = url
+        self.title = title
+    }
+}
+
 func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> () -> TableSectionNode? {
+
+    if data.recommendedRealtors?.count == 0 {
+        return { nil }
+    }
     let cellRender = curry(fillAgentListCell)(data)(traceModel)
     let params = TracerParams.momoid() <|>
         EnvContext.shared.homePageParams <|>
@@ -384,42 +417,67 @@ func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> 
     }
 }
 
-func fillAgentListCell(cdata: ErshouHouseData, traceModel: HouseRentTracer?, cell: BaseUITableViewCell) {
+func fillAgentListCell(
+    data: ErshouHouseData,
+    traceModel: HouseRentTracer?,
+    cell: BaseUITableViewCell) {
     guard let theCell = cell as? FHAgentListCell else {
         return
     }
+
+    let items = data.recommendedRealtors?.take(5).enumerated()
+        .map({ (e) -> ItemView  in
+            let (offset, contact) = e
+            let itemView = ItemView(frame: CGRect.zero)
+            itemView.name.text = contact.realtorName
+            itemView.agency.text = contact.agencyName
+            if let avatarUrl = contact.avatarUrl {
+                itemView.avator.bd_setImage(with: URL(string: avatarUrl),
+                                            placeholder: UIImage(named: "defaultAvatar"))
+            }
+            itemView.licenceIcon.isHidden = !shouldShowContact(contact: contact)
+            //点击电话
+            theCell.phoneCallViewModel.bindCallBtn(btn: itemView.callBtn,
+                                                   rank: "\(offset)",
+                                                   houseId: traceModel?.houseId ?? -1,
+                                                   houseType: .secondHandHouse,
+                                                   traceModel: traceModel,
+                                                   contact: contact,
+                                                   disposeBag: theCell.disposeBag)
+            //预览营业执照
+            itemView.licenceIcon.rx.tap
+                .bind(onNext: theCell.openPhotoByContact(contact: contact))
+                .disposed(by: theCell.disposeBag)
+            //页面跳转
+            itemView.rx.controlEvent(.touchUpInside)
+                .debug()
+                .bind {
+                    //TODO openUrl
+                }
+                .disposed(by: theCell.disposeBag)
+            return itemView
+        })
+
     theCell.traceModel = traceModel
-    let itemView = ItemView(frame: CGRect.zero)
-    itemView.name.text = "李强"
-    itemView.agency.text = "链家"
-    theCell.phoneCallViewModel.bindCallBtn(btn: itemView.callBtn,
-                                           disposeBag: theCell.disposeBag)
-    let itemView1 = ItemView(frame: CGRect.zero)
-    itemView1.name.text = "李强"
-    itemView1.agency.text = "链家"
-    theCell.phoneCallViewModel.bindCallBtn(btn: itemView1.callBtn,
-                                           disposeBag: theCell.disposeBag)
+    if let items = items, items.count > 0 {
+        theCell.addItems(items: items)
+        theCell.updateByExpandingState()
+    }
+}
 
-    let itemView2 = ItemView(frame: CGRect.zero)
-    itemView2.name.text = "李强"
-    itemView2.agency.text = "链家"
-    theCell.phoneCallViewModel.bindCallBtn(btn: itemView2.callBtn,
-                                           disposeBag: theCell.disposeBag)
-
-    let itemView3 = ItemView(frame: CGRect.zero)
-    itemView3.name.text = "李强"
-    itemView3.agency.text = "链家"
-    theCell.phoneCallViewModel.bindCallBtn(btn: itemView3.callBtn,
-                                           disposeBag: theCell.disposeBag)
-
-    let itemView4 = ItemView(frame: CGRect.zero)
-    itemView4.name.text = "李强"
-    itemView4.agency.text = "链家"
-    theCell.phoneCallViewModel.bindCallBtn(btn: itemView4.callBtn,
-                                           disposeBag: theCell.disposeBag)
-
-    theCell.addItems(items: [itemView, itemView1, itemView2, itemView3, itemView4])
-    theCell.updateByExpandingState()
+func shouldShowContact(contact: FHHouseDetailContact) -> Bool {
+    var result = false
+    if contact.showRealtorinfo ?? 0 != 0 {
+        result = true
+    } else {
+        if (contact.businessLicense?.isEmpty ?? true) == false {
+            result = true
+        }
+        if (contact.certificate?.isEmpty ?? true) == false {
+            result = true
+        }
+    }
+    return result
 }
 
 fileprivate class FHHouseNumberPageControlPlugin: HouseNumberPageControlPlugin {
@@ -485,7 +543,7 @@ extension FHAgentListCell: PhotoBrowserDelegate {
 
         if index >= headerImages.count { return nil}
         let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url ?? "")
+        let url = URL(string: imageModel.url)
         let key = BDWebImageManager.shared().requestKey(with: url)
         return BDImageCache.shared().image(forKey: key)
     }
@@ -495,7 +553,7 @@ extension FHAgentListCell: PhotoBrowserDelegate {
                       highQualityUrlForIndex index: Int) -> URL? {
         if index >= headerImages.count { return nil }
         let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url ?? "")
+        let url = URL(string: imageModel.url)
         return url
     }
 
@@ -504,7 +562,7 @@ extension FHAgentListCell: PhotoBrowserDelegate {
 
         if index >= headerImages.count { return nil }
         let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url ?? "")
+        let url = URL(string: imageModel.url)
         let key = BDWebImageManager.shared().requestKey(with: url)
 
         return BDImageCache.shared().image(forKey: key)
