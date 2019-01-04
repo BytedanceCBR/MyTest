@@ -71,6 +71,33 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
 
     [self addDefaultEmptyViewFullScreen];
+
+    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.notifyBar];
+    
+    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.mainTableView);
+        make.height.mas_equalTo(32);
+    }];
+}
+
+-(void)showNotify:(NSString *)message
+{
+    UIEdgeInsets inset = self.mainTableView.contentInset;
+    inset.top = 32;
+    self.mainTableView.contentInset = inset;
+    
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            UIEdgeInsets inset = self.mainTableView.contentInset;
+            inset.top = 0;
+            self.mainTableView.contentInset = inset;
+        }];
+    });
+    
 }
 
 - (void)retryLoadData

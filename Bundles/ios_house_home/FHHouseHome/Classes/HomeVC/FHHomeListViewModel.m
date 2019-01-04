@@ -16,7 +16,8 @@
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
-
+#import "ToastManager.h"
+#import "ArticleListNotifyBarView.h"
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
     FHHomePullTriggerTypePullDown = 2  //下拉刷新
@@ -35,6 +36,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
+@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+
 @end
 
 @implementation FHHomeListViewModel
@@ -58,12 +61,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
 
         WeakSelf;
-        // 下拉刷新，修改tabbar条和请求数据
+        // 上拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
             StrongSelf;
-            [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+            if ([FHEnvContext isNetworkConnected]) {
+                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+            }else
+            {
+                [self.tableViewV finishPullUpWithSuccess:YES];
+                [[ToastManager manager] showToast:@"网络异常"];
+            }
+            
         }];
-        
+        // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
             [self resetAllCacheData];
@@ -207,6 +217,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:model.data.searchId];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+        
+        if (model.data.refreshTip) {
+            [self.homeViewController showNotify:model.data.refreshTip];
+            
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }];
 }
 
@@ -267,6 +283,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self checkLoadingAndEmpty];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
+        
+        if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
+            [self.homeViewController showNotify:model.data.refreshTip];
+            
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }];
 }
 
