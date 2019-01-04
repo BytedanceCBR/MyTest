@@ -102,7 +102,7 @@
     }
     self.itemList = itemList;
     self.segmentView.sectionTitles = titleList;
-
+    self.segmentView.selectedSegmentIndex = 0;
 }
 
 - (void)jump2GuessVC
