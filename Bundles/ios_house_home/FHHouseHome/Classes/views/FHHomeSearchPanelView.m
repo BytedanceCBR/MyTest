@@ -229,14 +229,6 @@
 - (void)searchBtnClick
 {
     
-//    let tracerParams = TracerParams.momoid() <|>
-//    toTracerParams("click", key: "enter_type") <|>
-//    toTracerParams("maintab_search", key: "element_from") <|>
-//    toTracerParams("maintab", key: "enter_from") <|>
-//    toTracerParams("be_null", key: "log_pb") <|>
-//    toTracerParams("maintab_search", key: "origin_from")
-//
-    
     NSMutableDictionary *tracerParams = [NSMutableDictionary new];
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
@@ -252,24 +244,7 @@
 
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://sug_list"] userInfo:userInfo];
-    
-//    var infos:[String:Any] = [:]
-//    infos["house_type"] = HouseType.secondHandHouse.rawValue
-//    infos["tracer"] = tracerParams.paramsGetter([:])
-//    infos["from_home"] = 1
-//    let index = self.suspendSearchBar.searchTitleIndex
-//    if index >= 0 && index < self.homePageRollScreen.count {
-//        let homePageRollData = self.homePageRollScreen[index]
-//        let homePageRollDataDic = ["text":homePageRollData.text ?? "",
-//                                   "guess_search_id":homePageRollData.guessSearchId ?? "",
-//                                   "house_type":homePageRollData.houseType,
-//                                   "open_url":homePageRollData.openUrl ?? ""] as [String : Any]
-//        infos["homepage_roll_data"] = homePageRollDataDic
-//    }
-//    let userInfo = TTRouteUserInfo(info: infos)
-//    if let url = URL(string: "sslocal://sug_list") {
-//        TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
-//    }
+
 }
 
 - (void)setUpRollScreenTimer

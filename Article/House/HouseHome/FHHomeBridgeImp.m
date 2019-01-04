@@ -11,6 +11,7 @@
 #import "TTTabBarItem.h"
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
+#import "Bubble-Swift.h"
 
 @implementation FHHomeBridgeImp
 
@@ -48,5 +49,22 @@
 - (void)setUpLocationInfo:(NSDictionary *)dict
 {
     [[TTLocationManager sharedManager] setUpAmapInfo:dict];
+}
+
+- (void)jumpCountryList:(UIViewController *)viewController
+{
+    CountryListVC *listVC = [[CountryListVC alloc] init];
+    [viewController.navigationController pushViewController:listVC animated:YES];
+    
+//    let vc = CountryListVC()
+//    vc.onClose = { [weak self] _ in
+//        self?.baseVC.navigationController?.popViewController(animated: true)
+//    }
+//    vc.onItemSelect
+//    .subscribe(onNext: { [unowned self] i in
+//
+//    })
+//    .disposed(by: self.disposeBag)
+//    self.baseVC.navigationController?.pushViewController(vc, animated: true)
 }
 @end

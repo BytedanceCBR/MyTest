@@ -31,7 +31,9 @@
 }
 
 + (NSString *)buildVerion{
-    NSString* buildVersionRaw = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+//    NSString* buildVersionRaw = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     return buildVersionNew;
 }

@@ -38,11 +38,11 @@
 {
     [[[self.suspendSearchBar.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
     {
-        NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",@"xxx"];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
-        
-        NSLog(@"tap Country btn");
-
+//        NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",@"xxx"];
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
+//
+//        NSLog(@"tap Country btn");
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
     }];
 }
 
