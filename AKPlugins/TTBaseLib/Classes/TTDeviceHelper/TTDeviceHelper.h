@@ -195,4 +195,8 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
 //获取可用空间大小，单位Byte
 + (long long)getFreeDiskSpace;
 
++ (Boolean)is812Screen;
++ (Boolean)is896Screen2X;
++ (Boolean)is896Screen3X;
+
 @end

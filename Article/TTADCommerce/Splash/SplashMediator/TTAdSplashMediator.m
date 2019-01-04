@@ -148,9 +148,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)didEnterBackground
 {
-//    if (![TTAdSplashMediator useSplashSDK]) {
-//        [[SSADManager shareInstance] didEnterBackground];
-//    }
+
 }
 
 //端监控
@@ -189,6 +187,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 //    return [CommonURLSetting baseURL];
 //}
 
+- (BOOL)enableSplashGifKadunOptimize {
+    return YES;
+}
+
 - (NSString *)deviceId
 {
     return [[TTInstallIDManager sharedInstance] deviceID];
@@ -211,23 +213,28 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     return [TTNetworkHelper connectMethodName];
 }
 
-//todo fpd
-- (UIImage *)splashBgImageName
+- (UIImage *)splashBgImage
 {
-    NSString *imgName = @"LaunchImage-800-Portrait-736h@3x.png";
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
-        imgName = @"LaunchImage-800-Portrait-736h@3x.png";
+    
+    NSString *imgName = @"LaunchImage-800-Portrait-736h";
+    if ([TTDeviceHelper is667Screen]) {
+        imgName = @"LaunchImage-800-667h";
     }
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        imgName = @"LaunchImage-1100-Portrait-2436h@3x.png";
+    if ([TTDeviceHelper is568Screen]) {
+         imgName = @"LaunchImage-700-568h";
     }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0 &&
-        ([UIScreen mainScreen].bounds.size.height == 480)) {
-        imgName = @"LaunchImage-700@2x.png";
+    if ([TTDeviceHelper is812Screen]) {
+        imgName = @"LaunchImage-1100-Portrait-2436h";
+    }
+    if ([TTDeviceHelper is896Screen2X]) {
+        imgName = @"LaunchImage-1200-Portrait-1792h";
+    }
+    if ([TTDeviceHelper is896Screen3X]) {
+        imgName = @"LaunchImage-1200-Portrait-2688h";
     }
     return [UIImage imageNamed:imgName];
 }
-//todo fpd
+
 - (UIImage *)splashVideoLogo
 {
     return [UIImage imageNamed:@"logo"];
@@ -405,116 +412,57 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)setSplashADShowType:(TTAdSplashShowType)splashADShowType
 {
-//    if ([TTAdSplashMediator useSplashSDK]) {
-        [TTAdSplashManager shareInstance].splashADShowType = splashADShowType;
-//    }
-//    else{
-//        [SSADManager shareInstance].splashADShowType = (SSSplashADShowType)splashADShowType;
-//    }
+    [TTAdSplashManager shareInstance].splashADShowType = splashADShowType;
 }
 
 - (TTAdSplashShowType)splashADShowType
 {
     return [TTAdSplashManager shareInstance].splashADShowType;
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].splashADShowType;
-//    }
-//    else{
-//        return (TTAdSplashShowType)[SSADManager shareInstance].splashADShowType;
-//    }
-//    return [TTAdSplashManager shareInstance].splashADShowType;
 }
 
 - (TTAdSplashResouceType)resouceType
 {
     return [TTAdSplashManager shareInstance].resouceType;
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].resouceType;
-//    }
-//    else{
-//        return (TTAdSplashResouceType)[SSADManager shareInstance].resouceType;
-//    }
-//    return [TTAdSplashManager shareInstance].resouceType;
 }
 
 - (BOOL)showByForground
 {
     return [TTAdSplashManager shareInstance].showByForground;
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].showByForground;
-//    }
-//    else{
-//        return [SSADManager shareInstance].showByForground;
-//    }
-//    return [TTAdSplashManager shareInstance].showByForground;
 }
 
 - (void)setShowByForground:(BOOL)showByForground
 {
     [TTAdSplashManager shareInstance].showByForground = showByForground;
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        [TTAdSplashManager shareInstance].showByForground = showByForground;
-//    }
-//    else{
-//        [SSADManager shareInstance].showByForground = showByForground;
-//    }
 }
 
 - (BOOL)adWillShow
 {
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].adWillShow;
-//    }
-//    else{
-//        return [SSADManager shareInstance].adShow;
-//    }
     return [TTAdSplashManager shareInstance].adWillShow;
 }
 
 - (BOOL)isAdShowing
 {
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].isAdShowing;
-//    }
-//    else{
-//        return [SSADManager shareInstance].isSplashADShowed;
-//    }
     return [TTAdSplashManager shareInstance].isAdShowing;
 }
 
 - (BOOL)finishCheck
 {
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [TTAdSplashManager shareInstance].finishCheck;
-//    }
-//    else{
-//        return [SSADManager shareInstance].finishCheck;
-//    }
     return [TTAdSplashManager shareInstance].finishCheck;
 }
 
 - (BOOL)discardAd:(NSArray<NSString *> *)adIDs
 {
     return [[TTAdSplashManager shareInstance] discardAd:adIDs];
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        return [[TTAdSplashManager shareInstance] discardAd:adIDs];
-//    }
-//    return [[SSADManager shareInstance] discardAd:adIDs];
 }
 
 + (BOOL)useSplashSDK
 {
     return YES;
-    //todo fpd
-//    return ttas_isSplashSDKEnable();
 }
 
 + (void)clearResouceCache
 {
     [TTAdSplashManager clearResouceCache];
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        [TTAdSplashManager clearResouceCache];
-//    }
 }
 
 
