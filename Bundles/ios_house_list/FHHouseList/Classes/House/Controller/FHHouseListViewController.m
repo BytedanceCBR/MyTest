@@ -359,7 +359,6 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
 
-
     [self.houseFilterViewModel trigerConditionChanged];
 
 }

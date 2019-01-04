@@ -20,7 +20,7 @@
 
 @implementation FHHouseFindSearchBar
 
--(instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -31,7 +31,7 @@
 }
 
 
--(UITextField *)inputTextField
+- (UITextField *)inputTextField
 {
     if (!_inputTextField) {
         
@@ -59,7 +59,7 @@
     return _inputTextField;
 }
 
--(void)setupUI
+- (void)setupUI
 {
     self.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.inputTextField];
@@ -73,7 +73,7 @@
 
 }
 
--(void)setPlaceHolder:(NSString *)placeHolder
+- (void)setPlaceHolder:(NSString *)placeHolder
 {
     NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
                                NSForegroundColorAttributeName:[UIColor themeGray3]
@@ -82,7 +82,7 @@
     _inputTextField.attributedPlaceholder = attrPlaceHolder;
 }
 
--(NSString *)placeHolder
+- (NSString *)placeHolder
 {
     if (_inputTextField.attributedText.string.length > 0) {
         return _inputTextField.attributedText.string;
@@ -90,7 +90,7 @@
     return _inputTextField.placeholder;
 }
 
--(void)setInputText:(NSString *)inputText
+- (void)setInputText:(NSString *)inputText
 {
     if (inputText) {
         NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
@@ -105,13 +105,13 @@
     
 }
 
--(NSString *)inputText
+- (NSString *)inputText
 {
     return _inputTextField.text;
 }
 
 #pragma mark - uitextfield delegate
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     if (_tapInputBar) {
         _tapInputBar();

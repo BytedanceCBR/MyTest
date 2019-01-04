@@ -20,6 +20,8 @@
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
+@property(nonatomic , strong) NSDictionary *currentConfigDictionary;
+
 @end
 
 @implementation FHEnvContext
@@ -176,7 +178,10 @@
         self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
         [self.generalBizConfig saveCurrentConfigDataCache:configModel];
-        [self.configDataReplay sendNext:configModel];
+        if (![configModel.toDictionary isEqualToDictionary:self.currentConfigDictionary]) {
+            self.currentConfigDictionary = configModel.toDictionary;
+            [self.configDataReplay sendNext:configModel];
+        }
     }
 }
 

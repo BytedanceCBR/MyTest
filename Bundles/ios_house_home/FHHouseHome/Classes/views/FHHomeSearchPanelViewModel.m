@@ -62,7 +62,7 @@
 - (void)addListenerConfigChanged
 {
     WeakSelf;
-    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         [self fetchSearchPanelRollData];
     }];

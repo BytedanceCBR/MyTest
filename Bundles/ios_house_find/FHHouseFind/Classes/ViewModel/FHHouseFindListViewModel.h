@@ -6,12 +6,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHHouseType.h"
+#import "FHTracerModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class HMSegmentedControl;
 @interface FHHouseFindListViewModel : NSObject
 
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (void)jump2GuessVC;
+- (void)setTracerModel:(FHTracerModel *)tracerModel;
+- (void)setSegmentView:(HMSegmentedControl *)segmentView;
 
 @end
 

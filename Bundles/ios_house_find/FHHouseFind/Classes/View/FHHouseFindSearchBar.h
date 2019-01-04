@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindSearchBar : UIView
 
+@property(nonatomic , strong) NSString *placeHolder;
+@property(nonatomic , strong) NSString *inputText;
 @property(nonatomic , copy) void (^tapInputBar)();
 
 @end

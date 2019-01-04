@@ -162,8 +162,10 @@
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
         }
 
-        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
-//        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+//        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
+        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
+        NSLog(@"fParams = %@",fParams);
         
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];
