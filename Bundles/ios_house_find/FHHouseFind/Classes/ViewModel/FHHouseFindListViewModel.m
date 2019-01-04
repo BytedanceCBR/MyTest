@@ -47,7 +47,7 @@
         [self refreshDataWithConfigDataModel];
         //订阅config变化
         __block BOOL isFirstChange = YES;
-        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             
             //过滤多余刷新
             if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
