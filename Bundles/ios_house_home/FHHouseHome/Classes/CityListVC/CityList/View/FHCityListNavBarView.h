@@ -11,6 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityListNavBarView : UIView
 
+@property (nonatomic, strong)   UIButton       *backBtn;
+@property (nonatomic, strong)   UIButton       *searchBtn;
+@property (nonatomic, strong)   UIImageView       *searchIcon;
+@property (nonatomic, strong)   UILabel       *searchLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END
