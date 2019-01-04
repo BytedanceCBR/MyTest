@@ -8,10 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "FHClient.h"
 #import "TTBaseMacro.h"
-#import "FHHomeConfigManager.h"
 #import "FHGeneralBizConfig.h"
 #import "FHClientModel.h"
 #import "FHSearchConfigModel.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -40,8 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-@property (nonatomic,strong)FHClient * client;
+@property (nonatomic, strong)FHClient * client;
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
+@property (nonatomic, assign) BOOL isSameToLocCity;
+@property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
+@property(nonatomic , strong) RACReplaySubject *configDataReplay;
 
 
 + (instancetype)sharedInstance;
@@ -74,27 +77,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSDictionary *)getRequestCommonParams;
 
-/*
-  config变化更新cache
- */
-- (void)updateConfigCache;
-
-/*
  
- */
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
+
+
+//保存config数据
+- (void)saveGeneralConfig:(FHConfigModel *)model;
 
 //从缓存中获取config数据
 - (FHConfigDataModel *)getConfigFromCache;
 
 //从本地磁盘获取config数据
 - (FHConfigDataModel *)readConfigFromLocal;
-
-//从缓存中获取搜索配置
-- (FHSearchConfigModel *)getSearchConfigFromCache;
-
-//从本地磁盘中获取搜索配置
-- (FHSearchConfigModel *)readSearchConfigFromLocal;
 
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal;
@@ -108,6 +102,10 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+//接受config数据
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel;
+
+- (void)acceptConfigDictionary:(NSDictionary *)configDict;
 
 /*
  获取首页埋点公共参数

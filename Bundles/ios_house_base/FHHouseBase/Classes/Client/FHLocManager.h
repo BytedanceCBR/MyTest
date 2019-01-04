@@ -15,15 +15,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLocManager : NSObject
 
-@property (nonatomic, strong)AMapLocationManager * locMgr;
-@property (nonatomic, strong)AMapLocationReGeocode * currentReGeocode;
-@property (nonatomic, strong)CLLocation * currentLocaton;
+@property (nonatomic, strong) AMapLocationManager * locMgr;
+@property (nonatomic, strong) AMapLocationReGeocode * currentReGeocode;
+@property (nonatomic, strong) CLLocation * currentLocaton;
+@property (nonatomic, assign) BOOL isSameToLocCity;
 
 +(instancetype)sharedInstance;
 
 - (void)requestCurrentLocation:(BOOL)showAlert;
 
+- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion;
+
+- (void)checkUserLocationStatus;
+
 - (void)setUpLocManagerLocalInfo;
+
+- (void)showCitySwitchAlert:(NSString *)cityName;
 
 @end
 

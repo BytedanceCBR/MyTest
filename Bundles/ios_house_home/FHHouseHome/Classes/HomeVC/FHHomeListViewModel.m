@@ -16,7 +16,8 @@
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
-
+#import "ToastManager.h"
+#import "ArticleListNotifyBarView.h"
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
     FHHomePullTriggerTypePullDown = 2  //下拉刷新
@@ -35,6 +36,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
+@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+
 @end
 
 @implementation FHHomeListViewModel
@@ -53,17 +56,25 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.showPlaceHolder = YES;
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
-        
+        self.hasShowedData = NO;
+
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
 
         WeakSelf;
-        // 下拉刷新，修改tabbar条和请求数据
+        // 上拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
             StrongSelf;
-            [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+            if ([FHEnvContext isNetworkConnected]) {
+                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+            }else
+            {
+                [self.tableViewV finishPullUpWithSuccess:YES];
+                [[ToastManager manager] showToast:@"网络异常"];
+            }
+            
         }];
-        
+        // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
             [self resetAllCacheData];
@@ -73,7 +84,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         //订阅config变化发送网络请求
         __block BOOL isFirstChange = YES;
-        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
@@ -91,12 +102,28 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         [[FHHomeConfigManager sharedInstance].searchConfigDataReplay subscribeNext:^(id  _Nullable searchConfigModel) {
-            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
+            
+//            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
         }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
-
             StrongSelf;
+            
+//             NSString *urlStr = @"http://10.1.10.250:8080/test";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+//             NSString *unencodedString = urlStr;
+//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//             (CFStringRef)unencodedString,
+//             NULL,
+//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//             kCFStringEncodingUTF8));
+//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+//             NSURL *url = [TTURLUtils URLWithString:urlStr];
+//             [[TTRoute sharedRoute] openURLByPushViewController:url];
+//             return ;
+//            
+            
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
@@ -128,7 +155,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self requestOriginData];
             }
         };
-        
+
     }
     return self;
 }
@@ -170,7 +197,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         StrongSelf;
         
         if (!model || error) {
-            [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            if (![FHEnvContext isNetworkConnected]) {
+                [self.homeViewController.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+            }else
+            {
+                [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            }
             return;
         }
         
@@ -207,6 +239,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance] updateOriginFrom:[self.dataSource pageTypeString] originSearchId:model.data.searchId];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+        
+        if (model.data.refreshTip) {
+            [self.homeViewController showNotify:model.data.refreshTip];
+            
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }];
 }
 
@@ -261,12 +299,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV finishPullUpWithSuccess:YES];
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
+        
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         self.tableViewV.hasMore = model.data.hasMore;
         
         [self checkLoadingAndEmpty];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
+        
+        if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
+            [self.homeViewController showNotify:model.data.refreshTip];
+            
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }];
 }
 
@@ -370,6 +415,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 - (void)reloadHomeTableHouseSection:(NSArray <JSONModel *> *)models
 {
+    if (models.count == 0) {
+        return;
+    }
+    
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;

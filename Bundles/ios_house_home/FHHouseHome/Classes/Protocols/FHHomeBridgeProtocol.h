@@ -19,6 +19,9 @@
 - (void)isShowTabbarScrollToTop:(BOOL)scrollToTop;
 
 - (void)setUpLocationInfo:(NSDictionary *)dict;
+
+- (void)jumpCountryList:(UIViewController *)viewController;
+
 @end
 
 #endif /* FHHomeBridgeProtocol_h */

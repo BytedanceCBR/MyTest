@@ -146,15 +146,32 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
-        checkTraceParam(paramObj?.allParams)
-        self.checkoutPush(routeParamObj: paramObj)
-        if let logPb = paramObj?.userInfo.allInfo["log_pb"] {
-            traceParams = traceParams <|> toTracerParams(logPb , key: "log_pb");
-        }
+        makerTraceParam(paramObj?.allParams)
         if let source = paramObj?.userInfo.allInfo["source"] as? String {
             self.source = source;
         }
         
+        // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
+        if let urlStr = paramObj?.sourceURL.absoluteString,
+            let realStr = urlStr.removingPercentEncoding,
+            let urlParams = realStr.urlParameters {
+            if let origin_from = urlParams["origin_from"],
+                origin_from.count > 0 {
+                traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
+                // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(origin_from, key: "origin_from")
+            }
+            if let log_pb = urlParams["log_pb"],
+                log_pb.count > 2,
+                let jsonData = log_pb.data(using: .utf8) {
+                if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
+                    traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                }
+            }
+        }
+        
+        // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
 
         self.netStateInfoVM = NHErrorViewModel(
@@ -242,7 +259,61 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         fatalError("init(coder:) has not been implemented")
     }
 
-    
+    // 构建埋点参数方法
+    fileprivate func makerTraceParam(_ allParams : [AnyHashable : Any]?) {
+        guard let allParams = allParams else {
+            return
+        }
+        /*
+         traceParam[@"log_pb"] = [cellModel logPb];
+         */
+        if let tracerDic = allParams["tracer"] as? [String:Any] {
+            // 通过“tracer”传入的参数
+            traceParams = traceParams <|> mapTracerParams(tracerDic)
+        }
+        
+        // 非“tracer”参数
+        if let cardType = allParams["card_type"] {
+            traceParams = traceParams <|> toTracerParams(cardType,key:"card_type")
+        }
+        
+        if let enterFrom = allParams["enter_from"] {
+            traceParams = traceParams <|> toTracerParams(enterFrom, key: "enter_from")
+        }
+        
+        if let elementFrom = allParams["element_from"] {
+            traceParams = traceParams <|> toTracerParams(elementFrom, key: "element_from")
+        }
+        
+        if let rank = allParams["rank"] {
+            traceParams = traceParams <|> toTracerParams(rank, key: "rank")
+        }
+        
+        if let groupId = allParams["group_id"] {
+            traceParams = traceParams <|> toTracerParams(groupId,key:"group_id")
+        }
+        
+        if let imprId = allParams["impr_id"] {
+            traceParams = traceParams <|> toTracerParams(imprId,key:"impr_id")
+        }
+        
+        if let log_pb = allParams["log_pb"] {
+            traceParams = traceParams <|> toTracerParams(log_pb,key:"log_pb")
+        }
+        
+        if let searchId = allParams["search_id"] {
+            traceParams = traceParams <|> toTracerParams(searchId,key:"search_id")
+            self.searchId = searchId as? String
+        }
+        
+        if let originFrom = allParams["origin_from"] {
+            traceParams = traceParams <|> toTracerParams(originFrom,key:"origin_from")
+        }
+        if let originSearchId = allParams["origin_search_id"] {
+            traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
+        }
+    }
+    /*
     fileprivate func checkTraceParam(_ allParams :  [AnyHashable: Any]?) {
         
         guard let allParams = allParams else {
@@ -327,7 +398,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
         }
     }
-    
+    */
 
     fileprivate func bindNetStatusViewModel() {
         self.detailPageViewModel?.onNetworkError = { [weak self] (error) in

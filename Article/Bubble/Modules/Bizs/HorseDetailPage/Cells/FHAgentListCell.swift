@@ -156,6 +156,8 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     var isExpanding = false
 
+    var traceModel: HouseRentTracer?
+
     lazy var phoneCallViewModel: FHPhoneCallViewModel = {
         let re = FHPhoneCallViewModel()
         return re
@@ -284,6 +286,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 self.isExpanding = !self.isExpanding
                 self.updateBottomBarState(isExpand: self.isExpanding)
                 self.refreshCell()
+                self.traceRealtorClickMore()
             })
             .disposed(by: disposeBag)
     }
@@ -349,25 +352,43 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
     }
 
+    fileprivate func traceRealtorClickMore() {
+        if let traceModel = traceModel {
+            let params = TracerParams.momoid() <|>
+                EnvContext.shared.homePageParams <|>
+                toTracerParams(traceModel.pageType, key: "page_type") <|>
+                toTracerParams(traceModel.rank, key: "rank") <|>
+                toTracerParams(traceModel.logPb ?? "be_null", key: "log_pb")
+            recordEvent(key: "realtor_click_more", params: params)
+        }
+    }
+
 }
 
-func parseAgentListCell() -> () -> TableSectionNode? {
-    let cellRender = curry(fillAgentListCell)
+func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> () -> TableSectionNode? {
+    let cellRender = curry(fillAgentListCell)(data)(traceModel)
+    let params = TracerParams.momoid() <|>
+        EnvContext.shared.homePageParams <|>
+        toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
+        toTracerParams(traceModel?.rank ?? "be_null", key: "rank") <|>
+        toTracerParams(traceModel?.logPb ?? "be_null", key: "log_pb")
+    let records = [elementShowOnceRecord(params: params)]
     return {
         return TableSectionNode(
             items: [cellRender],
             selectors: [],
-            tracer:  [],
+            tracer:  records,
             sectionTracer: nil,
             label: "",
             type: .node(identifier: FHAgentListCell.identifier))
     }
 }
 
-func fillAgentListCell(cell: BaseUITableViewCell) {
+func fillAgentListCell(cdata: ErshouHouseData, traceModel: HouseRentTracer?, cell: BaseUITableViewCell) {
     guard let theCell = cell as? FHAgentListCell else {
         return
     }
+    theCell.traceModel = traceModel
     let itemView = ItemView(frame: CGRect.zero)
     itemView.name.text = "李强"
     itemView.agency.text = "链家"

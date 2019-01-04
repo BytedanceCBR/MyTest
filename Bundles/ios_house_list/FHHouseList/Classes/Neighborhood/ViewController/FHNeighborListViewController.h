@@ -6,6 +6,8 @@
 //
 
 #import "FHBaseViewController.h"
+#import "UIViewController+Track.h"
+#import "FHHouseType.h"
 
 typedef enum : NSUInteger {
     FHNeighborListVCTypeErshouSameNeighbor              = 1,         // 二手房-同小区房源
@@ -22,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 周边房源、同小区房源、在售房源、在租房源、小区房源
 @interface FHNeighborListViewController : FHBaseViewController
+
+@property (nonatomic, assign) FHHouseType houseType;
 
 @end
 

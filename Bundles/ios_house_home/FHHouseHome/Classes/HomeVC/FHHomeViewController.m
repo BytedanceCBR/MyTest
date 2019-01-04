@@ -16,6 +16,7 @@
 #import "ToastManager.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
+#import "FHLocManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -63,26 +64,47 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     if (!configModel) {
         self.mainTableView.hidden = YES;
         [self tt_startUpdate];
     }
 
     [self addDefaultEmptyViewFullScreen];
+
+    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.notifyBar];
+    
+    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.mainTableView);
+        make.height.mas_equalTo(32);
+    }];
+}
+
+-(void)showNotify:(NSString *)message
+{
+    UIEdgeInsets inset = self.mainTableView.contentInset;
+    inset.top = 32;
+    self.mainTableView.contentInset = inset;
+    
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            UIEdgeInsets inset = self.mainTableView.contentInset;
+            inset.top = 0;
+            self.mainTableView.contentInset = inset;
+        }];
+    });
+    
 }
 
 - (void)retryLoadData
 {
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     //to do request config xiefei.xf
-    if (configDataModel == nil) {
-        
-    }else
-    {
-        
-    }
-    [self.homeListViewModel requestOriginData];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (void)willAppear
@@ -99,20 +121,26 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
+    
+//    [[FHLocManager sharedInstance] showCitySwitchAlert:@"北京"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    FHSearchConfigModel *searchConfig = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
-    
     [self scrollToTopEnable:YES];
 }
 
 - (void)pullAndRefresh
 {
-    [self.mainTableView triggerPullDown];
+    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
+    }else
+    {
+        [self.mainTableView triggerPullDown];
+    }
+    
 //    detailPageViewModel?.reloadFromType = reloadFromType
 //    tableView.triggerPullDown()
 }
@@ -174,7 +202,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (BOOL)tt_hasValidateData
 {
-    FHConfigModel *configModel = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     return configModel != nil;
 }
 

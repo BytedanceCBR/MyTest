@@ -298,13 +298,8 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                     toTracerParams(element_from, key: "element_from") <|>
                     toTracerParams("click", key: "enter_type")
                 
-                params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
-                //            params["followStatus"] = self.followStatus
-                
                 params["tracerParams"] = transactionTrace
-                
-                params["bottomBarBinder"] = bottomBarBinder
-                params["related_house"] = true
+                params["tracer"] = transactionTrace.paramsGetter([:])
                 params["page_type"] = "related_list"
                 params["list_vc_type"] = 8 // FHNeighborListVCTypeRentNearBy
                 let userInfo = TTRouteUserInfo(info: params)
@@ -346,7 +341,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     fileprivate func jumpToReportPage(url: String) {
         if let jumpUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
-            let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+            let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
             
             let tp = EnvContext.shared.homePageParams <|>
                 toTracerParams("rent_detail", key: "page_type") <|>

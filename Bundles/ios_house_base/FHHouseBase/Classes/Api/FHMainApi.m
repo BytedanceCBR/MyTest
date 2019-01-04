@@ -85,7 +85,7 @@
 
 +(TTHttpTask *)getConfig:(NSInteger )cityId gaodeLocation:(CLLocationCoordinate2D)location gaodeCityId:(NSString *)gCityId gaodeCityName:(NSString *)gCityName completion:(void(^)(FHConfigModel* model , NSError *error))completion
 {
-    NSString *url = QURL(@"/f100/api/config");
+    NSString *url = QURL(@"/f100/v2/api/config");
     
     NSDictionary *commonParams = [TTNetworkManager shareInstance].commonParamsblock();
     

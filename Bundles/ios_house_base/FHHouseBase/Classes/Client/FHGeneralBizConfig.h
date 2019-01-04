@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updataCurrentConfigCache;
 
+- (void)saveCurrentConfigCache:(FHConfigModel *)configValue;
+
+- (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue;
+
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum;
 
 - (NSNumber *)getUserSelectTypeDiskCache;
@@ -22,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onStartAppGeneralCache;
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal;
-
-- (FHSearchConfigModel *)getSearchConfigFromLocal;
 
 @end
 

@@ -21,8 +21,9 @@ def appPods
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
     pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
     pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+    pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
     #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
+	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
     pod 'SecGuard', '0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
@@ -244,7 +245,7 @@ def appPods
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
-    pod 'TTPushManager', '0.0.10'
+    pod 'TTPushManager', '0.0.13.4'
     pod 'TTReachability', '0.1.8'
     pod 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----

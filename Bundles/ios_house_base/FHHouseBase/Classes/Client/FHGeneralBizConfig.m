@@ -8,7 +8,6 @@
 #import "FHGeneralBizConfig.h"
 #import <YYCache.h>
 #import "FHUtils.h"
-#import "FHHomeConfigManager.h"
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -50,13 +49,39 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 - (void)onStartAppGeneralCache
 {
     self.configCache = [self getGeneralConfigFromLocal];
-    self.configCache.filter = [self getSearchConfigFromLocal];
 }
 
 - (void)updataCurrentConfigCache
 {
-    self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
+    
 }
+
+- (void)saveCurrentConfigCache:(FHConfigModel *)configValue
+{
+    self.configCache = configValue.data;
+    
+    if([configValue.data isKindOfClass:[FHConfigDataModel class]])
+    {
+        NSString *configJsonStr = configValue.data.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kGeneralKey];
+        }
+    }
+}
+
+- (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue
+{
+    self.configCache = configValue;
+    
+    if([configValue isKindOfClass:[FHConfigDataModel class]])
+    {
+        NSString *configJsonStr = configValue.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kGeneralKey];
+        }
+    }
+}
+
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {
@@ -77,13 +102,12 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 
 - (FHConfigDataModel *)getGeneralConfigFromLocal
 {
-    NSString *configJsonStr = [self.generalConfigCache objectForKey:@"config"];
+    NSString *configJsonStr = [self.generalConfigCache objectForKey:kGeneralKey];
     NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
     
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
         if ([configModel isKindOfClass:[FHConfigDataModel class]]) {
-            configModel.filter = [self getSearchConfigFromLocal];
             return configModel;
         }else
         {
@@ -94,25 +118,26 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
         return nil;
     }
 }
-//临时方案
-- (FHSearchConfigModel *)getSearchConfigFromLocal
-{
-    NSString *configJsonStr = [self.searchConfigCache objectForKey:@"search_config"];
-    NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
-    
-    if ([configDict isKindOfClass:[NSDictionary class]]) {
-        FHSearchConfigModel *configModel = [[FHSearchConfigModel alloc] initWithDictionary:configDict error:nil];
-        if ([configModel isKindOfClass:[FHSearchConfigModel class]]) {
-            self.configCache.filter = configModel;
-            return configModel;
-        }else
-        {
-            return nil;
-        }
-    }else
-    {
-        return nil;
-    }
-}
+
+//临时方案,弃用
+//- (FHSearchConfigModel *)getSearchConfigFromLocal
+//{
+//    NSString *configJsonStr = [self.searchConfigCache objectForKey:@"search_config"];
+//    NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
+//
+//    if ([configDict isKindOfClass:[NSDictionary class]]) {
+//        FHSearchConfigModel *configModel = [[FHSearchConfigModel alloc] initWithDictionary:configDict error:nil];
+//        if ([configModel isKindOfClass:[FHSearchConfigModel class]]) {
+//            self.configCache.filter = configModel;
+//            return configModel;
+//        }else
+//        {
+//            return nil;
+//        }
+//    }else
+//    {
+//        return nil;
+//    }
+//}
 
 @end

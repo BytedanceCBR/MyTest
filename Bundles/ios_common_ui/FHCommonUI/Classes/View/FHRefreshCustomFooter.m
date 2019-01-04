@@ -1,5 +1,5 @@
 //
-//  NIHRefreshCustomFooter.m
+//  FHRefreshCustomFooter.m
 //  Article
 //
 //  Created by 张静 on 2018/8/30.

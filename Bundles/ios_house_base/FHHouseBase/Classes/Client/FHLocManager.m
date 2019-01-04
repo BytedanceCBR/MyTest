@@ -9,7 +9,6 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "AMapLocationCommonObj.h"
-#import "FHHomeConfigManager.h"
 #import "TTSandBoxHelper.h"
 #import "FHConfigApi.h"
 #import "FHEnvContext.h"
@@ -30,11 +29,35 @@
 - (void)showLocationGuideAlert
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"无定位权限，请前往系统设置开启" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+    [alertVC addActionWithGrayTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         
     }];
     
     [alertVC addActionWithTitle:@"立刻前往" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        
+        if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
+            [[UIApplication sharedApplication] openURL:jumpUrl];
+        }
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
+}
+
+- (void)showCitySwitchAlert:(NSString *)cityName
+{
+    
+    NSString *titleStr = [NSString stringWithFormat:@"是否切换到当前城市:%@",cityName];
+    
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
+    [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        
+    }];
+    
+    [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         
         if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
@@ -134,8 +157,7 @@
             amapInfo[@"longitude"] = @(location.coordinate.longitude);
         }
         
-        
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
+//        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
         
         if (regeocode) {
             self.currentReGeocode = regeocode;
@@ -146,19 +168,47 @@
         }
         
         [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-            
-            [[FHEnvContext sharedInstance] updateRequestCommonParams];
-
-            if (model.data) {
-                [[FHHomeConfigManager sharedInstance] acceptConfigDataModel:model.data];
-            }
+            //更新config
+            [self updateAllConfig:model];
         }];
-        
-        NSLog(@"regeocode = %d city = %@",regeocode.citycode,regeocode.city);
         
     }];
 }
 
+- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion
+{
+    [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+        [self updateAllConfig:model];
+        
+        if (model.data) {
+            completion(YES);
+        }
+    }];
+}
+
+- (void)updateAllConfig:(FHConfigModel * _Nullable) model
+{
+    if (![model isKindOfClass:[FHConfigModel class]]) {
+        return ;
+    }
+    [[FHEnvContext sharedInstance] saveGeneralConfig:model];
+    
+    [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
+    
+    if (model.data.currentCityName) {
+        [FHEnvContext saveCurrentUserDeaultCityName:model.data.currentCityName];
+    }
+    
+    [[FHEnvContext sharedInstance] updateRequestCommonParams];
+    
+    if (model.data) {
+        [[FHEnvContext sharedInstance] acceptConfigDataModel:model.data];
+    }
+    
+    if ([FHEnvContext sharedInstance].homeConfigCallBack) {
+        [FHEnvContext sharedInstance].homeConfigCallBack(model.data);
+    }
+}
 
 
 - (void)setLocManager:(AMapLocationManager *)locManager

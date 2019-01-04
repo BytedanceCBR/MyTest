@@ -280,6 +280,7 @@ PODS:
   - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
+  - FHHouseFind (0.1.0)
   - FHHouseHome (0.1.1)
   - FHHouseList (0.1.0)
   - FHHouseMessage (0.1.0)
@@ -992,7 +993,7 @@ PODS:
     - TTPlatformBaseLib
     - TTTracker
     - TTUIWidget
-  - TTPushManager (0.0.10)
+  - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1):
     - TTNetworkManager (< 3)
     - TTPlatformBaseLib/TTURLDomainHelper
@@ -1196,6 +1197,7 @@ DEPENDENCIES:
   - FHCommonUI (from `../Bundles/ios_common_ui`)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
+  - FHHouseFind (from `../Bundles/ios_house_find`)
   - FHHouseHome (from `../Bundles/ios_house_home`)
   - FHHouseList (from `../Bundles/ios_house_list`)
   - FHHouseMessage (from `../Bundles/ios_house_message`)
@@ -1295,7 +1297,7 @@ DEPENDENCIES:
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
-  - TTPushManager (= 0.0.10)
+  - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1)
   - TTReachability (= 0.1.8)
   - TTReporter (= 0.2.1)
@@ -1359,6 +1361,8 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_base
   FHHouseDetail:
     :path: ../Bundles/ios_house_detail
+  FHHouseFind:
+    :path: ../Bundles/ios_house_find
   FHHouseHome:
     :path: ../Bundles/ios_house_home
   FHHouseList:
@@ -1472,6 +1476,7 @@ SPEC CHECKSUMS:
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseDetail: dca81d6326acfc43803399629c7c3410f1b2093f
+  FHHouseFind: 1ac3175d71379d03dee33ab37d3feb386fe1c290
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
   FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
@@ -1545,7 +1550,7 @@ SPEC CHECKSUMS:
   TTPlayerSDK: ddf454156e94681632063317c1bd68a5e8369f2e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
-  TTPushManager: 708ba9dcc3849570f2b02cd04fc8aeeba1a562c0
+  TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
   TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
@@ -1578,6 +1583,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 3a7d6654113a022fbf2a4af6cc620cfe53edd80c
+PODFILE CHECKSUM: c9a7a54c93db8d732e8a12871f4efbf60ce5b2f1
 
 COCOAPODS: 1.4.0

@@ -12,7 +12,7 @@
 
 +(NSArray<FHFilterNodeModel*>*)getConfigByHouseType:(FHHouseType)houseType {
 
-    FHSearchConfigModel* model = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
+    FHConfigDataModel* model = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSArray<FHSearchFilterConfigItem*>* config = nil;
     switch (houseType) {
         case FHHouseTypeNewHouse:
@@ -33,7 +33,7 @@
 }
 
 +(NSArray<FHFilterNodeModel*>*)getSortConfigByHouseType:(FHHouseType)houseType {
-    FHSearchConfigModel* model = [[FHEnvContext sharedInstance] getSearchConfigFromCache];
+    FHConfigDataModel* model = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSArray<FHSearchFilterConfigItem*>* config = nil;
     switch (houseType) {
         case FHHouseTypeNewHouse:

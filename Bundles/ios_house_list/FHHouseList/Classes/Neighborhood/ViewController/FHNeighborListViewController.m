@@ -19,15 +19,12 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "TTDeviceHelper.h"
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
 
 @property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, copy) NSString *houseId;
-@property (nonatomic, copy) NSString *searchId;
-
-@property (nonatomic, assign) FHHouseType houseType;
-@property (nonatomic, assign) BOOL relatedHouse;
 
 @property (nonatomic, strong) FHNeighborViewModel *viewModel;
 
@@ -51,15 +48,19 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        /*
+         origin_from
+         origin_search_id
+         category_name：same_neighborhood_list & related_list ((page_type))
+         enter_from:rent_detail（租房详情页）,小区详情页，二手房详情页
+         element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
+         $$ search_id:外部的searchId无用，每次使用网络返回的searchId
+         */
         self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
         self.houseId = paramObj.userInfo.allInfo[@"houseId"];
-        self.searchId = paramObj.userInfo.allInfo[@"searchId"]; // add by zyk 外部的searchId无用，每次使用网络返回的searchId
         self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
-        self.relatedHouse = [paramObj.userInfo.allInfo[@"related_house"] boolValue];
         self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
-        
-        NSLog(@"%@\n", paramObj.queryParams);
-        NSLog(@"%@\n",paramObj.userInfo.allInfo);
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -71,6 +72,16 @@
     [self setupUI];
     [self setupData];
     [self startLoadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear:animated];
 }
 
 - (void)setupUI {
@@ -92,7 +103,6 @@
     
     [self configTableView];
     self.viewModel = [[FHNeighborViewModel alloc] initWithController:self tableView:_tableView];
-    self.viewModel.searchId = self.searchId;
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -131,11 +141,13 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+        _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMore];
@@ -168,22 +180,22 @@
 // 第一次或者过滤器变化之后重新加载
 - (void)firstRequestDataWithLoading:(BOOL)needLoading {
     [self.viewModel.houseList removeAllObjects];
+    [self.viewModel.houseShowTracerDic removeAllObjects];
     self.hasValidateData = NO;
     self.viewModel.searchId = NULL;
     [self.tableView reloadData];
-    // 开始加载
-    if (needLoading) {
-        [self startLoading];
-    }
-
+    
     [self realRequestWithOffset:0];
 }
 
 - (void)loadMore {
+    [self.viewModel addCategoryRefreshLog];
     [self realRequestWithOffset:self.viewModel.houseList.count];
 }
 
 - (void)realRequestWithOffset:(NSInteger)offset {
+    // 是否是第一次请求
+    self.viewModel.firstRequestData = (offset == 0 ? YES : NO);
     if (self.neighborListVCType == FHNeighborListVCTypeErshouSameNeighbor ||
         self.neighborListVCType == FHNeighborListVCTypeNeighborOnSales ||
         self.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
@@ -204,6 +216,16 @@
 - (void)onConditionChanged:(NSString *)condition {
     self.viewModel.condition = condition; // 过滤器条件改变
     [self firstRequestDataWithLoading:NO];
+}
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self.viewModel addStayCategoryLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

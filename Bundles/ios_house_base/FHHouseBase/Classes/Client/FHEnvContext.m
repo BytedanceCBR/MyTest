@@ -14,21 +14,25 @@
 #import "TTInstallIDManager.h"
 #import "BDAccountConfiguration.h"
 #import "BDAccount+Configuration.h"
+#import "FHURLSettings.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong)NSMutableDictionary *commonRequestParam;
+@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
+@property(nonatomic , strong) NSDictionary *currentConfigDictionary;
+
 @end
 
 @implementation FHEnvContext
 
 + (instancetype)sharedInstance
 {
-    static id manager = nil;
+    static FHEnvContext * manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
+        manager.configDataReplay = [RACReplaySubject subject];
     });
     
     return manager;
@@ -61,6 +65,11 @@
     
 }
 
+- (void)saveGeneralConfig:(FHConfigModel *)model
+{
+    [self.generalBizConfig saveCurrentConfigCache:model];
+}
+
 - (void)updateRequestCommonParams
 {
     //初始化公共请求参数
@@ -74,9 +83,12 @@
     requestParam[@"app_name"] = @"f100";
     requestParam[@"source"] = @"app";
     
-    NSInteger cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (cityId > 0) {
-        [requestParam setValue:@(cityId) forKey:@"city_id"];
+    //获取city_id
+    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if (cityId > 0) {
+            [requestParam setValue:@(cityId) forKey:@"city_id"];
+        }
     }
     
     double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
@@ -129,7 +141,7 @@
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
-        conf.domain = [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance baseUrl];
+        conf.domain = [FHURLSettings baseURL];
         conf.getDeviceIdBlock = ^NSString * _Nonnull{
             return deviceID;
         };
@@ -149,41 +161,50 @@
     }];
 }
 
+- (void)acceptConfigDictionary:(NSDictionary *)configDict
+{
+    if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
+        FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
+        self.generalBizConfig.configCache = dataModel;
+        [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
+        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+        [self.configDataReplay sendNext:dataModel];
+    }
+}
+
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
+{
+    if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
+        self.generalBizConfig.configCache = configModel;
+        [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
+        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+        if (![configModel.toDictionary isEqualToDictionary:self.currentConfigDictionary]) {
+            self.currentConfigDictionary = configModel.toDictionary;
+            [self.configDataReplay sendNext:configModel];
+        }
+    }
+}
+
 - (void)startLocation
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:YES];
-}
-
-- (void)updateConfigCache
-{
-    [self.generalBizConfig updataCurrentConfigCache];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (FHConfigDataModel *)getConfigFromCache
 {
-    return self.generalBizConfig.configCache;
+    if (self.generalBizConfig.configCache) {
+        return self.generalBizConfig.configCache;
+    }else
+    {
+        return [self readConfigFromLocal];
+    }
 }
 
 - (FHConfigDataModel *)readConfigFromLocal
 {
     return [self.generalBizConfig getGeneralConfigFromLocal];
-}
-
-- (FHSearchConfigModel *)getSearchConfigFromCache
-{
-    if (!self.generalBizConfig.configCache.filter) {
-        return [self readSearchConfigFromLocal];
-    }
-    return self.generalBizConfig.configCache.filter;
-}
-
-- (FHSearchConfigModel *)readSearchConfigFromLocal
-{
-    FHSearchConfigModel * searchConfig = [self.generalBizConfig getSearchConfigFromLocal];
-    self.generalBizConfig.configCache.filter = searchConfig;
-    return [self.generalBizConfig getSearchConfigFromLocal];
 }
 
 //获取当前保存的城市名称
