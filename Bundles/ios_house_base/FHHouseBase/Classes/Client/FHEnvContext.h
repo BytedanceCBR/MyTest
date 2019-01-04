@@ -8,10 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "FHClient.h"
 #import "TTBaseMacro.h"
-#import "FHHomeConfigManager.h"
 #import "FHGeneralBizConfig.h"
 #import "FHClientModel.h"
 #import "FHSearchConfigModel.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -40,9 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-@property (nonatomic,strong)FHClient * client;
+@property (nonatomic, strong)FHClient * client;
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
 @property (nonatomic, assign) BOOL isSameToLocCity;
+@property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
+@property(nonatomic , strong) RACReplaySubject *configDataReplay;
 
 
 + (instancetype)sharedInstance;
@@ -75,14 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSDictionary *)getRequestCommonParams;
 
-/*
-  config变化更新cache
- */
-- (void)updateConfigCache;
-
-/*
  
- */
 - (void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
 
@@ -107,6 +102,10 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+//接受config数据
+- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel;
+
+- (void)acceptConfigDictionary:(NSDictionary *)configDict;
 
 /*
  获取首页埋点公共参数

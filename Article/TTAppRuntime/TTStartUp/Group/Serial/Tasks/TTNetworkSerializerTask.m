@@ -25,7 +25,6 @@
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
-#import "FHHomeConfigManager.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
 #import "FHEnvContext.h"
@@ -165,6 +164,8 @@
 
 //        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
         NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
+        NSLog(@"fParams = %@",fParams);
         
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];

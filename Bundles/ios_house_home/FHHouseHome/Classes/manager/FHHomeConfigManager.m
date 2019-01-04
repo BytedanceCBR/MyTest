@@ -24,8 +24,11 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeConfigManager alloc] init];
-        manager.configDataReplay = [RACReplaySubject subject];
+//        manager.configDataReplay = [RACReplaySubject subject];
         manager.searchConfigDataReplay = [RACReplaySubject subject];
+        [FHEnvContext sharedInstance].homeConfigCallBack = ^(FHConfigDataModel * _Nonnull configModel) {
+            [manager acceptConfigDataModel:configModel];
+        };
     });
     return manager;
 }
@@ -40,7 +43,7 @@
     [FHMainApi getConfig:cityIdNumber gaodeLocation:CLLocationCoordinate2DMake(latValue, lonValue) gaodeCityId:cityCode gaodeCityName:cityName completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
         self.currentDataModel = model.data;
         self.currentDictionary = model.data.toDictionary;
-        [self.configDataReplay sendNext:model.data];
+//        [self.configDataReplay sendNext:model.data];
     }];
 }
 
@@ -51,8 +54,7 @@
             FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
             self.currentDataModel = dataModel;
             self.currentDictionary = configDict;
-            [[FHEnvContext sharedInstance] updateConfigCache];
-            [self.configDataReplay sendNext:dataModel];
+//            [self.configDataReplay sendNext:dataModel];
 //            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
         }
     }
@@ -64,8 +66,7 @@
         if (![configModel.toDictionary isEqualToDictionary:self.currentDictionary]) {
             self.currentDataModel = configModel;
             self.currentDictionary = configModel.toDictionary;
-            [[FHEnvContext sharedInstance] updateConfigCache];
-            [self.configDataReplay sendNext:configModel];
+//            [self.configDataReplay sendNext:configModel];
 //            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
         }
     }

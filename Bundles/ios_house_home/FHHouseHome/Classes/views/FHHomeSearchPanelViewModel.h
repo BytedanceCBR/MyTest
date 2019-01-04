@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeSearchPanelViewModel : NSObject
-
+@property (nonatomic, strong) UIViewController *viewController;
 - (instancetype)initWithSearchPanel:(FHHomeSearchPanelView *)panel;
 
 - (void)fetchSearchPanelRollData;

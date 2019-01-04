@@ -8,7 +8,6 @@
 #import "FHGeneralBizConfig.h"
 #import <YYCache.h>
 #import "FHUtils.h"
-#import "FHHomeConfigManager.h"
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -54,14 +53,12 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 
 - (void)updataCurrentConfigCache
 {
-    if ([FHHomeConfigManager sharedInstance].currentDataModel) {
-        self.configCache = [FHHomeConfigManager sharedInstance].currentDataModel;
-    }
+    
 }
 
 - (void)saveCurrentConfigCache:(FHConfigModel *)configValue
 {
-    self.configCache = configValue;
+    self.configCache = configValue.data;
     
     if([configValue.data isKindOfClass:[FHConfigDataModel class]])
     {
@@ -71,6 +68,20 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
         }
     }
 }
+
+- (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue
+{
+    self.configCache = configValue;
+    
+    if([configValue isKindOfClass:[FHConfigDataModel class]])
+    {
+        NSString *configJsonStr = configValue.toJSONString;
+        if ([configJsonStr isKindOfClass:[NSString class]]) {
+            [self.generalConfigCache setObject:configJsonStr forKey:kGeneralKey];
+        }
+    }
+}
+
 
 - (void)updateUserSelectDiskCacheIndex:(NSNumber *)indexNum
 {

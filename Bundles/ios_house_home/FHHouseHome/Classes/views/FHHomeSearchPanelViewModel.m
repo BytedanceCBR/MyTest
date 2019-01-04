@@ -38,11 +38,11 @@
 {
     [[[self.suspendSearchBar.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
     {
-        NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",@"xxx"];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
-        
-        NSLog(@"tap Country btn");
-
+//        NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",@"xxx"];
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
+//
+//        NSLog(@"tap Country btn");
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
     }];
 }
 
@@ -62,7 +62,7 @@
 - (void)addListenerConfigChanged
 {
     WeakSelf;
-    [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         [self fetchSearchPanelRollData];
     }];
@@ -104,6 +104,7 @@
     }];
     
     self.suspendSearchBar.countryLabel.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    [self.suspendSearchBar updateCountryLabelLayout:self.suspendSearchBar.countryLabel.text];
 }
 
 - (void)requestPanelRollScreen:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion

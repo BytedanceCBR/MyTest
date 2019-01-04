@@ -103,6 +103,7 @@ extension Notification.Name {
                 if let dictValue = data?.toJSON()
                 {
                     FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+                    FHEnvContext.sharedInstance().acceptConfigDictionary(dictValue)
                 }
             })
             .disposed(by: disposeBag)

@@ -24,9 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestCurrentLocation:(BOOL)showAlert;
 
+- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion;
+
 - (void)checkUserLocationStatus;
 
 - (void)setUpLocManagerLocalInfo;
+
+- (void)showCitySwitchAlert:(NSString *)cityName;
 
 @end
 

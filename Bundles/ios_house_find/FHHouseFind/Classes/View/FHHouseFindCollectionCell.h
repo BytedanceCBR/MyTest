@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindCollectionCell : UICollectionViewCell
 
+- (void)updateDataWithOpenUrl:(NSString *)openUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END

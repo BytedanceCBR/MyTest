@@ -88,6 +88,13 @@ class CountryListVC: BaseViewController {
             maker.left.right.bottom.equalToSuperview()
         }
         dataSource.onItemSelect = self.onItemSelect
+        dataSource.onItemClick = { cityId in
+            FHLocManager.sharedInstance().requestConfig(byCityId: cityId){
+                (isSuccess) in
+                print("xxxx city = \(cityId) = \(isSuccess)")
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
         tableView.register(BubbleCell.self, forCellReuseIdentifier: CountryListCellType.bubble.rawValue)
@@ -155,7 +162,8 @@ class CountryListVC: BaseViewController {
             let lat = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.latitude
             let lng = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.longitude
             
-            let params = TTNetworkManager.shareInstance()?.commonParamsblock() as? [String: Any]
+            let params = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String: Any]
+            
             
             let locationResponseObv: Observable<GeneralConfigResponse?> = requestGeneralConfig(cityName: cityName,
                                                                                                cityId: nil,
@@ -167,34 +175,34 @@ class CountryListVC: BaseViewController {
             locationResponseObv
                 .subscribe(onNext: { [unowned self] response in
 
-//                    let params = (self.dataSource.tracerParams ?? TracerParams.momoid()) <|>
-//                        toTracerParams("location", key: "query_type") <|>
-//                        toTracerParams(response?.data?.currentCityName ?? "be_null", key: "city")
-//
-//                    recordEvent(key: "city_filter", params: params)
-//
-//                    let generalBizConfig = EnvContext.shared.client.generalBizconfig
-//                    // 只在用户没有选择城市时才回设置城市
-//                    if let currentCityId = response?.data?.currentCityId {
-//                        if let theCityId = generalBizConfig.currentSelectCityId.value, theCityId != currentCityId {
-//                            generalBizConfig.currentSelectCityId.accept(Int(currentCityId))
-//                            generalBizConfig.setCurrentSelectCityId(cityId: Int(currentCityId))
-//                        }
-//                        self.navigationController?.popViewController(animated: true)
-//                        FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
-//
-//                    }
-//
-//                    if let payload = response?.data?.toJSONString() {
-//                        self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
-//                    }
-//
-//                    EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(response?.data)
-//
-//                    EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
-//
-//                    //TODO: 暂时的解决方案，需要也加入到switcher中去
-//                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
+                    let params = (self.dataSource.tracerParams ?? TracerParams.momoid()) <|>
+                        toTracerParams("location", key: "query_type") <|>
+                        toTracerParams(response?.data?.currentCityName ?? "be_null", key: "city")
+
+                    recordEvent(key: "city_filter", params: params)
+
+                    let generalBizConfig = EnvContext.shared.client.generalBizconfig
+                    // 只在用户没有选择城市时才回设置城市
+                    if let currentCityId = response?.data?.currentCityId {
+                        if let theCityId = generalBizConfig.currentSelectCityId.value, theCityId != currentCityId {
+                            generalBizConfig.currentSelectCityId.accept(Int(currentCityId))
+                            generalBizConfig.setCurrentSelectCityId(cityId: Int(currentCityId))
+                        }
+                        self.navigationController?.popViewController(animated: true)
+                        FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
+
+                    }
+
+                    if let payload = response?.data?.toJSONString() {
+                        self.searchConfigCache?.setObject(payload as NSString, forKey: "config")
+                    }
+                    
+                    EnvContext.shared.client.generalBizconfig.generalCacheSubject.accept(response?.data)
+                    
+                    EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
+
+                    //TODO: 暂时的解决方案，需要也加入到switcher中去
+                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })
@@ -275,6 +283,8 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     private var filterStr: String? = nil
 
     var onItemSelect: PublishSubject<Int>?
+    
+    var onItemClick: ((Int) -> Void)?
 
     func numberOfSections(in tableView: UITableView) -> Int {
         let theDatas = getDisplayDatas()
@@ -321,13 +331,17 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let node = getDisplayDatas()[indexPath.section]
-        if node.type == .item {
-            if let item = node.children?[indexPath.row], let cityId = item.cityId {
-                onItemSelect?.onNext(cityId)
-                let params = tracerParams <|>
-                    toTracerParams("list", key: "query_type") <|>
-                    toTracerParams(item.label, key: "city")
-                recordEvent(key: "city_filter", params: params)
+        var cityList = FHEnvContext.sharedInstance().getConfigFromCache().cityList as! [FHConfigDataCityListModel]?
+        
+        if (cityList?.count ?? 0) > indexPath.row {
+            if let item = cityList?[indexPath.row], let cityId = item.cityId {
+                self.onItemClick?(Int(cityId) ?? 0)
+
+//                onItemSelect?.onNext(cityId)
+//                let params = tracerParams <|>
+//                    toTracerParams("list", key: "query_type") <|>
+//                    toTracerParams(item.label, key: "city")
+//                recordEvent(key: "city_filter", params: params)
             }
         }
 
