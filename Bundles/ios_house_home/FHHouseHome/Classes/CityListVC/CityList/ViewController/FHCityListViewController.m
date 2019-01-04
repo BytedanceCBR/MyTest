@@ -12,6 +12,8 @@
 #import "FHCityListNavBarView.h"
 #import "TTDeviceHelper.h"
 #import "FHCityListLocationBar.h"
+#import "FHLocManager.h"
+#import "TTReachability.h"
 
 @interface FHCityListViewController ()
 
@@ -61,12 +63,66 @@
         make.top.mas_equalTo(self.naviBar.mas_bottom);
         make.height.mas_equalTo(50);
     }];
-    _locationBar.cityName = @"北京";
-    _locationBar.isLocationSuccess = YES;
+    [self.locationBar.reLocationBtn addTarget:self action:@selector(reLocation) forControlEvents:UIControlEventTouchUpInside];
+    // 允许定位，而且当前有城市数据
+    if ([FHLocManager sharedInstance].currentReGeocode && [self locAuthorization]) {
+        self.locationBar.cityName = [FHLocManager sharedInstance].currentReGeocode.city;
+        self.locationBar.isLocationSuccess = YES;
+    } else {
+        self.locationBar.isLocationSuccess = NO;
+    }
 }
 
 - (void)setupTableView {
     
+}
+
+// 是否允许定位
+- (BOOL)locAuthorization {
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusAuthorizedAlways) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self checkLocAuthorization];
+}
+
+// 重新定位
+- (void)reLocation {
+    if ([TTReachability isNetworkConnected]) {
+        // EnvContext.shared.toast.showCustomLoadingToast("定位中")
+        [self requestCurrentLocation];
+    } else {
+        // 无网络
+        // EnvContext.shared.toast.showToast("网络异常")
+    }
+}
+
+// 检测
+- (void)checkLocAuthorization {
+    if ([TTReachability isNetworkConnected]) {
+        [self requestCurrentLocation];
+    } else {
+        // 无网络
+    }
+}
+
+// 请求定位信息
+- (void)requestCurrentLocation {
+    __weak typeof(self) wSelf = self;
+    [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+        if (reGeocode && reGeocode.city.length > 0) {
+            // 定位成功
+            wSelf.locationBar.cityName = reGeocode.city;
+            wSelf.locationBar.isLocationSuccess = YES;
+        } else {
+            wSelf.locationBar.isLocationSuccess = NO;
+        }
+    }];
 }
 
 @end

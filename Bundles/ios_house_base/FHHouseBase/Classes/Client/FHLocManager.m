@@ -120,7 +120,7 @@
     [AMapServices sharedServices].crashReportEnabled = false;
 }
 
-- (void)requestCurrentLocation:(BOOL)showAlert
+- (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
     [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
@@ -167,12 +167,21 @@
             self.currentLocaton = location;
         }
         
-        [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-            //更新config
-            [self updateAllConfig:model];
-        }];
-        
+        if (completion) {
+            // 城市选择重新定位需回调
+            completion(regeocode);
+        } else {
+            [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+                //更新config
+                [self updateAllConfig:model];
+            }];
+        }
     }];
+}
+
+- (void)requestCurrentLocation:(BOOL)showAlert
+{
+    [self requestCurrentLocation:showAlert completion:NULL];
 }
 
 - (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion

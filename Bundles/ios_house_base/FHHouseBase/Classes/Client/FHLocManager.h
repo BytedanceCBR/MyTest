@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestCurrentLocation:(BOOL)showAlert;
 
+- (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion;
+
 - (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion;
 
 - (void)checkUserLocationStatus;
