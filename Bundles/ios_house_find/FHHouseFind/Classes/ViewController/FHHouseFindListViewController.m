@@ -45,17 +45,8 @@
 - (void)setupViewModel
 {
     _viewModel = [[FHHouseFindListViewModel alloc]initWithCollectionView:_collectionView];
+    [_viewModel setSegmentView:_segmentView];
  
-}
-
-
-- (void)updateSegementTitles:(NSArray <NSString *> *)titles
-{
-    if (titles.count == 0) {
-        return;
-    }
-    _segmentView.sectionTitles = titles;
-    _segmentView.selectedSegmentIndex = 0;
 }
 
 - (void)setupUI
@@ -98,7 +89,7 @@
 - (void)setupSegmentControl
 {
     _segmentView = [[HMSegmentedControl alloc]initWithFrame:CGRectZero];
-    _segmentView.sectionTitles = @[@"二手房",@"租房",@"新房",@"小区"];
+    self.segmentView.sectionTitles = @[@"",@"",@"",@""];
     _segmentView.selectionIndicatorHeight = 0;
     _segmentView.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -114,13 +105,6 @@
                                      [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
     _segmentView.titleTextAttributes = attributeNormal;
     _segmentView.selectedTitleTextAttributes = attributeSelect;
-    __weak typeof(self)wself = self;
-    _segmentView.indexChangeBlock = ^(NSInteger index) {
-
-//        if (self.clickIndexCallBack) {
-//            self.clickIndexCallBack(index);
-//        }
-    };
     [self.view addSubview:_segmentView];
 }
 

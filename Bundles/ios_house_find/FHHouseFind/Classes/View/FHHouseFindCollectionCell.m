@@ -26,9 +26,9 @@
     }
     return self;
 }
-- (void)updateDataWithOpenUrl:(NSString *)openUrl
+- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl
 {
-    [self.containerView updateDataWithOpenUrl:openUrl];
+    [self.containerView updateDataWithHouseType:houseType openUrl:openUrl];
 }
 - (void)setupUI
 {

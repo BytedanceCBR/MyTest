@@ -49,7 +49,7 @@
     return self;
 }
 
-- (void)updateDataWithOpenUrl:(NSString *)openUrl
+- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl
 {
     if ([_openUrl isEqualToString:openUrl]) {
         return;

@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindCollectionCell : UICollectionViewCell
 
-- (void)updateDataWithOpenUrl:(NSString *)openUrl;
+- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl;
 
 @end
 

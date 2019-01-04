@@ -11,14 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class HMSegmentedControl;
 @interface FHHouseFindListViewModel : NSObject
 
-@property (nonatomic , assign) FHHouseType houseType;
-
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView;
-
--(void)jump2GuessVC;
--(void)setTracerModel:(FHTracerModel *)tracerModel;
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (void)jump2GuessVC;
+- (void)setTracerModel:(FHTracerModel *)tracerModel;
+- (void)setSegmentView:(HMSegmentedControl *)segmentView;
 
 @end
 
