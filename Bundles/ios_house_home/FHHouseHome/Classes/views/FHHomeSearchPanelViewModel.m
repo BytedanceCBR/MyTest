@@ -104,6 +104,7 @@
     }];
     
     self.suspendSearchBar.countryLabel.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    [self.suspendSearchBar updateCountryLabelLayout:self.suspendSearchBar.countryLabel.text];
 }
 
 - (void)requestPanelRollScreen:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion

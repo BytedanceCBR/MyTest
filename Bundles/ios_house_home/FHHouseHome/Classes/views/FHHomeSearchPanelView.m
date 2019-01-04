@@ -110,6 +110,22 @@
     
 }
 
+- (void)updateCountryLabelLayout:(NSString *)labelText
+{
+    [self.countryLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.centerY.equalTo(self);
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(labelText.length * 14);
+    }];
+    
+//    [self.triangleImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.countryLabel.mas_right).offset(8);
+//        make.centerY.equalTo(self);
+//        make.height.width.mas_equalTo(10);
+//    }];
+}
+
 - (void)setupVerticalLine
 {
     self.verticalLineView = [UIView new];
