@@ -6161,7 +6161,7 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 + (BOOL)feedLastReadCellShowEnable{
     NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
     BOOL res = YES;
-    if (info && [info[@"is_show_last_read_docker"] integerValue] == 1) {
+    if (info && [info.allKeys containsObject:@"is_show_last_read_docker"] && [info[@"is_show_last_read_docker"] integerValue] == 0) {
         res = NO;
     }
     
