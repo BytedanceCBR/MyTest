@@ -91,7 +91,7 @@ class CountryListVC: BaseViewController {
         dataSource.onItemClick = { cityId in
             FHLocManager.sharedInstance().requestConfig(byCityId: cityId){
                 (isSuccess) in
-                print("xxxx = \(isSuccess)")
+                print("xxxx city = \(cityId) = \(isSuccess)")
                 self.navigationController?.popViewController(animated: true)
             }
         }
@@ -331,9 +331,11 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let node = getDisplayDatas()[indexPath.section]
-        if node.type == .item {
-            if let item = node.children?[indexPath.row], let cityId = item.cityId {
-                self.onItemClick?(cityId)
+        var cityList = FHEnvContext.sharedInstance().getConfigFromCache().cityList as! [FHConfigDataCityListModel]?
+        
+        if (cityList?.count ?? 0) > indexPath.row {
+            if let item = cityList?[indexPath.row], let cityId = item.cityId {
+                self.onItemClick?(Int(cityId) ?? 0)
 
 //                onItemSelect?.onNext(cityId)
 //                let params = tracerParams <|>

@@ -527,7 +527,7 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             [self reloadFHHomeHeaderCell];
         }];

@@ -56,7 +56,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.showPlaceHolder = YES;
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
-        
+        self.hasShowedData = NO;
+
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
 
@@ -107,6 +108,22 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
+            
+             NSString *urlStr = @"http://10.1.10.250:8080/test";
+             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
+             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
+             NSString *unencodedString = urlStr;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+             (CFStringRef)unencodedString,
+             NULL,
+             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+             kCFStringEncodingUTF8));
+             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             NSURL *url = [TTURLUtils URLWithString:urlStr];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+             return ;
+            
+            
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
@@ -138,7 +155,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self requestOriginData];
             }
         };
-        
+
     }
     return self;
 }
@@ -180,7 +197,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         StrongSelf;
         
         if (!model || error) {
-            [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            if (![FHEnvContext isNetworkConnected]) {
+                [self.homeViewController.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+            }else
+            {
+                [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+            }
             return;
         }
         
@@ -276,6 +298,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self.tableViewV finishPullUpWithSuccess:YES];
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
+        
         
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         self.tableViewV.hasMore = model.data.hasMore;

@@ -104,13 +104,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     //to do request config xiefei.xf
-    if (configDataModel == nil) {
-        
-    }else
-    {
-        
-    }
-    [self.homeListViewModel requestOriginData];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
 }
 
 - (void)willAppear
