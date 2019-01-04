@@ -183,8 +183,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>6.6.2.5</string>
-	<key>UPDATE_VERSION_CODE</key>
-	<string>66250</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -339,5 +337,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UPDATE_VERSION_CODE</key>
+	<string>66250</string>
 </dict>
 </plist>

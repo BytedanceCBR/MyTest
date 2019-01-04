@@ -114,7 +114,7 @@
              tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
              tracerDict[@"card_type"] = @"left_pic";
              tracerDict[@"page_type"] = [self pageTypeString];
-             tracerDict[@"element_type"] = @"be_null";
+             tracerDict[@"element_type"] = @"maintab_list";
              tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
              tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
              tracerDict[@"search_id"] = cellModel.searchId ? : @"";
