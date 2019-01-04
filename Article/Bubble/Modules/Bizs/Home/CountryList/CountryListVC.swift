@@ -93,6 +93,7 @@ class CountryListVC: BaseViewController {
                 (isSuccess) in
                 print("xxxx city = \(cityId) = \(isSuccess)")
                 self.navigationController?.popViewController(animated: true)
+                FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
             }
         }
         tableView.dataSource = dataSource

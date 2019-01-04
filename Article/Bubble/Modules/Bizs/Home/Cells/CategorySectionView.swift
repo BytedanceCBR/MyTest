@@ -163,7 +163,7 @@ class CategorySectionView: UIView {
                 {
                     FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
                     EnvContext.shared.client.generalBizconfig.updateConfig()
-                    FHEnvContext.sharedInstance().acceptConfigDictionary(dictValue)
+//                    FHEnvContext.sharedInstance().acceptConfigDictionary(dictValue)
                 }
             })
             .disposed(by: disposeBag)
