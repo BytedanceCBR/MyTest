@@ -151,6 +151,26 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self.source = source;
         }
         
+        // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
+        if let urlStr = paramObj?.sourceURL.absoluteString,
+            let realStr = urlStr.removingPercentEncoding,
+            let urlParams = realStr.urlParameters {
+            if let origin_from = urlParams["origin_from"],
+                origin_from.count > 0 {
+                traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
+                // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams(origin_from, key: "origin_from")
+            }
+            if let log_pb = urlParams["log_pb"],
+                log_pb.count > 2,
+                let jsonData = log_pb.data(using: .utf8) {
+                if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
+                    traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                }
+            }
+        }
+        
         // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
 
