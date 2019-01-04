@@ -73,7 +73,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         //订阅config变化发送网络请求
         __block BOOL isFirstChange = YES;
-        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {

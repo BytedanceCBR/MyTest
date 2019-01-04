@@ -28,6 +28,9 @@
 //添加按钮
 - (void)addActionWithTitle:(nullable NSString *)title actionType:(TTThemedAlertActionType)actionType actionBlock:(nullable TTThemedAlertActionBlock)actionBlock;
 
+//添加灰色按钮
+- (void)addActionWithGrayTitle:(nullable NSString *)title actionType:(TTThemedAlertActionType)actionType actionBlock:(nullable TTThemedAlertActionBlock)actionBlock;
+
 //添加textField（可连续添加，显示顺序同添加顺序）
 - (void)addTextFieldWithConfigurationHandler:(nullable TTThemedAlertTextFieldActionBlock)actionBlock;
 

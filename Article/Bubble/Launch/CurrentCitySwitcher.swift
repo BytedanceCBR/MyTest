@@ -140,6 +140,13 @@ class CurrentCitySwitcher {
 
     // MARK: 城市列表配置，首页频道配置q
     fileprivate func doRequestGeneralConfig(cityId: Int?) {
+        if let cityIdV = cityId {
+            FHLocManager.sharedInstance().requestConfig(byCityId: cityIdV){
+                (isSuccess) in
+                print("xxxx = \(isSuccess)")
+                
+            }
+        }
         
 //        requestGeneralConfig(cityId: "\(cityId ?? 122)", needCommonParams: false)
 //            .timeout(5, scheduler: MainScheduler.instance)

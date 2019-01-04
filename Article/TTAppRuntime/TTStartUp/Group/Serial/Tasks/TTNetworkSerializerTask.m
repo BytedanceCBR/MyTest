@@ -25,7 +25,6 @@
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
-#import "FHHomeConfigManager.h"
 #import <SecGuard/SGMSafeGuardManager.h>
 //#import "AKSafeGuardHelper.h"
 #import "FHEnvContext.h"
@@ -163,8 +162,8 @@
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
         }
 
-//        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
-        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
+//        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
         
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];

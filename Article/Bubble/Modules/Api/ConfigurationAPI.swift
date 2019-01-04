@@ -14,7 +14,7 @@ func requestSearchConfig(
     gaodeCityName: String? = nil,
     geoCityId: String? = nil,
     cityId: Int? = nil) -> Observable<SearchConfigResponse?> {
-    let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock()
+    let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams()
     var params = [String: Any]()
     if let commonParams = commonParams as? [String : Any] {
         params.merge(commonParams ) { (left, right) -> Any in
@@ -64,8 +64,8 @@ func requestGeneralConfig(
     
     
     var params: [String: Any] = params
-    let block = TTNetworkManager.shareInstance()?.commonParamsblock
-    let commonParams = block?()
+//    let block = TTNetworkManager.shareInstance()?.commonParamsblock
+    let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams()
     if !needCommonParams {
         if let commonParams = commonParams as? [String : Any] {
             params.merge(commonParams) { (left, right) -> Any in
@@ -104,7 +104,7 @@ func requestGeneralConfig(params: [String: Any], needCommonParams: Bool = true) 
 
     return TTNetworkManager.shareInstance().rx
             .requestForBinary(
-                    url: "\(EnvContext.networkConfig.host)/f100/v2/api/config",
+                    url: "\(EnvContext.networkConfig.host)/f100/api/config",
                     params: params,
                     method: "GET",
                     needCommonParams: needCommonParams)
