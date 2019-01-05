@@ -8,8 +8,9 @@ import RxCocoa
 import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
-
     
+    var tracerModel: HouseRentTracer?
+
     var source: String?
     var goDetailTraceParam: TracerParams?
     

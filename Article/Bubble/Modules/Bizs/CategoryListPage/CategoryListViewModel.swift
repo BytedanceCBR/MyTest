@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
+    
+    var tracerModel: HouseRentTracer?
 
     var source: String?
     

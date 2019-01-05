@@ -92,6 +92,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     private var netStateInfoVM : NHErrorViewModel?
 
+    private var allParams: [AnyHashable: Any]?
+
     var sameNeighborhoodFollowUp = BehaviorRelay<Result<Bool>>(value: Result.success(false))
 
     lazy var infoMaskView: EmptyMaskView = {
@@ -146,6 +148,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.isShowBottomBar = true
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
+        self.allParams = paramObj?.allParams
         makerTraceParam(paramObj?.allParams)
         if let source = paramObj?.userInfo.allInfo["source"] as? String {
             self.source = source;
@@ -170,7 +173,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 }
             }
         }
-        
         // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
 
@@ -264,6 +266,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         guard let allParams = allParams else {
             return
         }
+
+
         /*
          traceParam[@"log_pb"] = [cellModel logPb];
          */
@@ -312,6 +316,30 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let originSearchId = allParams["origin_search_id"] {
             traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
         }
+    }
+
+    fileprivate func tracerDictToTracerModel(tracerDict: [AnyHashable : Any]) -> HouseRentTracer {
+        print("tracerDictToTracerModel")
+        let houseTypeStr = houseType(houseType: houseType)
+        let pageType = pageTypeString(houseType)
+        let tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+        let cardType = tracer["card_type"] as? String ?? "be_null"
+        let result = HouseRentTracer(pageType: pageType,
+                                     houseType: houseTypeStr,
+                                     cardType: cardType)
+        result.groupId = "\(houseId)"
+        result.logPb = tracer["log_pb"]
+        if let rank = tracerDict["rank"] as? String {
+            result.rank = rank
+        } else {
+            result.rank = tracer["rank"] as? String ?? "be_null"
+        }
+        result.originFrom = tracer["origin_from"] as? String
+        result.originSearchId = tracer["origin_search_id"] as? String
+        result.enterFrom = tracer["enter_from"] as? String ?? "be_null"
+        result.elementFrom = tracer["element_from"] as? String ?? "be_null"
+
+        return result
     }
     /*
     fileprivate func checkTraceParam(_ allParams :  [AnyHashable: Any]?) {
@@ -439,6 +467,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
 
         detailPageViewModel = pageViewModelProvider?(tableView, infoMaskView, self.navigationController, searchId)
+
+        if let allParams = self.allParams {
+            self.detailPageViewModel?.tracerModel = self.tracerDictToTracerModel(tracerDict: allParams)
+        }
         detailPageViewModel?.source = self.source
         
         detailPageViewModel?.showMessageAlert = { [weak self] (message) in

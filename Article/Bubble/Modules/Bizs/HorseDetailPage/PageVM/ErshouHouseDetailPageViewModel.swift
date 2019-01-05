@@ -76,11 +76,7 @@ import RxCocoa
 
     weak var infoMaskView: EmptyMaskView?
 
-    var traceParams = TracerParams.momoid() {
-        didSet {
-            tracerModel = getTraceModelFromTraceParams(traceParams: traceParams)
-        }
-    }
+    var traceParams = TracerParams.momoid()
 
     var isRecordRelated: Bool = false
 
@@ -90,7 +86,7 @@ import RxCocoa
 
     var recordRowIndex: Set<IndexPath> = []
 
-    private var tracerModel: HouseRentTracer?
+    var tracerModel: HouseRentTracer?
 
 
     init(
@@ -139,9 +135,8 @@ import RxCocoa
                     self?.dataSource.datas = result
                     self?.tableView?.reloadData()
                     DispatchQueue.main.async {
-                        
                         if let tableView = self?.tableView, let datas = self?.dataSource.datas {
-                            
+                            self?.traceCellByVisibleRect(tableView: tableView)
                             self?.traceDisplayCell(tableView: tableView, datas: datas)
                         }
                     }
@@ -154,6 +149,7 @@ import RxCocoa
             .throttle(0.5, latest: true, scheduler: MainScheduler.instance)
             .bind { [weak self, weak tableView] void in
                 self?.traceDisplayCell(tableView: tableView, datas: self?.dataSource.datas ?? [])
+                self?.traceCellByVisibleRect(tableView: tableView)
             }.disposed(by: disposeBag)
 
         self.bindFollowPage()
@@ -190,6 +186,38 @@ import RxCocoa
                 isRecordRelated = true
             }
         })
+    }
+
+    fileprivate func traceCellByVisibleRect(tableView: UITableView?) {
+        tableView?.indexPathsForVisibleRows?.forEach({ (indexPath) in
+//            if !recordRowIndex.contains(indexPath),
+            if let theCell = tableView?.cellForRow(at: indexPath) as? FHAgentListCell ,
+                let tableView = tableView {
+                let rectInTableView = theCell.frame
+                let rectInSuperView = tableView.convert(rectInTableView,
+                                                        to: tableView.superview)
+                print("traceCellByVisibleRect: rectInSuperView \(rectInSuperView)")
+                let parentFrame = tableView.superview?.frame ?? CGRect.zero
+                print("traceCellByVisibleRect: superView \(parentFrame)")
+                let visibleArea = catulateVisibleArea(containerFrame: parentFrame,
+                                                      targetFrame: rectInSuperView)
+                print("traceCellByVisibleRect visibleArea: \(visibleArea)")
+                theCell.onAreaDisplay(displayArea: CGRect(x: 0,
+                                                          y: 0,
+                                                          width: visibleArea.width,
+                                                          height: visibleArea.height - 15))
+            }
+        })
+    }
+
+    func catulateVisibleArea(containerFrame: CGRect, targetFrame: CGRect) -> CGRect {
+        let buttomBarHeight: CGFloat = 64
+        let realVisible = CGRect(x: containerFrame.minX,
+                                 y: containerFrame.minY,
+                                 width: containerFrame.width,
+                                 height: containerFrame.height - buttomBarHeight)
+        let intersectionFrame = realVisible.intersection(targetFrame)
+        return intersectionFrame
     }
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {

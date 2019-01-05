@@ -8,6 +8,7 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var tracerModel: HouseRentTracer?
 
     var source: String?
     

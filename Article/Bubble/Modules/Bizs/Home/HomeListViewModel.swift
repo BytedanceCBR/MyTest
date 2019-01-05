@@ -22,6 +22,7 @@ enum RequestSuccessType: Int {
 
 class HomeListViewModel: DetailPageViewModel {
 
+    var tracerModel: HouseRentTracer?
 
     var source: String?
     

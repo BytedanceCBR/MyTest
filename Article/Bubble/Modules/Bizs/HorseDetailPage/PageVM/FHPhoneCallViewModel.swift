@@ -19,9 +19,6 @@ class FHPhoneCallViewModel: NSObject {
                      disposeBag: DisposeBag) {
         btn.rx.tap
             .bind { [weak self] () in
-                self?.traceCall(rank: rank,
-                                contact: contact,
-                                traceModel: traceModel)
                 let searchId = traceModel?.searchId ?? "be_null"
 
                 self?.callRealtorPhone(contactPhone: contact,
@@ -29,21 +26,32 @@ class FHPhoneCallViewModel: NSObject {
                                        houseType: houseType,
                                        searchId: searchId,
                                        imprId: "",
-                                       disposeBag: disposeBag)
+                                       disposeBag: disposeBag, tracer: { [weak self] (isVirtualNumber) in
+                                        self?.traceCall(rank: rank,
+                                                        contact: contact,
+                                                        isVirtualNumber: isVirtualNumber,
+                                                        traceModel: traceModel)
+                })
             }
             .disposed(by: disposeBag)
     }
 
     func traceCall(rank: String,
                    contact: FHHouseDetailContact,
+                   isVirtualNumber: Bool,
                    traceModel: HouseRentTracer?) {
         let params = TracerParams.momoid() <|>
             toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
+            toTracerParams(traceModel?.cardType ?? "be_null", key: "card_type") <|>
             toTracerParams(traceModel?.elementFrom ?? "be_null", key: "element_from") <|>
             toTracerParams(traceModel?.rank ?? "be_null", key: "rank") <|>
-            toTracerParams(contact.realtorId ?? "be_null", key: "realthor_id") <|>
             toTracerParams(traceModel?.logPb ?? "be_null", key: "log_pb") <|>
+            toTracerParams(traceModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+            toTracerParams(traceModel?.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(contact.realtorId ?? "be_null", key: "realthor_id") <|>
+            toTracerParams(rank, key: "realtor_rank") <|>
             toTracerParams("detail_related", key: "realtor_position") <|>
+            toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate") <|>
             toTracerParams(traceModel?.enterFrom ?? "be_null", key: "enter_from")
         // 谢飞不打，我就不打has_auth
         recordEvent(key: "click_call", params: params)
@@ -54,12 +62,11 @@ class FHPhoneCallViewModel: NSObject {
                           houseType: HouseType,
                           searchId: String,
                           imprId: String,
-                          disposeBag: DisposeBag) {
-
+                          disposeBag: DisposeBag,
+                          tracer: @escaping (Bool) -> Void) {
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
-
         requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0",
                              houseId: houseId,
                              houseType: houseType,
@@ -68,11 +75,14 @@ class FHPhoneCallViewModel: NSObject {
             .subscribe(onNext: { (response) in
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
                     Utils.telecall(phoneNumber: virtualNumber)
+                    tracer(true)
                 }else {
                     Utils.telecall(phoneNumber: phone)
+                    tracer(false)
                 }
-                }, onError: { (error) in
-                    Utils.telecall(phoneNumber: phone)
+            }, onError: { (error) in
+                Utils.telecall(phoneNumber: phone)
+                tracer(false)
             })
             .disposed(by: disposeBag)
 

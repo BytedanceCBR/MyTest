@@ -38,6 +38,7 @@ protocol DetailPageViewModel: class {
     var followPage: BehaviorRelay<String> { get set }
 
     var groupId: String { get }
+    var tracerModel: HouseRentTracer? { get set }
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
     var houseType: HouseType { get set }

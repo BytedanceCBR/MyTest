@@ -150,6 +150,9 @@ fileprivate class ItemView: UIControl {
 }
 
 class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
+
+    var displayRecords:[() -> Void]?
+
     var refreshCallback: CellRefreshCallback?
 
     var disposeBag = DisposeBag()
@@ -287,6 +290,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
                 self.updateBottomBarState(isExpand: self.isExpanding)
                 self.refreshCell()
                 self.traceRealtorClickMore()
+                self.recordAllElementShow()
             })
             .disposed(by: disposeBag)
     }
@@ -383,6 +387,28 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
     }
 
+    func onAreaDisplay(displayArea: CGRect) {
+        expandItemView.subviews
+            .map { $0.frame }
+            .enumerated()
+            .forEach { (e) in
+                let (offset, f) = e
+                if displayArea.intersects(f) {
+                    if let displayRecords = displayRecords {
+                        if displayRecords.count > offset {
+                            displayRecords[offset]()
+                        }
+                    }
+                }
+            }
+    }
+
+    func recordAllElementShow() {
+        displayRecords?.forEach({ (record) in
+            record()
+        })
+    }
+
 }
 
 fileprivate class FHImageItem {
@@ -403,6 +429,7 @@ func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> 
     let params = TracerParams.momoid() <|>
         EnvContext.shared.homePageParams <|>
         toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
+        toTracerParams("old_detail_related",key: "element_type") <|>
         toTracerParams(traceModel?.rank ?? "be_null", key: "rank") <|>
         toTracerParams(traceModel?.logPb ?? "be_null", key: "log_pb")
     let records = [elementShowOnceRecord(params: params)]
@@ -458,10 +485,41 @@ func fillAgentListCell(
             return itemView
         })
 
+    // 经纪人展现埋点绑定
+    if theCell.displayRecords?.isEmpty ?? true {
+        if let traceModel = traceModel {
+            let records = data.recommendedRealtors?.take(5).enumerated()
+                .map({ (e) -> () -> Void in
+                    let (offset, contact) = e
+                    return getElementRecord(contact: contact, traceModel: traceModel, offset: offset)
+                })
+            theCell.displayRecords = records
+        }
+    }
     theCell.traceModel = traceModel
     if let items = items, items.count > 0 {
         theCell.addItems(items: items)
         theCell.updateByExpandingState()
+    }
+}
+
+func getElementRecord(contact: FHHouseDetailContact, traceModel: HouseRentTracer, offset: Int) -> () -> Void {
+    var hasRecord: Bool = false
+    return {
+        if hasRecord {
+            return
+        }
+        let params:[String: Any] = ["page_type": "old_detail",
+                                    "element_type": "old_detail_related",
+                                    "rank": traceModel.rank,
+                                    "origin_from": traceModel.originFrom ?? "be_null",
+                                    "origin_search_id": traceModel.originSearchId ?? "be_null",
+                                    "log_pb": traceModel.logPb ?? "be_null",
+                                    "realtor_id": contact.realtorId ?? "be_null",
+                                    "realtor_rank": offset,
+                                    "realtor_position": "detail_related"]
+        recordEvent(key: "realtor_show", params: params)
+        hasRecord = true
     }
 }
 

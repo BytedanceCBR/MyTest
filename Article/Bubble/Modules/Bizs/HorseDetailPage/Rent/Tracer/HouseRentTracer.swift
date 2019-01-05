@@ -21,6 +21,7 @@ class HouseRentTracer {
     var searchId: String?
     var groupId: String?
     var originFrom : String?
+    var originSearchId : String?
     var enterQuery: String?
     var searchQuery: String?
     var queryType: String?
@@ -40,6 +41,7 @@ class HouseRentTracer {
         self.searchId = "be_null"
         self.groupId = "be_null"
         self.originFrom = "be_null"
+        self.originSearchId = ""
         self.houseId = -1
     }
 
