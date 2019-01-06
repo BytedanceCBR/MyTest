@@ -335,8 +335,8 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         var cityList = FHEnvContext.sharedInstance().getConfigFromCache().cityList as! [FHConfigDataCityListModel]?
         
         if (cityList?.count ?? 0) > indexPath.row {
-            if let item = cityList?[indexPath.row], let cityId = item.cityId {
-                self.onItemClick?(Int(cityId) ?? 0)
+            if let item = cityList?[0], let cityId = item.cityId {
+                self.onItemClick?(Int(786) ?? 0)
 
 //                onItemSelect?.onNext(cityId)
 //                let params = tracerParams <|>

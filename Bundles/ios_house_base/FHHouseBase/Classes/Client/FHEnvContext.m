@@ -229,7 +229,7 @@
     if (kIsNSString([FHUtils contentForKey:kUserDefaultCityId])) {
         return [FHUtils contentForKey:kUserDefaultCityId];
     }
-    return @"122";
+    return nil;
 }
 
 //保存当前城市id
