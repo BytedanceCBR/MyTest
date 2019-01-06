@@ -214,6 +214,7 @@
 #pragma mark - FHHouseFilterDelegate
 
 - (void)onConditionChanged:(NSString *)condition {
+    self.tableView.mj_footer.hidden = YES;
     self.viewModel.condition = condition; // 过滤器条件改变
     [self firstRequestDataWithLoading:NO];
 }
