@@ -420,10 +420,10 @@ extension DetailPageViewModel {
                     }else {
                         if let pageType = traceParam.paramsGetter([:])["page_type"] as? String, pageType == "house_model_detail"
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true)
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true)
                         }else
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价")
                         }
                     }
                 })

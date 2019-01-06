@@ -150,7 +150,7 @@ class FHHouseContactBottomBarViewModel {
                     if self.houseType == .neighborhood {
                         titleStr = "咨询经纪人"
                     }
-                    self.showSendPhoneAlert?(titleStr, "随时获取房源最新动态", "提交")
+                    self.showSendPhoneAlert?(titleStr, "提交后将安排专业经纪人与您联系", "提交")
                 }
 
             })

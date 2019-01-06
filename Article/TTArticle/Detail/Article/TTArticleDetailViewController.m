@@ -1232,12 +1232,19 @@
                     StrongSelf;
                     [self report_showReportOnNatantView:style source:source trackSource:trackSource];
                 };
+            }else
+            {
+                if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
+                    ((ExploreDetailADContainerView*)natantView).delegate = self;
+                }
+          
+                [natantItems addObject:natantView];
+                [natantItems addObject:[self p_natantSpacingItemForClass:className]];
+                
+                if ([natantView isKindOfClass:[TTDetailNatantRelateArticleGroupView class]]) {
+                    [natantItems addObject:[self p_natantSpacingItemForClass:@"topMargin"]];
+                }
             }
-            if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
-                ((ExploreDetailADContainerView*)natantView).delegate = self;
-            }
-            [natantItems addObject:natantView];
-            [natantItems addObject:[self p_natantSpacingItemForClass:className]];
         }
     }];
     
@@ -1284,6 +1291,7 @@
     SWITCH (className) {
         CASE (@"topMargin") {
             paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] topMargin];
+//            paddingHeight = 0;
             break;
         }
         CASE (@"TTDetailNatantRiskWarningView") {
@@ -1305,7 +1313,7 @@
             break;
         }
         CASE (@"TTDetailNatantRelateArticleGroupView"){
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] bottomMargin];
+            paddingHeight = 0;
             break;
         }
         CASE (@"ExploreDetailTextlinkADView"){

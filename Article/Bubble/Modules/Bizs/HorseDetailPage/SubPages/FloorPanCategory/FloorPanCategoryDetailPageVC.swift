@@ -149,7 +149,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                         recordEvent(key: "click_call", params: traceParams)
                         
                     }else {
-                        self.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价")
                     }
                     
                 }.disposed(by: disposeBag)

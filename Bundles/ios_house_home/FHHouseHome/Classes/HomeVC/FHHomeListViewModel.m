@@ -73,7 +73,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self.tableViewV finishPullUpWithSuccess:YES];
                 [[ToastManager manager] showToast:@"网络异常"];
             }
-            
+        
         }];
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
@@ -507,8 +507,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }else if (traceType == FHHomeCategoryTraceTypeRefresh)
     {
-        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : @"pull");
+        NSString *stringReloadType = @"pull";
+        if (self.reloadType == TTReloadTypeTab) {
+            stringReloadType = @"tab";
+        }
+        if (self.reloadType == TTReloadTypeClickCategory) {
+            stringReloadType = @"click";
+        }
+        tracerDict[@"refresh_type"] = (self.currentPullType == FHHomePullTriggerTypePullUp ? @"pre_load_more" : stringReloadType);
         [FHEnvContext recordEvent:tracerDict andEventKey:@"category_refresh"];
+        
+        self.reloadType = nil;
     }
 
 }
