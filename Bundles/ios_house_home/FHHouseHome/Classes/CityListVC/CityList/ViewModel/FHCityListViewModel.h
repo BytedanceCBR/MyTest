@@ -6,10 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHCityListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityListViewModel : NSObject
+
+-(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView;
 
 @end
 

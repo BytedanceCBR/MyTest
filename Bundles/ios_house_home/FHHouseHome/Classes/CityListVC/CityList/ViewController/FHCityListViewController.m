@@ -15,12 +15,16 @@
 #import "FHLocManager.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import "FHCityListViewModel.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
 
 @property (nonatomic, strong)   FHCityListNavBarView       *naviBar;
 @property (nonatomic, strong)   FHCityListLocationBar       *locationBar;
+
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong)   FHCityListViewModel       *viewModel;
 
 @end
 
@@ -43,6 +47,13 @@
     [self setupNaviBar];
     [self setupLocationBar];
     [self setupTableView];
+    self.viewModel = [[FHCityListViewModel alloc] initWithController:self tableView:_tableView];
+    [self.view addSubview:_tableView];
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.locationBar.mas_bottom);
+        make.bottom.mas_equalTo(self.view);
+    }];
 }
 
 - (void)setupNaviBar {
@@ -76,7 +87,19 @@
 }
 
 - (void)setupTableView {
-    
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0 , *)) {
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
+    }
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    self.tableView.sectionIndexColor = [UIColor themeBlue1];
 }
 
 // 是否允许定位
