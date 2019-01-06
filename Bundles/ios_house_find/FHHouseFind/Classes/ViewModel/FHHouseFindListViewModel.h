@@ -14,11 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @class HMSegmentedControl;
 @interface FHHouseFindListViewModel : NSObject
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView;
 - (void)jump2GuessVC;
 - (void)setTracerModel:(FHTracerModel *)tracerModel;
 - (void)setSegmentView:(HMSegmentedControl *)segmentView;
 - (void)addConfigObserver;
+- (void)viewDidLayoutSubviews;
+
 @end
 
 NS_ASSUME_NONNULL_END

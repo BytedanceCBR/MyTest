@@ -6,45 +6,39 @@
 //
 
 #import "FHHouseFindListViewModel.h"
-#import "FHHouseFindCollectionCell.h"
+#import "FHHouseFindBaseView.h"
 #import "TTRoute.h"
 #import "FHEnvContext.h"
 #import "FHHomeConfigManager.h"
 #import "HMSegmentedControl.h"
 #import "FHHouseFindSectionItem.h"
 
-#define kFHHouseFindCollectionViewCell @"kFHHouseFindCollectionViewCell"
+@interface FHHouseFindListViewModel () <UIScrollViewDelegate>
 
-
-@interface FHHouseFindListViewModel () <UICollectionViewDataSource, UICollectionViewDelegate>
-
-@property(nonatomic,weak)UICollectionView *collectionView;
+@property(nonatomic,weak)UIScrollView *scrollView;
 @property(nonatomic,strong)FHTracerModel *tracerModel;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
 @property (nonatomic , strong) FHConfigDataModel *configDataModel;
 @property (nonatomic , weak) HMSegmentedControl *segmentView;
 @property (nonatomic , strong) NSArray <FHHouseFindSectionItem *> *itemList;
-@property (nonatomic , assign) FHHouseType currentHouseType;
+@property (nonatomic , assign) NSInteger currentSelectIndex;
 
 @end
 
 @implementation FHHouseFindListViewModel
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView
 {
     self = [super init];
     if (self) {
-        
-        self.collectionView = collectionView;
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
-        
-        [self.collectionView registerClass:[FHHouseFindCollectionCell class] forCellWithReuseIdentifier:kFHHouseFindCollectionViewCell];
+        _scrollView = scrollView;
+        _scrollView.delegate = self;
     }
-    
     return self;
 }
+
+
 - (void)addConfigObserver
 {
     __weak typeof(self)wself = self;
@@ -56,63 +50,85 @@
         
         //过滤多余刷新
         if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
+            
             return;
         }
         wself.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
         [wself refreshDataWithConfigDataModel];
         isFirstChange = NO;
+
     }];
     
 }
 
 - (void)refreshDataWithConfigDataModel
 {
-    [self refreshHouseItemList];
-    [self.collectionView reloadData];
-    if (self.itemList.count > 0) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-        self.currentHouseType = self.itemList[0].houseType;
-        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    for (UIView *subview in self.scrollView.subviews) {
+        [subview removeFromSuperview];
     }
+    [self refreshHouseItemList];
+    for (NSInteger index = 0; index < self.itemList.count; index++) {
+        
+        FHHouseFindSectionItem *item = self.itemList[index];
+        FHHouseFindBaseView *baseView = [[FHHouseFindBaseView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        baseView.tag = 10 + index;
+        [self.scrollView addSubview:baseView];
+    }
+    
+    if (self.itemList.count > 0) {
+        
+        self.currentSelectIndex = 0;
+        [self.scrollView setContentOffset:CGPointZero animated:NO];
+        FHHouseFindSectionItem *item = self.itemList[0];
+        FHHouseFindBaseView *baseView = [self.scrollView viewWithTag:10];
+        [baseView updateDataWithItem:item needRefresh:YES];
+    }
+}
+
+- (void)viewDidLayoutSubviews
+{
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.itemList.count, self.scrollView.bounds.size.height - self.scrollView.contentInset.bottom);
 }
 
 - (void)refreshHouseItemList
 {
     NSMutableArray *itemList = @[].mutableCopy;
     NSMutableArray *titleList = @[].mutableCopy;
+    FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
+    NSString *itemTitle = @"";
     if (self.configDataModel.searchTabFilter.count > 0) {
-        FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeSecondHandHouse;
-        item.title = @"二手房";
+        itemTitle = @"二手房";
         [itemList addObject:item];
-        [titleList addObject:@"二手房"];
+        [titleList addObject:itemTitle];
     }
     if (self.configDataModel.searchTabCourtFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeNewHouse;
-        item.title = @"新房";
+        itemTitle = @"新房";
         [itemList addObject:item];
-        [titleList addObject:@"新房"];
+        [titleList addObject:itemTitle];
     }
     if (self.configDataModel.searchTabRentFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeRentHouse;
-        item.title = @"租房";
+        itemTitle = @"租房";
         [itemList addObject:item];
-        [titleList addObject:@"租房"];
+        [titleList addObject:itemTitle];
     }
     if (self.configDataModel.searchTabNeighborhoodFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeNeighborhood;
-        item.title = @"小区";
+        itemTitle = @"小区";
         [itemList addObject:item];
-        [titleList addObject:@"小区"];
+        [titleList addObject:itemTitle];
     }
+
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
     self.segmentView.selectedSegmentIndex = 0;
     if (self.itemList.count > 0) {
-        self.currentHouseType = self.itemList[0].houseType;
+        self.currentSelectIndex = 0;
     }
     
 }
@@ -123,7 +139,12 @@
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
-    NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+    FHHouseType houseType = FHHouseTypeSecondHandHouse;
+    if (self.currentSelectIndex < self.itemList.count) {
+        FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
+        houseType = item.houseType;
+    }
+    NSDictionary *dict = @{@"house_type":@(houseType),
                            @"tracer": traceParam,
                            @"from_home":@(3), // list
                            @"sug_delegate":sugDelegateTable
@@ -145,73 +166,43 @@
     _segmentView = segmentView;
     __weak typeof(self)wself = self;
     segmentView.indexChangeBlock = ^(NSInteger index) {
+        
         if (index < wself.itemList.count) {
             
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
-            self.currentHouseType = self.itemList[index].houseType;
-            [wself.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+            wself.currentSelectIndex = index;
+            [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
+            FHHouseFindSectionItem *item = wself.itemList[index];
+            FHHouseFindBaseView *baseView = [wself.scrollView viewWithTag:10 + index];
+            [baseView updateDataWithItem:item needRefresh:YES];
         }
     };
 }
 
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return self.itemList.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHHouseFindCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kFHHouseFindCollectionViewCell forIndexPath:indexPath];
-    NSString *openUrl;
-    FHHouseType houseType;
-    if (indexPath.item < self.itemList.count) {
-        
-        FHHouseFindSectionItem *item = self.itemList[indexPath.item];
-        houseType = item.houseType;
-        openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",houseType];
-        [cell updateDataWithHouseType:houseType openUrl:openUrl];
-    }
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-
-    //    if ((_userDrag && ![self.lastCategoryID isEqualToString:self.currentCategory.categoryID]) || _userClick) {
-//        if ([[cell class] conformsToProtocol:@protocol(TTFeedCollectionCell)]) {
-//            id<TTFeedCollectionCell> collectionCell = (id<TTFeedCollectionCell>)cell;
-//
-//            if ([collectionCell respondsToSelect or:@selector(willDisappear)]) {
-//                [collectionCell willDisappear];
-//            }
-//
-//            TTCategory *category = [self categoryAtIndex:indexPath.item];
-//            [self leaveCategory:category];
-//
-//            if ([collectionCell respondsToSelector:@selector(didDisappear)]) {
-//                [collectionCell didDisappear];
-//            }
-//        }
-//    }
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView != self.collectionView) {
+    if (scrollView != self.scrollView) {
         return;
     }
-    NSInteger index = self.collectionView.contentOffset.x / [UIScreen mainScreen].bounds.size.width;
-    if ((self.collectionView.contentOffset.x - index * [UIScreen mainScreen].bounds.size.width) > ([UIScreen mainScreen].bounds.size.width / 2)) {
+    NSInteger index = self.scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width;
+    if ((self.scrollView.contentOffset.x - index * [UIScreen mainScreen].bounds.size.width) > ([UIScreen mainScreen].bounds.size.width / 2)) {
         index += 1;
     }
     if (index >= 0 && index < self.itemList.count) {
         self.segmentView.selectedSegmentIndex = index;
-        self.currentHouseType = self.itemList[index].houseType;
+        self.currentSelectIndex = index;
 
     }
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
+        
+        NSInteger index = self.segmentView.selectedSegmentIndex;
+        FHHouseFindSectionItem *item = self.itemList[index];
+        FHHouseFindBaseView *baseView = [self.scrollView viewWithTag:10 + index];
+        [baseView updateDataWithItem:item needRefresh:YES];
+    }
+}
 
 @end

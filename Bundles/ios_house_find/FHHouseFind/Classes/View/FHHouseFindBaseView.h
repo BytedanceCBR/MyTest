@@ -1,5 +1,5 @@
 //
-//  FHHouseFindListView.h
+//  FHHouseFindBaseView.h
 //  Pods
 //
 //  Created by 张静 on 2019/1/2.
@@ -7,11 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
-#import "FHHouseFindSectionItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseFindListView : UIView
+@class FHHouseFindSectionItem;
+
+@interface FHHouseFindBaseView : UIView
 
 @property(nonatomic , copy) void (^changeHouseTypeBlock)(FHHouseType houseType);
 
