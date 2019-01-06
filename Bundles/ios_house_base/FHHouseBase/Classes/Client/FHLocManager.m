@@ -53,6 +53,7 @@
 - (void)loadCurrentLocationData {
     self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
 }
 
 - (void)saveCurrentLocationData {
@@ -62,6 +63,11 @@
     if (self.currentLocaton) {
         [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
     }
+}
+
+- (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
+    _isLocationSuccess = isLocationSuccess;
+    [self.locationCache setObject:@(self.isLocationSuccess) forKey:@"fh_isLocationSuccess"];
 }
 
 - (void)showLocationGuideAlert

@@ -14,6 +14,7 @@
 #import "FHCityListLocationBar.h"
 #import "FHLocManager.h"
 #import "TTReachability.h"
+#import "ToastManager.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
@@ -65,8 +66,8 @@
         make.height.mas_equalTo(50);
     }];
     [self.locationBar.reLocationBtn addTarget:self action:@selector(reLocation) forControlEvents:UIControlEventTouchUpInside];
-    // 当前有城市数据
-    if ([FHLocManager sharedInstance].currentReGeocode) {
+    // 当前有城市数据 && 定位成功
+    if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
         self.locationBar.cityName = [FHLocManager sharedInstance].currentReGeocode.city;
         self.locationBar.isLocationSuccess = YES;
     } else {
@@ -95,11 +96,14 @@
 // 重新定位
 - (void)reLocation {
     if ([TTReachability isNetworkConnected]) {
-        // EnvContext.shared.toast.showCustomLoadingToast("定位中")
-        [self requestCurrentLocation];
+        if ([self locAuthorization]) {
+            // custom loading
+            [[ToastManager manager] showCustomLoading:@"定位中"];
+        }
+        [self requestCurrentLocationWithToast:YES];
     } else {
         // 无网络
-        // EnvContext.shared.toast.showToast("网络异常")
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 
@@ -107,21 +111,30 @@
 - (void)checkLocAuthorization {
     if ([self locAuthorization]) {
         if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
-            [self requestCurrentLocation];
+            [self requestCurrentLocationWithToast:NO];
         }
     }
 }
 
 // 请求定位信息
-- (void)requestCurrentLocation {
+- (void)requestCurrentLocationWithToast:(BOOL)hasToast {
     __weak typeof(self) wSelf = self;
     [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+        [[ToastManager manager] dismissCustomLoading];
         if (reGeocode && reGeocode.city.length > 0) {
             // 定位成功
             wSelf.locationBar.cityName = reGeocode.city;
             wSelf.locationBar.isLocationSuccess = YES;
+            [FHLocManager sharedInstance].isLocationSuccess = YES;
+            if (hasToast) {
+                [[ToastManager manager] showToast:@"定位成功" duration:1.0 isUserInteraction:YES];
+            }
         } else {
             wSelf.locationBar.isLocationSuccess = NO;
+            [FHLocManager sharedInstance].isLocationSuccess = NO;
+            if (hasToast) {
+                [[ToastManager manager] showToast:@"定位失败" duration:1.0 isUserInteraction:YES];
+            }
         }
     }];
 }

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AMapLocationReGeocode * currentReGeocode;
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isSameToLocCity;
+@property (nonatomic, assign)   BOOL       isLocationSuccess;
 
 +(instancetype)sharedInstance;
 
