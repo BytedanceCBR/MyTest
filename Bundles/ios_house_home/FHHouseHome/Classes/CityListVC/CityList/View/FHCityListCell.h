@@ -18,9 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityHotItemCell : UITableViewCell
 
+@property (nonatomic, strong , nullable) NSArray *cityList; // 城市名称数组
+
 @end
 
 @interface FHCityItemHeaderView : UIView
+
+@property (nonatomic, strong)   UILabel       *label;
+
+@end
+
+@interface FHCityHotItemButton : UIControl
 
 @property (nonatomic, strong)   UILabel       *label;
 

@@ -22,7 +22,7 @@
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataCityListModel> *historyCityList;
 @property (nonatomic, strong) NSMutableArray    *sectionsKeyData;
 @property (nonatomic, strong) NSMutableArray    *sectionsData;
-@property (nonatomic, assign)   NSInteger       mainCount; // 历史 + 热门 + 其他 (共3种)
+@property (nonatomic, assign)   NSInteger       mainCount; // 历史 + 热门 + 其他 (共3种 目的为了计算行高等)
 
 @end
 
@@ -134,7 +134,16 @@
             NSArray *tempData = self.sectionsData[indexPath.section];
             FHCityHotItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCityListHotItemCellId];
             if (cell) {
-                
+                NSMutableArray *cityNames = [NSMutableArray new];
+                for (id obj in tempData) {
+                    NSString *name = [obj name];
+                    if (name) {
+                        [cityNames addObject:name];
+                    }
+                }
+                if (cityNames.count > 0) {
+                    cell.cityList = cityNames;
+                }
             }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
@@ -189,7 +198,7 @@
     if (section < self.mainCount - 1) {
         NSArray *tempData = self.sectionsData[indexPath.section];
         if (tempData.count > 0) {
-            NSInteger rowCount = (tempData.count / 4) + 1;
+            NSInteger rowCount = (tempData.count / 4) + (tempData.count % 4 > 0 ? 1 : 0);
             CGFloat rowHeight = rowCount * 40.0;
             if (section == self.mainCount - 2) {
                 return rowHeight + 20.0;
