@@ -733,7 +733,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         if self.houseType == .neighborhood {
                             titleStr = "咨询经纪人"
                         }
-                        self.showSendPhoneAlert(title: titleStr, subTitle: "随时获取房源最新动态", confirmBtnTitle: "提交")
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "提交")
                     }
 
                 })

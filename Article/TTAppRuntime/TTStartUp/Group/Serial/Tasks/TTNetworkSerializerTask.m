@@ -157,6 +157,11 @@
         if (cityName.length > 0) {
             [commonParams setValue:cityName forKey:@"f_city_name"];
         }
+        
+        NSString *cityId = configModel.currentCityId;
+        if (cityId.length > 0) {
+            [commonParams setValue:cityName forKey:@"f_city_id"];
+        }
 
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
