@@ -370,13 +370,17 @@
 // 猜你想搜
 - (void)requestGuessYouWantData {
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-    [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
+    if (cityId) {
+        [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
+    }
 }
 
 // sug建议
 - (void)requestSuggestion:(NSString *)text {
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-    [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
+    if (cityId) {
+        [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
+    }
 }
 
 #pragma mark - dealloc

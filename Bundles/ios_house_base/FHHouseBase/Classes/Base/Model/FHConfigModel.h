@@ -262,6 +262,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface  FHConfigDataCitySwitchModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSNumber *enable;
+@property (nonatomic, copy , nullable) NSString *cityName;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 @interface  FHConfigDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
@@ -280,6 +288,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataCityStatsModel> *cityStats;
 @property (nonatomic, copy , nullable) NSString *userPhone;
 @property (nonatomic, strong, nullable) FHConfigDataAvailabilityModel *cityAvailability;
+@property (nonatomic, strong, nullable) FHConfigDataCitySwitchModel *citySwitch;
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;

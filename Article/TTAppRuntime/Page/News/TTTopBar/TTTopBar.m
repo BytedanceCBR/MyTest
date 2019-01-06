@@ -86,7 +86,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 - (void)showUnValibleCity
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (dataModel.cityAvailability) {
+    if (dataModel.cityAvailability && !dataModel.cityAvailability.enable) {
         NSLog(@"avalibility = %@",dataModel.cityAvailability.toDictionary);
         
         if (self.topUnAvalibleCityContainer) {
@@ -104,7 +104,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             [self.topUnAvalibleCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
         }
         
-        CGFloat padingTop = 0;
+        CGFloat padingTop = 8;
         if ([TTDeviceHelper isIPhoneXDevice]) {
             padingTop = 20;
         }
@@ -137,6 +137,17 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         }];
         
         
+        UIImageView *imageRightView = [UIImageView new];
+        [self.topUnAvalibleCityContainer addSubview:imageRightView];
+        
+        [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
+            make.height.mas_equalTo(52);
+            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.width.mas_equalTo(108);
+        }];
+        
+        
         UILabel *topTipForCityLabel = [UILabel new];
         topTipForCityLabel.text = @"找房服务即将开通,敬请期待";
         topTipForCityLabel.font = [UIFont themeFontRegular:14];
@@ -150,16 +161,6 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             make.width.mas_equalTo(182);
         }];
         
-        
-        UIImageView *imageRightView = [UIImageView new];
-        [self.topUnAvalibleCityContainer addSubview:imageRightView];
-        
-        [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
-            make.height.mas_equalTo(52);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
-            make.width.mas_equalTo(108);
-        }];
         
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];

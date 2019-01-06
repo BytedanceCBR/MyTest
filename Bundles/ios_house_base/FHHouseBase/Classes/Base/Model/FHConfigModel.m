@@ -108,6 +108,27 @@
 
 @end
 
+@implementation FHConfigDataCitySwitchModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"cityName": @"city_name",
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
 @implementation  FHConfigDataModel
 
 + (JSONKeyMapper*)keyMapper
@@ -127,6 +148,7 @@
                            @"cityStats": @"city_stats",
                            @"userPhone": @"user_phone",
                            @"cityAvailability" : @"city_availability",
+                           @"citySwitch" : @"city_switch",
                            @"searchTabNeighborhoodFilter": @"search_tab_neighborhood_filter",
                            @"searchTabCourtFilter": @"search_tab_court_filter",
                            @"neighborhoodFilter": @"neighborhood_filter",

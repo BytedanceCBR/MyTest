@@ -201,7 +201,7 @@
             amapInfo[@"longitude"] = @(location.coordinate.longitude);
         }
         
-//        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
+//      [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
         
         if (regeocode) {
             wSelf.currentReGeocode = regeocode;

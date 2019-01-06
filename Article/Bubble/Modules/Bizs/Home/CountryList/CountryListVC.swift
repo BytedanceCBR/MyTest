@@ -336,7 +336,7 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         
         if (cityList?.count ?? 0) > indexPath.row {
             if let item = cityList?[0], let cityId = item.cityId {
-                self.onItemClick?(Int(122) ?? 0)
+                self.onItemClick?(Int(786) ?? 0)
 
 //                onItemSelect?.onNext(cityId)
 //                let params = tracerParams <|>
