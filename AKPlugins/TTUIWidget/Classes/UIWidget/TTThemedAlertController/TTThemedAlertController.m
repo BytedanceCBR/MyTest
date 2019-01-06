@@ -488,6 +488,7 @@
                                                                                     actionType:actionType
                                                                                    actionTitle:title
                                                                                    actionBlock:actionBlock];
+        action.actionElementModel.elementColor = [UIColor grayColor];
         [self.actionBlockArr addObject:action];
         
         //特殊处理actionSheet的cancelAction

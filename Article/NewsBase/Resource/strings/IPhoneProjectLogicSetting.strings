@@ -35,6 +35,8 @@
 "detail"                = "TTDetailContainerViewController";
 "comments"              = "TTDetailContainerViewController";
 
+"fhomepage"             = "FHHomePageRoute";
+
 "new_detail"            = "TTDetailContainerViewController";
 "webview"               = "SSWebViewController";
 "rctview"               = "TTRNViewController";

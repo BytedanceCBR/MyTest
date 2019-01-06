@@ -56,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey;
 
+
++ (void)openSwitchCityURL:(NSString *)urlString;
+
 /*
   判断是否联网
  */

@@ -15,6 +15,9 @@
 #import "BDAccountConfiguration.h"
 #import "BDAccount+Configuration.h"
 #import "FHURLSettings.h"
+#import "TTRoute.h"
+#import "ToastManager.h"
+#import "TTArticleCategoryManager.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -36,6 +39,53 @@
     });
     
     return manager;
+}
+
++ (void)openSwitchCityURL:(NSString *)urlString
+{
+    NSInteger cityId = 0;
+    
+    if ([urlString containsString:@"city_id"]) {
+        NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
+        NSString *paramsStr = [paramsArrary lastObject];
+        
+        for (NSString *paramStr in [paramsStr componentsSeparatedByString:@"&"]) {
+            NSArray *elts = [paramStr componentsSeparatedByString:@"="];
+            if([elts count] < 2) continue;
+            if ([elts.lastObject respondsToSelector:@selector(integerValue)]) {
+                cityId = [elts.lastObject integerValue];
+            }
+        }
+    
+        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:NO];
+
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
+            [[ToastManager manager] dismissCustomLoading];
+            if (isSuccess) {
+                FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                if (configModel.cityAvailability.enable) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
+                        if (isSuccess) {
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
+                        }else
+                        {
+                            [[ToastManager manager] showToast:@"切换城市失败"];
+                        }
+                    }];
+                }else
+                {
+                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                        
+                    }];
+                }
+            }else
+            {
+                [[ToastManager manager] showToast:@"切换城市失败"];
+            }
+        }];
+    }
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey

@@ -24,7 +24,7 @@
 
 @property (nonatomic , strong) HMSegmentedControl *segmentView;
 @property (nonatomic , strong) FHHouseFindSearchBar *searchBar;
-@property (nonatomic , strong) UICollectionView *collectionView;
+@property (nonatomic , strong) UIScrollView *scrollView;
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 
 @property (nonatomic , strong) FHHouseFindListViewModel *viewModel;
@@ -44,7 +44,7 @@
 
 - (void)setupViewModel
 {
-    _viewModel = [[FHHouseFindListViewModel alloc]initWithCollectionView:_collectionView];
+    _viewModel = [[FHHouseFindListViewModel alloc]initWithScrollView:_scrollView];
     [_viewModel setSegmentView:_segmentView];
     [_viewModel addConfigObserver];
  
@@ -66,7 +66,7 @@
     };
     [self.view addSubview:_searchBar];
 
-    [self setupCollectionView];
+    [self setupScrollView];
     
     CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 40 : 30;
@@ -81,10 +81,19 @@
         make.top.mas_equalTo(self.segmentView.mas_bottom);
         make.height.mas_equalTo(32);
     }];
-    [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.view);
+    height = 50 + 32;
+    height +=  [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.searchBar.mas_bottom);
+        make.height.mas_equalTo(@([UIScreen mainScreen].bounds.size.height - height));
     }];
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self.viewModel viewDidLayoutSubviews];
 }
 
 - (void)setupSegmentControl
@@ -109,33 +118,23 @@
     [self.view addSubview:_segmentView];
 }
 
-- (void)setupCollectionView
+- (void)setupScrollView
 {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
-    flowLayout.minimumLineSpacing = 0;
-    flowLayout.minimumInteritemSpacing = 0;
-    
-    // add by zjing for test 布局问题
-    CGFloat height = 50 + 32 + 49;
+    CGFloat height = 50 + 32;
     height +=  [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    flowLayout.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - height);
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
-
-    _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:flowLayout];
-    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _collectionView.pagingEnabled = YES;
-    _collectionView.scrollsToTop = NO;
-    _collectionView.alwaysBounceHorizontal = YES;
-    _collectionView.contentInset = UIEdgeInsetsMake(0, 0, [TTDeviceHelper isIPhoneXDevice] ? 83 : 49, 0);
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, height, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - height)];
+    _scrollView.pagingEnabled = YES;
+    _scrollView.scrollsToTop = NO;
+    _scrollView.alwaysBounceHorizontal = NO;
+    _scrollView.alwaysBounceVertical = NO;
+    _scrollView.contentInset = UIEdgeInsetsMake(0, 0, [TTDeviceHelper isIPhoneXDevice] ? 83 : 49, 0);
     if (@available(iOS 11.0, *)) {
-        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.showsVerticalScrollIndicator = NO;
-    
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:_collectionView];
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_scrollView];
 
 }
 
