@@ -36,36 +36,44 @@
     self = [super init];
     if (self) {
         
-        __weak typeof(self)wself = self;
         self.collectionView = collectionView;
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
         
         [self.collectionView registerClass:[FHHouseFindCollectionCell class] forCellWithReuseIdentifier:kFHHouseFindCollectionViewCell];
-        
-        self.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
-        [self refreshDataWithConfigDataModel];
-        //订阅config变化
-        __block BOOL isFirstChange = YES;
-        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-            
-            //过滤多余刷新
-            if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
-                return;
-            }
-            wself.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
-            [wself refreshDataWithConfigDataModel];
-            isFirstChange = NO;
-        }];
     }
     
     return self;
+}
+- (void)addConfigObserver
+{
+    __weak typeof(self)wself = self;
+    self.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
+    [self refreshDataWithConfigDataModel];
+    //订阅config变化
+    __block BOOL isFirstChange = YES;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        
+        //过滤多余刷新
+        if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
+            return;
+        }
+        wself.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
+        [wself refreshDataWithConfigDataModel];
+        isFirstChange = NO;
+    }];
+    
 }
 
 - (void)refreshDataWithConfigDataModel
 {
     [self refreshHouseItemList];
     [self.collectionView reloadData];
+    if (self.itemList.count > 0) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+        self.currentHouseType = self.itemList[0].houseType;
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    }
 }
 
 - (void)refreshHouseItemList
@@ -101,8 +109,12 @@
         [titleList addObject:@"小区"];
     }
     self.itemList = itemList;
-    self.segmentView.sectionTitles = titleList;
+    [self.segmentView setSectionTitles:titleList];
     self.segmentView.selectedSegmentIndex = 0;
+    if (self.itemList.count > 0) {
+        self.currentHouseType = self.itemList[0].houseType;
+    }
+    
 }
 
 - (void)jump2GuessVC

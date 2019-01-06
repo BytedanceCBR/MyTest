@@ -46,6 +46,7 @@
 {
     _viewModel = [[FHHouseFindListViewModel alloc]initWithCollectionView:_collectionView];
     [_viewModel setSegmentView:_segmentView];
+    [_viewModel addConfigObserver];
  
 }
 
