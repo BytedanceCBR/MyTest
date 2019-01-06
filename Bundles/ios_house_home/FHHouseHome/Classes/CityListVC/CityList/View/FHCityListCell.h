@@ -16,4 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHCityHotItemCell : UITableViewCell
+
+@end
+
+@interface FHCityItemHeaderView : UIView
+
+@property (nonatomic, strong)   UILabel       *label;
+
+@end
+
 NS_ASSUME_NONNULL_END

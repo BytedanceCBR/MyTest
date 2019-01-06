@@ -51,3 +51,63 @@
 }
 
 @end
+
+// FHCityHotItemCell
+@interface FHCityHotItemCell ()
+
+@end
+
+@implementation FHCityHotItemCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+        [self setupUI];
+    }
+    return self;
+}
+
+
+- (void)setupUI {
+    
+}
+
+
+
+@end
+
+
+// FHCityItemHeaderView
+
+@interface FHCityItemHeaderView ()
+
+@end
+
+@implementation FHCityItemHeaderView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    // label
+    self.label = [[UILabel alloc] init];
+    self.label.textColor = [UIColor themeGray4];
+    self.label.font = [UIFont themeFontRegular:16];
+    [self addSubview:self.label];
+    [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.height.mas_equalTo(22);
+        make.top.mas_equalTo(self).offset(6);
+        make.right.mas_equalTo(self).offset(-20);
+    }];
+}
+
+@end
