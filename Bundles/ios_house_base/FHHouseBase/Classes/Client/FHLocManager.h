@@ -13,13 +13,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHConfigModel;
+
 @interface FHLocManager : NSObject
 
 @property (nonatomic, strong) AMapLocationManager * locMgr;
 @property (nonatomic, strong) AMapLocationReGeocode * currentReGeocode;
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isSameToLocCity;
-@property (nonatomic, assign)   BOOL       isLocationSuccess;
+@property (nonatomic, assign) BOOL isLocationSuccess;
 
 +(instancetype)sharedInstance;
 
@@ -34,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setUpLocManagerLocalInfo;
 
 - (void)showCitySwitchAlert:(NSString *)cityName;
+
+- (void)updateAllConfig:(FHConfigModel * _Nullable) model;
 
 @end
 
