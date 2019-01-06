@@ -198,6 +198,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+
+
 @interface  FHConfigDataReviewInfoModel  : JSONModel
 
 @property (nonatomic, assign) BOOL isFLogin;
@@ -252,6 +254,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface  FHConfigDataAvailabilityModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSNumber *enable;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) FHConfigDataOpDataItemsImageModel *iconImage;
+
+@end
+
 @interface  FHConfigDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
@@ -269,7 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataBannersModel> *banners;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataCityStatsModel> *cityStats;
 @property (nonatomic, copy , nullable) NSString *userPhone;
-
+@property (nonatomic, strong, nullable) FHConfigDataAvailabilityModel *cityAvailability;
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;

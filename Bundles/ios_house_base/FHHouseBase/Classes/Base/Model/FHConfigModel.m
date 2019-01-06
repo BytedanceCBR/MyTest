@@ -88,6 +88,25 @@
 
 @end
 
+@implementation FHConfigDataAvailabilityModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"backgroundColor": @"background_color",
+                           @"iconImage": @"icon_image",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 
 @implementation  FHConfigDataModel
 
@@ -107,6 +126,7 @@
                            @"reviewInfo": @"review_info",
                            @"cityStats": @"city_stats",
                            @"userPhone": @"user_phone",
+                           @"cityAvailability" : @"city_availability",
                            @"searchTabNeighborhoodFilter": @"search_tab_neighborhood_filter",
                            @"searchTabCourtFilter": @"search_tab_court_filter",
                            @"neighborhoodFilter": @"neighborhood_filter",
