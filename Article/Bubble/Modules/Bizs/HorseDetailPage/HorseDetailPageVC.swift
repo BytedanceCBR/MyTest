@@ -158,18 +158,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let urlStr = paramObj?.sourceURL.absoluteString,
             let realStr = urlStr.removingPercentEncoding,
             let urlParams = realStr.urlParameters {
-            if let origin_from = urlParams["origin_from"],
-                origin_from.count > 0 {
-                traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
-                // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
-                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-                    toTracerParams(origin_from, key: "origin_from")
-            }
-            if let log_pb = urlParams["log_pb"],
-                log_pb.count > 2,
-                let jsonData = log_pb.data(using: .utf8) {
-                if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
-                    traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+            if let typeStr = urlParams["type"], typeStr == "activity" {
+                if let origin_from = urlParams["origin_from"],
+                    origin_from.count > 0 {
+                    traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
+                    // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
+                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                        toTracerParams(origin_from, key: "origin_from")
+                }
+                if let log_pb = urlParams["log_pb"],
+                    log_pb.count > 2,
+                    let jsonData = log_pb.data(using: .utf8) {
+                    if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
+                        traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                    }
                 }
             }
         }

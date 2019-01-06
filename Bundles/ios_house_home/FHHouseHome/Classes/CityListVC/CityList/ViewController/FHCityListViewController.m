@@ -15,6 +15,7 @@
 #import "FHLocManager.h"
 #import "TTReachability.h"
 
+// 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
 
 @property (nonatomic, strong)   FHCityListNavBarView       *naviBar;
@@ -64,8 +65,8 @@
         make.height.mas_equalTo(50);
     }];
     [self.locationBar.reLocationBtn addTarget:self action:@selector(reLocation) forControlEvents:UIControlEventTouchUpInside];
-    // 允许定位，而且当前有城市数据
-    if ([FHLocManager sharedInstance].currentReGeocode && [self locAuthorization]) {
+    // 当前有城市数据
+    if ([FHLocManager sharedInstance].currentReGeocode) {
         self.locationBar.cityName = [FHLocManager sharedInstance].currentReGeocode.city;
         self.locationBar.isLocationSuccess = YES;
     } else {
@@ -104,10 +105,10 @@
 
 // 检测
 - (void)checkLocAuthorization {
-    if ([TTReachability isNetworkConnected]) {
-        [self requestCurrentLocation];
-    } else {
-        // 无网络
+    if ([self locAuthorization]) {
+        if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
+            [self requestCurrentLocation];
+        }
     }
 }
 

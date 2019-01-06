@@ -12,6 +12,13 @@
 #import "TTSandBoxHelper.h"
 #import "FHConfigApi.h"
 #import "FHEnvContext.h"
+#import "YYCache.h"
+
+@interface FHLocManager ()
+
+@property (nonatomic, strong)   YYCache       *locationCache;
+
+@end
 
 @implementation FHLocManager
 
@@ -24,6 +31,37 @@
     });
     
     return manager;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self loadCurrentLocationData];
+    }
+    return self;
+}
+
+- (YYCache *)locationCache
+{
+    if (!_locationCache) {
+        _locationCache = [YYCache cacheWithName:@"fh_location_cache"];
+    }
+    return _locationCache;
+}
+
+- (void)loadCurrentLocationData {
+    self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
+    self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+}
+
+- (void)saveCurrentLocationData {
+    if (self.currentReGeocode) {
+        [self.locationCache setObject:self.currentReGeocode forKey:@"fh_currentReGeocode"];
+    }
+    if (self.currentLocaton) {
+        [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
+    }
 }
 
 - (void)showLocationGuideAlert
@@ -127,12 +165,12 @@
     [self.locManager setLocationTimeout:2];
     
     [self.locManager setReGeocodeTimeout:2];
-    
+    __weak typeof(self) wSelf = self;
     [self.locManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
         
         if (showAlert)
         {
-            [self checkUserLocationStatus];
+            [wSelf checkUserLocationStatus];
         }
         
         if (error.code == AMapLocationErrorLocateFailed) {
@@ -160,12 +198,15 @@
 //        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
         
         if (regeocode) {
-            self.currentReGeocode = regeocode;
+            wSelf.currentReGeocode = regeocode;
         }
         
         if (location) {
-            self.currentLocaton = location;
+            wSelf.currentLocaton = location;
         }
+        
+        // 存储当前定位信息
+        [self saveCurrentLocationData];
         
         if (completion) {
             // 城市选择重新定位需回调
@@ -173,7 +214,7 @@
         } else {
             [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 //更新config
-                [self updateAllConfig:model];
+                [wSelf updateAllConfig:model];
             }];
         }
     }];
@@ -186,10 +227,11 @@
 
 - (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion
 {
+     __weak typeof(self) wSelf = self;
     [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-        [self updateAllConfig:model];
+        [wSelf updateAllConfig:model];
         
-        if (model.data) {
+        if (model.data && completion) {
             completion(YES);
         }
     }];
