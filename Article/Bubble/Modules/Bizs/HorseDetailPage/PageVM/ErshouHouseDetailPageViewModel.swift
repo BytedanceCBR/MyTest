@@ -196,12 +196,9 @@ import RxCocoa
                 let rectInTableView = theCell.frame
                 let rectInSuperView = tableView.convert(rectInTableView,
                                                         to: tableView.superview)
-                print("traceCellByVisibleRect: rectInSuperView \(rectInSuperView)")
                 let parentFrame = tableView.superview?.frame ?? CGRect.zero
-                print("traceCellByVisibleRect: superView \(parentFrame)")
                 let visibleArea = catulateVisibleArea(containerFrame: parentFrame,
                                                       targetFrame: rectInSuperView)
-                print("traceCellByVisibleRect visibleArea: \(visibleArea)")
                 theCell.onAreaDisplay(displayArea: CGRect(x: 0,
                                                           y: 0,
                                                           width: visibleArea.width,

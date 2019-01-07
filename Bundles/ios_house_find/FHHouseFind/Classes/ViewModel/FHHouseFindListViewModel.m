@@ -6,7 +6,7 @@
 //
 
 #import "FHHouseFindListViewModel.h"
-#import "FHHouseFindBaseView.h"
+#import "FHHouseFindListView.h"
 #import "TTRoute.h"
 #import "FHEnvContext.h"
 #import "FHHomeConfigManager.h"
@@ -14,8 +14,10 @@
 #import "FHHouseFindSectionItem.h"
 #import "FHHouseFindListViewController.h"
 #import "FHErrorView.h"
+#import <FHHouseSuggestionDelegate.h>
+#import "TTRoute.h"
 
-@interface FHHouseFindListViewModel () <UIScrollViewDelegate>
+@interface FHHouseFindListViewModel () <UIScrollViewDelegate, FHHouseSuggestionDelegate>
 
 @property(nonatomic,weak)FHHouseFindListViewController *listVC;
 @property(nonatomic,weak)UIScrollView *scrollView;
@@ -27,6 +29,9 @@
 @property (nonatomic , weak) HMSegmentedControl *segmentView;
 @property (nonatomic , strong) NSArray <FHHouseFindSectionItem *> *itemList;
 @property (nonatomic , assign) NSInteger currentSelectIndex;
+
+@property (nonatomic , strong) NSDictionary *houseSearchDic;
+@property(nonatomic , assign) BOOL canChangeHouseSearchDic;// houseSearchDic[@"query_type"] = @"filter"
 
 @end
 
@@ -94,18 +99,15 @@
     for (NSInteger index = 0; index < self.itemList.count; index++) {
         
         FHHouseFindSectionItem *item = self.itemList[index];
-        FHHouseFindBaseView *baseView = [[FHHouseFindBaseView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
         baseView.tag = 10 + index;
         [self.scrollView addSubview:baseView];
     }
     
     if (self.itemList.count > 0) {
         
-        self.currentSelectIndex = 0;
         [self.scrollView setContentOffset:CGPointZero animated:NO];
-        FHHouseFindSectionItem *item = self.itemList[0];
-        FHHouseFindBaseView *baseView = [self.scrollView viewWithTag:10];
-        [baseView updateDataWithItem:item needRefresh:YES];
+        [self selectHouseFindListItem:0];
     }
 }
 
@@ -179,6 +181,35 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
+#pragma mark - sug delegate
+- (void)suggestionSelected:(TTRouteObject *)routeObject
+{
+    NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
+    if (allInfo[@"houseSearch"]) {
+        self.houseSearchDic = allInfo[@"houseSearch"];
+        self.canChangeHouseSearchDic = NO; // 禁止修改house_search埋点数据
+    }
+
+    NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
+    FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
+    if (item.houseType != houseTypeStr.integerValue) {
+        
+        for (NSInteger index = 0; index < self.itemList.count; index++) {
+            FHHouseFindSectionItem *obj = self.itemList[index];
+            if (obj.houseType == houseTypeStr.integerValue) {
+                
+                self.segmentView.selectedSegmentIndex = index;
+                [self.scrollView setContentOffset:CGPointMake(index * self.scrollView.bounds.size.width, 0) animated:NO];
+                [self selectHouseFindListItem:index];
+                break;
+            }
+        }
+    }
+
+    FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    [baseView handleSugSelection:routeObject.paramObj];
+}
+
 - (void)setTracerModel:(FHTracerModel *)tracerModel
 {
     _tracerModel = tracerModel;
@@ -193,11 +224,9 @@
         
         if (index < wself.itemList.count) {
             
-            wself.currentSelectIndex = index;
             [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
-            FHHouseFindSectionItem *item = wself.itemList[index];
-            FHHouseFindBaseView *baseView = [wself.scrollView viewWithTag:10 + index];
-            [baseView updateDataWithItem:item needRefresh:YES];
+            [wself selectHouseFindListItem:index];
+
         }
     };
 }
@@ -221,12 +250,17 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
-        
-        NSInteger index = self.segmentView.selectedSegmentIndex;
-        FHHouseFindSectionItem *item = self.itemList[index];
-        FHHouseFindBaseView *baseView = [self.scrollView viewWithTag:10 + index];
-        [baseView updateDataWithItem:item needRefresh:YES];
+
+        [self selectHouseFindListItem:self.segmentView.selectedSegmentIndex];
     }
+}
+
+- (void)selectHouseFindListItem: (NSInteger)index
+{
+    self.currentSelectIndex = index;
+    FHHouseFindSectionItem *item = self.itemList[index];
+    FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
+    [baseView updateDataWithItem:item];
 }
 
 @end

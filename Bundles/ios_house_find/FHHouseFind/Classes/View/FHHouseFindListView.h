@@ -11,12 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class TTRouteParamObj;
 @interface FHHouseFindListView : UIView
 
 @property(nonatomic , copy) void (^changeHouseTypeBlock)(FHHouseType houseType);
 
-- (void)updateDataWithItem: (FHHouseFindSectionItem *)item needRefresh: (BOOL)needRefresh;
-
+- (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
+- (void)handleSugSelection:(TTRouteParamObj *)paramObj;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -70,7 +70,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
             }else
             {
-                [self.tableViewV finishPullUpWithSuccess:YES];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableViewV finishPullUpWithSuccess:YES];
+                    });
+                });
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         
@@ -78,9 +82,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
+            if (![FHEnvContext isNetworkConnected]) {
+                [[ToastManager manager] showToast:@"网络异常"];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableViewV finishPullDownWithSuccess:YES];
+                    });
+                });
+                return ;
+            }
+            
             [self resetAllCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
-        }] ;
+        }];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         //订阅config变化发送网络请求
