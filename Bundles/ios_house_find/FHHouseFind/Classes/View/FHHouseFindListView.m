@@ -64,6 +64,15 @@
     _houseType = item.houseType;
     _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
+    TTRouteUserInfo *userInfo = nil;
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"enter_from"] = @"findtab";
+    param[@"enter_type"] = @"click";
+    param[@"element_from"] = @"be_null";
+    param[@"origin_from"] = @"findtab_related";
+
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:@{@"tracer":param}];
+    self.paramObj.userInfo = userInfo;
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     [self.viewModel setMaskView:self.errorMaskView];
     [self setupViewModelBlock];

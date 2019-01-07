@@ -90,18 +90,15 @@
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
 
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
-        
+        NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
+        if (tracerDict) {
+            self.tracerModel = [[FHTracerModel alloc]initWithDictionary:tracerDict error:nil];
+            self.originFrom = self.tracerModel.originFrom;
+        }
         [self configTableView];
 
     }
     return self;
-}
-
--(void)setTracerModel:(FHTracerModel *)tracerModel {
-    
-    _tracerModel = tracerModel;
-    self.originFrom = tracerModel.originFrom;
-
 }
 
 -(void)configTableView
@@ -738,144 +735,69 @@
         
         if (indexPath.row < self.houseList.count) {
             
-            switch (self.houseType) {
-                case FHHouseTypeNewHouse:
-                    [self jump2NewDetailPage:indexPath];
-                    break;
-                case FHHouseTypeSecondHandHouse:
-                    [self jump2OldDetailPage:indexPath];
-                    break;
-                case FHHouseTypeRentHouse:
-                    [self jump2RentDetailPage:indexPath];
-                    break;
-                case FHHouseTypeNeighborhood:
-                    [self jump2NeighborDetailPage:indexPath];
-                    break;
-                default:
-                    break;
-            }
+            [self jump2HouseDetailPage:indexPath];
         }
         
     }
 }
 
 #pragma mark - 详情页跳转
--(void)jump2NewDetailPage:(NSIndexPath *)indexPath {
-    /*
-    1. event_type：house_app2c_v2
-    2. page_type（详情页类型）：rent_detail（租房详情页）
-    3. card_type（房源展现时的卡片样式）：left_pic（左图）
-    4. enter_from（详情页入口）：rent_list（租房列表页）
-    5. element_from：be_null
-     logpb
-    9. rank
-    10. origin_from：renting_all（租房大类页全部房源icon），renting_joint（租房大类页合租icon），renting_fully（租房大类页整租icon），renting_apartment（租房大类页公寓icon），maintab_search（首页搜索），findtab_find（找房tab开始找房），findtab_search（找房tab搜索），renting_search（租房大类页搜索）
-    11. origin_search_id
-    */
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-    if (cellModel.houseModel) {
-        
-        FHNewHouseItemModel *theModel = cellModel.houseModel;
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
-        traceParam[@"log_pb"] = [cellModel logPb];
-        traceParam[@"origin_from"] = self.originFrom;
-        traceParam[@"origin_search_id"] = self.originSearchId;
-        traceParam[@"search_id"] = self.searchId;
-        traceParam[@"rank"] = @(indexPath.row);
+-(void)jump2HouseDetailPage:(NSIndexPath *)indexPath {
 
-        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"card_type"] = @"left_pic";
+    traceParam[@"enter_from"] = [self pageTypeString];
+    traceParam[@"element_from"] = [self elementTypeString];
+    traceParam[@"log_pb"] = [cellModel logPb];
+    traceParam[@"origin_from"] = self.originFrom;
+    traceParam[@"origin_search_id"] = self.originSearchId;
+    traceParam[@"search_id"] = self.searchId;
+    traceParam[@"rank"] = @(indexPath.row);
+    NSDictionary *dict = @{@"house_type":@(self.houseType) ,
+                           @"tracer": traceParam
+                           };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSString *urlStr;
+
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            if (cellModel.houseModel) {
+                
+                FHNewHouseItemModel *theModel = cellModel.houseModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
+            }
+            break;
+        case FHHouseTypeSecondHandHouse:
+            if (cellModel.secondModel) {
+                
+                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
+            }
+            break;
+        case FHHouseTypeRentHouse:
+            if (cellModel.rentModel) {
+                
+                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
+            }
+            break;
+        case FHHouseTypeNeighborhood:
+            if (cellModel.neighborModel) {
+                
+                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+            }
+            break;
+        default:
+            break;
+    }
+    
+    if (urlStr.length > 0) {
+        NSURL *url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
     
-}
-
--(void)jump2OldDetailPage:(NSIndexPath *)indexPath {
-    
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-    if (cellModel.secondModel) {
-        
-        FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
-        traceParam[@"log_pb"] = [cellModel logPb];
-        traceParam[@"origin_from"] = self.originFrom;
-        traceParam[@"origin_search_id"] = self.originSearchId;
-        traceParam[@"search_id"] = self.searchId;
-        traceParam[@"rank"] = @(indexPath.row);
-
-        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid]];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-
-}
-
--(void)jump2RentDetailPage:(NSIndexPath *)indexPath {
-    
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-    if (cellModel.rentModel) {
-        
-        FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
-        traceParam[@"log_pb"] = [cellModel logPb];
-        traceParam[@"origin_from"] = self.originFrom;
-        traceParam[@"origin_search_id"] = self.originSearchId;
-        traceParam[@"search_id"] = self.searchId;
-        traceParam[@"rank"] = @(indexPath.row);
-
-        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id]];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-
-}
-
--(void)jump2NeighborDetailPage:(NSIndexPath *)indexPath {
-    
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-    if (cellModel.neighborModel) {
-        
-        FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
-        traceParam[@"log_pb"] = [cellModel logPb];
-        traceParam[@"origin_from"] = self.originFrom;
-        traceParam[@"origin_search_id"] = self.originSearchId;
-        traceParam[@"search_id"] = self.searchId;
-        traceParam[@"rank"] = @(indexPath.row);
-
-        NSDictionary *dict = @{@"house_type":@(self.houseType) ,
-                               @"tracer": traceParam
-                               };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id]];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-
 }
 
 #pragma mark - 埋点相关

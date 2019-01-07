@@ -155,8 +155,8 @@
         param[@"log_pb"] = houseModel.logPb;
         
     }
-    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
-
+    NSDictionary *userDict = @{@"tracer":param};
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:userDict];
     if (strUrl.length  > 0) {
         
         NSURL *url =[NSURL URLWithString:strUrl];
@@ -199,7 +199,8 @@
         param[@"log_pb"] = houseModel.logPb;
 
     }
-    userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    NSDictionary *userDict = @{@"tracer":param};
+    userInfo = [[TTRouteUserInfo alloc]initWithInfo:userDict];
     if (strUrl.length  > 0) {
         
         NSURL *url =[NSURL URLWithString:strUrl];
