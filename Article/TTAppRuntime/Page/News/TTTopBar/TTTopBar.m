@@ -171,6 +171,12 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
         }
+    }else
+    {
+        if (self.topUnAvalibleCityContainer) {
+            [self.topUnAvalibleCityContainer removeFromSuperview];
+            self.topUnAvalibleCityContainer = nil;
+        }
     }
 }
 
