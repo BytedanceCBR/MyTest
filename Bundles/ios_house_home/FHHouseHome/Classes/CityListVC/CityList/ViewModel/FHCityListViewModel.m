@@ -10,6 +10,7 @@
 #import "FHEnvContext.h"
 #import "YYCache.h"
 #import "FHCityListModel.h"
+#import "FHLocManager.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -71,7 +72,6 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     self.cityList = [configDataModel cityList];
     self.hotCityList = [configDataModel hotCityList];
     [self loadHistoryData];
-//    [self saveHistoryData];
     [self configSectionData];
     [self.tableView reloadData];
 }
@@ -96,6 +96,62 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         NSString *saveStr = [cacheModel toJSONString];
         if (saveStr.length > 0) {
             [self.historyCache setObject:saveStr forKey:kFHHistoryListKey];
+        }
+    }
+}
+
+// 历史最多8个
+- (void)addCityToHistory:(id)city {
+    if (city) {
+        NSString *name = NULL;
+        NSString *simplePinyin = NULL;
+        NSString *cityId = NULL;
+        NSString *pinyin = NULL;
+        if ([city isKindOfClass:[FHConfigDataCityListModel class]]) {
+            // 城市
+            FHConfigDataCityListModel *item = city;
+            name = item.name;
+            cityId = item.cityId;
+            pinyin = item.fullPinyin;
+            simplePinyin = item.simplePinyin;
+        } else if ([city isKindOfClass:[FHConfigDataHotCityListModel class]]) {
+            // 热门
+            FHConfigDataHotCityListModel *item = city;
+            name = item.name;
+            cityId = item.cityId;
+            pinyin = @"";
+            simplePinyin = @"";
+        } else if ([city isKindOfClass:[FHHistoryCityListModel class]]) {
+            FHHistoryCityListModel *item = city;
+            // 历史
+            name = item.name;
+            cityId = item.cityId;
+            pinyin = item.pinyin;
+            simplePinyin = item.simplePinyin;
+        } else {
+            //
+        }
+        if (cityId.length > 0) {
+            NSMutableArray *tempHisArray = [NSMutableArray new];
+            // 去除相同的城市
+            for (FHHistoryCityListModel *obj in self.historyCityList) {
+                if (![obj.cityId isEqualToString:cityId]) {
+                    [tempHisArray addObject:obj];
+                }
+            }
+            // 添加现有的
+            FHHistoryCityListModel *tempHistoryData = [[FHHistoryCityListModel alloc] init];
+            tempHistoryData.name = name;
+            tempHistoryData.cityId = cityId;
+            tempHistoryData.pinyin = pinyin;
+            tempHistoryData.simplePinyin = simplePinyin;
+            [tempHisArray insertObject:tempHistoryData atIndex:0];
+            if (tempHisArray.count > 8) {
+                NSRange range = NSMakeRange(0, 8);
+                tempHisArray = [tempHisArray subarrayWithRange:range];
+            }
+            self.historyCityList = tempHisArray;
+            [self saveHistoryData];
         }
     }
 }
@@ -184,25 +240,66 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 - (void)historyItemClick:(NSInteger)index {
     if (index >= 0 && index < self.historyCityList.count) {
         FHHistoryCityListModel *item = self.historyCityList[index];
+        __weak typeof(self) wSelf = self;
+        [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                [wSelf addCityToHistory:item];
+            }
+        }];
     }
 }
 
 - (void)hotItemClick:(NSInteger)index {
     if (index >= 0 && index < self.hotCityList.count) {
         FHConfigDataHotCityListModel *item = self.hotCityList[index];
+        __weak typeof(self) wSelf = self;
+        [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                [wSelf addCityToHistory:item];
+            }
+        }];
     }
 }
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
-    
+    __weak typeof(self) wSelf = self;
+    [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
+        if (isSuccess) {
+            [wSelf addCityToHistory:item];
+        }
+    }];
 }
 
-- (void)switchCityByCityId:(NSString *)cityId {
+- (void)cityNameBtnClick {
+//    if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
+//        AMapLocationReGeocode * currentReGeocode = [FHLocManager sharedInstance].currentReGeocode;
+//        FHConfigDataCityListModel *item = NULL;
+//        for (FHConfigDataCityListModel *obj in self.cityList) {
+//            if ([obj.name isEqualToString:currentReGeocode.city]) {
+//                item = obj;
+//                break;
+//            }
+//        }
+//        if (item) {
+//            __weak typeof(self) wSelf = self;
+//            [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
+//                if (isSuccess) {
+//                    [wSelf addCityToHistory:item];
+//                }
+//            }];
+//        }
+//    }
+}
+
+// 切换城市
+- (void)switchCityByCityId:(NSString *)cityId switchCompletion:(void(^)(BOOL isSuccess))switchCompletion {
     if (cityId.length > 0) {
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
-        __weak typeof(self) wSelf = self;
         [FHEnvContext openSwitchCityURL:url completion:^(BOOL isSuccess) {
             // 进历史
+            if (switchCompletion) {
+                switchCompletion(isSuccess);
+            }
         }];
     }
 }

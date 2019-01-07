@@ -76,6 +76,7 @@
         make.top.mas_equalTo(self.naviBar.mas_bottom);
         make.height.mas_equalTo(50);
     }];
+    [self.locationBar.cityNameBtn addTarget:self action:@selector(cityNameBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.locationBar.reLocationBtn addTarget:self action:@selector(reLocation) forControlEvents:UIControlEventTouchUpInside];
     // 当前有城市数据 && 定位成功
     if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
@@ -127,6 +128,14 @@
     } else {
         // 无网络
         [[ToastManager manager] showToast:@"网络异常"];
+    }
+}
+
+- (void)cityNameBtnClick {
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewModel cityNameBtnClick];
+    } else {
+         [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 

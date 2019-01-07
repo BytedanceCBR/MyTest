@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCityListViewModel : NSObject
 
 -(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView;
+- (void)cityNameBtnClick;
 
 @end
 

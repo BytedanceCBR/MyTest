@@ -53,21 +53,7 @@
 
 - (void)jumpCountryList:(UIViewController *)viewController
 {
-    CountryListVC *listVC = [[CountryListVC alloc] init];
-    [viewController.navigationController pushViewController:listVC animated:YES];
-    
-//    let vc = CountryListVC()
-//    vc.onClose = { [weak self] _ in
-//        self?.baseVC.navigationController?.popViewController(animated: true)
-//    }
-//    vc.onItemSelect
-//    .subscribe(onNext: { [unowned self] i in
-//
-//    })
-//    .disposed(by: self.disposeBag)
-//    self.baseVC.navigationController?.pushViewController(vc, animated: true)
-    
-//    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
+    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
 }
 @end

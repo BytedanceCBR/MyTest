@@ -66,39 +66,39 @@
                 if (configModel.cityAvailability.enable) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
                         if (isSuccess) {
-                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                
-                            }];
                             if(completion)
                             {
                                 completion(YES);
                             }
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
                         }else
                         {
-                            [[ToastManager manager] showToast:@"切换城市失败"];
                             if(completion)
                             {
                                 completion(NO);
                             }
+                            [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
                 }else
                 {
-                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                        
-                    }];
                     if(completion)
                     {
                         completion(YES);
                     }
+                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                        
+                    }];
                 }
             }else
             {
-                [[ToastManager manager] showToast:@"切换城市失败"];
                 if(completion)
                 {
                     completion(NO);
                 }
+                [[ToastManager manager] showToast:@"切换城市失败"];
             }
         }];
     }
