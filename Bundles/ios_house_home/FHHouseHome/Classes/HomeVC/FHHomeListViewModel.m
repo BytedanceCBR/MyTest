@@ -92,7 +92,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return ;
             }
             
-            [self resetAllCacheData];
+            [self resetCurrentHouseCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
         
@@ -123,8 +123,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-            
-//             NSString *urlStr = @"http://10.1.10.250:8080/test";
+////            sslocal://webview?url=10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876
+//            NSString *urlStr = @"http://10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876";
+////            NSString *urlStr = @"http://10.1.10.250:8080/test";
 //             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
 //             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
 //             NSString *unencodedString = urlStr;
@@ -375,6 +376,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.itemsSearchIdCache removeAllObjects];
     [self.originSearchIdCache removeAllObjects];
     [self.isItemsHasMoreCache removeAllObjects];
+}
+
+- (void)resetCurrentHouseCacheData
+{
+    [self.itemsDataCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
+    [self.itemsSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
+    [self.originSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
+    [self.isItemsHasMoreCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
 }
 
 - (void)updateCategoryViewSegmented:(BOOL)isFirstChange
