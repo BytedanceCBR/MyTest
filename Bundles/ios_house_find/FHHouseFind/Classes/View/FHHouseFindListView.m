@@ -35,6 +35,7 @@
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , copy) NSString *openUrl;
 @property (nonatomic , strong) FHHouseFindSectionItem *item;
+@property(nonatomic , assign) BOOL needRefresh;
 
 @end
 
@@ -44,6 +45,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.needRefresh = YES;
         [self setupUI];
         [self setupConstraints];
 
@@ -51,16 +53,21 @@
     return self;
 }
 
-- (void)updateDataWithItem: (FHHouseFindSectionItem *)item needRefresh: (BOOL)needRefresh
+- (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
+    if (!self.needRefresh) {
+        return;
+    }
     _houseType = item.houseType;
     _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    [self.viewModel setMaskView:self.errorMaskView];
     [self setupViewModelBlock];
     [self resetFilter:self.paramObj];
     [self setupConstraints];
     [self.houseFilterBridge trigerConditionChanged];
+    self.needRefresh = NO;
 
 }
 
@@ -161,17 +168,17 @@
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj
 {
     // FIXME: zjing navbar
-    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
-        
-//        self.viewModel.isEnterCategory = YES;
-//        self.houseType = houseTypeStr.integerValue;
-//        [self resetFilter:paramObj];
-        if (self.changeHouseTypeBlock) {
-            self.changeHouseTypeBlock(houseTypeStr.integerValue);
-        }
-        return;
-    }
+//    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
+//    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
+//        
+////        self.viewModel.isEnterCategory = YES;
+////        self.houseType = houseTypeStr.integerValue;
+////        [self resetFilter:paramObj];
+//        if (self.changeHouseTypeBlock) {
+//            self.changeHouseTypeBlock(houseTypeStr.integerValue);
+//        }
+//        return;
+//    }
     
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
