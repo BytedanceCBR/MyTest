@@ -18,8 +18,9 @@
 #import "FHHouseType.h"
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
+#import "UIView+Refresh_ErrorHandler.h"
 
-@interface FHHouseFindListView () <FHHouseListViewModelDelegate>
+@interface FHHouseFindListView () <FHHouseListViewModelDelegate, UIViewControllerErrorHandler>
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
@@ -36,7 +37,7 @@
 @property (nonatomic , copy) NSString *openUrl;
 @property (nonatomic , strong) FHHouseFindSectionItem *item;
 @property(nonatomic , assign) BOOL needRefresh;
-
+@property(nonatomic , assign) BOOL hasValidateData;
 @end
 
 @implementation FHHouseFindListView
@@ -46,6 +47,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.needRefresh = YES;
+        self.hasValidateData = NO;
+        [self startLoading];
         [self setupUI];
         [self setupConstraints];
 
@@ -68,7 +71,31 @@
     [self setupConstraints];
     [self.houseFilterBridge trigerConditionChanged];
     self.needRefresh = NO;
+    self.hasValidateData = YES;
+//    [self endLoading];
 
+}
+#pragma mark - UIViewControllerErrorHandler
+
+- (BOOL)tt_hasValidateData
+{
+    return _hasValidateData;
+}
+
+- (void)startLoading
+{
+    [self tt_startUpdate];
+}
+
+- (void)endLoading
+{
+    [self tt_endUpdataData];
+}
+
+- (void)setHasValidateData:(BOOL)hasValidateData
+{
+    _hasValidateData = hasValidateData;
+    [self endLoading];
 }
 
 - (void)initFilter
@@ -167,19 +194,6 @@
 
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj
 {
-    // FIXME: zjing navbar
-//    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-//    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
-//        
-////        self.viewModel.isEnterCategory = YES;
-////        self.houseType = houseTypeStr.integerValue;
-////        [self resetFilter:paramObj];
-//        if (self.changeHouseTypeBlock) {
-//            self.changeHouseTypeBlock(houseTypeStr.integerValue);
-//        }
-//        return;
-//    }
-    
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
     
@@ -187,20 +201,9 @@
 
 - (void)handleListOpenUrlUpdate:(TTRouteParamObj *)paramObj
 {
-    // FIXME: zjing navbar
-//    NSString *placeholder = [self placeholderByHouseType:self.houseType];
-//    NSString *fullText = paramObj.queryParams[@"full_text"];
-//    NSString *displayText = paramObj.queryParams[@"display_text"];
-//
-//    if (fullText.length > 0) {
-//
-//        placeholder = fullText;
-//    }else if (displayText.length > 0) {
-//
-//        placeholder = displayText;
-//    }
-//    [self refreshNavBar:self.houseType placeholder:placeholder];
-    
+    if (self.houseListOpenUrlUpdateBlock) {
+        self.houseListOpenUrlUpdateBlock(paramObj);
+    }
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
     
 }
