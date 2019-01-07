@@ -22,7 +22,9 @@
 #import "DebugUmengIndicator.h"
 #import <TTTracker/TTTrackerCleaner.h>
 #import "SSWebViewUtil.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHLocManager.h"
+
 @implementation TTAppLogStartupTask
 
 + (void)load
@@ -94,8 +96,10 @@
         if ([SSCommonLogic isUAEnable]) {
             [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
         }
-        NSString* currentCityName = [[EnvContext shared].client currentCityName];
-        NSString* provinceName = [[EnvContext shared].client currentProvince];
+//        NSString* currentCityName = [[EnvContext shared].client currentCityName];
+//        NSString* provinceName = [[EnvContext shared].client currentProvince];
+        NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
+        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
         customHeader[@"city_name"] = currentCityName;
         customHeader[@"province_name"] = currentCityName;
 

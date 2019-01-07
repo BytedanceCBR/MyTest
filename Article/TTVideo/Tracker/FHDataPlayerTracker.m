@@ -9,7 +9,8 @@
 #import "TTVPlayerStateStore.h"
 #import "KVOController.h"
 #import "TTVResolutionStore.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @interface FHDataPlayerTracker ()
 {
@@ -158,7 +159,8 @@
         [dict setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
 
         if (![TTTrackerWrapper isOnlyV3SendingEnable]){
-            [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
+//            [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
+            [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
         }
     }
 }

@@ -14,7 +14,8 @@
 #import "SSURLTracker.h"
 #import "TTVCommentModelProtocol.h"
 #import "TTRelevantDurationTracker.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 static NSInteger const vaildStayPageMinInterval = 1;
 static NSInteger const vaildStayPageMaxInterval = 7200;
@@ -350,20 +351,22 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
         if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat)
         {
 //            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_headline", value, nil, dic);
-            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
-            
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
         }
         else if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloatRelated)
         {
             [self ttv_addFromGId:dic];
-            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 
 //            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_related", value, nil, dic);
         }
         else
         {
             [self ttv_addFromGId:dic];
-            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 
 //            wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
         }

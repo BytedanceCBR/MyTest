@@ -9,7 +9,7 @@
 #import "UIScrollView+Refresh.h"
 #import "TTDeviceHelper.h"
 #import "TTCategory.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "TTTopBar.h"
 #import "FHHomeViewController.h"
 #import "UIScrollView+Refresh.h"
