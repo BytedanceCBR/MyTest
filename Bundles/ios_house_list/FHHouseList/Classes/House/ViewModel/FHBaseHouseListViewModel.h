@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FHBaseHouseListViewModel : NSObject <FHHouseFilterDelegate>
 
-//@property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
 @property(nonatomic , copy) void (^closeConditionFilter)();
 @property(nonatomic , copy) void (^clearSortCondition)();

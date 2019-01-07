@@ -75,6 +75,9 @@
 
 - (void)setPlaceHolder:(NSString *)placeHolder
 {
+    if (placeHolder.length < 1) {
+        return;
+    }
     NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
                                NSForegroundColorAttributeName:[UIColor themeGray3]
                                };
