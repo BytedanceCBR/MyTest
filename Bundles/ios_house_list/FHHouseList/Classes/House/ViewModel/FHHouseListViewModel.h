@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;
+// findTab过来的houseSearch需要单独处理下埋点数据
+-(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 
 @end
 

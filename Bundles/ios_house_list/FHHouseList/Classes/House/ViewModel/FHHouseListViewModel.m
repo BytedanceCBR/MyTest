@@ -470,8 +470,6 @@
 #pragma mark filter条件改变
 -(void)onConditionChanged:(NSString *)condition
 {
-//    NSLog(@"zjing - onConditionChanged condition-%@",condition);
-    
     NSString *allQuery = @"";
     if (self.getAllQueryString) {
         
@@ -603,6 +601,13 @@
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
         self.houseListOpenUrlUpdateBlock(routeParamObj, NO);
     }
+}
+
+// findTab过来的houseSearch需要单独处理下埋点数据
+-(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic {
+
+    self.houseSearchDic = houseSearchDic;
+    self.canChangeHouseSearchDic = NO; // 禁止修改house_search埋点数据
 }
 
 #pragma mark - map url delegate

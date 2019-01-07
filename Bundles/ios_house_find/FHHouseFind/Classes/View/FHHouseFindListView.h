@@ -18,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj;
-
+// findTab过来的houseSearch需要单独处理下埋点数据
+-(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 @end
 
 NS_ASSUME_NONNULL_END

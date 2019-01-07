@@ -31,9 +31,6 @@
 @property (nonatomic , assign) NSInteger currentSelectIndex;
 @property (nonatomic , strong) NSMutableDictionary *sugDict;
 
-@property (nonatomic , strong) NSDictionary *houseSearchDic;
-@property(nonatomic , assign) BOOL canChangeHouseSearchDic;// houseSearchDic[@"query_type"] = @"filter"
-
 @end
 
 @implementation FHHouseFindListViewModel
@@ -199,12 +196,6 @@
 #pragma mark - sug delegate
 - (void)suggestionSelected:(TTRouteObject *)routeObject
 {
-    NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
-    if (allInfo[@"houseSearch"]) {
-        self.houseSearchDic = allInfo[@"houseSearch"];
-        self.canChangeHouseSearchDic = NO; // 禁止修改house_search埋点数据
-    }
-
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
     FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
     if (item.houseType != houseTypeStr.integerValue) {
@@ -222,6 +213,10 @@
     }
 
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
+    if (allInfo[@"houseSearch"]) {
+        [baseView updateHouseSearchDict:allInfo[@"houseSearch"]];
+    }
     [baseView handleSugSelection:routeObject.paramObj];
     [self handlePlaceholder:routeObject.paramObj];
 }

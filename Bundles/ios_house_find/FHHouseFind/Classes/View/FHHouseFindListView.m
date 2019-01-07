@@ -217,6 +217,12 @@
     
 }
 
+// findTab过来的houseSearch需要单独处理下埋点数据
+-(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic
+{
+    [self.viewModel updateHouseSearchDict:houseSearchDic];
+}
+
 - (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;
