@@ -38,7 +38,7 @@
 @property (nonatomic , copy, nullable) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
-@property (nonatomic , copy) NSDictionary *houseSearchDic;
+@property (nonatomic , strong) NSDictionary *houseSearchDic;
 @property(nonatomic , assign) BOOL canChangeHouseSearchDic;// houseSearchDic[@"query_type"] = @"filter"
 
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;

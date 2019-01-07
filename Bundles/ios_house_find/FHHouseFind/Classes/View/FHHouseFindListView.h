@@ -7,13 +7,17 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
+#import "FHHouseFindSectionItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class TTRouteParamObj;
 @interface FHHouseFindListView : UIView
 
-- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl;
+@property(nonatomic , copy) void (^changeHouseTypeBlock)(FHHouseType houseType);
 
+- (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
+- (void)handleSugSelection:(TTRouteParamObj *)paramObj;
 @end
 
 NS_ASSUME_NONNULL_END

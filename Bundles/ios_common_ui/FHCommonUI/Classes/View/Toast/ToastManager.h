@@ -17,9 +17,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showToast:(NSString *)message;
 - (void)showToast:(NSString *)message duration:(NSTimeInterval)duration isUserInteraction:(BOOL)isUserInteraction;
 
+- (void)showCustomLoading:(NSString *)message;
+- (void)showCustomLoading:(NSString *)message isUserInteraction:(BOOL)isUserInteraction;
+- (void)dismissCustomLoading;
+
 @end
 
 @interface FHToastView : UIView
+
+@end
+
+@interface FHCycleIndicatorView : UIView
+
+- (void)startAnimating;
+- (void)stopAnimating;
+
+@end
+
+
+@interface FHLoadingView : UIView
+
+@property (nonatomic, strong)   UILabel       *message;
 
 @end
 

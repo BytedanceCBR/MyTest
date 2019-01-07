@@ -157,6 +157,11 @@
         if (cityName.length > 0) {
             [commonParams setValue:cityName forKey:@"f_city_name"];
         }
+        
+        NSString *cityId = configModel.currentCityId;
+        if (cityId.length > 0) {
+            [commonParams setValue:cityId forKey:@"f_city_id"];
+        }
 
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
             [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
@@ -164,8 +169,6 @@
 
 //        NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
         NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-        
-        NSLog(@"fParams = %@",fParams);
         
         [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [commonParams setValue:obj forKey:key];

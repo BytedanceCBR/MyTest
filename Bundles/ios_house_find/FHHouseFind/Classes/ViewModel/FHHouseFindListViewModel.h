@@ -11,13 +11,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class HMSegmentedControl;
+@class HMSegmentedControl,FHHouseFindListViewController,FHErrorView,TTRouteParamObj;
 @interface FHHouseFindListViewModel : NSObject
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+//@property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
+
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView viewController:(FHHouseFindListViewController *)listVC;
 - (void)jump2GuessVC;
 - (void)setTracerModel:(FHTracerModel *)tracerModel;
 - (void)setSegmentView:(HMSegmentedControl *)segmentView;
+- (void)addConfigObserver;
+- (void)viewDidLayoutSubviews;
+- (void)setErrorMaskView:(FHErrorView *)errorMaskView;
 
 @end
 

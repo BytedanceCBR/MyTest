@@ -15,6 +15,9 @@
 #import "BDAccountConfiguration.h"
 #import "BDAccount+Configuration.h"
 #import "FHURLSettings.h"
+#import "TTRoute.h"
+#import "ToastManager.h"
+#import "TTArticleCategoryManager.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -36,6 +39,85 @@
     });
     
     return manager;
+}
+
++ (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
+{
+    NSInteger cityId = 0;
+    
+    if ([urlString containsString:@"city_id"]) {
+        NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
+        NSString *paramsStr = [paramsArrary lastObject];
+        
+        for (NSString *paramStr in [paramsStr componentsSeparatedByString:@"&"]) {
+            NSArray *elts = [paramStr componentsSeparatedByString:@"="];
+            if([elts count] < 2) continue;
+            if ([elts.lastObject respondsToSelector:@selector(integerValue)]) {
+                cityId = [elts.lastObject integerValue];
+            }
+        }
+            
+        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
+            [[ToastManager manager] dismissCustomLoading];
+            if (isSuccess) {
+                FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                if (configModel.cityAvailability.enable) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
+                        if (isSuccess) {
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                        }else
+                        {
+                            [[ToastManager manager] showToast:@"切换城市失败"];
+                            if(completion)
+                            {
+                                completion(NO);
+                            }
+                        }
+                    }];
+                }else
+                {
+                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                        
+                    }];
+                    if(completion)
+                    {
+                        completion(YES);
+                    }
+                }
+            }else
+            {
+                [[ToastManager manager] showToast:@"切换城市失败"];
+                if(completion)
+                {
+                    completion(NO);
+                }
+            }
+        }];
+    }
+}
+
+/*
+ 判断找房当前城市是否开通
+ */
++ (BOOL)isCurrentCityNormalOpen
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable;
+}
+
+/*
+ 判断用户选择城市和当前城市是否是同一个
+ */
++ (BOOL)isSameLocCityToUserSelect
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable;
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey
@@ -229,7 +311,7 @@
     if (kIsNSString([FHUtils contentForKey:kUserDefaultCityId])) {
         return [FHUtils contentForKey:kUserDefaultCityId];
     }
-    return @"122";
+    return nil;
 }
 
 //保存当前城市id

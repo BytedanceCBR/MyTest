@@ -88,7 +88,6 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
-        NSLog(@"header height = %f",[[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]);
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     

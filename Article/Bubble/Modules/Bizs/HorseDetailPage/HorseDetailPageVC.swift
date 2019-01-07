@@ -158,18 +158,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let urlStr = paramObj?.sourceURL.absoluteString,
             let realStr = urlStr.removingPercentEncoding,
             let urlParams = realStr.urlParameters {
-            if let origin_from = urlParams["origin_from"],
-                origin_from.count > 0 {
-                traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
-                // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
-                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-                    toTracerParams(origin_from, key: "origin_from")
-            }
-            if let log_pb = urlParams["log_pb"],
-                log_pb.count > 2,
-                let jsonData = log_pb.data(using: .utf8) {
-                if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
-                    traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+            if let typeStr = urlParams["type"], typeStr == "activity" {
+                if let origin_from = urlParams["origin_from"],
+                    origin_from.count > 0 {
+                    traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
+                    // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
+                    EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                        toTracerParams(origin_from, key: "origin_from")
+                }
+                if let log_pb = urlParams["log_pb"],
+                    log_pb.count > 2,
+                    let jsonData = log_pb.data(using: .utf8) {
+                    if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
+                        traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                    }
                 }
             }
         }
@@ -734,7 +736,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         if self.houseType == .neighborhood {
                             titleStr = "咨询经纪人"
                         }
-                        self.showSendPhoneAlert(title: titleStr, subTitle: "随时获取房源最新动态", confirmBtnTitle: "提交")
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "提交")
                     }
 
                 })

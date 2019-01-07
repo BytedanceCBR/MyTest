@@ -30,9 +30,12 @@
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) UITableView *tableView;
 @property (nonatomic , strong) FHHouseListViewModel *viewModel;
-@property (nonatomic , copy) NSString *openUrl;
-@property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+
+@property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , copy) NSString *openUrl;
+@property (nonatomic , strong) FHHouseFindSectionItem *item;
+@property(nonatomic , assign) BOOL needRefresh;
 
 @end
 
@@ -42,6 +45,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.needRefresh = YES;
         [self setupUI];
         [self setupConstraints];
 
@@ -49,24 +53,26 @@
     return self;
 }
 
-- (void)updateDataWithHouseType:(FHHouseType)houseType openUrl:(NSString *)openUrl
+- (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
-    _openUrl = openUrl;
-    _houseType = houseType;
-    self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];
+    if (!self.needRefresh) {
+        return;
+    }
+    _houseType = item.houseType;
+    _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
+    self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    [self.viewModel setMaskView:self.errorMaskView];
     [self setupViewModelBlock];
     [self resetFilter:self.paramObj];
     [self setupConstraints];
     [self.houseFilterBridge trigerConditionChanged];
+    self.needRefresh = NO;
+
 }
 
 - (void)initFilter
 {
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
-    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-    self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
-    
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
     
@@ -74,7 +80,7 @@
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     
-    [self.houseFilterViewModel setFilterConditions:paramObj.queryParams];
+    [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
     self.viewModel.viewModelDelegate = self;
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
@@ -88,7 +94,6 @@
         make.left.and.right.and.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
     }];
-    
 }
 
 - (void)resetFilter:(TTRouteParamObj *)paramObj
@@ -115,7 +120,6 @@
     self.viewModel.houseType = self.houseType;
     [self.houseFilterViewModel setFilterConditions:paramObj.queryParams];
     [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
-    
 }
 
 - (void)setupViewModelBlock
@@ -151,10 +155,33 @@
         [wself handleListOpenUrlUpdate:paramObj];
  
     };
-    
+    _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+        
+        [wself handleSugSelection:paramObj];
+    };
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
         //        [wself showNotify:message];
     };
+    
+}
+
+- (void)handleSugSelection:(TTRouteParamObj *)paramObj
+{
+    // FIXME: zjing navbar
+//    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
+//    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
+//        
+////        self.viewModel.isEnterCategory = YES;
+////        self.houseType = houseTypeStr.integerValue;
+////        [self resetFilter:paramObj];
+//        if (self.changeHouseTypeBlock) {
+//            self.changeHouseTypeBlock(houseTypeStr.integerValue);
+//        }
+//        return;
+//    }
+    
+    [self handleListOpenUrlUpdate:paramObj];
+    [self.houseFilterBridge trigerConditionChanged];
     
 }
 
@@ -258,7 +285,7 @@
 {
     if (!_tableView) {
         
-        _tableView = [[UITableView alloc] initWithFrame:self.bounds];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;
@@ -267,7 +294,6 @@
             self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         if ([TTDeviceHelper isIPhoneXDevice]) {
-            
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

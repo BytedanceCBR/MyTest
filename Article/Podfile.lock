@@ -1431,7 +1431,7 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: b847fa61d78dc8dd32b134dfb0a6e6fa2ce402d8
+    :commit: cc466fc84dbfab863d4464138b55e321e4ac0041
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1440,7 +1440,7 @@ CHECKOUT OPTIONS:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: 36ec99d363c14f33b0c3e2033ef500403c23fc3a
+    :commit: 49bc68f0b533295611619e12234719da02a66de4
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
