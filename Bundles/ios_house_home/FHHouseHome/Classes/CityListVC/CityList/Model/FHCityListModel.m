@@ -7,6 +7,33 @@
 
 #import "FHCityListModel.h"
 
-@implementation FHCityListModel
+@implementation FHHistoryCityListModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"name": @"label",
+                           @"cityId": @"cityId",
+                           @"simplePinyin": @"simplePinyin",
+                           @"pinyin": @"pinyin",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHistoryCityCacheModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 
 @end

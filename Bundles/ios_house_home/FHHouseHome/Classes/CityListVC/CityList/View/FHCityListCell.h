@@ -9,6 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^kFHHotCityItemClick)(NSInteger index);
+
 @interface FHCityItemCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *cityNameLabel;
@@ -19,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCityHotItemCell : UITableViewCell
 
 @property (nonatomic, strong , nullable) NSArray *cityList; // 城市名称数组
+@property (nonatomic, copy)     kFHHotCityItemClick       itemClickBlk;
 
 @end
 

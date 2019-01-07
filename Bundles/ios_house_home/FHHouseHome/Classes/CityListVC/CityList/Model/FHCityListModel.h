@@ -6,10 +6,27 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "JSONModel.h"
+#import "FHBaseModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCityListModel : NSObject
+@protocol FHHistoryCityListModel<NSObject>
+
+@end
+
+@interface  FHHistoryCityListModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *simplePinyin;
+@property (nonatomic, copy , nullable) NSString *cityId;
+@property (nonatomic, copy , nullable) NSString *pinyin;
+
+@end
+
+@interface FHHistoryCityCacheModel : JSONModel
+
+@property (nonatomic, strong)   NSArray<FHHistoryCityListModel>       *datas;
 
 @end
 

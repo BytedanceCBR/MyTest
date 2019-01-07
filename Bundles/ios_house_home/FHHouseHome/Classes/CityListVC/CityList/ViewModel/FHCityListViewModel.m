@@ -8,9 +8,14 @@
 #import "FHCityListViewModel.h"
 #import "FHCityListCell.h"
 #import "FHEnvContext.h"
+#import "YYCache.h"
+#import "FHCityListModel.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
+
+static const NSString *kHistoryCityCacheKey = @"cache_country_list_history";
+static const NSString *kFHHistoryListKey = @"key_history_list";
 
 @interface FHCityListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -19,10 +24,12 @@
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataHotCityListModel> *hotCityList;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataCityListModel> *cityList;
-@property (nonatomic, strong , nullable) NSArray<FHConfigDataCityListModel> *historyCityList;
+@property (nonatomic, strong , nullable) NSArray<FHHistoryCityListModel> *historyCityList;
 @property (nonatomic, strong) NSMutableArray    *sectionsKeyData;
 @property (nonatomic, strong) NSMutableArray    *sectionsData;
 @property (nonatomic, assign)   NSInteger       mainCount; // 历史 + 热门 + 其他 (共3种 目的为了计算行高等)
+
+@property (nonatomic, strong)   YYCache       *historyCache;
 
 @end
 
@@ -38,6 +45,7 @@
     }
     return self;
 }
+
 -(void)configTableView
 {
     _tableView.delegate = self;
@@ -47,13 +55,49 @@
     [_tableView registerClass:[FHCityHotItemCell class] forCellReuseIdentifier:kCityListHotItemCellId];
 }
 
+- (YYCache *)historyCache
+{
+    if (!_historyCache) {
+        _historyCache = [YYCache cacheWithName:kHistoryCityCacheKey];
+    }
+    return _historyCache;
+}
+
 - (void)loadListCityData {
+    self.cityList = NULL;
+    self.hotCityList = NULL;
+    self.historyCityList = NULL;
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     self.cityList = [configDataModel cityList];
     self.hotCityList = [configDataModel hotCityList];
-    // 加载历史数据
+    [self loadHistoryData];
+//    [self saveHistoryData];
     [self configSectionData];
     [self.tableView reloadData];
+}
+
+// 加载历史数据
+- (void)loadHistoryData {
+    NSString *historyStr = [self.historyCache objectForKey:kFHHistoryListKey];
+    if (historyStr.length > 0) {
+        JSONModelError *jerror = nil;
+        FHHistoryCityCacheModel *cacheData = [[FHHistoryCityCacheModel alloc] initWithString:historyStr error:&jerror];
+        if (cacheData && !jerror) {
+            self.historyCityList = cacheData.datas;
+        }
+    }
+}
+
+// 保存历史记录数据
+- (void)saveHistoryData {
+    if (self.historyCityList) {
+        FHHistoryCityCacheModel *cacheModel = [[FHHistoryCityCacheModel alloc] init];
+        cacheModel.datas = self.historyCityList;
+        NSString *saveStr = [cacheModel toJSONString];
+        if (saveStr.length > 0) {
+            [self.historyCache setObject:saveStr forKey:kFHHistoryListKey];
+        }
+    }
 }
 
 // 构建列表页数据
@@ -106,6 +150,52 @@
     }
 }
 
+- (void)hotOrHistoryCityItemClickBySection:(NSInteger)section index:(NSInteger)index {
+    // 历史和热门
+    if (section < self.mainCount - 1) {
+        if (self.mainCount == 3) {
+            // 有历史和热门
+            if (section == 0) {
+                // 历史
+                [self historyItemClick:index];
+            } else if (section == 1) {
+                // 热门
+                [self hotItemClick:index];
+            } else {
+                // 没有历史且没有热门
+            }
+        } else if (self.mainCount == 2) {
+            // 有历史或者有热门
+            if (self.historyCityList.count > 0) {
+                // 历史
+                [self historyItemClick:index];
+            } else if (self.hotCityList.count > 0) {
+                // 热门
+                [self hotItemClick:index];
+            } else {
+                // 没有历史且没有热门
+            }
+        } else {
+            // 没有历史且没有热门
+        }
+    }
+}
+
+- (void)historyItemClick:(NSInteger)index {
+    if (index >= 0 && index < self.historyCityList.count) {
+        FHHistoryCityListModel *item = self.historyCityList[index];
+    }
+}
+
+- (void)hotItemClick:(NSInteger)index {
+    if (index >= 0 && index < self.hotCityList.count) {
+        FHConfigDataHotCityListModel *item = self.hotCityList[index];
+    }
+}
+
+- (void)cellItemClick:(FHConfigDataCityListModel *)item {
+    
+}
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
@@ -144,6 +234,10 @@
                 if (cityNames.count > 0) {
                     cell.cityList = cityNames;
                 }
+                __weak typeof(self) wSelf = self;
+                cell.itemClickBlk = ^(NSInteger index) {
+                    [wSelf hotOrHistoryCityItemClickBySection:indexPath.section index:index];
+                };
             }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
@@ -226,7 +320,21 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section < self.sectionsData.count) {
+        if (indexPath.section < self.mainCount - 1) {
+            // 历史和热门
+        } else {
+            NSArray *tempData = self.sectionsData[indexPath.section];
+            if (indexPath.row < tempData.count) {
+                FHConfigDataCityListModel *model = (FHConfigDataCityListModel *)tempData[indexPath.row];
+                [self cellItemClick:model];
+            }
+        }
+    }
 }
 
+- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return [self.sectionsKeyData copy];
+}
 
 @end
