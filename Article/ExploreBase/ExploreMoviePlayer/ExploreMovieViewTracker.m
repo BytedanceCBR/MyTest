@@ -16,7 +16,8 @@
 #import <TTTracker/TTTrackerProxy.h>
 #import "MZMonitor.h"
 #import "SSMoviePlayerController.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @implementation ExploreMovieViewTracker {
     NSUInteger _watchDurationLogIndex;
@@ -446,8 +447,8 @@
     NSString *from_gid = [log_pb tt_stringValueForKey:@"from_gid"];
     [dict setValue: from_gid forKey:@"from_gid"];
 
-    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
-    
+//    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"enter_fullscreen"];
 }
 
 - (void)sendExistFullScreenTrack:(BOOL)sendByFullScreenButton
@@ -583,8 +584,8 @@
         [dict setValue:log_pb forKey:@"log_pb"];
     }
 
-    [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
-
+//    [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
 }
 
 - (void)sendVideoPlayEventV3WithLabel:(NSString *)dataLabel isDoubleSending:(BOOL)animation{

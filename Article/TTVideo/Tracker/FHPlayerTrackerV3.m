@@ -8,8 +8,8 @@
 #import "FHPlayerTrackerV3.h"
 #import "TTVPlayerStateStore.h"
 #import "KVOController.h"
-#import "Bubble-Swift.h"
-
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @interface FHPlayerTrackerV3 ()
 {
@@ -85,8 +85,8 @@
     NSString *from_gid = [log_pb tt_stringValueForKey:@"from_gid"];
     [dict setValue: from_gid forKey:@"from_gid"];
     
-    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
-
+//    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
+    [FHEnvContext recordEvent:dic andEventKey:@"enter_fullscreen"];
 }
 
 - (void)existFullScreenTrack:(TTVPlayerExitFullScreeenType)type
@@ -95,7 +95,8 @@
     [dic setValue:[self ttv_exitFullscreenAction] forKey:@"action_type"];
     [dic setValue:@"landscape" forKey:@"fullscreen_type"];
 //    [TTTrackerWrapper eventV3:@"exit_fullscreen" params:dic isDoubleSending:YES];
-    [[EnvContext shared].tracer writeEvent:@"exit_fullscreen" params:dic];
+//    [[EnvContext shared].tracer writeEvent:@"exit_fullscreen" params:dic];
+    [FHEnvContext recordEvent:dic andEventKey:@"exit_fullscreen"];
 
 }
 

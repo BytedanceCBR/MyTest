@@ -73,7 +73,9 @@
 #import "TSVCategory.h"
 //#import "TSVStoryContainerView.h"
 #import "TSVMonitorManager.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
+#import "TTCategoryStayTrackManager.h"
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 1
@@ -1556,8 +1558,8 @@ TTAccountMulticastProtocol
         [params setValue:refreshType forKey:@"refresh_type"];
         [params setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
 
-        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
-
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
+        [FHEnvContext recordEvent:params andEventKey:@"category_refresh"];
     }
 
 }
@@ -1571,7 +1573,8 @@ TTAccountMulticastProtocol
         [params setValue:refreshType forKey:@"refresh_type"];
         [params setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
         
-        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
+        [FHEnvContext recordEvent:params andEventKey:@"category_refresh"];
 
     }
     
