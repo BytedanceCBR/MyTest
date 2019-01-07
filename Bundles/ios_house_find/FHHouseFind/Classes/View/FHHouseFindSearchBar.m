@@ -47,7 +47,7 @@
         UIImage *searchIcon = [UIImage imageNamed:@"nav_search_icon"];
         UIImageView *searchImgView = [[UIImageView alloc] initWithImage:searchIcon];
         searchImgView.frame = CGRectMake(0, 0, 12, 12);
-        UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(00, 00, 32, 32)];
+        UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
         [leftView addSubview:searchImgView];
         searchImgView.center = CGPointMake(leftView.width/2, leftView.height/2);
         leftView.backgroundColor = [UIColor clearColor];

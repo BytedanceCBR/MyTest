@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;
 // findTab过来的houseSearch需要单独处理下埋点数据
 -(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
+-(NSDictionary *)categoryLogDict;
 
 @end
 

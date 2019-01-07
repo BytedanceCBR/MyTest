@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.13)
+  - BDALog (0.1.14)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -1431,7 +1431,7 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: cc466fc84dbfab863d4464138b55e321e4ac0041
+    :commit: ff6456b6467c18f977035584d6c0dfd0f3dd287a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1461,7 +1461,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 54aee45a65093ffafdbe747b0b00f3c26cdc1ea5
+  BDALog: 4209f6570704720c3f9f7a6abdfceaf2cc3ea7e5
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 2556db5b8358fe78dcb8f793793bf693e2a76adb
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23

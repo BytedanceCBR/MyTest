@@ -19,6 +19,7 @@
 #import "HMSegmentedControl.h"
 #import "FHHouseFindSearchBar.h"
 #import "TTDeviceHelper.h"
+#import "UIViewController+Track.h"
 
 @interface FHHouseFindListViewController ()
 
@@ -36,12 +37,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.ttTrackStayEnable = YES;
     __weak typeof(self)wself = self;
     [self setupUI];
     [self startLoading];
     [self setupViewModel];
 
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.viewModel viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.viewModel viewWillDisappear:animated];
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground
+{
+    [self.viewModel addStayCategoryLog];
+    [self.viewModel resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground
+{
+    [self.viewModel resetStayTime];
+    self.viewModel.trackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
 
 - (void)setupViewModel
 {

@@ -16,6 +16,7 @@
 #import "FHErrorView.h"
 #import <FHHouseSuggestionDelegate.h>
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseFindListViewModel () <UIScrollViewDelegate, FHHouseSuggestionDelegate>
 
@@ -23,12 +24,14 @@
 @property(nonatomic,weak)UIScrollView *scrollView;
 @property (nonatomic , weak) FHErrorView *errorMaskView;
 @property(nonatomic,strong)FHTracerModel *tracerModel;
+@property (nonatomic , strong) NSDictionary *tracerDict;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
 @property (nonatomic , strong) FHConfigDataModel *configDataModel;
 @property (nonatomic , weak) HMSegmentedControl *segmentView;
 @property (nonatomic , strong) NSArray <FHHouseFindSectionItem *> *itemList;
 @property (nonatomic , assign) NSInteger currentSelectIndex;
+@property (nonatomic , assign) NSInteger lastSelectIndex;
 @property (nonatomic , strong) NSMutableDictionary *sugDict;
 
 @end
@@ -43,6 +46,15 @@
         _scrollView = scrollView;
         _scrollView.delegate = self;
         _sugDict = [NSMutableDictionary dictionary];
+        TTRouteUserInfo *userInfo = nil;
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[@"enter_from"] = @"findtab";
+        param[@"enter_type"] = @"click";
+        param[@"element_from"] = @"be_null";
+        param[@"origin_from"] = @"findtab_related";
+        self.tracerDict = param;
+        self.tracerModel = [[FHTracerModel alloc]initWithDictionary:self.tracerDict error:nil];
+        self.originFrom = self.tracerModel.originFrom;
     }
     return self;
 }
@@ -100,6 +112,7 @@
         
         FHHouseFindSectionItem *item = self.itemList[index];
         FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        baseView.tracerDict = self.tracerDict;
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
             [wself handlePlaceholder:paramObj];
@@ -110,6 +123,7 @@
     
     if (self.itemList.count > 0) {
         
+        self.segmentView.selectedSegmentIndex = 0;
         [self.scrollView setContentOffset:CGPointZero animated:NO];
         [self selectHouseFindListItem:0];
     }
@@ -164,11 +178,6 @@
 
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
-    self.segmentView.selectedSegmentIndex = 0;
-    if (self.itemList.count > 0) {
-        self.currentSelectIndex = 0;
-    }
-    
 }
 
 - (void)jump2GuessVC
@@ -283,12 +292,6 @@
     }
 }
 
-- (void)setTracerModel:(FHTracerModel *)tracerModel
-{
-    _tracerModel = tracerModel;
-    self.originFrom = tracerModel.originFrom;
-}
-
 - (void)setSegmentView:(HMSegmentedControl *)segmentView
 {
     _segmentView = segmentView;
@@ -315,7 +318,6 @@
     }
     if (index >= 0 && index < self.itemList.count) {
         self.segmentView.selectedSegmentIndex = index;
-        self.currentSelectIndex = index;
 
     }
 }
@@ -323,13 +325,20 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
-
         [self selectHouseFindListItem:self.segmentView.selectedSegmentIndex];
+        if (self.lastSelectIndex != self.currentSelectIndex) {
+            
+            [self endTrack];
+            [self addEnterCategoryLog];
+            [self addStayCategoryLog];
+            [self resetStayTime];
+        }
     }
 }
 
 - (void)selectHouseFindListItem: (NSInteger)index
 {
+    self.lastSelectIndex = self.currentSelectIndex;
     self.currentSelectIndex = index;
     FHHouseFindSectionItem *item = self.itemList[index];
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
@@ -338,7 +347,70 @@
     if (self.sugSelectBlock) {
         self.sugSelectBlock(placeholder);
     }
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self startTrack];
+
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self endTrack];
+    [self addStayCategoryLog];
+    [self resetStayTime];
+
+}
+
+-(void)addEnterCategoryLog
+{
+    if (self.currentSelectIndex < self.itemList.count) {
+        
+        FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+        FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
+        NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
+        [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+
+    }
+
+}
+
+- (void)addStayCategoryLog
+{
+    NSTimeInterval duration = self.trackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    if (self.lastSelectIndex < self.itemList.count) {
+        
+        FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
+        FHHouseFindSectionItem *item = self.itemList[self.lastSelectIndex];
+        NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
+        tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+        [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    }
+}
+
+- (void)resetStayTime
+{
+    self.trackStayTime = 0;
     
 }
+
+- (void)startTrack {
+    
+    self.trackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)endTrack {
+    
+    
+    self.trackStayTime += [[NSDate date] timeIntervalSince1970] - self.trackStartTime;
+    
+    NSLog(@"zjing-trackStayTime：%@",@(self.trackStayTime).stringValue);
+    
+}
+
 
 @end

@@ -15,11 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindListView : UIView
 
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj);
+@property (nonatomic , strong) NSDictionary *tracerDict;
 
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj;
 // findTab过来的houseSearch需要单独处理下埋点数据
--(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
+- (void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
+- (NSDictionary *)categoryLogDict;
+
 @end
 
 NS_ASSUME_NONNULL_END

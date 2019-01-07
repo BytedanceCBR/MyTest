@@ -38,6 +38,7 @@
 @property (nonatomic , strong) FHHouseFindSectionItem *item;
 @property(nonatomic , assign) BOOL needRefresh;
 @property(nonatomic , assign) BOOL hasValidateData;
+
 @end
 
 @implementation FHHouseFindListView
@@ -65,13 +66,10 @@
     _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
     TTRouteUserInfo *userInfo = nil;
-    NSMutableDictionary *param = @{}.mutableCopy;
-    param[@"enter_from"] = @"findtab";
-    param[@"enter_type"] = @"click";
-    param[@"element_from"] = @"be_null";
-    param[@"origin_from"] = @"findtab_related";
-
-    userInfo = [[TTRouteUserInfo alloc]initWithInfo:@{@"tracer":param}];
+    if (self.tracerDict) {
+        
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:@{@"tracer":self.tracerDict}];
+    }
     self.paramObj.userInfo = userInfo;
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     [self.viewModel setMaskView:self.errorMaskView];
@@ -144,8 +142,10 @@
     [self addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
+    CGFloat bottomHeight = [TTDeviceHelper isIPhoneXDevice] ? 83 : 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self);
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
@@ -223,6 +223,12 @@
     [self.viewModel updateHouseSearchDict:houseSearchDic];
 }
 
+- (NSDictionary *)categoryLogDict
+{
+    return [self.viewModel categoryLogDict];
+}
+
+
 - (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;
@@ -266,8 +272,10 @@
 
 - (void)setupConstraints
 {
+    CGFloat bottomHeight = [TTDeviceHelper isIPhoneXDevice] ? 83 : 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self);
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
