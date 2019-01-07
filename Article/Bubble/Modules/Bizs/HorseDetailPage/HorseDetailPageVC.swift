@@ -319,7 +319,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }
 
     fileprivate func tracerDictToTracerModel(tracerDict: [AnyHashable : Any]) -> HouseRentTracer {
-        print("tracerDictToTracerModel")
         let houseTypeStr = houseType(houseType: houseType)
         let pageType = pageTypeString(houseType)
         let tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
@@ -332,7 +331,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let rank = tracerDict["rank"] as? String {
             result.rank = rank
         } else {
-            result.rank = tracer["rank"] as? String ?? "be_null"
+            if let rank = tracer["rank"] as? Int {
+                result.rank = "\(rank)"
+            }
         }
         result.originFrom = tracer["origin_from"] as? String
         result.originSearchId = tracer["origin_search_id"] as? String

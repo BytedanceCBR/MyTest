@@ -477,7 +477,6 @@ func fillAgentListCell(
                 .disposed(by: theCell.disposeBag)
             //页面跳转
             itemView.rx.controlEvent(.touchUpInside)
-                .debug()
                 .bind {
                     //TODO openUrl
                 }
