@@ -203,7 +203,7 @@ class CountryListVC: BaseViewController {
                     EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
 
                     //TODO: 暂时的解决方案，需要也加入到switcher中去
-                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
+//                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })
