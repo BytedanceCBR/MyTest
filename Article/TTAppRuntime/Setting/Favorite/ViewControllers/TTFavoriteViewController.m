@@ -33,7 +33,8 @@
 #import <TTAccountSDK.h>
 //#import "Thread.h"
 #import "ExploreMomentDefine.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 #define kHasBottomTipFavlistClosedUserDefaultKey @"kHasBottomTipFavlistClosedUserDefaultKey"
 
@@ -142,8 +143,8 @@
     [dict setValue:@"favorite" forKey:@"category_name"];
     [dict setValue:@"click" forKey:@"enter_type"];
     [dict setValue:isLoadMore ? @"pre_load_more" : @"pull" forKey:@"refresh_type"];
-    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
-
+//    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
 }
 
 - (void)setupFooterView {

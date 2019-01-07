@@ -17,8 +17,8 @@
 #import "NSDictionary+TTGeneratedContent.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTRelevantDurationTracker.h"
-#import "Bubble-Swift.h"
-
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @interface ExploreDetailManager()
 {
@@ -638,8 +638,8 @@
     [params setValue:self.paramDicts[kNewsDetailViewConditionRelateReadFromGID] forKey:@"from_gid"];
     [params setValue:@((long long)(duration * 1000)).stringValue forKey:@"stay_time"];
 
-    [[EnvContext shared].tracer writeEvent:@"stay_page" params:params];
-
+//    [[EnvContext shared].tracer writeEvent:@"stay_page" params:params];
+    [FHEnvContext recordEvent:params andEventKey:@"stay_page"];
 //    [TTTrackerWrapper eventV3:@"stay_page" params:({
 //        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJSONDict];
 //        [params setValue:self.article.groupModel.groupID forKey:@"group_id"];

@@ -29,8 +29,13 @@
 #import "TTAlphaThemedButton.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "FHHomeSearchPanelView.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import <UIFont+House.h>
+#import "UIImageView+BDWebImage.h"
+
+#import "FHEnvContext.h"
+
+#import "UIImageAdditions.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 
@@ -123,7 +128,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         }];
         [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
+//         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
         } forControlEvent:UIControlEventTouchUpInside];
         
         UIImageView *imageButtonLeftIcon = [UIImageView new];

@@ -29,6 +29,7 @@
 @property (nonatomic , weak) HMSegmentedControl *segmentView;
 @property (nonatomic , strong) NSArray <FHHouseFindSectionItem *> *itemList;
 @property (nonatomic , assign) NSInteger currentSelectIndex;
+@property (nonatomic , strong) NSMutableDictionary *sugDict;
 
 @property (nonatomic , strong) NSDictionary *houseSearchDic;
 @property(nonatomic , assign) BOOL canChangeHouseSearchDic;// houseSearchDic[@"query_type"] = @"filter"
@@ -44,6 +45,7 @@
         _listVC = listVC;
         _scrollView = scrollView;
         _scrollView.delegate = self;
+        _sugDict = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -77,6 +79,7 @@
 
 - (void)refreshDataWithConfigDataModel
 {
+    __weak typeof(self)wself = self;
     [self.listVC endLoading];
     
     if (self.configDataModel == nil) {
@@ -100,6 +103,10 @@
         
         FHHouseFindSectionItem *item = self.itemList[index];
         FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+            
+            [wself handlePlaceholder:paramObj];
+        };
         baseView.tag = 10 + index;
         [self.scrollView addSubview:baseView];
     }
@@ -127,6 +134,8 @@
         itemTitle = @"二手房";
         [itemList addObject:item];
         [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeSecondHandHouse];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeSecondHandHouse]];
     }
     if (self.configDataModel.searchTabCourtFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
@@ -134,6 +143,8 @@
         itemTitle = @"新房";
         [itemList addObject:item];
         [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNewHouse];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNewHouse]];
     }
     if (self.configDataModel.searchTabRentFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
@@ -141,6 +152,8 @@
         itemTitle = @"租房";
         [itemList addObject:item];
         [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeRentHouse];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeRentHouse]];
     }
     if (self.configDataModel.searchTabNeighborhoodFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
@@ -148,6 +161,8 @@
         itemTitle = @"小区";
         [itemList addObject:item];
         [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNeighborhood];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNeighborhood]];
     }
 
     self.itemList = itemList;
@@ -208,6 +223,69 @@
 
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
     [baseView handleSugSelection:routeObject.paramObj];
+    [self handlePlaceholder:routeObject.paramObj];
+}
+
+- (void)handlePlaceholder:(TTRouteParamObj *)paramObj
+{
+    FHHouseFindSectionItem *obj = self.itemList[self.currentSelectIndex];
+    NSString *placeholder = [self.sugDict objectForKey:[self placeholderKeyByHouseType:obj.houseType]];
+    NSString *fullText = paramObj.queryParams[@"full_text"];
+    NSString *displayText = paramObj.queryParams[@"display_text"];
+    
+    if (fullText.length > 0) {
+        
+        placeholder = fullText;
+    }else if (displayText.length > 0) {
+        
+        placeholder = displayText;
+    }
+    [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:obj.houseType]];
+    if (self.sugSelectBlock) {
+        self.sugSelectBlock(placeholder);
+    }
+}
+
+- (NSString *)placeholderKeyByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"FHHouseTypeNewHouse";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"FHHouseTypeSecondHandHouse";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"FHHouseTypeNeighborhood";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"FHHouseTypeRentHouse";
+            break;
+        default:
+            return @"";
+            break;
+    }
+}
+
+- (NSString *)placeholderByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"请输入楼盘名/地址";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"请输入小区/商圈/地铁";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"请输入小区/商圈/地铁";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"请输入小区/商圈/地铁";
+            break;
+        default:
+            return @"";
+            break;
+    }
 }
 
 - (void)setTracerModel:(FHTracerModel *)tracerModel
@@ -261,6 +339,11 @@
     FHHouseFindSectionItem *item = self.itemList[index];
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
     [baseView updateDataWithItem:item];
+    NSString *placeholder = [self.sugDict objectForKey:[self placeholderKeyByHouseType:item.houseType]];
+    if (self.sugSelectBlock) {
+        self.sugSelectBlock(placeholder);
+    }
+    
 }
 
 @end

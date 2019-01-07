@@ -21,7 +21,8 @@
 #import <TTTracker/TTTrackerProxy.h>
 #import "ExploreOrderedData+TTAd.h"
 
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @interface TTArticleDetailTracker ()
 
@@ -449,8 +450,8 @@
     [param setValue:@(percent) forKey:@"percent"];
     [param setValue:@(pageCount) forKey:@"page_count"];
     param[@"event_type"] = @"house_app2c_v2";
-    [[EnvContext shared].tracer writeEvent:@"read_pct" params:param];
-    
+//    [[EnvContext shared].tracer writeEvent:@"read_pct" params:param];
+    [FHEnvContext recordEvent:param andEventKey:@"read_pct"];
 }
 
 - (NSString *)enterFromString {

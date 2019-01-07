@@ -21,7 +21,7 @@
 #import "TTPushResourceMgr.h"
 #import "TTArticleTabBarController.h"
 #import "TTAccountManager.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -449,8 +449,8 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                                                    @"origin_search_id": @"be_null"
 //                                                   @"group_id": paramObj.allParams[@"group_id"],
                                                    }};
-                [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-                [[EnvContext shared] setTraceValueWithValue:@"be_null" key:@"origin_search_id"];
+//                [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+//                [[EnvContext shared] setTraceValueWithValue:@"be_null" key:@"origin_search_id"];
 
                 TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
                 [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];

@@ -106,7 +106,8 @@
 #import <ExploreMomentDefine_Enums.h>
 //爱看
 #import "AKHelper.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
 #define SWITCH(s)                       for (NSString *__s__ = (s); ; )
@@ -2307,9 +2308,9 @@
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
-    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+//    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
 
-    
+    [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
 //        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
