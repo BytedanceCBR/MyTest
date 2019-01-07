@@ -60,7 +60,7 @@
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     _naviBar = [[FHCityListNavBarView alloc] init];
     [self.view addSubview:_naviBar];
-    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
+    CGFloat naviHeight = 49 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(naviHeight);

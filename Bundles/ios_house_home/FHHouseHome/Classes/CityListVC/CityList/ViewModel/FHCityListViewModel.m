@@ -271,24 +271,29 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (void)cityNameBtnClick {
-//    if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
-//        AMapLocationReGeocode * currentReGeocode = [FHLocManager sharedInstance].currentReGeocode;
-//        FHConfigDataCityListModel *item = NULL;
-//        for (FHConfigDataCityListModel *obj in self.cityList) {
-//            if ([obj.name isEqualToString:currentReGeocode.city]) {
-//                item = obj;
-//                break;
-//            }
-//        }
-//        if (item) {
-//            __weak typeof(self) wSelf = self;
-//            [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
-//                if (isSuccess) {
-//                    [wSelf addCityToHistory:item];
-//                }
-//            }];
-//        }
-//    }
+    if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
+        AMapLocationReGeocode * currentReGeocode = [FHLocManager sharedInstance].currentReGeocode;
+        __weak typeof(self) wSelf = self;
+        // 特殊处理，当前定位城市，选择cityid为0，结果返回后，用结果数据存历史
+        [self switchCityByCityId:@"0" switchCompletion:^(BOOL isSuccess) {
+            if (isSuccess) {
+                NSString *cityName = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityName;
+                NSString *cityId = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityId;
+                FHHistoryCityListModel *item = NULL;
+                if (cityId.length > 0) {
+                    for (FHConfigDataCityListModel *obj in wSelf.cityList) {
+                        if ([obj.cityId isEqualToString:cityId]) {
+                            item = obj;
+                            break;
+                        }
+                    }
+                }
+                if (item) {
+                    [wSelf addCityToHistory:item];
+                }
+            }
+        }];
+    }
 }
 
 // 切换城市
