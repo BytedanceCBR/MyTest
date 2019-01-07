@@ -38,13 +38,15 @@
 
     __weak typeof(self)wself = self;
     [self setupUI];
+    [self startLoading];
     [self setupViewModel];
 
 }
 
 - (void)setupViewModel
 {
-    _viewModel = [[FHHouseFindListViewModel alloc]initWithScrollView:_scrollView];
+    _viewModel = [[FHHouseFindListViewModel alloc]initWithScrollView:_scrollView viewController:self];
+    [_viewModel setErrorMaskView:_errorMaskView];
     [_viewModel setSegmentView:_segmentView];
     [_viewModel addConfigObserver];
  
@@ -67,6 +69,10 @@
     [self.view addSubview:_searchBar];
 
     [self setupScrollView];
+    
+    self.errorMaskView = [[FHErrorView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    [self.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    [self.view addSubview:self.errorMaskView];
     
     CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 40 : 30;

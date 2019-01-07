@@ -173,6 +173,7 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
     CGFloat barH = self.bounds.size.height;
     
     if (CGAffineTransformEqualToTransform(self.transform, CGAffineTransformMakeTranslation(0, -barH))) {
+        self.hidden = YES;
         return;
     }
 

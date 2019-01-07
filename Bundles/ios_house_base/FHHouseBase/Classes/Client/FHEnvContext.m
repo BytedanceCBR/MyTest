@@ -41,7 +41,7 @@
     return manager;
 }
 
-+ (void)openSwitchCityURL:(NSString *)urlString
++ (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
 {
     NSInteger cityId = 0;
     
@@ -56,7 +56,7 @@
                 cityId = [elts.lastObject integerValue];
             }
         }
-    
+            
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:NO];
 
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
@@ -69,9 +69,14 @@
                             [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                                 
                             }];
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
                         }else
                         {
                             [[ToastManager manager] showToast:@"切换城市失败"];
+                            completion(NO);
                         }
                     }];
                 }else
@@ -79,13 +84,31 @@
                     [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                         
                     }];
+                    completion(YES);
                 }
             }else
             {
                 [[ToastManager manager] showToast:@"切换城市失败"];
+                completion(NO);
             }
         }];
     }
+}
+
+/*
+ 判断找房当前城市是否开通
+ */
++ (BOOL)isCurrentCityNormalOpen
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable;
+}
+
+/*
+ 判断用户选择城市和当前城市是否是同一个
+ */
++ (BOOL)isSameLocCityToUserSelect
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable;
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey

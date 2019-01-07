@@ -102,8 +102,8 @@ func requestNewHouseTimeLine(houseId: Int64, count: Int64, page: Int64 = 0) -> O
 
 func requestSendPhoneNumber(houseId: Int64, phone: String, from: String = "detail") -> Observable<SendPhoneNumResponse?> {
     let url = "\(EnvContext.networkConfig.host)/f100/api/call_report"
-    
-    let userName = ((TTAccount.shared().user()?.name) != nil) ? TTAccount.shared().user()?.name : EnvContext.shared.client.did //如果没有名字，则取did
+    //        NSString *deviceID  = [[TTInstallIDManager sharedInstance] deviceID];
+    let userName = ((TTAccount.shared().user()?.name) != nil) ? TTAccount.shared().user()?.name : TTInstallIDManager.sharedInstance()?.deviceID //如果没有名字，则取did
     
     return TTNetworkManager.shareInstance().rx
         .requestForModel(

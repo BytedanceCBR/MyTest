@@ -406,7 +406,6 @@ fileprivate func createSpringBroadItemSelector(item: OpData.Item, disposeBag: Di
     }else
     {
         return {
-            NotificationCenter.default.post(name: .discovery, object: nil)
         }
     }
 

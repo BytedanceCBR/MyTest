@@ -7,6 +7,7 @@
 
 #import "FHMainManager.h"
 #import "FHHouseBridgeManager.h"
+#import "FHEnvContext.h"
 
 @implementation FHMainManager
 
@@ -33,8 +34,9 @@
 
 -(BOOL)locationSameAsChooseCity
 {
-    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
-    return [contextBridge locationSameAsChooseCity];
+    return [FHEnvContext isSameLocCityToUserSelect];
+//    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+//    return [contextBridge locationSameAsChooseCity];
 }
 
 -(CLLocationCoordinate2D)currentLocation

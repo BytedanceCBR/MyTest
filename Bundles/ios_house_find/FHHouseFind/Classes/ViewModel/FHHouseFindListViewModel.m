@@ -12,10 +12,14 @@
 #import "FHHomeConfigManager.h"
 #import "HMSegmentedControl.h"
 #import "FHHouseFindSectionItem.h"
+#import "FHHouseFindListViewController.h"
+#import "FHErrorView.h"
 
 @interface FHHouseFindListViewModel () <UIScrollViewDelegate>
 
+@property(nonatomic,weak)FHHouseFindListViewController *listVC;
 @property(nonatomic,weak)UIScrollView *scrollView;
+@property (nonatomic , weak) FHErrorView *errorMaskView;
 @property(nonatomic,strong)FHTracerModel *tracerModel;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
@@ -28,16 +32,21 @@
 
 @implementation FHHouseFindListViewModel
 
-- (instancetype)initWithScrollView:(UIScrollView *)scrollView
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView viewController:(FHHouseFindListViewController *)listVC
 {
     self = [super init];
     if (self) {
+        _listVC = listVC;
         _scrollView = scrollView;
         _scrollView.delegate = self;
     }
     return self;
 }
 
+- (void)setErrorMaskView:(FHErrorView *)errorMaskView
+{
+    _errorMaskView = errorMaskView;
+}
 
 - (void)addConfigObserver
 {
@@ -63,10 +72,25 @@
 
 - (void)refreshDataWithConfigDataModel
 {
+    [self.listVC endLoading];
+    
+    if (self.configDataModel == nil) {
+        // 网络失败页
+        [self.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+        return;
+    }
+    
     for (UIView *subview in self.scrollView.subviews) {
         [subview removeFromSuperview];
     }
     [self refreshHouseItemList];
+    
+    if (self.itemList.count < 1) {
+        // 当前城市未开通
+        [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
+        return;
+    }
+    self.errorMaskView.hidden = YES;
     for (NSInteger index = 0; index < self.itemList.count; index++) {
         
         FHHouseFindSectionItem *item = self.itemList[index];

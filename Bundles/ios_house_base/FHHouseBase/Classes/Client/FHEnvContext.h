@@ -57,12 +57,22 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey;
 
 
-+ (void)openSwitchCityURL:(NSString *)urlString;
++ (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion;
 
 /*
   判断是否联网
  */
 + (BOOL)isNetworkConnected;
+
+/*
+ 判断找房当前城市是否开通
+ */
++ (BOOL)isCurrentCityNormalOpen;
+
+/*
+ 判断用户选择城市和当前城市是否是同一个
+ */
++ (BOOL)isSameLocCityToUserSelect;
 
 /*
   app启动调用
