@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(instancetype)sharedInstance;
 
-- (void)requestCurrentLocation:(BOOL)showAlert;
+- (void)requestCurrentLocation:(BOOL)showAlert andShowSwitch:(BOOL)switchCity;
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion;
 

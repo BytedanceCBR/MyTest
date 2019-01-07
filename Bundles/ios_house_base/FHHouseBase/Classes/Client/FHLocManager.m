@@ -17,6 +17,7 @@
 @interface FHLocManager ()
 
 @property (nonatomic, strong)   YYCache       *locationCache;
+@property (nonatomic, assign)   BOOL       isShowSwitch;
 
 @end
 
@@ -221,9 +222,20 @@
             [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 //更新config
                 [wSelf updateAllConfig:model];
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
+                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName]];
+                    self.isShowSwitch = NO;
+                }
             }];
         }
     }];
+}
+
+- (void)requestCurrentLocation:(BOOL)showAlert andShowSwitch:(BOOL)switchCity
+{
+
+    self.isShowSwitch = switchCity;
+    [self requestCurrentLocation:showAlert completion:NULL];
 }
 
 - (void)requestCurrentLocation:(BOOL)showAlert

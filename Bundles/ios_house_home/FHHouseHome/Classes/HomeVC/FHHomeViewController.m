@@ -104,7 +104,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     //to do request config xiefei.xf
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
 }
 
 - (void)willAppear
@@ -121,8 +121,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
-    
-//    [[FHLocManager sharedInstance] showCitySwitchAlert:@"北京"];
 }
 
 

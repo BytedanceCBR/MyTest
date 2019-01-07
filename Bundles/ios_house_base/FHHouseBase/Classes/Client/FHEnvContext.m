@@ -271,7 +271,7 @@
 {
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
 }
 
 - (FHConfigDataModel *)getConfigFromCache

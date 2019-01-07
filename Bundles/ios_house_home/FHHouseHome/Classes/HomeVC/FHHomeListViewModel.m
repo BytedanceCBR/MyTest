@@ -55,6 +55,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource = [FHHomeMainTableViewDataSource new];
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
+        [self updateCategoryViewSegmented:YES];
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
