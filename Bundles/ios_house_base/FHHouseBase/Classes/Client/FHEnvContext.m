@@ -57,7 +57,7 @@
             }
         }
             
-        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:NO];
+        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
 
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
             [[ToastManager manager] dismissCustomLoading];
@@ -76,7 +76,10 @@
                         }else
                         {
                             [[ToastManager manager] showToast:@"切换城市失败"];
-                            completion(NO);
+                            if(completion)
+                            {
+                                completion(NO);
+                            }
                         }
                     }];
                 }else
@@ -84,12 +87,18 @@
                     [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                         
                     }];
-                    completion(YES);
+                    if(completion)
+                    {
+                        completion(YES);
+                    }
                 }
             }else
             {
                 [[ToastManager manager] showToast:@"切换城市失败"];
-                completion(NO);
+                if(completion)
+                {
+                    completion(NO);
+                }
             }
         }];
     }

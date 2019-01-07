@@ -197,6 +197,16 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     
 }
 
+- (void)switchCityByCityId:(NSString *)cityId {
+    if (cityId.length > 0) {
+        NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
+        __weak typeof(self) wSelf = self;
+        [FHEnvContext openSwitchCityURL:url completion:^(BOOL isSuccess) {
+            // 进历史
+        }];
+    }
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
