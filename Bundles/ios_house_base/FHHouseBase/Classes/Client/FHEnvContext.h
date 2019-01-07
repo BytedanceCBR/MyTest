@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHClient.h"
 #import "TTBaseMacro.h"
 #import "FHGeneralBizConfig.h"
 #import "FHClientModel.h"
@@ -40,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 {
     
 }
-@property (nonatomic, strong)FHClient * client;
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);

@@ -320,14 +320,6 @@
     [FHUtils setContent:cityId forKey:kUserDefaultCityId];
 }
 
-- (FHClient *)_client
-{
-    if (!_client) {
-        _client = [FHClient new];
-    }
-    return _client;
-}
-
 - (TTReachability *)reachability
 {
     if (!_reachability) {

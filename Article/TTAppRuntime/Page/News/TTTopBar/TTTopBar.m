@@ -91,7 +91,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 - (void)showUnValibleCity
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (dataModel.cityAvailability && !dataModel.cityAvailability.enable) {
+    if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
         NSLog(@"avalibility = %@",dataModel.cityAvailability.toDictionary);
         
         if (self.topUnAvalibleCityContainer) {
@@ -128,7 +128,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         }];
         [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
-//         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
+            NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
         } forControlEvent:UIControlEventTouchUpInside];
         
         UIImageView *imageButtonLeftIcon = [UIImageView new];
