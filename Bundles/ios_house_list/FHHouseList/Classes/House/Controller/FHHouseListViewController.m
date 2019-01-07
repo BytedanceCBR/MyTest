@@ -350,7 +350,7 @@
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
-
+    [self.viewModel setTracerModel:self.tracerModel];
     [self initFilter];
     [self setupViewModelBlock];
 
