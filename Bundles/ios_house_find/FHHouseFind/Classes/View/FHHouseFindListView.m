@@ -278,7 +278,7 @@
 {
     if (!_tableView) {
         
-        _tableView = [[UITableView alloc] initWithFrame:self.bounds];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;
@@ -287,7 +287,6 @@
             self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         if ([TTDeviceHelper isIPhoneXDevice]) {
-            
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
