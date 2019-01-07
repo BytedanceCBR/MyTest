@@ -92,6 +92,7 @@
     for (NSString *cityName in self.cityList) {
         FHCityHotItemButton *btn = [[FHCityHotItemButton alloc] initWithFrame:CGRectMake(left, top, width, height)];
         btn.tag = index;
+        [btn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         btn.label.text = cityName;
         [self addSubview:btn];
         [self.rowViews addObject:btn];
@@ -102,6 +103,13 @@
         } else {
             left += (width + offset);
         }
+    }
+}
+
+- (void)buttonClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    if (self.itemClickBlk) {
+        self.itemClickBlk(index);
     }
 }
 
