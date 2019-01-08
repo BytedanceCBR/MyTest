@@ -118,12 +118,11 @@
              tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
              tracerDict[@"search_id"] = cellModel.searchId ? : @"";
              tracerDict[@"rank"] = @(indexPath.row);
-             tracerDict[@"origin_from"] = [FHEnvContext sharedInstance].getCommonParams.originFrom;
-             tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+             tracerDict[@"origin_from"] = [self pageTypeString];
+             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
              tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
              
              [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
-             
          }
      }
 }
@@ -169,9 +168,14 @@
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"enter_from"] = @"maintab";
+        traceParam[@"element_from"] = @"be_null";
         traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        
         NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
                                @"tracer": traceParam
                                };

@@ -124,9 +124,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-////            sslocal://webview?url=10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876
-//            NSString *urlStr = @"http://10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876";
-////            NSString *urlStr = @"http://10.1.10.250:8080/test";
+//            sslocal://webview?url=10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876
+            
+//             NSString *urlStr = @"http://10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876";
+//             //            NSString *urlStr = @"http://10.1.10.250:8080/test";
 //             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
 //             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
 //             NSString *unencodedString = urlStr;
@@ -135,11 +136,18 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 //             NULL,
 //             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
 //             kCFStringEncodingUTF8));
-//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+//
+//            NSString *encodedStringURL = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//                                                                                                            (CFStringRef)@"小区榜单",
+//                                                                                                            NULL,
+//                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+//                                                                                                            kCFStringEncodingUTF8));
+//            urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@&titlt=%@",encodedString,encodedStringURL];
+//
 //             NSURL *url = [TTURLUtils URLWithString:urlStr];
 //             [[TTRoute sharedRoute] openURLByPushViewController:url];
-//             return ;
-//
+//             return;
+
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
 
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -162,6 +170,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
                     self.stayTime = [self getCurrentTime];
                     [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
+                    self.dataSource.originSearchId = self.originSearchIdCache[cacheKey];
                 }else
                 {
                     [self reloadHomeTableHeaderSection];
@@ -297,6 +306,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         
         self.stayTime = [self getCurrentTime];
+        self.dataSource.originSearchId = model.data.searchId;
+    
     }];
 }
 
