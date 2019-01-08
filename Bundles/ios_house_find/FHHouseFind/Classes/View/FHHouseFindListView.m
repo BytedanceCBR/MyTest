@@ -57,6 +57,17 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.viewModel viewWillDisappear:animated];
+    [self.houseFilterBridge closeConditionFilterPanel];
+
+}
+
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
     if (!self.needRefresh) {
@@ -203,6 +214,7 @@
 
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj
 {
+    self.viewModel.isEnterCategory = YES;
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
     
@@ -228,7 +240,10 @@
     return [self.viewModel categoryLogDict];
 }
 
-
+- (BOOL)isEnterCategory
+{
+    return self.viewModel.isEnterCategory;
+}
 - (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;

@@ -194,6 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *fullPinyin;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *simplePinyin;
+@property (nonatomic, assign)   BOOL       enable;
 
 @end
 

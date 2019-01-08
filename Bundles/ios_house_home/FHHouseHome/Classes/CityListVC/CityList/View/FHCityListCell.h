@@ -15,6 +15,7 @@ typedef void(^kFHHotCityItemClick)(NSInteger index);
 
 @property (nonatomic, strong)   UILabel       *cityNameLabel;
 @property (nonatomic, strong)   UILabel       *descLabel;
+@property (nonatomic, assign)   BOOL       enabled;
 
 @end
 

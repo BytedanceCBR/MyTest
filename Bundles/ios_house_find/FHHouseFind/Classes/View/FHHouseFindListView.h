@@ -22,7 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 // findTab过来的houseSearch需要单独处理下埋点数据
 - (void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 - (NSDictionary *)categoryLogDict;
-
+- (BOOL)isEnterCategory;
+- (void)viewWillAppear:(BOOL)animated;
+- (void)viewWillDisappear:(BOOL)animated;
 @end
 
 NS_ASSUME_NONNULL_END

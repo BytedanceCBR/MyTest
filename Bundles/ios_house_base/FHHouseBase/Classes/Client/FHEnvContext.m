@@ -226,6 +226,9 @@
     //开始定位
     [self startLocation];
     
+    //检测是否需要打开城市列表
+    [self check2CityList];
+    
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
@@ -278,6 +281,25 @@
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
+}
+
+- (void)check2CityList {
+    // 城市是否选择，未选择直接跳转城市列表页面
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    if (!hasSelectedCity) {
+        NSDictionary* info = @{@"animated":@(NO),
+                               @"disablePanGes":@(YES),
+                               @"tracer":@{@"enter_from": @"push",
+                                           @"element_from": @"be_null",
+                                           @"rank": @"be_null",
+                                           @"card_type": @"be_null",
+                                           @"origin_from": @"push",
+                                           @"origin_search_id": @"be_null"
+                                           }};
+        TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 - (FHConfigDataModel *)getConfigFromCache

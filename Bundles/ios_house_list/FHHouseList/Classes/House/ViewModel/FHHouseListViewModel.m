@@ -35,7 +35,7 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , copy, nullable, readwrite) NSString *searchId;
+@property (nonatomic , copy, nullable) NSString *searchId;
 @property (nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *originFrom;
 @property (nonatomic , strong) NSDictionary *houseSearchDic;

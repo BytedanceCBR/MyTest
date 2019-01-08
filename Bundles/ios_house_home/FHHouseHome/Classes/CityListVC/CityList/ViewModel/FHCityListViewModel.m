@@ -11,6 +11,7 @@
 #import "YYCache.h"
 #import "FHCityListModel.h"
 #import "FHLocManager.h"
+#import "FHUtils.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -103,6 +104,9 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 // 历史最多8个
 - (void)addCityToHistory:(id)city {
     if (city) {
+        // 进历史之前，说明当前城市是选择过的城市
+        [FHUtils setContent:@(YES) forKey:@"k_fh_has_sel_city"];
+        // 进历史
         NSString *name = NULL;
         NSString *simplePinyin = NULL;
         NSString *cityId = NULL;
@@ -262,6 +266,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
+    // add by zyk 未开通逻辑，是否能点击
     __weak typeof(self) wSelf = self;
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
         if (isSuccess) {
@@ -362,6 +367,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     FHConfigDataCityListModel *model = (FHConfigDataCityListModel *)tempData[indexPath.row];
                     cell.cityNameLabel.text = model.name;
+                    cell.enabled = model.enable;
                 }
                 return cell;
             }

@@ -320,6 +320,7 @@
         self.segmentView.selectedSegmentIndex = index;
 
     }
+    [self.scrollView endEditing:YES];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -327,6 +328,12 @@
     if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
         [self selectHouseFindListItem:self.segmentView.selectedSegmentIndex];
         if (self.lastSelectIndex != self.currentSelectIndex) {
+            
+            FHHouseFindListView *lastBaseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
+            [lastBaseView viewWillDisappear:YES];
+
+            FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+            [currentBaseView viewWillAppear:YES];
             
             [self endTrack];
             [self addEnterCategoryLog];
@@ -353,14 +360,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self startTrack];
-
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
+    FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    [currentBaseView viewWillDisappear:YES];
+    
     [self endTrack];
     [self addStayCategoryLog];
     [self resetStayTime];
-
 }
 
 -(void)addEnterCategoryLog
@@ -370,9 +378,11 @@
         FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
         FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
         NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
-        [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+        if (!baseView.isEnterCategory) {
+            
+            [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+        }
     }
-
 }
 
 - (void)addStayCategoryLog
