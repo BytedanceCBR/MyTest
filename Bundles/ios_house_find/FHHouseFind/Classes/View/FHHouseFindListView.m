@@ -203,6 +203,7 @@
 
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj
 {
+    self.viewModel.isEnterCategory = YES;
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
     
