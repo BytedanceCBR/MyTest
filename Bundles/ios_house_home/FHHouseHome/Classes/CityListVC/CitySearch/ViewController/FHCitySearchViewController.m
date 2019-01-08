@@ -15,6 +15,7 @@
 #import "FHCitySearchNavBarView.h"
 #import "TTNavigationController.h"
 #import "FHCitySearchViewModel.h"
+#import "FHCitySearchItemCell.h"
 
 @interface FHCitySearchViewController ()
 
@@ -98,9 +99,7 @@
     }];
     tableView.delegate  = self.viewModel;
     tableView.dataSource = self.viewModel;
-//    [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
-//    [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
-//    [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
+    [tableView registerClass:[FHCitySearchItemCell class] forCellReuseIdentifier:@"fh_city_search_cell"];
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
@@ -120,7 +119,11 @@
         self.naviBar.searchInput.text = text;
     }
     BOOL hasText = text.length > 0;
-
+    if (hasText) {
+        [self.viewModel requestSearchCityByQuery:text];
+    } else {
+        [self.viewModel clearTableView];
+    }
 }
 
 @end

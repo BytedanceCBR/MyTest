@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHCitySearchViewController *)viewController;
 
+- (void)requestSearchCityByQuery:(NSString *)query;
+- (void)clearTableView;
+
 @end
 
 NS_ASSUME_NONNULL_END
