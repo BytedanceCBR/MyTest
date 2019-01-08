@@ -302,6 +302,19 @@
             
             [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
             [wself selectHouseFindListItem:index];
+            if (wself.lastSelectIndex != wself.currentSelectIndex) {
+                
+                FHHouseFindListView *lastBaseView = [wself.scrollView viewWithTag:10 + wself.lastSelectIndex];
+                [lastBaseView viewWillDisappear:YES];
+                
+                FHHouseFindListView *currentBaseView = [wself.scrollView viewWithTag:10 + wself.currentSelectIndex];
+                [currentBaseView viewWillAppear:YES];
+                
+                [wself endTrack];
+                [wself addEnterCategoryLog];
+                [wself addStayCategoryLogBy:wself.lastSelectIndex];
+                [wself resetStayTime];
+            }
 
         }
     };
