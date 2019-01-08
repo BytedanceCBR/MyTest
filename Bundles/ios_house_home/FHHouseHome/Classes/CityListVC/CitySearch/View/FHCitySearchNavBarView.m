@@ -106,7 +106,7 @@
 }
 
 - (void)setupData {
-    [self setSearchPlaceHolderText:@"请输入城市名"];
+    [self setSearchPlaceHolderText:@"请输入城市名称"];
 }
 
 - (void)setSearchPlaceHolderText:(NSString *)text {
