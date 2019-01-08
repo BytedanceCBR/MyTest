@@ -14,6 +14,8 @@
 #import "FHEnvContext.h"
 #import "YYCache.h"
 
+NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
+
 @interface FHLocManager ()
 
 @property (nonatomic, strong)   YYCache       *locationCache;
@@ -260,6 +262,7 @@
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
+    
     [[FHEnvContext sharedInstance] saveGeneralConfig:model];
     
     [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
@@ -277,6 +280,9 @@
     if ([FHEnvContext sharedInstance].homeConfigCallBack) {
         [FHEnvContext sharedInstance].homeConfigCallBack(model.data);
     }
+    
+    // 告诉城市列表config加载ok
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];
 }
 
 

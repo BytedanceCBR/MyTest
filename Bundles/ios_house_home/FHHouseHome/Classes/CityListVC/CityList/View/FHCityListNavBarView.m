@@ -67,7 +67,7 @@
     _searchLabel = [[UILabel alloc] init];
     _searchLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
     _searchLabel.font = [UIFont themeFontRegular:12];
-    _searchLabel.text = @"你想住在哪？";
+    _searchLabel.text = @"请输入城市名";
     [_searchBtn addSubview:_searchLabel];
     [_searchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.searchIcon.mas_right).offset(10);

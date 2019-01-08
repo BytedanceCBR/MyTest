@@ -11,6 +11,7 @@
 #import "YYCache.h"
 #import "FHCityListModel.h"
 #import "FHLocManager.h"
+#import "FHUtils.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -103,6 +104,9 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 // 历史最多8个
 - (void)addCityToHistory:(id)city {
     if (city) {
+        // 进历史之前，说明当前城市是选择过的城市
+        [FHUtils setContent:@(YES) forKey:@"k_fh_has_sel_city"];
+        // 进历史
         NSString *name = NULL;
         NSString *simplePinyin = NULL;
         NSString *cityId = NULL;

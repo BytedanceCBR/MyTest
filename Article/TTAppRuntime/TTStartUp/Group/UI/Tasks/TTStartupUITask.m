@@ -69,10 +69,10 @@
 //    [[TTFantasyTimeCountDownManager sharedManager] fetchFantasyActivityTimes];
     dispatch_async(dispatch_get_main_queue(), ^{
         [[[EnvContext shared] client] onStart];
-        [[FHEnvContext sharedInstance] onStartApp];
     });
 
     [SharedAppDelegate.window makeKeyAndVisible];
+    [[FHEnvContext sharedInstance] onStartApp];
 }
 
 - (void)registerHomePageViewControllers {

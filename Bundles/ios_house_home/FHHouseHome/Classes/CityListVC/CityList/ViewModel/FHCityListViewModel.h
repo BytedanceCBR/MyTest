@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView;
 - (void)cityNameBtnClick;
+// 加载城市列表数据
+- (void)loadListCityData;
 
 @end
 

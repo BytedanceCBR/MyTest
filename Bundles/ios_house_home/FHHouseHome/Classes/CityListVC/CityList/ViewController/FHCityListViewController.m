@@ -16,6 +16,8 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHCityListViewModel.h"
+#import "TTNavigationController.h"
+#import "UINavigationController+NavigationBarConfig.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
@@ -26,6 +28,9 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   FHCityListViewModel       *viewModel;
 
+@property (nonatomic, weak)     TTNavigationController       *weakNavVC;
+@property (nonatomic, assign)   BOOL       disablePanGesture;
+
 @end
 
 @implementation FHCityListViewController
@@ -33,7 +38,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.disablePanGesture = [paramObj.userInfo.allInfo[@"disablePanGes"] boolValue];
     }
     return self;
 }
@@ -41,6 +46,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    [self setupData];
+    if (self.disablePanGesture) {
+        self.naviBar.backBtn.hidden = YES;
+    }
 }
 
 - (void)setupUI {
@@ -56,6 +65,21 @@
     }];
 }
 
+- (void)setupData {
+    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configDataModel) {
+        [self.viewModel loadListCityData];
+    } else {
+        [[ToastManager manager] showCustomLoading:@"加载中"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
+    }
+}
+
+- (void)configDataLoadSuccess:(NSNotification *)noti {
+    [[ToastManager manager] dismissCustomLoading];
+    [self.viewModel loadListCityData];
+}
+
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     _naviBar = [[FHCityListNavBarView alloc] init];
@@ -66,6 +90,7 @@
         make.height.mas_equalTo(naviHeight);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [_naviBar.searchBtn addTarget:self action:@selector(goSearchCity) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupLocationBar {
@@ -115,6 +140,42 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self checkLocAuthorization];
+    
+    if (self.disablePanGesture) {
+        // 禁止左滑
+        self.weakNavVC = self.navigationController;
+        if (self.weakNavVC) {
+            self.weakNavVC.panRecognizer.delegate = nil;
+            [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
+        }
+    }
+    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.disablePanGesture) {
+        // 取消禁止左滑
+        if (self.weakNavVC) {
+            self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
+            [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
+        }
+    }
+}
+
+- (void)goSearchCity {
+    NSDictionary* info = @{
+                           @"tracer":@{@"enter_from": @"test",
+                                       @"element_from": @"be_null",
+                                       @"rank": @"be_null",
+                                       @"card_type": @"be_null",
+                                       @"origin_from": @"test",
+                                       @"origin_search_id": @"be_null"
+                                       }};
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_search"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 // 重新定位
@@ -169,6 +230,10 @@
             }
         }
     }];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
