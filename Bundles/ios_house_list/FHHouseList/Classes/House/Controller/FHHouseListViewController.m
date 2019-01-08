@@ -426,9 +426,9 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             
-            UIEdgeInsets inset = self.tableView.contentInset;
-            inset.top = 0;
-            self.tableView.contentInset = inset;
+//            UIEdgeInsets inset = self.tableView.contentInset;
+//            inset.top = 0;
+            self.tableView.contentInset = UIEdgeInsetsZero;
         }];
     });
 
