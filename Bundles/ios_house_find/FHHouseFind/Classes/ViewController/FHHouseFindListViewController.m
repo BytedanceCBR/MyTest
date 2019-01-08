@@ -113,7 +113,7 @@
     [self.view addSubview:self.errorMaskView];
     
     CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 40 : 30;
+    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
     [_segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).mas_offset(marginX);
         make.right.mas_equalTo(self.view).mas_offset(-marginX);
@@ -125,9 +125,6 @@
         make.top.mas_equalTo(self.segmentView.mas_bottom);
         make.height.mas_equalTo(32);
     }];
-    height = 50 + 32;
-    height +=  [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    
     CGFloat bottomHeight = 0;
     if (@available(iOS 11.0, *)) {
         bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
@@ -150,13 +147,13 @@
 - (void)setupSegmentControl
 {
     _segmentView = [[HMSegmentedControl alloc]initWithFrame:CGRectZero];
-    self.segmentView.sectionTitles = @[@"",@"",@"",@""];
+    _segmentView.sectionTitles = @[@"",@"",@"",@""];
     _segmentView.selectionIndicatorHeight = 0;
     _segmentView.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentView.isNeedNetworkCheck = YES;
-    
+    _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,
                                      [UIColor themeGray],NSForegroundColorAttributeName,nil];
