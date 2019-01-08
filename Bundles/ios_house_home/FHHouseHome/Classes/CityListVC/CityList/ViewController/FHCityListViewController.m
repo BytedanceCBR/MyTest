@@ -18,6 +18,7 @@
 #import "FHCityListViewModel.h"
 #import "TTNavigationController.h"
 #import "UINavigationController+NavigationBarConfig.h"
+#import "FHCitySearchViewController.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
@@ -183,6 +184,7 @@
 }
 
 - (void)goSearchCity {
+    /*
     NSDictionary* info = @{
                            @"tracer":@{@"enter_from": @"test",
                                        @"element_from": @"be_null",
@@ -194,6 +196,10 @@
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+     */
+    FHCitySearchViewController *citySearchVC = [[FHCitySearchViewController alloc] init];
+    citySearchVC.cityListViewModel = self.viewModel;
+    [self.navigationController pushViewController:citySearchVC animated:YES];
 }
 
 // 重新定位

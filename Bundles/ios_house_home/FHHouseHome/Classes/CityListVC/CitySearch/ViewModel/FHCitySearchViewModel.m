@@ -41,6 +41,12 @@
     [self.listController.tableView reloadData];
 }
 
+- (void)searchItemCellClick:(FHCitySearchDataDataModel *)item {
+    if (item) {
+        [self.listController.cityListViewModel searchCellItemClick:item];
+    }
+}
+
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -67,11 +73,20 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.cityList.count > 0) {
+        if (indexPath.row == self.cityList.count - 1) {
+            return 61;
+        }
+    }
     return 41;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.row < self.cityList.count) {
+        FHCitySearchDataDataModel *model = (FHCitySearchDataDataModel *)self.cityList[indexPath.row];
+        [self searchItemCellClick:model];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

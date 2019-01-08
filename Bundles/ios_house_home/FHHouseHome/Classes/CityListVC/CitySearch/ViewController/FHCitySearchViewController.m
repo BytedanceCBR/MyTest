@@ -28,7 +28,6 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        _viewModel = [[FHCitySearchViewModel alloc] initWithController:self];
     }
     return self;
 }
@@ -36,6 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    _viewModel = [[FHCitySearchViewModel alloc] initWithController:self];
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     __weak typeof(self) weakSelf = self;

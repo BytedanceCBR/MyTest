@@ -32,19 +32,20 @@
     [self.cityNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(21);
-        make.bottom.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(20);
     }];
     // descLabel
     self.descLabel = [[UILabel alloc] init];
     self.descLabel.text = @"找房服务即将开通";
+    self.descLabel.textAlignment = NSTextAlignmentLeft;
     self.descLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
     self.descLabel.font = [UIFont themeFontRegular:14];
     [self.contentView addSubview:self.descLabel];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(21);
-        make.bottom.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.cityNameLabel);
         make.left.mas_equalTo(self.cityNameLabel.mas_right).offset(10);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-20);
     }];
     self.enabled = NO;
 }

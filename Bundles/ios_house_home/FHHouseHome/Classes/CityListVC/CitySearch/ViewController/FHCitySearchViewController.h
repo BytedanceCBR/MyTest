@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 #import "FHCitySearchNavBarView.h"
+#import "FHCityListViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   FHCitySearchTableView       *tableView;
 @property (nonatomic, strong)     FHCitySearchNavBarView     *naviBar;
+@property (nonatomic, weak)   FHCityListViewModel       *cityListViewModel;
 
 @end
 
