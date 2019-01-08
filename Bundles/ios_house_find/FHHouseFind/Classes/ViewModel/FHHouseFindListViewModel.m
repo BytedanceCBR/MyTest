@@ -139,7 +139,8 @@
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.itemList.count, self.scrollView.bounds.size.height - self.scrollView.contentInset.bottom);
     if ([self.segmentView totalSegmentedControlWidth] < self.segmentView.width) {
         
-        self.segmentView.width = [self.segmentView totalSegmentedControlWidth];
+        self.segmentView.userDraggable = NO;
+        self.segmentView.width = ceil([self.segmentView totalSegmentedControlWidth]);
         self.segmentView.centerX = self.scrollView.width / 2;
     }
 }
