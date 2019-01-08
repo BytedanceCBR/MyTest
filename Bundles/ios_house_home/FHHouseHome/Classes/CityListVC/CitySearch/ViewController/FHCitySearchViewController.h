@@ -7,10 +7,14 @@
 
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
+#import "FHCitySearchNavBarView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCitySearchViewController : FHBaseViewController
+
+@property (nonatomic, strong)   FHCitySearchTableView       *tableView;
+@property (nonatomic, strong)     FHCitySearchNavBarView     *naviBar;
 
 @end
 

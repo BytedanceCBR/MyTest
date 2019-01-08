@@ -6,10 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHCitySearchViewController.h"
+#import "FHHouseListAPI.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCitySearchViewModel : NSObject
+
+-(instancetype)initWithController:(FHCitySearchViewController *)viewController;
 
 @end
 
