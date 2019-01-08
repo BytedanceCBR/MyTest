@@ -148,7 +148,7 @@
     [infoPanel addSubview:self.imageTopLeftLabelBgView];
     [self.imageTopLeftLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.majorImageView);
-        make.top.mas_equalTo(self.majorImageView).mas_offset(0.5);
+        make.top.mas_equalTo(self.majorImageView).mas_offset(0);
         make.height.mas_equalTo(@17);
         make.width.mas_equalTo(@48);
     }];

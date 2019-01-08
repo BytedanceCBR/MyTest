@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 - (NSDictionary *)categoryLogDict;
 - (BOOL)isEnterCategory;
-
+- (void)viewWillAppear:(BOOL)animated;
+- (void)viewWillDisappear:(BOOL)animated;
 @end
 
 NS_ASSUME_NONNULL_END

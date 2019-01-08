@@ -478,7 +478,13 @@ func fillAgentListCell(
             //页面跳转
             itemView.rx.controlEvent(.touchUpInside)
                 .bind {
-                    //TODO openUrl
+                    let reportParams = getRealtorReportParams(traceModel: traceModel)
+                    let openUrl = "fschema://realtor_detail"
+//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
+                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=104764519372&report_params=\(reportParams)"
+                    let info: [String: Any] = ["url": jumpUrl, "title": "房源问题反馈"]
+                    let userInfo = TTRouteUserInfo(info: info)
+                    TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }
                 .disposed(by: theCell.disposeBag)
             return itemView
@@ -499,6 +505,29 @@ func fillAgentListCell(
     if let items = items, items.count > 0 {
         theCell.addItems(items: items)
         theCell.updateByExpandingState()
+    }
+}
+
+func getRealtorReportParams(traceModel: HouseRentTracer?) -> String {
+    if let traceModel = traceModel {
+        var dict:[String: Any] = [:]
+        dict["enter_from"] = traceModel.enterFrom
+        dict["element_from"] = traceModel.elementFrom
+        dict["origin_from"] = traceModel.originFrom ?? "be_null"
+        dict["log_pb"] = traceModel.logPb ?? "be_null"
+        dict["search_id"] = traceModel.searchId ?? "be_null"
+        dict["group_id"] = traceModel.groupId ?? "be_null"
+        if let logPb = traceModel.logPb as? [AnyHashable: Any] {
+            dict["impr_id"] = (logPb["impr_id"] as? String) ?? "be_null"
+        }
+
+        if let data = try? JSONSerialization.data(withJSONObject: dict) {
+            return String(bytes: data, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        } else {
+            return ""
+        }
+    } else {
+        return ""
     }
 }
 

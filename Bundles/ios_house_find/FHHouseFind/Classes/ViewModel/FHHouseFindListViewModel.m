@@ -302,6 +302,19 @@
             
             [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
             [wself selectHouseFindListItem:index];
+            if (wself.lastSelectIndex != wself.currentSelectIndex) {
+                
+                FHHouseFindListView *lastBaseView = [wself.scrollView viewWithTag:10 + wself.lastSelectIndex];
+                [lastBaseView viewWillDisappear:YES];
+                
+                FHHouseFindListView *currentBaseView = [wself.scrollView viewWithTag:10 + wself.currentSelectIndex];
+                [currentBaseView viewWillAppear:YES];
+                
+                [wself endTrack];
+                [wself addEnterCategoryLog];
+                [wself addStayCategoryLogBy:wself.lastSelectIndex];
+                [wself resetStayTime];
+            }
 
         }
     };
@@ -320,6 +333,7 @@
         self.segmentView.selectedSegmentIndex = index;
 
     }
+    [self.scrollView endEditing:YES];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -327,6 +341,12 @@
     if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
         [self selectHouseFindListItem:self.segmentView.selectedSegmentIndex];
         if (self.lastSelectIndex != self.currentSelectIndex) {
+            
+            FHHouseFindListView *lastBaseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
+            [lastBaseView viewWillDisappear:YES];
+
+            FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+            [currentBaseView viewWillAppear:YES];
             
             [self endTrack];
             [self addEnterCategoryLog];
@@ -353,14 +373,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self startTrack];
-
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
+    FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    [currentBaseView viewWillDisappear:YES];
+    
     [self endTrack];
     [self addStayCategoryLog];
     [self resetStayTime];
-
 }
 
 -(void)addEnterCategoryLog
@@ -375,7 +396,6 @@
             [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
         }
     }
-
 }
 
 - (void)addStayCategoryLog

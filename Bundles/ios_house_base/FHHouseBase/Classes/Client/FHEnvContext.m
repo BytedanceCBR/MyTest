@@ -195,6 +195,7 @@
     
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
+        requestParam[@"city"] = gCityName;
     }else
     {
         requestParam[@"city_name"] = nil;

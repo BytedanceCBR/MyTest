@@ -57,6 +57,17 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.viewModel viewWillDisappear:animated];
+    [self.houseFilterBridge closeConditionFilterPanel];
+
+}
+
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
     if (!self.needRefresh) {

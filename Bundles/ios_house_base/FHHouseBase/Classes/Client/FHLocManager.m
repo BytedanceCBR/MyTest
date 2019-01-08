@@ -100,7 +100,7 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
         return;
     }
 
-    NSString *titleStr = [NSString stringWithFormat:@"是否切换到当前城市:%@",cityName];
+    NSString *titleStr = [NSString stringWithFormat:@"%@",cityName];
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
