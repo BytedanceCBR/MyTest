@@ -65,6 +65,7 @@
 
 - (void)trackEndedByAppWillEnterBackground
 {
+    [self.viewModel endTrack];
     [self.viewModel addStayCategoryLog];
     [self.viewModel resetStayTime];
 }

@@ -93,7 +93,7 @@
         make.left.mas_equalTo(15);
         make.centerY.equalTo(self);
         make.height.mas_equalTo(20);
-        make.width.mas_equalTo(28);
+        make.width.mas_equalTo(label.text.length * 14);
     }];
     
     [self.countryLabel sizeToFit];
@@ -107,7 +107,6 @@
         make.centerY.equalTo(self);
         make.height.width.mas_equalTo(10);
     }];
-    
 }
 
 - (void)updateCountryLabelLayout:(NSString *)labelText

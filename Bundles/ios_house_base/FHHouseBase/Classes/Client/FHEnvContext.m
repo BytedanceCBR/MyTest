@@ -184,6 +184,11 @@
         requestParam[@"gaode_lat"] = @(latitude);
     }
     
+    if (longitude != 0 && longitude != 0) {
+        requestParam[@"longitude"] = @(longitude);
+        requestParam[@"latitude"] = @(latitude);
+    }
+    
     if ([gCityId isKindOfClass:[NSString class]]) {
         requestParam[@"gaode_city_id"] = gCityId;
     }
