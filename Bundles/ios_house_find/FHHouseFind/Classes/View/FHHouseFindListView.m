@@ -153,7 +153,12 @@
     [self addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
-    CGFloat bottomHeight = [TTDeviceHelper isIPhoneXDevice] ? 83 : 49;
+    CGFloat bottomHeight = 0;
+    // FIXME: filter兼容处理
+    if (![TTDeviceHelper isIPhoneXDevice]) {
+
+        bottomHeight = 49;
+    }
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
@@ -287,7 +292,17 @@
 
 - (void)setupConstraints
 {
-    CGFloat bottomHeight = [TTDeviceHelper isIPhoneXDevice] ? 83 : 49;
+    CGFloat bottomHeight = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        
+        if (@available(iOS 11.0, *)) {
+            bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        } else {
+            // Fallback on earlier versions
+        }
+    }else {
+        bottomHeight = 49;
+    }
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
