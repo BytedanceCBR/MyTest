@@ -1388,6 +1388,9 @@
 		B1E346601DD33F51002B14C5 /* SSMoviePlayerTrackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E2BE261DCADA6D00AC62B6 /* SSMoviePlayerTrackManager.m */; };
 		B302205A2192B7B500400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B302205B2192B7B700400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
+		B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
+		B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
+		B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
 		B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
@@ -7880,6 +7883,8 @@
 		AFDE897518165D2A0090BAD9 /* EssayContentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EssayContentManager.m; sourceTree = "<group>"; };
 		B119472C1CF7FF4700561B49 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
+		B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRealtorDetailWebViewController.h; sourceTree = "<group>"; };
+		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
 		B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCitySwitcher.swift; sourceTree = "<group>"; };
 		B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentDetailPageVC.h; sourceTree = "<group>"; };
 		B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentDetailPageVC.m; sourceTree = "<group>"; };
@@ -12496,6 +12501,8 @@
 				760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */,
 				760CF74821ABE82E0006BE07 /* FHWebviewViewModel.h */,
 				760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */,
+				B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */,
+				B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */,
 			);
 			path = WebView;
 			sourceTree = "<group>";
@@ -20869,6 +20876,7 @@
 				F87694441F31D0D500D59CA5 /* TTVVideoDetailNatantInfoViewController.m in Sources */,
 				F87695741F31D0D700D59CA5 /* TTVFeedListPageCell.m in Sources */,
 				FE1FC320206922D800664B00 /* ExploreMixedListBaseView+TrackEvent.m in Sources */,
+				B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 				3DF363C721A29D9F0097FCB6 /* BaseSubPageViewModel.swift in Sources */,
 				F876958C1F31D0D700D59CA5 /* TTVReplyListCell.m in Sources */,
 				FE0876BC1C757437005F526B /* TTArticleTabBarController.m in Sources */,
@@ -22775,6 +22783,7 @@
 				B373CE492174587A008F9905 /* TTAricleDetailLeftUnifyADView.m in Sources */,
 				B373CE4A2174587A008F9905 /* TTLayOutUnifyADRightPicCellModel.m in Sources */,
 				B373CE4B2174587A008F9905 /* FollowAPI.swift in Sources */,
+				B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 				B32FD32721A3E0A6007B9966 /* RentCoreInfoCellRender.swift in Sources */,
 				B373CE4C2174587A008F9905 /* TSVRecUserCardModel.m in Sources */,
 				B373CE4D2174587A008F9905 /* TTAppSettingsStartupTask.m in Sources */,
@@ -24512,6 +24521,7 @@
 				FEFA5981205FB1A8001F50D8 /* TTAricleDetailLeftUnifyADView.m in Sources */,
 				FEFA5983205FB1A8001F50D8 /* TTLayOutUnifyADRightPicCellModel.m in Sources */,
 				B388CB3F2142652A00653188 /* FollowAPI.swift in Sources */,
+				B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 				B32FD32821A3E0A7007B9966 /* RentCoreInfoCellRender.swift in Sources */,
 				FEFA5984205FB1A8001F50D8 /* TSVRecUserCardModel.m in Sources */,
 				FEFA5985205FB1A8001F50D8 /* TTAppSettingsStartupTask.m in Sources */,

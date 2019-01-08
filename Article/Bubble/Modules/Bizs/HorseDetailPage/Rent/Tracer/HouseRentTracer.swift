@@ -6,19 +6,25 @@
 //
 
 import Foundation
-
-class HouseRentTracer {
+@objc
+class HouseRentTracer: NSObject {
     var logPb: Any?
     var pageType: String
+    @objc
     var houseType: String
     var houseId: Int64
     var stayPageParams: TracerParams?
     var cardType: String
     var enterFrom: String
     var elementFrom: String
+    @objc
     var rank: String
+    @objc
+    var imprId: String
     var hasRecordGoDetail: Bool
+    @objc
     var searchId: String?
+    @objc
     var groupId: String?
     var originFrom : String?
     var originSearchId : String?
@@ -41,6 +47,7 @@ class HouseRentTracer {
         self.searchId = "be_null"
         self.groupId = "be_null"
         self.originFrom = "be_null"
+        self.imprId = "be_null"
         self.originSearchId = ""
         self.houseId = -1
     }

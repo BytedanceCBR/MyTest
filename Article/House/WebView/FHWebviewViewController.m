@@ -21,8 +21,6 @@
 {
     BOOL _isWebViewLoading;
 }
-@property (nonatomic, strong) FHWebviewViewModel *viewModel;
-@property (nonatomic, strong) TTRouteUserInfo *userInfo;
 @property (nonatomic, copy)   NSString *url;
 @property (nonatomic, strong) FHErrorMaskView *maskView;
 
