@@ -43,13 +43,6 @@
 
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
 
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        if (@available(iOS 11.0, *)) {
-            factory.safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-        } else {
-            // Fallback on earlier versions
-        }
-    }
     //    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
     //    NSArray<FHFilterNodeModel*>* sortConfig = nil;
     //    if (showSort) {
@@ -83,7 +76,7 @@
     return [self filterViewModelWithType:houseType
                         showAllCondition:showAllCondition
                                 showSort:showSort
-                      safeBottomPandding:safeBottomPandding]
+                      safeBottomPandding:safeBottomPandding];
 }
 
 -(UIView *)filterPannel:(id)viewModel
