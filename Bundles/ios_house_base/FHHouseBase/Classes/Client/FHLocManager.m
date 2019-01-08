@@ -92,9 +92,12 @@
     }
 }
 
-- (void)showCitySwitchAlert:(NSString *)cityName
+- (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl
 {
-    
+    if (!cityName || !openUrl) {
+        return;
+    }
+
     NSString *titleStr = [NSString stringWithFormat:@"是否切换到当前城市:%@",cityName];
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
@@ -103,10 +106,10 @@
     }];
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-        NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        
-        if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
-            [[UIApplication sharedApplication] openURL:jumpUrl];
+        if (openUrl) {
+            [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
+                
+            }];
         }
     }];
     
@@ -223,7 +226,7 @@
                 //更新config
                 [wSelf updateAllConfig:model];
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
-                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName]];
+                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                     self.isShowSwitch = NO;
                 }
             }];
