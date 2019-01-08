@@ -50,6 +50,8 @@
     if (self.disablePanGesture) {
         self.naviBar.backBtn.hidden = YES;
     }
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void)setupUI {
@@ -78,6 +80,12 @@
 - (void)configDataLoadSuccess:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
     [self.viewModel loadListCityData];
+    // 定位当前城市
+    if ([TTReachability isNetworkConnected]) {
+        if ([self locAuthorization]) {
+            [self requestCurrentLocationWithToast:NO];
+        }
+    }
 }
 
 - (void)setupNaviBar {
@@ -149,8 +157,6 @@
             [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
         }
     }
-    self.ttStatusBarStyle = UIStatusBarStyleDefault;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
