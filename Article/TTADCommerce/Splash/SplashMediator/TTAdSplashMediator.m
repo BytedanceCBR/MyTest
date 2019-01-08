@@ -157,15 +157,13 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 //设置域名,app实现选路
 - (NSString *)splashBaseUrl
 {
-    return @"http://10.25.80.96:9231";
-//    return @"http://is.snssdk.com";
+    return @"https://i.haoduofangs.com";
 }
 
 //接入方可自由定制path,拼接后url:https://is.snssdk.com/api/ad/splash/news_article_inhouse/v15/
 - (NSString *)splashPathUrl
 {
-    return @"f101/api/ad/splash";
-//    return @"api/ad/splash/news_article_inhouse/v15/";
+    return @"f100/api/ad/splash";
 }
 
 - (BOOL)enableSplashGifKadunOptimize {
