@@ -124,30 +124,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-//            sslocal://webview?url=10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876
             
-//             NSString *urlStr = @"http://10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876";
-//             //            NSString *urlStr = @"http://10.1.10.250:8080/test";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
-//             NSString *unencodedString = urlStr;
-//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//             (CFStringRef)unencodedString,
-//             NULL,
-//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-//             kCFStringEncodingUTF8));
-//
-//            NSString *encodedStringURL = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//                                                                                                            (CFStringRef)@"小区榜单",
-//                                                                                                            NULL,
-//                                                                                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-//                                                                                                            kCFStringEncodingUTF8));
-//            urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@&titlt=%@",encodedString,encodedStringURL];
-//
-//             NSURL *url = [TTURLUtils URLWithString:urlStr];
-//             [[TTRoute sharedRoute] openURLByPushViewController:url];
-//             return;
-
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
 
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
