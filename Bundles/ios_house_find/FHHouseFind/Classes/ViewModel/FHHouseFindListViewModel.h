@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewWillDisappear:(BOOL)animated;
 - (void)addStayCategoryLog;
 - (void)resetStayTime;
-
+- (void)endTrack;
 @end
 
 NS_ASSUME_NONNULL_END

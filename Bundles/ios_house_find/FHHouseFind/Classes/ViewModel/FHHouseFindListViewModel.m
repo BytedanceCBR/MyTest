@@ -330,7 +330,7 @@
             
             [self endTrack];
             [self addEnterCategoryLog];
-            [self addStayCategoryLog];
+            [self addStayCategoryLogBy:self.lastSelectIndex];
             [self resetStayTime];
         }
     }
@@ -371,21 +371,25 @@
         FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
         NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
         [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
-
     }
 
 }
 
 - (void)addStayCategoryLog
 {
+    [self addStayCategoryLogBy:self.currentSelectIndex];
+}
+
+- (void)addStayCategoryLogBy:(NSInteger)index
+{
     NSTimeInterval duration = self.trackStayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
         return;
     }
-    if (self.lastSelectIndex < self.itemList.count) {
+    if (index < self.itemList.count) {
         
-        FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
-        FHHouseFindSectionItem *item = self.itemList[self.lastSelectIndex];
+        FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
+        FHHouseFindSectionItem *item = self.itemList[index];
         NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
         tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
         [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
