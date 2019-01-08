@@ -42,10 +42,17 @@
     self.panBeginAction = ^{
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.naviBar.searchInput becomeFirstResponder];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -114,16 +121,7 @@
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
-    if (text.length > maxCount) {
-        text = [text substringToIndex:maxCount];
-        self.naviBar.searchInput.text = text;
-    }
-    BOOL hasText = text.length > 0;
-    if (hasText) {
-        [self.viewModel requestSearchCityByQuery:text];
-    } else {
-        [self.viewModel clearTableView];
-    }
+    [self.viewModel requestSearchCityByQuery:text];
 }
 
 @end
