@@ -64,7 +64,8 @@ fileprivate class ItemView: UIControl {
 
     lazy var avator: UIImageView = {
         let re = UIImageView()
-        re.contentMode = .scaleAspectFit
+        re.layer.cornerRadius = 23
+        re.contentMode = .scaleAspectFill
         re.clipsToBounds = true
         re.image = #imageLiteral(resourceName: "default-avatar-icons")
         return re

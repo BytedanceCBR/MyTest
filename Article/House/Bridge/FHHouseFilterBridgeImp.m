@@ -19,7 +19,10 @@
 
 @implementation FHHouseFilterBridgeImp
 
--(id)filterViewModelWithType:(FHHouseType)houseType showAllCondition:(BOOL)showAllCondition showSort:(BOOL)showSort
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort
+          safeBottomPandding:(CGFloat)safeBottomPandding
 {
     HouseType ht = HouseTypeSecondHandHouse;
     switch (houseType) {
@@ -40,19 +43,12 @@
 
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
 
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        if (@available(iOS 11.0, *)) {
-            factory.safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-//    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
-//    NSArray<FHFilterNodeModel*>* sortConfig = nil;
-//    if (showSort) {
-//        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
-//    }
-
+    //    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
+    //    NSArray<FHFilterNodeModel*>* sortConfig = nil;
+    //    if (showSort) {
+    //        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
+    //    }
+    factory.safeBottomPandding = safeBottomPandding;
     NSArray<FHFilterNodeModel*>* configs = [FHFilterModelParser getConfigByHouseType:houseType];
     NSArray<FHFilterNodeModel*>* sortConfig = nil;
     if (showSort) {
@@ -63,6 +59,24 @@
                                                      sortConfig:sortConfig
                                                          config:configs];
     return _houseFilterViewModel;
+}
+
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort
+{
+    CGFloat safeBottomPandding = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        if (@available(iOS 11.0, *)) {
+            safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    return [self filterViewModelWithType:houseType
+                        showAllCondition:showAllCondition
+                                showSort:showSort
+                      safeBottomPandding:safeBottomPandding];
 }
 
 -(UIView *)filterPannel:(id)viewModel
