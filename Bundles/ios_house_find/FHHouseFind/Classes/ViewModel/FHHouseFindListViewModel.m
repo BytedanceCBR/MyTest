@@ -370,7 +370,10 @@
         FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
         FHHouseFindSectionItem *item = self.itemList[self.currentSelectIndex];
         NSMutableDictionary *tracerDict = [baseView categoryLogDict].mutableCopy;
-        [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+        if (!baseView.isEnterCategory) {
+            
+            [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+        }
     }
 
 }
