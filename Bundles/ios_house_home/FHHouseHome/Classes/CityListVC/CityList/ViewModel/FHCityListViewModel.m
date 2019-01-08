@@ -132,6 +132,13 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
             cityId = item.cityId;
             pinyin = item.pinyin;
             simplePinyin = item.simplePinyin;
+        } else if ([city isKindOfClass:[FHCitySearchDataDataModel class]]) {
+            FHCitySearchDataDataModel *item = city;
+            // 城市搜索
+            name = item.name;
+            cityId = item.cityId;
+            pinyin = item.fullPinyin;
+            simplePinyin = item.simplePinyin;
         } else {
             //
         }
@@ -266,6 +273,17 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
+    // add by zyk 未开通逻辑，是否能点击
+    __weak typeof(self) wSelf = self;
+    [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
+        if (isSuccess) {
+            [wSelf addCityToHistory:item];
+        }
+    }];
+}
+
+// 城市搜索
+- (void)searchCellItemClick:(FHCitySearchDataDataModel *)item {
     // add by zyk 未开通逻辑，是否能点击
     __weak typeof(self) wSelf = self;
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {

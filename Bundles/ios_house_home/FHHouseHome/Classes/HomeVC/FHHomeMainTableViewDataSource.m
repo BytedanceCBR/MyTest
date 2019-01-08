@@ -168,7 +168,7 @@
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        traceParam[@"enter_from"] = @"maintab";
+        traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = @"be_null";
         traceParam[@"log_pb"] = theModel.logPb;
         traceParam[@"origin_from"] = [self pageTypeString];
@@ -201,6 +201,27 @@
 }
 
 -(NSString *)pageTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)enterFromTypeString {
     
     switch (self.currentHouseType) {
         case FHHouseTypeNewHouse:

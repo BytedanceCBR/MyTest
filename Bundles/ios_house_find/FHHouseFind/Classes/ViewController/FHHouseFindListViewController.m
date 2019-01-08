@@ -127,10 +127,17 @@
     }];
     height = 50 + 32;
     height +=  [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    
+    CGFloat bottomHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    } else {
+        // Fallback on earlier versions
+    }
     [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.searchBar.mas_bottom);
-        make.height.mas_equalTo(@([UIScreen mainScreen].bounds.size.height - height));
+        make.bottom.mas_equalTo(self.view).mas_offset(-bottomHeight);
     }];
 }
 
@@ -171,7 +178,14 @@
     _scrollView.scrollsToTop = NO;
     _scrollView.alwaysBounceHorizontal = NO;
     _scrollView.alwaysBounceVertical = NO;
-    _scrollView.contentInset = UIEdgeInsetsMake(0, 0, [TTDeviceHelper isIPhoneXDevice] ? 83 : 49, 0);
+    CGFloat bottomHeight = 49;
+    if (@available(iOS 11.0, *)) {
+        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    } else {
+        // Fallback on earlier versions
+    }
+    _scrollView.contentInset = UIEdgeInsetsMake(0, 0, bottomHeight, 0);
+
     if (@available(iOS 11.0, *)) {
         _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }

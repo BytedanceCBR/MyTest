@@ -111,7 +111,7 @@
     for (NSInteger index = 0; index < self.itemList.count; index++) {
         
         FHHouseFindSectionItem *item = self.itemList[index];
-        FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectZero];
         baseView.tracerDict = self.tracerDict;
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
@@ -119,6 +119,10 @@
         };
         baseView.tag = 10 + index;
         [self.scrollView addSubview:baseView];
+        [baseView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.scrollView.bounds.size.width * index);
+            make.top.width.height.mas_equalTo(self.scrollView);
+        }];
     }
     
     if (self.itemList.count > 0) {
@@ -302,6 +306,19 @@
             
             [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
             [wself selectHouseFindListItem:index];
+            if (wself.lastSelectIndex != wself.currentSelectIndex) {
+                
+                FHHouseFindListView *lastBaseView = [wself.scrollView viewWithTag:10 + wself.lastSelectIndex];
+                [lastBaseView viewWillDisappear:YES];
+                
+                FHHouseFindListView *currentBaseView = [wself.scrollView viewWithTag:10 + wself.currentSelectIndex];
+                [currentBaseView viewWillAppear:YES];
+                
+                [wself endTrack];
+                [wself addEnterCategoryLog];
+                [wself addStayCategoryLogBy:wself.lastSelectIndex];
+                [wself resetStayTime];
+            }
 
         }
     };

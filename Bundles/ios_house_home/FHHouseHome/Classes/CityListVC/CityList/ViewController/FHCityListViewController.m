@@ -18,6 +18,7 @@
 #import "FHCityListViewModel.h"
 #import "TTNavigationController.h"
 #import "UINavigationController+NavigationBarConfig.h"
+#import "FHCitySearchViewController.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
@@ -47,9 +48,6 @@
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
-    if (self.disablePanGesture) {
-        self.naviBar.backBtn.hidden = YES;
-    }
     [UIApplication sharedApplication].statusBarHidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
@@ -70,6 +68,13 @@
 }
 
 - (void)setupData {
+    if (self.disablePanGesture) {
+        self.naviBar.backBtn.hidden = YES;
+        // 重新布局导航栏
+        [self.naviBar.searchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.naviBar).offset(20);
+        }];
+    }
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.viewModel loadListCityData];
@@ -179,6 +184,7 @@
 }
 
 - (void)goSearchCity {
+    /*
     NSDictionary* info = @{
                            @"tracer":@{@"enter_from": @"test",
                                        @"element_from": @"be_null",
@@ -190,6 +196,10 @@
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+     */
+    FHCitySearchViewController *citySearchVC = [[FHCitySearchViewController alloc] init];
+    citySearchVC.cityListViewModel = self.viewModel;
+    [self.navigationController pushViewController:citySearchVC animated:YES];
 }
 
 // 重新定位
