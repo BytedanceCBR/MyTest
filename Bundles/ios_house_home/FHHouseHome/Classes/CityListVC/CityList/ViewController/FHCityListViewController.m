@@ -47,9 +47,6 @@
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
-    if (self.disablePanGesture) {
-        self.naviBar.backBtn.hidden = YES;
-    }
     [UIApplication sharedApplication].statusBarHidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
@@ -70,6 +67,13 @@
 }
 
 - (void)setupData {
+    if (self.disablePanGesture) {
+        self.naviBar.backBtn.hidden = YES;
+        // 重新布局导航栏
+        [self.naviBar.searchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.naviBar).offset(20);
+        }];
+    }
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.viewModel loadListCityData];
