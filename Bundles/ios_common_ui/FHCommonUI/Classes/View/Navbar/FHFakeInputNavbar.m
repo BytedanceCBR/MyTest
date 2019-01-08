@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <UIViewAdditions.h>
+#import "FHTextField.h"
 
 #define MIN_HEIGHT    44
 #define BOTTOM_MARGIN 6
@@ -20,7 +21,7 @@
 @interface FHFakeInputNavbar()<UITextFieldDelegate>
 
 @property(nonatomic , assign) FHFakeInputNavbarType type;
-@property(nonatomic , strong) UITextField *inputTextField;
+@property(nonatomic , strong) FHTextField *inputTextField;
 @property(nonatomic , strong) UIView *leftContainerView;
 @property(nonatomic , strong) UIView *rightContainerView;
 
@@ -96,8 +97,7 @@
         _inputTextField.delegate = self;
         _inputTextField.layer.cornerRadius = 4;
         _inputTextField.layer.masksToBounds = YES;
-        
-        
+        _inputTextField.edgeInsets = UIEdgeInsetsMake(1, 0, 0, 0);
         UIImage *searchIcon = [UIImage imageNamed:@"nav_search_icon"];
         UIImageView *searchImgView = [[UIImageView alloc] initWithImage:searchIcon];
         searchImgView.frame = CGRectMake(0, 0, 12, 12);

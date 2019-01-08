@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindSectionItem : NSObject
 
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) BOOL hasRecord;// 是否已经上报过
 
 @end
 
