@@ -121,7 +121,7 @@
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
     
-    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES safeBottomPandding:0];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     
@@ -153,12 +153,7 @@
     [self addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
-    CGFloat bottomHeight = 0;
-    // FIXME: filter兼容处理
-    if (![TTDeviceHelper isIPhoneXDevice]) {
-
-        bottomHeight = 49;
-    }
+    CGFloat bottomHeight = 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
@@ -292,17 +287,7 @@
 
 - (void)setupConstraints
 {
-    CGFloat bottomHeight = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        
-        if (@available(iOS 11.0, *)) {
-            bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-        } else {
-            // Fallback on earlier versions
-        }
-    }else {
-        bottomHeight = 49;
-    }
+    CGFloat bottomHeight = 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
