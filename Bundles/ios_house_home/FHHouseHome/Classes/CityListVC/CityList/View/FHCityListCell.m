@@ -30,13 +30,14 @@
 - (void)setupUI {
     // descLabel
     self.descLabel = [[UILabel alloc] init];
+    self.descLabel.text = @"未开通";
     self.descLabel.textColor = [UIColor colorWithHexString:@"#e1e3e6"];
     self.descLabel.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:self.descLabel];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(17);
         make.centerY.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView).offset(-40);
+        make.right.mas_equalTo(self.contentView).offset(-14);
     }];
     // cityNameLabel
     self.cityNameLabel = [[UILabel alloc] init];
@@ -47,8 +48,14 @@
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(21);
         make.centerY.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.descLabel.mas_left).offset(-10);
+        make.right.mas_equalTo(self.contentView).offset(-60);
     }];
+    self.enabled = NO;
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    self.descLabel.hidden = enabled;
 }
 
 @end

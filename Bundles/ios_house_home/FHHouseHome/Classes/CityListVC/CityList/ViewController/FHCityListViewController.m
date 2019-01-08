@@ -52,6 +52,8 @@
     }
     [UIApplication sharedApplication].statusBarHidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)setupUI {
@@ -72,6 +74,7 @@
     if (configDataModel) {
         [self.viewModel loadListCityData];
     } else {
+        // add by zyk "加载中"
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
     }
@@ -86,6 +89,11 @@
             [self requestCurrentLocationWithToast:NO];
         }
     }
+}
+
+- (void)enterForegroundNotification:(NSNotification *)noti {
+    // 进入前台
+    [self checkLocAuthorization];
 }
 
 - (void)setupNaviBar {

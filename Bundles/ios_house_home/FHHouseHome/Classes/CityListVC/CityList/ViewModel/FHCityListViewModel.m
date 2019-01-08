@@ -266,6 +266,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
+    // add by zyk 未开通逻辑，是否能点击
     __weak typeof(self) wSelf = self;
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
         if (isSuccess) {
@@ -366,6 +367,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     FHConfigDataCityListModel *model = (FHConfigDataCityListModel *)tempData[indexPath.row];
                     cell.cityNameLabel.text = model.name;
+                    cell.enabled = model.enable;
                 }
                 return cell;
             }
