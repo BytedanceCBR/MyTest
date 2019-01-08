@@ -114,18 +114,17 @@ static NSString *lastTabIdentifier;
         [vc preloadPage];
         return vc;
     } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
-        
-        // add by zjing for test
+
         UIViewController *houseFindVC = nil;
 
-//        if (1) {
-//            houseFindVC = [[FHHouseFindListViewController alloc]init];
-//
-//        }else {
-//           houseFindVC = [[HouseFindVC alloc] init];
-//
-//        }
-        return [[HouseFindVC alloc] init];
+        if ([SSCommonLogic findTabShowHouse] == 1) {
+            houseFindVC = [[FHHouseFindListViewController alloc]init];
+
+        }else {
+           houseFindVC = [[HouseFindVC alloc] init];
+
+        }
+        return houseFindVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
         ChatVC* vc = [[ChatVC alloc] init];
