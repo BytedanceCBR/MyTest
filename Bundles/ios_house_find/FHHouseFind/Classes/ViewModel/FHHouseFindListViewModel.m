@@ -168,7 +168,6 @@
     if (self.itemList.count > 0) {
         self.currentSelectIndex = 0;
     }
-    
 }
 
 - (void)jump2GuessVC

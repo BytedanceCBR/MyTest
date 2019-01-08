@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindSectionItem : NSObject
 
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) NSString *title;
 
 @end
 

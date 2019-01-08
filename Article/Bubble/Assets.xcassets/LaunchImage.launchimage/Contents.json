@@ -48,6 +48,7 @@
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
+      "filename" : "launchScreen@2x.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
       "scale" : "2x"

@@ -33,6 +33,7 @@
 #import "TTAdDetailActionModel.h"
 #import "TTASettingConfiguration.h"
 #import "TTAdCanvasPreloader.h"
+#import "FHLocManager.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -64,43 +65,6 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [self detectCallbackFromThirdApp];
     });
-    
-//    if ([TTAdSplashMediator useSplashSDK]) {
-//        dispatch_once(&once_t, ^{
-//            [TTAdSplashMediator registerParamas];
-//        });
-//
-//        [TTAdSplashManager shareInstance].ignoreFirstLaunch = NO;
-//        [[TTAdSplashManager shareInstance] displaySplashOnWindow:keyWindow splashShowType:type];
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-//            [self detectCallbackFromThirdApp];
-//        });
-//    }
-//    else{
-//
-//        id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
-//        if ([adManagerInstance splashADShowType] != SSSplashADShowTypeIgnore) {
-//            if (!SharedAppDelegate.window.rootViewController) {
-//                UIViewController *blankVC = [[UIViewController alloc] init];
-//                UIImageView *bgView = [[UIImageView alloc] initWithFrame:blankVC.view.bounds];
-//
-//                [bgView setImage:[TTAdSplashMediator splashImageForPrefix:@"Default" extension:@"png"]];
-//                bgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//                [blankVC.view addSubview:bgView];
-//                SharedAppDelegate.window.rootViewController = blankVC;
-//            }
-//            if ([TTDeviceHelper isPadDevice] && [TTDeviceHelper OSVersionNumber] < 8) {
-//                [adManagerInstance applicationDidBecomeActiveShowOnWindow:SharedAppDelegate.window splashShowType:adManagerInstance.splashADShowType];
-//            }
-//            else {
-//                [adManagerInstance applicationDidBecomeActiveShowOnWindow:SharedAppDelegate.window splashShowType:adManagerInstance.splashADShowType];
-//            }
-//        }else{
-//            LOGD(@"ingore....");
-//        }
-//        LOGD(@"ingore....");
-//        [adManagerInstance setSplashADShowType:SSSplashADShowTypeIgnore];
-//    }
     return YES;
 }
 
@@ -151,6 +115,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 }
 
+- (BOOL)ignoreFirstLaunch {
+    return NO;
+}
+
 //端监控
 - (void)monitorService:(NSString *)serviceName status:(NSUInteger)status extra:(NSDictionary *)extra
 {
@@ -159,6 +127,22 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)monitorService:(NSString *)serviceName value:(NSDictionary *)params extra:(NSDictionary *)extra{
     [[TTMonitor shareManager] trackService:serviceName value:params extra:extra];
+}
+
+- (BOOL)enableTrackV3Format {
+    return YES;
+}
+
+- (void)trackV3WithEvent:(NSString *)event params:(NSDictionary *)params isDoubleSending:(BOOL)isDoubleSending {
+    if (params) {
+        [params setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];
+        [params setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
+        [params setValue:[TTExtensions buildVersion] forKey:@"app_version"];
+        [params setValue:[TTSandBoxHelper getCurrentChannel] forKey:@"app_channel"];
+        [params setValue:[FHLocManager sharedInstance].currentReGeocode.city forKey:@"city_name"];
+        [params setValue:[FHLocManager sharedInstance].currentReGeocode.province forKey:@"province_name"];
+        [TTTracker eventV3:event params:params];
+    }
 }
 
 #pragma mark -- TTAdSplashDelegate
@@ -173,19 +157,16 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 //设置域名,app实现选路
 - (NSString *)splashBaseUrl
 {
-    return @"http://is.snssdk.com";
+    return @"http://10.25.80.96:9231";
+//    return @"http://is.snssdk.com";
 }
 
 //接入方可自由定制path,拼接后url:https://is.snssdk.com/api/ad/splash/news_article_inhouse/v15/
 - (NSString *)splashPathUrl
 {
-    return @"api/ad/splash/news_article_inhouse/v15/";
+    return @"f101/api/ad/splash";
+//    return @"api/ad/splash/news_article_inhouse/v15/";
 }
-//todo fpd
-//- (NSString *)splashBaseUrl
-//{
-//    return [CommonURLSetting baseURL];
-//}
 
 - (BOOL)enableSplashGifKadunOptimize {
     return YES;
@@ -215,7 +196,6 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (UIImage *)splashBgImage
 {
-    
     NSString *imgName = @"LaunchImage-800-Portrait-736h";
     if ([TTDeviceHelper is667Screen]) {
         imgName = @"LaunchImage-800-667h";
@@ -278,7 +258,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     TTURLTrackerModel *trackModel = [[TTURLTrackerModel alloc] initWithAdId:ad_id logExtra:log_extra];
     ttTrackURLsModel(URLs, trackModel);
 }
-//todo fpd 检测参数和umeng是否需要发送事件
+
 - (void)splashActionWithCondition:(NSDictionary *)condition
 {
     NSString *ad_id = [condition valueForKey:TT_ADID];

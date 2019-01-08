@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.13)
+  - BDALog (0.1.14)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -619,7 +619,8 @@ PODS:
     - TTInstallService
     - TTMonitor
     - TTUIWidget
-  - TTAdSplashSDK (0.1.0)
+  - TTAdSplashSDK (0.4.3):
+    - JSONModel
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9):
     - JSONModel
     - TTBaseLib/TTCategory
@@ -1255,7 +1256,7 @@ DEPENDENCIES:
   - TTAccountSDK/WeChatAccount (from `../AKPlugins/TTAccountSDK`)
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
-  - TTAdSplashSDK (= 0.1.0)
+  - TTAdSplashSDK (from `git@code.byted.org:TTIOS/tt_splash_sdk.git`, branch `feature_multi_log_version_tgq`)
   - TTAppUpdateHelper/TTUpdateHelper
   - TTAppUpdateHelper/TTUpdateView
   - TTAudio (= 0.1.4)
@@ -1385,6 +1386,9 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
     :path: ../AKPlugins/TTAccountSDK
+  TTAdSplashSDK:
+    :branch: feature_multi_log_version_tgq
+    :git: git@code.byted.org:TTIOS/tt_splash_sdk.git
   TTAvatar:
     :path: ../AKPlugins/TTAvatar
   TTBaseLib:
@@ -1431,11 +1435,14 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: cc466fc84dbfab863d4464138b55e321e4ac0041
+    :commit: 999f61a31cd507f21a9f52b11024ce45f1174819
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
+  TTAdSplashSDK:
+    :commit: cb6ec73d5c6255d8f0ed6c13a51be175f5954306
+    :git: git@code.byted.org:TTIOS/tt_splash_sdk.git
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -1461,7 +1468,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 54aee45a65093ffafdbe747b0b00f3c26cdc1ea5
+  BDALog: 4209f6570704720c3f9f7a6abdfceaf2cc3ea7e5
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 2556db5b8358fe78dcb8f793793bf693e2a76adb
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1517,7 +1524,7 @@ SPEC CHECKSUMS:
   TTAccountSDK: f190978cb0db94f923c70da6c0d16de8327aff97
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
-  TTAdSplashSDK: 7cec359f05cb94d4d3a83eda545b9c6c66c2eaf0
+  TTAdSplashSDK: 87bacf6fe320357d581040ef9bd94ef60bc7e103
   TTAppUpdateHelper: 2a86cb2172e04a544dc4bf40241196bbf562f997
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
@@ -1583,6 +1590,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: c9a7a54c93db8d732e8a12871f4efbf60ce5b2f1
+PODFILE CHECKSUM: 185980b676488755a48b945086bb57c24b16cb6e
 
 COCOAPODS: 1.4.0

@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHHouseListViewModelDelegate> viewModelDelegate;
 
 -(NSString *)categoryName;
+-(void)setTracerModel:(FHTracerModel *)tracerModel;
 
 -(void)reloadData;
 
