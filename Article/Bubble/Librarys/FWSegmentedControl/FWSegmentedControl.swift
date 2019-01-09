@@ -469,6 +469,10 @@ extension FWSegmentedControl {
         var strSize: CGSize = CGSize(width: 0, height: 0)
         var iconSize: CGSize = CGSize(width: 0, height: 0)
 
+        if self.sectionTitleArray == nil && self.sectionImageArray == nil && self.sectionSelectedImageArray == nil {
+            return
+        }
+        
         if self.scType == .text {
             sectionContentArray = self.sectionTitleArray! as [AnyObject]
         } else if self.scType == .images {

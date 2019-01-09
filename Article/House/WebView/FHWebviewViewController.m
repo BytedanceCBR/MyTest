@@ -16,6 +16,9 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "FHErrorMaskView.h"
 #import "TTReachability.h"
+#import "NSDictionary+TTAdditions.h"
+#import "NSString+URLEncoding.h"
+#import "TTInstallJSONHelper.h"
 
 @interface FHWebviewViewController ()<TTRouteInitializeProtocol, TTRWebViewDelegate, UIViewControllerErrorHandler>
 {
@@ -142,11 +145,38 @@
 - (void)webView:(UIView<TTRWebView> *)webView didFailLoadWithError:(NSError *)error {
     _isWebViewLoading = NO;
     [self tt_endUpdataData];
-    
+
     [self showMaskView:YES];
     [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
     [self.maskView showRetry:YES];
 }
+
+- (BOOL)webView:(UIView<TTRWebView> *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(TTRWebViewNavigationType)navigationType {
+    BOOL result = YES;
+    NSURL *URL = request.URL;
+    NSString *host = [URL.host copy];
+    if ([URL.scheme isEqualToString:@"bytedance"] &&
+        ([host isEqualToString:@"custom_event"] ||
+         [host isEqualToString:@"log_event"] || [host isEqualToString:@"log_event_v3"])) {
+            // 发送统计事件的拦截
+            if ([host isEqualToString:@"log_event_v3"]) {
+                //applog 3.0
+                [self sendV3TrackDataFromQuery:URL.query];
+                result = NO;
+            }
+        }
+    return result;
+}
+
+- (void)sendV3TrackDataFromQuery:(NSString *)query {
+    NSMutableDictionary *parameters = [[TTStringHelper parametersOfURLString:query] mutableCopy];
+
+    NSString *eventName = [[parameters tt_stringValueForKey:@"event"] URLDecodedString];
+    NSDictionary *params = [[[parameters tt_stringValueForKey:@"params"] URLDecodedString] JSONValue];
+    BOOL isDoubleSending = [parameters tt_boolValueForKey:@"is_double_sending"];
+    [TTTrackerWrapper eventV3:eventName params:params isDoubleSending:isDoubleSending];
+}
+
 
 #pragma mark - UIViewControllerErrorHandler
 

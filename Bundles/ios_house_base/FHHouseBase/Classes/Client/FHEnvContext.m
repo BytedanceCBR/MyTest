@@ -333,7 +333,7 @@
     }
 }
 
-- (FHConfigDataModel *)getConfigFromCache
+- (nullable FHConfigDataModel *)getConfigFromCache
 {
     if (self.generalBizConfig.configCache) {
         return self.generalBizConfig.configCache;

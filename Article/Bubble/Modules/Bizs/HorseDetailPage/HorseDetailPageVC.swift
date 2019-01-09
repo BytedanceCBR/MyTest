@@ -911,12 +911,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         targetView.rx.controlEvent(.touchUpInside).bind { [unowned self] () in
             if let realtorId = contactPhone.realtorId ,
                 let traceModel = self.detailPageViewModel?.tracerModel {
+                traceModel.elementFrom = "old_detail_button"
                 let reportParams = getRealtorReportParams(traceModel: traceModel)
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
                 let info: [String: Any] = ["url": jumpUrl,
                                            "title": "经纪人详情页",
-                                           "delegate": delegate]
+                                           "realtorId": realtorId,
+                                           "delegate": delegate,
+                                           "trace": traceModel]
                 let userInfo = TTRouteUserInfo(info: info)
                 TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
             }

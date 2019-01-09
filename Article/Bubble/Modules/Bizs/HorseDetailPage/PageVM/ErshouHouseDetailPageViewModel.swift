@@ -151,6 +151,17 @@ import RxCocoa
                 self?.traceDisplayCell(tableView: tableView, datas: self?.dataSource.datas ?? [])
                 self?.traceCellByVisibleRect(tableView: tableView)
             }.disposed(by: disposeBag)
+        NotificationCenter.default.rx
+            .notification(.followUpDidChange)
+            .bind { [unowned self] (notification) in
+                if let followupId = notification.userInfo?["followup_id"] as? String,
+                    let status = notification.userInfo?["status"] as? Int {
+                    if followupId == "\(self.houseId)" {
+                        self.followStatus.accept(Result.success(status == 1))
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
 
         self.bindFollowPage()
     }
