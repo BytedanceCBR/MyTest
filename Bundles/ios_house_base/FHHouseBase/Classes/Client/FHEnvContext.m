@@ -18,6 +18,7 @@
 #import "TTRoute.h"
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
+#import <objc/runtime.h>
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -214,6 +215,9 @@
 
 - (void)onStartApp
 {
+    //城市列表页未选择时hook页面跳转判断方法
+    [self checkExchangeCanOpenURLMethod];
+    
     //开始网络监听通知
     [self.reachability startNotifier];
     
@@ -287,6 +291,7 @@
     // 城市是否选择，未选择直接跳转城市列表页面
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
     if (!hasSelectedCity) {
+        // add by zyk，参数需要修改
         NSDictionary* info = @{@"animated":@(NO),
                                @"disablePanGes":@(YES),
                                @"tracer":@{@"enter_from": @"push",
@@ -299,6 +304,27 @@
         TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+// 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
+- (void)checkExchangeCanOpenURLMethod {
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    if (!hasSelectedCity) {
+        // 交换方法
+        Class cls = [TTRoute class];
+        SEL originalSel = @selector(canOpenURL:);
+        SEL swizzeledSel = @selector(toSwizzled_canOpenURL:);
+        
+        Method originalMethod = class_getInstanceMethod(cls, originalSel);
+        Method swizzledMethod = class_getInstanceMethod(cls, swizzeledSel);
+        
+        BOOL success = class_addMethod(cls, originalSel, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+        if (success) {
+            class_replaceMethod(cls, swizzeledSel, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
     }
 }
 
@@ -378,6 +404,21 @@
     if (kIsNSString(originSearchid)) {
         self.commonPageModel.originSearchId = originSearchid;
     }
+}
+
+@end
+
+// 升级TTRoute后需要验当前场景
+@implementation TTRoute (fhCityList)
+
+- (BOOL)toSwizzled_canOpenURL:(NSURL *)url {
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    BOOL isCityListUrl = [url.absoluteString containsString:@"sslocal://city_list"];
+    if (hasSelectedCity || isCityListUrl) {
+        return [self toSwizzled_canOpenURL:url];
+    }
+    // 当前城市未选择，不能进行页面跳转
+    return NO;
 }
 
 @end

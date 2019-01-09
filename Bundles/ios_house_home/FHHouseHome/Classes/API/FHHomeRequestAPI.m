@@ -36,6 +36,8 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query.length > 0) {
         paramDic[@"full_text"] = query;
+    } else {
+        paramDic[@"full_text"] = @"";
     }
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];

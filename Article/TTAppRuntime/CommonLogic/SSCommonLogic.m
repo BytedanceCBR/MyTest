@@ -6133,6 +6133,12 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return [fhSettings tta_boolForKey:@"f_wenda_share_enable"];
 }
 
++ (NSInteger)findTabShowHouse {
+    
+    NSDictionary *fhSettings = [self fhSettings];
+    return [fhSettings tt_intValueForKey:@"find_tab_show_house"];
+}
+
 + (NSInteger)categoryBadgeTimeInterval
 {
     NSDictionary *fhSettings = [self fhSettings];

@@ -17,6 +17,7 @@
 #import <FHHouseSuggestionDelegate.h>
 #import "TTRoute.h"
 #import "FHUserTracker.h"
+#import "UIViewAdditions.h"
 
 @interface FHHouseFindListViewModel () <UIScrollViewDelegate, FHHouseSuggestionDelegate>
 
@@ -136,6 +137,12 @@
 - (void)viewDidLayoutSubviews
 {
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.itemList.count, self.scrollView.bounds.size.height - self.scrollView.contentInset.bottom);
+    if ([self.segmentView totalSegmentedControlWidth] < self.segmentView.width) {
+        
+        self.segmentView.userDraggable = NO;
+        self.segmentView.width = ceil([self.segmentView totalSegmentedControlWidth]);
+        self.segmentView.centerX = self.scrollView.width / 2;
+    }
 }
 
 - (void)refreshHouseItemList
@@ -152,15 +159,6 @@
         NSString *placeholder = [self placeholderByHouseType:FHHouseTypeSecondHandHouse];
         [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeSecondHandHouse]];
     }
-    if (self.configDataModel.searchTabCourtFilter.count > 0) {
-        FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
-        item.houseType = FHHouseTypeNewHouse;
-        itemTitle = @"新房";
-        [itemList addObject:item];
-        [titleList addObject:itemTitle];
-        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNewHouse];
-        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNewHouse]];
-    }
     if (self.configDataModel.searchTabRentFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeRentHouse;
@@ -169,6 +167,15 @@
         [titleList addObject:itemTitle];
         NSString *placeholder = [self placeholderByHouseType:FHHouseTypeRentHouse];
         [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeRentHouse]];
+    }
+    if (self.configDataModel.searchTabCourtFilter.count > 0) {
+        FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
+        item.houseType = FHHouseTypeNewHouse;
+        itemTitle = @"新房";
+        [itemList addObject:item];
+        [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNewHouse];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNewHouse]];
     }
     if (self.configDataModel.searchTabNeighborhoodFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
@@ -182,6 +189,7 @@
 
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
+    
 }
 
 - (void)jump2GuessVC
@@ -429,17 +437,14 @@
     
 }
 
-- (void)startTrack {
-    
+- (void)startTrack
+{
     self.trackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)endTrack {
-    
-    
+- (void)endTrack
+{
     self.trackStayTime += [[NSDate date] timeIntervalSince1970] - self.trackStartTime;
-    
-    NSLog(@"zjing-trackStayTime：%@",@(self.trackStayTime).stringValue);
     
 }
 

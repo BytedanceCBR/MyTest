@@ -104,7 +104,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 // 历史最多8个
 - (void)addCityToHistory:(id)city {
     if (city) {
-        // 进历史之前，说明当前城市是选择过的城市
+        // YES 说明当前城市是选择过的城市，而且如果未选择过城市，其他页面不让跳转
         [FHUtils setContent:@(YES) forKey:@"k_fh_has_sel_city"];
         // 进历史
         NSString *name = NULL;
@@ -273,7 +273,6 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
-    // add by zyk 未开通逻辑，是否能点击
     __weak typeof(self) wSelf = self;
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
         if (isSuccess) {
@@ -284,7 +283,6 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 
 // 城市搜索
 - (void)searchCellItemClick:(FHCitySearchDataDataModel *)item {
-    // add by zyk 未开通逻辑，是否能点击
     __weak typeof(self) wSelf = self;
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
         if (isSuccess) {

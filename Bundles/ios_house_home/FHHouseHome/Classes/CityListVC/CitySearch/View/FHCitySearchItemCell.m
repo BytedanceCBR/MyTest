@@ -36,16 +36,14 @@
     }];
     // descLabel
     self.descLabel = [[UILabel alloc] init];
-    self.descLabel.text = @"找房服务即将开通";
-    self.descLabel.textAlignment = NSTextAlignmentLeft;
-    self.descLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
-    self.descLabel.font = [UIFont themeFontRegular:14];
+    self.descLabel.text = @"未开通";
+    self.descLabel.textColor = [UIColor colorWithHexString:@"#e1e3e6"];
+    self.descLabel.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:self.descLabel];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(21);
         make.centerY.mas_equalTo(self.cityNameLabel);
-        make.left.mas_equalTo(self.cityNameLabel.mas_right).offset(10);
-        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
     }];
     self.enabled = NO;
 }

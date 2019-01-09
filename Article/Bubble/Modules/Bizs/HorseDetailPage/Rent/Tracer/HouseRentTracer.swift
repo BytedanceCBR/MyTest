@@ -54,12 +54,14 @@ class HouseRentTracer: NSObject {
 
     func recordGoDetail() {
         if !hasRecordGoDetail {
-            let params = EnvContext.shared.homePageParams <|>
+            let params = TracerParams.momoid() <|>
                 toTracerParams(self.pageType, key: "page_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams(self.cardType, key: "card_type") <|>
                 toTracerParams(self.enterFrom, key: "enter_from") <|>
                 toTracerParams(self.elementFrom, key: "element_from") <|>
+                toTracerParams(self.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 toTracerParams(self.logPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams(self.rank, key: "rank")
             stayPageParams = params <|> traceStayTime()
