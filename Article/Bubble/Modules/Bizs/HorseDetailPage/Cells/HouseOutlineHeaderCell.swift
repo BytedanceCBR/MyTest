@@ -19,6 +19,10 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
     var tracerParams:TracerParams?
     let disposeBag = DisposeBag()
     var reportUrl:String?
+    
+    var originFrom:String?
+    
+    var originSearchId:String?
 
     var ershouHouseData: ErshouHouseData?
     
@@ -68,7 +72,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
                     if let ershouHouseData = self?.ershouHouseData,
                     let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
 
-                        var traceParam = EnvContext.shared.homePageParams <|>
+                        var traceParam = TracerParams.momoid() <|>
                         toTracerParams("old_detail", key: "page_type")
                         if let tp = self?.tracerParams {
                             traceParam = traceParam <|> tp
@@ -113,13 +117,15 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
 func parseHouseOutlineHeaderNode(
     _ title: String,
     _ ershouHouseData: ErshouHouseData,
+    originSearchId: String? = "be_null",
+    originFrom: String? = "be_null",
     traceExtension: TracerParams = TracerParams.momoid(),
     filter: (() -> Bool)? = nil) -> () -> TableSectionNode? {
     return {
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
+            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData)(originSearchId)(originFrom)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
             
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("house_info", key: "element_type") <|>
@@ -140,11 +146,15 @@ func parseHouseOutlineHeaderNode(
 func fillHouseOutlineHeaderCell(_ title: String,
                                 _ ershouHouseData: ErshouHouseData,
                                 _ openUrl:String?,
+                                originSearchId: String? = "be_null",
+                                originFrom: String? = "be_null",
                                 traceExtension: TracerParams = TracerParams.momoid(),
                                 cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? HouseOutlineHeaderCell {
         theCell.label.text = title
         theCell.reportUrl = openUrl
+        theCell.originSearchId = originSearchId;
+        theCell.originFrom = originFrom;
         theCell.ershouHouseData = ershouHouseData
         theCell.tracerParams = traceExtension
     }

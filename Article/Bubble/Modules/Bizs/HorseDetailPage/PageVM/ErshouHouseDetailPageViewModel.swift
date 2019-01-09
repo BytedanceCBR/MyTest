@@ -390,7 +390,7 @@ import RxCocoa
                 <- parsePropertyListNode(data)
                 <- parseAgentListCellGroup(data ,traceModel: tracerModel)
                 <- parseFlineNode(data.baseInfo != nil ? 6: 0)
-                <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
+                <- parseHouseOutlineHeaderNode("房源概况", data , originSearchId: relateNeighborhoodData.value?.data?.searchId , originFrom: "old_detail",traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
                 }
                 <- parseHouseOutlineListNode(data)

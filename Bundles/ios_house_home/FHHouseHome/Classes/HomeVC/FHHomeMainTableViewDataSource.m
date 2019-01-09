@@ -98,6 +98,9 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_modelsArray.count <= indexPath.row) {
+        return;
+    }
     FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
      if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
      {

@@ -35,6 +35,10 @@
 
     NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
+    
+    if (!buildVersionNew) {
+        buildVersionNew = @"10500";
+    }
     return buildVersionNew;
 }
 
