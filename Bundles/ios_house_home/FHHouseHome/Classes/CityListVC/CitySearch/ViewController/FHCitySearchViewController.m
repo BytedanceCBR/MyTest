@@ -119,9 +119,13 @@
 
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
-    NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
     [self.viewModel requestSearchCityByQuery:text];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self.naviBar.searchInput resignFirstResponder];
+    return YES;
 }
 
 @end

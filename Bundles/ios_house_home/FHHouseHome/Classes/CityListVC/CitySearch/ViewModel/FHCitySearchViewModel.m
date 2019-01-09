@@ -20,6 +20,7 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 
 @property (nonatomic, strong , nullable) NSArray<FHCitySearchDataDataModel> *cityList;
+@property (nonatomic, copy)     NSString       *inputText;
 
 @end
 
@@ -44,6 +45,7 @@
 - (void)searchItemCellClick:(FHCitySearchDataDataModel *)item {
     if (item) {
         [self.listController.cityListViewModel searchCellItemClick:item];
+        [self addCitySearchTracer:item.name];
     }
 }
 
@@ -101,6 +103,7 @@
     if (self.httpTask) {
         [self.httpTask cancel];
     }
+    self.inputText = query;
     __weak typeof(self) wself = self;
     self.httpTask = [FHHomeRequestAPI requestCitySearchByQuery:query class:[FHCitySearchModel class] completion:^(FHCitySearchModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
@@ -111,6 +114,15 @@
         }
         [wself.listController.tableView reloadData];
     }];
+}
+
+- (void)addCitySearchTracer:(NSString *)searchText {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"city_list";
+    tracerDict[@"query_type"] = @"associate";
+    tracerDict[@"enter_query"] = self.inputText.length > 0 ? self.inputText : @"be_null";
+    tracerDict[@"search_query"] = searchText.length > 0 ? searchText : @"be_null";
+    [FHUserTracker writeEvent:@"city_search" params:tracerDict];
 }
 
 @end

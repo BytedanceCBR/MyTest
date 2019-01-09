@@ -296,16 +296,8 @@
     // 城市是否选择，未选择直接跳转城市列表页面
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
-        // add by zyk，参数需要修改
         NSDictionary* info = @{@"animated":@(NO),
-                               @"disablePanGes":@(YES),
-                               @"tracer":@{@"enter_from": @"push",
-                                           @"element_from": @"be_null",
-                                           @"rank": @"be_null",
-                                           @"card_type": @"be_null",
-                                           @"origin_from": @"push",
-                                           @"origin_search_id": @"be_null"
-                                           }};
+                               @"disablePanGes":@(YES)};
         TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

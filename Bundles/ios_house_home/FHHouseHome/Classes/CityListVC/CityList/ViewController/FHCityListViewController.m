@@ -23,6 +23,7 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "FHIndexSectionView.h"
+#import "FHUserTracker.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()<FHIndexSectionDelegate>
@@ -226,19 +227,10 @@
 }
 
 - (void)goSearchCity {
-    /*
-    NSDictionary* info = @{
-                           @"tracer":@{@"enter_from": @"test",
-                                       @"element_from": @"be_null",
-                                       @"rank": @"be_null",
-                                       @"card_type": @"be_null",
-                                       @"origin_from": @"test",
-                                       @"origin_search_id": @"be_null"
-                                       }};
-    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_search"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-     */
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"city_list";
+    [FHUserTracker writeEvent:@"click_city_search" params:tracerDict];
+    
     FHCitySearchViewController *citySearchVC = [[FHCitySearchViewController alloc] init];
     citySearchVC.cityListViewModel = self.viewModel;
     [self.navigationController pushViewController:citySearchVC animated:YES];
