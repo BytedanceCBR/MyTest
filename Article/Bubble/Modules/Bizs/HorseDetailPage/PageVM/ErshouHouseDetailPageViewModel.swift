@@ -1252,6 +1252,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             let selector = openDetailPage(
                 houseType: HouseType(rawValue: item.houseType!),
                 followUpId: Int64(item.followId!) ?? 0,
+                originSearchId: (data.searchId ?? "be_null"),
                 disposeBag: disposeBag,
                 logPB: item.logPB as? [String : Any],
                 navVC: navVC)
@@ -1263,7 +1264,9 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams(categoryNameByHouseType(houseType: houseType), key: "page_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.fhSearchId ?? "be_null", key: "originSearchId") <|>
                 toTracerParams("be_null", key: "element_type")
+
             let finalHouseShowParams = houseShowParams
                 .exclude("element_from")
                 .exclude("category_name")
@@ -1337,6 +1340,7 @@ fileprivate func houseTypeStringByHouseType(houseType: HouseType) -> String {
 fileprivate func openDetailPage(
     houseType: HouseType?,
     followUpId: Int64,
+    originSearchId: String = "be_null",
     disposeBag: DisposeBag,
     logPB: [String: Any]? = nil,
     navVC: UINavigationController?) -> (TracerParams) -> Void {
@@ -1372,6 +1376,8 @@ fileprivate func openDetailPage(
     case .rentHouse:
         params = params <|>
             toTracerParams("rent_follow_list", key: "enter_from") <|>
+            toTracerParams("minetab_rent", key: "origin_from") <|>
+            toTracerParams(originSearchId, key: "origin_search_id") <|>
             toTracerParams(logPB ?? "be_null", key: "log_pb")
         return openRentHouseDetailPage(
             houseId: followUpId,
@@ -1389,12 +1395,6 @@ fileprivate func openDetailPage(
             disposeBag: disposeBag,
             tracerParams: params,
             navVC: navVC)
-    case .rentHouse:
-        params = params <|>
-            toTracerParams("rent_follow_list", key: "enter_from") <|>
-            toTracerParams(logPB ?? "be_null", key: "log_pb")
-        return openRentHouseDetailPage(houseId: followUpId,
-                                       tracerParams: params)
     default:
         return openErshouHouseDetailPage(
             houseId: followUpId,

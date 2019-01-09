@@ -158,6 +158,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self reloadHomeTableHeaderSection];
                 [self requestOriginData];
             }
+            
+            [self sendSwitchButtonClickTrace];
+            
         };
 
     }
@@ -491,6 +494,29 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV reloadData];
     }
     [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+}
+
+- (void)sendSwitchButtonClickTrace
+{
+    NSString *stringClickType = @"be_null";
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            stringClickType = @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            stringClickType = @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            stringClickType = @"rent";
+            break;
+        default:
+            break;
+    }
+    tracerDict[@"click_type"] = stringClickType;
+    
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"click_switch_maintablist"];
+
 }
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
