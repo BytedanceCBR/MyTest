@@ -29,7 +29,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>66250</string>
+	<string>10500</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
