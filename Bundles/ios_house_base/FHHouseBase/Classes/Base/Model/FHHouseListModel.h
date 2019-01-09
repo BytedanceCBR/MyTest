@@ -39,6 +39,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHSearchHouseDataRedirectTipsModel<NSObject>
+
+@end
+
+
+@interface  FHSearchHouseDataRedirectTipsModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *text2;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
 
 
 @interface FHHouseListModel : NSObject
