@@ -441,12 +441,15 @@ func fillAgentListCell(
             //页面跳转
             itemView.rx.controlEvent(.touchUpInside)
                 .bind {
+                    traceModel?.elementFrom = "old_detail_related"
                     let reportParams = getRealtorReportParams(traceModel: traceModel)
                     let openUrl = "fschema://realtor_detail"
-//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
-//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=104764519372&report_params=\(reportParams)"
                     let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
-                    let info: [String: Any] = ["url": jumpUrl, "title": "经纪人详情页", "delegate": delegate]
+                    let info: [String: Any] = ["url": jumpUrl,
+                                               "title": "经纪人详情页",
+                                               "delegate": delegate,
+                                               "realtorId": contact.realtorId ?? "",
+                                               "trace": traceModel]
                     let userInfo = TTRouteUserInfo(info: info)
                     TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }
