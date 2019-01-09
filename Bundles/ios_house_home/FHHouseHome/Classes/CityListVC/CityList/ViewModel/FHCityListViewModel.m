@@ -360,6 +360,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         // 历史和热门
         if (indexPath.section < self.mainCount - 1) {
             NSArray *tempData = self.sectionsData[indexPath.section];
+            NSString *sectionName = self.sectionsKeyData[indexPath.section];
             FHCityHotItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCityListHotItemCellId];
             if (cell) {
                 NSMutableArray *cityNames = [NSMutableArray new];
@@ -372,6 +373,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
                 if (cityNames.count > 0) {
                     cell.cityList = cityNames;
                 }
+                cell.label.text = sectionName;
                 __weak typeof(self) wSelf = self;
                 cell.itemClickBlk = ^(NSInteger index) {
                     [wSelf hotOrHistoryCityItemClickBySection:indexPath.section index:index];
@@ -398,6 +400,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    // 历史和热门
+    if (section < self.mainCount - 1) {
+        return nil;
+    }
     FHCityItemHeaderView *headerView = [[FHCityItemHeaderView alloc] init];
     if (section < self.sectionsKeyData.count) {
         NSString *tempText = self.sectionsKeyData[section];
@@ -432,7 +438,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         NSArray *tempData = self.sectionsData[indexPath.section];
         if (tempData.count > 0) {
             NSInteger rowCount = (tempData.count / 4) + (tempData.count % 4 > 0 ? 1 : 0);
-            CGFloat rowHeight = rowCount * 40.0;
+            CGFloat rowHeight = rowCount * 40.0 + 44.0;
             if (section == self.mainCount - 2) {
                 return rowHeight + 20.0;
             } else {
@@ -447,7 +453,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 {
     // 历史和热门
     if (section < self.mainCount - 1) {
-        return 44;
+        return CGFLOAT_MIN;
     }
     return 34;
 }
@@ -471,9 +477,5 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         }
     }
 }
-
-//- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-//    return [self.sectionsKeyData copy];
-//}
 
 @end

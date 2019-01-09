@@ -21,6 +21,7 @@ typedef void(^kFHHotCityItemClick)(NSInteger index);
 
 @interface FHCityHotItemCell : UITableViewCell
 
+@property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong , nullable) NSArray *cityList; // 城市名称数组
 @property (nonatomic, copy)     kFHHotCityItemClick       itemClickBlk;
 
