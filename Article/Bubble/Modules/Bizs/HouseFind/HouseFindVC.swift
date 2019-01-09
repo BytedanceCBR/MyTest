@@ -173,14 +173,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         return re
     }()
 
-    private lazy var segmentedNav: FWSegmentedControl = {
-        let re = FWSegmentedControl.segmentedWith(
-            scType: SCType.text,
-            scWidthStyle: SCWidthStyle.dynamicFixedSuper,
-            sectionTitleArray: nil,
-            sectionImageArray: nil,
-            sectionSelectedImageArray: nil,
-            frame: CGRect.zero)
+    private lazy var segmentedNav: HMSegmentedControl = {
+        
+        let re = HMSegmentedControl()
+        re.segmentWidthStyle = .dynamic
+        re.selectionStyle = .textWidthStripe
         re.selectionIndicatorHeight = 0
         re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(20),
@@ -450,22 +447,35 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 
                 self.cleanAllDatasourceHistoryCache()
                 self.preLoadHistoryData(items: sections)
-                self.segmentedNav.sectionTitleArray = sections.map { $0.label }
-                if self.segmentedNav.segmentWidthsArray?.count ?? 0 > 0 {
-                    self.segmentedNav.setSelectedSegmentIndex(index: 0, animated: false)
+                self.segmentedNav.sectionTitles = sections.map { $0.label }
+                if self.segmentedNav.sectionTitles?.count ?? 0 > 0 {
+                    self.segmentedNav.setSelectedSegmentIndex(0, animated: false)
                 }
             }else {
-                self.segmentedNav.sectionTitleArray = nil
+                self.segmentedNav.sectionTitles = nil
                 maskView.showEmpty(withTip: "找房服务即将开通，敬请期待", errorImageName: kFHErrorMaskNetWorkErrorImageName, showRetry: false)
             }
             
         } else {
             if EnvContext.shared.client.reachability.connection == .none {
-                self.segmentedNav.sectionTitleArray = houseTypePlaceHolder().map { $0.label }
+                self.segmentedNav.sectionTitles = houseTypePlaceHolder().map { $0.label }
             } else {
-                self.segmentedNav.sectionTitleArray = []
+                self.segmentedNav.sectionTitles = []
             }
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var frame = self.segmentedNav.frame
+        if self.segmentedNav.totalSegmentedControlWidth() <= frame.size.width {
+            
+            frame.size.width = self.segmentedNav.totalSegmentedControlWidth()
+        }
+        self.segmentedNav.frame = frame
+        self.segmentedNav.centerX = self.containerView.width / 2
+        
     }
 
     func setSegmentNayBySections(sections: [SectionItem]) {
