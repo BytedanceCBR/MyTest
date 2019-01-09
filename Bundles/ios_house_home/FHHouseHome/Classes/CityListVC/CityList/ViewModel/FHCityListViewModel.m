@@ -12,6 +12,7 @@
 #import "FHCityListModel.h"
 #import "FHLocManager.h"
 #import "FHUtils.h"
+#import "FHIndexSectionView.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -214,6 +215,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
             [self.sectionsData addObject:cities];
         }
         [self.sectionsKeyData addObjectsFromArray:keys];
+    }
+    // 添加索引
+    if (self.sectionsKeyData.count > 0) {
+        [self.listController addSectionIndexs:self.sectionsKeyData];
     }
 }
 
@@ -467,8 +472,8 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     }
 }
 
-- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [self.sectionsKeyData copy];
-}
+//- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+//    return [self.sectionsKeyData copy];
+//}
 
 @end

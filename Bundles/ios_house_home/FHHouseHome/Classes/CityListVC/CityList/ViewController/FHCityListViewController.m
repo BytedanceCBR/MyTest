@@ -22,9 +22,10 @@
 #import "FHUtils.h"
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
+#import "FHIndexSectionView.h"
 
 // 进入当前页面肯定有城市数据
-@interface FHCityListViewController ()
+@interface FHCityListViewController ()<FHIndexSectionDelegate>
 
 @property (nonatomic, strong)   FHCityListNavBarView       *naviBar;
 @property (nonatomic, strong)   FHCityListLocationBar       *locationBar;
@@ -34,6 +35,8 @@
 
 @property (nonatomic, weak)     TTNavigationController       *weakNavVC;
 @property (nonatomic, assign)   BOOL       disablePanGesture;
+
+@property (nonatomic, weak)     FHIndexSectionView       *sectionView;
 
 @end
 
@@ -51,6 +54,8 @@
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
+    // 禁止左滑
+    self.weakNavVC = self.navigationController;
     [UIApplication sharedApplication].statusBarHidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
@@ -166,8 +171,25 @@
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+    self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [UIColor themeBlue1];
+}
+
+- (void)addSectionIndexs:(NSArray *)indexDatas {
+    if (self.sectionView) {
+        [self.sectionView removeFromSuperview];
+    }
+    if (indexDatas.count > 0) {
+        BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+        CGFloat topOffset = 119 + (isIphoneX ? 44 : 20);
+        FHIndexSectionView *isv = [[FHIndexSectionView alloc] initWithTitles:indexDatas topOffset:topOffset];
+        if (isv) {
+            isv.delegate = self;
+            [self.view addSubview:isv];
+            self.sectionView = isv;
+        }
+    }
 }
 
 // 是否允许定位
@@ -184,8 +206,7 @@
     [self checkLocAuthorization];
     
     if (self.disablePanGesture) {
-        // 禁止左滑
-        self.weakNavVC = self.navigationController;
+        // 禁止滑动手势
         if (self.weakNavVC) {
             self.weakNavVC.panRecognizer.delegate = nil;
             [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
@@ -196,7 +217,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     if (self.disablePanGesture) {
-        // 取消禁止左滑
+        // 取消禁止滑动手势
         if (self.weakNavVC) {
             self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
             [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
@@ -279,6 +300,38 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - FHIndexSectionDelegate
+
+- (void)indexSectionView:(FHIndexSectionView *)view didSelecteedTitle:(NSString *)title atSectoin:(NSInteger)section {
+    if (section >= 0) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+}
+
+- (void)indexSectionViewTouchesBegin {
+    if (self.disablePanGesture) {
+        // 已经禁止滑动手势
+        return;
+    }
+    // 禁止滑动手势
+    if (self.weakNavVC) {
+        self.weakNavVC.panRecognizer.delegate = nil;
+        [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
+    }
+}
+
+- (void)indexSectionViewTouchesEnd {
+    if (self.disablePanGesture) {
+        // 已经禁止滑动手势
+        return;
+    }
+    // 取消禁止滑动手势
+    if (self.weakNavVC) {
+        self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
+        [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
+    }
 }
 
 @end

@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityListViewController : FHBaseViewController
 
+// 添加索引视图
+- (void)addSectionIndexs:(NSArray *)indexDatas;
+
 @end
 
 NS_ASSUME_NONNULL_END

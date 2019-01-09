@@ -37,7 +37,7 @@
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(17);
         make.centerY.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView).offset(-14);
+        make.right.mas_equalTo(self.contentView).offset(-40);
     }];
     // cityNameLabel
     self.cityNameLabel = [[UILabel alloc] init];
