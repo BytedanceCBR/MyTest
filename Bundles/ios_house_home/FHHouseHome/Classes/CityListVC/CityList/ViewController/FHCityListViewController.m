@@ -19,6 +19,9 @@
 #import "TTNavigationController.h"
 #import "UINavigationController+NavigationBarConfig.h"
 #import "FHCitySearchViewController.h"
+#import "FHUtils.h"
+#import "TTThemedAlertController.h"
+#import "TTUIResponderHelper.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()
@@ -78,8 +81,8 @@
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.viewModel loadListCityData];
+        [self checkShowLocationErrorAlert];
     } else {
-        // add by zyk "加载中"
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
     }
@@ -92,6 +95,24 @@
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
             [self requestCurrentLocationWithToast:NO];
+        } else {
+            [self checkShowLocationErrorAlert];
+        }
+    }
+}
+
+- (void)checkShowLocationErrorAlert {
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    if (!hasSelectedCity) {
+        // 定位失败弹窗
+        TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"定位失败，请手动选择城市" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+            
+        }];
+        
+        UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+        if (topVC) {
+            [alertVC showFrom:topVC animated:YES];
         }
     }
 }

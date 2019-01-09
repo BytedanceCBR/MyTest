@@ -1248,11 +1248,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 detailParams <|>
                 houseSearchParamsStay <|>
                 toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
-            recordEvent(key: "stay_page_search",
-                        params: recordParams
-                            .exclude("time")
-                            .exclude("element_type")
-                            .exclude("page_type"))
+//            recordEvent(key: "stay_page_search",
+//                        params: recordParams
+//                            .exclude("time")
+//                            .exclude("element_type")
+//                            .exclude("page_type"))
         }
     }
 

@@ -48,7 +48,7 @@
     }];
     // searchIcon
     _locationIcon = [[UIImageView alloc] init];
-    _locationIcon.image = [UIImage imageNamed:@"group"];
+    _locationIcon.image = [UIImage imageNamed:@"location-name"];
     [self addSubview:_locationIcon];
     [_locationIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.cityNameBtn.mas_right).offset(2);
