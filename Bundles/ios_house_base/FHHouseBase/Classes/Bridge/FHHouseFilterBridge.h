@@ -15,7 +15,14 @@
 
 @required
 
--(id)filterViewModelWithType:(FHHouseType)houseType showAllCondition:(BOOL)showAllCondition showSort:(BOOL)showSort;
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort;
+
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort
+          safeBottomPandding:(CGFloat)safeBottomPandding;
 
 -(UIView *)filterPannel:(id)viewModel;
 

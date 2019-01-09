@@ -103,12 +103,12 @@ import RxCocoa
 
         cellFactory.register(tableView: tableView)
         tableView.register(MultitemCollectionNeighborhoodCell.self, forCellReuseIdentifier: "MultitemCollectionCell-neighborhood")
-        ershouHouseData
-            .map { (response) -> FHHouseDetailContact? in
-                return response?.data?.contact
-            }
-            .bind(to: contactPhone)
-            .disposed(by: disposeBag)
+//        ershouHouseData
+//            .map { (response) -> FHHouseDetailContact? in
+//                return response?.data?.contact
+//            }
+//            .bind(to: contactPhone)
+//            .disposed(by: disposeBag)
         ershouHouseData
             .map { (response) -> Int? in
                 return response?.data?.status
@@ -229,8 +229,11 @@ import RxCocoa
                         self?.dismissMessageAlert?()
                     }
                     if let response = response{
-
-                        self?.contactPhone.accept(response.data?.contact)
+                        if let contact = response.data?.highlightedRealtor {
+                            self?.contactPhone.accept(contact)
+                        } else {
+                            self?.contactPhone.accept(response.data?.contact)
+                        }
 
                         if response.status == 0{
                             if let idStr = response.data?.id

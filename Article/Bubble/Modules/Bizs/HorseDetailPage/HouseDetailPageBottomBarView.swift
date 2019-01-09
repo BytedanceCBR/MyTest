@@ -84,7 +84,7 @@ class HouseDetailPageBottomBarView: UIView {
             make.left.equalTo(nameLabel.snp.right).offset(4)
             make.height.width.equalTo(20)
             make.centerY.equalTo(nameLabel)
-            make.right.lessThanOrEqualTo(self)
+            make.right.lessThanOrEqualTo(leftView).offset(-4)
         }
 
         agencyLabel.snp.makeConstraints { (maker) in
@@ -100,6 +100,19 @@ class HouseDetailPageBottomBarView: UIView {
             maker.left.equalTo(leftView.snp.right).offset(20)
             maker.right.equalTo(-20)
             maker.height.equalTo(44)
+        }
+    }
+
+    func displayLicence(isDisplay: Bool) {
+        licenceIcon.isHidden = !isDisplay
+        if isDisplay {
+            nameLabel.snp.updateConstraints { (make) in
+                make.right.equalTo(licenceIcon.snp.left)
+            }
+        } else {
+            nameLabel.snp.updateConstraints { (make) in
+                make.right.equalToSuperview()
+            }
         }
     }
 

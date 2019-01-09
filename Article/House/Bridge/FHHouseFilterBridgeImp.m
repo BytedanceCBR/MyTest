@@ -43,11 +43,6 @@
 
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
 
-    //    NSArray<FHFilterNodeModel*>* configs = [FHFilterConditionParser getConfigByHouseTypeWithHouseType:ht];
-    //    NSArray<FHFilterNodeModel*>* sortConfig = nil;
-    //    if (showSort) {
-    //        sortConfig = [FHFilterConditionParser getSortConfigByHouseTypeWithHouseType:ht].firstObject.children.firstObject.children;
-    //    }
     factory.safeBottomPandding = safeBottomPandding;
     NSArray<FHFilterNodeModel*>* configs = [FHFilterModelParser getConfigByHouseType:houseType];
     NSArray<FHFilterNodeModel*>* sortConfig = nil;

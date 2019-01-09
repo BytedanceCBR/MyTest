@@ -116,6 +116,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     var houseSearchParamsStay: TracerParams?
 
+    lazy var licenceBrowserViewModel: LicenceBrowserViewModel = {
+        let re = LicenceBrowserViewModel()
+        return re
+    }()
 
     init(houseId: Int64,
          houseType: HouseType,
@@ -638,19 +642,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
             
             detailPageViewModel.contactPhone.skip(1).subscribe(onNext: { [weak self] contactPhone in
-                
                 var titleStr:String = "电话咨询"
                 if let phone = contactPhone?.phone, phone.count > 0 {
-                    
                     if self?.houseType == .secondHandHouse {
-                        
                         self?.refreshSecondHouseBottomBar(contactPhone: contactPhone)
                     }
-                    
                 } else {
-
                     titleStr = "询底价"
-                    
                 }
                 if self?.houseType == .neighborhood {
                     titleStr = "咨询经纪人"
@@ -658,8 +656,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 
                 self?.bottomBar.contactBtn.setTitle(titleStr, for: .normal)
                 self?.bottomBar.contactBtn.setTitle(titleStr, for: .highlighted)
-
-                
             })
                 .disposed(by: disposeBag)
             
@@ -838,10 +834,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     
     // MARK: 设置二手房bottomBar
     func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
-        
         self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
         
-        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 140 : 0
+        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 150 : 0
         self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
         
         if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
@@ -859,22 +854,41 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             self.bottomBar.agencyLabel.text = agencyName
             self.bottomBar.agencyLabel.isHidden = false
-            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
-                maker.right.equalToSuperview()
-            })
-            
+//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+//                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
+//                maker.right.equalTo(self.bottomBar.licenceIcon.snp.left).offset(4)
+//            })
+
         }else {
             
-            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-                maker.centerY.equalTo(self.bottomBar.avatarView)
-                maker.right.equalToSuperview()
-            })
+//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
+//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
+//                maker.centerY.equalTo(self.bottomBar.avatarView)
+//                maker.right.equalToSuperview()
+//            })
             self.bottomBar.agencyLabel.isHidden = true
             
         }
+        var licenseViews: [FHLicenceImageItem] = []
+        if (contactPhone?.businessLicense?.isEmpty ?? true) == false,
+            let businessLicense = contactPhone?.businessLicense {
+            let item = FHLicenceImageItem(url: businessLicense, title: "营业执照")
+            licenseViews.append(item)
+        }
+        if (contactPhone?.certificate?.isEmpty ?? true) == false,
+            let certificate = contactPhone?.certificate {
+            let item = FHLicenceImageItem(url: certificate, title: "从业人员信息卡")
+            licenseViews.append(item)
+        }
+
+        licenceBrowserViewModel.setImages(images: licenseViews)
+
+        self.bottomBar.licenceIcon.rx.tap
+            .bind(onNext: { [weak self] in
+                self?.licenceBrowserViewModel.open()
+            })
+            .disposed(by: disposeBag)
         
         self.bottomBar.leftView.snp.updateConstraints({ (maker) in
             
