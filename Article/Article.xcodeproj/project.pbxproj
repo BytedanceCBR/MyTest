@@ -24993,7 +24993,7 @@
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
-				INFOPLIST_FILE = "NewsLite copy-Info.plist";
+				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
@@ -25101,7 +25101,7 @@
 					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
-				INFOPLIST_FILE = "NewsLite copy-Info.plist";
+				INFOPLIST_FILE = "News/News-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
