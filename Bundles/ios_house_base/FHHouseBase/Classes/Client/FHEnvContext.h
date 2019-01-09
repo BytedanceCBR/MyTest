@@ -24,7 +24,7 @@
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
-static NSString *const kUserDefaultCityId = @"config_key_select_city_id"; // v0.5替换，后续可以考虑删除
+static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";
 
 static NSString *const kUserHasSelectedCityKey = @"k_fh_has_sel_city";
 
