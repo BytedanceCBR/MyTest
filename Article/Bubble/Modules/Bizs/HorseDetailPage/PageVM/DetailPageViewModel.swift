@@ -274,6 +274,9 @@ extension DetailPageViewModel {
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
                             }
+                            NotificationCenter.default.post(name: .followUpDidChange,
+                                                            object: nil,
+                                                            userInfo: ["status": 1, "followup_id": followId])
                         }else if response?.data?.followStatus ?? 0 == 1 {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {

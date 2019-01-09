@@ -1391,6 +1391,10 @@
 		B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
+		B30912C421E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */; };
+		B30912C521E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */; };
+		B30912C721E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
+		B30912C821E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
 		B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
 		B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
@@ -7885,6 +7889,8 @@
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
 		B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRealtorDetailWebViewController.h; sourceTree = "<group>"; };
 		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
+		B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenceBrowserViewModel.swift; sourceTree = "<group>"; };
+		B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRealtorDetailWebViewControllerImpl.swift; sourceTree = "<group>"; };
 		B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCitySwitcher.swift; sourceTree = "<group>"; };
 		B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentDetailPageVC.h; sourceTree = "<group>"; };
 		B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentDetailPageVC.m; sourceTree = "<group>"; };
@@ -14867,6 +14873,8 @@
 				B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */,
 				B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */,
 				B3C18BBB21AD3282005CF234 /* FHHouseShareViewModel.swift */,
+				B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */,
+				B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */,
 			);
 			path = Rent;
 			sourceTree = "<group>";
@@ -21408,6 +21416,7 @@
 				B373C91A2174587A008F9905 /* ExploreDetailAppVideoADView.m in Sources */,
 				B373C91B2174587A008F9905 /* SubscribeEntryGetLocalDataOperation.m in Sources */,
 				B373C91C2174587A008F9905 /* TTRNBundleInfoBuilder.m in Sources */,
+				B30912C821E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */,
 				B373C91D2174587A008F9905 /* TTAdCanvasFullPicCell.m in Sources */,
 				B373C91E2174587A008F9905 /* ExploreArticleCardCellView.m in Sources */,
 				B373C91F2174587A008F9905 /* AKTaskSettingHelper.m in Sources */,
@@ -21851,6 +21860,7 @@
 				B373CACE2174587A008F9905 /* ChatCell.swift in Sources */,
 				B373CACF2174587A008F9905 /* TTVFeedItem+ComputedProperties.m in Sources */,
 				B373CAD02174587A008F9905 /* TTDetailModel+TTVTrackToolbarMode.m in Sources */,
+				B30912C521E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */,
 				B373CAD12174587A008F9905 /* TTMomentProfileBaseView.m in Sources */,
 				B373CAD22174587A008F9905 /* NewsBaseDelegate+Notification.m in Sources */,
 				B373CAD32174587A008F9905 /* ExploreVideoTopView.m in Sources */,
@@ -23146,6 +23156,7 @@
 				FEFA53A4205FB1A8001F50D8 /* ExploreDetailAppVideoADView.m in Sources */,
 				FEFA53A5205FB1A8001F50D8 /* SubscribeEntryGetLocalDataOperation.m in Sources */,
 				FEFA53A8205FB1A8001F50D8 /* TTRNBundleInfoBuilder.m in Sources */,
+				B30912C721E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */,
 				FEFA53A9205FB1A8001F50D8 /* TTAdCanvasFullPicCell.m in Sources */,
 				FEFA53AA205FB1A8001F50D8 /* ExploreArticleCardCellView.m in Sources */,
 				FEFA53AB205FB1A8001F50D8 /* AKTaskSettingHelper.m in Sources */,
@@ -23589,6 +23600,7 @@
 				B388CC072142652B00653188 /* ChatCell.swift in Sources */,
 				FEFA55A0205FB1A8001F50D8 /* TTVFeedItem+ComputedProperties.m in Sources */,
 				FEFA55A5205FB1A8001F50D8 /* TTDetailModel+TTVTrackToolbarMode.m in Sources */,
+				B30912C421E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */,
 				D507C735206B46080072A03E /* TTMomentProfileBaseView.m in Sources */,
 				FEFA55A6205FB1A8001F50D8 /* NewsBaseDelegate+Notification.m in Sources */,
 				FEFA55A7205FB1A8001F50D8 /* ExploreVideoTopView.m in Sources */,

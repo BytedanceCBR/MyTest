@@ -34,6 +34,7 @@
 @property (nonatomic , assign) NSInteger currentSelectIndex;
 @property (nonatomic , assign) NSInteger lastSelectIndex;
 @property (nonatomic , strong) NSMutableDictionary *sugDict;
+@property (nonatomic , strong) RACDisposable *configDisposeble;
 
 @end
 
@@ -72,7 +73,7 @@
     [self refreshDataWithConfigDataModel];
     //订阅config变化
     __block BOOL isFirstChange = YES;
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+    self.configDisposeble = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         
         //过滤多余刷新
         if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
@@ -381,6 +382,13 @@
     }
 
 }
+
+- (void)dealloc
+{
+    [_configDisposeble dispose];
+}
+
+#pragma mark - log
 
 - (void)viewWillAppear:(BOOL)animated
 {

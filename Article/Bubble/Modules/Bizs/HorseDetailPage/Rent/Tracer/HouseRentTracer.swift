@@ -8,31 +8,46 @@
 import Foundation
 @objc
 class HouseRentTracer: NSObject {
+    @objc
     var logPb: Any?
+    @objc
     var pageType: String
     @objc
     var houseType: String
+    @objc
     var houseId: Int64
     var stayPageParams: TracerParams?
+    @objc
     var cardType: String
+    @objc
     var enterFrom: String
+    @objc
     var elementFrom: String
     @objc
     var rank: String
     @objc
     var imprId: String
+    @objc
     var hasRecordGoDetail: Bool
     @objc
     var searchId: String?
     @objc
     var groupId: String?
+    @objc
     var originFrom : String?
+    @objc
     var originSearchId : String?
+    @objc
     var enterQuery: String?
+    @objc
     var searchQuery: String?
+    @objc
     var queryType: String?
+    @objc
     var time: String?
+    @objc
     var offset: String?
+    @objc
     var limit: String?
     init(pageType: String,
          houseType: String,

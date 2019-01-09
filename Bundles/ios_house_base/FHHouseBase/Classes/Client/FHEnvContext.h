@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveGeneralConfig:(FHConfigModel *)model;
 
 //从缓存中获取config数据
-- (FHConfigDataModel *)getConfigFromCache;
+- (nullable FHConfigDataModel *)getConfigFromCache;
 
 //从本地磁盘获取config数据
 - (FHConfigDataModel *)readConfigFromLocal;

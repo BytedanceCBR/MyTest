@@ -120,5 +120,9 @@
 #import "FHMapSearchOpenUrlDelegate.h"
 #import "TTLocationManager.h"
 #import "FHLocManager.h"
+#import "FHRealtorDetailWebViewController.h"
+#import "FHErrorView.h"
+#import "HMSegmentedControl.h"
+
 
 #endif /* Article_Bridging_Header_h */

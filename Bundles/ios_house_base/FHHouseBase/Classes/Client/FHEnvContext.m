@@ -233,7 +233,12 @@
     //检测是否需要打开城市列表
     [self check2CityList];
     
-    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
+    NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
+    if (!channelName) {
+        channelName = @"App Store";
+    }
+    
+    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
         conf.domain = [FHURLSettings baseURL];
@@ -332,7 +337,7 @@
     }
 }
 
-- (FHConfigDataModel *)getConfigFromCache
+- (nullable FHConfigDataModel *)getConfigFromCache
 {
     if (self.generalBizConfig.configCache) {
         return self.generalBizConfig.configCache;

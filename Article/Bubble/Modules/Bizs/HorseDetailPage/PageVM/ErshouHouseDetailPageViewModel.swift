@@ -103,12 +103,12 @@ import RxCocoa
 
         cellFactory.register(tableView: tableView)
         tableView.register(MultitemCollectionNeighborhoodCell.self, forCellReuseIdentifier: "MultitemCollectionCell-neighborhood")
-        ershouHouseData
-            .map { (response) -> FHHouseDetailContact? in
-                return response?.data?.contact
-            }
-            .bind(to: contactPhone)
-            .disposed(by: disposeBag)
+//        ershouHouseData
+//            .map { (response) -> FHHouseDetailContact? in
+//                return response?.data?.contact
+//            }
+//            .bind(to: contactPhone)
+//            .disposed(by: disposeBag)
         ershouHouseData
             .map { (response) -> Int? in
                 return response?.data?.status
@@ -151,6 +151,17 @@ import RxCocoa
                 self?.traceDisplayCell(tableView: tableView, datas: self?.dataSource.datas ?? [])
                 self?.traceCellByVisibleRect(tableView: tableView)
             }.disposed(by: disposeBag)
+        NotificationCenter.default.rx
+            .notification(.followUpDidChange)
+            .bind { [unowned self] (notification) in
+                if let followupId = notification.userInfo?["followup_id"] as? String,
+                    let status = notification.userInfo?["status"] as? Int {
+                    if followupId == "\(self.houseId)" {
+                        self.followStatus.accept(Result.success(status == 1))
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
 
         self.bindFollowPage()
     }
@@ -229,8 +240,11 @@ import RxCocoa
                         self?.dismissMessageAlert?()
                     }
                     if let response = response{
-
-                        self?.contactPhone.accept(response.data?.contact)
+                        if let contact = response.data?.highlightedRealtor {
+                            self?.contactPhone.accept(contact)
+                        } else {
+                            self?.contactPhone.accept(response.data?.contact)
+                        }
 
                         if response.status == 0{
                             if let idStr = response.data?.id
@@ -387,7 +401,7 @@ import RxCocoa
                 <- parsePropertyListNode(data)
                 <- parseAgentListCellGroup(data ,traceModel: tracerModel)
                 <- parseFlineNode(data.baseInfo != nil ? 6: 0)
-                <- parseHouseOutlineHeaderNode("房源概况", data,traceExtension: traceExtension) {
+                <- parseHouseOutlineHeaderNode("房源概况", data , originSearchId: relateNeighborhoodData.value?.data?.searchId , originFrom: "old_detail",traceExtension: traceExtension) {
                     (data.outLineOverreview == nil) ? false : true
                 }
                 <- parseHouseOutlineListNode(data)
@@ -557,7 +571,17 @@ import RxCocoa
         let header = combineParser(left: parseFlineNode(),
                                    right: parseHeaderNode("推荐经纪人", adjustBottomSpace: -10))
         return parseNodeWrapper(preNode: header,
-                                wrapedNode: parseAgentListCell(data: data, traceModel: tracerModel))
+                                wrapedNode: parseAgentListCell(data: data,
+                                                               traceModel: tracerModel, followUp: followUpAction()))
+    }
+
+    func followUpAction() -> () -> Void {
+        return { [unowned self] in
+            self.followHouseItem(houseType: .secondHandHouse,
+                                 followAction: .ershouHouse,
+                                 followId: "\(self.houseId)",
+                                 disposeBag: self.disposeBag)()
+        }
     }
 
     fileprivate func openFloorPanDetailPage(
