@@ -19,6 +19,8 @@
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
+#import "FHHouseListRedirectTipView.h"
+#import "FHHouseListModel.h"
 
 #define kFilterBarHeight 44
 
@@ -30,6 +32,7 @@
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
+@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
@@ -332,8 +335,14 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
+    }];
+    
+    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.containerView);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.height.mas_equalTo(0);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -357,7 +366,8 @@
 
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
-
+    [self.viewModel setRedirectTipView:self.redirectTipView];
+    
     [self.houseFilterViewModel trigerConditionChanged];
 
 }
@@ -395,10 +405,13 @@
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
-    
+
     //notifyview
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
+    
+    _redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:_redirectTipView];
 
     [self.view addSubview:self.navbar];
 
@@ -415,7 +428,7 @@
 
 #pragma mark - show notify
 
--(void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
+- (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
@@ -436,8 +449,7 @@
 
 -(void)showErrorMaskView
 {
-    //
-//    [self.viewModel reloadData];
+
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

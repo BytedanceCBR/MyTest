@@ -57,6 +57,7 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
     self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
+    self.retryConfigCount = 3;
 }
 
 - (void)saveCurrentLocationData {
@@ -225,12 +226,25 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
             completion(regeocode);
         } else {
             [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+                if (!model) {
+                    self.retryConfigCount -= 1;
+                    if (self.retryConfigCount >= 0)
+                    {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self requestCurrentLocation:NO];
+                            });
+                        });
+                    }
+                    return;
+                }
                 //更新config
                 [wSelf updateAllConfig:model];
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                     self.isShowSwitch = NO;
                 }
+                self.retryConfigCount = 3;
             }];
         }
     }];
@@ -238,7 +252,6 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
 
 - (void)requestCurrentLocation:(BOOL)showAlert andShowSwitch:(BOOL)switchCity
 {
-
     self.isShowSwitch = switchCity;
     [self requestCurrentLocation:showAlert completion:NULL];
 }

@@ -26,9 +26,14 @@
 #import "FHMapSearchOpenUrlDelegate.h"
 #import "FHUserTracker.h"
 #import "FHHouseBridgeManager.h"
+#import "FHHouseListRedirectTipView.h"
+#import "Masonry.h"
+#import "FHEnvContext.h"
+
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
-@property(nonatomic , strong) FHErrorView *maskView;
+@property(nonatomic , weak) FHErrorView *maskView;
+@property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
 
 @property(nonatomic, weak) UITableView *tableView;
 
@@ -53,6 +58,8 @@
 @property (nonatomic, copy) NSString *mapFindHouseOpenUrl;
 @property(nonatomic , strong) NSMutableDictionary *houseShowCache;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
+@property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
+@property (nonatomic , assign) BOOL isShowRedirectTips;
 
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
@@ -70,6 +77,56 @@
         
         [wself loadData:wself.isRefresh];
     };
+}
+
+-(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView
+{
+    __weak typeof(self)wself = self;
+    _redirectTipView = redirectTipView;
+    _redirectTipView.clickCloseBlock = ^{
+        [wself closeRedirectTip];
+    };
+    _redirectTipView.clickRightBlock = ^{
+        [wself clickRedirectTip];
+    };
+    
+}
+
+-(void)updateRedirectTipInfo {
+    
+    if (self.isShowRedirectTips && self.redirectTips) {
+        
+        self.redirectTipView.hidden = NO;
+        self.redirectTipView.text = self.redirectTips.text;
+        self.redirectTipView.text1 = self.redirectTips.text2;
+        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(36);
+        }];
+    }else {
+        self.redirectTipView.hidden = YES;
+        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+}
+
+-(void)closeRedirectTip {
+    
+    self.isShowRedirectTips = NO;
+    self.redirectTipView.hidden = YES;
+    [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
+}
+
+-(void)clickRedirectTip {
+    
+    if (self.redirectTips.openUrl.length > 0) {
+        
+        [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
+            
+        }];
+    }
 }
 
 -(instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj {
@@ -280,14 +337,14 @@
     }
     
     if (model) {
-        
-        
+
         NSString *searchId;
         NSString *houseListOpenUrl;
         NSString *mapFindHouseOpenUrl;
         NSArray *itemArray = @[];
         BOOL hasMore = NO;
         NSString *refreshTip;
+        FHSearchHouseDataRedirectTipsModel *redirectTips;
 
         if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
@@ -298,7 +355,8 @@
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
-
+            redirectTips = houseModel.redirectTips;
+            
         }else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -307,6 +365,7 @@
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
+            redirectTips = houseModel.redirectTips;
 
         }else if ([model isKindOfClass:[FHHouseRentModel class]]) {
 
@@ -317,6 +376,7 @@
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
+            redirectTips = houseModel.redirectTips;
 
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
 
@@ -326,6 +386,7 @@
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
+            redirectTips = houseModel.redirectTips;
 
         }
         
@@ -353,6 +414,9 @@
         self.houseListOpenUrl = houseListOpenUrl;
         self.mapFindHouseOpenUrl = mapFindHouseOpenUrl;
         
+        self.redirectTips = redirectTips;
+        [self updateRedirectTipInfo];
+
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -621,6 +685,8 @@
 
 #pragma mark - sug delegate
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
+    
+    self.isShowRedirectTips = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         self.houseSearchDic = allInfo[@"houseSearch"];
