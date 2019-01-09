@@ -229,6 +229,8 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate var contentOffsetDisposeBag : DisposeBag?
     fileprivate var configDisposable : RACDisposable?
 
+    fileprivate var searchConfig: SearchConfigResponseData?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hidesBottomBarWhenPushed = false
@@ -240,7 +242,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         setupViews()
 
         segmentedNav.indexChangeBlock = { [unowned self] index in
-            if let config = EnvContext.shared.client.configCacheSubject.value {
+            if let config = self.searchConfig {
                 let items = houseTypeSectionByConfig(config: config)
 
                 if items.count > index {
@@ -267,7 +269,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                                            pageView: containerView)
         pageControl?.didPageIndexChanged = { [unowned self] index in
             self.view.endEditing(true)
-            if let config = EnvContext.shared.client.configCacheSubject.value {
+            if let config = self.searchConfig {
                 let items = houseTypeSectionByConfig(config: config)
 
                 if items.count > index {
@@ -282,8 +284,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
-        if EnvContext.shared.client.reachability.connection == .none,
-            EnvContext.shared.client.configCacheSubject.value != nil {
+        if EnvContext.shared.client.reachability.connection == .none,let config = self.searchConfig {
             createPageViews()
         }
 
@@ -310,16 +311,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func getSideMargin() -> CGFloat {
-        var sideMargin: CGFloat = 30
-        if let config = EnvContext.shared.client.configCacheSubject.value {
-            if houseTypeSectionByConfig(config: config).count < 3 {
-                if UIScreen.main.bounds.width < 370 {
-                    sideMargin = 90
-                } else {
-                    sideMargin = 100
-                }
-            }
-        }
+        var sideMargin: CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 45 : 15
         return sideMargin
     }
 
@@ -427,6 +419,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             
             guard let configStr = configModel.toJSONString() else { return }
             guard let config = SearchConfigResponseData(JSONString: configStr as String) else { return }
+            self.searchConfig = config
         
         // 获取searchConfig
 //        EnvContext.shared.client.loadSearchCondition()
@@ -472,9 +465,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         if self.segmentedNav.totalSegmentedControlWidth() <= frame.size.width {
             
             frame.size.width = self.segmentedNav.totalSegmentedControlWidth()
+            self.segmentedNav.frame = frame
+            self.segmentedNav.centerX = self.containerView.width / 2
+            self.segmentedNav.isUserDraggable = false
         }
-        self.segmentedNav.frame = frame
-        self.segmentedNav.centerX = self.containerView.width / 2
         
     }
 
@@ -489,7 +483,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
         EnvContext.shared.client.loadSearchCondition()
         //如果首次进入无网络，需要显示4个category。网络恢复后，拉取config会触发再次c刷新
-        if EnvContext.shared.client.reachability.connection == .none && EnvContext.shared.client.configCacheSubject.value == nil {
+        if EnvContext.shared.client.reachability.connection == .none && self.searchConfig == nil {
             let pages = houseTypePlaceHolder().map { (item) -> FHFindHouseCategoryPageView in
                 let re = FHFindHouseCategoryPageView(collectionView: nil, controler: errorInfoDisplayController)
                 return re
@@ -505,7 +499,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             return
         }
 
-        if let config = EnvContext.shared.client.configCacheSubject.value {
+        if let config = self.searchConfig {
             let items = houseTypeSectionByConfig(config: config)
             let pages = items.map { (item) -> FHFindHouseCategoryPageView in
                 let ds = dataSourceByHouseType(houseType: item.houseType)
@@ -588,7 +582,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             errorInfoDisplayController.onNetworkUnavailable()
             searchBtn.isHidden = true
         } else {
-            if EnvContext.shared.client.configCacheSubject.value != nil {
+            if let config = self.searchConfig {
                 errorInfoDisplayController.onRequestNormalData()
                 searchBtn.isHidden = false
             } else {
