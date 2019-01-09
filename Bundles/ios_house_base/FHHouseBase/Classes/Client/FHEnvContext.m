@@ -289,7 +289,7 @@
 
 - (void)check2CityList {
     // 城市是否选择，未选择直接跳转城市列表页面
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
         // add by zyk，参数需要修改
         NSDictionary* info = @{@"animated":@(NO),
@@ -309,7 +309,11 @@
 
 // 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
 - (void)checkExchangeCanOpenURLMethod {
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    if([(id)[FHUtils contentForKey:kUserDefaultCityId] integerValue] > 0) {
+        // 旧版本选择过城市
+        [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
+    }
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
         // 交换方法
         Class cls = [TTRoute class];
@@ -412,7 +416,7 @@
 @implementation TTRoute (fhCityList)
 
 - (BOOL)toSwizzled_canOpenURL:(NSURL *)url {
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     BOOL isCityListUrl = [url.absoluteString containsString:@"sslocal://city_list"];
     if (hasSelectedCity || isCityListUrl) {
         return [self toSwizzled_canOpenURL:url];

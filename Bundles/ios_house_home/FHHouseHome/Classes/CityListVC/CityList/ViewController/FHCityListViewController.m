@@ -54,7 +54,7 @@
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
-    // 禁止左滑
+    // 禁止左滑-使用
     self.weakNavVC = self.navigationController;
     [UIApplication sharedApplication].statusBarHidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
@@ -107,7 +107,7 @@
 }
 
 - (void)checkShowLocationErrorAlert {
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
         // 定位失败弹窗
         TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"定位失败，请手动选择城市" message:nil preferredType:TTThemedAlertControllerTypeAlert];
