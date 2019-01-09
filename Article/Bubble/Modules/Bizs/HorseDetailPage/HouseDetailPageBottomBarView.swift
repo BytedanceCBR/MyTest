@@ -7,8 +7,8 @@ import Foundation
 import SnapKit
 class HouseDetailPageBottomBarView: UIView {
 
-    lazy var leftView: UIView = {
-        let re = UIView()
+    lazy var leftView: UIControl = {
+        let re = UIControl()
         return re
     }()
     

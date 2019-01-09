@@ -894,7 +894,33 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             
             maker.width.equalTo(leftWidth)
         })
+        if leftWidth > 0, let contactPhone = contactPhone {
+            self.bindJumpToRealtorDetail(contactPhone: contactPhone, targetView: self.bottomBar.leftView)
+        }
+
         
+    }
+
+    fileprivate func bindJumpToRealtorDetail(contactPhone: FHHouseDetailContact, targetView: UIControl) {
+        let delegate = FHRealtorDetailWebViewControllerDelegateImpl()
+        delegate.followUp = self.detailPageViewModel?.followHouseItem(houseType: .secondHandHouse,
+                                                      followAction: .ershouHouse,
+                                                      followId: "\(self.houseId)",
+                                                      disposeBag: self.disposeBag)
+
+        targetView.rx.controlEvent(.touchUpInside).bind { [unowned self] () in
+            if let realtorId = contactPhone.realtorId ,
+                let traceModel = self.detailPageViewModel?.tracerModel {
+                let reportParams = getRealtorReportParams(traceModel: traceModel)
+                let openUrl = "fschema://realtor_detail"
+                let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
+                let info: [String: Any] = ["url": jumpUrl,
+                                           "title": "经纪人详情页",
+                                           "delegate": delegate]
+                let userInfo = TTRouteUserInfo(info: info)
+                TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+            }
+        }.disposed(by: disposeBag)
     }
 
     fileprivate func bindShareAction() {

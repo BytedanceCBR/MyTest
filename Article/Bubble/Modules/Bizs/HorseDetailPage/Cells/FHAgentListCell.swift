@@ -377,12 +377,14 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
 }
 
-func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> () -> TableSectionNode? {
+func parseAgentListCell(data: ErshouHouseData,
+                        traceModel: HouseRentTracer?,
+                        followUp:@escaping () -> Void) -> () -> TableSectionNode? {
 
     if data.recommendedRealtors?.count == 0 {
         return { nil }
     }
-    let cellRender = curry(fillAgentListCell)(data)(traceModel)
+    let cellRender = curry(fillAgentListCell)(data)(traceModel)(followUp)
     let params = TracerParams.momoid() <|>
         EnvContext.shared.homePageParams <|>
         toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
@@ -404,11 +406,12 @@ func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> 
 func fillAgentListCell(
     data: ErshouHouseData,
     traceModel: HouseRentTracer?,
+    followUpAction:@escaping () -> Void,
     cell: BaseUITableViewCell) {
     guard let theCell = cell as? FHAgentListCell else {
         return
     }
-
+    theCell.phoneCallViewModel.followUpAction = followUpAction
     let items = data.recommendedRealtors?.take(5).enumerated()
         .map({ (e) -> ItemView  in
             let (offset, contact) = e
@@ -432,6 +435,9 @@ func fillAgentListCell(
             itemView.licenceIcon.rx.tap
                 .bind(onNext: theCell.openPhotoByContact(contact: contact))
                 .disposed(by: theCell.disposeBag)
+
+            let delegate = FHRealtorDetailWebViewControllerDelegateImpl()
+            delegate.followUp = followUpAction
             //页面跳转
             itemView.rx.controlEvent(.touchUpInside)
                 .bind {
@@ -440,7 +446,7 @@ func fillAgentListCell(
 //                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
 //                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=104764519372&report_params=\(reportParams)"
                     let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
-                    let info: [String: Any] = ["url": jumpUrl, "title": "经纪人详情页"]
+                    let info: [String: Any] = ["url": jumpUrl, "title": "经纪人详情页", "delegate": delegate]
                     let userInfo = TTRouteUserInfo(info: info)
                     TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }

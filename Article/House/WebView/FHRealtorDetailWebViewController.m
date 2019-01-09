@@ -22,8 +22,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     _phoneCallViewModel = [[FHPhoneCallViewModel alloc] init];
     _tracerModel = [self.userInfo allInfo][@"trace"];
+    _delegate = [self.userInfo allInfo][@"delegate"];
     [self.webview.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         NSString* realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
@@ -34,6 +36,7 @@
                                                                   houseId:_tracerModel.groupId
                                                                  searchId:_tracerModel.searchId
                                                                    imprId: _tracerModel.imprId];
+            [_delegate followUpAction];
         }
         completion(TTRJSBMsgSuccess, @{});
     } forMethodName:@"phoneSwitch"];

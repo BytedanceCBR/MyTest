@@ -13,6 +13,8 @@ class FHPhoneCallViewModel: NSObject {
 
     let theDisposeBag = DisposeBag()
 
+    var followUpAction: (() -> Void)?
+
     func bindCallBtn(btn: UIButton,
                      rank: String,
                      houseId: Int64,
@@ -83,9 +85,11 @@ class FHPhoneCallViewModel: NSObject {
                     Utils.telecall(phoneNumber: phone)
                     tracer(false)
                 }
+                self.followUpAction?()
             }, onError: { (error) in
                 Utils.telecall(phoneNumber: phone)
                 tracer(false)
+                self.followUpAction?()
             })
             .disposed(by: disposeBag)
 

@@ -560,7 +560,17 @@ import RxCocoa
         let header = combineParser(left: parseFlineNode(),
                                    right: parseHeaderNode("推荐经纪人", adjustBottomSpace: -10))
         return parseNodeWrapper(preNode: header,
-                                wrapedNode: parseAgentListCell(data: data, traceModel: tracerModel))
+                                wrapedNode: parseAgentListCell(data: data,
+                                                               traceModel: tracerModel, followUp: followUpAction()))
+    }
+
+    func followUpAction() -> () -> Void {
+        return { [unowned self] in
+            self.followHouseItem(houseType: .secondHandHouse,
+                                 followAction: .ershouHouse,
+                                 followId: "\(self.houseId)",
+                                 disposeBag: self.disposeBag)()
+        }
     }
 
     fileprivate func openFloorPanDetailPage(
