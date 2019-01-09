@@ -311,7 +311,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:open_url] userInfo:TTRouteUserInfoWithDict(params)];
     }
-    else if ([actionType isEqualToString:@"web"] && !isEmptyString(web_url)) {
+    else if ([actionType isEqualToString:@"web"] && !isEmptyString(web_url) && [web_url hasPrefix:@"http"]) {
         NSMutableDictionary *conditions = [NSMutableDictionary dictionaryWithCapacity:5];
         [conditions setValue:@"splash" forKey:@"gd_label"];
         [conditions setValue:@(NewsGoDetailFromSourceSplashAD) forKey:kNewsGoDetailFromSourceKey];
