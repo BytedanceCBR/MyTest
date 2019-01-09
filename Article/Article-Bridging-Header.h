@@ -121,5 +121,6 @@
 #import "TTLocationManager.h"
 #import "FHLocManager.h"
 #import "FHRealtorDetailWebViewController.h"
+#import "FHErrorView.h"
 
 #endif /* Article_Bridging_Header_h */
