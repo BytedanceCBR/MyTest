@@ -12,6 +12,7 @@
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
 #import "Bubble-Swift.h"
+#import "TTTabBarManager.h"
 
 @implementation FHHomeBridgeImp
 
@@ -56,4 +57,15 @@
     NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
 }
+
+- (void)jumpToTabbarFirst
+{
+    NSString *firstTabItemIdentifier = [[TTTabBarManager sharedTTTabBarManager].tabItems firstObject].identifier;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        [userInfo setValue:firstTabItemIdentifier forKey:@"tag"];
+        [userInfo copy];
+    })];
+}
+
 @end

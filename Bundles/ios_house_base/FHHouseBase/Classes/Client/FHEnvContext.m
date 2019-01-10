@@ -61,7 +61,6 @@
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
 
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
-            [[ToastManager manager] dismissCustomLoading];
             if (isSuccess) {
                 FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
                 if (configModel.cityAvailability.enable) {
@@ -83,8 +82,10 @@
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
+                    [[ToastManager manager] dismissCustomLoading];
                 }else
                 {
+                    [[ToastManager manager] dismissCustomLoading];
                     if(completion)
                     {
                         completion(YES);
@@ -95,6 +96,7 @@
                 }
             }else
             {
+                [[ToastManager manager] dismissCustomLoading];
                 if(completion)
                 {
                     completion(NO);

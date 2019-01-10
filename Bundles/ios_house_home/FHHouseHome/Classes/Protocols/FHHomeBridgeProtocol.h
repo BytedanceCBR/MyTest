@@ -22,6 +22,8 @@
 
 - (void)jumpCountryList:(UIViewController *)viewController;
 
+- (void)jumpToTabbarFirst;
+
 @end
 
 #endif /* FHHomeBridgeProtocol_h */
