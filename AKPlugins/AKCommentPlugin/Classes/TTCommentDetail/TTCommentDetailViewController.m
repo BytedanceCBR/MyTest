@@ -883,8 +883,6 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
     if (!model.userDigg) {
         [TTTracker eventV3:@"rt_like" params:params];
-    } else {
-        
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;

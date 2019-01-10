@@ -26,8 +26,6 @@
 #import <TTDiggButton/TTDiggButton.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import "TTTracker.h"
-#import "FHTraceEventUtils.h"
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
