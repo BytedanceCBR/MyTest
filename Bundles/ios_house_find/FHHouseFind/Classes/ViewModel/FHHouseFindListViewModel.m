@@ -190,10 +190,6 @@
 
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
-    self.segmentView.selectedSegmentIndex = 0;
-    if (self.itemList.count > 0) {
-        self.currentSelectIndex = 0;
-    }
 }
 
 - (void)jump2GuessVC

@@ -167,13 +167,6 @@
     return self;
 }
 
--(void)setTracerModel:(FHTracerModel *)tracerModel {
-    
-    _tracerModel = tracerModel;
-    self.originFrom = tracerModel.originFrom;
-
-}
-
 -(void)configTableView
 {
     self.tableView.delegate = self;
