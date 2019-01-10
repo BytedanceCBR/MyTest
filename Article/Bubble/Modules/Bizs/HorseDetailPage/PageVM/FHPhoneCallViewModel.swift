@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
 @objc
 class FHPhoneCallViewModel: NSObject {
 
@@ -23,6 +24,7 @@ class FHPhoneCallViewModel: NSObject {
                      contact: FHHouseDetailContact,
                      disposeBag: DisposeBag) {
         btn.rx.tap
+            .debounce(0.5, scheduler: MainScheduler.instance)
             .bind { [weak self] () in
                 let searchId = traceModel?.searchId ?? "be_null"
 
@@ -101,7 +103,8 @@ class FHPhoneCallViewModel: NSObject {
                                      phone: String,
                                      houseId: String,
                                      searchId: String,
-                                     imprId: String) {
+                                     imprId: String,
+                                     onSuccessed: @escaping () -> Void) {
         var contact = FHHouseDetailContact()
         contact.realtorId = realtorId
         contact.phone = phone
@@ -116,6 +119,7 @@ class FHPhoneCallViewModel: NSObject {
                                                    contact: contact,
                                                    isVirtualNumber: isVirtualNumber,
                                                    traceModel: traceModel)
+                                    onSuccessed()
                                 }
         }
     }
