@@ -25,6 +25,7 @@
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"
 #import <TTKitchenHeader.h>
+#import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceGroupDraftKey @"PersistenceGroupDraftKey" // 对应文章、帖子
@@ -573,11 +574,9 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 [paramsDict setValue:[self categoryName] forKey:@"category_name"];
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
                 if (self.enterFrom.length > 0) {
-                    
-                    [paramsDict setValue:[self enterFromString]  forKey:@"enter_from"];
+                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
                     [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
                 }
-                
 
                 if (self.publishStatusForTrack == 1) {
                     self.publishStatusForTrack = 2;
