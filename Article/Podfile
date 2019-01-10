@@ -149,9 +149,9 @@ def appPods
     pod 'TTReporter', '0.2.1'
     #-----头条号---
     pod 'TTAdModule', '0.1.25'
-#    pod 'TTAdSplashSDK', '0.4.1'
-    pod 'TTAdSplashSDK', :git=> 'git@code.byted.org:TTIOS/tt_splash_sdk.git', :branch=> 'feature_multi_log_version_tgq'
-    
+    pod 'TTAdSplashSDK', '0.4.4'
+#    pod 'TTAdSplashSDK', :git=> 'git@code.byted.org:TTIOS/tt_splash_sdk.git', :branch=> 'feature_multi_log_version_tgq'
+
     pod 'TTEntry', '0.1.6'
     
     pod 'TTBridgeUnify', '0.3.19',:subspecs => [
