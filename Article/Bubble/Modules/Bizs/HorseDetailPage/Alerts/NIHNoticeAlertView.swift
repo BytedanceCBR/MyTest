@@ -295,6 +295,18 @@ class NHSendPhoneNumberPanel: UIView,UITextFieldDelegate {
         return re
     }()
     
+    // 隐私保护声明
+    lazy var infoProtectedDecBtn: UIButton = {
+        let re = UIButton()
+        re.backgroundColor = UIColor.clear
+        re.titleLabel?.font = CommonUIStyle.Font.pingFangRegular(10)
+        re.setTitle("提交即视为同意《个人信息保护声明》", for: .normal)
+        re.setTitle("提交即视为同意《个人信息保护声明》", for: .highlighted)
+        re.setTitleColor(hexStringToUIColor(hex: "#a1aab3"), for: .normal)
+        re.setTitleColor(hexStringToUIColor(hex: "#a1aab3"), for: .highlighted)
+        return re
+    }()
+    
     
     init(subTitle: String) {
         super.init(frame: CGRect.zero)
@@ -368,6 +380,21 @@ class NHSendPhoneNumberPanel: UIView,UITextFieldDelegate {
         }
         confirmBtn.isEnabled = true
         
+        addSubview(infoProtectedDecBtn)
+        infoProtectedDecBtn.snp.makeConstraints { maker in
+            maker.centerX.equalTo(self).offset(1)
+            maker.height.equalTo(15)
+            maker.bottom.equalTo(self).offset(-13);
+        }
+        infoProtectedDecBtn.addTarget(self, action: #selector(infoBtnClick(button:)), for: .touchUpInside)
+    }
+    
+    @objc func infoBtnClick(button:UIButton) {
+        self.phoneTextField.resignFirstResponder()
+        let openUrl = "snssdk1370://webview_oc"
+        let info: [String: Any] = ["url": "https://www.baidu.com", "title": "测试页面"]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
     }
     
     func enableConfirmBtn(button: UIButton, isEnabled: Bool) {

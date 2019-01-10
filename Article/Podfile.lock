@@ -619,7 +619,7 @@ PODS:
     - TTInstallService
     - TTMonitor
     - TTUIWidget
-  - TTAdSplashSDK (0.4.3):
+  - TTAdSplashSDK (0.4.4):
     - JSONModel
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9):
     - JSONModel
@@ -1256,7 +1256,7 @@ DEPENDENCIES:
   - TTAccountSDK/WeChatAccount (from `../AKPlugins/TTAccountSDK`)
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
-  - TTAdSplashSDK (from `git@code.byted.org:TTIOS/tt_splash_sdk.git`, branch `feature_multi_log_version_tgq`)
+  - TTAdSplashSDK (= 0.4.4)
   - TTAppUpdateHelper/TTUpdateHelper
   - TTAppUpdateHelper/TTUpdateView
   - TTAudio (= 0.1.4)
@@ -1386,9 +1386,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
     :path: ../AKPlugins/TTAccountSDK
-  TTAdSplashSDK:
-    :branch: feature_multi_log_version_tgq
-    :git: git@code.byted.org:TTIOS/tt_splash_sdk.git
   TTAvatar:
     :path: ../AKPlugins/TTAvatar
   TTBaseLib:
@@ -1435,14 +1432,11 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: d8b46d8fb66ee954b2eff9bc4089310c9c963720
+    :commit: 90faec07df9d433ec17c256758d1b86e45e566d7
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
-  TTAdSplashSDK:
-    :commit: cb6ec73d5c6255d8f0ed6c13a51be175f5954306
-    :git: git@code.byted.org:TTIOS/tt_splash_sdk.git
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -1524,7 +1518,7 @@ SPEC CHECKSUMS:
   TTAccountSDK: f190978cb0db94f923c70da6c0d16de8327aff97
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
-  TTAdSplashSDK: 87bacf6fe320357d581040ef9bd94ef60bc7e103
+  TTAdSplashSDK: bcbf6e94de76b9f200a52d549a6096afdb7a3726
   TTAppUpdateHelper: 2a86cb2172e04a544dc4bf40241196bbf562f997
   TTAudio: f79de9ffc28d1ca3205191a333840a0be9301f1f
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
@@ -1590,6 +1584,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 185980b676488755a48b945086bb57c24b16cb6e
+PODFILE CHECKSUM: ae039c102bd3f2b7dfa9ce4f722f2057a87ec9d1
 
 COCOAPODS: 1.4.0
