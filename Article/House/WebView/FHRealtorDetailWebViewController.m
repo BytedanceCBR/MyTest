@@ -17,6 +17,7 @@
     HouseRentTracer* _tracerModel;
     NSTimeInterval _startTime;
     NSString* _realtorId;
+//    NSTimeInterval _lastClickCall;
 }
 @end
 
@@ -35,19 +36,25 @@ static NSString *s_oldAgent = nil;
     @weakify(self);
     [self.webview.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         @strongify(self);
-
+//        if (self->_lastClickCall - [[NSDate new] timeIntervalSince1970] < 3) {
+//            return;
+//        } else {
+//            self->_lastClickCall = [[NSDate new] timeIntervalSince1970];
+//        }
         self->_realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
         if (self->_realtorId != nil && phone != nil) {
             [self->_phoneCallViewModel requestVirtualNumberAndCallWithRealtorId:self->_realtorId
-                                                               traceModel:self->_tracerModel
-                                                                    phone:phone
-                                                                  houseId:self->_tracerModel.groupId
-                                                                 searchId:self->_tracerModel.searchId
-                                                                   imprId:self->_tracerModel.imprId];
+                                                                     traceModel:self->_tracerModel
+                                                                          phone:phone
+                                                                        houseId:self->_tracerModel.groupId
+                                                                       searchId:self->_tracerModel.searchId
+                                                                         imprId:self->_tracerModel.imprId
+                                                                    onSuccessed:^{
+                                                                        completion(TTRJSBMsgSuccess, @{});
+                                                                    }];
             [self->_delegate followUpAction];
         }
-        completion(TTRJSBMsgSuccess, @{});
     } forMethodName:@"phoneSwitch"];
     [TTTracker eventV3:@"go_detail" params:[self goDetailParams]];
 }

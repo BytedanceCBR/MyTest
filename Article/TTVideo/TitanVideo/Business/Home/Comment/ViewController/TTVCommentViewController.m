@@ -503,8 +503,8 @@ TTCommentFooterCellDelegate>
 
 - (void)commentCell:(UITableViewCell *)view digCommentWithCommentItem:(nonnull TTVCommentListItem *)item {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(commentViewController:digCommentWithCommentModel:)]) {
-        [self.delegate commentViewController:self digCommentWithCommentModel:item.commentModel];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(commentViewController:digCommentWithCommentModel:position:)]) {
+        [self.delegate commentViewController:self digCommentWithCommentModel:item.commentModel position:@"comment"];
     }
 }
 

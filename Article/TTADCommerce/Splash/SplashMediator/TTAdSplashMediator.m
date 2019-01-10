@@ -32,6 +32,8 @@
 #import "TTAdAction.h"
 #import "TTAdDetailActionModel.h"
 #import "TTASettingConfiguration.h"
+#import "TTAdCanvasPreloader.h"
+#import "FHLocManager.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -51,45 +53,18 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     return adMediator;
 }
 
-- (BOOL)displaySplashOnWindow:(UIView *)keyWindow splashShowType:(TTAdSplashShowType)type
-{
-    if ([TTAdSplashMediator useSplashSDK]) {
-        static dispatch_once_t once_t;
-        dispatch_once(&once_t, ^{
-            [TTAdSplashMediator registerParamas];
-        });
-        
-        [TTAdSplashManager shareInstance].ignoreFirstLaunch = NO;
-        [[TTAdSplashManager shareInstance] displaySplashOnWindow:keyWindow splashShowType:type];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            [self detectCallbackFromThirdApp];
-        });
-    }
-    else{
-        
-        id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];
-        if ([adManagerInstance splashADShowType] != SSSplashADShowTypeIgnore) {
-            if (!SharedAppDelegate.window.rootViewController) {
-                UIViewController *blankVC = [[UIViewController alloc] init];
-                UIImageView *bgView = [[UIImageView alloc] initWithFrame:blankVC.view.bounds];
-                
-                [bgView setImage:[TTAdSplashMediator splashImageForPrefix:@"Default" extension:@"png"]];
-                bgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-                [blankVC.view addSubview:bgView];
-                SharedAppDelegate.window.rootViewController = blankVC;
-            }
-            if ([TTDeviceHelper isPadDevice] && [TTDeviceHelper OSVersionNumber] < 8) {
-                [adManagerInstance applicationDidBecomeActiveShowOnWindow:SharedAppDelegate.window splashShowType:adManagerInstance.splashADShowType];
-            }
-            else {
-                [adManagerInstance applicationDidBecomeActiveShowOnWindow:SharedAppDelegate.window splashShowType:adManagerInstance.splashADShowType];
-            }
-        }else{
-            LOGD(@"ingore....");
-        }
-        LOGD(@"ingore....");
-        [adManagerInstance setSplashADShowType:SSSplashADShowTypeIgnore];
-    }
+- (BOOL)displaySplashOnWindow:(UIView *)keyWindow splashShowType:(TTAdSplashShowType)type {
+    static dispatch_once_t once_t;
+    dispatch_once(&once_t, ^{
+        [TTAdSplashMediator registerParamas];
+    });
+    
+    [TTAdSplashManager shareInstance].ignoreFirstLaunch = NO;
+    [TTAdSplashManager shareInstance].enableMonitor = YES;
+    [[TTAdSplashManager shareInstance] displaySplashOnWindow:keyWindow splashShowType:type];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [self detectCallbackFromThirdApp];
+    });
     return YES;
 }
 
@@ -122,6 +97,9 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         [dict setValue:@(placemarkItem.coordinate.latitude) forKey:TT_LATITUDE];
         [dict setValue:@(placemarkItem.coordinate.longitude) forKey:TT_LONGITUDE];
         [dict setValue:[TTDeviceHelper idfvString] forKey:TT_IDFV];
+        [dict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:TT_IID];
+        [dict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:TT_DEVICE_ID];
+        
 #ifndef SS_TODAY_EXTENSTION
         [dict setValue:[[TTABHelper sharedInstance_tt] ABVersion] forKey:TT_AB_VERSION];
         [dict setValue:[[TTABHelper sharedInstance_tt] ABFeature] forKey:TT_AB_FEATURE];
@@ -134,8 +112,36 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)didEnterBackground
 {
-    if (![TTAdSplashMediator useSplashSDK]) {
-        [[SSADManager shareInstance] didEnterBackground];
+
+}
+
+- (BOOL)ignoreFirstLaunch {
+    return NO;
+}
+
+//端监控
+- (void)monitorService:(NSString *)serviceName status:(NSUInteger)status extra:(NSDictionary *)extra
+{
+    [[TTMonitor shareManager] trackService:serviceName status:status extra:extra];
+}
+
+- (void)monitorService:(NSString *)serviceName value:(NSDictionary *)params extra:(NSDictionary *)extra{
+    [[TTMonitor shareManager] trackService:serviceName value:params extra:extra];
+}
+
+- (BOOL)enableTrackV3Format {
+    return YES;
+}
+
+- (void)trackV3WithEvent:(NSString *)event params:(NSDictionary *)params isDoubleSending:(BOOL)isDoubleSending {
+    if (params) {
+        [params setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];
+        [params setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
+        [params setValue:[TTExtensions buildVersion] forKey:@"app_version"];
+        [params setValue:[TTSandBoxHelper getCurrentChannel] forKey:@"app_channel"];
+        [params setValue:[FHLocManager sharedInstance].currentReGeocode.city forKey:@"city_name"];
+        [params setValue:[FHLocManager sharedInstance].currentReGeocode.province forKey:@"province_name"];
+        [TTTracker eventV3:event params:params];
     }
 }
 
@@ -146,13 +152,22 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     [[TTNetworkManager shareInstance] requestForBinaryWithResponse:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] params:nil method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj, TTHttpResponse *response) {
         responseBlock(obj, error,response.statusCode);
     }];
-
 }
 
-
+//设置域名,app实现选路
 - (NSString *)splashBaseUrl
 {
-    return [CommonURLSetting baseURL];
+    return @"https://i.haoduofangs.com";
+}
+
+//接入方可自由定制path,拼接后url:https://is.snssdk.com/api/ad/splash/news_article_inhouse/v15/
+- (NSString *)splashPathUrl
+{
+    return @"f100/api/ad/splash";
+}
+
+- (BOOL)enableSplashGifKadunOptimize {
+    return YES;
 }
 
 - (NSString *)deviceId
@@ -177,37 +192,45 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     return [TTNetworkHelper connectMethodName];
 }
 
-- (NSString *)splashBgImageName
+- (UIImage *)splashBgImage
 {
-    NSString *imgName = @"LaunchImage-800-Portrait-736h@3x.png";
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
-        imgName = @"LaunchImage-800-Portrait-736h@3x.png";
+    NSString *imgName = @"LaunchImage-800-Portrait-736h";
+    if ([TTDeviceHelper is667Screen]) {
+        imgName = @"LaunchImage-800-667h";
     }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0 &&
-        ([UIScreen mainScreen].bounds.size.height == 480)) {
-        imgName = @"LaunchImage-700@2x.png";
+    if ([TTDeviceHelper is568Screen]) {
+         imgName = @"LaunchImage-700-568h";
     }
-    return imgName;
+    if ([TTDeviceHelper is812Screen]) {
+        imgName = @"LaunchImage-1100-Portrait-2436h";
+    }
+    if ([TTDeviceHelper is896Screen2X]) {
+        imgName = @"LaunchImage-1200-Portrait-1792h";
+    }
+    if ([TTDeviceHelper is896Screen3X]) {
+        imgName = @"LaunchImage-1200-Portrait-2688h";
+    }
+    return [UIImage imageNamed:imgName];
 }
 
-- (NSString *)splashVideoLogoName
+- (UIImage *)splashVideoLogo
 {
-    return @"logo";
+    return [UIImage imageNamed:@"logo"];
 }
 
-- (NSString *)splashWifiImageName
+- (UIImage *)splashWifiImage
 {
-    return @"wifi_splash";
+    return [UIImage imageNamed:@"wifi_splash"];
 }
 
-- (NSString *)splashViewMoreImageName
+- (UIImage *)splashViewMoreImage
 {
-    return @"viewicon_splash";
+    return [UIImage imageNamed:@"viewicon_splash"];
 }
 
-- (NSString *)splashArrowImageName
+- (UIImage *)splashArrowImage
 {
-    return @"right_arrow_ad";
+    return [UIImage imageNamed:@"right_arrow_ad"];
 }
 
 - (void)splashViewWillAppear
@@ -242,12 +265,14 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     NSString *open_url = [condition valueForKey:TT_OPEN_URL];
     NSString *web_url = [condition valueForKey:TT_WEB_URL];
     NSString *app_open_url = [condition valueForKey:TT_OPEN_URL];
+    
     BOOL click_banner = [condition tt_boolValueForKey:TT_CLICK_BANNER];
     BOOL result = NO;
     NSString * const sourceTag = @"splash_ad";
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:1];
     [extra setValue:log_extra forKey:@"log_extra"];
     [extra setValue:@"1" forKey:@"is_ad_event"];
+    
     if (display_viewbutton.integerValue == TTSplashClikButtonStyleStripAction && click_banner) {//banner区域支持调起三方app,使用app_open_url
         result = [TTAppLinkManager dealWithWebURL:web_url openURL:app_open_url sourceTag:sourceTag value:ad_id extraDic:extra];
     }
@@ -286,7 +311,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:open_url] userInfo:TTRouteUserInfoWithDict(params)];
     }
-    else if ([actionType isEqualToString:@"web"] && !isEmptyString(web_url)) {
+    else if ([actionType isEqualToString:@"web"] && !isEmptyString(web_url) && [web_url hasPrefix:@"http"]) {
         NSMutableDictionary *conditions = [NSMutableDictionary dictionaryWithCapacity:5];
         [conditions setValue:@"splash" forKey:@"gd_label"];
         [conditions setValue:@(NewsGoDetailFromSourceSplashAD) forKey:kNewsGoDetailFromSourceKey];
@@ -308,6 +333,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     else {
         //do nothing
     }
+}
+
+- (void)downloadCanvasResource:(NSDictionary *)dict {
+   // 沉浸式广告需要的内容 暂时不需要实现
 }
 
 //统计app_open_url跳出头条到回来的时长间隔
@@ -361,108 +390,57 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)setSplashADShowType:(TTAdSplashShowType)splashADShowType
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        [TTAdSplashManager shareInstance].splashADShowType = splashADShowType;
-    }
-    else{
-        [SSADManager shareInstance].splashADShowType = (SSSplashADShowType)splashADShowType;
-    }
+    [TTAdSplashManager shareInstance].splashADShowType = splashADShowType;
 }
 
 - (TTAdSplashShowType)splashADShowType
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].splashADShowType;
-    }
-    else{
-        return (TTAdSplashShowType)[SSADManager shareInstance].splashADShowType;
-    }
     return [TTAdSplashManager shareInstance].splashADShowType;
 }
 
 - (TTAdSplashResouceType)resouceType
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].resouceType;
-    }
-    else{
-        return (TTAdSplashResouceType)[SSADManager shareInstance].resouceType;
-    }
     return [TTAdSplashManager shareInstance].resouceType;
 }
 
 - (BOOL)showByForground
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].showByForground;
-    }
-    else{
-        return [SSADManager shareInstance].showByForground;
-    }
     return [TTAdSplashManager shareInstance].showByForground;
 }
 
 - (void)setShowByForground:(BOOL)showByForground
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        [TTAdSplashManager shareInstance].showByForground = showByForground;
-    }
-    else{
-        [SSADManager shareInstance].showByForground = showByForground;
-    }
+    [TTAdSplashManager shareInstance].showByForground = showByForground;
 }
 
 - (BOOL)adWillShow
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].adWillShow;
-    }
-    else{
-        return [SSADManager shareInstance].adShow;
-    }
     return [TTAdSplashManager shareInstance].adWillShow;
 }
 
 - (BOOL)isAdShowing
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].isAdShowing;
-    }
-    else{
-        return [SSADManager shareInstance].isSplashADShowed;
-    }
     return [TTAdSplashManager shareInstance].isAdShowing;
 }
 
 - (BOOL)finishCheck
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [TTAdSplashManager shareInstance].finishCheck;
-    }
-    else{
-        return [SSADManager shareInstance].finishCheck;
-    }
     return [TTAdSplashManager shareInstance].finishCheck;
 }
 
 - (BOOL)discardAd:(NSArray<NSString *> *)adIDs
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        return [[TTAdSplashManager shareInstance] discardAd:adIDs];
-    }
-    return [[SSADManager shareInstance] discardAd:adIDs];
+    return [[TTAdSplashManager shareInstance] discardAd:adIDs];
 }
 
 + (BOOL)useSplashSDK
 {
-    return ttas_isSplashSDKEnable();
+    return YES;
 }
 
 + (void)clearResouceCache
 {
-    if ([TTAdSplashMediator useSplashSDK]) {
-        [TTAdSplashManager clearResouceCache];
-    }
+    [TTAdSplashManager clearResouceCache];
 }
 
 
@@ -498,6 +476,92 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     if(isEmptyString(extension)) extension = @"png";
     [imageName appendFormat:@".%@", extension];
     return [UIImage imageNamed:imageName];
+}
+
+- (NSUInteger)logoAreaHeight {
+    if (![TTDeviceHelper isPadDevice])
+    {
+        if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen])
+        {
+            return 218;
+        }
+        else if([TTDeviceHelper is667Screen])
+        {
+            return 246;
+        }
+        else if([TTDeviceHelper is736Screen])
+        {
+            return 394;
+        }
+        else if ([TTDeviceHelper isIPhoneXDevice])
+        {
+            return 406;
+        }
+    }
+    else {
+        if(UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+        {
+            //区分 单双倍屏
+            if ([TTDeviceHelper screenScale] == 2.f) {
+                return 360;
+            } else {
+                return 180;
+            }
+        }
+        else
+        {
+            //区分 单双倍屏
+            if ([TTDeviceHelper screenScale] == 2.f) {
+                return 262;
+            } else {
+                return 131;
+            }
+        }
+    }
+    return 0;
+}
+
+- (NSUInteger)skipButtonCenterYOffset {
+    if (![TTDeviceHelper isPadDevice])
+    {
+        if ([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen])
+        {
+            return 47;
+        }
+        else if([TTDeviceHelper is667Screen])
+        {
+            return 65;
+        }
+        else if([TTDeviceHelper is736Screen])
+        {
+            return 70;
+        }
+        else if ([TTDeviceHelper isIPhoneXDevice])
+        {
+            return 74;
+        }
+    }
+    else {
+        if(UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+        {
+            //区分 单双倍屏
+            if ([TTDeviceHelper screenScale] == 2.f) {
+                return 107;
+            } else {
+                return 106;
+            }
+        }
+        else
+        {
+            //区分 单双倍屏
+            if ([TTDeviceHelper screenScale] == 2.f) {
+                return 79;
+            } else {
+                return 72;
+            }
+        }
+    }
+    return 0;
 }
 
 @end

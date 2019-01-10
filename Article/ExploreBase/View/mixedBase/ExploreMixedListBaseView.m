@@ -1527,7 +1527,7 @@ TTRefreshViewDelegate
             
             [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
             
-            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
+//            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
             
             if ([obj.categoryID isEqualToString:@"f_wenda"])
             {

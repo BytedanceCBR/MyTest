@@ -38,8 +38,9 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
     //    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
     
+    //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersion) {
-        buildVersion = @"10500";
+        buildVersion = @"65000";
     }
     
     if (buildVersion) {

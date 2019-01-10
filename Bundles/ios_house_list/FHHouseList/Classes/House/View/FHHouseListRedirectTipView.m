@@ -45,12 +45,13 @@
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self);
         make.left.mas_equalTo(self.closeBtn.mas_right).mas_offset(10);
-        make.right.mas_equalTo(self.rightBtn).mas_offset(-5);
+        make.right.mas_equalTo(self.rightBtn.mas_left).mas_offset(-5);
     }];
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).mas_offset(-20);
         make.centerY.mas_equalTo(self);
     }];
+    [self.rightBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     [self.closeBtn addTarget:self action:@selector(closeBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];

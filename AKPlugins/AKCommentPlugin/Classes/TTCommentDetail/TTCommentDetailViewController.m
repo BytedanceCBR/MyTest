@@ -32,6 +32,7 @@
 #import "TTCommentDetailCell.h"
 #import "TTCommentEmptyView.h"
 #import "TTCommentDetailToolbarView.h"
+#import "FHTraceEventUtils.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -60,8 +61,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 @property (nonatomic, strong) NSString *groupId;
 @property (nonatomic, strong) NSString *fromPage;
 @property (nonatomic, assign) int64_t uniqueID;
+@property (nonatomic, strong) NSString *qid;
 
-@property (nonatomic,strong) NSDate *enterDate;
+@property (nonatomic, strong) NSDate *enterDate;
 @end
 
 @implementation TTCommentDetailViewController
@@ -101,6 +103,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     _follow = [baseCondition tt_stringValueForKey:@"follow"];
     _groupId = [baseCondition tt_stringValueForKey:@"groupId"];
     _fromPage = [baseCondition tt_stringValueForKey:@"fromPage"];
+    _qid = [baseCondition tta_stringForKey:@"qid"];
     if (_commentModel.commentID.longLongValue) {
         self.pageState.commentID = _commentModel.commentID.stringValue;
     }
@@ -640,7 +643,19 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - actions
 
 - (void)toolbarDiggButtonOnClicked:(id)sender {
-    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
+    if (!self.pageState.detailModel.userDigg) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:_groupId forKey:@"group_Id"];
+        [params setValue:_groupId forKey:@"item_Id"];
+        [params setValue:_logPb  forKey:@"log_pd"];
+        [params setValue:_categoryName  forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+        [params setValue:@"comment_detail" forKey:@"position"];
+        [params setValue:@"comment_id" forKey:[self.commentModel.commentID stringValue]];
+        [TTTracker eventV3:@"rt_like" params:params];
+    }
+//    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
     [self.store dispatch:action];
 }
@@ -721,6 +736,25 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header digButtonOnClick:(id)sender {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:_groupId forKey:@"group_Id"];
+    [params setValue:_groupId forKey:@"item_Id"];
+    [params setValue:_logPb  forKey:@"log_pd"];
+    [params setValue:_categoryName  forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    [params setValue:@"comment_detail" forKey:@"position"];
+    if (!isEmptyString(_qid)) {
+        [params setValue:_groupId forKey:@"ansid"];
+        [params setValue:_qid forKey:@"qid"];
+    }
+    [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
+    if (!self.pageState.detailModel.userDigg) {
+        [TTTracker eventV3:@"rt_like" params:params];
+    } else {
+         [TTTracker eventV3:@"rt_unlike" params:params];
+    }
+    
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
     [self.store dispatch:action];
 }
@@ -833,6 +867,23 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:_groupId forKey:@"group_Id"];
+    [params setValue:_groupId forKey:@"item_Id"];
+    [params setValue:_logPb forKey:@"log_pd"];
+    [params setValue:_categoryName  forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    [params setValue:@"replay" forKey:@"position"];
+    [params setValue:_commentModel.commentID forKey:@"comment_id"];
+    if (!isEmptyString(_qid)) {
+        [params setValue:_qid forKey:@"qid"];
+         [params setValue:_groupId forKey:@"ansid"];
+    }
+    
+    if (!model.userDigg) {
+        [TTTracker eventV3:@"rt_like" params:params];
+    }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;
     [self.store dispatch:action];

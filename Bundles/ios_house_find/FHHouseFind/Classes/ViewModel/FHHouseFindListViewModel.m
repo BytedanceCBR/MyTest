@@ -190,7 +190,6 @@
 
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
-    
 }
 
 - (void)jump2GuessVC

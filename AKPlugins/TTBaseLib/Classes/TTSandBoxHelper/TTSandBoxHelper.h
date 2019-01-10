@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  获取下载渠道
  *
  *  @return 下载渠道
- */
+*/
 + (nullable NSString *)getCurrentChannel;
 
 /**

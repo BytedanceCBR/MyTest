@@ -20,7 +20,6 @@
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
 #import "FHHouseListRedirectTipView.h"
-#import "FHHouseListModel.h"
 
 #define kFilterBarHeight 44
 
@@ -340,13 +339,13 @@
     }];
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.containerView);
+        make.left.right.mas_equalTo(self.containerView);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         make.height.mas_equalTo(0);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.tableView);
+        make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
     }];
     
@@ -410,18 +409,16 @@
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
     
-    _redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:_redirectTipView];
+    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.redirectTipView];
 
     [self.view addSubview:self.navbar];
-
     [self.view addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];
     [self.view addSubview:_filterContainerView];
 
     [_filterContainerView addSubview:self.filterPanel];
-
     [self.view bringSubviewToFront:self.filterBgControl];
 
 }

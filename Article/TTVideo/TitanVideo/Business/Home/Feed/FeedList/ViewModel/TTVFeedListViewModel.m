@@ -289,7 +289,7 @@ typedef void(^Finished)();
     NSMutableArray *entitys = [NSMutableArray array];
     [self prefetchAutoPlayVideoWithFeedItems:[array copy]];
     if ([SSCommonLogic feedRefreshClearAllEnable] && isAppendTop && !response.isFromLocal) {
-        for (int i = 0; i < response.increasedItems.count; i ++) {
+        for (int i = 0; i < response.increasedItems.count; i++) {
             TTVFeedItem *obj = response.increasedItems[i];
             TTVFeedListItem *entity = [[[self entityClassWithItem:obj] alloc] init];
             entity.originData = obj;

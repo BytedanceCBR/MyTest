@@ -72,13 +72,13 @@ fileprivate class ItemView: UIControl {
     }()
 
     lazy var licenceIcon: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "contact"), for: .normal)
         return re
     }()
 
     lazy var callBtn: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "icon-phone"), for: .normal)
         return re
     }()
@@ -185,6 +185,11 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         return re
     }()
 
+    lazy var expandAreaBtnView: UIControl = {
+        let re = UIControl()
+        return re
+    }()
+
     lazy var arrowIcon: UIImageView = {
         let re = UIImageView()
         re.image = UIImage(named: "defaultAvatar")
@@ -231,7 +236,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         contentView.addSubview(containerView)
         contentView.addSubview(expandBtnView)
         contentView.addSubview(expandBtn)
-
+        contentView.addSubview(expandAreaBtnView)
         containerView.addSubview(expandItemView)
         expandBtnView.addSubview(arrowIcon)
         expandBtnView.addSubview(expandLabel)
@@ -283,13 +288,19 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
             make.centerY.equalTo(expandLabel)
             make.right.equalToSuperview()
         }
+
+        expandAreaBtnView.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(expandBtnView)
+            make.left.right.equalToSuperview()
+        }
         bindExpandingBtn()
         updateBottomBarState(isExpand: self.isExpanding)
     }
 
     func bindExpandingBtn() {
         disposeBag = DisposeBag()
-        expandBtn.rx.tap
+        expandAreaBtnView.rx.controlEvent(.touchUpInside)
+//        expandBtn.rx.tap
             .bind(onNext: { [unowned self] in
                 self.isExpanding = !self.isExpanding
                 self.updateBottomBarState(isExpand: self.isExpanding)
@@ -444,6 +455,8 @@ func fillAgentListCell(
                     traceModel?.elementFrom = "old_detail_related"
                     let reportParams = getRealtorReportParams(traceModel: traceModel)
                     let openUrl = "fschema://realtor_detail"
+
+//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let info: [String: Any] = ["url": jumpUrl,
                                                "title": "经纪人详情页",
