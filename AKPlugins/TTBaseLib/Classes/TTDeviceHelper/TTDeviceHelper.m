@@ -49,6 +49,20 @@ static TTDeviceMode tt_deviceMode;
     return [TTDeviceHelper getDeviceType] == TTDeviceModePad;
 }
 
++ (Boolean)is812Screen {
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode812;
+}
+
++ (Boolean)is896Screen2X {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode896 && scale == 2.f;
+}
+
++ (Boolean)is896Screen3X {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode896 && scale == 3.f;
+}
+
 + (BOOL)isScreenWidthLarge320 {
     CGFloat shortSide = MIN([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
     return shortSide > 320;

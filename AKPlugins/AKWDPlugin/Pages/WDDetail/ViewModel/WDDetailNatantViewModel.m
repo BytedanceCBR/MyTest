@@ -225,7 +225,7 @@
     NSString *label;
     DetailActionRequestType type;
     if (!self.detailModel.answerEntity.userRepined) {
-        label = @"favorite_button";
+        label = @"favourite_button";
         type = DetailActionTypeFavourite;
     }
     else {
@@ -260,8 +260,23 @@
         [indicatorView showFromParentView:activityPanelControllerWindow];
     }
     
-    [self sendFavoriteAction:type entity:self.detailModel.answerEntity];
-    [self tt_sendDetailLogicTrackWithLabel:label];
+   
+    if (!self.detailModel.answerEntity.userRepined) {
+         [self tt_sendDetailLogicTrackWithLabel:label];
+    }
+    else {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
+        [params setValue:self.detailModel.answerEntity.ansid forKey:@"ansid"];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"enter_from"]  forKey:@"enter_from"];
+        [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"category_name"]  forKey:@"category_name"];
+        [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"qid"]  forKey:@"qid"];
+        [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:@"detail" forKey:@"position"];
+        [TTTracker eventV3:@"rt_favorite" params:params];
+       
+    }
 }
 
 - (void)sendFavoriteAction:(DetailActionRequestType)type entity:(WDAnswerEntity *)entity

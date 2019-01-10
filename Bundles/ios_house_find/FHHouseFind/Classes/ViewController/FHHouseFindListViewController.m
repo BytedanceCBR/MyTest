@@ -87,7 +87,6 @@
     _viewModel.sugSelectBlock = ^(NSString * _Nullable placeholder) {
         [wself.searchBar setPlaceHolder:placeholder];
     };
- 
 }
 
 - (void)setupUI

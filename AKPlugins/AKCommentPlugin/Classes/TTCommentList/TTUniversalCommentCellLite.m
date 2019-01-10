@@ -49,6 +49,7 @@
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 @property (nonatomic, strong) NSArray *menuItems;
 @property (nonatomic, strong) TTActionSheetController *actionSheetController;
+
 @end
 
 @implementation TTUniversalCommentCellLite
@@ -301,7 +302,7 @@
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setValue:_commentModel.commentID.stringValue forKey:@"ext_value"];
-    wrapperTrackEventWithCustomKeys(@"comment", @"digg_button", _commentModel.groupModel.groupID, nil, dic);
+//    wrapperTrackEventWithCustomKeys(@"comment", @"digg_button", _commentModel.groupModel.groupID, nil, dic);
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:digCommentWithCommentModel:)]) {
         [self.delegate tt_commentCell:self digCommentWithCommentModel:_commentModel];
     }

@@ -78,7 +78,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 });
                 [[ToastManager manager] showToast:@"网络异常"];
             }
-        
         }];
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{

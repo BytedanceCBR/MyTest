@@ -104,6 +104,8 @@
 #import "TTCommentViewControllerProtocol.h"
 #import "TTUGCTrackerHelper.h"
 #import <ExploreMomentDefine_Enums.h>
+#import "FHTraceEventUtils.h"
+
 //爱看
 #import "AKHelper.h"
 //#import "Bubble-Swift.h"
@@ -2649,6 +2651,7 @@
 {
     if (!model.userDigged) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
         [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
         [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
@@ -2657,6 +2660,18 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+//        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }
 

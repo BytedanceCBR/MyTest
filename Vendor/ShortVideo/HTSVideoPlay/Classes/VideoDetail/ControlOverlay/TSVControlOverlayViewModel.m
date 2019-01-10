@@ -477,13 +477,13 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)doubleTapView
 {
     if (!self.isLiked) {
-        [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"user_id": self.model.author.userID,
-                                            @"position": @"double_like",
-                                            }];
+//        [AWEVideoDetailTracker trackEvent:@"rt_like"
+//                                    model:self.model
+//                          commonParameter:self.commonTrackingParameter
+//                           extraParameter:@{
+//                                            @"user_id": self.model.author.userID,
+//                                            @"position": @"double_like",
+//                                            }];
 
         [self markLikeDirectly];
     }
