@@ -24,6 +24,7 @@ extern NSString * const kFHAllConfigLoadSuccessNotice;
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isLocationSuccess;
+@property (nonatomic, assign) NSInteger retryConfigCount;
 
 +(instancetype)sharedInstance;
 

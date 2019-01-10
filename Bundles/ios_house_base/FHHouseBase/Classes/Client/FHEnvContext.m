@@ -46,6 +46,12 @@
 {
     NSInteger cityId = 0;
     
+    if (![FHEnvContext isNetworkConnected])
+    {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
     if ([urlString containsString:@"city_id"]) {
         NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
         NSString *paramsStr = [paramsArrary lastObject];
@@ -59,9 +65,8 @@
         }
             
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-
+        
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
-            [[ToastManager manager] dismissCustomLoading];
             if (isSuccess) {
                 FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
                 if (configModel.cityAvailability.enable) {
@@ -83,8 +88,10 @@
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
+                    [[ToastManager manager] dismissCustomLoading];
                 }else
                 {
+                    [[ToastManager manager] dismissCustomLoading];
                     if(completion)
                     {
                         completion(YES);
@@ -95,6 +102,7 @@
                 }
             }else
             {
+                [[ToastManager manager] dismissCustomLoading];
                 if(completion)
                 {
                     completion(NO);
@@ -296,16 +304,8 @@
     // 城市是否选择，未选择直接跳转城市列表页面
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
-        // add by zyk，参数需要修改
         NSDictionary* info = @{@"animated":@(NO),
-                               @"disablePanGes":@(YES),
-                               @"tracer":@{@"enter_from": @"push",
-                                           @"element_from": @"be_null",
-                                           @"rank": @"be_null",
-                                           @"card_type": @"be_null",
-                                           @"origin_from": @"push",
-                                           @"origin_search_id": @"be_null"
-                                           }};
+                               @"disablePanGes":@(YES)};
         TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
