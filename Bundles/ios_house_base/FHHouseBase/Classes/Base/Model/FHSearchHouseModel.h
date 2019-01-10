@@ -161,6 +161,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHRecommendSecondhandHouseTitleModel<NSObject>
+
+@end
+
+@interface FHRecommendSecondhandHouseDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *total;
+@property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *recommendTitle;
+@property (nonatomic, copy , nullable) NSString *searchHint;
+@property (nonatomic, assign) BOOL hasMore;
+
+@end
+
+@interface  FHRecommendSecondhandHouseModel  : JSONModel<FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHRecommendSecondhandHouseDataModel *data ;
+
+@end
+
 
 @interface  FHSearchHouseDataModel  : JSONModel
 
@@ -172,6 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
+@property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
 
 @end
 
