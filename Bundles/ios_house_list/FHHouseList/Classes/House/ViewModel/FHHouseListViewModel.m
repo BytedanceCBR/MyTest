@@ -101,6 +101,10 @@
         [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(36);
         }];
+        
+        NSDictionary *params = @{@"page_type":@"city_switch",
+                                 @"enter_from":@"search"};
+        [FHUserTracker writeEvent:@"city_switch_show" params:params];
 
     }else {
         self.redirectTipView.hidden = YES;
@@ -116,15 +120,21 @@
     [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
     }];
+    NSDictionary *params = @{@"click_type":@"cancel",
+                             @"enter_from":@"search"};
+    [FHUserTracker writeEvent:@"city_click" params:params];
 }
 
 -(void)clickRedirectTip {
     
     if (self.redirectTips.openUrl.length > 0) {
-        
+
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             
         }];
+        NSDictionary *params = @{@"click_type":@"switch",
+                                 @"enter_from":@"search"};
+        [FHUserTracker writeEvent:@"city_click" params:params];
     }
 }
 
