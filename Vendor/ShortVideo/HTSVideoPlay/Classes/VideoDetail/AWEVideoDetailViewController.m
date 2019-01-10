@@ -1482,10 +1482,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     AWEAwemeAddCommentResponseBlock callback = ^(AWECommentModel *model, NSError *error) {
         @strongify(self);
         if (!error) {
-            [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
-                                        model:self.model
-                              commonParameter:self.commonTrackingParameter
-                               extraParameter:[self writeCommentExtraPositionDict]];
+            if (model.replyToComment == nil) {
+                [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
+                                            model:self.model
+                                  commonParameter:self.commonTrackingParameter
+                                   extraParameter:[self writeCommentExtraPositionDict]];
+            }
 
             [self.inputBar clearInputBar];
 
@@ -1652,7 +1654,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_reply"
+    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
                        extraParameter:extra];
@@ -1830,11 +1832,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
-    NSString *eventName = commentModel.userDigg ? @"comment_undigg" : @"comment_digg";
+    NSString *eventName = commentModel.userDigg ? @"rt_unlike" : @"rt_like";
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail",
+                       extraParameter:@{@"position": @"comment",
                                         @"comment_id": [commentModel.id stringValue]}];
 
     if ([self alertIfNotValid]) {
@@ -2279,7 +2281,7 @@ static const CGFloat kFloatingViewOriginY = 230;
                                     model:self.model
                           commonParameter:self.commonTrackingParameter
                            extraParameter:@{
-                                            @"position": @"detail_top_bar",
+                                            @"position": @"detail",
                                             }];
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {

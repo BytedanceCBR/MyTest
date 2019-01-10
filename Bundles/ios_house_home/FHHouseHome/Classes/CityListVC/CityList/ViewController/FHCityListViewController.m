@@ -16,15 +16,28 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHCityListViewModel.h"
+#import "TTNavigationController.h"
+#import "UINavigationController+NavigationBarConfig.h"
+#import "FHCitySearchViewController.h"
+#import "FHUtils.h"
+#import "TTThemedAlertController.h"
+#import "TTUIResponderHelper.h"
+#import "FHIndexSectionView.h"
+#import "FHUserTracker.h"
 
 // 进入当前页面肯定有城市数据
-@interface FHCityListViewController ()
+@interface FHCityListViewController ()<FHIndexSectionDelegate>
 
 @property (nonatomic, strong)   FHCityListNavBarView       *naviBar;
 @property (nonatomic, strong)   FHCityListLocationBar       *locationBar;
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   FHCityListViewModel       *viewModel;
+
+@property (nonatomic, weak)     TTNavigationController       *weakNavVC;
+@property (nonatomic, assign)   BOOL       disablePanGesture;
+
+@property (nonatomic, weak)     FHIndexSectionView       *sectionView;
 
 @end
 
@@ -33,7 +46,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        self.disablePanGesture = [paramObj.userInfo.allInfo[@"disablePanGes"] boolValue];
     }
     return self;
 }
@@ -41,6 +54,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    [self setupData];
+    // 禁止左滑-使用
+    self.weakNavVC = self.navigationController;
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForegroundNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)setupUI {
@@ -56,6 +76,58 @@
     }];
 }
 
+- (void)setupData {
+    if (self.disablePanGesture) {
+        self.naviBar.backBtn.hidden = YES;
+        // 重新布局导航栏
+        [self.naviBar.searchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.naviBar).offset(20);
+        }];
+    }
+    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configDataModel) {
+        [self.viewModel loadListCityData];
+        [self checkShowLocationErrorAlert];
+    } else {
+        [[ToastManager manager] showCustomLoading:@"加载中"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
+    }
+}
+
+- (void)configDataLoadSuccess:(NSNotification *)noti {
+    [[ToastManager manager] dismissCustomLoading];
+    [self.viewModel loadListCityData];
+    // 定位当前城市
+    if ([TTReachability isNetworkConnected]) {
+        if ([self locAuthorization]) {
+            [self requestCurrentLocationWithToast:NO];
+        } else {
+            [self checkShowLocationErrorAlert];
+        }
+    }
+}
+
+- (void)checkShowLocationErrorAlert {
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+    if (!hasSelectedCity) {
+        // 定位失败弹窗
+        TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"定位失败，请手动选择城市" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+        [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+            
+        }];
+        
+        UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+        if (topVC) {
+            [alertVC showFrom:topVC animated:YES];
+        }
+    }
+}
+
+- (void)enterForegroundNotification:(NSNotification *)noti {
+    // 进入前台
+    [self checkLocAuthorization];
+}
+
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     _naviBar = [[FHCityListNavBarView alloc] init];
@@ -66,6 +138,7 @@
         make.height.mas_equalTo(naviHeight);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [_naviBar.searchBtn addTarget:self action:@selector(goSearchCity) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupLocationBar {
@@ -99,8 +172,25 @@
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+    self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [UIColor themeBlue1];
+}
+
+- (void)addSectionIndexs:(NSArray *)indexDatas {
+    if (self.sectionView) {
+        [self.sectionView removeFromSuperview];
+    }
+    if (indexDatas.count > 0) {
+        BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+        CGFloat topOffset = 119 + (isIphoneX ? 44 : 20);
+        FHIndexSectionView *isv = [[FHIndexSectionView alloc] initWithTitles:indexDatas topOffset:topOffset];
+        if (isv) {
+            isv.delegate = self;
+            [self.view addSubview:isv];
+            self.sectionView = isv;
+        }
+    }
 }
 
 // 是否允许定位
@@ -115,6 +205,35 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self checkLocAuthorization];
+    
+    if (self.disablePanGesture) {
+        // 禁止滑动手势
+        if (self.weakNavVC) {
+            self.weakNavVC.panRecognizer.delegate = nil;
+            [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
+        }
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (self.disablePanGesture) {
+        // 取消禁止滑动手势
+        if (self.weakNavVC) {
+            self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
+            [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
+        }
+    }
+}
+
+- (void)goSearchCity {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"city_list";
+    [FHUserTracker writeEvent:@"click_city_search" params:tracerDict];
+    
+    FHCitySearchViewController *citySearchVC = [[FHCitySearchViewController alloc] init];
+    citySearchVC.cityListViewModel = self.viewModel;
+    [self.navigationController pushViewController:citySearchVC animated:YES];
 }
 
 // 重新定位
@@ -169,6 +288,42 @@
             }
         }
     }];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - FHIndexSectionDelegate
+
+- (void)indexSectionView:(FHIndexSectionView *)view didSelecteedTitle:(NSString *)title atSectoin:(NSInteger)section {
+    if (section >= 0) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+}
+
+- (void)indexSectionViewTouchesBegin {
+    if (self.disablePanGesture) {
+        // 已经禁止滑动手势
+        return;
+    }
+    // 禁止滑动手势
+    if (self.weakNavVC) {
+        self.weakNavVC.panRecognizer.delegate = nil;
+        [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
+    }
+}
+
+- (void)indexSectionViewTouchesEnd {
+    if (self.disablePanGesture) {
+        // 已经禁止滑动手势
+        return;
+    }
+    // 取消禁止滑动手势
+    if (self.weakNavVC) {
+        self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
+        [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
+    }
 }
 
 @end

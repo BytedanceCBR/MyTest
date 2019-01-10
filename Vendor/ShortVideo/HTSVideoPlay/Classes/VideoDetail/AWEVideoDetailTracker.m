@@ -66,16 +66,16 @@
 
 //        parameterDictionary[@"is_follow"] = @(model.author.isFollowing);
 //        parameterDictionary[@"is_friend"] = @(model.author.isFriend);
-
+        parameterDictionary[@"event_type"] = @"house_app2c_v2";
         if ([event isEqualToString:@"go_detail_draw"] || [event isEqualToString:@"video_play_draw"] || [event isEqualToString:@"go_detail"] || [event isEqualToString:@"video_play"]) {
             
-            parameterDictionary[@"event_type"] = @"house_app2c_v2";
+//            parameterDictionary[@"event_type"] = @"house_app2c_v2";
             [AWEVideoPlayTrackerBridge trackEvent:event params:parameterDictionary];
             return;
         }
         if ([event isEqualToString:@"video_over_draw"] || [event isEqualToString:@"video_over"]) {
             
-            parameterDictionary[@"event_type"] = @"house_app2c_v2";
+//            parameterDictionary[@"event_type"] = @"house_app2c_v2";
             NSInteger duration = [extraParameter tt_intValueForKey:@"duration"];
             if (duration > 0) {
                 parameterDictionary[@"duration"] = [extraParameter valueForKey:@"duration"] ? : @"be_null";
@@ -89,7 +89,7 @@
         
         if ([event isEqualToString:@"stay_page_draw"] || [event isEqualToString:@"stay_page"]) {
             
-            parameterDictionary[@"event_type"] = @"house_app2c_v2";
+//            parameterDictionary[@"event_type"] = @"house_app2c_v2";
             
             NSInteger stayTime = [extraParameter tt_intValueForKey:@"stay_time"];
             if (stayTime > 0) {

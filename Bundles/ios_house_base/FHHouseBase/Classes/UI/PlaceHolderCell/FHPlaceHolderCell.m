@@ -81,7 +81,7 @@
             make.height.mas_equalTo(@10);
         }];
 
-        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }

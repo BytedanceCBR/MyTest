@@ -98,6 +98,9 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_modelsArray.count <= indexPath.row) {
+        return;
+    }
     FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
      if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
      {
@@ -118,12 +121,11 @@
              tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
              tracerDict[@"search_id"] = cellModel.searchId ? : @"";
              tracerDict[@"rank"] = @(indexPath.row);
-             tracerDict[@"origin_from"] = [FHEnvContext sharedInstance].getCommonParams.originFrom;
-             tracerDict[@"origin_search_id"] = [FHEnvContext sharedInstance].getCommonParams.originSearchId ? : @"be_null";
+             tracerDict[@"origin_from"] = [self pageTypeString];
+             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
              tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
              
              [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
-             
          }
      }
 }
@@ -170,8 +172,13 @@
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = [self elementTypeString];
+        traceParam[@"element_from"] = @"be_null";
         traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        
         NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
                                @"tracer": traceParam
                                };
@@ -197,6 +204,27 @@
 }
 
 -(NSString *)pageTypeString {
+    
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+-(NSString *)enterFromTypeString {
     
     switch (self.currentHouseType) {
         case FHHouseTypeNewHouse:

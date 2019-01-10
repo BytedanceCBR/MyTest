@@ -271,10 +271,10 @@
         if (userModel) {
             [state.detailModel.digUsers removeObject:userModel];
         }
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setValue:state.detailModel.commentID forKey:@"comment_id"];
-        [params setValue:state.detailModel.user.ID forKey:@"user_id"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+//        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+//        [params setValue:state.detailModel.commentID forKey:@"comment_id"];
+//        [params setValue:state.detailModel.user.ID forKey:@"user_id"];
+//        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     } else {
         //点赞
         state.detailModel.diggCount += 1;

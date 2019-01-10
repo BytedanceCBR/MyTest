@@ -11,6 +11,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "UIViewController+Tree.h"
+
 @interface FHHomePageRoute() <TTRouteInitializeProtocol>
 
 @end
@@ -23,6 +24,8 @@
         
         UIViewController *currentVC = [UIViewController ttmu_currentViewController];
         [currentVC.navigationController popToRootViewControllerAnimated:YES];
+        
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
         
         [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
         

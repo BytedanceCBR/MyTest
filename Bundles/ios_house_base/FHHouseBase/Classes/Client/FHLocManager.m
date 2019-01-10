@@ -14,9 +14,12 @@
 #import "FHEnvContext.h"
 #import "YYCache.h"
 
+NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
+
 @interface FHLocManager ()
 
 @property (nonatomic, strong)   YYCache       *locationCache;
+@property (nonatomic, assign)   BOOL       isShowSwitch;
 
 @end
 
@@ -54,6 +57,7 @@
     self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
+    self.retryConfigCount = 3;
 }
 
 - (void)saveCurrentLocationData {
@@ -91,21 +95,33 @@
     }
 }
 
-- (void)showCitySwitchAlert:(NSString *)cityName
+- (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl
 {
+    if (!cityName || !openUrl) {
+        return;
+    }
+
+    NSDictionary *params = @{@"page_type":@"city_switch",
+                             @"enter_from":@"default"};
+    [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
+
     
-    NSString *titleStr = [NSString stringWithFormat:@"是否切换到当前城市:%@",cityName];
+    NSString *titleStr = [NSString stringWithFormat:@"%@",cityName];
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        
+        NSDictionary *params = @{@"click_type":@"cancel",
+                                 @"enter_from":@"default"};
+        [FHEnvContext recordEvent:params andEventKey:@"city_click"];
     }];
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-        NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        
-        if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
-            [[UIApplication sharedApplication] openURL:jumpUrl];
+        if (openUrl) {
+            [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
+            }];
+            NSDictionary *params = @{@"click_type":@"switch",
+                                     @"enter_from":@"default"};
+            [FHEnvContext recordEvent:params andEventKey:@"city_click"];
         }
     }];
     
@@ -219,11 +235,34 @@
             completion(regeocode);
         } else {
             [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+                if (!model) {
+                    self.retryConfigCount -= 1;
+                    if (self.retryConfigCount >= 0)
+                    {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self requestCurrentLocation:NO];
+                            });
+                        });
+                    }
+                    return;
+                }
                 //更新config
                 [wSelf updateAllConfig:model];
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
+                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
+                    self.isShowSwitch = NO;
+                }
+                self.retryConfigCount = 3;
             }];
         }
     }];
+}
+
+- (void)requestCurrentLocation:(BOOL)showAlert andShowSwitch:(BOOL)switchCity
+{
+    self.isShowSwitch = switchCity;
+    [self requestCurrentLocation:showAlert completion:NULL];
 }
 
 - (void)requestCurrentLocation:(BOOL)showAlert
@@ -235,10 +274,16 @@
 {
      __weak typeof(self) wSelf = self;
     [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-        [wSelf updateAllConfig:model];
+        
+        if (model) {
+            [wSelf updateAllConfig:model];
+        }
         
         if (model.data && completion) {
             completion(YES);
+        }else
+        {
+            completion(NO);
         }
     }];
 }
@@ -248,6 +293,7 @@
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
+    
     [[FHEnvContext sharedInstance] saveGeneralConfig:model];
     
     [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
@@ -265,6 +311,9 @@
     if ([FHEnvContext sharedInstance].homeConfigCallBack) {
         [FHEnvContext sharedInstance].homeConfigCallBack(model.data);
     }
+    
+    // 告诉城市列表config加载ok
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];
 }
 
 

@@ -92,7 +92,7 @@
 
 "renthouse_main"  =  "FHHouseRentHomeVC";
 "rent_main"  =  "FHHouseRentHomeVC";
-
+"realtor_detail"       = "FHRealtorDetailWebViewController";
 "webview_oc"           = "FHWebviewViewController";
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";

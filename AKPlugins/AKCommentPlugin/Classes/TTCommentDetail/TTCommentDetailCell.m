@@ -209,7 +209,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 }
 
 - (void)digButtonOnClick:(id)sender {
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"replier_digg_click", nil, self.source, nil);
+//    wrapperTrackEventWithCustomKeys([self _trackerSource], @"replier_digg_click", nil, self.source, nil);
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:digCommentWithCommentModel:)]) {
         [self.delegate tt_commentCell:self digCommentWithCommentModel:self.commentModel];
     }

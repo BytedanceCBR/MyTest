@@ -38,6 +38,8 @@
 #import <TTForwardWeitoutiaoActivity.h>
 #import <TTDirectForwardWeitoutiaoActivity.h>
 #import "AKAwardCoinManager.h"
+#import "FHTraceEventUtils.h"
+
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 @implementation TTArticleDetailViewController (Share)
@@ -586,9 +588,20 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if ([SSCommonLogic accountABVersionEnabled]) {
         NSString *label;
         if (!self.detailModel.article.userRepined) {
-            label = @"favorite_button";
+//            label = @"favorite_button";
+//
+//            [self report_p_sendDetailLogicTrackWithLabel:label];
             
-            [self report_p_sendDetailLogicTrackWithLabel:label];
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+            [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+            [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+            //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+            [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+            [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+            [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+            [params setValue:@"detail" forKey:@"position"];
+            [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
             // 加入收藏吊起登录弹窗的代码
             TTAccountLoginAlertTitleType type = TTAccountLoginAlertTitleTypeFavor;
             NSString *source = @"article_detail_favor";

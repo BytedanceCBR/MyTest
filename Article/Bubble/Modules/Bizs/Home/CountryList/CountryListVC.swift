@@ -332,7 +332,8 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let node = getDisplayDatas()[indexPath.section]
-        var cityList = FHEnvContext.sharedInstance().getConfigFromCache().cityList as! [FHConfigDataCityListModel]?
+        guard let configCache = FHEnvContext.sharedInstance().getConfigFromCache() else { return }
+        var cityList = configCache.cityList as! [FHConfigDataCityListModel]?
         
         if (cityList?.count ?? 0) > indexPath.row {
             if let item = cityList?[0], let cityId = item.cityId {

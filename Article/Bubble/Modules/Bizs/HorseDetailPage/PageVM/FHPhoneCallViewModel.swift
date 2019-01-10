@@ -8,7 +8,13 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
+@objc
 class FHPhoneCallViewModel: NSObject {
+
+    let theDisposeBag = DisposeBag()
+
+    var followUpAction: (() -> Void)?
 
     func bindCallBtn(btn: UIButton,
                      rank: String,
@@ -18,6 +24,7 @@ class FHPhoneCallViewModel: NSObject {
                      contact: FHHouseDetailContact,
                      disposeBag: DisposeBag) {
         btn.rx.tap
+            .debounce(0.5, scheduler: MainScheduler.instance)
             .bind { [weak self] () in
                 let searchId = traceModel?.searchId ?? "be_null"
 
@@ -80,11 +87,40 @@ class FHPhoneCallViewModel: NSObject {
                     Utils.telecall(phoneNumber: phone)
                     tracer(false)
                 }
+                self.followUpAction?()
             }, onError: { (error) in
                 Utils.telecall(phoneNumber: phone)
                 tracer(false)
+                self.followUpAction?()
             })
             .disposed(by: disposeBag)
 
+    }
+
+    @objc
+    func requestVirtualNumberAndCall(realtorId: String,
+                                     traceModel: HouseRentTracer?,
+                                     phone: String,
+                                     houseId: String,
+                                     searchId: String,
+                                     imprId: String,
+                                     onSuccessed: @escaping () -> Void) {
+        var contact = FHHouseDetailContact()
+        contact.realtorId = realtorId
+        contact.phone = phone
+        self.callRealtorPhone(contactPhone: contact,
+                              houseId: Int64(houseId) ?? -1,
+                              houseType: .secondHandHouse,
+                              searchId: searchId,
+                              imprId: imprId,
+                              disposeBag: theDisposeBag) {  [weak self] (isVirtualNumber) in
+                                if let traceModel = traceModel {
+                                    self?.traceCall(rank: traceModel.rank,
+                                                   contact: contact,
+                                                   isVirtualNumber: isVirtualNumber,
+                                                   traceModel: traceModel)
+                                    onSuccessed()
+                                }
+        }
     }
 }

@@ -64,20 +64,21 @@ fileprivate class ItemView: UIControl {
 
     lazy var avator: UIImageView = {
         let re = UIImageView()
-        re.contentMode = .scaleAspectFit
+        re.layer.cornerRadius = 23
+        re.contentMode = .scaleAspectFill
         re.clipsToBounds = true
         re.image = #imageLiteral(resourceName: "default-avatar-icons")
         return re
     }()
 
     lazy var licenceIcon: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "contact"), for: .normal)
         return re
     }()
 
     lazy var callBtn: UIButton = {
-        let re = UIButton()
+        let re = ExtendHotAreaButton()
         re.setImage(UIImage(named: "icon-phone"), for: .normal)
         return re
     }()
@@ -161,6 +162,11 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     var traceModel: HouseRentTracer?
 
+    lazy var licenceBrowserViewModel: LicenceBrowserViewModel = {
+        let re = LicenceBrowserViewModel()
+        return re
+    }()
+
     lazy var phoneCallViewModel: FHPhoneCallViewModel = {
         let re = FHPhoneCallViewModel()
         return re
@@ -176,6 +182,11 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
     lazy var expandBtnView: UIView = {
         let re = UIView()
         re.backgroundColor = UIColor.white
+        return re
+    }()
+
+    lazy var expandAreaBtnView: UIControl = {
+        let re = UIControl()
         return re
     }()
 
@@ -208,7 +219,6 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     weak var photoBrowser: PhotoBrowser?
 
-    fileprivate var headerImages: [FHImageItem] = []
     open override class var identifier: String {
         return "FHAgentListCell"
     }
@@ -226,7 +236,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         contentView.addSubview(containerView)
         contentView.addSubview(expandBtnView)
         contentView.addSubview(expandBtn)
-
+        contentView.addSubview(expandAreaBtnView)
         containerView.addSubview(expandItemView)
         expandBtnView.addSubview(arrowIcon)
         expandBtnView.addSubview(expandLabel)
@@ -278,13 +288,19 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
             make.centerY.equalTo(expandLabel)
             make.right.equalToSuperview()
         }
+
+        expandAreaBtnView.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(expandBtnView)
+            make.left.right.equalToSuperview()
+        }
         bindExpandingBtn()
         updateBottomBarState(isExpand: self.isExpanding)
     }
 
     func bindExpandingBtn() {
         disposeBag = DisposeBag()
-        expandBtn.rx.tap
+        expandAreaBtnView.rx.controlEvent(.touchUpInside)
+//        expandBtn.rx.tap
             .bind(onNext: { [unowned self] in
                 self.isExpanding = !self.isExpanding
                 self.updateBottomBarState(isExpand: self.isExpanding)
@@ -319,60 +335,21 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
         }
     }
 
-
-    fileprivate func openPhoto() {
-        if self.headerImages.count > 0 {
-            // 创建图片浏览器
-            let browser = FHPhotoBrowser(photoLoader: BDWebImagePhotoLoader())
-            // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
-            // 如果希望`scale`动画不要隐藏关联缩略图，可使用`.scaleNoHiding`。
-            browser.animationType = .fade
-
-            // 浏览器协议实现者
-            browser.photoBrowserDelegate = self
-            // 装配页码指示器插件，提供了两种PageControl实现，若需要其它样式，可参照着自由定制
-            // 光点型页码指示器
-            //    browser.plugins.append(DefaultPageControlPlugin())
-            // 数字型页码指示器cccc
-            let numberPageControlPlugin = FHHouseNumberPageControlPlugin()
-            //            numberPageControlPlugin.images = self.headerImages
-
-            //            numberPageControlPlugin.largeTracer = largeImageTracerGen(images: self.headerImages, traceParams: traceParams)
-            numberPageControlPlugin.centerY = UIScreen.main.bounds.height - 30
-            browser.plugins.append(numberPageControlPlugin)
-            browser.cellPlugins = [RawImageButtonPlugin()]
-            let plugin = FHPhotoBrowserShowAllPlugin(titles: headerImages.map { $0.title ?? "" } )
-            plugin.overlayView.imageNameLabel.isHidden = false
-            browser.plugins.append(plugin)
-
-            let originWindowLevel: UIWindowLevel? = UIApplication.shared.keyWindow?.windowLevel
-            plugin.didTouchBackButton = { [weak browser] in
-
-                browser?.dismiss(animated: true, completion: nil)
-                if let window = UIApplication.shared.keyWindow, let originLevel = originWindowLevel {
-                    window.windowLevel = originLevel
-                }
-            }
-            plugin.overlayView.showBtn.isHidden = true
-            browser.show()
-        }
-    }
-
     func openPhotoByContact(contact: FHHouseDetailContact) -> () -> Void {
         return { [weak self] in
-            var headers:[FHImageItem] = []
+            var headers:[FHLicenceImageItem] = []
             if (contact.businessLicense?.isEmpty ?? true) == false,
                 let businessLicense = contact.businessLicense {
-                let item = FHImageItem(url: businessLicense, title: "营业执照")
+                let item = FHLicenceImageItem(url: businessLicense, title: "营业执照")
                 headers.append(item)
             }
             if (contact.certificate?.isEmpty ?? true) == false,
                 let certificate = contact.certificate {
-                let item = FHImageItem(url: certificate, title: "从业人员信息卡")
+                let item = FHLicenceImageItem(url: certificate, title: "从业人员信息卡")
                 headers.append(item)
             }
-            self?.headerImages = headers
-            self?.openPhoto()
+            self?.licenceBrowserViewModel.setImages(images: headers)
+            self?.licenceBrowserViewModel.open()
         }
     }
 
@@ -411,21 +388,14 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
 }
 
-fileprivate class FHImageItem {
-    var url: String
-    var title: String
-    init(url: String, title: String) {
-        self.url = url
-        self.title = title
-    }
-}
-
-func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> () -> TableSectionNode? {
+func parseAgentListCell(data: ErshouHouseData,
+                        traceModel: HouseRentTracer?,
+                        followUp:@escaping () -> Void) -> () -> TableSectionNode? {
 
     if data.recommendedRealtors?.count == 0 {
         return { nil }
     }
-    let cellRender = curry(fillAgentListCell)(data)(traceModel)
+    let cellRender = curry(fillAgentListCell)(data)(traceModel)(followUp)
     let params = TracerParams.momoid() <|>
         EnvContext.shared.homePageParams <|>
         toTracerParams(traceModel?.pageType ?? "be_null", key: "page_type") <|>
@@ -447,11 +417,12 @@ func parseAgentListCell(data: ErshouHouseData, traceModel: HouseRentTracer?) -> 
 func fillAgentListCell(
     data: ErshouHouseData,
     traceModel: HouseRentTracer?,
+    followUpAction:@escaping () -> Void,
     cell: BaseUITableViewCell) {
     guard let theCell = cell as? FHAgentListCell else {
         return
     }
-
+    theCell.phoneCallViewModel.followUpAction = followUpAction
     let items = data.recommendedRealtors?.take(5).enumerated()
         .map({ (e) -> ItemView  in
             let (offset, contact) = e
@@ -475,10 +446,25 @@ func fillAgentListCell(
             itemView.licenceIcon.rx.tap
                 .bind(onNext: theCell.openPhotoByContact(contact: contact))
                 .disposed(by: theCell.disposeBag)
+
+            let delegate = FHRealtorDetailWebViewControllerDelegateImpl()
+            delegate.followUp = followUpAction
             //页面跳转
             itemView.rx.controlEvent(.touchUpInside)
                 .bind {
-                    //TODO openUrl
+                    traceModel?.elementFrom = "old_detail_related"
+                    let reportParams = getRealtorReportParams(traceModel: traceModel)
+                    let openUrl = "fschema://realtor_detail"
+
+//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
+                    let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
+                    let info: [String: Any] = ["url": jumpUrl,
+                                               "title": "经纪人详情页",
+                                               "delegate": delegate,
+                                               "realtorId": contact.realtorId ?? "",
+                                               "trace": traceModel]
+                    let userInfo = TTRouteUserInfo(info: info)
+                    TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }
                 .disposed(by: theCell.disposeBag)
             return itemView
@@ -499,6 +485,29 @@ func fillAgentListCell(
     if let items = items, items.count > 0 {
         theCell.addItems(items: items)
         theCell.updateByExpandingState()
+    }
+}
+
+func getRealtorReportParams(traceModel: HouseRentTracer?) -> String {
+    if let traceModel = traceModel {
+        var dict:[String: Any] = [:]
+        dict["enter_from"] = traceModel.enterFrom
+        dict["element_from"] = traceModel.elementFrom
+        dict["origin_from"] = traceModel.originFrom ?? "be_null"
+        dict["log_pb"] = traceModel.logPb ?? "be_null"
+        dict["search_id"] = traceModel.searchId ?? "be_null"
+        dict["group_id"] = traceModel.groupId ?? "be_null"
+        if let logPb = traceModel.logPb as? [AnyHashable: Any] {
+            dict["impr_id"] = (logPb["impr_id"] as? String) ?? "be_null"
+        }
+
+        if let data = try? JSONSerialization.data(withJSONObject: dict) {
+            return String(bytes: data, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        } else {
+            return ""
+        }
+    } else {
+        return ""
     }
 }
 
@@ -535,140 +544,4 @@ func shouldShowContact(contact: FHHouseDetailContact) -> Bool {
         }
     }
     return result
-}
-
-fileprivate class FHHouseNumberPageControlPlugin: HouseNumberPageControlPlugin {
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser, didChangedPageIndex index: Int) {
-        currentPageRelay.accept(index)
-    }
-
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidLayoutSubviews view: UIView) {
-        super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
-        numberLabel.isHidden = false
-    }
-
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser, viewDidAppear view: UIView, animated: Bool) {
-        view.addSubview(numberLabel)
-    }
-}
-
-fileprivate class FHPhotoBrowserShowAllPlugin: PhotoBrowserShowAllPlugin {
-    private var titles: [String]
-    init(titles: [String]) {
-        self.titles = titles
-        super.init()
-        self.overlayView.backgroundColor = color(0, 0, 0, 0.2)
-    }
-
-    override func photoBrowser(_ photoBrowser: PhotoBrowser,
-                               didChangedPageIndex index: Int) {
-        if titles.count > index {
-            self.overlayView.imageNameLabel.text = titles[index]
-        }
-    }
-
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser,
-                                    viewDidLayoutSubviews view: UIView) {
-        super.photoBrowser(photoBrowser, viewDidLayoutSubviews: view)
-        overlayView.isHidden = false
-        let frame = overlayView.frame
-        guard let superView = overlayView.superview else { return }
-
-        overlayView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
-        overlayView.center = CGPoint(x: superView.bounds.midX,
-                                     y: bottomOffsetY)
-    }
-
-    open override func photoBrowser(_ photoBrowser: PhotoBrowser,
-                                    viewDidAppear view: UIView,
-                                    animated: Bool) {
-        view.addSubview(overlayView)
-    }
-
-}
-
-
-extension FHAgentListCell: PhotoBrowserDelegate {
-    /// 共有多少张图片
-    func numberOfPhotos(in photoBrowser: JXPhotoBrowser.PhotoBrowser) -> Int {
-        return headerImages.count
-    }
-
-    /// 各缩略图图片，也是图片加载完成前的 placeholder
-    func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser,
-                      thumbnailImageForIndex index: Int) -> UIImage? {
-
-        if index >= headerImages.count { return nil}
-        let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url)
-        let key = BDWebImageManager.shared().requestKey(with: url)
-        return BDImageCache.shared().image(forKey: key)
-    }
-
-    /// 高清图
-    func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser,
-                      highQualityUrlForIndex index: Int) -> URL? {
-        if index >= headerImages.count { return nil }
-        let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url)
-        return url
-    }
-
-    func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser,
-                      localImageForIndex index: Int) -> UIImage? {
-
-        if index >= headerImages.count { return nil }
-        let imageModel = headerImages[index]
-        let url = URL(string: imageModel.url)
-        let key = BDWebImageManager.shared().requestKey(with: url)
-
-        return BDImageCache.shared().image(forKey: key)
-    }
-
-    public func photoBrowser(_ photoBrowser: JXPhotoBrowser.PhotoBrowser, thumbnailViewForIndex index: Int) -> UIView? {
-        return self
-    }
-
-    func photoBrowser(_ photoBrowser: PhotoBrowser,
-                      didLongPressForIndex index: Int,
-                      image: UIImage) {
-        if index >= headerImages.count { return }
-        UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
-
-    }
-
-    @objc func image(image: UIImage,
-                     didFinishSavingWithError error: NSError?,
-                     contextInfo:UnsafeRawPointer) {
-
-        if let _ = error as NSError? {
-            let errorTip:String = "保存失败"
-            let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-            if status != .authorized {
-
-                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许好多房访问您的照片", preferredType: .alert)
-                alert.addAction(withTitle: "取消", actionType: .cancel) {
-                }
-                alert.addAction(withTitle: "立刻前往", actionType: .normal, actionBlock: {
-
-                    if let url = URL(string: UIApplicationOpenSettingsURLString),UIApplication.shared.canOpenURL(url) {
-
-                        if #available(iOS 10.0, *) {
-                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                        } else {
-                            UIApplication.shared.openURL(url)
-                        }
-                    }
-
-                })
-                if let topVC = TTUIResponderHelper.topmostViewController() {
-                    alert.show(from: topVC, animated: true)
-                }
-                return
-            }
-            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: errorTip, indicatorImage: UIImage(named: "close_popup_textpage")!, autoDismiss: true, dismissHandler: nil)        }
-        else {
-            TTIndicatorView.show(withIndicatorStyle: .image, indicatorText: "保存成功", indicatorImage: UIImage(named: "doneicon_popup_textpage")!, autoDismiss: true, dismissHandler: nil)
-        }
-    }
 }

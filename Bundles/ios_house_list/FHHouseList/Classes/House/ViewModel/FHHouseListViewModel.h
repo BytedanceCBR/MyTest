@@ -12,8 +12,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /*
- * 二手房列表页 viewmodel
+ * 列表页 viewmodel
  */
+
+@class FHHouseListRedirectTipView;
+
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
 
 @property (nonatomic, copy) NSString *houseListOpenUrl;
@@ -22,12 +25,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj, BOOL isFromMap);
 
-#pragma mark - log相关
 @property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
 
+-(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;
+
+#pragma mark - log相关
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;
 // findTab过来的houseSearch需要单独处理下埋点数据
 -(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
+-(NSDictionary *)categoryLogDict;
 
 @end
 

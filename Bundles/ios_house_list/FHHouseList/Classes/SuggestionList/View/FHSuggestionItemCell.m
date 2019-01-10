@@ -11,6 +11,7 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHSuggestionListNavBar.h"
+#import "FHExtendHotAreaButton.h"
 
 @interface FHSuggestionItemCell ()
 

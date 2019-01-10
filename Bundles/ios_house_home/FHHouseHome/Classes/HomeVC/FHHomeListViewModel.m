@@ -55,6 +55,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource = [FHHomeMainTableViewDataSource new];
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
+        [self updateCategoryViewSegmented:YES];
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
@@ -122,22 +123,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-////            sslocal://webview?url=10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876
-//            NSString *urlStr = @"http://10.1.15.29:8889/f100/client/top_xiaoqu/hot?city_id=7876";
-////            NSString *urlStr = @"http://10.1.10.250:8080/test";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/lib/js_sdk/";
-//             //            NSString *urlStr = @"http://s.pstatp.com/site/tt_mfsroot/test/main.html";
-//             NSString *unencodedString = urlStr;
-//             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//             (CFStringRef)unencodedString,
-//             NULL,
-//             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-//             kCFStringEncodingUTF8));
-//             urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-//             NSURL *url = [TTURLUtils URLWithString:urlStr];
-//             [[TTRoute sharedRoute] openURLByPushViewController:url];
-//             return ;
-//
+            
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
 
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -160,6 +146,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
                     self.stayTime = [self getCurrentTime];
                     [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
+                    self.dataSource.originSearchId = self.originSearchIdCache[cacheKey];
                 }else
                 {
                     [self reloadHomeTableHeaderSection];
@@ -170,6 +157,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self reloadHomeTableHeaderSection];
                 [self requestOriginData];
             }
+            
+            [self sendSwitchButtonClickTrace];
+            
         };
 
     }
@@ -295,6 +285,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         
         self.stayTime = [self getCurrentTime];
+        self.dataSource.originSearchId = model.data.searchId;
+    
     }];
 }
 
@@ -501,6 +493,29 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV reloadData];
     }
     [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+}
+
+- (void)sendSwitchButtonClickTrace
+{
+    NSString *stringClickType = @"be_null";
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    switch (self.currentHouseType) {
+        case FHHouseTypeNewHouse:
+            stringClickType = @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            stringClickType = @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            stringClickType = @"rent";
+            break;
+        default:
+            break;
+    }
+    tracerDict[@"click_type"] = stringClickType;
+    
+    [FHEnvContext recordEvent:tracerDict andEventKey:@"click_switch_maintablist"];
+
 }
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType

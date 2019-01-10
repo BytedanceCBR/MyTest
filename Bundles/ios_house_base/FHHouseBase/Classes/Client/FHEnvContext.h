@@ -24,7 +24,9 @@
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
-static NSString *const kUserDefaultCityId = @"config_key_select_city_id";
+static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";
+
+static NSString *const kUserHasSelectedCityKey = @"k_fh_has_sel_city";
 
 static NSString *const kTracerEventType = @"house_app2c_v2";
 
@@ -96,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveGeneralConfig:(FHConfigModel *)model;
 
 //从缓存中获取config数据
-- (FHConfigDataModel *)getConfigFromCache;
+- (nullable FHConfigDataModel *)getConfigFromCache;
 
 //从本地磁盘获取config数据
 - (FHConfigDataModel *)readConfigFromLocal;

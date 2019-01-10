@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const kFHAllConfigLoadSuccessNotice;
+
 @class FHConfigModel;
 
 @interface FHLocManager : NSObject
@@ -22,10 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) CLLocation * currentLocaton;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isLocationSuccess;
+@property (nonatomic, assign) NSInteger retryConfigCount;
 
 +(instancetype)sharedInstance;
 
-- (void)requestCurrentLocation:(BOOL)showAlert;
+- (void)requestCurrentLocation:(BOOL)showAlert andShowSwitch:(BOOL)switchCity;
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion;
 

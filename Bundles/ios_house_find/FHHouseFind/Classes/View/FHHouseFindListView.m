@@ -19,15 +19,18 @@
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
 #import "UIView+Refresh_ErrorHandler.h"
+#import "FHHouseListRedirectTipView.h"
 
 @interface FHHouseFindListView () <FHHouseListViewModelDelegate, UIViewControllerErrorHandler>
 
+@property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 @property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) UITableView *tableView;
 @property (nonatomic , strong) FHHouseListViewModel *viewModel;
@@ -38,6 +41,7 @@
 @property (nonatomic , strong) FHHouseFindSectionItem *item;
 @property(nonatomic , assign) BOOL needRefresh;
 @property(nonatomic , assign) BOOL hasValidateData;
+
 @end
 
 @implementation FHHouseFindListView
@@ -56,6 +60,17 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.viewModel viewWillDisappear:animated];
+    [self.houseFilterBridge closeConditionFilterPanel];
+
+}
+
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
     if (!self.needRefresh) {
@@ -65,25 +80,23 @@
     _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
     TTRouteUserInfo *userInfo = nil;
-    NSMutableDictionary *param = @{}.mutableCopy;
-    param[@"enter_from"] = @"findtab";
-    param[@"enter_type"] = @"click";
-    param[@"element_from"] = @"be_null";
-    param[@"origin_from"] = @"findtab_related";
-
-    userInfo = [[TTRouteUserInfo alloc]initWithInfo:@{@"tracer":param}];
+    if (self.tracerDict) {
+        
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:@{@"tracer":self.tracerDict}];
+    }
     self.paramObj.userInfo = userInfo;
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     [self.viewModel setMaskView:self.errorMaskView];
+    [self.viewModel setRedirectTipView:self.redirectTipView];
     [self setupViewModelBlock];
     [self resetFilter:self.paramObj];
-    [self setupConstraints];
     [self.houseFilterBridge trigerConditionChanged];
     self.needRefresh = NO;
     self.hasValidateData = YES;
 //    [self endLoading];
 
 }
+
 #pragma mark - UIViewControllerErrorHandler
 
 - (BOOL)tt_hasValidateData
@@ -112,7 +125,7 @@
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
     
-    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES];
+    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:YES showSort:YES safeBottomPandding:0];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     
@@ -144,8 +157,10 @@
     [self addSubview:self.filterBgControl];
     [self.filterContainerView addSubview:self.filterPanel];
     
+    CGFloat bottomHeight = 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self);
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
@@ -203,6 +218,7 @@
 
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj
 {
+    self.viewModel.isEnterCategory = YES;
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
     
@@ -223,6 +239,15 @@
     [self.viewModel updateHouseSearchDict:houseSearchDic];
 }
 
+- (NSDictionary *)categoryLogDict
+{
+    return [self.viewModel categoryLogDict];
+}
+
+- (BOOL)isEnterCategory
+{
+    return self.viewModel.isEnterCategory;
+}
 - (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;
@@ -244,17 +269,24 @@
 
 - (void)setupUI
 {
-    [self addSubview:self.tableView];
+    _containerView = [[UIView alloc] init];
+
+    [self addSubview:_containerView];
     
+    [_containerView addSubview:self.tableView];
+
     //error view
     _errorMaskView = [[FHErrorView alloc] init];
-    [self addSubview:_errorMaskView];
+    [_containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
     
     //notifyview
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self addSubview:self.notifyBarView];
     
+    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
+    [self addSubview:self.redirectTipView];
+
     [self addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];
@@ -266,8 +298,15 @@
 
 - (void)setupConstraints
 {
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+    }];
+    
+    CGFloat bottomHeight = 49;
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self);
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).mas_offset(-bottomHeight);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
@@ -276,8 +315,7 @@
     }];
 
     [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
-        make.top.mas_equalTo(self);
+        make.left.right.top.mas_equalTo(self.containerView);
         make.height.mas_equalTo(@40);
     }];
     
@@ -286,12 +324,18 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
+        make.left.right.bottom.mas_equalTo(self.containerView);
+    }];
+    
+    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
-        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(0);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.tableView);
+        make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
     }];
     
