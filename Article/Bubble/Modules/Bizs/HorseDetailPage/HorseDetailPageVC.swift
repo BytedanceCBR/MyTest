@@ -790,6 +790,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
 
         recordEvent(key: "go_detail", params: traceParams
+            .exclude("group_id")
+            .exclude("search_id")
             .exclude("house_type")
             .exclude("element_type")
             .exclude("maintab_search"))
@@ -1118,7 +1120,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             navigationController.view.bringSubview(toFront: navigationController.navigationBar)
         }
         if let stayPageParams = stayPageParams {
-            recordEvent(key: "stay_page", params: stayPageParams.exclude("element_type"))
+            recordEvent(key: "stay_page", params: stayPageParams.exclude("element_type").exclude("group_id").exclude("search_id"))
         }
         stayPageParams = nil
     }
