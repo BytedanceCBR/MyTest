@@ -11,6 +11,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCitySearchNavBarView : UIView
 
+@property (nonatomic, strong)   UIButton       *backBtn;
+@property (nonatomic, strong)   UITextField       *searchInput;
+
+@end
+
+@interface FHCitySearchTableView : UITableView
+
+@property (nonatomic, copy)     dispatch_block_t       handleTouch;
+
 @end
 
 NS_ASSUME_NONNULL_END

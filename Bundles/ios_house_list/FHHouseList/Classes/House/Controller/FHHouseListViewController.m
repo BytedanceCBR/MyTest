@@ -19,6 +19,7 @@
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
+#import "FHHouseListRedirectTipView.h"
 
 #define kFilterBarHeight 44
 
@@ -30,6 +31,7 @@
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
+@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
@@ -332,12 +334,18 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
+    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.height.mas_equalTo(0);
+    }];
+    
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.tableView);
+        make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
     }];
     
@@ -357,7 +365,8 @@
 
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
-
+    [self.viewModel setRedirectTipView:self.redirectTipView];
+    
     [self.houseFilterViewModel trigerConditionChanged];
 
 }
@@ -395,27 +404,28 @@
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
-    
+
     //notifyview
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
+    
+    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:self.redirectTipView];
 
     [self.view addSubview:self.navbar];
-
     [self.view addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];
     [self.view addSubview:_filterContainerView];
 
     [_filterContainerView addSubview:self.filterPanel];
-
     [self.view bringSubviewToFront:self.filterBgControl];
 
 }
 
 #pragma mark - show notify
 
--(void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
+- (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
 {
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
@@ -426,9 +436,9 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             
-            UIEdgeInsets inset = self.tableView.contentInset;
-            inset.top = 0;
-            self.tableView.contentInset = inset;
+//            UIEdgeInsets inset = self.tableView.contentInset;
+//            inset.top = 0;
+            self.tableView.contentInset = UIEdgeInsetsZero;
         }];
     });
 
@@ -436,8 +446,7 @@
 
 -(void)showErrorMaskView
 {
-    //
-//    [self.viewModel reloadData];
+
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

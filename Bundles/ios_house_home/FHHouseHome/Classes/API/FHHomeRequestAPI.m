@@ -31,4 +31,17 @@
     }];
 }
 
++ (TTHttpTask *)requestCitySearchByQuery:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/city_search";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        paramDic[@"full_text"] = query;
+    } else {
+        paramDic[@"full_text"] = @"";
+    }
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
+
 @end

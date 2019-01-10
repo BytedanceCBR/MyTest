@@ -101,7 +101,6 @@
             isFirtItem = NO;
             leftView = button;
             [_tempViews addObject:button];
-            // TODO: add by zyk 记得埋点添加，应该还有问题，原因是当sug list显示的时候上报了 猜你想搜的数据埋点
             [self trackShowEventData:item rank:button.tag];
         }
         currentIndex += 1;

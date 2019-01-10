@@ -17,6 +17,7 @@
     NSDictionary *dict = @{
                            @"hasMore": @"has_more",
                            @"refreshTip": @"refresh_tip",
+                           @"redirectTips": @"redirect_tips",
                            @"searchId": @"search_id",
                            @"houseListOpenUrl": @"house_list_open_url",
                            };

@@ -30,6 +30,7 @@
 - (void)setupUI {
     // descLabel
     self.descLabel = [[UILabel alloc] init];
+    self.descLabel.text = @"未开通";
     self.descLabel.textColor = [UIColor colorWithHexString:@"#e1e3e6"];
     self.descLabel.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:self.descLabel];
@@ -47,8 +48,14 @@
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(21);
         make.centerY.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.descLabel.mas_left).offset(-10);
+        make.right.mas_equalTo(self.contentView).offset(-60);
     }];
+    self.enabled = NO;
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    self.descLabel.hidden = enabled;
 }
 
 @end
@@ -67,8 +74,23 @@
     if (self) {
         self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
         self.rowViews = [[NSMutableArray alloc] init];
+        [self setupUI];
     }
     return self;
+}
+
+- (void)setupUI {
+    // label
+    self.label = [[UILabel alloc] init];
+    self.label.textColor = [UIColor themeGray4];
+    self.label.font = [UIFont themeFontRegular:16];
+    [self addSubview:self.label];
+    [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.height.mas_equalTo(22);
+        make.top.mas_equalTo(self).offset(20);
+        make.right.mas_equalTo(self).offset(-20);
+    }];
 }
 
 - (void)setCityList:(NSArray *)cityList {
@@ -81,7 +103,7 @@
         [v removeFromSuperview];
     }
     [self.rowViews removeAllObjects];
-    CGFloat top = 12.0;
+    CGFloat top = 44.0 + 12.0;
     CGFloat left = 20.0;
     CGFloat offset = 9.0;
     CGFloat right = 28.0;
@@ -188,35 +210,3 @@
 }
 
 @end
-/*
- fileprivate class BubbleBtn: UIControl {
- 
- lazy var label: UILabel = {
- let result = UILabel()
- result.textAlignment = .center
- result.font = CommonUIStyle.Font.pingFangRegular(14 * CommonUIStyle.Screen.widthScale)
- result.textColor = hexStringToUIColor(hex: "#505050")
- return result
- }()
- 
- init() {
- super.init(frame: CGRect.zero)
- self.layer.cornerRadius = 4
- self.backgroundColor = UIColor.white
- addSubview(label)
- label.snp.makeConstraints { maker in
- maker.centerY.equalToSuperview()
- maker.left.equalTo(5)
- maker.right.equalToSuperview().offset(-5)
- maker.height.equalTo(14)
- maker.top.equalTo(7)
- maker.bottom.equalToSuperview().offset(-7)
- }
- }
- 
- required init?(coder aDecoder: NSCoder) {
- fatalError("init(coder:) has not been implemented")
- }
- 
- }
- */

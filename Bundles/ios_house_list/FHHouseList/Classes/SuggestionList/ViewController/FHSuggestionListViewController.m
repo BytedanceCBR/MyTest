@@ -195,13 +195,32 @@
     [self requestData];
 }
 
+- (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    if (config.searchTabFilter.count > 0) {
+        [items addObject:@(FHHouseTypeSecondHandHouse)];
+    }
+    if (config.searchTabRentFilter.count > 0) {
+        [items addObject:@(FHHouseTypeRentHouse)];
+    }
+    if (config.searchTabCourtFilter.count > 0) {
+        [items addObject:@(FHHouseTypeNewHouse)];
+    }
+    if (config.searchTabNeighborhoodFilter.count > 0) {
+        [items addObject:@(FHHouseTypeNeighborhood)];
+    }
+    return items;
+}
+
 - (void)searchTypeBtnClick:(UIButton *)btn {
     NSArray *items = @[@(FHHouseTypeSecondHandHouse),
                        @(FHHouseTypeRentHouse),
                        @(FHHouseTypeNewHouse),
                        @(FHHouseTypeNeighborhood),];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //TODO: add by zyk configCcache中数据获取
+    if (model) {
+        items = [self houseTypeSectionByConfig:model];
+    }
     NSMutableArray *menuItems = [[NSMutableArray alloc] init];
     [items enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHHouseType houseType = [obj integerValue];
@@ -352,7 +371,6 @@
 - (void)requestHistoryFromRemote {
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
-        // TODO:add by zyk 有loadRequestTimes 自动加的逻辑需要处理吗？
     } else {
         [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
     }

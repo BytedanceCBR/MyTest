@@ -7,8 +7,8 @@ import Foundation
 import SnapKit
 class HouseDetailPageBottomBarView: UIView {
 
-    lazy var leftView: UIView = {
-        let re = UIView()
+    lazy var leftView: UIControl = {
+        let re = UIControl()
         return re
     }()
     
@@ -48,6 +48,12 @@ class HouseDetailPageBottomBarView: UIView {
         return re
     }()
 
+    lazy var licenceIcon: UIButton = {
+        let re = UIButton()
+        re.setImage(UIImage(named: "contact"), for: .normal)
+        return re
+    }()
+
     init() {
         super.init(frame: CGRect.zero)
         self.lu.addTopBorder()
@@ -61,17 +67,26 @@ class HouseDetailPageBottomBarView: UIView {
         leftView.addSubview(avatarView)
         leftView.addSubview(nameLabel)
         leftView.addSubview(agencyLabel)
-        
+        leftView.addSubview(licenceIcon)
         avatarView.snp.makeConstraints { (maker) in
             maker.left.equalTo(20)
             maker.centerY.equalToSuperview()
             maker.width.height.equalTo(42)
         }
+        
         nameLabel.snp.makeConstraints { (maker) in
             maker.left.equalTo(avatarView.snp.right).offset(10)
             maker.top.equalTo(avatarView).offset(2)
             maker.right.equalToSuperview()
         }
+
+        licenceIcon.snp.makeConstraints { (make) in
+            make.left.equalTo(nameLabel.snp.right).offset(4)
+            make.height.width.equalTo(20)
+            make.centerY.equalTo(nameLabel)
+            make.right.lessThanOrEqualTo(leftView).offset(-4)
+        }
+
         agencyLabel.snp.makeConstraints { (maker) in
             maker.left.equalTo(nameLabel)
             maker.top.equalTo(nameLabel.snp.bottom)
@@ -85,6 +100,19 @@ class HouseDetailPageBottomBarView: UIView {
             maker.left.equalTo(leftView.snp.right).offset(20)
             maker.right.equalTo(-20)
             maker.height.equalTo(44)
+        }
+    }
+
+    func displayLicence(isDisplay: Bool) {
+        licenceIcon.isHidden = !isDisplay
+        if isDisplay {
+            nameLabel.snp.updateConstraints { (make) in
+                make.right.equalTo(licenceIcon.snp.left)
+            }
+        } else {
+            nameLabel.snp.updateConstraints { (make) in
+                make.right.equalToSuperview()
+            }
         }
     }
 

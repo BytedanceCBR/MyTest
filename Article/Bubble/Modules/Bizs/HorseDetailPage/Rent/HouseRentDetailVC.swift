@@ -155,7 +155,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
                 toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
-            recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params  <|> traceStayTime()
         }
 
@@ -168,6 +167,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             self.houseRentTracer.elementFrom = tracer["element_from"] as? String ?? "be_null"
             self.houseRentTracer.logPb = tracer["log_pb"]
             self.houseRentTracer.searchId = tracer["search_id"] as? String ?? "be_null"
+            self.houseRentTracer.originSearchId = tracer["origin_search_id"] as? String ?? "be_null"
+            self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
             self.houseRentTracer.enterQuery = tracer["enter_query"] as? String ?? "be_null"
             self.houseRentTracer.searchQuery = tracer["search_query"] as? String ?? "be_null"
             self.houseRentTracer.queryType = tracer["query_type"] as? String ?? "be_null"
@@ -356,7 +357,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                         groupId = logpbV["group_id"] as? String
                     }
                     
-                    let tracerParamsFollow = EnvContext.shared.homePageParams <|>
+                    let tracerParamsFollow =
                         self.getTracePamrasFromRent() <|>
                         toTracerParams(imprId ?? "be_null", key: "impr_id") <|>
                         toTracerParams(groupId ?? "be_null", key: "group_id")
@@ -612,7 +613,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     fileprivate func openSharePanel() {
         
-        var params = EnvContext.shared.homePageParams <|>
+        var params = TracerParams.momoid() <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
             toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
@@ -701,7 +702,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             .disposed(by: disposeBag)
 
 
-        var tracerParams = EnvContext.shared.homePageParams <|>
+        var tracerParams =
             (self.bottomBarViewModel?.traceParams ?? TracerParams.momoid())
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
@@ -719,7 +720,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     func sendClickConfirmTrace()
     {
         let tracerParams = TracerParams.momoid() <|>
-            EnvContext.shared.homePageParams <|>
             toTracerParams(houseRentTracer.pageType, key: "page_type") <|>
             toTracerParams("left_pic", key: "card_type") <|>
             toTracerParams(houseRentTracer.enterFrom, key: "enter_from") <|>
@@ -732,7 +732,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     deinit {
         if let staySearchParams = staySearchParams {
-            recordEvent(key: "stay_page_search", params: staySearchParams)
+//            recordEvent(key: "stay_page_search", params: staySearchParams)
         }
          UIApplication.shared.statusBarStyle = .default
     }

@@ -17,7 +17,7 @@
 @property (nonatomic, strong)   FHToastView       *toastView;
 @property (nonatomic, strong)   CSToastStyle      *toastStyle;
 
-@property (nonatomic, strong)   FHLoadingView       *loadingView;
+@property (nonatomic, strong)   UIView       *loadingView;
 
 @end
 
@@ -81,14 +81,17 @@
     [self dismissToast];
     [self dismissCustomLoading];
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-    _loadingView = [[FHLoadingView alloc] initWithFrame:CGRectZero];
-    _loadingView.userInteractionEnabled = isUserInteraction;
     if (window) {
-        [window addSubview:_loadingView];
-        [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.mas_equalTo(window);
+        UIView *loadingParentView = [[UIView alloc] initWithFrame:window.bounds];
+        loadingParentView.userInteractionEnabled = isUserInteraction;
+        self.loadingView = loadingParentView;
+        FHLoadingView *loadV = [[FHLoadingView alloc] initWithFrame:CGRectZero];
+        [window addSubview:loadingParentView];
+        [loadingParentView addSubview:loadV];
+        [loadV mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(loadingParentView);
         }];
-        self.loadingView.message.text = message;
+        loadV.message.text = message;
     }
 }
 

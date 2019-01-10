@@ -18,6 +18,7 @@
 #import "TTRoute.h"
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
+#import <objc/runtime.h>
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -45,6 +46,12 @@
 {
     NSInteger cityId = 0;
     
+    if (![FHEnvContext isNetworkConnected])
+    {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
     if ([urlString containsString:@"city_id"]) {
         NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
         NSString *paramsStr = [paramsArrary lastObject];
@@ -58,9 +65,8 @@
         }
             
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-
+        
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
-            [[ToastManager manager] dismissCustomLoading];
             if (isSuccess) {
                 FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
                 if (configModel.cityAvailability.enable) {
@@ -82,8 +88,10 @@
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
+                    [[ToastManager manager] dismissCustomLoading];
                 }else
                 {
+                    [[ToastManager manager] dismissCustomLoading];
                     if(completion)
                     {
                         completion(YES);
@@ -94,6 +102,7 @@
                 }
             }else
             {
+                [[ToastManager manager] dismissCustomLoading];
                 if(completion)
                 {
                     completion(NO);
@@ -195,6 +204,7 @@
     
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
+        requestParam[@"city"] = gCityName;
     }else
     {
         requestParam[@"city_name"] = nil;
@@ -213,6 +223,9 @@
 
 - (void)onStartApp
 {
+    //城市列表页未选择时hook页面跳转判断方法
+    [self checkExchangeCanOpenURLMethod];
+    
     //开始网络监听通知
     [self.reachability startNotifier];
     
@@ -228,7 +241,12 @@
     //检测是否需要打开城市列表
     [self check2CityList];
     
-    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:@"local_test" finishBlock:^(NSString *deviceID, NSString *installID) {
+    NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
+    if (!channelName) {
+        channelName = @"App Store";
+    }
+    
+    [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
         conf.domain = [FHURLSettings baseURL];
@@ -284,24 +302,42 @@
 
 - (void)check2CityList {
     // 城市是否选择，未选择直接跳转城市列表页面
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:@"k_fh_has_sel_city"] boolValue];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
     if (!hasSelectedCity) {
         NSDictionary* info = @{@"animated":@(NO),
-                               @"disablePanGes":@(YES),
-                               @"tracer":@{@"enter_from": @"push",
-                                           @"element_from": @"be_null",
-                                           @"rank": @"be_null",
-                                           @"card_type": @"be_null",
-                                           @"origin_from": @"push",
-                                           @"origin_search_id": @"be_null"
-                                           }};
+                               @"disablePanGes":@(YES)};
         TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
         NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
-- (FHConfigDataModel *)getConfigFromCache
+// 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
+- (void)checkExchangeCanOpenURLMethod {
+    if([(id)[FHUtils contentForKey:kUserDefaultCityId] integerValue] > 0) {
+        // 旧版本选择过城市
+        [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
+    }
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+    if (!hasSelectedCity) {
+        // 交换方法
+        Class cls = [TTRoute class];
+        SEL originalSel = @selector(canOpenURL:);
+        SEL swizzeledSel = @selector(toSwizzled_canOpenURL:);
+        
+        Method originalMethod = class_getInstanceMethod(cls, originalSel);
+        Method swizzledMethod = class_getInstanceMethod(cls, swizzeledSel);
+        
+        BOOL success = class_addMethod(cls, originalSel, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+        if (success) {
+            class_replaceMethod(cls, swizzeledSel, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    }
+}
+
+- (nullable FHConfigDataModel *)getConfigFromCache
 {
     if (self.generalBizConfig.configCache) {
         return self.generalBizConfig.configCache;
@@ -377,6 +413,21 @@
     if (kIsNSString(originSearchid)) {
         self.commonPageModel.originSearchId = originSearchid;
     }
+}
+
+@end
+
+// 升级TTRoute后需要验当前场景
+@implementation TTRoute (fhCityList)
+
+- (BOOL)toSwizzled_canOpenURL:(NSURL *)url {
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+    BOOL isCityListUrl = [url.absoluteString containsString:@"sslocal://city_list"];
+    if (hasSelectedCity || isCityListUrl) {
+        return [self toSwizzled_canOpenURL:url];
+    }
+    // 当前城市未选择，不能进行页面跳转
+    return NO;
 }
 
 @end

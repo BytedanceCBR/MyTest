@@ -17,6 +17,7 @@
 #import <FHHouseSuggestionDelegate.h>
 #import "TTRoute.h"
 #import "FHUserTracker.h"
+#import "UIViewAdditions.h"
 
 @interface FHHouseFindListViewModel () <UIScrollViewDelegate, FHHouseSuggestionDelegate>
 
@@ -33,6 +34,7 @@
 @property (nonatomic , assign) NSInteger currentSelectIndex;
 @property (nonatomic , assign) NSInteger lastSelectIndex;
 @property (nonatomic , strong) NSMutableDictionary *sugDict;
+@property (nonatomic , strong) RACDisposable *configDisposeble;
 
 @end
 
@@ -71,7 +73,7 @@
     [self refreshDataWithConfigDataModel];
     //订阅config变化
     __block BOOL isFirstChange = YES;
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+    self.configDisposeble = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         
         //过滤多余刷新
         if (wself.configDataModel == [[FHEnvContext sharedInstance]getConfigFromCache] && !isFirstChange) {
@@ -111,7 +113,7 @@
     for (NSInteger index = 0; index < self.itemList.count; index++) {
         
         FHHouseFindSectionItem *item = self.itemList[index];
-        FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectMake(self.scrollView.bounds.size.width * index, 0, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
+        FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectZero];
         baseView.tracerDict = self.tracerDict;
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
@@ -119,6 +121,10 @@
         };
         baseView.tag = 10 + index;
         [self.scrollView addSubview:baseView];
+        [baseView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.scrollView.bounds.size.width * index);
+            make.top.width.height.mas_equalTo(self.scrollView);
+        }];
     }
     
     if (self.itemList.count > 0) {
@@ -132,6 +138,12 @@
 - (void)viewDidLayoutSubviews
 {
     self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width * self.itemList.count, self.scrollView.bounds.size.height - self.scrollView.contentInset.bottom);
+    if ([self.segmentView totalSegmentedControlWidth] < self.segmentView.width) {
+        
+        self.segmentView.userDraggable = NO;
+        self.segmentView.width = ceil([self.segmentView totalSegmentedControlWidth]);
+        self.segmentView.centerX = self.scrollView.width / 2;
+    }
 }
 
 - (void)refreshHouseItemList
@@ -148,15 +160,6 @@
         NSString *placeholder = [self placeholderByHouseType:FHHouseTypeSecondHandHouse];
         [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeSecondHandHouse]];
     }
-    if (self.configDataModel.searchTabCourtFilter.count > 0) {
-        FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
-        item.houseType = FHHouseTypeNewHouse;
-        itemTitle = @"新房";
-        [itemList addObject:item];
-        [titleList addObject:itemTitle];
-        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNewHouse];
-        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNewHouse]];
-    }
     if (self.configDataModel.searchTabRentFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
         item.houseType = FHHouseTypeRentHouse;
@@ -165,6 +168,15 @@
         [titleList addObject:itemTitle];
         NSString *placeholder = [self placeholderByHouseType:FHHouseTypeRentHouse];
         [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeRentHouse]];
+    }
+    if (self.configDataModel.searchTabCourtFilter.count > 0) {
+        FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
+        item.houseType = FHHouseTypeNewHouse;
+        itemTitle = @"新房";
+        [itemList addObject:item];
+        [titleList addObject:itemTitle];
+        NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNewHouse];
+        [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNewHouse]];
     }
     if (self.configDataModel.searchTabNeighborhoodFilter.count > 0) {
         FHHouseFindSectionItem *item = [[FHHouseFindSectionItem alloc]init];
@@ -178,6 +190,7 @@
 
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
+    
 }
 
 - (void)jump2GuessVC
@@ -302,6 +315,19 @@
             
             [wself.scrollView setContentOffset:CGPointMake(index * wself.scrollView.bounds.size.width, 0) animated:NO];
             [wself selectHouseFindListItem:index];
+            if (wself.lastSelectIndex != wself.currentSelectIndex) {
+                
+                FHHouseFindListView *lastBaseView = [wself.scrollView viewWithTag:10 + wself.lastSelectIndex];
+                [lastBaseView viewWillDisappear:YES];
+                
+                FHHouseFindListView *currentBaseView = [wself.scrollView viewWithTag:10 + wself.currentSelectIndex];
+                [currentBaseView viewWillAppear:YES];
+                
+                [wself endTrack];
+                [wself addEnterCategoryLog];
+                [wself addStayCategoryLogBy:wself.lastSelectIndex];
+                [wself resetStayTime];
+            }
 
         }
     };
@@ -320,6 +346,7 @@
         self.segmentView.selectedSegmentIndex = index;
 
     }
+    [self.scrollView endEditing:YES];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -327,6 +354,12 @@
     if (self.segmentView.selectedSegmentIndex < self.itemList.count) {
         [self selectHouseFindListItem:self.segmentView.selectedSegmentIndex];
         if (self.lastSelectIndex != self.currentSelectIndex) {
+            
+            FHHouseFindListView *lastBaseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
+            [lastBaseView viewWillDisappear:YES];
+
+            FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+            [currentBaseView viewWillAppear:YES];
             
             [self endTrack];
             [self addEnterCategoryLog];
@@ -350,17 +383,25 @@
 
 }
 
+- (void)dealloc
+{
+    [_configDisposeble dispose];
+}
+
+#pragma mark - log
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [self startTrack];
-
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
+    FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    [currentBaseView viewWillDisappear:YES];
+    
     [self endTrack];
     [self addStayCategoryLog];
     [self resetStayTime];
-
 }
 
 -(void)addEnterCategoryLog
@@ -375,7 +416,6 @@
             [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
         }
     }
-
 }
 
 - (void)addStayCategoryLog
@@ -405,17 +445,14 @@
     
 }
 
-- (void)startTrack {
-    
+- (void)startTrack
+{
     self.trackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)endTrack {
-    
-    
+- (void)endTrack
+{
     self.trackStayTime += [[NSDate date] timeIntervalSince1970] - self.trackStartTime;
-    
-    NSLog(@"zjing-trackStayTime：%@",@(self.trackStayTime).stringValue);
     
 }
 

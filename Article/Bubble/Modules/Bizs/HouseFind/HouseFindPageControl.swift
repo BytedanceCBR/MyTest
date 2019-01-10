@@ -8,12 +8,12 @@
 import Foundation
 import RxSwift
 class HouseFindPageControl: NSObject, UIScrollViewDelegate {
-    let segmentControl: FWSegmentedControl
+    let segmentControl: HMSegmentedControl
     let pageView: UIScrollView
     private var pageIndex: Int
     var didPageIndexChanged: ((Int) -> Void)?
 
-    init(segmentControl: FWSegmentedControl,
+    init(segmentControl: HMSegmentedControl,
          pageView: UIScrollView) {
         self.segmentControl = segmentControl
         self.pageView = pageView
@@ -36,7 +36,7 @@ class HouseFindPageControl: NSObject, UIScrollViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let index = pageIndexOfContentOffsetX()
-        segmentControl.setSelectedSegmentIndex(index: index, animated: true)
+        segmentControl.setSelectedSegmentIndex(UInt(index), animated: true)
         if pageIndex != index {
             pageIndex = index
             didPageIndexChanged?(index)
@@ -45,7 +45,7 @@ class HouseFindPageControl: NSObject, UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let index = pageIndexOfContentOffsetX()
-        segmentControl.setSelectedSegmentIndex(index: index, animated: true)
+        segmentControl.setSelectedSegmentIndex(UInt(index), animated: true)
         if pageIndex != index {
             pageIndex = index
             didPageIndexChanged?(index)

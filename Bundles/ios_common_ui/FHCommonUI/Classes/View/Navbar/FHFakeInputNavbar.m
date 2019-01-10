@@ -85,11 +85,11 @@
     return self;
 }
 
--(UITextField *)inputTextField
+-(FHTextField *)inputTextField
 {
     if (!_inputTextField) {
         
-        _inputTextField = [[UITextField alloc] init];
+        _inputTextField = [[FHTextField alloc] init];
         _inputTextField.borderStyle = UITextBorderStyleNone;
         _inputTextField.backgroundColor = [UIColor themeGrayPale];
         _inputTextField.font = [UIFont themeFontRegular:14];
