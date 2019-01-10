@@ -76,6 +76,7 @@
                             {
                                 completion(YES);
                             }
+                            [[ToastManager manager] dismissCustomLoading];
                             [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                                 
                             }];
@@ -85,28 +86,28 @@
                             {
                                 completion(NO);
                             }
+                            [[ToastManager manager] dismissCustomLoading];
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
-                    [[ToastManager manager] dismissCustomLoading];
                 }else
                 {
-                    [[ToastManager manager] dismissCustomLoading];
                     if(completion)
                     {
                         completion(YES);
                     }
+                    [[ToastManager manager] dismissCustomLoading];
                     [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                         
                     }];
                 }
             }else
             {
-                [[ToastManager manager] dismissCustomLoading];
                 if(completion)
                 {
                     completion(NO);
                 }
+                [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
             }
         }];
