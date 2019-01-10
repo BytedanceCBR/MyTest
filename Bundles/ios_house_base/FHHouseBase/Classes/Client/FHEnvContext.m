@@ -46,6 +46,12 @@
 {
     NSInteger cityId = 0;
     
+    if (![FHEnvContext isNetworkConnected])
+    {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
     if ([urlString containsString:@"city_id"]) {
         NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
         NSString *paramsStr = [paramsArrary lastObject];
@@ -59,7 +65,7 @@
         }
             
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-
+        
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
             if (isSuccess) {
                 FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];

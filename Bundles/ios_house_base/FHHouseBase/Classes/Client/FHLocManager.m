@@ -101,18 +101,27 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
         return;
     }
 
+    NSDictionary *params = @{@"page_type":@"city_switch",
+                             @"enter_from":@"default"};
+    [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
+
+    
     NSString *titleStr = [NSString stringWithFormat:@"%@",cityName];
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        
+        NSDictionary *params = @{@"click_type":@"cancel",
+                                 @"enter_from":@"default"};
+        [FHEnvContext recordEvent:params andEventKey:@"city_click"];
     }];
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
-                
             }];
+            NSDictionary *params = @{@"click_type":@"switch",
+                                     @"enter_from":@"default"};
+            [FHEnvContext recordEvent:params andEventKey:@"city_click"];
         }
     }];
     
@@ -265,10 +274,16 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
 {
      __weak typeof(self) wSelf = self;
     [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-        [wSelf updateAllConfig:model];
+        
+        if (model) {
+            [wSelf updateAllConfig:model];
+        }
         
         if (model.data && completion) {
             completion(YES);
+        }else
+        {
+            completion(NO);
         }
     }];
 }
