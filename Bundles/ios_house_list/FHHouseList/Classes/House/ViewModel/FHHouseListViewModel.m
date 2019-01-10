@@ -59,7 +59,6 @@
 @property(nonatomic , strong) NSMutableDictionary *houseShowCache;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
-@property (nonatomic , assign) BOOL isShowRedirectTips;
 
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
@@ -94,7 +93,7 @@
 
 -(void)updateRedirectTipInfo {
     
-    if (self.isShowRedirectTips && self.redirectTips) {
+    if (self.redirectTips) {
         
         self.redirectTipView.hidden = NO;
         self.redirectTipView.text = self.redirectTips.text;
@@ -102,6 +101,7 @@
         [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(36);
         }];
+
     }else {
         self.redirectTipView.hidden = YES;
         [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -112,7 +112,6 @@
 
 -(void)closeRedirectTip {
     
-    self.isShowRedirectTips = NO;
     self.redirectTipView.hidden = YES;
     [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
@@ -686,7 +685,6 @@
 #pragma mark - sug delegate
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     
-    self.isShowRedirectTips = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         self.houseSearchDic = allInfo[@"houseSearch"];
