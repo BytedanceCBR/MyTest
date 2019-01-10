@@ -371,7 +371,6 @@
 - (void)requestHistoryFromRemote {
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
-        // TODO:add by zyk 有loadRequestTimes 自动加的逻辑需要处理吗？
     } else {
         [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
     }
