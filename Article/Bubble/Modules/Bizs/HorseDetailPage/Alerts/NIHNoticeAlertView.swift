@@ -45,15 +45,8 @@ class NIHNoticeAlertView: UIView {
         subTitleStr = subTitle
         super.init(frame: UIScreen.main.bounds)
         
+        setupUIForSendPhone()
 
-        if alertType == .alertTypeSendPhone
-        {
-            setupUIForSendPhone()
-        }else
-        {
-            setupUI()
-        }
-        
         sendPhoneView.subTitleView.text = subTitle
         
         let attriStr = NSAttributedString(
@@ -80,10 +73,10 @@ class NIHNoticeAlertView: UIView {
         contentView.snp.makeConstraints { maker in
             maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
             maker.centerX.equalToSuperview()
-            maker.centerY.equalToSuperview().offset(-30)
+            maker.centerY.equalToSuperview()
         }
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.resignTextFieldResponder))
         bgView.addGestureRecognizer(tap)
         bgView.isUserInteractionEnabled = true
         
@@ -91,7 +84,6 @@ class NIHNoticeAlertView: UIView {
         setCustomerPanel(view: sendPhoneView)
         
         sendPhoneView.snp.makeConstraints { maker in
-            maker.height.equalTo(200)
             maker.centerX.equalToSuperview()
             maker.bottom.equalToSuperview()
         }
@@ -102,70 +94,17 @@ class NIHNoticeAlertView: UIView {
                 let userInfo = notification.userInfo!
                 let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
                 let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-                
                 let animations:(() -> Void) = { [unowned self] in
-                    
-                    let offsetY = keyBoardBounds.height - (UIScreen.main.bounds.height - self.contentView.bottom)
-                    if offsetY > 0
-                    {
-                        self.contentView.top -= offsetY
+                    let contentViewHeight = self.contentView.height
+                    let tempOffset = UIScreen.main.bounds.height - keyBoardBounds.origin.y
+                    if (tempOffset > 0) {
+                        let offsetKeybord:CGFloat = 30.0
+                        let offset = (UIScreen.main.bounds.height - (UIScreen.main.bounds.height - keyBoardBounds.origin.y) - contentViewHeight) - offsetKeybord
+                        self.contentView.top = offset
+                    } else {
+                        let offset = (UIScreen.main.bounds.height - (UIScreen.main.bounds.height - keyBoardBounds.origin.y) - contentViewHeight) / 2
+                        self.contentView.top = offset
                     }
-                    
-                    if UIScreen.main.bounds.width < 375
-                    {
-                        self.contentView.snp.remakeConstraints { maker in
-                            maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
-                            maker.centerX.equalToSuperview()
-                            maker.centerY.equalToSuperview().offset(-100)
-                        }
-                    }
-                }
-                
-                if duration > 0 {
-                    let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
-                    UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
-                }else{
-                    animations()
-                }
-            })
-            .disposed(by: disposeBag)
-        
-    }
-
-    private func setupUI() {
-        
-        addSubview(bgView)
-        bgView.snp.makeConstraints { maker in
-            maker.edges.equalToSuperview()
-            
-        }
-        contentView.backgroundColor = UIColor.white
-        contentView.layer.cornerRadius = 6
-        contentView.clipsToBounds = true
-        addSubview(contentView)
-        contentView.snp.makeConstraints { maker in
-
-            maker.width.equalTo(280*CommonUIStyle.Screen.widthScale)
-            maker.centerX.equalToSuperview()
-            maker.centerY.equalToSuperview()
-
-        }
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))
-        bgView.addGestureRecognizer(tap)
-        bgView.isUserInteractionEnabled = true
-        
-        NotificationCenter.default.rx
-            .notification(NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
-            .subscribe(onNext: { [unowned self] notification in
-                let userInfo = notification.userInfo!
-                let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-                let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-                
-                let animations:(() -> Void) = { [unowned self] in
-                    
-                    let offsetY = keyBoardBounds.height - (UIScreen.main.bounds.height - self.contentView.bottom)
-                    self.contentView.top -= offsetY
-                    
                 }
                 
                 if duration > 0 {
@@ -209,9 +148,11 @@ class NIHNoticeAlertView: UIView {
         
     }
 
-    @objc func dismiss() {
-
+    @objc func resignTextFieldResponder() {
         self.sendPhoneView.phoneTextField.resignFirstResponder()
+    }
+    
+    @objc func dismiss() {
         
         UIView.animate(withDuration: 0.25, animations: {
             
@@ -268,7 +209,7 @@ extension NIHNoticeAlertView {
 }
 
 
-class NHSendPhoneNumberPanel: UIView {
+class NHSendPhoneNumberPanel: UIView,UITextFieldDelegate {
     
     let acceptRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: true)
     
@@ -316,10 +257,28 @@ class NHSendPhoneNumberPanel: UIView {
         re.placeholder = "请输入手机号"
         if let phonenum = EnvContext.shared.client.sendPhoneNumberCache?.object(forKey: "phonenumber") as? String
         {
-            re.text = phonenum
+            // 显示 151*****010
+            var tempPhone:String = phonenum
+            if tempPhone.count == 11 {
+                var temp:String = tempPhone
+                tempPhone = "\(temp.prefix(3))*****\(temp.suffix(3))"
+                self.origin_phoneNumber = phonenum
+            }
+            re.text = tempPhone
         }
         return re
     }()
+    
+    var origin_phoneNumber:String? = nil // 原有手机号
+    // 当前输入手机号(有*号的特殊处理)
+    var currentInputPhoneNumber:String? {
+        get {
+            if (self.origin_phoneNumber != nil) {
+                return self.origin_phoneNumber
+            }
+            return self.phoneTextField.text
+        }
+    }
     
     
     lazy var confirmBtn: UIButton = {
@@ -368,7 +327,8 @@ class NHSendPhoneNumberPanel: UIView {
             maker.left.equalTo(leftMarge)
             maker.right.equalTo(rightMarge)
             maker.top.equalTo(phoneInputView.snp.bottom).offset(20)
-            maker.height.equalTo(46)
+            maker.height.equalTo(40)
+            maker.bottom.equalTo(self).offset(-40);
         }
         
         NotificationCenter.default.rx
@@ -395,9 +355,16 @@ class NHSendPhoneNumberPanel: UIView {
                 self.enableConfirmBtn(button: self.confirmBtn, isEnabled: isEnabled)
             })
             .disposed(by: disposeBag)
-        //需要在下一个loop唤醒键盘
-        DispatchQueue.main.async {
-            self.phoneTextField.becomeFirstResponder()
+        
+        phoneTextField.delegate = self
+        
+        if let _ = self.origin_phoneNumber {
+            // 有手机号，不弹出弹窗
+        } else {
+            //需要在下一个loop唤醒键盘
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.4) {
+                self.phoneTextField.becomeFirstResponder()
+            }
         }
         confirmBtn.isEnabled = true
         
@@ -454,4 +421,13 @@ class NHSendPhoneNumberPanel: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // 开始编辑
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if let pn = self.origin_phoneNumber {
+            // 有手机号，显示原来的手机号
+            self.phoneTextField.text = pn
+            self.origin_phoneNumber = nil
+        }
+        return true
+    }
 }
