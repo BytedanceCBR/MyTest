@@ -284,7 +284,7 @@ class NHSendPhoneNumberPanel: UIView,UITextFieldDelegate {
     lazy var confirmBtn: UIButton = {
         let re = UIButton()
         re.backgroundColor = hexStringToUIColor(hex: "#299cff")
-        re.layer.cornerRadius = 24
+        re.layer.cornerRadius = 20
         re.alpha = 0.6
         let attriStr = NSAttributedString(
             string: "确认",

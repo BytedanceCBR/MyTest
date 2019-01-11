@@ -14,6 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const kFHAllConfigLoadSuccessNotice;
+extern NSString * const kFHAllConfigLoadErrorNotice;
 
 @class FHConfigModel;
 

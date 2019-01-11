@@ -15,6 +15,7 @@
 #import "YYCache.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
+NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
 
 @interface FHLocManager ()
 
@@ -244,6 +245,9 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
                                 [self requestCurrentLocation:NO];
                             });
                         });
+                    } else {
+                        // 告诉城市列表config加载error
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadErrorNotice object:nil];
                     }
                     return;
                 }
