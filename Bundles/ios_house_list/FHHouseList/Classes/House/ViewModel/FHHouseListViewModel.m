@@ -738,6 +738,9 @@
 
 -(void)refreshHouseListUrlCallback:(NSString *)openUrl {
 
+    if (openUrl.length < 1) {
+        return;
+    }
     if (self.houseListOpenUrlUpdateBlock) {
         
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:openUrl]];

@@ -63,7 +63,7 @@
                 cityId = [elts.lastObject integerValue];
             }
         }
-            
+        
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
@@ -187,7 +187,7 @@
     double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
     NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
-
+    
     
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);
@@ -266,7 +266,7 @@
         };
         
         [BDAccount sharedAccount].accountConf = conf;
-
+        
     }];
 }
 

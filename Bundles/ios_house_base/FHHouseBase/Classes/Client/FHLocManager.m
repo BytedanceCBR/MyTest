@@ -101,11 +101,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (!cityName || !openUrl) {
         return;
     }
-
+    
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
     [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
-
+    
     
     NSString *titleStr = [NSString stringWithFormat:@"%@",cityName];
     
@@ -205,7 +205,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         {
             
         }
-                
+        
         NSMutableDictionary * amapInfo = [NSMutableDictionary new];
         
         amapInfo[@"sub_locality"] = regeocode.district;
@@ -218,7 +218,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             amapInfo[@"longitude"] = @(location.coordinate.longitude);
         }
         
-//      [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
+        //      [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
         
         if (regeocode) {
             wSelf.currentReGeocode = regeocode;
@@ -235,7 +235,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             // 城市选择重新定位需回调
             completion(regeocode);
         } else {
-            [FHConfigAPI requestGeneralConfig:0 gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            NSInteger cityId = 0;
+            if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
+                cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+            }
+            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model) {
                     self.retryConfigCount -= 1;
                     if (self.retryConfigCount >= 0)
@@ -251,14 +255,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     }
                     return;
                 }
-             
+                
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                     self.isShowSwitch = NO;
                 }else
                 {
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                  
+                    
                     if (currentCityid == model.data.currentCityId || !currentCityid) {
                         //更新config
                         [wSelf updateAllConfig:model isNeedDiff:YES];
@@ -283,7 +287,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion
 {
-     __weak typeof(self) wSelf = self;
+    __weak typeof(self) wSelf = self;
     [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
         
         if (model) {

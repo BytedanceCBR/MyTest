@@ -8,6 +8,7 @@
 #import "FHGeneralBizConfig.h"
 #import <YYCache.h>
 #import "FHUtils.h"
+#import "FHEnvContext.h"
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -49,6 +50,9 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 - (void)onStartAppGeneralCache
 {
     self.configCache = [self getGeneralConfigFromLocal];
+    if (self.configCache) {
+        [[FHEnvContext sharedInstance] acceptConfigDataModel:self.configCache];
+    }
 }
 
 - (void)updataCurrentConfigCache
