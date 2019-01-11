@@ -547,7 +547,7 @@ TTRefreshViewDelegate
 - (void)reloadFHHomeHeaderCell
 {
     if ([_categoryID isEqualToString:@"f_house_news"]) {
-        [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
+        [self.listView reloadData];
     }
 }
 
