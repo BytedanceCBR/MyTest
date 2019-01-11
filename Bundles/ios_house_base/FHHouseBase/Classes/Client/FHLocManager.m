@@ -254,7 +254,8 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
                 }else
                 {
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                    if (currentCityid == model.data.currentCityId) {
+                  
+                    if (currentCityid == model.data.currentCityId || !currentCityid) {
                         //更新config
                         [wSelf updateAllConfig:model isNeedDiff:YES];
                     }
