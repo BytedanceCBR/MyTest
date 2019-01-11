@@ -20,7 +20,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 @interface FHLocManager ()
 
 @property (nonatomic, strong)   YYCache       *locationCache;
-@property (nonatomic, assign)   BOOL       isShowSwitch;
 
 @end
 
@@ -59,6 +58,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
+    self.isShowSwitch = YES;
+    self.isShowSplashAdView = NO;
 }
 
 - (void)saveCurrentLocationData {
@@ -130,6 +131,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (topVC) {
         [alertVC showFrom:topVC animated:YES];
     }
+    
+    self.isShowSwitch = NO;
 }
 
 - (void)checkUserLocationStatus
@@ -256,9 +259,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     return;
                 }
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                    self.isShowSwitch = NO;
                 }else
                 {
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];

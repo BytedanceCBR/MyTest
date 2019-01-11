@@ -34,6 +34,7 @@
 #import "TTASettingConfiguration.h"
 #import "TTAdCanvasPreloader.h"
 #import "FHLocManager.h"
+#import "FHEnvContext.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -235,12 +236,17 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)splashViewWillAppear
 {
-    
+    [FHLocManager sharedInstance].isShowSplashAdView = YES;
 }
 
 - (void)splashViewDidDisappear
 {
-    
+    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if ([FHLocManager sharedInstance].isShowSwitch) {
+        if ([model.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.citySwitch.enable boolValue]) {
+            [[FHLocManager sharedInstance] showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.citySwitch.cityName] openUrl:model.citySwitch.openUrl];
+        }
+    }
 }
 
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra
