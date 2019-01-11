@@ -93,6 +93,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
+//                [self.tableViewV finishPullDownWithSuccess:YES];
                 return;
             }
             
