@@ -100,6 +100,8 @@
     [[ToastManager manager] dismissCustomLoading];
     [self.emptyView hideEmptyView];
     [self.viewModel loadListCityData];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
