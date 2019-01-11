@@ -278,7 +278,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
         }
         stayTimeParams = nil
     }

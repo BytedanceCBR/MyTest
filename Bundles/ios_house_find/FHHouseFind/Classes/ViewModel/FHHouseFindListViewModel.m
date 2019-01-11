@@ -234,6 +234,7 @@
     }
 
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    baseView.showRedirectTip = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         [baseView updateHouseSearchDict:allInfo[@"houseSearch"]];

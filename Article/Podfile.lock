@@ -1432,7 +1432,7 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: 2d5deee94dd0439d15c6abbb2ad0db7f3c2dfcea
+    :commit: 1c91793a1db06ed9697b51f6f76f7d54419964f8
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git

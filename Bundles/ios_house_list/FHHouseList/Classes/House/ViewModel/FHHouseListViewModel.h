@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj, BOOL isFromMap);
 
 @property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
+@property (nonatomic , assign) BOOL showRedirectTip;
 
 -(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;
 

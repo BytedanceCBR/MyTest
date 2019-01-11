@@ -97,7 +97,7 @@
 
 -(void)updateRedirectTipInfo {
     
-    if (self.redirectTips) {
+    if (self.showRedirectTip && self.redirectTips) {
         
         self.redirectTipView.hidden = NO;
         self.redirectTipView.text = self.redirectTips.text;
@@ -120,6 +120,7 @@
 
 -(void)closeRedirectTip {
     
+    self.showRedirectTip = NO;
     self.redirectTipView.hidden = YES;
     [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
@@ -479,6 +480,7 @@
         }
         if (self.isRefresh) {
             [self addHouseSearchLog];
+            [self addHouseRankLog];
             [self refreshHouseListUrlCallback:houseListOpenUrl];
         }else {
             [self addCategoryRefreshLog];
@@ -618,9 +620,9 @@
         allQuery = self.getAllQueryString();
     }
 
-    if ([self.condition isEqualToString:allQuery]) {
-        return;
-    }
+//    if ([self.condition isEqualToString:allQuery]) {
+//        return;
+//    }
     self.condition = allQuery;
     [self.filterOpenUrlMdodel overwriteFliter:self.condition];
 
@@ -773,6 +775,7 @@
 #pragma mark - sug delegate
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     
+    self.showRedirectTip = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         self.houseSearchDic = allInfo[@"houseSearch"];
@@ -1178,6 +1181,25 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_search",params);
+    self.canChangeHouseSearchDic = YES;
+}
+
+- (void)addHouseRankLog {
+    
+    NSString *sortType;
+    if (self.getSortTypeString) {
+        sortType = self.getSortTypeString();
+    }
+    if (sortType.length < 1) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"rank_type"] = sortType;
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    TRACK_EVENT(@"house_rank",params);
     self.canChangeHouseSearchDic = YES;
 }
 

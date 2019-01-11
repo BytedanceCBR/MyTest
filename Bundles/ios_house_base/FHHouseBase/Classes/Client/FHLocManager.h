@@ -26,6 +26,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isLocationSuccess;
 @property (nonatomic, assign) NSInteger retryConfigCount;
+@property (nonatomic, assign) BOOL isShowSwitch;
+@property (nonatomic, assign) BOOL isShowSplashAdView;
 
 +(instancetype)sharedInstance;
 
@@ -40,6 +42,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 - (void)setUpLocManagerLocalInfo;
 
 - (void)showCitySwitchAlert:(NSString *)cityName;
+
+- (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl;
 
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model;
 

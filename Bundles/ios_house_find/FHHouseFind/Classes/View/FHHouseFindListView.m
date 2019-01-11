@@ -71,6 +71,11 @@
 
 }
 
+- (void)setShowRedirectTip:(BOOL)showRedirectTip
+{
+    self.viewModel.showRedirectTip = showRedirectTip;
+}
+
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
     if (!self.needRefresh) {
@@ -196,9 +201,15 @@
         [wself.houseFilterBridge setFilterConditions:params];
         [wself.houseFilterBridge trigerConditionChanged];
     };
-    _viewModel.getAllQueryString = ^NSString * _Nonnull{
+    _viewModel.getAllQueryString = ^NSString * _Nonnull {
         
         return [wself.houseFilterBridge getAllQueryString];
+    };
+    _viewModel.getSortTypeString = ^NSString * _Nullable {
+        if ([wself.houseFilterViewModel isLastSearchBySort]) {
+            return [wself.houseFilterViewModel sortType] ? : @"default";
+        }
+        return nil;
     };
     
     _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj, BOOL isFromMap) {
