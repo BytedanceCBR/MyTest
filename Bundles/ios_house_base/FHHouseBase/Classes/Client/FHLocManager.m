@@ -78,6 +78,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)showLocationGuideAlert
 {
+    BOOL isLocationEnabled = [CLLocationManager locationServicesEnabled];
+    if (!isLocationEnabled) {
+        return;
+    }
+    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"无定位权限，请前往系统设置开启" message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         
@@ -186,6 +191,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
+    
     [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
     [self.locManager setLocationTimeout:2];
