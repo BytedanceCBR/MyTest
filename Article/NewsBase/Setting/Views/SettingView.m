@@ -1327,7 +1327,7 @@ TTEditUserProfileViewControllerDelegate
         }
     } else if (cellType == SettingCellTypePrivacyProtocol) {
         // 隐私协议
-        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userPrivateProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (urlStr.length > 0) {
             [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
         }
