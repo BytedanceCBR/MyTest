@@ -92,11 +92,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return ;
             }
             
-            if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-//                [self.tableViewV finishPullDownWithSuccess:YES];
-                return;
-            }
-            
             [self resetCurrentHouseCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
@@ -243,10 +238,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             {
                 [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
             }
+            self.tableViewV.hidden = YES;
             return;
         }
         
         if (model.data.items.count == 0) {
+            self.tableViewV.hidden = YES;
             [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
             return;
         }
@@ -295,7 +292,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.stayTime = [self getCurrentTime];
         self.dataSource.originSearchId = model.data.searchId;
-    
+        self.tableViewV.hidden = NO;
     }];
 }
 

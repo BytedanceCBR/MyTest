@@ -173,11 +173,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)didAppear
 {
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
-    }
     
-    [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
 - (void)willDisappear

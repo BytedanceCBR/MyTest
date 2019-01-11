@@ -390,6 +390,13 @@
         
         NSString *eventStr = @"navigation";
         wrapperTrackEvent(eventStr, [NSString stringWithFormat:@"click_%@", category.categoryID]);
+    }else
+    {
+        id<TTFeedCollectionCell> currentCell = self.collectionVC.currentCollectionPageCell;
+
+        if ([category.categoryID isEqualToString:@"f_find_house"]) {
+            [currentCell refreshDataWithType:ListDataOperationReloadFromTypeClickCategoryWithTip];
+        }
     }
     
     if (![category.categoryID isEqualToString:self.lastRefreshedCategoryID]) {

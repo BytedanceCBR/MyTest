@@ -242,10 +242,6 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
         enterType = TTCategoryStayTrackManager.share().enterType
         self.detailPageViewModel?.isCurrentShowHome = true
 
-        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
-            self.tableView?.triggerPullDown()
-            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
-        }
     }
     
     @objc func didAppear() {
