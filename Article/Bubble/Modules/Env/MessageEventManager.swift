@@ -73,7 +73,12 @@ class MessageEventManager: NSObject {
         requestCategroyRefreshTip(query:"")
             .subscribe(onNext: {  (responsed) in
                 if let responseData = responsed?.data?.count,responseData > 0 {
-                    TTCategoryBadgeNumberManager.shared().updateNotifyBadgeNumber(ofCategoryID: kCategroyDefaulHouse, withShow: true)
+                    if let stringCategoryId = TTArticleCategoryManager.currentSelectedCategoryID()          {
+                        if stringCategoryId != kCategroyDefaulHouse
+                        {
+                            TTCategoryBadgeNumberManager.shared().updateNotifyBadgeNumber(ofCategoryID: kCategroyDefaulHouse, withShow: true)
+                        }
+                    }
                 }
                 }, onError: {  (error) in
                     

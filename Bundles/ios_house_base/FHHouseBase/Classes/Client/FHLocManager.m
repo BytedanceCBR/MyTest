@@ -247,11 +247,17 @@ NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"
                     }
                     return;
                 }
-                //更新config
-                [wSelf updateAllConfig:model];
+             
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                     self.isShowSwitch = NO;
+                }else
+                {
+                    NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
+                    if (currentCityid == model.data.currentCityId) {
+                        //更新config
+                        [wSelf updateAllConfig:model];
+                    }
                 }
                 self.retryConfigCount = 3;
             }];
