@@ -98,11 +98,10 @@
 - (void)refreshDataWithType:(ListDataOperationReloadFromType)refreshType
 {
     self.houseListViewController.reloadFromType = (TTReloadType)refreshType;
-    if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+    if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && refreshType == TTReloadTypeTab) {
         return;
     }
     [self triggerPullRefresh];
-    [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
 - (void)triggerPullRefresh

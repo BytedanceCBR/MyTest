@@ -84,6 +84,11 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)showNotify:(NSString *)message
 {
+    if (self.isRefreshing) {
+        return;
+    }
+    self.isRefreshing = YES;
+
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
@@ -96,6 +101,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
             self.mainTableView.contentInset = inset;
+            self.isRefreshing = NO;
         }];
     });
     
@@ -135,26 +141,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)pullAndRefresh
 {
     self.homeListViewModel.reloadType = _reloadFromType;
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
-    }else
-    {
-        if (self.isRefreshing) {
-            return;
-        }
-        self.isRefreshing = YES;
-        [self.mainTableView triggerPullDown];
-        //首次启动，tab和category同时刷新
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.isRefreshing = NO;
-            });
-        });
-    }
-    
-    
-//    detailPageViewModel?.reloadFromType = self._reloadFromType
-//    tableView.triggerPullDown()
+    [self.mainTableView triggerPullDown];
 }
 
 - (void)scrollToTopEnable:(BOOL)enable
@@ -201,6 +188,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didDisappear
 {
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
+    [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom

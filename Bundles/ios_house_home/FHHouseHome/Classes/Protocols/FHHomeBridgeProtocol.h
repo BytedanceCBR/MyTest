@@ -24,6 +24,8 @@
 
 - (void)jumpToTabbarFirst;
 
+- (BOOL)isCurrentTabFirst;
+
 @end
 
 #endif /* FHHomeBridgeProtocol_h */

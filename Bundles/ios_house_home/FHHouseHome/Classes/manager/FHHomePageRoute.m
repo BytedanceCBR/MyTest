@@ -28,7 +28,9 @@
         UIViewController *currentVC = [UIViewController ttmu_currentViewController];
         [currentVC.navigationController popToRootViewControllerAnimated:YES];
         
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+        if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
+            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+        }
         
         [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
         

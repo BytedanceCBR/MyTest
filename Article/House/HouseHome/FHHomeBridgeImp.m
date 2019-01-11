@@ -14,6 +14,7 @@
 #import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
+#import "TTTabBarProvider.h"
 
 @implementation FHHomeBridgeImp
 
@@ -73,4 +74,11 @@
     })];
 }
 
+- (BOOL)isCurrentTabFirst
+{
+    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        return YES;
+    }
+    return NO;
+}
 @end
