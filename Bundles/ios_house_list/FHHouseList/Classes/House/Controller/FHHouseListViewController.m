@@ -195,7 +195,12 @@
         
         return [wself.houseFilterBridge getAllQueryString];
     };
-    
+    _viewModel.getSortTypeString = ^NSString * _Nullable {
+        if ([wself.houseFilterViewModel isLastSearchBySort]) {
+            return [wself.houseFilterViewModel sortType] ? : @"default";
+        }
+        return nil;
+    };
     _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
         
         [wself handleSugSelection:paramObj];

@@ -480,6 +480,7 @@
         }
         if (self.isRefresh) {
             [self addHouseSearchLog];
+            [self addHouseRankLog];
             [self refreshHouseListUrlCallback:houseListOpenUrl];
         }else {
             [self addCategoryRefreshLog];
@@ -1180,6 +1181,25 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_search",params);
+    self.canChangeHouseSearchDic = YES;
+}
+
+- (void)addHouseRankLog {
+    
+    NSString *sortType;
+    if (self.getSortTypeString) {
+        sortType = self.getSortTypeString();
+    }
+    if (sortType.length < 1) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"rank_type"] = sortType;
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    TRACK_EVENT(@"house_rank",params);
     self.canChangeHouseSearchDic = YES;
 }
 
