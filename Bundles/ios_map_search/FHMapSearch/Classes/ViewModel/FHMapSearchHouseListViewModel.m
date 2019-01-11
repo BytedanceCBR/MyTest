@@ -734,6 +734,7 @@
     param[@"page_type"] = @"mapfind";
     param[@"card_type"] = @"left_pic";
     param[@"group_id"] = logPb[@"group_id"] ?: @"be_null";
+    param[@"search_id"] = logPb[@"search_id"] ?: @"be_null";
     param[@"impr_id"] = imprId ?: @"be_null";
     param[@"rank"] = [NSString stringWithFormat:@"%@", @(indexPath.row+1)]; //小区是0 
     if ([self.listController canMoveup]) {

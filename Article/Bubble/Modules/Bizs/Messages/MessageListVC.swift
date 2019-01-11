@@ -611,6 +611,9 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                                 toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
+                                imprIdTraceParam(item.logPb) <|>
+                                groupIdTraceParam(item.logPb) <|>
+                                searchIdTraceParam(item.logPb) <|>
                                 toTracerParams(listType ?? "", key: "page_type")
 
                         recordEvent(key: TraceEventName.house_show, params: params

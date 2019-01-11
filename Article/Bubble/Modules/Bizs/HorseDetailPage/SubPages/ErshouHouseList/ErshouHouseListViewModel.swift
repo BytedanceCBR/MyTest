@@ -602,6 +602,8 @@ func parseRelatedHouseListItemNode(
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                imprIdTraceParam(item.logPB) <|>
+                groupIdTraceParam(item.logPB) <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             let finalParams = theParams
                 .exclude("category_name")

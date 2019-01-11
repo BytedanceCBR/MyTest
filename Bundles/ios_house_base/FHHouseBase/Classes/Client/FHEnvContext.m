@@ -72,6 +72,9 @@
                 if (configModel.cityAvailability.enable) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
                         if (isSuccess) {
+                            
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
                             if(completion)
                             {
                                 completion(YES);

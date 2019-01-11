@@ -323,6 +323,8 @@ func parseMultiHouseListItemNode(
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
+                    groupIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }

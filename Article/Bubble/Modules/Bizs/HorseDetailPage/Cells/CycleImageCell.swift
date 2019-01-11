@@ -301,13 +301,13 @@ class CycleImageCell: BaseUITableViewCell {
 
             thePageVM.currentPage
                 .observeOn(MainScheduler.asyncInstance)
-                .map { [unowned self] _ in self.count == 0 }
+                .map { [weak self] _ in self?.count ?? 0 == 0 }
                 .bind(to: indexIndicator.rx.isHidden)
                 .disposed(by: disposeBag)
             
             thePageVM.currentPage
                 .observeOn(MainScheduler.asyncInstance)
-                .filter { [unowned self] _ in self.count != 0 }
+                .filter { [weak self] _ in self?.count ?? 0 != 0 }
                 .map { [unowned self] (index) in CycleImageCell.offsetByIndex(index: index, count: self.count) }
                 .map { [unowned self] (index) in "\(index + 1)/\(self.count)" }
                 .bind(to: indexLabel.rx.text)
@@ -315,9 +315,9 @@ class CycleImageCell: BaseUITableViewCell {
             
             thePageVM.currentPage
 //                .debug()
-                .subscribe(onNext: { [unowned self] (index) in
-                    if self.headerImages.count != 0 {
-                        self.smallTracer?(index,TracerParams.momoid() <|> toTracerParams("small", key: "show_type"))
+                .subscribe(onNext: { [weak self] (index) in
+                    if self?.headerImages.count != 0 {
+                        self?.smallTracer?(index,TracerParams.momoid() <|> toTracerParams("small", key: "show_type"))
                     }
                 })
                 .disposed(by: disposeBag)

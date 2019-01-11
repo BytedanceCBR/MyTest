@@ -809,6 +809,7 @@ func parseFHHomeNewHouseListItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
@@ -869,6 +870,7 @@ func paresNewHouseListRowItemNode(
                 toTracerParams("new_list", key: "page_type") <|>
                 beNull(key: "element_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
@@ -1117,6 +1119,7 @@ func parseFHHomeRentHouseListRowItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }

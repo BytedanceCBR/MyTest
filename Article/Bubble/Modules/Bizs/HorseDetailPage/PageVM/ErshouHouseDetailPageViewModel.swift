@@ -894,6 +894,8 @@ func parseFHHomeErshouHouseListItemNode(
                             toTracerParams(offset, key: "rank") <|>
                             toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                             toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                            imprIdTraceParam(item.logPB) <|>
+                            groupIdTraceParam(item.logPB) <|>
                             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                             toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                     return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -968,6 +970,8 @@ func parseErshouHouseListItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
+                    groupIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
@@ -1074,6 +1078,8 @@ func parseErshouHouseListRowItemNode(
 //                toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                imprIdTraceParam(item.logPB) <|>
+                groupIdTraceParam(item.logPB) <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams("old", key: "house_type")
@@ -1153,6 +1159,8 @@ func parseErshouRelatedHouseListItemNode(
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                imprIdTraceParam(item.logPB) <|>
+                groupIdTraceParam(item.logPB) <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -1576,28 +1584,52 @@ func openErshouHouseDetailPage(
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     return { (params) in
 
-        let detailPage = HorseDetailPageVC(
-            houseId: houseId,
-            houseType: .secondHandHouse,
-            isShowBottomBar: true,
-            provider: getErshouHouseDetailPageViewModel())
-        detailPage.logPB = logPB
-        detailPage.houseSearchParams = houseSearchParams
-        if let followStatus = followStatus {
-            detailPage.sameNeighborhoodFollowUp.accept(followStatus.value)
+        var tracer: [String: Any?] = tracerParams.paramsGetter([:])
 
-            detailPage.sameNeighborhoodFollowUp
-                .debug("sameNeighborhoodFollowUp")
-                .bind(to: followStatus)
-                .disposed(by: disposeBag)
-        }
-        detailPage.traceParams = EnvContext.shared.homePageParams <|> tracerParams <|> params
-        detailPage.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [weak navVC] void in
-                EnvContext.shared.toast.dismissToast()
-                navVC?.popViewController(animated: true)
+        var houseSearchDict : [String : Any]? = nil
+        if let houseSearchParams = houseSearchParams?.paramsGetter([:]) {
+            houseSearchDict = houseSearchParams
+            tracer.merge(houseSearchParams, uniquingKeysWith: { (left, right) -> Any? in
+                right
             })
-            .disposed(by: disposeBag)
-        navVC?.pushViewController(detailPage, animated: true)
+        }
+        if let paramsDict: [String: Any?] = params.paramsGetter([:]) {
+            tracer.merge(paramsDict, uniquingKeysWith: { (left, right) -> Any? in
+                right
+            })
+        }
+        tracer["element_from"] = "be_null"
+        tracer["card_type"] = "left_pic"
+        tracer["origin_from"] = "minetab_old"
+
+        var info = ["tracer": tracer]
+        if let hsp = houseSearchDict  {
+            info["house_search_params"] = hsp
+        }
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://old_house_detail?house_id=\(houseId)"), userInfo: userInfo)
+//        let detailPage = HorseDetailPageVC(
+//            houseId: houseId,
+//            houseType: .secondHandHouse,
+//            isShowBottomBar: true,
+//            provider: getErshouHouseDetailPageViewModel())
+//        detailPage.logPB = logPB
+//        detailPage.houseSearchParams = houseSearchParams
+//        if let followStatus = followStatus {
+//            detailPage.sameNeighborhoodFollowUp.accept(followStatus.value)
+//
+//            detailPage.sameNeighborhoodFollowUp
+//                .debug("sameNeighborhoodFollowUp")
+//                .bind(to: followStatus)
+//                .disposed(by: disposeBag)
+//        }
+//        detailPage.traceParams = EnvContext.shared.homePageParams <|> tracerParams <|> params
+//        detailPage.navBar.backBtn.rx.tap
+//            .subscribe(onNext: { [weak navVC] void in
+//                EnvContext.shared.toast.dismissToast()
+//                navVC?.popViewController(animated: true)
+//            })
+//            .disposed(by: disposeBag)
+//        navVC?.pushViewController(detailPage, animated: true)
     }
 }
