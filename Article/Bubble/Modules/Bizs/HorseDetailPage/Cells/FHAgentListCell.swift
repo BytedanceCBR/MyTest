@@ -112,8 +112,8 @@ fileprivate class ItemView: UIControl {
         self.addSubview(avator)
         self.addSubview(name)
         self.addSubview(agency)
-        self.addSubview(licenceIcon)
         self.addSubview(callBtn)
+        self.addSubview(licenceIcon)
 
         avator.snp.makeConstraints { (make) in
             make.height.width.equalTo(46)
@@ -139,7 +139,7 @@ fileprivate class ItemView: UIControl {
             make.left.equalTo(name.snp.right).offset(4)
             make.height.width.equalTo(20)
             make.centerY.equalTo(name)
-            make.right.lessThanOrEqualTo(callBtn.snp.left)
+            make.right.lessThanOrEqualTo(callBtn.snp.left).offset(-10)
         }
 
         callBtn.snp.makeConstraints { (make) in
