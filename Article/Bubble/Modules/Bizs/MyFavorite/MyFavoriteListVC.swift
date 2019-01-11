@@ -178,7 +178,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
+            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
         }
         stayTimeParams = nil
         
@@ -269,7 +269,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             //增加
             if let tracePram = self?.tracerParams , !(self?.isChangeFromFollow ?? false)
             {
-                recordEvent(key: TraceEventName.enter_category, params: tracePram)
+                recordEvent(key: TraceEventName.enter_category, params: tracePram.exclude("log_pb"))
             }
 
             if(isHaveData)
@@ -307,7 +307,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         tracerParams = tracerParams.exclude("card_type") <|>
             toTracerParams("pre_load_more", key: "refresh_type")
         
-        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+        recordEvent(key: TraceEventName.category_refresh, params: tracerParams.exclude("log_pb"))
         
     }
 
