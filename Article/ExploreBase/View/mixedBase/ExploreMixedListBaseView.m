@@ -531,8 +531,17 @@ TTRefreshViewDelegate
             StrongSelf;
             [self reloadFHHomeHeaderCell];
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryGotFinished) name:kFHSwitchGetLightFinishedNotification object:nil];
     }
     return self;
+}
+
+- (void)categoryGotFinished
+{
+    if (![[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        [self.listView reloadData];
+    }
 }
 
 - (void)reloadFHHomeHeaderCell
