@@ -81,6 +81,7 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+#import "TTArticleCategoryManager.h"
 
 #import "UIImageAdditions.h"
 

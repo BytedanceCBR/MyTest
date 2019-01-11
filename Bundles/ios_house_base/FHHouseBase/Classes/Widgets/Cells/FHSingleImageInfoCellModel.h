@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSingleImageInfoCellModel : NSObject
 
+@property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy , nullable) NSString *houseId;
 

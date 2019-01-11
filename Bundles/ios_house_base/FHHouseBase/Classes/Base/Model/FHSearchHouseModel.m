@@ -27,6 +27,26 @@
 
 @end
 
+@implementation FHRecommendSecondhandHouseDataModel
+
++ (JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+                           @"hasMore": @"has_more",
+                           @"recommendTitle": @"recommend_title",
+                           @"searchHint": @"search_hint",
+                           @"searchId": @"search_id",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
 
 @implementation  FHSearchHouseDataModel
 
@@ -39,6 +59,7 @@
                            @"searchId": @"search_id",
                            @"mapFindHouseOpenUrl": @"map_find_house_open_url",
                            @"houseListOpenUrl": @"house_list_open_url",
+                           @"recommendSearchModel": @"recommend_search",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -251,6 +272,15 @@
 //
 //@end
 
+
+@implementation  FHRecommendSecondhandHouseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 
 @implementation  FHSearchHouseModel
 
