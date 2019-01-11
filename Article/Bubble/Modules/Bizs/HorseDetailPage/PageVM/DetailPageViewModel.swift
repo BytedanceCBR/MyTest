@@ -374,6 +374,11 @@ extension DetailPageViewModel {
                 
             }).disposed(by: self.disposeBag)
         
+            let topVC:UIViewController? = TTUIResponderHelper.topViewController(for: bottomBar)
+            var topView:UIView? = UIApplication.shared.keyWindow?.rootViewController?.view
+            if (topVC != nil) {
+                topView = topVC?.view
+            }
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
@@ -423,18 +428,18 @@ extension DetailPageViewModel {
                     }else {
                         if let pageType = traceParam.paramsGetter([:])["page_type"] as? String, pageType == "house_model_detail"
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true)
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true, topView: topView)
                         }else
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价")
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价", topView: topView)
                         }
                     }
                 })
                 .disposed(by: self.disposeBag)
         }
     }
-    
-    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String , traceParam: TracerParams = TracerParams.momoid(), isHouseModelDetail: Bool = false) {
+    // UIApplication.shared.keyWindow?.rootViewController?.view
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String , traceParam: TracerParams = TracerParams.momoid(), isHouseModelDetail: Bool = false, topView:UIView?) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
@@ -466,13 +471,13 @@ extension DetailPageViewModel {
             }
             .disposed(by: disposeBag)
         
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        if let tempView = topView
         {
             let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
                         params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
             
-            alert.showFrom(rootView)
+            alert.showFrom(tempView)
         }
     }
     

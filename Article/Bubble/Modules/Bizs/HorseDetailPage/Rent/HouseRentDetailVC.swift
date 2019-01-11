@@ -287,6 +287,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         // 发送请求
         requestDetailData()
         bindShareAction()
+        self.panBeginAction = { [weak self] in
+            self?.view.endEditing(false)
+        };
     }
 
     func requestDetailData() {

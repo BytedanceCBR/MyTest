@@ -229,6 +229,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         case .newHouse:
             return { [unowned self] (tableView, infoMaskView, navVC, searchId) in
                 let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
+                re.currentVC = self
                 re.searchId = searchId
                 re.showQuickLoginAlert = { [weak self] (title, subTitle) in
                     self?.showQuickLoginAlert(title: title, subTitle: subTitle)
@@ -721,6 +722,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
 
         recordEvent(key: "go_detail", params: traceParams
+            .exclude("group_id")
+            .exclude("search_id")
             .exclude("house_type")
             .exclude("element_type")
             .exclude("maintab_search"))
@@ -745,8 +748,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         bindShareAction()
         
         UIApplication.shared.statusBarStyle = .lightContent
-
         
+        self.panBeginAction = { [weak self] in
+            self?.view.endEditing(false)
+        };
     }
     
     func refreshStatusBar() {
@@ -1049,7 +1054,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             navigationController.view.bringSubview(toFront: navigationController.navigationBar)
         }
         if let stayPageParams = stayPageParams {
-            recordEvent(key: "stay_page", params: stayPageParams.exclude("element_type"))
+            recordEvent(key: "stay_page", params: stayPageParams.exclude("element_type").exclude("group_id").exclude("search_id"))
         }
         stayPageParams = nil
     }

@@ -181,6 +181,8 @@ struct UserListMsgInnerItem: Mappable {
     var logPb: Any?
     var status: Int = 0
     var houseImageTag: HouseImageTag?
+    var searchId: String?
+    var imprId: String?
 
 
     init?(map: Map) {
@@ -200,6 +202,9 @@ struct UserListMsgInnerItem: Mappable {
         houseType <- map["house_type"]
         status <- map["status"]
         logPb <- map["log_pb"]
+        searchId <- map["search_id"]
+        imprId <- map["impr_id"]
+
         houseImageTag <- map["house_image_tag"]
     }
     

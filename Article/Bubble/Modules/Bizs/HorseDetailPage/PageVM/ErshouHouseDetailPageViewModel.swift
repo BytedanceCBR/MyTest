@@ -1295,10 +1295,9 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams("left_pic", key: "card_type") <|>
                 toTracerParams(categoryNameByHouseType(houseType: houseType), key: "page_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                groupIdTraceParam(item.logPB) <|>
-                imprIdTraceParam(item.logPB) <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "originSearchId") <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                toTracerParams(item.followId ?? "be_null", key: "group_id") <|>
                 toTracerParams("be_null", key: "element_type")
 
             let finalHouseShowParams = houseShowParams

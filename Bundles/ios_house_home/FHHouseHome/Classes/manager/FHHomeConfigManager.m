@@ -24,8 +24,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeConfigManager alloc] init];
-//        manager.configDataReplay = [RACReplaySubject subject];
-        manager.searchConfigDataReplay = [RACReplaySubject subject];
         [FHEnvContext sharedInstance].homeConfigCallBack = ^(FHConfigDataModel * _Nonnull configModel) {
             [manager acceptConfigDataModel:configModel];
         };
@@ -74,7 +72,7 @@
 
 - (void)openCategoryFeedStart
 {
-    
+
     NSString * categoryStartName = nil;
 
     if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(feedStartCategoryName)]) {

@@ -63,7 +63,7 @@
                 cityId = [elts.lastObject integerValue];
             }
         }
-            
+        
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
@@ -72,10 +72,14 @@
                 if (configModel.cityAvailability.enable) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
                         if (isSuccess) {
+                            
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
                             if(completion)
                             {
                                 completion(YES);
                             }
+                            [[ToastManager manager] dismissCustomLoading];
                             [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                                 
                             }];
@@ -85,28 +89,28 @@
                             {
                                 completion(NO);
                             }
+                            [[ToastManager manager] dismissCustomLoading];
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
-                    [[ToastManager manager] dismissCustomLoading];
                 }else
                 {
-                    [[ToastManager manager] dismissCustomLoading];
                     if(completion)
                     {
                         completion(YES);
                     }
+                    [[ToastManager manager] dismissCustomLoading];
                     [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                         
                     }];
                 }
             }else
             {
-                [[ToastManager manager] dismissCustomLoading];
                 if(completion)
                 {
                     completion(NO);
                 }
+                [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
             }
         }];
@@ -186,7 +190,7 @@
     double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
     NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
-
+    
     
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);
@@ -265,7 +269,7 @@
         };
         
         [BDAccount sharedAccount].accountConf = conf;
-
+        
     }];
 }
 

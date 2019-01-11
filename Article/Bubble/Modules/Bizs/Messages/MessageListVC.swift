@@ -105,7 +105,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
             
             let params = TracerParams.momoid() <|>
                 toTracerParams("click", key: "enter_type") <|>
-                beNull(key: "log_pb") <|>
                 toTracerParams(category_name, key: "category_name")
             
             EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -212,7 +211,11 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                             toTracerParams(data.searchId ?? "be_null", key: "search_id")
                     }
                     if let responseData = responsed?.data?.items, responseData.count != 0 {
-                        self.hasMore = responsed?.data?.hasMore ?? false
+                        
+                        // add by zjing for test
+                        self.hasMore = true
+
+//                        self.hasMore = responsed?.data?.hasMore ?? false
                         if let data = self.tableListViewModel?.datas.value{
                             self.tableListViewModel?.datas.accept(data + responseData)
                         }
@@ -227,7 +230,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
 
                         if !self.hasRecordEnterCategory {
                             self.stayTimeParams = self.traceParams <|> traceStayTime()
-                            recordEvent(key: TraceEventName.enter_category, params: self.traceParams)
+                            recordEvent(key: TraceEventName.enter_category, params: self.traceParams.exclude("log_pb"))
                             self.hasRecordEnterCategory = true
                         }
 
@@ -298,7 +301,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         traceParams = traceParams <|>
             toTracerParams("pre_load_more", key: "refresh_type")
 
-        recordEvent(key: TraceEventName.category_refresh, params: traceParams)
+        recordEvent(key: TraceEventName.category_refresh, params: traceParams.exclude("log_pb"))
 
         self.pageableLoader?()
     }
@@ -601,6 +604,9 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                         let params = EnvContext.shared.homePageParams <|>
                                 traceParams <|>
                                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
+                                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                                 toTracerParams(rankByIndexPath(path), key: "rank") <|>
                                 toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
@@ -611,7 +617,6 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                                 toTracerParams(listType ?? "", key: "page_type")
 
                         recordEvent(key: TraceEventName.house_show, params: params
-                            .exclude("search_id")
                             .exclude("enter_from")
                             .exclude("category_name")
                             .exclude("enter_type"))

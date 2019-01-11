@@ -13,6 +13,7 @@
 #import "FHTracerModel.h"
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
+#define kFHHouseListRecommendTitleCellId @"kFHHouseListRecommendTitleCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
 
 NS_ASSUME_NONNULL_BEGIN

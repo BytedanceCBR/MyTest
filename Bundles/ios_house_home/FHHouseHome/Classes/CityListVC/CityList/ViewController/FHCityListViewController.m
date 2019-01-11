@@ -74,6 +74,7 @@
         make.top.mas_equalTo(self.locationBar.mas_bottom);
         make.bottom.mas_equalTo(self.view);
     }];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(50, 0, 0, 0)];
 }
 
 - (void)setupData {
@@ -91,11 +92,13 @@
     } else {
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
     }
 }
 
 - (void)configDataLoadSuccess:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
+    [self.emptyView hideEmptyView];
     [self.viewModel loadListCityData];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
@@ -105,6 +108,20 @@
             [self checkShowLocationErrorAlert];
         }
     }
+}
+
+- (void)configDataLoadError:(NSNotification *)noti {
+    [[ToastManager manager] dismissCustomLoading];
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.tableView);
+    }];
+}
+
+// 重新加载
+- (void)retryLoadData {
+    [[ToastManager manager] showCustomLoading:@"加载中"];
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
 }
 
 - (void)checkShowLocationErrorAlert {

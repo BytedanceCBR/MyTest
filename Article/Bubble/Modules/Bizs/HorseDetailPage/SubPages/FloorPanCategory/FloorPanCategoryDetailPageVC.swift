@@ -149,7 +149,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                         recordEvent(key: "click_call", params: traceParams)
                         
                     }else {
-                        self.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价")
+                        self.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价", topView: self.view)
                     }
                     
                 }.disposed(by: disposeBag)
@@ -160,7 +160,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         return self.tracerParams.exclude("house_type")
     }
     
-    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String, topView:UIView?) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
@@ -198,19 +198,12 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
             .disposed(by: disposeBag)
 
 
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        if let tempView = topView
         {
-//            var tracerParams = EnvContext.shared.homePageParams <|> self.tracerParams
-//            tracerParams = tracerParams <|>
-//                toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-//                toTracerParams(self.houseId, key: "group_id") <|>
-//                toTracerParams(self.viewModel?.logPB ?? "be_null", key: "log_pb")
-//
-//
             recordEvent(key: TraceEventName.inform_show,
                         params: self.tracerParams.exclude("house_type"))
             
-            alert.showFrom(rootView)
+            alert.showFrom(tempView)
         }
     }
     
@@ -310,7 +303,9 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.errorVM?.onRequest()
         self.viewModel?.request(floorPanId: self.floorPanId)
         
-        
+        self.panBeginAction = { [weak self] in
+            self?.view.endEditing(false)
+        };
     }
 
     required init?(coder aDecoder: NSCoder) {
