@@ -26,7 +26,7 @@
     if (self) {
         self.noDataTipLabel = [[UILabel alloc] init];
         [self.contentView addSubview:self.noDataTipLabel];
-        self.noDataTipLabel.font = [UIFont themeFontRegular:12];
+        self.noDataTipLabel.font = [UIFont themeFontMedium:12];
         self.noDataTipLabel.textColor = [UIColor themeGray4];
         self.noDataTipImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_base_recommend_not_found"]];
         [self.contentView addSubview:self.noDataTipImage];
