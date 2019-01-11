@@ -808,4 +808,18 @@ func parseNodeWrapper(preNode: @escaping () -> TableSectionNode?,
     }
 }
 
+func getStringFromLogPb(key: String, logPb: Any?) -> String {
+    if let logPB = logPb as? [String: Any],
+        let result = logPB[key] as? String {
+        return result
+    }
+    return "be_null"
+}
 
+var getSearchIdFromLogPb = curry(getStringFromLogPb)("search_id")
+var getGroupIdFromLogPb = curry(getStringFromLogPb)("group_id")
+var getImprIdFromLogPb = curry(getStringFromLogPb)("impr_id")
+
+var searchIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getSearchIdFromLogPb($0), key: "search_id") }
+var groupIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getGroupIdFromLogPb($0), key: "group_id") }
+var imprIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getImprIdFromLogPb($0), key: "impr_id") }

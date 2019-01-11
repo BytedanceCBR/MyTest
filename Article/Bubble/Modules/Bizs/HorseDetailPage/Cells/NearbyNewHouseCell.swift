@@ -193,6 +193,8 @@ func parseNearbyNewHouseListNode(
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
+                    groupIdTraceParam(item.logPB) <|>
                     toTracerParams(index, key: "rank")
                 return onceRecord(key: "house_show", params: tempParams)
             })

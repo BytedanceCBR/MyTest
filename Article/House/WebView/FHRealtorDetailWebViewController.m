@@ -61,14 +61,14 @@ static NSString *s_oldAgent = nil;
 
 -(NSMutableDictionary*)goDetailParams {
     NSParameterAssert(_tracerModel);
-    NSDictionary* params = @{@"page_type": _tracerModel.pageType,
-                             @"enter_from": _tracerModel.enterFrom,
-                             @"element_from": _tracerModel.elementFrom,
-                             @"rank": _tracerModel.rank,
-                             @"origin_from": _tracerModel.originFrom,
-                             @"origin_search_id": _tracerModel.originSearchId,
-                             @"log_pb": _tracerModel.logPb,
-                             @"realtor_id": _realtorId,
+    NSDictionary* params = @{@"page_type": _tracerModel.pageType ? : @"be_null",
+                             @"enter_from": _tracerModel.enterFrom ? : @"be_null",
+                             @"element_from": _tracerModel.elementFrom ? : @"be_null",
+                             @"rank": _tracerModel.rank ? : @"be_null",
+                             @"origin_from": _tracerModel.originFrom ? : @"be_null",
+                             @"origin_search_id": _tracerModel.originSearchId ? : @"be_null",
+                             @"log_pb": _tracerModel.logPb ? : @"be_null",
+                             @"realtor_id": _realtorId ? : @"be_null",
                              };
     return [params mutableCopy];
 }

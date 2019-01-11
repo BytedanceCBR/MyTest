@@ -126,6 +126,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
          isShowBottomBar: Bool = true,
          isShowFollowNavBtn: Bool = false,
          provider: @escaping DetailPageViewModelProvider) {
+//        assert(false, "不再适用的入口");
         self.houseId = houseId
         self.houseType = houseType
         self.isShowBottomBar = isShowBottomBar
@@ -348,77 +349,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         return result
     }
-    /*
-    fileprivate func checkTraceParam(_ allParams :  [AnyHashable: Any]?) {
-        
-        guard let allParams = allParams else {
-            return
-        }
-        
-        if (allParams["enter_from"]  as? String ) == "mapfind" {
-            //enter from mapfind page
-            traceParams = traceParams <|> toTracerParams("mapfind", key: "enter_from")
-            
-            if let cardType = allParams["card_type"] {
-                traceParams = traceParams <|> toTracerParams(cardType,key:"card_type")
-            }
-            
-            if let elementFrom = allParams["element_from"] {
-                traceParams = traceParams <|> toTracerParams(elementFrom, key: "element_from")
-            }
-            
-            if let rank = allParams["rank"] {
-                traceParams = traceParams <|> toTracerParams(rank, key: "rank")
-            }
-            if let groupId = allParams["group_id"] {
-                traceParams = traceParams <|> toTracerParams(groupId,key:"group_id")
-            }
-            if let imprId = allParams["impr_id"] {
-                traceParams = traceParams <|> toTracerParams(imprId,key:"impr_id")
-            }
-            
-            if let searchId = allParams["search_id"] {
-                traceParams = traceParams <|> toTracerParams(searchId,key:"search_id")
-                self.searchId = searchId as? String
-            }
-            
-            if let originFrom = allParams["origin_from"] {
-                traceParams = traceParams <|> toTracerParams(originFrom,key:"origin_from")
-            }
-            if let originSearchId = allParams["origin_search_id"] {
-                traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
-            }
-        }
-        
-        if (allParams["element_from"]  as? String ) == "mix_list" && (allParams["enter_from"]  as? String ) == "maintab" {
-            
-            //enter from feed mix list
-            traceParams = traceParams <|> toTracerParams("maintab", key: "enter_from")
-            
-            if let cardType = allParams["card_type"] {
-                traceParams = traceParams <|> toTracerParams(cardType,key:"card_type")
-            }
-            if let elementFrom = allParams["element_from"] {
-                traceParams = traceParams <|> toTracerParams(elementFrom, key: "element_from")
-            }
-            if let rank = allParams["rank"] {
-                traceParams = traceParams <|> toTracerParams(rank, key: "rank")
-            }
-            if let originFrom = allParams["origin_from"] {
-                traceParams = traceParams <|> toTracerParams(originFrom,key:"origin_from")
-            }
-            if let originSearchId = allParams["origin_search_id"] {
-                traceParams = traceParams <|> toTracerParams(originSearchId,key:"origin_search_id")
-            }
-        } else {
-            traceParams = traceParams <|>
-                toTracerParams(allParams["enter_from"] ?? "be_null", key: "enter_from") <|>
-                toTracerParams(allParams["element_from"] ?? "be_null", key: "element_from") <|>
-                toTracerParams(allParams["search_id"] ?? "be_null", key: "search_id")
-        }
-
-    }
-
+/*
     fileprivate func checkoutPush(routeParamObj paramObj: TTRouteParamObj?) {
         if let paramObj = paramObj,
         let userInfo = paramObj.userInfo.allInfo as? [String: Any] {
