@@ -140,7 +140,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     {
         [self.mainTableView triggerPullDown];
     }
-    
 //    detailPageViewModel?.reloadFromType = self._reloadFromType
 //    tableView.triggerPullDown()
 }
@@ -174,7 +173,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)didAppear
 {
-    
+    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
+    }
 }
 
 - (void)willDisappear
