@@ -71,6 +71,11 @@
 
 }
 
+- (void)setShowRedirectTip:(BOOL)showRedirectTip
+{
+    self.viewModel.showRedirectTip = showRedirectTip;
+}
+
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
     if (!self.needRefresh) {
