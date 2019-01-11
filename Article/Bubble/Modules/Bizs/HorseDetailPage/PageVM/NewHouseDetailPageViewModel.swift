@@ -89,7 +89,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     var recordRowIndex: Set<IndexPath> = []
 
-
+    weak var currentVC:UIViewController?
 
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?){
         self.tableView = tableView
@@ -525,7 +525,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
             
-            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交", topView: self.currentVC?.view)
             
             /*
             let informParams = self.informParams
@@ -597,7 +597,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
-            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交", topView: self.currentVC?.view)
             /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")

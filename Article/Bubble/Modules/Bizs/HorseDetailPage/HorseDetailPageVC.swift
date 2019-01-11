@@ -228,6 +228,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         case .newHouse:
             return { [unowned self] (tableView, infoMaskView, navVC, searchId) in
                 let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
+                re.currentVC = self
                 re.searchId = searchId
                 re.showQuickLoginAlert = { [weak self] (title, subTitle) in
                     self?.showQuickLoginAlert(title: title, subTitle: subTitle)
@@ -814,8 +815,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         bindShareAction()
         
         UIApplication.shared.statusBarStyle = .lightContent
-
         
+        self.panBeginAction = { [weak self] in
+            self?.view.endEditing(false)
+        };
     }
     
     func refreshStatusBar() {
