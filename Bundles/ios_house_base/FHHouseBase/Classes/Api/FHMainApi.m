@@ -96,7 +96,6 @@
     }else
     {
         [requestParam setValue:nil forKey:@"city_id"];
-        [requestParam setValue:nil forKey:@"f_city_id"];
     }
     
     if ([gCityName isKindOfClass:[NSString class]]){

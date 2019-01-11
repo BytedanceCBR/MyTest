@@ -120,10 +120,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             isFirstChange = NO;
         }];
         
-        [[FHHomeConfigManager sharedInstance].searchConfigDataReplay subscribeNext:^(id  _Nullable searchConfigModel) {
-            
-//            NSLog(@"serarch config=%@",((JSONModel *)searchConfigModel).toDictionary);
-        }];
         
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;

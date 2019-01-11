@@ -20,8 +20,6 @@ typedef NS_ENUM(NSInteger, FHHomeHeaderCellPositionType) {
 
 @interface FHHomeConfigManager : NSObject
 
-//@property(nonatomic , strong) RACReplaySubject *configDataReplay;
-@property(nonatomic , strong) RACReplaySubject *searchConfigDataReplay;
 @property(nonatomic , strong) FHConfigDataModel *currentDataModel;
 @property(nonatomic , strong) NSDictionary *currentDictionary;
 @property (nonatomic, assign) BOOL isNeedTriggerPullDownUpdate;
