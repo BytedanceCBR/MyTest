@@ -239,7 +239,7 @@ TTEditUserProfileViewControllerDelegate
         _tableView.dataSource = self;
         _tableView.backgroundView = nil;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.enableTTStyledSeparator = YES;
+        _tableView.enableTTStyledSeparator = NO;
         _tableView.separatorInsetLeft = [TTDeviceUIUtils tt_padding:15.f];
         _tableView.separatorColorThemeKey = kColorLine1;
         _tableView.separatorSecondColorThemeKey = kColorLine1;
@@ -485,20 +485,11 @@ TTEditUserProfileViewControllerDelegate
 //        return [TTDeviceUIUtils tt_padding:kTTSettingNotificationCellHeight];
 //    }
     
-    if (cellType == SettingCellTypeLogout) {
-        return [TTEditUserLogoutCell cellHeight];
-    }
-    
     return [SettingView heightOfCell];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     CGFloat height = [TTDeviceUIUtils tt_padding:kTTSettingSpacingOfSection];
-    
-    if ([self isTableViewSectionOfLogoutModule] &&
-        [self sectionTypeAtSection:section] == kTTSettingSectionTypeLogout) {
-        height = [TTDeviceUIUtils tt_padding:kTTSettingLogoutSectionHeaderHeight];
-    }
     
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.width, height)];
     view.backgroundColor = [UIColor clearColor];
@@ -508,10 +499,6 @@ TTEditUserProfileViewControllerDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = [TTDeviceUIUtils tt_padding:kTTSettingSpacingOfSection];
-    if ([self sectionTypeAtSection:section] == kTTSettingSectionTypeLogout &&
-        [self isTableViewSectionOfLogoutModule]) {
-        height = [TTDeviceUIUtils tt_padding:kTTSettingLogoutSectionHeaderHeight];
-    }
     return height;
 }
 
@@ -525,13 +512,10 @@ TTEditUserProfileViewControllerDelegate
         cell = [[SettingPushCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
         self.pushCell = (SettingPushCell *)cell;
         self.pushCell.pushTitleLabel.font = [UIFont systemFontOfSize:[SettingView fontSizeOfCellLeftLabel]];
-    } else if (cellType == SettingCellTypeLogout) {
-        if ([self isTableViewSectionOfLogoutModule]) {
-            cell = [[TTEditUserLogoutCell alloc] initWithReuseIdentifier:cellIndenitfier];
-        }
     } else if (cellType == SettingCellTypeAccountManagement) {
         cell = [[TTEditUserProfileItemCell alloc] initWithReuseIdentifier:cellIndenitfier];
     } else {
+        // SettingCellTypeLogout
         cell = [[SettingNormalCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
     }
     cell.backgroundColor = nil;
@@ -710,7 +694,7 @@ TTEditUserProfileViewControllerDelegate
     }
     else if (cellType == SettingCellTypeShowADSplash) {
         cell.textLabel.text = NSLocalizedString(@"头条封面", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -729,35 +713,37 @@ TTEditUserProfileViewControllerDelegate
     }
     else if (cellType == SettingCellTypeAccountBindingSetting) {
         cell.textLabel.text = NSLocalizedString(@"账号和隐私设置", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeBlockUsersList) {
         cell.textLabel.text = NSLocalizedString(@"黑名单", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (cellType == SettingCellTypeLogout) {
-        [((TTEditUserLogoutCell *)cell) reloadWithTitle:@"退出登录" themeKey:kColorText4];
     } else if (cellType == SettingCellTypeADRegisterEntrance) {
         cell.textLabel.text = NSLocalizedString(@"广告合作", nil);
         cell.detailTextLabel.text = NSLocalizedString(@"3步注册开户", nil);
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];;
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeAbout) {
         cell.textLabel.text = @"关于我们";
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeUserProtocol) {
         cell.textLabel.text = @"用户协议";
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypePrivacyProtocol) {
         cell.textLabel.text = @"隐私协议";
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypeLogout) {
+        cell.textLabel.text = @"退出登录";
+        cell.accessoryView = NULL;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     

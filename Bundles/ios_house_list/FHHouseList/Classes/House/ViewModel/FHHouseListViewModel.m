@@ -97,7 +97,7 @@
 
 -(void)updateRedirectTipInfo {
     
-    if (self.redirectTips) {
+    if (self.showRedirectTip && self.redirectTips) {
         
         self.redirectTipView.hidden = NO;
         self.redirectTipView.text = self.redirectTips.text;
@@ -120,6 +120,7 @@
 
 -(void)closeRedirectTip {
     
+    self.showRedirectTip = NO;
     self.redirectTipView.hidden = YES;
     [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
@@ -618,9 +619,9 @@
         allQuery = self.getAllQueryString();
     }
 
-    if ([self.condition isEqualToString:allQuery]) {
-        return;
-    }
+//    if ([self.condition isEqualToString:allQuery]) {
+//        return;
+//    }
     self.condition = allQuery;
     [self.filterOpenUrlMdodel overwriteFliter:self.condition];
 
@@ -773,6 +774,7 @@
 #pragma mark - sug delegate
 -(void)suggestionSelected:(TTRouteObject *)routeObject {
     
+    self.showRedirectTip = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (allInfo[@"houseSearch"]) {
         self.houseSearchDic = allInfo[@"houseSearch"];

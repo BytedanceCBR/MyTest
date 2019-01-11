@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj);
 @property (nonatomic , strong) NSDictionary *tracerDict;
+@property (nonatomic , assign) BOOL showRedirectTip;
 
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj;
