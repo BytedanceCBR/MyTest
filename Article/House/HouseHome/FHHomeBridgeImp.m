@@ -13,6 +13,7 @@
 #import "CommonURLSetting.h"
 #import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
+#import "TTCategoryBadgeNumberManager.h"
 
 @implementation FHHomeBridgeImp
 
@@ -60,6 +61,10 @@
 
 - (void)jumpToTabbarFirst
 {
+    
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:@"f_house_news" withShow:NO];
+    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    
     NSString *firstTabItemIdentifier = [[TTTabBarManager sharedTTTabBarManager].tabItems firstObject].identifier;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

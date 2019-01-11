@@ -92,8 +92,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
-        NSLog(@"avalibility = %@",dataModel.cityAvailability.toDictionary);
-        
+        self.pageSearchPanel.hidden = YES;
+
         if (self.topUnAvalibleCityContainer) {
             [self.topUnAvalibleCityContainer removeFromSuperview];
             self.topUnAvalibleCityContainer = nil;
@@ -101,6 +101,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         
         self.topUnAvalibleCityContainer = [[UIView alloc] init];
         [self.backgroundImageView addSubview:self.topUnAvalibleCityContainer];
+        [self.backgroundImageView bringSubviewToFront:self.topUnAvalibleCityContainer];
         
         [self.topUnAvalibleCityContainer mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.backgroundImageView);
@@ -171,12 +172,25 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
         }
+        
     }else
     {
         if (self.topUnAvalibleCityContainer) {
             [self.topUnAvalibleCityContainer removeFromSuperview];
             self.topUnAvalibleCityContainer = nil;
         }
+        self.pageSearchPanel.hidden = NO;
+    }
+}
+
+- (void)willAppear
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
+        self.pageSearchPanel.hidden = YES;
+    }else
+    {
+        self.pageSearchPanel.hidden = NO;
     }
 }
 
@@ -201,12 +215,6 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     }];
     self.backgroundImageView.layer.zPosition = -1;
     self.backgroundImageView.userInteractionEnabled = YES;
-    
-    WeakSelf;
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        StrongSelf;
-        [self showUnValibleCity];
-    }];
     
     /*
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self.delegate action:@selector(searchActionFired:)];
@@ -281,6 +289,13 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     [self refreshData];
     [self refreshLayout];
+    
+    
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        [self showUnValibleCity];
+    }];
 }
 
 - (void)refreshLayout {
