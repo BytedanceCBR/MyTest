@@ -84,11 +84,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)showNotify:(NSString *)message
 {
-    if (self.isRefreshing) {
-        return;
-    }
-    self.isRefreshing = YES;
-
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
@@ -101,7 +96,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
             self.mainTableView.contentInset = inset;
-            self.isRefreshing = NO;
+            [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+
         }];
     });
     
@@ -151,25 +147,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)scrollToTopAnimated:(BOOL)animated
 {
-//    [self.tableView setContentOffset:CGPointMake(0, self.mainTableView.customTopOffset - self.mainTableView.contentInset.top) animated:animated];
+    self.mainTableView.contentOffset = CGPointMake(0, 0);
 }
-
-//- (void)scroll
-
-//@objc func pullAndRefresh() {
-//
-//    detailPageViewModel?.reloadFromType = reloadFromType
-//    tableView.triggerPullDown()
-//}
-//
-//@objc func scrollToTopEnable(_ enable: Bool) {
-//
-//    tableView.scrollsToTop = enable
-//}
-//
-//@objc func scrollToTopAnimated(_ animated: Bool) {
-//    tableView.setContentOffset(CGPoint.zero, animated: animated)
-//}
 
 - (void)didAppear
 {
@@ -189,7 +168,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
-//    self.ttContentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
+    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 //    tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 //    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 }

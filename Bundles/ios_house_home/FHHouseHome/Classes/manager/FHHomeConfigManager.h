@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, FHHomeHeaderCellPositionType) {
 @property(nonatomic , strong) FHConfigDataModel *currentDataModel;
 @property(nonatomic , strong) NSDictionary *currentDictionary;
 @property (nonatomic, assign) BOOL isNeedTriggerPullDownUpdate;
+@property (nonatomic, assign) BOOL isNeedTriggerPullDownUpdateFowFindHouse;
 @property (nonatomic, assign) BOOL isTraceClickIcon;
 @property (nonatomic, strong) NSString * enterType;
 

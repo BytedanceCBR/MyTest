@@ -78,12 +78,18 @@
     if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(feedStartCategoryName)]) {
         categoryStartName = [[self fhHomeBridgeInstance] feedStartCategoryName];
     }
-
-    if ([categoryStartName isEqualToString:[TTArticleCategoryManager currentSelectedCategoryID]]) {
-        self.isNeedTriggerPullDownUpdate = NO;
+    if ([categoryStartName isEqualToString:@"f_find_house"] && [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(currentSelectCategoryName)]) {
+            self.isNeedTriggerPullDownUpdateFowFindHouse = YES;
+        }
     }else
     {
-        self.isNeedTriggerPullDownUpdate = YES;
+        if ([categoryStartName isEqualToString:[TTArticleCategoryManager currentSelectedCategoryID]]) {
+            self.isNeedTriggerPullDownUpdate = NO;
+        }else
+        {
+            self.isNeedTriggerPullDownUpdate = YES;
+        }
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
