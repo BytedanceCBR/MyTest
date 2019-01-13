@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
 @property (nonatomic , assign) BOOL showRedirectTip;
+@property (nonatomic , assign) BOOL fromFindTab;
 
 -(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 // findTab过来的houseSearch需要单独处理下埋点数据
 -(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 -(NSDictionary *)categoryLogDict;
+- (void)addClickHouseSearchLog;
 
 @end
 

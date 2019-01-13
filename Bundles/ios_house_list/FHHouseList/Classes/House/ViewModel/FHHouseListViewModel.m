@@ -1092,6 +1092,27 @@
     }
 }
 
+-(NSString *)pageTypeStringByFindTab {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"findtab_new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"findtab_old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"findtab_rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"findtab_neighborhood";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
 -(NSString *)elementTypeString {
     
     return @"be_null";
@@ -1157,7 +1178,13 @@
 
 - (void)addClickHouseSearchLog {
     NSMutableDictionary *params = [NSMutableDictionary new];
-    params[@"page_type"] = [self pageTypeString];
+    if (self.fromFindTab) {
+        
+        params[@"page_type"] = [self pageTypeStringByFindTab];
+    }else {
+        
+        params[@"page_type"] = [self pageTypeString];
+    }
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"hot_word"] = @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
