@@ -117,6 +117,12 @@
     [self checkLocalTestUpgradeVersionAlert];
     #endif
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
     [[TTLaunchTracer shareInstance] writeEvent];
 }
 

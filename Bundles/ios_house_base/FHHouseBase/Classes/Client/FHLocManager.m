@@ -142,34 +142,42 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)checkUserLocationStatus
 {
+    if (![self isHaveLocationAuthorization]) {
+        [self showLocationGuideAlert];
+    }
+}
+
+- (BOOL)isHaveLocationAuthorization
+{
     CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
     switch (status) {
         case kCLAuthorizationStatusDenied:
         {
-            [self showLocationGuideAlert];
+            return NO;
         }
             break;
         case kCLAuthorizationStatusNotDetermined:
         {
-            [self showLocationGuideAlert];
+            return NO;
         }
             break;
         case kCLAuthorizationStatusRestricted:
         {
-            [self showLocationGuideAlert];
+            return NO;
         }
             break;
         case kCLAuthorizationStatusAuthorizedAlways:
         {
-            
+            return YES;
         }
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
         {
-            
+            return YES;
         }
             break;
         default:
+            return NO;
             break;
     }
 }
