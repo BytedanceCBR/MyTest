@@ -249,7 +249,6 @@
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
     tracerParams[@"enter_from"] = @"maintab";
-    tracerParams[@"log_pb"] = @"be_null";
     tracerParams[@"origin_from"] = @"maintab_search";
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
