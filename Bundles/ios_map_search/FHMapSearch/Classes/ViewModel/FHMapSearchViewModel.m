@@ -661,8 +661,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeClickAnnotation currentLevel:zoomLevel];
         [self.mapView setCenterCoordinate:moveCenter animated:YES];
         [self.mapView setZoomLevel:zoomLevel animated:YES]; //atPivot:annotationView.center
-        //request
-        [self requestHouses:NO showTip:YES];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            //待地图缩放完之后
+            [self requestHouses:NO showTip:YES];
+        });
+        
         
     }else{
         //show house list
