@@ -55,7 +55,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
 
     var traceParams = TracerParams.momoid()
 
-    var stayTimeParams: TracerParams?
+//    var stayTimeParams: TracerParams?
     
     private var errorVM : NHErrorViewModel?
 
@@ -135,6 +135,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
 
+        self.ttTrackStayEnable = true
         self.view.backgroundColor = UIColor.white
         self.tableListViewModel = ChatDetailListTableViewModel(navVC: self.navigationController,tableView:tableView)
         self.tableListViewModel?.traceParams = traceParams
@@ -213,10 +214,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                     if let responseData = responsed?.data?.items, responseData.count != 0 {
 
                         self.hasMore = responsed?.data?.hasMore ?? false
-                        
-                        // add by zjing for test
-                        self.hasMore = true
-                        
                         if let data = self.tableListViewModel?.datas.value{
                             self.tableListViewModel?.datas.accept(data + responseData)
                         }
@@ -230,7 +227,6 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                         }
 
                         if !self.hasRecordEnterCategory {
-                            self.stayTimeParams = self.traceParams <|> traceStayTime()
                             
                             let traceParams = self.traceParams <|> toTracerParams("be_null", key: "element_from")
                             recordEvent(key: TraceEventName.enter_category, params: traceParams.exclude("log_pb"))
@@ -274,17 +270,14 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         UIApplication.shared.statusBarStyle = .default
         self.ttStatusBarStyle = UIStatusBarStyle.default.rawValue
         UIApplication.shared.setStatusBarHidden(false, with: .none)
-        self.stayTimeParams = traceParams <|> traceStayTime()
 
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if var stayTimeParams = stayTimeParams {
-            stayTimeParams = stayTimeParams <|> toTracerParams("be_null", key: "element_from")
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
-        }
-        stayTimeParams = nil
+
+        self.addStayCategoryLog()
+        self.tt_resetStayTime()
     }
 
     override func didReceiveMemoryWarning() {
@@ -320,6 +313,29 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
         return self.tableListViewModel?.datas.value.count ?? 0 > 0
     }
     
+    func addStayCategoryLog() {
+        
+        let trackTime = self.ttTrackStayTime * 1000
+        let stayTimeParams = self.traceParams <|> toTracerParams(trackTime, key: "stay_time")
+            <|> toTracerParams("be_null", key: "element_from")
+        recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
+    }
+    
+}
+
+// MARK: TTUIViewControllerTrackProtocol
+extension MessageListVC {
+    
+    override func trackStartedByAppWillEnterForground() {
+        
+        self.tt_resetStayTime()
+        self.ttTrackStartTime = Date().timeIntervalSince1970
+    }
+    override func trackEndedByAppWillEnterBackground() {
+        
+        self.addStayCategoryLog()
+        self.tt_resetStayTime()
+    }
 }
 
 fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, UITableViewDataSource {
