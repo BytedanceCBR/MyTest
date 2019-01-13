@@ -109,6 +109,8 @@
 
 + (NSString*)userProtocolURLString;
 + (NSString*)functionExtensionURLString;
++ (NSString*)userPrivateProtocolURLString;
++ (NSString*)protectedProtocolURLString;
 
 #pragma mark -- 删除
 /**

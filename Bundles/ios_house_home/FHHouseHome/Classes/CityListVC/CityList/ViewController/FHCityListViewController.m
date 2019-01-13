@@ -100,6 +100,8 @@
     [[ToastManager manager] dismissCustomLoading];
     [self.emptyView hideEmptyView];
     [self.viewModel loadListCityData];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
@@ -296,6 +298,11 @@
             [FHLocManager sharedInstance].isLocationSuccess = YES;
             if (hasToast) {
                 [[ToastManager manager] showToast:@"定位成功" duration:1.0 isUserInteraction:YES];
+            }
+            //如果用户首次安装，且没有选过城市，自动跳到首页
+            BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+            if (!hasSelectedCity) {
+                [self.viewModel cityNameBtnClick];
             }
         } else {
             wSelf.locationBar.isLocationSuccess = NO;

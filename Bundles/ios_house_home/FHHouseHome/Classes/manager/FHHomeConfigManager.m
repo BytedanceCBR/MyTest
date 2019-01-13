@@ -78,7 +78,6 @@
     if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(feedStartCategoryName)]) {
         categoryStartName = [[self fhHomeBridgeInstance] feedStartCategoryName];
     }
-    self.isNeedTriggerPullDownUpdateFowFindHouse = NO;
     if ([categoryStartName isEqualToString:@"f_find_house"] && [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
         if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(currentSelectCategoryName)]) {
             self.isNeedTriggerPullDownUpdateFowFindHouse = YES;

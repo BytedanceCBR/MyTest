@@ -11,6 +11,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "UIViewController+Tree.h"
+#import "FHEnvContext.h"
 
 @interface FHHomePageRoute() <TTRouteInitializeProtocol>
 
@@ -22,10 +23,14 @@
     self = [super init];
     if (self) {
         
+        [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
+        
         UIViewController *currentVC = [UIViewController ttmu_currentViewController];
         [currentVC.navigationController popToRootViewControllerAnimated:YES];
         
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+        if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
+            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
+        }
         
         [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
         

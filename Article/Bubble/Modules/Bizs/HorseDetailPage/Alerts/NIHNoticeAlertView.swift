@@ -391,10 +391,15 @@ class NHSendPhoneNumberPanel: UIView,UITextFieldDelegate {
     
     @objc func infoBtnClick(button:UIButton) {
         self.phoneTextField.resignFirstResponder()
-        let openUrl = "snssdk1370://webview_oc"
-        let info: [String: Any] = ["url": "https://www.baidu.com", "title": "测试页面"]
-        let userInfo = TTRouteUserInfo(info: info)
-        TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+        // 《个人信息保护声明》
+        if let protectedUrlStr = ArticleURLSetting.protectedProtocolURLString(),
+            let urlStr = "\(protectedUrlStr)&hide_more=1".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
+            if urlStr.count > 0 {
+                if let openUrl = URL(string: "fschema://webview?url=\(urlStr)") {
+                    TTRoute.shared()?.openURL(byPushViewController: openUrl)
+                }
+            }
+        }
     }
     
     func enableConfirmBtn(button: UIButton, isEnabled: Bool) {

@@ -825,7 +825,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 backgroundColor: nil,
                 userInfo: nil,
                 tapAction: { (_, text, range, _) in
-                    if let url = "\(EnvContext.networkConfig.host)/f100/download/private_policy.html&title=隐私声明&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    if let url = "\(EnvContext.networkConfig.host)/f100/download/private_policy.html&title=隐私协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                         TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                     }
                 })

@@ -59,10 +59,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
-
+        
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
-
+        
         WeakSelf;
         // 上拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
@@ -92,11 +92,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return ;
             }
             
-            if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-//                [self.tableViewV finishPullDownWithSuccess:YES];
-                return;
-            }
-            
             [self resetCurrentHouseCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
@@ -110,13 +105,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
+            
+            //防止二次刷新
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
+                return;
+            }
+            
             [self reloadHomeTableHeaderSection];
             
             [self resetAllCacheData];
             
             [self updateCategoryViewSegmented:isFirstChange];
             
-            [self requestOriginData];
+            [self requestOriginData:isFirstChange];
             
             isFirstChange = NO;
         }];
@@ -126,7 +127,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             StrongSelf;
             
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
-
+            
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
                 NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
@@ -137,7 +138,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
             self.tableViewV.hasMore = [self.isItemsHasMoreCache[cacheKey] boolValue];
-
+            
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
                 
@@ -151,18 +152,18 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 }else
                 {
                     [self reloadHomeTableHeaderSection];
-                    [self requestOriginData];
+                    [self requestOriginData:NO];
                 }
             }else
             {
                 [self reloadHomeTableHeaderSection];
-                [self requestOriginData];
+                [self requestOriginData:NO];
             }
             
             [self sendSwitchButtonClickTrace];
             
         };
-
+        
     }
     return self;
 }
@@ -207,7 +208,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.itemsTraceCache = [NSMutableDictionary new];
 }
 
-- (void)requestOriginData
+- (void)requestOriginData:(BOOL)isFirstChange
 {
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
@@ -237,10 +238,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             {
                 [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
             }
+            self.tableViewV.hidden = YES;
             return;
         }
         
         if (model.data.items.count == 0) {
+            self.tableViewV.hidden = YES;
+            [self.homeViewController.view sendSubviewToBack:self.tableViewV];
             [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
             return;
         }
@@ -269,8 +273,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:model.data.items];
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         
-        [self checkLoadingAndEmpty];
-
+        
         self.tableViewV.hasMore = model.data.hasMore;
         
         self.hasShowedData = YES;
@@ -279,15 +282,18 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
-        if (model.data.refreshTip) {
+        if (model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && !isFirstChange) {
             [self.homeViewController showNotify:model.data.refreshTip];
             
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         
+        [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+        
         self.stayTime = [self getCurrentTime];
         self.dataSource.originSearchId = model.data.searchId;
-    
+        self.tableViewV.hidden = NO;
+        [self checkLoadingAndEmpty];
     }];
 }
 
@@ -329,6 +335,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
         }
         
+        if (pullType == FHHomePullTriggerTypePullDown) {
+            if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable) {
+                self.tableViewV.hidden = YES;
+                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                return;
+            }
+            
+            if (model.data.items.count == 0 && self.dataSource.modelsArray.count != 0) {
+                [self.tableViewV finishPullDownWithSuccess:YES];
+                return;
+            }
+        }
+        
         if (kIsNSString(cahceKey) && pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
         }
@@ -356,7 +376,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
             [self.homeViewController showNotify:model.data.refreshTip];
-            
+            self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
     }];
@@ -451,7 +471,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     if ([self.homeViewController respondsToSelector:@selector(tt_endUpdataData)]) {
         [self.homeViewController.emptyView hideEmptyView];
-        self.homeViewController.mainTableView.hidden = NO;
+        if (self.dataSource.modelsArray.count > 0) {
+            self.homeViewController.mainTableView.hidden = NO;
+        }else
+        {
+            self.homeViewController.mainTableView.hidden = YES;
+        }
         [self.homeViewController tt_endUpdataData];
     }
 }
@@ -516,7 +541,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     tracerDict[@"click_type"] = stringClickType;
     
     [FHEnvContext recordEvent:tracerDict andEventKey:@"click_switch_maintablist"];
-
+    
 }
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
@@ -557,7 +582,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.reloadType = nil;
     }
-
+    
 }
 
 @end

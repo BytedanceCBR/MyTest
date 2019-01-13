@@ -20,7 +20,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 @interface FHLocManager ()
 
 @property (nonatomic, strong)   YYCache       *locationCache;
-@property (nonatomic, assign)   BOOL       isShowSwitch;
 
 @end
 
@@ -59,6 +58,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
+    self.isShowSwitch = YES;
+    self.isShowSplashAdView = NO;
 }
 
 - (void)saveCurrentLocationData {
@@ -77,12 +78,17 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)showLocationGuideAlert
 {
+    BOOL isLocationEnabled = [CLLocationManager locationServicesEnabled];
+    if (!isLocationEnabled) {
+        return;
+    }
+    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"无定位权限，请前往系统设置开启" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithGrayTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+    [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         
     }];
     
-    [alertVC addActionWithTitle:@"立刻前往" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         
         if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
@@ -130,6 +136,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (topVC) {
         [alertVC showFrom:topVC animated:YES];
     }
+    
+    self.isShowSwitch = NO;
 }
 
 - (void)checkUserLocationStatus
@@ -183,6 +191,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
+    
     [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
     [self.locManager setLocationTimeout:2];
@@ -256,9 +265,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     return;
                 }
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch) {
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                    self.isShowSwitch = NO;
                 }else
                 {
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];

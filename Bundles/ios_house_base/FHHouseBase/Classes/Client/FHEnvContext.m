@@ -65,7 +65,7 @@
         }
         
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-        
+        [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
             if (isSuccess) {
                 FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];

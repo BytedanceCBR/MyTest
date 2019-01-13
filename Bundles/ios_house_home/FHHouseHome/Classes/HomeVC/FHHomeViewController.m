@@ -26,6 +26,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
 @property (nonatomic, assign) BOOL isClickTab;
+@property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 
 @end
@@ -95,6 +96,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
             self.mainTableView.contentInset = inset;
+            [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+
         }];
     });
     
@@ -134,14 +137,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)pullAndRefresh
 {
     self.homeListViewModel.reloadType = _reloadFromType;
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
-    }else
-    {
-        [self.mainTableView triggerPullDown];
-    }
-//    detailPageViewModel?.reloadFromType = self._reloadFromType
-//    tableView.triggerPullDown()
+    [self.mainTableView triggerPullDown];
 }
 
 - (void)scrollToTopEnable:(BOOL)enable
@@ -151,31 +147,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)scrollToTopAnimated:(BOOL)animated
 {
-//    [self.tableView setContentOffset:CGPointMake(0, self.mainTableView.customTopOffset - self.mainTableView.contentInset.top) animated:animated];
+    self.mainTableView.contentOffset = CGPointMake(0, 0);
 }
-
-//- (void)scroll
-
-//@objc func pullAndRefresh() {
-//
-//    detailPageViewModel?.reloadFromType = reloadFromType
-//    tableView.triggerPullDown()
-//}
-//
-//@objc func scrollToTopEnable(_ enable: Bool) {
-//
-//    tableView.scrollsToTop = enable
-//}
-//
-//@objc func scrollToTopAnimated(_ animated: Bool) {
-//    tableView.setContentOffset(CGPoint.zero, animated: animated)
-//}
 
 - (void)didAppear
 {
-    if ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
-        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
-    }
+    
 }
 
 - (void)willDisappear
@@ -186,11 +163,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didDisappear
 {
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
+    [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
-//    self.ttContentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
+    self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
+    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 //    tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 //    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 }

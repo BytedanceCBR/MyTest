@@ -13,6 +13,7 @@
 #import "TTTopBar.h"
 #import "FHHomeViewController.h"
 #import "UIScrollView+Refresh.h"
+#import "FHEnvContext.h"
 
 @interface NIHFeedCollectionHouseCell () // <ExploreMixedListBaseViewDelegate>
 //@property (nonatomic, strong) ExploreMixedListView *listView;
@@ -97,7 +98,9 @@
 - (void)refreshDataWithType:(ListDataOperationReloadFromType)refreshType
 {
     self.houseListViewController.reloadFromType = (TTReloadType)refreshType;
-    
+    if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && refreshType == TTReloadTypeTab) {
+        return;
+    }
     [self triggerPullRefresh];
 }
 
