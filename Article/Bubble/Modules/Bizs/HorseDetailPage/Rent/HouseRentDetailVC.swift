@@ -617,6 +617,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     fileprivate func openSharePanel() {
         
         var params = TracerParams.momoid() <|>
+            toTracerParams(self.houseRentTracer.originFrom, key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId, key: "origin_search_id") <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
             toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
