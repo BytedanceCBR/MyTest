@@ -211,11 +211,12 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                             toTracerParams(data.searchId ?? "be_null", key: "search_id")
                     }
                     if let responseData = responsed?.data?.items, responseData.count != 0 {
+
+                        self.hasMore = responsed?.data?.hasMore ?? false
                         
                         // add by zjing for test
                         self.hasMore = true
-
-//                        self.hasMore = responsed?.data?.hasMore ?? false
+                        
                         if let data = self.tableListViewModel?.datas.value{
                             self.tableListViewModel?.datas.accept(data + responseData)
                         }
@@ -230,7 +231,9 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
 
                         if !self.hasRecordEnterCategory {
                             self.stayTimeParams = self.traceParams <|> traceStayTime()
-                            recordEvent(key: TraceEventName.enter_category, params: self.traceParams.exclude("log_pb"))
+                            
+                            let traceParams = self.traceParams <|> toTracerParams("be_null", key: "element_from")
+                            recordEvent(key: TraceEventName.enter_category, params: traceParams.exclude("log_pb"))
                             self.hasRecordEnterCategory = true
                         }
 
@@ -277,7 +280,8 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let stayTimeParams = stayTimeParams {
+        if var stayTimeParams = stayTimeParams {
+            stayTimeParams = stayTimeParams <|> toTracerParams("be_null", key: "element_from")
             recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
         }
         stayTimeParams = nil
@@ -298,8 +302,9 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     
     func loadMore() {
         
-        traceParams = traceParams <|>
-            toTracerParams("pre_load_more", key: "refresh_type")
+        traceParams = traceParams <|> toTracerParams("pre_load_more", key: "refresh_type")
+            <|> toTracerParams("be_null", key: "element_from")
+
 
         recordEvent(key: TraceEventName.category_refresh, params: traceParams.exclude("log_pb"))
 
@@ -461,15 +466,12 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
             let item = datas.value[section]
             if item.moreLabel?.isEmpty ?? true == false {
                 let view = UserMsgFooterOpenAllView(){
-                    //to do
-//                    let userInfo = TTRouteUserInfo(info: ["tracer": parmasMap,
-//                                                          "houseSearch": houseSearchParams])
-                    
+     
                     recordEvent(key: "click_recommend_loadmore", params: TracerParams.momoid())
 
                     var tracerParams = TracerParams.momoid()
                     tracerParams = tracerParams <|>
-                        toTracerParams("be_null", key: "element_from") <|>
+                        toTracerParams("messagetab", key: "element_from") <|>
                         toTracerParams("messagetab", key: "enter_from") <|>
                         toTracerParams("click", key: "enter_type")
 
@@ -492,78 +494,99 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+    
         if let houseId = datas.value[indexPath.section].items?[indexPath.row].id {
             if let houseTypeId = datas.value[indexPath.section].items?[indexPath.row].houseType {
-                let logPb = datas.value[indexPath.section].items?[indexPath.row].logPb
-                var params = EnvContext.shared.homePageParams <|>
-                    toTracerParams(logPb ?? "be_null", key: "log_pb") <|>
-                    toTracerParams("left_pic", key: "card_type") <|>
-                    toTracerParams(rankByIndexPath(indexPath), key: "rank")
+
                 let houseType: HouseType = HouseType(rawValue: houseTypeId) ?? .newHouse
-
+                let logPb = datas.value[indexPath.section].items?[indexPath.row].logPb
+                var tracerDict: [String: Any] = [:]
+                tracerDict["card_type"] = "left_pic"
+                let listType = selectTraceParam(self.traceParams, key: "category_name")
+                tracerDict["enter_from"] = listType ?? "old_message_list"
+                tracerDict["element_from"] = "be_null"
+                tracerDict["search_id"] = datas.value[indexPath.section].items?[indexPath.row].searchId ?? "be_null"
+                tracerDict["log_pb"] = logPb ?? "be_null"
+                tracerDict["rank"] = rankByIndexPath(indexPath)
+                tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
+                tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
+                let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
+                
                 switch houseType {
-                case .newHouse:
-                    openNewHouseDetailPage(
-                        houseId: Int64(houseId) ?? 0,
-                        logPB: logPb as? [String: Any],
-                        disposeBag: disposeBag,
-                        tracerParams: params <|> toTracerParams("new_message_list", key: "enter_from"),
-                        navVC: navVC)(TracerParams.momoid() <|>
-                            beNull(key: "element_from") <|>
-                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
-                case .secondHandHouse:
-                    
-                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-                    var elementParams = TracerParams.momoid()
-                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
-                                        <|> beNull(key: "element_from")
+                    case .newHouse:
+                        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://new_house_detail?court_id=\(houseId)"), userInfo: userInfo)
 
-                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-                        
-                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
-                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
+                    case .secondHandHouse:
+                        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://old_house_detail?house_id=\(houseId)"), userInfo: userInfo)
 
-                    }else {
-                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
-                    }
-                    openErshouHouseDetailPage(
-                        houseId: Int64(houseId) ?? 0,
-                        logPB: logPb as? [String: Any],
-                        disposeBag: disposeBag,
-                        tracerParams: params,
-                        navVC: navVC)(elementParams)
-                    
-                case .rentHouse:
-
-                    var tracerDict:[String:Any] = [:]
-                    tracerDict["card_type"] = "left_pic"
-                    
-                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-                        tracerDict["enter_from"] = "recommend_message_list"
-                    }else {
-                        tracerDict["enter_from"] = listType ?? "rent_message_list"
-                    }
-                    tracerDict["element_from"] = "be_null"
-                    tracerDict["log_pb"] = selectTraceParam(params, key: "log_pb") ?? "be_null"
-                    tracerDict["rank"] = rankByIndexPath(indexPath)
-                    tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
-                    tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
-
-                    let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
-                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
-                    
+                    case .rentHouse:
+                        TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
                 default:
-                    openErshouHouseDetailPage(
-                        houseId: Int64(houseId) ?? 0,
-                        logPB: logPb as? [String: Any],
-                        disposeBag: disposeBag,
-                        tracerParams: params <|> toTracerParams("neighborhood_message_list", key: "enter_from"),
-                        navVC: navVC)(TracerParams.momoid() <|>
-                            beNull(key: "element_from") <|>
-                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
+                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://neighborhood_detail?neighborhood_id=\(houseId)"), userInfo: userInfo)
                 }
+
+//                switch houseType {
+//                case .newHouse:
+//                    openNewHouseDetailPage(
+//                        houseId: Int64(houseId) ?? 0,
+//                        logPB: logPb as? [String: Any],
+//                        disposeBag: disposeBag,
+//                        tracerParams: params <|> toTracerParams("new_message_list", key: "enter_from"),
+//                        navVC: navVC)(TracerParams.momoid() <|>
+//                            beNull(key: "element_from") <|>
+//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
+//                case .secondHandHouse:
+//
+//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
+//                    var elementParams = TracerParams.momoid()
+//                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
+//                                        <|> beNull(key: "element_from")
+//
+//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+//
+//                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
+//                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
+//
+//                    }else {
+//                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
+//                    }
+//                    openErshouHouseDetailPage(
+//                        houseId: Int64(houseId) ?? 0,
+//                        logPB: logPb as? [String: Any],
+//                        disposeBag: disposeBag,
+//                        tracerParams: params,
+//                        navVC: navVC)(elementParams)
+//
+//                case .rentHouse:
+//
+//                    var tracerDict:[String:Any] = [:]
+//                    tracerDict["card_type"] = "left_pic"
+//
+//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
+//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
+//                        tracerDict["enter_from"] = "recommend_message_list"
+//                    }else {
+//                        tracerDict["enter_from"] = listType ?? "rent_message_list"
+//                    }
+//                    tracerDict["element_from"] = "be_null"
+//                    tracerDict["log_pb"] = selectTraceParam(params, key: "log_pb") ?? "be_null"
+//                    tracerDict["rank"] = rankByIndexPath(indexPath)
+//                    tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
+//                    tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
+//
+//                    let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
+//                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
+//
+//                default:
+//                    openErshouHouseDetailPage(
+//                        houseId: Int64(houseId) ?? 0,
+//                        logPB: logPb as? [String: Any],
+//                        disposeBag: disposeBag,
+//                        tracerParams: params <|> toTracerParams("neighborhood_message_list", key: "enter_from"),
+//                        navVC: navVC)(TracerParams.momoid() <|>
+//                            beNull(key: "element_from") <|>
+//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
+//                }
             } else {
                 assertionFailure()
             }
