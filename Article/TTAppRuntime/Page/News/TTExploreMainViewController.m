@@ -50,6 +50,7 @@
 #import "Bubble-Swift.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import "FHEnvContext.h"
+#import "TTLaunchTracer.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -115,6 +116,8 @@
     #if INHOUSE
     [self checkLocalTestUpgradeVersionAlert];
     #endif
+    
+    [[TTLaunchTracer shareInstance] writeEvent];
 }
 
 - (void)checkLocalTestUpgradeVersionAlert
