@@ -73,7 +73,7 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel, TableViewTracer {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row < datas.value.count {
-            let params = EnvContext.shared.homePageParams <|>
+            let params = TracerParams.momoid() <|>
                 toTracerParams(indexPath.row, key: "rank")
             callTracer(tracer: datas.value[indexPath.row].tracer, traceParams: params)
         }

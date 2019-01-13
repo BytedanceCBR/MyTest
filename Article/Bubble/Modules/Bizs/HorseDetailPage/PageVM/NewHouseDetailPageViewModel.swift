@@ -266,7 +266,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
   
             let dataParser = DetailDataParser.monoid()
-                <- parseNewHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag, navVC: self.navVC)
+                <- parseNewHouseCycleImageNode(data,traceParams: pictureParams <|> traceExtension, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
                 <- parseNewHouseCoreInfoNode(
                     data,
@@ -300,7 +300,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                             floorPanId: "\(courtId)",
                             logPBVC: data.floorPan?.logPB ?? "be_null",
                             isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
-                            traceParams: floorPanTraceParams,
+                            traceParams: floorPanTraceParams <|> traceExtension,
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
                             followPage: self.followPage,
@@ -727,13 +727,14 @@ func openRelatedNeighborhoodList(
     searchId: String? = nil,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    traceExtension: TracerParams = TracerParams.momoid(),
     navVC: UINavigationController?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) {
     let listVC = RelatedNeighborhoodListVC(
         neighborhoodId: neighborhoodId,
         searchId: searchId,
         bottomBarBinder: bottomBarBinder)
-    listVC.tracerParams = tracerParams
+    listVC.tracerParams = tracerParams <|> traceExtension
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
@@ -804,7 +805,8 @@ func openFloorPanCategoryPage(
     logPB: Any?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
-
+        var traceDict = traceParams.paramsGetter([:])
+        
         let detailPage = FloorPanCategoryVC(
                 isHiddenBottomBar: isHiddenBottomBtn,
                 floorPanId: floorPanId,

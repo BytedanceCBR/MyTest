@@ -136,7 +136,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             statusBehavior: self.follwUpStatus,
                             isNeedRecord: true)()
                         
-                        var traceParams = self.tracerParams <|> EnvContext.shared.homePageParams
+                        var traceParams = self.tracerParams <|> TracerParams.momoid()
                             .exclude("house_type")
                             .exclude("element_type")
                             .exclude("maintab_search")
@@ -283,7 +283,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.viewModel?.bottomBarBinder = bottomBarBinder
         self.viewModel?.floorPanId = self.floorPanId
 
-        tracerParams = (EnvContext.shared.homePageParams <|> tracerParams <|>
+        tracerParams = (TracerParams.momoid() <|> tracerParams <|>
             toTracerParams("house_model_detail", key: "page_type")).exclude("house_type")
 
         stayTimeParams = tracerParams <|> traceStayTime()
