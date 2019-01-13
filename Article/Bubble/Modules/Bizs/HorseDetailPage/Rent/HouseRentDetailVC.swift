@@ -21,6 +21,7 @@ enum MyEnumError: Error {
     }
 }
 
+@objc
 class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewControllerErrorHandler {
 
     fileprivate var pageFrameObv: NSKeyValueObservation?
@@ -97,8 +98,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     }()
 
     var traceParams = TracerParams.momoid()
-
-    var stayPageParams: TracerParams? = TracerParams.momoid()
 
     private var netStateInfoVM : NHErrorViewModel?
 
@@ -231,6 +230,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         setupNavBar()
         bindNavBarStateMonitor()
@@ -430,9 +431,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillDisappear(animated)
+        
+        self.houseRentTracer.ttTrackStayTime = self.ttTrackStayTime
         self.houseRentTracer.recordStayPage()
-//        self.recordStayPageSearch()
+        self.tt_resetStayTime()
+        
     }
 
     fileprivate func bindOffSaleCallback() {
@@ -736,10 +740,23 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     }
 
     deinit {
-        if let staySearchParams = staySearchParams {
-//            recordEvent(key: "stay_page_search", params: staySearchParams)
-        }
          UIApplication.shared.statusBarStyle = .default
     }
 
+}
+
+// MARK: TTUIViewControllerTrackProtocol
+extension HouseRentDetailVC {
+    
+    override func trackStartedByAppWillEnterForground() {
+        
+        self.tt_resetStayTime()
+        self.ttTrackStartTime = Date().timeIntervalSince1970
+    }
+    override func trackEndedByAppWillEnterBackground() {
+        
+        self.houseRentTracer.ttTrackStayTime = self.ttTrackStayTime
+        self.houseRentTracer.recordStayPage()
+        self.tt_resetStayTime()
+    }
 }

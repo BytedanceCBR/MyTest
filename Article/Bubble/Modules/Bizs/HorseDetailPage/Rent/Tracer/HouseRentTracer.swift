@@ -16,6 +16,8 @@ class HouseRentTracer: NSObject {
     var houseType: String
     @objc
     var houseId: Int64
+    @objc
+    var ttTrackStayTime: TimeInterval = 0
     var stayPageParams: TracerParams?
     @objc
     var cardType: String
@@ -79,7 +81,8 @@ class HouseRentTracer: NSObject {
                 toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 toTracerParams(self.logPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams(self.rank, key: "rank")
-            stayPageParams = params <|> traceStayTime()
+
+            stayPageParams = params
             recordEvent(key: "go_detail", params: params)
             hasRecordGoDetail = true
         }
@@ -87,9 +90,12 @@ class HouseRentTracer: NSObject {
     }
 
     func recordStayPage() {
+
         if let stayPageParams = stayPageParams {
-            recordEvent(key: "stay_page", params: stayPageParams)
+            let trackTime = Int64(self.ttTrackStayTime * 1000)
+            recordEvent(key: "stay_page", params: stayPageParams <|> toTracerParams(trackTime, key: "stay_time"))
+            self.ttTrackStayTime = 0
         }
-        self.stayPageParams = nil
+        
     }
 }
