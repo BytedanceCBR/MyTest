@@ -19,7 +19,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 @interface FHLocManager ()
 
-@property (nonatomic, strong)   YYCache       *locationCache;
+@property (nonatomic, strong) YYCache       *locationCache;
+@property (nonatomic, assign) BOOL isHasSendPermissionTrace;
 
 @end
 
@@ -182,6 +183,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
 }
 
+ - (void)sendLocationAuthorizedTrace
+{
+    if (!self.isHasSendPermissionTrace) {
+        self.isHasSendPermissionTrace = YES;
+        NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
+        
+        NSDictionary *dictTrace = [NSDictionary dictionaryWithObjectsAndKeys:statusNumber,@"status", nil];
+        
+        [FHEnvContext recordEvent:dictTrace andEventKey:@"location_permission_status"];
+    }
+}
+
 - (void)setUpLocManagerLocalInfo
 {
     NSString *apiKeyString = nil;
@@ -212,6 +225,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         {
             [wSelf checkUserLocationStatus];
         }
+        
+        [self sendLocationAuthorizedTrace];
         
         if (error.code == AMapLocationErrorLocateFailed) {
             NSLog(@"定位错误:%@",error.localizedDescription);

@@ -343,10 +343,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
             let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
             let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
             
-            let tp = EnvContext.shared.homePageParams <|>
+            let tp = TracerParams.momoid() <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
+                toTracerParams(houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 self.traceParam
-            recordEvent(key: "click_feedback", params: tp)
+            recordEvent(key: "click_feedback", params: tp.exclude("element_from").exclude("search_id").exclude("group_id"))
             
             let openUrl = "fschema://webview_oc"
             let pageData: [String: Any] = ["data": detailModel]
