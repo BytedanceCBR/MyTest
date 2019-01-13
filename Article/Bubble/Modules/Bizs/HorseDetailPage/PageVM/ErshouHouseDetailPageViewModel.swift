@@ -396,7 +396,7 @@ import RxCocoa
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
 
             let dataParser = DetailDataParser.monoid()
-                <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
+                <- parseErshouHouseCycleImageNode(data,traceParams : pictureParams <|> traceExtension, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
@@ -463,7 +463,8 @@ import RxCocoa
                                     toTracerParams("same_neighborhood", key: "element_from") <|>
                                     toTracerParams("old_detail", key: "enter_from") <|>
                                     toTracerParams("click", key: "enter_type") <|>
-                                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                                    toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                    traceExtension
 
                                 openErshouHouseList(
                                     title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
@@ -506,6 +507,7 @@ import RxCocoa
                                     searchId: self.relateNeighborhoodData.value?.data?.searchId,
                                     disposeBag: self.disposeBag,
                                     tracerParams: params,
+                                    traceExtension: traceExtension,
                                     navVC: self.navVC,
                                     bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                             }
@@ -1601,9 +1603,7 @@ func openErshouHouseDetailPage(
                 right
             })
         }
-        tracer["element_from"] = "be_null"
         tracer["card_type"] = "left_pic"
-        tracer["origin_from"] = "minetab_old"
 
         var info = ["tracer": tracer]
         if let hsp = houseSearchDict  {
@@ -1614,3 +1614,5 @@ func openErshouHouseDetailPage(
 
     }
 }
+ 
+

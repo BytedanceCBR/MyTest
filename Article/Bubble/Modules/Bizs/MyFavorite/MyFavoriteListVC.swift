@@ -312,7 +312,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     
     func addStayCategoryLog() {
         
-        let trackTime = self.ttTrackStayTime * 1000
+        let trackTime = Int64(self.ttTrackStayTime * 1000)
         let stayTimeParams = self.tracerParams <|> toTracerParams(trackTime, key: "stay_time")
         recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
     }

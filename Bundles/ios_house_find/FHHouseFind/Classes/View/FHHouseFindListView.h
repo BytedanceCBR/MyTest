@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isEnterCategory;
 - (void)viewWillAppear:(BOOL)animated;
 - (void)viewWillDisappear:(BOOL)animated;
+- (void)addClickHouseSearchLog;
+
 @end
 
 NS_ASSUME_NONNULL_END

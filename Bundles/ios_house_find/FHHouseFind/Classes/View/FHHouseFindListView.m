@@ -91,6 +91,7 @@
     }
     self.paramObj.userInfo = userInfo;
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel.fromFindTab = YES;
     [self.viewModel setMaskView:self.errorMaskView];
     [self.viewModel setRedirectTipView:self.redirectTipView];
     [self setupViewModelBlock];

@@ -194,6 +194,9 @@
 
 - (void)jump2GuessVC
 {
+    FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
+    [baseView addClickHouseSearchLog];
+    
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //sug_list
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];

@@ -103,7 +103,7 @@ class HouseNumberPageControlPlugin: PhotoBrowserPlugin {
         
         if let traceParams = self.traceParams {
             
-            self.theThresholdTracer?(TraceEventName.picture_large_stay, self.stayParams <|> traceParams <|> toTracerParams("large", key: "show_type"))
+            self.theThresholdTracer?(TraceEventName.picture_large_stay, self.stayParams <|> traceParams.exclude("rank") <|> toTracerParams("large", key: "show_type"))
         }
 
     }
@@ -149,7 +149,7 @@ fileprivate func largeImageTracerGen(images: [ImageModel], traceParams: TracerPa
                 
                 theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
 
-                recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                 array.append(offset)
             }
         }
@@ -236,7 +236,7 @@ class CycleImageCell: BaseUITableViewCell {
                 if !array.contains(offset) {
                     
                     theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                     array.append(offset)
                 }
             }
@@ -260,7 +260,7 @@ class CycleImageCell: BaseUITableViewCell {
                 if !array.contains(offset) {
                     
                     theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                     array.append(offset)
                 }
             }
@@ -449,7 +449,7 @@ class CycleImageCell: BaseUITableViewCell {
                 let imageModel = self.headerImages[selectedIndex]
                 let key = imageModel.url
                 theTraceParams = theTraceParams <|> toTracerParams(key, key: "picture_id")
-                recordEvent(key: TraceEventName.picture_gallery, params: theTraceParams)
+                recordEvent(key: TraceEventName.picture_gallery, params: theTraceParams.exclude("rank"))
                 
                 vc.traceParams = theTraceParams
             }
@@ -718,7 +718,7 @@ extension CycleImageCell: PhotoBrowserDelegate {
         if var tracerParams = self.traceParams {
 
             tracerParams = tracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-            recordEvent(key: TraceEventName.picture_save, params: tracerParams)
+            recordEvent(key: TraceEventName.picture_save, params: tracerParams.exclude("rank"))
         }
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
         

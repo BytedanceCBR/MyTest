@@ -526,13 +526,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 let ds = dataSourceByHouseType(houseType: item.houseType)
                 let priceNode = searchConfigByHouseType(
                     configData: config,
-                    houseType: item.houseType).first(where: { $0.tabStyle ?? -1 == 2 })
+                    houseType: item.houseType).first(where: { $0.tabStyle ?? "-1" == "2" })
 
                 ds.priceNodeItem = priceNode
                 let nodes = searchConfigByHouseType(
                     configData: config,
                     houseType: item.houseType)
-                    .filter { $0.tabStyle ?? -1 != 2 }
+                    .filter { $0.tabStyle ?? "-1" != "2" }
                     .map { (option) -> [Node] in
                         if let options = option.options {
                             return transferSearchConfigOptionToNode(

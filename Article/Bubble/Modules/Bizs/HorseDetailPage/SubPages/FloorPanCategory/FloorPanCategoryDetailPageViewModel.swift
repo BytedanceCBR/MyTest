@@ -84,7 +84,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
 
     func dataParserByData(data: FloorPlanInfoData) -> DetailDataParser {
         
-        var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("house_model_detail", key: "page_type")
+        var pictureParams = TracerParams.momoid() <|> toTracerParams("house_model_detail", key: "page_type")
         pictureParams = pictureParams <|>
             toTracerParams(self.floorPanId, key: "group_id") <|>
             toTracerParams(selectTraceParam(self.tracerParams, key: "search_id") ?? "be_null", key: "search_id") <|>
@@ -97,7 +97,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             <- parseFloorPlanHouseTypeNameNode(data)
             <- parseFloorPlanPropertyListNode(data)
             <- parseFloorPlanRecommendHeaderNode(isShow: data.recommend.count>0)
-            <- parseFloorPanCollectionNode(data.recommend,isHiddenBottomBar: isHiddenBottomBar,logPb: traceParamsDic["log_pb"],navVC: navVC,followPage: followPage, bottomBarBinder: bottomBarBinder ?? { (_, _, _) in })
+            <- parseFloorPanCollectionNode(data.recommend,isHiddenBottomBar: isHiddenBottomBar,logPb: traceParamsDic["log_pb"],traceParam:tracerParams,navVC: navVC,followPage: followPage, bottomBarBinder: bottomBarBinder ?? { (_, _, _) in })
         return dataParser
     }
 
@@ -139,6 +139,7 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
+                    self.tracerParams <|>
                     toTracerParams(String(code), key: "rank") <|>
                     toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
                     toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
@@ -155,11 +156,14 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
                     toTracerParams(logPb, key: "log_pb")
             }
             
+            var traceExt = self.tracerParams.paramsGetter([:])
             
             let params = (EnvContext.shared.homePageParams <|>
                     toTracerParams("house_model_detail", key: "page_type") <|>
                     toTracerParams(self.floorPanId, key: "group_id") <|>
                     toTracerParams("related", key: "element_type")) <|>
+                    toTracerParams(traceExt["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceExt["origin_from"] ?? "be_null", key: "origin_from") <|>
                     traceExtension
                     .exclude("operation_style")
                     .exclude("operation_name")

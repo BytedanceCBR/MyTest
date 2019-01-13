@@ -276,6 +276,11 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
+
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         self.addStayCategoryLog()
         self.tt_resetStayTime()
     }
@@ -315,7 +320,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
     
     func addStayCategoryLog() {
         
-        let trackTime = self.ttTrackStayTime * 1000
+        let trackTime = Int64(self.ttTrackStayTime * 1000)
         let stayTimeParams = self.traceParams <|> toTracerParams(trackTime, key: "stay_time")
             <|> toTracerParams("be_null", key: "element_from")
         recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
