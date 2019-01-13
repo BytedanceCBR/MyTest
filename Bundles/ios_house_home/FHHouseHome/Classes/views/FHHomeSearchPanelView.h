@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Masonry.h"
+#import "FHHomeRollModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIButton * searchBtn;
 @property(nonatomic, strong) UILabel * countryLabel;
 @property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
+@property (nonatomic, strong)   NSArray<FHHomeRollDataDataModel>      *rollDatas;
 
 - (instancetype)initWithFrame:(CGRect)frame withHighlight:(BOOL)highlighted;
 

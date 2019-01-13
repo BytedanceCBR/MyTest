@@ -13,6 +13,8 @@
 #import "ReactiveObjC.h"
 #import "FHHouseType.h"
 #import "TTRoute.h"
+#import "FHHouseBridgeManager.h"
+#import "FHUserTracker.h"
 
 @interface FHHomeSearchPanelView()
 {
@@ -237,7 +239,12 @@
 
 - (void)searchBtnClick
 {
-    
+    SETTRACERKV(UT_ORIGIN_FROM,@"maintab_search");
+    NSString *rollText = @"be_null";
+    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.searchTitles.count) {
+        rollText = self.searchTitles[self.searchTitleIndex];
+    }
+    [self recordClickHouseSearch:rollText];
     NSMutableDictionary *tracerParams = [NSMutableDictionary new];
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
@@ -249,10 +256,28 @@
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     infos[@"tracer"] = tracerParams;
     infos[@"from_home"] = @(1);
-
+    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
+        FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
+        NSMutableDictionary *homePageRollData = [NSMutableDictionary new];
+        homePageRollData[@"text"] = model.text ?: @"";
+        homePageRollData[@"guess_search_id"] = model.guessSearchId ?: @"";
+        homePageRollData[@"house_type"] = model.houseType ?: @"";
+        homePageRollData[@"open_url"] = model.openUrl ?: @"";
+        infos[@"homepage_roll_data"] = homePageRollData;
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://sug_list"] userInfo:userInfo];
 
+}
+
+- (void)recordClickHouseSearch:(NSString *)rollText {
+    NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+    tracerDic[@"hot_word"] = rollText;
+    tracerDic[@"page_type"] = @"maintab";
+    tracerDic[@"origin_search_id"] = @"be_null";
+    tracerDic[@"origin_from"] = @"maintab_search";
+    
+    [FHUserTracker writeEvent:@"click_house_search" params:tracerDic];
 }
 
 - (void)setUpRollScreenTimer
