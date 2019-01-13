@@ -1079,7 +1079,7 @@ fileprivate func floorPanItemSelector(
             toTracerParams("slide", key: "card_type") <|>
             toTracerParams("new_detail", key: "enter_from") <|>
             traceExtension
-
+        
         openFloorPanCategoryDetailPage(
                 floorPanId: floorPanId,
                 isHiddenBottomBtn: isHiddenBottomBtn ?? true,
@@ -1294,7 +1294,7 @@ fileprivate func fillFloorPanCell(
         }
         theCell.itemSelectors = data.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
-            return curry(floorPanItemSelector)(item)(isHiddenBottomBar)(logPBVC)(offset)(navVC)(followPage)(bottomBarBinder)
+            return curry(floorPanItemSelector)(item)(isHiddenBottomBar)(logPBVC)(offset)(navVC)(traceParam)(followPage)(bottomBarBinder)
         }
         var traceParamDict = traceParam.paramsGetter([:])
         
@@ -1357,6 +1357,7 @@ fileprivate func floorPanItemSelector(
         logPbVC: Any?,
         offset: Int,
         navVC: UINavigationController?,
+        traceExtension: TracerParams = TracerParams.momoid(),
         followPage: BehaviorRelay<String>,
         bottomBarBinder: @escaping FollowUpBottomBarBinder,
         dispostBag: DisposeBag) {
@@ -1366,8 +1367,9 @@ fileprivate func floorPanItemSelector(
         let params = TracerParams.momoid() <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams("related", key: "element_from") <|>
-                toTracerParams("house_model_detail", key: "enter_from")
-
+                toTracerParams("house_model_detail", key: "enter_from") <|>
+                traceExtension
+        
         openFloorPanCategoryDetailPage(
                 floorPanId: floorPanId,
                 isHiddenBottomBtn: isHiddenBottomBtn,
