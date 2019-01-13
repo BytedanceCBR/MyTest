@@ -130,6 +130,7 @@
         infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
     }
     NSMutableDictionary *tracer = [NSMutableDictionary new];
+    tracer[@"enter_type"] = @"click";
     if (self.listController.tracerDict != NULL) {
         if (self.listController.tracerDict[@"element_from"]) {
             tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
@@ -187,6 +188,7 @@
         infos[@"suggestion"] = [self createQueryCondition:dic];
     }
     NSMutableDictionary *tracer = [NSMutableDictionary new];
+    tracer[@"enter_type"] = @"click";
     if (self.listController.tracerDict != NULL) {
         if (self.listController.tracerDict[@"element_from"]) {
             tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];

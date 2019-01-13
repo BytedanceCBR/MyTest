@@ -241,10 +241,9 @@
     NSMutableDictionary *tracerParams = [NSMutableDictionary new];
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
-    tracerParams[@"maintab"] = @"enter_from";
-    tracerParams[@"be_null"] = @"log_pb";
-    tracerParams[@"maintab_search"] = @"origin_from";
-
+    tracerParams[@"enter_from"] = @"maintab";
+    tracerParams[@"log_pb"] = @"be_null";
+    tracerParams[@"origin_from"] = @"maintab_search";
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);

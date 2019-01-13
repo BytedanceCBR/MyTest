@@ -687,6 +687,7 @@
         NSMutableString *openUrl = self.mapFindHouseOpenUrl;
         NSMutableDictionary *param = [self categoryLogDict].mutableCopy;
         param[@"click_type"] = @"list";
+        param[@"enter_type"] = @"click";
         TRACK_EVENT(@"click_switch_mapfind", param);
         
         NSMutableString *query = @"".mutableCopy;
