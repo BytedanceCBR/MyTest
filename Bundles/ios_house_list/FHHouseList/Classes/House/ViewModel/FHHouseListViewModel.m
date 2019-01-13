@@ -686,7 +686,7 @@
 
         NSMutableString *openUrl = self.mapFindHouseOpenUrl;
         NSMutableDictionary *param = [self categoryLogDict].mutableCopy;
-        param[@"click_type"] = @"list";
+        param[@"click_type"] = @"map";
         param[@"enter_type"] = @"click";
         TRACK_EVENT(@"click_switch_mapfind", param);
         
@@ -704,11 +704,7 @@
 
         }
         if (![self.mapFindHouseOpenUrl containsString:@"enter_from"]) {
-            [query appendString:[NSString stringWithFormat:@"&enter_from=%@",self.tracerModel.enterFrom ? : @"be_null"]];
-            
-        }
-        if (![self.mapFindHouseOpenUrl containsString:@"enter_type"]) {
-            [query appendString:[NSString stringWithFormat:@"&enter_type=%@",self.tracerModel.enterType ? : @"be_null"]];
+            [query appendString:[NSString stringWithFormat:@"&enter_from=%@",[self pageTypeString]]];
             
         }
         if (![self.mapFindHouseOpenUrl containsString:@"element_from"]) {

@@ -1611,28 +1611,6 @@ func openErshouHouseDetailPage(
         }
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://old_house_detail?house_id=\(houseId)"), userInfo: userInfo)
-//        let detailPage = HorseDetailPageVC(
-//            houseId: houseId,
-//            houseType: .secondHandHouse,
-//            isShowBottomBar: true,
-//            provider: getErshouHouseDetailPageViewModel())
-//        detailPage.logPB = logPB
-//        detailPage.houseSearchParams = houseSearchParams
-//        if let followStatus = followStatus {
-//            detailPage.sameNeighborhoodFollowUp.accept(followStatus.value)
-//
-//            detailPage.sameNeighborhoodFollowUp
-//                .debug("sameNeighborhoodFollowUp")
-//                .bind(to: followStatus)
-//                .disposed(by: disposeBag)
-//        }
-//        detailPage.traceParams = EnvContext.shared.homePageParams <|> tracerParams <|> params
-//        detailPage.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { [weak navVC] void in
-//                EnvContext.shared.toast.dismissToast()
-//                navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
-//        navVC?.pushViewController(detailPage, animated: true)
+
     }
 }
