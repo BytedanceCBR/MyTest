@@ -338,6 +338,8 @@ import RxCocoa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
             
@@ -972,7 +974,8 @@ func parseErshouHouseListItemNode(
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     imprIdTraceParam(item.logPB) <|>
                     groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    traceExtension
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
         

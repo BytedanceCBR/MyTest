@@ -170,6 +170,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
                     EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                         toTracerParams(origin_from, key: "origin_from")
+                    
                 }
                 if let log_pb = urlParams["log_pb"],
                     log_pb.count > 2,

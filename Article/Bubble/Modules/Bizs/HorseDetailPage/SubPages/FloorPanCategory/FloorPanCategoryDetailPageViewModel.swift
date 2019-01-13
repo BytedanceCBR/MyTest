@@ -140,6 +140,8 @@ class FloorPanCategoryDetailPageViewModel: NSObject, UITableViewDataSource, UITa
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
                     toTracerParams(String(code), key: "rank") <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(self.logPB ?? "be_null", key: "log_pb")
             }
             

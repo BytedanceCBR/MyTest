@@ -20,14 +20,16 @@ func parseRentHouseCycleImageNode(_ images: [FHRentDetailResponseDataHouseImageM
         groupId = logPB["group_id"] as? String
     }
     
-    let params = EnvContext.shared.homePageParams <|>
+    let params = TracerParams.momoid() <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams(tracer.pageType, key: "page_type")  <|>
         toTracerParams(tracer.searchId ?? "be_null", key: "search_id")  <|>
         toTracerParams(groupId, key: "group_id") <|>
+        toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+        toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
         toTracerParams(imprId, key: "impr_id")
     
-    let cellRender = curry(fillRentHouseCycleImageCell)(images ?? [])(disposeBag)(params)
+    let cellRender = curry(fillRentHouseCycleImageCell)(images ?? [])(disposeBag)(params.exclude("search_id"))
     return {
         return TableSectionNode(
             items: [oneTimeRender(cellRender)],

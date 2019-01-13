@@ -30,7 +30,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     var logPB: Any?
     
     var searchId: String?
-
+    
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "new_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -218,12 +218,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         subDisposeBag = DisposeBag()
         if var data = response.data {
             self.shareInfo = data.shareInfo
-            
             let traceParamsDic = traceParams.paramsGetter([:])
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
-                toTracerParams(String(code), key: "rank") <|>
+                    toTracerParams(String(code), key: "rank") <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id")
             }
             
@@ -239,9 +240,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     toTracerParams(logPb, key: "log_pb")
                 logPbVC = logPb
             }
-            
-            
-            
             
             self.informParams = self.informParams <|>
             toTracerParams(data.logPB ?? [:], key: "log_pb") <|>

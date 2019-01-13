@@ -548,7 +548,7 @@ func parseSearchInNeighborhoodNodeCollection(
                 toTracerParams("old_detail", key: "enter_from") <|>
                 toTracerParams("same_neighborhood", key: "element_from") 
 
-            let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(navVC)(openParams)
+            let render = curry(fillSearchInNeighborhoodCollectionCell)(theDatas)(openParams)(traceExtension)(navVC)(openParams)
             return TableSectionNode(
                 items: [render],
                 selectors: nil,
@@ -567,6 +567,7 @@ func parseSearchInNeighborhoodNodeCollection(
 fileprivate func fillSearchInNeighborhoodCollectionCell(
         items: [HouseItemInnerEntity],
         params: TracerParams,
+        traceExtension: TracerParams = TracerParams.momoid(),
         navVC: UINavigationController?,
         itemTracerParams: TracerParams,
         cell: BaseUITableViewCell) {
@@ -579,10 +580,9 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
             let (offset, item) = e
             return curry(searchInNeighborhoodItemCellSelector)(offset)(item)(itemTracerParams)(navVC)
         }
-
         theCell.itemRecorders = items.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
-            let params = EnvContext.shared.homePageParams <|>
+            let params = TracerParams.momoid() <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
@@ -591,7 +591,8 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("old_detail", key: "page_type") <|>
-                    toTracerParams("same_neighborhood", key: "element_type")
+                    toTracerParams("same_neighborhood", key: "element_type") <|>
+                    traceExtension
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
         }
     }
@@ -654,7 +655,7 @@ func parseRelatedNeighborhoodCollectionNode(
                 toTracerParams("neighborhood_nearby", key: "element_from") <|>
                 toTracerParams("old_detail", key: "enter_from") <|>
                 traceExtension
-            let render = curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(navVC)
+            let render = curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(traceExtension)(navVC)
             let params = itemTracerParams <|>
 //                    toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("neighborhood_nearby", key: "element_type") <|>
@@ -675,6 +676,7 @@ func parseRelatedNeighborhoodCollectionNode(
 fileprivate func fillRelatedNeighborhoodCell(
         datas: [NeighborhoodInnerItemEntity],
         itemTracerParams: TracerParams,
+        traceExtension: TracerParams = TracerParams.momoid(),
         navVC: UINavigationController?,
         cell: BaseUITableViewCell) {
     if let theCell = cell as? MultitemCollectionNeighborhoodCell {
@@ -691,9 +693,10 @@ fileprivate func fillRelatedNeighborhoodCell(
             let (offset, item) = e
             return curry(relatedNeighborhoodItemSelector)(offset)(item)(itemTracerParamsResult)(navVC)
         }
+        
         theCell.itemRecorders = datas.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
-            let params = EnvContext.shared.homePageParams <|>
+            let params = TracerParams.momoid() <|>
                     itemTracerParams <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
@@ -702,7 +705,8 @@ fileprivate func fillRelatedNeighborhoodCell(
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams("slide", key: "card_type") <|>
-                    toTracerParams("neighborhood_nearby", key: "element_type")
+                    toTracerParams("neighborhood_nearby", key: "element_type") <|>
+                    traceExtension
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
         }
     }
@@ -837,7 +841,7 @@ func parseRelateCourtCollectionNode(
             let params = TracerParams.momoid() <|>
             toTracerParams("related", key: "element_type") <|>
             traceExtension
-            let render = oneTimeRender(curry(fillSearchInNeighborhoodCell)(theDatas)(params)(navVC))
+            let render = oneTimeRender(curry(fillSearchInNeighborhoodCell)(theDatas)(params)(traceExtension)(navVC))
 
             return TableSectionNode(
                     items: [render],
@@ -855,6 +859,7 @@ func parseRelateCourtCollectionNode(
 fileprivate func fillSearchInNeighborhoodCell(
         items: [CourtItemInnerEntity],
         params: TracerParams,
+        traceExtension: TracerParams = TracerParams.momoid(),
         navVC: UINavigationController?,
         cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? MultitemCollectionCell {
@@ -870,7 +875,7 @@ fileprivate func fillSearchInNeighborhoodCell(
         // 详情页猜你喜欢house_show埋点
         theCell.itemRecorders = items.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
-            let params = EnvContext.shared.homePageParams <|>
+            let params = TracerParams.momoid() <|>
                     toTracerParams("new", key: "house_type") <|>
                     toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
@@ -879,7 +884,8 @@ fileprivate func fillSearchInNeighborhoodCell(
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    toTracerParams(offset, key: "rank")
+                    toTracerParams(offset, key: "rank") <|>
+                    traceExtension
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
     }
