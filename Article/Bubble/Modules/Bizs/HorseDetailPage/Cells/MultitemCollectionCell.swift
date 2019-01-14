@@ -658,6 +658,7 @@ func parseRelatedNeighborhoodCollectionNode(
                 toTracerParams("old_detail", key: "enter_from") <|>
                 traceExtension
             let render = curry(fillRelatedNeighborhoodCell)(datas)(enterParams)(traceExtension)(navVC)
+            
             let params = itemTracerParams <|>
 //                    toTracerParams("slide", key: "card_type") <|>
                     toTracerParams("neighborhood_nearby", key: "element_type") <|>
@@ -689,7 +690,7 @@ fileprivate func fillRelatedNeighborhoodCell(
         
         var traceParamsDict = itemTracerParams.paramsGetter([:])
         let itemTracerParamsResult = TracerParams.momoid() <|>
-            toTracerParams(traceParamsDict["page_type"] ?? "be_null", key: "enter_from") //本页类型是下次进入小区详情页的enter_from
+            toTracerParams(traceParamsDict["page_type"] ?? "be_null", key: "enter_from") <|> traceExtension //本页类型是下次进入小区详情页的enter_from
         
         theCell.itemSelectors = datas.take(5).enumerated().map { e -> (DisposeBag) -> Void in
             let (offset, item) = e
