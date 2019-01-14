@@ -103,6 +103,11 @@
 
 }
 
+- (void)addClickHouseSearchLog
+{
+    [self.viewModel addClickHouseSearchLog];
+}
+
 #pragma mark - UIViewControllerErrorHandler
 
 - (BOOL)tt_hasValidateData
