@@ -369,7 +369,7 @@ import RxCocoa
                 searchId: searchIdForDetail,
                 sameNeighborhoodFollowUp: sameNeighborhoodFollowUp)
 
-            let theParams = EnvContext.shared.homePageParams <|>
+            let theParams = TracerParams.momoid() <|>
                     toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
                     toTracerParams("slide", key: "card_type")
             self.logPB = data.logPB
@@ -389,7 +389,7 @@ import RxCocoa
             })
             
             
-            var pictureParams = EnvContext.shared.homePageParams <|> toTracerParams("old_detail", key: "page_type")
+            var pictureParams = TracerParams.momoid() <|> toTracerParams("old_detail", key: "page_type")
             pictureParams = pictureParams <|>
                 toTracerParams(self.houseId, key: "group_id") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
@@ -536,14 +536,15 @@ import RxCocoa
                     navVC: self.navVC)
                 <- parseOpenAllNode((relateErshouHouseData.value?.data?.hasMore ?? false) && (self.relateErshouHouseData.value?.data?.items?.count ?? 0 > 0), callBack: {[unowned self] in
                         if let id = data.neighborhoodInfo?.id {
-                            let loadMoreParams = EnvContext.shared.homePageParams <|>
+                            let loadMoreParams = TracerParams.momoid() <|>
                                 toTracerParams("related", key: "element_type") <|>
                                 toTracerParams(id, key: "group_id") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 toTracerParams("click", key: "enter_type") <|>
                                 toTracerParams("related", key: "element_from") <|>
                                 toTracerParams("related_list", key: "category_name") <|>
-                                toTracerParams("old_detail", key: "enter_from")
+                                toTracerParams("old_detail", key: "enter_from") <|>
+                                traceExtension
                             
                             
                             openAroundHouseList(title: "周边房源",
@@ -596,7 +597,7 @@ import RxCocoa
         return { [unowned self] (theTracerParams) in
             if let floorPanId = floorPanId, let id = Int64(floorPanId) {
                 let params = TracerParams.momoid() <|>
-                    EnvContext.shared.homePageParams <|>
+                    TracerParams.momoid() <|>
                     toTracerParams("neighborhood_detail", key: "element_from") <|>
                     toTracerParams(logPb ?? "be_null", key: "log_pb") <|>
                     toTracerParams(searchId ?? "be_null", key: "search_id") <|>
