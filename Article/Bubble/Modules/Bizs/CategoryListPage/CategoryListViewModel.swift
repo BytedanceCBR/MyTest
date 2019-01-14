@@ -16,6 +16,8 @@ class CategoryListViewModel: DetailPageViewModel {
 
     var source: String?
     
+    var sourceOriginFrom: String?
+
     var goDetailTraceParam: TracerParams?
     
     
@@ -516,7 +518,9 @@ class CategoryListViewModel: DetailPageViewModel {
                                  self.favoriteHasMore = false
                                }
                             }
-                            return (data.hasMore ?? false, parseFollowUpListRowItemNode(data, hasMore: data.hasMore ?? false, disposeBag: self.disposeBag, navVC: self.navVC))
+                            
+                            self.traceParams = self.traceParams <|> toTracerParams(self.originSearchId ?? "be_null", key: "origin_search_id") <|> toTracerParams(self.sourceOriginFrom ?? "be_null", key: "origin_from")
+                            return (data.hasMore ?? false, parseFollowUpListRowItemNode(data, hasMore: data.hasMore ?? false,traceParam: self.traceParams , disposeBag: self.disposeBag, navVC: self.navVC))
                         } else {
                             return (false, [])
                         }

@@ -133,6 +133,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             })
             .disposed(by: disposeBag)
         
+        self.categoryListVM?.traceParams = self.tracerParams;
     }
 
     private func refreshRemoteData() { 
@@ -161,6 +162,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
             toTracerParams(originFromByType(houseType: houseType), key: "origin_from")
+        
+        self.categoryListVM?.sourceOriginFrom = originFromByType(houseType: houseType);
     }
 
     fileprivate func originFromByType(houseType: HouseType) -> String {

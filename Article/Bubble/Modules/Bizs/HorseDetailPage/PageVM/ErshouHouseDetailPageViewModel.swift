@@ -1275,6 +1275,7 @@ func fillErshouHouseListitemCell(_ data: HouseItemInnerEntity,
 
 func parseFollowUpListRowItemNode(_ data: UserFollowData,
                                   hasMore: Bool = true,
+                                  traceParam: TracerParams = TracerParams.momoid(),
                                   disposeBag: DisposeBag,
                                   navVC: UINavigationController?) -> [TableRowNode] {
     
@@ -1286,6 +1287,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             
             var item = item
             item.fhSearchId = data.searchId
+                        
             
             let selector = openDetailPage(
                 houseType: HouseType(rawValue: item.houseType!),
