@@ -80,6 +80,18 @@ static CGFloat const kSectionHeaderHeight = 38;
         make.top.left.right.equalTo(self.mainTableView);
         make.height.mas_equalTo(32);
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    self.homeListViewModel.stayTime = 0;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 -(void)showNotify:(NSString *)message
@@ -206,6 +218,11 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

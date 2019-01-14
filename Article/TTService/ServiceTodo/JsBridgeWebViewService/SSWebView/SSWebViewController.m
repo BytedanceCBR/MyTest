@@ -449,6 +449,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     //注册基础服务
 //    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
     [self setupAdInfo];
+    
 }
 
 // 注册全局通知监听器
@@ -626,12 +627,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
--(void) applicationDidEnterBackground:(NSNotification *)notification {
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
     [self _sendStayEventWithTimeInterval];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     _startDate = [NSDate date];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated

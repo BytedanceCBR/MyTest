@@ -336,11 +336,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     
-    if (needDiff && [model.data isEqual:[[FHEnvContext sharedInstance] getConfigFromCache]])
+    if (needDiff && [model.data.diffCode isEqualToString:configData.diffCode])
     {
         return;
     }
+    
     
     [[FHEnvContext sharedInstance] saveGeneralConfig:model];
     
