@@ -387,12 +387,45 @@ extension DetailPageViewModel {
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         if let houseId = self?.houseId, let houseType = self?.houseType {
-                            
+
+                            var clickCallParams: TracerParams? = nil
+
+                            if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+
+                                if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
+                                    traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
+                                } else {
+                                    traceParams = traceParams <|>
+                                        toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
+                                }
+
+                                traceParams = traceParams <|> EnvContext.shared.homePageParams
+                                    .exclude("house_type")
+                                    .exclude("element_type")
+                                    .exclude("maintab_search")
+                                    .exclude("search")
+                                    .exclude("filter")
+                                traceParams = traceParams <|>
+                                    toTracerParams(self?.searchId ?? "be_null", key: "search_id")
+                                if let houseId = self?.houseId {
+                                    traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
+                                }else {
+                                    traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
+                                }
+                                clickCallParams = traceParams
+                            }
                             var theImprId: String?
                             if let logPB = self?.logPB as? [String: Any],let imprId = logPB["impr_id"] as? String {
                                 theImprId = imprId
                             }
-                            self?.callRealtorPhone(contactPhone: contactPhone, bottomBar: bottomBar, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
+                            self?.callRealtorPhone(contactPhone: contactPhone,
+                                                   bottomBar: bottomBar,
+                                                   houseId: houseId,
+                                                   houseType: houseType,
+                                                   searchId: self?.searchId ?? "",
+                                                   imprId: theImprId ?? "",
+                                                   traceParams: clickCallParams,
+                                                   disposeBag: self?.disposeBag ?? DisposeBag())
                             self?.followHouseItem(houseType: houseType,
                                                   followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
                                                   followId: "\(houseId)",
@@ -400,31 +433,7 @@ extension DetailPageViewModel {
                                 isNeedRecord: false)()
                         }
                         
-                        if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
-                            
-                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
-                                traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
-                            } else {
-                                traceParams = traceParams <|>
-                                    toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
-                            }
-                            
-                            traceParams = traceParams <|> EnvContext.shared.homePageParams
-                                .exclude("house_type")
-                                .exclude("element_type")
-                                .exclude("maintab_search")
-                                .exclude("search")
-                                .exclude("filter")
-                            traceParams = traceParams <|>
-                                toTracerParams(self?.searchId ?? "be_null", key: "search_id")
-                            if let houseId = self?.houseId {
-                                traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
-                            }else {
-                                traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
-                            }
-                            recordEvent(key: "click_call", params: traceParams <|> traceParam)
-                        }
-                        
+
                     }else {
                         if let pageType = traceParam.paramsGetter([:])["page_type"] as? String, pageType == "house_model_detail"
                         {
@@ -495,30 +504,54 @@ extension DetailPageViewModel {
                           houseType: HouseType,
                           searchId: String,
                           imprId: String,
+                          traceParams: TracerParams?,
                           disposeBag: DisposeBag) {
-        
+
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
         
         bottomBar?.contactBtn.startLoading()
         requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
-            .subscribe(onNext: { [weak bottomBar] (response) in
+            .subscribe(onNext: { [weak bottomBar, weak self] (response) in
                 
                 bottomBar?.contactBtn.stopLoading()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
-                    
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: true, traceParams: traceParams)
                     Utils.telecall(phoneNumber: virtualNumber)
                 }else {
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: traceParams)
                     Utils.telecall(phoneNumber: phone)
                 }
                 
-            }, onError: { [weak bottomBar]  (error) in
+            }, onError: { [weak bottomBar, weak self]  (error) in
                 bottomBar?.contactBtn.stopLoading()
+                self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: traceParams)
                 Utils.telecall(phoneNumber: phone)
             })
             .disposed(by: disposeBag)
         
+    }
+
+
+    func traceCall(rank: String,
+                   contact: FHHouseDetailContact?,
+                   isVirtualNumber: Bool,
+                   traceParams: TracerParams?) {
+        guard let traceParams = traceParams else {
+            return
+        }
+        let params = traceParams <|>
+            toTracerParams(rank, key: "realtor_rank") <|>
+            toTracerParams(1, key: "has_auth") <|>
+            toTracerParams(contact?.realtorId ?? "be_null", key: "realtor_id") <|>
+            toTracerParams("detail_button", key: "realtor_position") <|>
+            toTracerParams(0, key: "is_dial") <|>
+            toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate")
+
+
+        // 谢飞不打，我就不打has_auth
+        recordEvent(key: "click_call", params: params)
     }
 
 }

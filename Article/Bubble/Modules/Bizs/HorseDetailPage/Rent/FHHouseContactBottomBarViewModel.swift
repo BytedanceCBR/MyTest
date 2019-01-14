@@ -68,6 +68,7 @@ class FHHouseContactBottomBarViewModel {
                           houseType: HouseType,
                           searchId: String,
                           imprId: String,
+                          params: TracerParams?,
                           disposeBag: DisposeBag) {
 
         guard let phone = contactPhone?.phone, phone.count > 0 else {
@@ -85,15 +86,36 @@ class FHHouseContactBottomBarViewModel {
                 self?.bottomBar?.contactBtn.stopLoading()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
                     Utils.telecall(phoneNumber: virtualNumber)
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: true, traceParams: params)
                 }else {
                     Utils.telecall(phoneNumber: phone)
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: params)
                 }
             }, onError: { [weak self]  (error) in
                 self?.bottomBar?.contactBtn.stopLoading()
                 Utils.telecall(phoneNumber: phone)
+                self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: params)
             })
             .disposed(by: disposeBag)
 
+    }
+
+    func traceCall(rank: String,
+                   contact: FHHouseDetailContact?,
+                   isVirtualNumber: Bool,
+                   traceParams: TracerParams?) {
+        guard let traceParams = traceParams else {
+            return
+        }
+        let params = traceParams <|>
+            toTracerParams(rank, key: "realtor_rank") <|>
+            toTracerParams(1, key: "has_auth") <|>
+            toTracerParams(contact?.realtorId ?? "be_null", key: "realtor_id") <|>
+            toTracerParams("detail_button", key: "realtor_position") <|>
+            toTracerParams(0, key: "is_dial") <|>
+            toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate")
+        // 谢飞不打，我就不打has_auth
+        recordEvent(key: "click_call", params: params)
     }
 
     func bindBottomBarViewBehavior() {
@@ -125,25 +147,27 @@ class FHHouseContactBottomBarViewModel {
                             self.searchId = logPB["search_id"] as? String
                         }
                     }
+                    var traceParamsClick: TracerParams? = nil
+                    if self.houseType == .rentHouse {
+                        if let traceParamsV = self.traceParams
+                        {
+                            traceParamsClick = TracerParams.momoid() <|>
+                                traceParamsV <|>
+                                EnvContext.shared.homePageParams <|>
+                                toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
+                                toTracerParams("be_null", key: "search_id") <|>
+                                toTracerParams("\(self.houseId)", key: "group_id")
+                        }
+                    }
                     self.callRealtorPhone(contactPhone: contactPhone,
                                           houseId: self.houseId,
                                           houseType: self.houseType,
                                           searchId: theSearchId ?? "",
                                           imprId: theImprId ?? "",
+                                          params: traceParamsClick,
                                           disposeBag: self.disposeBag)
                     self.followForSendPhone(showTip: false)
 
-                    if self.houseType == .rentHouse {
-                        if let traceParamsV = self.traceParams
-                        {
-                            let traceParamsClick = TracerParams.momoid() <|>
-                                traceParamsV <|>
-                                EnvContext.shared.homePageParams <|>
-                                toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
-                                toTracerParams("\(self.houseId)", key: "group_id")
-                            recordEvent(key: "click_call", params: traceParamsClick)
-                        }
-                    }
 
                 }else {
                     var titleStr: String = "询底价"

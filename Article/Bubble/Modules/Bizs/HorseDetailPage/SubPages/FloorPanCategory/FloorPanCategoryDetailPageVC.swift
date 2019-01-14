@@ -127,15 +127,6 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             theImprId = imprId
 
                         }
-                        self.callRealtorPhone(contactPhone: contactPhone, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
-                        
-                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
-                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
-                                                                  followId: "\(self.houseId)",
-                            disposeBag: self.disposeBag,
-                            statusBehavior: self.follwUpStatus,
-                            isNeedRecord: true)()
-                        
                         var traceParams = self.tracerParams <|> EnvContext.shared.homePageParams
                             .exclude("house_type")
                             .exclude("element_type")
@@ -146,8 +137,22 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                             toTracerParams("house_model_detail", key: "page_type") <|>
                             toTracerParams("be_null", key: "search_id") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
-                        recordEvent(key: "click_call", params: traceParams)
+                        self.callRealtorPhone(contactPhone: contactPhone,
+                                              houseId: self.houseId,
+                                              houseType: self.houseType,
+                                              searchId: theSearchId ?? "",
+                                              imprId: theImprId ?? "",
+                                              params: traceParams,
+                                              disposeBag: self.disposeBag)
                         
+                        self.followUpViewModel?.followHouseItem(houseType: self.houseType,
+                                                                  followAction: (FollowActionType(rawValue: self.houseType.rawValue) ?? .newHouse),
+                                                                  followId: "\(self.houseId)",
+                            disposeBag: self.disposeBag,
+                            statusBehavior: self.follwUpStatus,
+                            isNeedRecord: true)()
+                        
+
                     }else {
                         self.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价", topView: self.view)
                     }
@@ -246,6 +251,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
                           houseType: HouseType,
                           searchId: String,
                           imprId: String,
+                          params: TracerParams?,
                           disposeBag: DisposeBag) {
 
 
@@ -254,23 +260,47 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         }
 
         bottomBar.contactBtn.startLoading()
-        requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
+        requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0",
+                             houseId: houseId,
+                             houseType: houseType,
+                             searchId: searchId,
+                             imprId: imprId)
             .subscribe(onNext: { [weak self] (response) in
                 
                 self?.bottomBar.contactBtn.stopLoading()
-                if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
-                    
+                if let contactPhoneData = response?.data, let virtualNumber = contactPhoneData.virtualNumber {
+                    self?.traceCall(rank: "0", contact: contactPhone, isVirtualNumber: true, traceParams: params)
                     Utils.telecall(phoneNumber: virtualNumber)
                 }else {
+                    self?.traceCall(rank: "0", contact: contactPhone, isVirtualNumber: false, traceParams: params)
                     Utils.telecall(phoneNumber: phone)
                 }
                 
             }, onError: { [weak self]  (error) in
                 self?.bottomBar.contactBtn.stopLoading()
+                self?.traceCall(rank: "0", contact: contactPhone, isVirtualNumber: false, traceParams: params)
                 Utils.telecall(phoneNumber: phone)
             })
             .disposed(by: self.disposeBag)
         
+    }
+
+    func traceCall(rank: String,
+                   contact: FHHouseDetailContact?,
+                   isVirtualNumber: Bool,
+                   traceParams: TracerParams?) {
+        guard let traceParams = traceParams else {
+            return
+        }
+        let params = traceParams <|>
+            toTracerParams(rank, key: "realtor_rank") <|>
+            toTracerParams(1, key: "has_auth") <|>
+            toTracerParams(contact?.realtorId ?? "be_null", key: "realtor_id") <|>
+            toTracerParams("detail_button", key: "realtor_position") <|>
+            toTracerParams(0, key: "is_dial") <|>
+            toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate")
+        // 谢飞不打，我就不打has_auth
+        recordEvent(key: "click_call", params: params)
     }
 
     override func viewDidLoad() {

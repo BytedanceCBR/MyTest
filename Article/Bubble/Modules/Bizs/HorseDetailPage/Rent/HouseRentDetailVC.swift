@@ -363,6 +363,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                     let tracerParamsFollow =
                         self.getTracePamrasFromRent() <|>
                         toTracerParams(imprId ?? "be_null", key: "impr_id") <|>
+                        toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                        toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
                         toTracerParams(groupId ?? "be_null", key: "group_id")
                     
                     if let theDetailModel = detailPageViewModel {
@@ -711,7 +713,13 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             (self.bottomBarViewModel?.traceParams ?? TracerParams.momoid())
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.houseRentTracer.pageType, key: "page_type") <|>
+            toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
+            toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams("be_null", key: "element_from") <|>
+            toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
@@ -729,16 +737,15 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             toTracerParams("left_pic", key: "card_type") <|>
             toTracerParams(houseRentTracer.enterFrom, key: "enter_from") <|>
             toTracerParams(houseRentTracer.elementFrom, key: "element_from") <|>
-            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
-            toTracerParams(houseRentTracer.rank, key: "rank")
+            toTracerParams(houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
+            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb")
         recordEvent(key: TraceEventName.click_confirm,
                     params: tracerParams.exclude("element_type"))
     }
 
     deinit {
-        if let staySearchParams = staySearchParams {
-//            recordEvent(key: "stay_page_search", params: staySearchParams)
-        }
          UIApplication.shared.statusBarStyle = .default
     }
 

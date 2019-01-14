@@ -641,24 +641,25 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                             theSearchId = searchId
 
                         }
-                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone, bottomBar: self.bottomBar, houseId: self.houseId, houseType: self.houseType, searchId: theSearchId ?? "", imprId: theImprId ?? "", disposeBag: self.disposeBag)
+                        var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("maintab_search")
+                            .exclude("search")
+                            .exclude("filter")
+                        traceParams = traceParams <|>
+                            toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
+                            toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams("\(self.houseId)", key: "group_id")
+                        self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone,
+                                                                   bottomBar: self.bottomBar,
+                                                                   houseId: self.houseId,
+                                                                   houseType: self.houseType,
+                                                                   searchId: theSearchId ?? "",
+                                                                   imprId: theImprId ?? "",
+                                                                   traceParams: traceParams,
+                                                                   disposeBag: self.disposeBag)
                         self.followForSendPhone(false)
-
-                        if self.houseType != .neighborhood {
-                            
-                            var traceParams = self.traceParams <|> EnvContext.shared.homePageParams
-                                .exclude("house_type")
-                                .exclude("element_type")
-                                .exclude("maintab_search")
-                                .exclude("search")
-                                .exclude("filter")
-                            traceParams = traceParams <|>
-                                toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
-                                toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
-                                toTracerParams("\(self.houseId)", key: "group_id")
-                            recordEvent(key: "click_call", params: traceParams)
-                        }
-                        
                     }else {
                         var titleStr:String = "询底价"
                         if self.houseType == .neighborhood {
@@ -1108,7 +1109,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tracerParams = tracerParams <|>
 //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
         
@@ -1124,7 +1125,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
         recordEvent(key: TraceEventName.click_confirm,

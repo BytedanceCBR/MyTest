@@ -554,7 +554,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
         let paramsDict = self.tracerParams.paramsGetter([:])
         if paramsDict.count > 0 {
-            recordEvent(key: TraceEventName.login_page, params: tracerParams)
+            let theParams = tracerParams <|>
+                toTracerParams("minetab", key: "orign_from") <|>
+                toTracerParams("be_null", key: "orign_search_id") <|>
+                toTracerParams("be_null", key: "log_pb")
+            recordEvent(key: TraceEventName.login_page, params: theParams)
 
         }
         handleKeyboardState()

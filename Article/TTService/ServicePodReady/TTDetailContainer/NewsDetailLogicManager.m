@@ -180,7 +180,7 @@ static NewsDetailLogicManager * shareManager;
             return clickLabel;
         }else if ([categoryID isEqualToString:@"xx"]) {
             
-            if ([clickLabel isEqualToString:@"click_apn"]) {
+            if ([clickLabel isEqualToString:@"click_apn"] || [@"" isEqualToString:clickLabel]) {
                 return @"push";
             } else {
                 return clickLabel;
