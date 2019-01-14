@@ -13,6 +13,7 @@
 #import "FHLocManager.h"
 #import "FHUtils.h"
 #import "FHIndexSectionView.h"
+#import "FHUserTracker.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -256,6 +257,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 - (void)historyItemClick:(NSInteger)index {
     if (index >= 0 && index < self.historyCityList.count) {
         FHHistoryCityListModel *item = self.historyCityList[index];
+        [self addCityFilterTracer:item.name queryType:@"history"];
         __weak typeof(self) wSelf = self;
         [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
             if (isSuccess) {
@@ -268,6 +270,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 - (void)hotItemClick:(NSInteger)index {
     if (index >= 0 && index < self.hotCityList.count) {
         FHConfigDataHotCityListModel *item = self.hotCityList[index];
+        [self addCityFilterTracer:item.name queryType:@"hot"];
         __weak typeof(self) wSelf = self;
         [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
             if (isSuccess) {
@@ -279,6 +282,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 
 - (void)cellItemClick:(FHConfigDataCityListModel *)item {
     __weak typeof(self) wSelf = self;
+    [self addCityFilterTracer:item.name queryType:@"list"];
     [self switchCityByCityId:item.cityId switchCompletion:^(BOOL isSuccess) {
         if (isSuccess) {
             [wSelf addCityToHistory:item];
@@ -333,6 +337,16 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
             }
         }];
     }
+}
+
+// city_filter 埋点
+// 搜索输入方式,{'点击历史记录': 'history', '列表选择': 'list', '当前定位': 'location', '热门城市': 'hot'}
+- (void)addCityFilterTracer:(NSString *)cityName queryType:(NSString *)queryType {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"page_type"] = @"maintab";
+    tracerDict[@"query_type"] = queryType ?: @"be_null";
+    tracerDict[@"city"] = cityName ?: @"be_null";
+    [FHUserTracker writeEvent:@"city_filter" params:tracerDict];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

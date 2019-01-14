@@ -149,8 +149,6 @@
     if (neighbor) {
         [self addNeighborShowLog:self.neighbor];
     }
-    
-    [self addEnterListPageLog];
 }
 
 -(void)showNeighborDetail
@@ -404,6 +402,7 @@
                 
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
+            [wself addEnterListPageLog];
             if (showLoading) {
                 [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];
             }
@@ -519,6 +518,7 @@
         
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
+            [wself addEnterListPageLog];
             if (showLoading) {
                 [wself addHouseListShowLog:wself.neighbor houseListModel:houseModel];
             }
@@ -657,6 +657,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     param[@"category_name"] = @"same_neighborhood_list";
     param[@"enter_type"] = @"slide_up";
+    param[@"enter_from"] = @"mapfind"; // 地图找房页
     
     [FHUserTracker writeEvent:@"enter_category" params:param];
 }
@@ -678,6 +679,7 @@
     param[@"stay_time"] = [NSNumber numberWithInteger:duration*1000];
 
     param[@"enter_type"] = @"slide_up";
+    param[@"enter_from"] = @"mapfind";
 
     [FHUserTracker writeEvent:@"stay_category" params:param];
     _startTimestamp = 0;
@@ -688,6 +690,7 @@
    NSMutableDictionary *param = [self logBaseParams];
     param[@"refresh_type"] = @"pre_load_more";
     param[@"enter_type"] = @"slide_up";
+    param[@"enter_from"] = @"mapfind";
     [FHUserTracker writeEvent:@"category_refresh" params:param];
 }
 

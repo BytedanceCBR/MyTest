@@ -61,6 +61,8 @@ func requestRelatedCourtSearch(courtId: String = "", offset: String = "0", query
         .map({ (payload) -> RelatedCourtResponse? in
             if let payload = payload {
                 let response = RelatedCourtResponse(JSONString: payload as String)
+                print("related count" + (payload as String))
+                
                 return response
             } else {
                 return nil

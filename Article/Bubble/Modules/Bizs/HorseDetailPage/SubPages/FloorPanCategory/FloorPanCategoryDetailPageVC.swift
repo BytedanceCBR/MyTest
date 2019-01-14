@@ -313,10 +313,10 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         self.viewModel?.bottomBarBinder = bottomBarBinder
         self.viewModel?.floorPanId = self.floorPanId
 
-        tracerParams = (EnvContext.shared.homePageParams <|> tracerParams <|>
+        tracerParams = (TracerParams.momoid() <|> tracerParams <|>
             toTracerParams("house_model_detail", key: "page_type")).exclude("house_type")
-
-        stayTimeParams = tracerParams <|> traceStayTime()
+        
+        stayTimeParams = TracerParams.momoid() <|> tracerParams <|> traceStayTime()
 
         recordEvent(key: "go_detail", params: self.tracerParams.exclude("house_type"))
 
@@ -380,7 +380,7 @@ func openFloorPanCategoryDetailPage(
                 searchId = searchIdV
             }
         }
-        
+                
         detailPage.tracerParams = params <|>
             toTracerParams(logPbVC ?? "be_null", key: "log_pb") <|>
             toTracerParams(searchId, key: "search_id")

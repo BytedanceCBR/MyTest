@@ -88,8 +88,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     var traceParams = TracerParams.momoid()
 
-    var stayPageParams: TracerParams? = TracerParams.momoid()
-
     private var netStateInfoVM : NHErrorViewModel?
 
     private var allParams: [AnyHashable: Any]?
@@ -170,6 +168,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
                     EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                         toTracerParams(origin_from, key: "origin_from")
+                    
                 }
                 if let log_pb = urlParams["log_pb"],
                     log_pb.count > 2,
@@ -384,7 +383,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.openANRMonitor(with: 0.5)
+
+        self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         
         let detailPageParams = self.traceParams.paramsGetter([:])
@@ -714,13 +714,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 .disposed(by: disposeBag)
         }
 
-
-
         traceParams = (EnvContext.shared.homePageParams <|> traceParams <|>
             toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
             toTracerParams("\(self.houseId)", key: "group_id")).exclude("house_type")
-        stayPageParams = traceParams <|> traceStayTime()
-
 
         recordEvent(key: "go_detail", params: traceParams
             .exclude("group_id")
@@ -1054,12 +1050,18 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let navigationController = self.navigationController {
             navigationController.view.bringSubview(toFront: navigationController.navigationBar)
         }
-        if let stayPageParams = stayPageParams {
-            recordEvent(key: "stay_page", params: stayPageParams.exclude("element_type").exclude("group_id").exclude("search_id"))
-        }
-        stayPageParams = nil
+        
+        self.addStayPageLog()
+        self.tt_resetStayTime()
     }
 
+    func addStayPageLog() {
+        
+        let trackTime = Int64(self.ttTrackStayTime * 1000)
+        let stayTimeParams = self.traceParams <|> toTracerParams(trackTime, key: "stay_time")
+        recordEvent(key: TraceEventName.stay_page, params: stayTimeParams.exclude("element_type").exclude("group_id").exclude("search_id"))
+    }
+    
     func showQuickLoginAlert(title: String, subTitle: String) {
         
         var subTitleStr: String = subTitle
@@ -1186,11 +1188,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 detailParams <|>
                 houseSearchParamsStay <|>
                 toTracerParams(self.houseType.traceTypeValue(), key: "house_type")
-//            recordEvent(key: "stay_page_search",
-//                        params: recordParams
-//                            .exclude("time")
-//                            .exclude("element_type")
-//                            .exclude("page_type"))
+
         }
     }
 
@@ -1207,3 +1205,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
 }
 
+// MARK: TTUIViewControllerTrackProtocol
+extension HorseDetailPageVC {
+    
+    override func trackStartedByAppWillEnterForground() {
+        
+        self.tt_resetStayTime()
+        self.ttTrackStartTime = Date().timeIntervalSince1970
+    }
+    override func trackEndedByAppWillEnterBackground() {
+        
+        self.addStayPageLog()
+        self.tt_resetStayTime()
+    }
+}

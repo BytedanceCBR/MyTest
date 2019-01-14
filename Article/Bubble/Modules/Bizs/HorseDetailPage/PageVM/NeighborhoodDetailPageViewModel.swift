@@ -263,6 +263,8 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
             
@@ -299,7 +301,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             let openEvaluationWeb = openEvaluateWebPage(urlStr: data.evaluationInfo?.detailUrl ?? "", traceParams: traceExtension,houseType:.neighborhood ,disposeBag: disposeBag)
             
             let dataParser = DetailDataParser.monoid()
-                <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams, disposeBag: self.disposeBag)
+                <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams <|> traceExtension, disposeBag: self.disposeBag)
                 <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
@@ -382,8 +384,10 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             let transactionTrace = theParams <|>
                                 toTracerParams("neighborhood_trade_list", key: "category_name") <|>
                                 toTracerParams("neighborhood_trade", key: "element_from") <|>
-                                toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                                toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                traceExtension
                             
+                            recordEvent(key: "click_house_deal", params: transactionTrace.exclude("category_name").exclude("element_from"))
                             self.openTransactionHistoryPage(
                                 neighborhoodId: id,
                                 traceParams: transactionTrace,
@@ -417,6 +421,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                                 searchId: self.relateNeighborhoodData.value?.data?.searchId,
                                 disposeBag: self.disposeBag,
                                 tracerParams: params,
+                                traceExtension: traceExtension,
                                 navVC: self.navVC,
                                 bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
                         }

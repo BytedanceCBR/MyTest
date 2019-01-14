@@ -185,7 +185,7 @@ func parseNearbyNewHouseListNode(
             
             // house_show
             let hsRecords = theDatas.enumerated().map({ (index, item) -> ElementRecord in
-                let tempParams = EnvContext.shared.homePageParams <|>
+                let tempParams = TracerParams.momoid() <|>
                     toTracerParams("new", key: "house_type") <|>
                     toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
@@ -195,7 +195,9 @@ func parseNearbyNewHouseListNode(
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     imprIdTraceParam(item.logPB) <|>
                     groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(index, key: "rank")
+                    toTracerParams(index, key: "rank") <|>
+                    traceExtension
+
                 return onceRecord(key: "house_show", params: tempParams)
             })
             

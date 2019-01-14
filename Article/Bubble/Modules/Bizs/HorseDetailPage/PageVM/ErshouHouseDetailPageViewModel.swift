@@ -338,6 +338,8 @@ import RxCocoa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
             
@@ -394,7 +396,7 @@ import RxCocoa
                 toTracerParams(data.logPB ?? [:], key: "log_pb")
 
             let dataParser = DetailDataParser.monoid()
-                <- parseErshouHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag)
+                <- parseErshouHouseCycleImageNode(data,traceParams : pictureParams <|> traceExtension, disposeBag: disposeBag)
                 <- parseErshouHouseNameNode(data)
                 <- parseErshouHouseCoreInfoNode(data)
                 <- parsePriceChangeHistoryNode(data,traceExtension: traceExtension)
@@ -461,7 +463,8 @@ import RxCocoa
                                     toTracerParams("same_neighborhood", key: "element_from") <|>
                                     toTracerParams("old_detail", key: "enter_from") <|>
                                     toTracerParams("click", key: "enter_type") <|>
-                                    toTracerParams(data.logPB ?? "be_null", key: "log_pb")
+                                    toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+                                    traceExtension
 
                                 openErshouHouseList(
                                     title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
@@ -504,6 +507,7 @@ import RxCocoa
                                     searchId: self.relateNeighborhoodData.value?.data?.searchId,
                                     disposeBag: self.disposeBag,
                                     tracerParams: params,
+                                    traceExtension: traceExtension,
                                     navVC: self.navVC,
                                     bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                             }
@@ -972,7 +976,8 @@ func parseErshouHouseListItemNode(
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                     imprIdTraceParam(item.logPB) <|>
                     groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    traceExtension
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
         
@@ -1598,9 +1603,7 @@ func openErshouHouseDetailPage(
                 right
             })
         }
-        tracer["element_from"] = "be_null"
         tracer["card_type"] = "left_pic"
-        tracer["origin_from"] = "minetab_old"
 
         var info = ["tracer": tracer]
         if let hsp = houseSearchDict  {
@@ -1608,28 +1611,8 @@ func openErshouHouseDetailPage(
         }
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://old_house_detail?house_id=\(houseId)"), userInfo: userInfo)
-//        let detailPage = HorseDetailPageVC(
-//            houseId: houseId,
-//            houseType: .secondHandHouse,
-//            isShowBottomBar: true,
-//            provider: getErshouHouseDetailPageViewModel())
-//        detailPage.logPB = logPB
-//        detailPage.houseSearchParams = houseSearchParams
-//        if let followStatus = followStatus {
-//            detailPage.sameNeighborhoodFollowUp.accept(followStatus.value)
-//
-//            detailPage.sameNeighborhoodFollowUp
-//                .debug("sameNeighborhoodFollowUp")
-//                .bind(to: followStatus)
-//                .disposed(by: disposeBag)
-//        }
-//        detailPage.traceParams = EnvContext.shared.homePageParams <|> tracerParams <|> params
-//        detailPage.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { [weak navVC] void in
-//                EnvContext.shared.toast.dismissToast()
-//                navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
-//        navVC?.pushViewController(detailPage, animated: true)
+
     }
 }
+ 
+

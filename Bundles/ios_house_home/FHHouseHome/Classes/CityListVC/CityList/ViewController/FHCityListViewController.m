@@ -271,6 +271,13 @@
 
 - (void)cityNameBtnClick {
     if ([TTReachability isNetworkConnected]) {
+        // 添加埋点
+        if ([FHLocManager sharedInstance].currentReGeocode && [FHLocManager sharedInstance].isLocationSuccess) {
+            AMapLocationReGeocode * currentReGeocode = [FHLocManager sharedInstance].currentReGeocode;
+            if (currentReGeocode != NULL) {
+                [self.viewModel addCityFilterTracer:currentReGeocode.city queryType:@"location"];
+            }
+        }
         [self.viewModel cityNameBtnClick];
     } else {
          [[ToastManager manager] showToast:@"网络异常"];

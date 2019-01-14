@@ -82,7 +82,7 @@ class PictureCategoryListVC: UIViewController, UICollectionViewDataSource, UICol
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.theThresholdTracer?(TraceEventName.picture_gallery_stay, self.stayParams <|> self.traceParams)
+        self.theThresholdTracer?(TraceEventName.picture_gallery_stay, self.stayParams <|> self.traceParams.exclude("rank"))
         
     }
     

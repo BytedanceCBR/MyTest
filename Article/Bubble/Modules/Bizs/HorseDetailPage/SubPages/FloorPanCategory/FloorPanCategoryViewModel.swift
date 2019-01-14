@@ -62,6 +62,8 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
     private weak var navVC: UINavigationController?
     
     let bottomBarBinder: FollowUpBottomBarBinder
+    
+    var tracerParams = TracerParams.momoid()
 
     var logPB: Any?
     
@@ -134,6 +136,7 @@ class FloorPanCategoryViewModel: NSObject, UITableViewDataSource, UITableViewDel
                     disposeBag: self.disposeBag,
                     bottomBarBinder: bottomBarBinder,
                     params: TracerParams.momoid() <|>
+                        self.tracerParams <|>
                         toTracerParams(self.logPB ?? "be_null", key: "log_pb"))())
 
                 self.segmentedControl?.indexChangeBlock = { [unowned self] (index) in
