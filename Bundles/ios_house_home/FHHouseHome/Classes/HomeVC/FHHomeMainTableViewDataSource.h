@@ -23,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseType currentHouseType;
 @property (nonatomic, strong) NSString * originSearchId;
 
--(NSString *)pageTypeString;
+- (NSString *)pageTypeString;
+
+- (void)resetTraceCahce;
 
 @end
 

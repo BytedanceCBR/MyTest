@@ -36,7 +36,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
-@property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property (nonatomic, assign) NSTimeInterval stayTime;
 @end
@@ -205,7 +204,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.itemsSearchIdCache = [NSMutableDictionary new];
     self.originSearchIdCache = [NSMutableDictionary new];
     self.isItemsHasMoreCache = [NSMutableDictionary new];
-    self.itemsTraceCache = [NSMutableDictionary new];
+    [self.dataSource resetTraceCahce];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange
@@ -396,6 +395,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.itemsSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
     [self.originSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
     [self.isItemsHasMoreCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
+    [self.dataSource resetTraceCahce];
 }
 
 - (void)updateCategoryViewSegmented:(BOOL)isFirstChange

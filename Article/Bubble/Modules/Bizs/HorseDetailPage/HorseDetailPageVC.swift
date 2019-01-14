@@ -161,7 +161,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let urlStr = paramObj?.sourceURL.absoluteString,
             let realStr = urlStr.removingPercentEncoding,
             let urlParams = realStr.urlParameters {
-            if let typeStr = urlParams["type"], typeStr == "activity" {
                 if let origin_from = urlParams["origin_from"],
                     origin_from.count > 0 {
                     traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
@@ -177,7 +176,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
                     }
                 }
-            }
         }
         // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
