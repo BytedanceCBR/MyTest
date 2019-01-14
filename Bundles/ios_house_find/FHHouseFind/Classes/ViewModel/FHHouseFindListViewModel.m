@@ -55,7 +55,7 @@
         param[@"element_from"] = @"be_null";
         param[@"origin_from"] = @"findtab_related";
         self.tracerDict = param;
-        self.tracerModel = [[FHTracerModel alloc]initWithDictionary:self.tracerDict error:nil];
+        self.tracerModel = [FHTracerModel makerTracerModelWithDic:self.tracerDict];
         self.originFrom = self.tracerModel.originFrom;
     }
     return self;

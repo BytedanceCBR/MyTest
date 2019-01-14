@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHTracerModel : JSONModel
 
 /*
+ * 构建FHTracerModel，字典中，log_pb只能为：字典或者字典字符串
+ */
++ (FHTracerModel *)makerTracerModelWithDic:(NSDictionary *)dicParams;
+
+/*
  * 总入口配置
  */
 @property(nonatomic , copy) NSString *originFrom;
