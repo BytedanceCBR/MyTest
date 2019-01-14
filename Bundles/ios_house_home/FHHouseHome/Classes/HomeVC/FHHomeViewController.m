@@ -152,7 +152,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)didAppear
 {
-    
+    self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)willDisappear
@@ -163,6 +163,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didDisappear
 {
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
+    self.homeListViewModel.stayTime = 0;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
