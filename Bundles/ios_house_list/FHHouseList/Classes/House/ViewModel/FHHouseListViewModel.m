@@ -156,6 +156,7 @@
         self.isEnterCategory = YES;
         self.isFirstLoad = YES;
         self.tableView = tableView;
+        self.showRedirectTip = YES;
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
