@@ -83,6 +83,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
+    var disableSendGoDetail: String = "0"
     
     var isShowFollowNavBtn = false
 
@@ -101,7 +102,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }()
 
     var logPB: [String: Any]?
-    var searchId: String? 
+    var searchId: String?
 
     var houseSearchParams: TracerParams? {
         didSet {
@@ -157,6 +158,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self.source = source;
         }
         
+    
+        
+        
         // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
         if let urlStr = paramObj?.sourceURL.absoluteString,
             let realStr = urlStr.removingPercentEncoding,
@@ -169,6 +173,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         toTracerParams(origin_from, key: "origin_from")
                     
                 }
+            
+                if let disableGoDetail = urlParams["disable_go_detail"]
+                {
+                        self.disableSendGoDetail = disableGoDetail;
+                }
+            
                 if let log_pb = urlParams["log_pb"],
                     log_pb.count > 2,
                     let jsonData = log_pb.data(using: .utf8) {
@@ -716,12 +726,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
             toTracerParams("\(self.houseId)", key: "group_id")).exclude("house_type")
 
-        recordEvent(key: "go_detail", params: traceParams
-            .exclude("group_id")
-            .exclude("search_id")
-            .exclude("house_type")
-            .exclude("element_type")
-            .exclude("maintab_search"))
+        if self.disableSendGoDetail == "0" {
+            recordEvent(key: "go_detail", params: traceParams
+                .exclude("group_id")
+                .exclude("search_id")
+                .exclude("house_type")
+                .exclude("element_type")
+                .exclude("maintab_search"))
+        }
+
         
         detailPageViewModel?.goDetailTraceParam = traceParams
             .exclude("house_type")
