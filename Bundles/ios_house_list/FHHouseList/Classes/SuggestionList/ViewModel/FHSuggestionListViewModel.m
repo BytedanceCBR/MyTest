@@ -591,6 +591,9 @@
 - (void)reloadSugTableView {
     if (self.listController.suggestTableView != NULL) {
         [self.listController.suggestTableView reloadData];
+        if (self.sugListData.count > 0) {
+            [self.listController.suggestTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }
 }
 
@@ -601,6 +604,9 @@
             self.hasShowKeyboard = YES;
         }
         [self.listController.historyTableView reloadData];
+        if (self.historyData.count > 0) {
+            [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }
 }
 
