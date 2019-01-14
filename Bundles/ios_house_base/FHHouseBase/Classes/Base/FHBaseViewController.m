@@ -40,7 +40,7 @@
         }else if([tracer isKindOfClass:[NSDictionary class]]){
             self.tracerDict = [NSMutableDictionary new];
             [self.tracerDict addEntriesFromDictionary:tracer];
-            self.tracerModel = [[FHTracerModel alloc]initWithDictionary:self.tracerDict error:nil];
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:self.tracerDict];
         }
     }
     return self;

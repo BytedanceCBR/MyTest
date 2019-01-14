@@ -164,7 +164,7 @@
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
-            self.tracerModel = [[FHTracerModel alloc]initWithDictionary:tracerDict error:nil];
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
             self.originFrom = self.tracerModel.originFrom;
         }
         [self configTableView];
