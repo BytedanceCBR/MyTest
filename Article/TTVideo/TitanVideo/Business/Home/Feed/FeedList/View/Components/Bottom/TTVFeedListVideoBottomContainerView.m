@@ -682,14 +682,16 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     }
     TTVDiggAction *digAction = [[TTVDiggAction alloc] initWithEntity:diggEntity];
     digAction.diggActionDone = ^(BOOL digg) {
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:@"house_app2c_v2" forKey:@"event_type"];
-        [params setObject:model.groupId forKey:@"group_id"];
-        [params setObject:model.groupId forKey:@"item_id"];
-        [params setObject:@"click_category" forKey:@"enter_from"];
-        [params setValue:self.cellEntity.originData.logPb forKey:@"log_pb"];
-        [params setValue:@"f_shipin" forKey:@"category_name"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        if (digg) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:@"house_app2c_v2" forKey:@"event_type"];
+            [params setObject:model.groupId forKey:@"group_id"];
+            [params setObject:model.groupId forKey:@"item_id"];
+            [params setObject:@"click_category" forKey:@"enter_from"];
+            [params setValue:self.cellEntity.originData.logPb forKey:@"log_pb"];
+            [params setValue:@"f_shipin" forKey:@"category_name"];
+            [TTTracker eventV3:@"rt_like" params:params];
+        }
         self.cellEntity.article.userDigg = digg;
     };
     [digAction execute:TTActivityTypeDigUp];
