@@ -75,10 +75,12 @@ class FHHouseRentSummaryCell: BaseUITableViewCell {
 
 func parseRentSummaryCellNode(model: FHRentDetailResponseModel?,
                               tracer: HouseRentTracer) -> () -> TableSectionNode? {
-    let params = EnvContext.shared.homePageParams <|>
+    let params = TracerParams.momoid() <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("house_info", key: "element_type") <|>
         toTracerParams(tracer.rank, key: "rank") <|>
+        toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+        toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     

@@ -337,7 +337,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return ;
     }
     
-    if (needDiff && [model.data.toDictionary isEqualToDictionary:[[FHEnvContext sharedInstance] getConfigFromCache].toDictionary])
+    if (needDiff && [model.data isEqual:[[FHEnvContext sharedInstance] getConfigFromCache]])
     {
         return;
     }

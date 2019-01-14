@@ -16,6 +16,8 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
         toTracerParams("neighborhood_detail", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type") <|>
         toTracerParams(tracer.rank, key: "rank") <|>
+        toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+        toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
         toTracerParams("rent_detail", key: "enter_from")
     
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
