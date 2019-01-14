@@ -274,7 +274,7 @@
         [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"qid"]  forKey:@"qid"];
         [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"]  forKey:@"log_pb"];
         [params setValue:@"detail" forKey:@"position"];
-        [TTTracker eventV3:@"rt_favorite" params:params];
+        [TTTracker eventV3:@"rt_favourite" params:params];
        
     }
 }

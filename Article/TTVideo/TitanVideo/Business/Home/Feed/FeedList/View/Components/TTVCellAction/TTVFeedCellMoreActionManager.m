@@ -660,7 +660,6 @@ typedef void(^TTActivityAction)(NSString *type);
         [self shareTrackEventV3WithActivityType:itemType favouriteButton:button];
         if ([action isKindOfClass:[TTVMoreAction class]]) {
             [action execute:itemType];
-            //埋点3.0
         }
     }
 }
@@ -755,7 +754,6 @@ typedef void(^TTActivityAction)(NSString *type);
         [self showIndicatorViewWithTip:tipMsg andImage:nil dismissHandler:nil];
     }else{
         [self shareTrackEventV3WithActivityType:itemType];
-        
     }
 }
 
@@ -820,7 +818,7 @@ typedef void(^TTActivityAction)(NSString *type);
     if (itemType == TTActivityTypeFavorite)
     {
         BOOL userRepined = [self.model.userRepined boolValue];
-        [extra setValue: !userRepined ? @"rt_favorite" : @"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue: !userRepined ? @"rt_favourite" : @"rt_unfavourite" forKey:@"favorite_name"];
     }
     
     NSString *fromSource = _activityActionManager.clickSource;

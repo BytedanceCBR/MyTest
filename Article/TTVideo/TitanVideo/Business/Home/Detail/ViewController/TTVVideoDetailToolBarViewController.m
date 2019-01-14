@@ -1195,9 +1195,9 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)favoriteLog3{
     NSMutableDictionary *extra = [NSMutableDictionary dictionary];
     if (self.videoInfo.userRepined) {
-        [extra setValue:@"rt_favorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_favourite" forKey:@"favorite_name"];
     }else{
-        [extra setValue:@"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_unfavourite" forKey:@"favorite_name"];
     }
     [extra addEntriesFromDictionary:_shareSectionAndEventDic];
     Article *covertArticle = [self.videoInfo ttv_convertedArticle];
@@ -1288,7 +1288,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (itemType == TTActivityTypeFavorite)
     {
         BOOL userRepine = self.detailModel.protocoledArticle.userRepined;
-        [extra setValue: userRepine ? @"rt_favorite" : @"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue: userRepine ? @"rt_favourite" : @"rt_unfavourite" forKey:@"favorite_name"];
     }
     
     NSString *fromSource = _activityActionManager.clickSource;
