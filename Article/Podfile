@@ -429,7 +429,13 @@ target 'NewsLiteInHouse' do
 
 end
 
-
+target 'NewsLiteChannel' do
+    pod 'TTDebugAssistant', '0.2.31'
+    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+    
+end
 
 
 # POD POST_INSTALL

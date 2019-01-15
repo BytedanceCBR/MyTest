@@ -125,7 +125,7 @@ func parseHouseOutlineHeaderNode(
         if let filter = filter, filter() == false {
             return nil
         } else {
-            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData)(originSearchId)(originFrom)(ershouHouseData.outLineOverreview?.reportUrl)(traceExtension)
+            let cellRender = curry(fillHouseOutlineHeaderCell)(title)(ershouHouseData)(ershouHouseData.outLineOverreview?.reportUrl)(originSearchId)(originFrom)(traceExtension)
             
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams("house_info", key: "element_type") <|>

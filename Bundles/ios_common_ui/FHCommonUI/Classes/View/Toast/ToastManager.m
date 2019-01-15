@@ -62,8 +62,11 @@
     _toastView.userInteractionEnabled = isUserInteraction;
     [window addSubview:_toastView];
     __weak typeof(self) wSelf = self;
+    __weak FHToastView * wToast = _toastView;
     [_toastView makeToast:message duration:duration position:CSToastPositionCenter title:NULL image:NULL style:_toastStyle completion:^(BOOL didTap) {
-        [wSelf dismissToast];
+        if (wToast) {
+            [wToast removeFromSuperview];
+        }
     }];
 }
 

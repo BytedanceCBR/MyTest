@@ -93,6 +93,11 @@
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
+        // 增加第一次加载数据延时判断是否定位未返回判断
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [wSelf checkConfigDataNoReturn];
+        });
     }
 }
 
@@ -118,6 +123,13 @@
     [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.tableView);
     }];
+}
+
+- (void)checkConfigDataNoReturn {
+    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configDataModel == NULL) {
+        [self configDataLoadError:NULL];
+    }
 }
 
 // 重新加载
@@ -300,6 +312,10 @@
         [[ToastManager manager] dismissCustomLoading];
         if (reGeocode && reGeocode.city.length > 0) {
             // 定位成功
+            [wSelf.emptyView hideEmptyView];
+            if (!wSelf.viewModel.hasReloadListData) {
+                [wSelf.viewModel loadListCityData];
+            }
             wSelf.locationBar.cityName = reGeocode.city;
             wSelf.locationBar.isLocationSuccess = YES;
             [FHLocManager sharedInstance].isLocationSuccess = YES;

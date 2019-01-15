@@ -19,6 +19,7 @@
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
 #import <objc/runtime.h>
+#import "TTNetworkUtilities.h"
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -156,9 +157,13 @@
 
 - (void)updateRequestCommonParams
 {
+    NSDictionary *param = [TTNetworkUtilities commonURLParameters];
+    
     //初始化公共请求参数
     NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:self.commonRequestParam];
-    
+    if (param) {
+        [requestParam addEntriesFromDictionary:param];
+    }
     
     requestParam[@"app_id"] = @"1370";
     requestParam[@"aid"] = @"1370";
@@ -225,9 +230,6 @@
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
     
-    //更新公共参数
-    [self updateRequestCommonParams];
-    
     //开始定位
     [self startLocation];
     
@@ -258,8 +260,9 @@
         };
         
         [BDAccount sharedAccount].accountConf = conf;
-        
     }];
+    //更新公共参数
+    [self updateRequestCommonParams];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
