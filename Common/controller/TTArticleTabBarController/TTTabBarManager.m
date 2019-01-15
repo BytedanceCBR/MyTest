@@ -316,7 +316,7 @@ SINGLETON_GCD(TTTabBarManager);
             }
         } else {
             item.normalTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleColor"];
-            item.highlightedTitleColor = [UIColor colorWithHexString:@"#299cff"];
+            item.highlightedTitleColor = [UIColor colorWithHexString:@"#ff5869"];
 //            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
             item.ttBadgeView.backgroundColorThemeKey = kColorBackground7;
         }
@@ -919,7 +919,7 @@ SINGLETON_GCD(TTTabBarManager);
 
 - (UIColor *)customHighlightedColor {
     //f100 暂时去掉云控设置颜色
-    return [UIColor colorWithHexString:@"#299cff"];
+    return [UIColor colorWithHexString:@"#ff5869"];
 //    return [UIColor colorWithDayColorName:[self.customTextColorArray objectAtIndex:2] nightColorName:[self.customTextColorArray objectAtIndex:3]];
 }
 
