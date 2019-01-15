@@ -124,8 +124,10 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    NSString *text = self.naviBar.searchInput.text;
-    [self.viewModel requestSearchCityByQuery:text];
+    if (self.naviBar.searchInput.markedTextRange == NULL) {
+        NSString *text = self.naviBar.searchInput.text;
+        [self.viewModel requestSearchCityByQuery:text];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
