@@ -163,7 +163,7 @@
     self.hidden = NO;
     self.label.text = text;
     CGSize size = [self.label sizeThatFits:CGSizeMake(100, 40)];
-    if (size.width < 20) {
+    if (size.width < 40) {
         size.width = 20;
     }
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
