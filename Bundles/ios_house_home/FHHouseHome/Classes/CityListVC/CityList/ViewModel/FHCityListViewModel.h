@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 搜索输入方式,{'点击历史记录': 'history', '列表选择': 'list', '当前定位': 'location', '热门城市': 'hot'}
 - (void)addCityFilterTracer:(NSString *)cityName queryType:(NSString *)queryType;
 
+@property (nonatomic, assign)   BOOL       hasReloadListData;
+
 @end
 
 NS_ASSUME_NONNULL_END
