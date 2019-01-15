@@ -22,6 +22,9 @@ class LicenceBrowserViewModel {
     fileprivate var headerImages: [FHLicenceImageItem] = []
 
     func open() {
+        if headerImages.isEmpty {
+            return
+        }
         // 创建图片浏览器
         let browser = FHPhotoBrowser(photoLoader: BDWebImagePhotoLoader())
         // 提供两种动画效果：缩放`.scale`和渐变`.fade`。
