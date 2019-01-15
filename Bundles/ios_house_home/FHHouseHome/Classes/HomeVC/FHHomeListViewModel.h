@@ -19,6 +19,7 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 @property (nonatomic, assign) BOOL hasShowedData;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC;
 
