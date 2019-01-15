@@ -913,6 +913,7 @@
 		6BF694541CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		6BF694581CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
 		6BF6945C1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
+		6F6DFCAD76A181C548065CBB /* libPods-NewsLiteChannel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B0D256FBEA8FC685618E1CB /* libPods-NewsLiteChannel.a */; };
 		70002C721F594ABA00EB810A /* ExploreOrderedADModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70002C711F594ABA00EB810A /* ExploreOrderedADModel.m */; };
 		706F4A391F5D357B007B533D /* TTAdDetailActionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 706F4A381F5D357B007B533D /* TTAdDetailActionModel.m */; };
 		70E7C2C01F551B7B006CFB6F /* TTAdFullScreenVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2B71F551B7B006CFB6F /* TTAdFullScreenVideoManager.m */; };
@@ -8852,6 +8853,7 @@
 		70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTAdFullScreenVideoViewModel.m; sourceTree = "<group>"; };
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
+		75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteChannel.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel.release.xcconfig"; sourceTree = "<group>"; };
 		760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceChangeHistoryCell.swift; sourceTree = "<group>"; };
 		760CF74321ABE7DE0006BE07 /* FHWebviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHWebviewViewController.h; sourceTree = "<group>"; };
 		760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHWebviewViewController.m; sourceTree = "<group>"; };
@@ -8952,6 +8954,7 @@
 		88EDBFA31F3076CF00911931 /* SettingSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingSwitch.m; sourceTree = "<group>"; };
 		88EDBFA41F3076CF00911931 /* SettingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingView.h; sourceTree = "<group>"; };
 		88EDBFA51F3076CF00911931 /* SettingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingView.m; sourceTree = "<group>"; };
+		8B0D256FBEA8FC685618E1CB /* libPods-NewsLiteChannel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLiteChannel.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BA3BB6E310AA5E3DA1FC486 /* libPods-NewsLite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLite.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DBC60805FCA5DB47B5B5F77 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
 		92650CDC1FCC3A98000E0D03 /* TSVDebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSVDebugViewController.h; sourceTree = "<group>"; };
@@ -8960,6 +8963,7 @@
 		9627EF4B1F2767BD00969C9A /* TTInterfaceTipManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTInterfaceTipManager.m; sourceTree = "<group>"; };
 		9627EF511F2767BD00969C9A /* TTInterfaceTipBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTInterfaceTipBaseView.h; sourceTree = "<group>"; };
 		9627EF521F2767BD00969C9A /* TTInterfaceTipBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTInterfaceTipBaseView.m; sourceTree = "<group>"; };
+		98B8EFF5487EFE6706DB6CF6 /* Pods-NewsLiteChannel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteChannel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel.debug.xcconfig"; sourceTree = "<group>"; };
 		9C0A54901D6AFE56007025F4 /* TTArticleInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTArticleInfoView.h; path = TTListCell/BaseView/TTArticleInfoView.h; sourceTree = "<group>"; };
 		9C0A54911D6AFE56007025F4 /* TTArticleInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TTArticleInfoView.m; path = TTListCell/BaseView/TTArticleInfoView.m; sourceTree = "<group>"; };
 		9C0DF0731D66E7D30067342D /* TTTableViewBaseCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTTableViewBaseCellView.h; path = TTListCell/BaseView/TTTableViewBaseCellView.h; sourceTree = "<group>"; };
@@ -11137,6 +11141,7 @@
 				D479580721ECC94E00548965 /* AssetsLibrary.framework in Frameworks */,
 				D479580821ECC94E00548965 /* libttheif_dec.a in Frameworks */,
 				D479580921ECC94E00548965 /* libPods-f100.a in Frameworks */,
+				6F6DFCAD76A181C548065CBB /* libPods-NewsLiteChannel.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12453,6 +12458,7 @@
 				8BA3BB6E310AA5E3DA1FC486 /* libPods-NewsLite.a */,
 				28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */,
 				C69183A1551F2595D7E8A663 /* libPods-f100.a */,
+				8B0D256FBEA8FC685618E1CB /* libPods-NewsLiteChannel.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -13980,6 +13986,8 @@
 				B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */,
 				361D57CCFF403D07B8F94DEE /* Pods-f100.debug.xcconfig */,
 				161B25D60AD228B64C158D08 /* Pods-f100.release.xcconfig */,
+				98B8EFF5487EFE6706DB6CF6 /* Pods-NewsLiteChannel.debug.xcconfig */,
+				75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -21237,7 +21245,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-f100-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-NewsLiteChannel-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -21353,7 +21361,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh",
 				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_ali@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_weixin@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/yy_select_checked@2x.png",
@@ -21436,6 +21444,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -21521,10 +21530,11 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D479581021ECC94E00548965 /* ShellScript */ = {
@@ -21557,7 +21567,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FEE92B402C46778071F5AA19 /* [CP] Copy Pods Resources */ = {
@@ -29311,7 +29321,7 @@
 		};
 		D479581321ECC94E00548965 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 361D57CCFF403D07B8F94DEE /* Pods-f100.debug.xcconfig */;
+			baseConfigurationReference = 98B8EFF5487EFE6706DB6CF6 /* Pods-NewsLiteChannel.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29414,7 +29424,7 @@
 		};
 		D479581421ECC94E00548965 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 161B25D60AD228B64C158D08 /* Pods-f100.release.xcconfig */;
+			baseConfigurationReference = 75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
