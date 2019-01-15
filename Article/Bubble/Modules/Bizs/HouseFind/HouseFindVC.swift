@@ -425,7 +425,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 //        EnvContext.shared.client.loadSearchCondition()
 //        if let config = EnvContext.shared.client.configCacheSubject.value {
             let sections = houseTypeSectionByConfig(config: config)
-            if sections.count > 0 {
+            if sections.count > 0 && (configModel.cityAvailability?.enable ?? false) == true {
 
                 maskView.isHidden = true
                 sections.forEach({ (item) in
