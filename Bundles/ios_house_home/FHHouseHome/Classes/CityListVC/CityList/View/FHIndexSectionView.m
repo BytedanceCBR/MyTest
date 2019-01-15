@@ -67,6 +67,7 @@
         if (section < _numberOfSections && section >= 0) {
             if (_delegate) {
                 [_delegate indexSectionView:self didSelecteedTitle:self.titleArray[_currentSection] atSectoin:_currentSection];
+                [[FHIndexSectionTipView sharedInstance] showWithText:self.titleArray[_currentSection]];
             }
         }
     }
@@ -101,6 +102,7 @@
     if (_delegate) {
         [_delegate indexSectionViewTouchesEnd];
     }
+    [[FHIndexSectionTipView sharedInstance] dismiss];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -108,6 +110,69 @@
     if (_delegate) {
         [_delegate indexSectionViewTouchesEnd];
     }
+    [[FHIndexSectionTipView sharedInstance] dismiss];
+}
+
+@end
+
+@interface FHIndexSectionTipView ()
+
+@property (nonatomic, strong)   UILabel       *label;
+
+@end
+
+@implementation FHIndexSectionTipView
+
++ (instancetype)sharedInstance {
+    static FHIndexSectionTipView *_sharedInstance = nil;
+    if (!_sharedInstance){
+        _sharedInstance = [[FHIndexSectionTipView alloc] init];
+    }
+    return _sharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.hidden = YES;
+        self.backgroundColor = RGBA(0x08, 0x1f, 0x33,0.4);
+        self.layer.cornerRadius = 4.0;
+        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+        [window addSubview:self];
+        [self mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(window);
+            make.width.mas_equalTo(40);
+            make.height.mas_equalTo(40);
+        }];
+        UILabel* label = [[UILabel alloc] init];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor colorWithHexString:@"#ffffff"];
+        label.font = [UIFont themeFontRegular:30];
+        [self addSubview:label];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self);
+            make.width.height.mas_equalTo(self);
+        }];
+        self.label = label;
+    }
+    return self;
+}
+
+- (void)showWithText:(NSString *)text {
+    self.hidden = NO;
+    self.label.text = text;
+    CGSize size = [self.label sizeThatFits:CGSizeMake(100, 40)];
+    if (size.width < 20) {
+        size.width = 20;
+    }
+    [self mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width + 20);
+    }];
+}
+
+- (void)dismiss {
+    self.hidden = YES;
 }
 
 @end
