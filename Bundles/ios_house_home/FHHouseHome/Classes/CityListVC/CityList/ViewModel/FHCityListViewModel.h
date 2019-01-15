@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHCityListViewController.h"
 #import "FHCitySearchModel.h"
+#import "FHConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView;
 - (void)cityNameBtnClick;
 // 加载城市列表数据
-- (void)loadListCityData;
+- (void)loadListCityData:(FHConfigDataModel *)configDataModel;
 // 城市搜索 cell 点击，和城市搜索列表联动
 - (void)searchCellItemClick:(FHCitySearchDataDataModel *)item;
 
