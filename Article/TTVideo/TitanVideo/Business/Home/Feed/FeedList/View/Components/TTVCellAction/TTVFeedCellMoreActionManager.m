@@ -1540,7 +1540,7 @@ typedef void(^TTActivityAction)(NSString *type);
     if (!isEmptyString(self.model.shareModel.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@-%@", self.model.shareModel.title, @""];
     }else{
-        timeLineTitle = NSLocalizedString(@"真房源，好中介，快流通", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -1548,7 +1548,7 @@ typedef void(^TTActivityAction)(NSString *type);
 - (NSString *)shareDesc
 {
     NSString *detail;
-    detail = isEmptyString(self.model.shareModel.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : self.model.shareModel.abstract;
+    detail = isEmptyString(self.model.shareModel.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : self.model.shareModel.abstract;
     return detail;
 }
 

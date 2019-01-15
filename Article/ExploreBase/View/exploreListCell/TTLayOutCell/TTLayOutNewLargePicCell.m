@@ -989,7 +989,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     if (!isEmptyString(self.orderedData.article.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@", self.orderedData.article.title];
     }else{
-        timeLineTitle = NSLocalizedString(@"真房源，好中介，快流通", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -997,7 +997,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 - (NSString *)shareDesc
 {
-    NSString *detail = isEmptyString(self.orderedData.article.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : self.orderedData.article.abstract;
+    NSString *detail = isEmptyString(self.orderedData.article.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : self.orderedData.article.abstract;
     return detail;
 }
 

@@ -115,9 +115,9 @@ static ArticleShareManager * manager;
     manager.groupModel = model;
     
     manager.weixinTitleText = shareTitle;
-    NSString *detail = isEmptyString(shareDesc)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareDesc;
+    NSString *detail = isEmptyString(shareDesc)?NSLocalizedString(@"好房就在幸福里", nil):shareDesc;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareDesc;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareDesc;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
@@ -257,14 +257,14 @@ static ArticleShareManager * manager;
     }
 
     manager.weixinTitleText = weixinShareTitle;
-    NSString *detail = isEmptyString(article.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.abstract;
+    NSString *detail = isEmptyString(article.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : article.abstract;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(weixinShareTitle) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : weixinShareTitle;
+    manager.weixinMomentText = isEmptyString(weixinShareTitle) ? NSLocalizedString(@"好房就在幸福里", nil) : weixinShareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2) {
-        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.title;
+        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"好房就在幸福里", nil) : article.title;
         manager.weixinMomentText = weixinMomentText;
     }
     
@@ -276,7 +276,7 @@ static ArticleShareManager * manager;
     }
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.title;
+        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"好房就在幸福里", nil) : article.title;
         manager.weixinMomentText = weixinMomentText;
     }
     
@@ -444,14 +444,14 @@ static ArticleShareManager * manager;
     }
 
     manager.weixinTitleText = shareTitle;
-    NSString *detail = isEmptyString(abstract)?NSLocalizedString(@"真房源，好中介，快流通", nil):abstract;
+    NSString *detail = isEmptyString(abstract)?NSLocalizedString(@"好房就在幸福里", nil):abstract;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2) {
-        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : title;
+        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"好房就在幸福里", nil) : title;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -463,7 +463,7 @@ static ArticleShareManager * manager;
     }
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : title;
+        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"好房就在幸福里", nil) : title;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -899,7 +899,7 @@ static ArticleShareManager * manager;
 
 + (NSMutableArray *)shareActivityManager:(TTActivityShareManager *)manager shareInfo:(NSDictionary *)shareInfo showReport:(BOOL)report withQQ:(BOOL)qq{
     [manager clearCondition];
-    NSString * const defaultText = NSLocalizedString(@"真房源，好中介，快流通", nil);
+    NSString * const defaultText = NSLocalizedString(@"好房就在幸福里", nil);
     NSString *shareTitle = [shareInfo tt_stringValueForKey:@"share_title"];
     if (isEmptyString(shareTitle)) {
         shareTitle = defaultText;
@@ -935,12 +935,12 @@ static ArticleShareManager * manager;
     
     manager.weixinTitleText = shareTitle;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(shareTitle) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : shareTitle;
+        NSString *weixinMomentText = isEmptyString(shareTitle) ? NSLocalizedString(@"好房就在幸福里", nil) : shareTitle;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -1040,7 +1040,7 @@ static ArticleShareManager * manager;
 
     }
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
