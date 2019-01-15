@@ -606,7 +606,7 @@ NSURLSessionTaskDelegate
         appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         if (!appName) appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     }
-    return appName ? : @"好多房";
+    return appName ? : @"幸福里";
 }
 
 - (NSString *)__SNSText__

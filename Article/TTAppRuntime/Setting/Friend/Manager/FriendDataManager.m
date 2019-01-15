@@ -215,7 +215,7 @@ static NSString *s_hasNewFriendCountKey = @"s_hasNewFriendCountKey";
                     else
                     {
                         /* 晓东需求
-                         好多房-iOSXWTT-2958
+                         幸福里-iOSXWTT-2958
                          客户端不能读出通讯录时，有通讯录好友加入，显示对方头条用户名和「通讯录好友」——现在是页面为空*/
                         if (isEmptyString(model.recommendReason)) {
                             model.recommendReason = NSLocalizedString(@"通讯录好友", nil);

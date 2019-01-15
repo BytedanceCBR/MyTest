@@ -291,7 +291,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * questionMarkOrAmpersand = nil;
     if ([article.shareURL rangeOfString:@"?"].location == NSNotFound) {
@@ -478,7 +478,7 @@ static ArticleShareManager * manager;
 
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
 
     NSString * questionMarkOrAmpersand = nil;
     if ([shareURL rangeOfString:@"?"].location == NSNotFound) {
@@ -690,7 +690,7 @@ static ArticleShareManager * manager;
 
         
         //分割线， 签名
-        NSString * signStr = [NSString stringWithFormat:@"<br></br>%@<p>%@</p><p></p><p></p>%@<br></br>%@ <a href=\"%@\">%@</a><br></br><img src=\"http://s.pstatp.com/r2/image/code/news_article.png?ver=201305241510\"/><br></br>%@<br></br>", NSLocalizedString(@"好多房 - 真房源，好中介，快流通", nil), sepLineStr, NSLocalizedString(@"《好多房》是一款会自动学习的资讯软件，它会聪明地分析你的兴趣爱好，自动为你推荐喜欢的内容，并且越用越懂你。", nil), NSLocalizedString(@"点击下载", nil), downloadAppURL, NSLocalizedString(@"好多房", nil), NSLocalizedString(@"扫描二维码", nil)];
+        NSString * signStr = [NSString stringWithFormat:@"<br></br>%@<p>%@</p><p></p><p></p>%@<br></br>%@ <a href=\"%@\">%@</a><br></br><img src=\"http://s.pstatp.com/r2/image/code/news_article.png?ver=201305241510\"/><br></br>%@<br></br>", NSLocalizedString(@"幸福里 - 真房源，好中介，快流通", nil), sepLineStr, NSLocalizedString(@"《幸福里》是一款会自动学习的资讯软件，它会聪明地分析你的兴趣爱好，自动为你推荐喜欢的内容，并且越用越懂你。", nil), NSLocalizedString(@"点击下载", nil), downloadAppURL, NSLocalizedString(@"幸福里", nil), NSLocalizedString(@"扫描二维码", nil)];
         
         [resultContent appendString:signStr];
         
@@ -772,7 +772,7 @@ static ArticleShareManager * manager;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = shareMsg;
     
-    NSString *mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐好多房中的\"%@\"", nil), shareName];
+    NSString *mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐幸福里中的\"%@\"", nil), shareName];
     manager.mailBody = shareMsgWithUrl;
     manager.mailSubject = mailSubject;
     manager.mailBodyIsHTML = NO;
@@ -858,7 +858,7 @@ static ArticleShareManager * manager;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = shareMsg;
 
-    NSString * mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐好多房中的\"%@\"", nil), screenName];
+    NSString * mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐幸福里中的\"%@\"", nil), screenName];
     
     manager.mailBody = shareMsg;
     manager.mailSubject = mailSubject;
@@ -955,7 +955,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * systemTemplate = [templatesDict objectForKey:@"system"];
     NSString * smsText = [SSCommonLogic parseShareContentWithTemplate:systemTemplate title:shareTitle shareURLString:[NSString stringWithFormat:@"%@%@", shareURL, kShareChannelFromSMS]];
@@ -1055,7 +1055,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * questionMarkOrAmpersand = nil;
     if ([url rangeOfString:@"?"].location == NSNotFound) {
