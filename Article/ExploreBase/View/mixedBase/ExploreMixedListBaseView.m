@@ -1282,6 +1282,8 @@ TTRefreshViewDelegate
             BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
             
             if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+                //修改头部类型
+                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
                 return 1;
             }else
             {
