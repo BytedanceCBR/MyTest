@@ -886,13 +886,11 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (isFull) {
         [self.playerController exitFullScreen:YES completion:^(BOOL finished) {
             self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
-            // add by zjing for test
-            NSLog(@"zjing-controlView:%@",self.controlView);
+
         }];
     }else{
         [self.playerController enterFullScreen:YES completion:^(BOOL finished) {
-            // add by zjing for test
-            NSLog(@"zjing-controlView:%@",self.controlView);
+
         }];
     }
 }
