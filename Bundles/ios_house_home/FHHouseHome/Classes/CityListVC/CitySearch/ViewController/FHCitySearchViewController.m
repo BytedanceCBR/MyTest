@@ -16,6 +16,7 @@
 #import "TTNavigationController.h"
 #import "FHCitySearchViewModel.h"
 #import "FHCitySearchItemCell.h"
+#import "TTReachability.h"
 
 @interface FHCitySearchViewController ()
 
@@ -119,8 +120,14 @@
 
 // 文本框文字变化，进行sug请求
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
-    NSString *text = self.naviBar.searchInput.text;
-    [self.viewModel requestSearchCityByQuery:text];
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    if (self.naviBar.searchInput.markedTextRange == NULL) {
+        NSString *text = self.naviBar.searchInput.text;
+        [self.viewModel requestSearchCityByQuery:text];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

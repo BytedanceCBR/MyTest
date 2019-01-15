@@ -42,6 +42,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 -(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView {
     self = [super init];
     if (self) {
+        self.hasReloadListData = NO;
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
@@ -77,6 +78,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     [self loadHistoryData];
     [self configSectionData];
     [self.tableView reloadData];
+    self.hasReloadListData = YES;
 }
 
 // 加载历史数据
