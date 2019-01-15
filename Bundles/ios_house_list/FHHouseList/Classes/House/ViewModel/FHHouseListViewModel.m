@@ -156,6 +156,7 @@
         self.isEnterCategory = YES;
         self.isFirstLoad = YES;
         self.tableView = tableView;
+        self.showRedirectTip = YES;
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
@@ -164,7 +165,7 @@
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
-            self.tracerModel = [[FHTracerModel alloc]initWithDictionary:tracerDict error:nil];
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
             self.originFrom = self.tracerModel.originFrom;
         }
         [self configTableView];

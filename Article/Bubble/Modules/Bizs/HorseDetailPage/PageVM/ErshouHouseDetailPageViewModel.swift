@@ -1287,12 +1287,13 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             
             var item = item
             item.fhSearchId = data.searchId
-                        
+            
             
             let selector = openDetailPage(
                 houseType: HouseType(rawValue: item.houseType!),
                 followUpId: Int64(item.followId!) ?? 0,
                 originSearchId: (data.searchId ?? "be_null"),
+                tracceParam: traceParam,
                 disposeBag: disposeBag,
                 logPB: item.logPB as? [String : Any],
                 navVC: navVC)
@@ -1306,7 +1307,8 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
                 toTracerParams(item.followId ?? "be_null", key: "group_id") <|>
-                toTracerParams("be_null", key: "element_type")
+                toTracerParams("be_null", key: "element_type") <|>
+                traceParam
 
             let finalHouseShowParams = houseShowParams
                 .exclude("element_from")
@@ -1382,13 +1384,15 @@ fileprivate func openDetailPage(
     houseType: HouseType?,
     followUpId: Int64,
     originSearchId: String = "be_null",
+    tracceParam: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     logPB: [String: Any]? = nil,
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     var params = TracerParams.momoid() <|>
         toTracerParams("old", key: "house_type") <|>
         beNull(key: "element_from") <|>
-        toTracerParams("left_pic", key: "card_type")
+        toTracerParams("left_pic", key: "card_type") <|>
+        tracceParam
     guard let houseType = houseType else {
         return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     }

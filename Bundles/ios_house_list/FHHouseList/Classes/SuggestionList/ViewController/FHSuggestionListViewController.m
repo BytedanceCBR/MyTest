@@ -167,7 +167,7 @@
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    tableView.estimatedRowHeight = 0;
     tableView.estimatedSectionFooterHeight = 0;
     tableView.estimatedSectionHeaderHeight = 0;
     

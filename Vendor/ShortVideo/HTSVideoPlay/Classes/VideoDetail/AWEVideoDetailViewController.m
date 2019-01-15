@@ -1483,7 +1483,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
         if (!error) {
             if (model.replyToComment == nil) {
-                [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
+                [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
                                             model:self.model
                                   commonParameter:self.commonTrackingParameter
                                    extraParameter:[self writeCommentExtraPositionDict]];
@@ -1836,7 +1836,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"comment",
+                       extraParameter:@{@"position": @"reply",
                                         @"comment_id": [commentModel.id stringValue]}];
 
     if ([self alertIfNotValid]) {
@@ -2277,7 +2277,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeFavourite]) {
-        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavorite" : @"rt_favorite"
+        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavourite" : @"rt_favourite"
                                     model:self.model
                           commonParameter:self.commonTrackingParameter
                            extraParameter:@{

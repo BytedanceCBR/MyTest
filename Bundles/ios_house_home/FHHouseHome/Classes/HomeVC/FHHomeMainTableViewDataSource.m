@@ -282,4 +282,8 @@
     }
 }
 
+- (void)resetTraceCahce
+{
+    [self.traceRecordDict removeAllObjects];
+}
 @end

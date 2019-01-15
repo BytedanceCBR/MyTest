@@ -12,6 +12,8 @@
 #import "FHEnvContext.h"
 
 static const float kSegementedOneWidth = 50;
+static const float kSegementedHeight = 35;
+static const float kSegementedPadingTop = 5;
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
@@ -58,7 +60,7 @@ static const float kSegementedOneWidth = 50;
 {
     self.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 35);
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - 55 * 3, 15, 55 * 3, 20);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, kSegementedOneWidth * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];
     _segmentedControl.selectionIndicatorHeight = 0;
     _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
@@ -75,7 +77,7 @@ static const float kSegementedOneWidth = 50;
                                      [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 15, 0, 0);
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
@@ -93,7 +95,7 @@ static const float kSegementedOneWidth = 50;
     }
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - 10, 15, kSegementedOneWidth * titles.count, 20);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - 10, kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
@@ -105,7 +107,7 @@ static const float kSegementedOneWidth = 50;
     {
         _segmentedControl.selectedSegmentIndex = _segmentedControl.selectedSegmentIndex;
     }
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10), 15, kSegementedOneWidth * titles.count, 20);
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10), kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
 }
 /*
  // Only override drawRect: if you perform custom drawing.

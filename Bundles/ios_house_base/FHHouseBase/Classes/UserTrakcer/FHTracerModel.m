@@ -78,4 +78,41 @@
     return [self toDictionary];
 }
 
+/*
+ * 构建FHTracerModel，字典中，log_pb只能为：字典或者字典字符串
+ */
++ (FHTracerModel *)makerTracerModelWithDic:(NSDictionary *)dicParams {
+    NSError *error = NULL;
+    FHTracerModel *model = [[FHTracerModel alloc] initWithDictionary:dicParams error:&error];
+    if (model == NULL || error != NULL) {
+        model = [[FHTracerModel alloc] init];
+        model.originFrom = dicParams[@"origin_from"];
+        model.elementFrom = dicParams[@"element_from"];
+        model.enterFrom = dicParams[@"enter_from"];
+        model.categoryName = dicParams[@"category_name"];
+        model.searchId = dicParams[@"search_id"];
+        model.originSearchId = dicParams[@"origin_search_id"];
+        // log_pb特殊处理
+        if (model) {
+            id logPb = dicParams[@"log_pb"];
+            if (logPb != NULL) {
+                model.logPb = NULL;
+                if ([logPb isKindOfClass:[NSDictionary class]]) {
+                    model.logPb = logPb;
+                } else if ([logPb isKindOfClass:[NSString class]]) {
+                    // 字符串转字典
+                    NSError *error = nil;
+                    NSDictionary *logPbDict = [NSJSONSerialization JSONObjectWithData:[((NSString *)logPb) dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+                    if (!error) {
+                        model.logPb = logPbDict;
+                    }
+                }
+            } else {
+                model.logPb = NULL;
+            }
+        }
+    }
+    return model;
+}
+
 @end

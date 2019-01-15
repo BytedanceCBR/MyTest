@@ -13,6 +13,7 @@
 #import "FHConfigApi.h"
 #import "FHEnvContext.h"
 #import "YYCache.h"
+#import "TTSandBoxHelper.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -79,11 +80,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)showLocationGuideAlert
 {
-    BOOL isLocationEnabled = [CLLocationManager locationServicesEnabled];
-    if (!isLocationEnabled) {
-        return;
-    }
-    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"无定位权限，请前往系统设置开启" message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         
@@ -223,6 +219,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         if (showAlert)
         {
+            BOOL isLocationEnabled = [CLLocationManager locationServicesEnabled];
+            if (!isLocationEnabled && [TTSandBoxHelper isAPPFirstLaunch]) {
+                return;
+            }
+            
             [wSelf checkUserLocationStatus];
         }
         
@@ -316,20 +317,16 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [self requestCurrentLocation:showAlert completion:NULL];
 }
 
-- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion
+- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess, FHConfigModel * _Nullable model))completion
 {
     __weak typeof(self) wSelf = self;
     [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:CLLocationCoordinate2DMake(0, 0) gaodeCityId:nil gaodeCityName:nil completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
         
-        if (model) {
-            [wSelf updateAllConfig:model isNeedDiff:NO];
-        }
-        
         if (model.data && completion) {
-            completion(YES);
+            completion(YES, model);
         }else
         {
-            completion(NO);
+            completion(NO, model);
         }
     }];
 }
@@ -339,11 +336,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     
-    if (needDiff && [model.data.toDictionary isEqualToDictionary:[[FHEnvContext sharedInstance] getConfigFromCache].toDictionary])
+    if (needDiff && [model.data.diffCode isEqualToString:configData.diffCode])
     {
         return;
     }
+    
     
     [[FHEnvContext sharedInstance] saveGeneralConfig:model];
     

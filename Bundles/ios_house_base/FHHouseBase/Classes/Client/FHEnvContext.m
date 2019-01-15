@@ -66,12 +66,14 @@
         
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
-        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             if (isSuccess) {
-                FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                FHConfigDataModel *configModel = model.data;
                 if (configModel.cityAvailability.enable) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
                         if (isSuccess) {
+                            
+                            [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                             
                             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                             
@@ -318,7 +320,7 @@
 
 // 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
 - (void)checkExchangeCanOpenURLMethod {
-    if([(id)[FHUtils contentForKey:kUserDefaultCityId] integerValue] > 0) {
+    if([(id)[FHUtils contentForKey:@"config_key_select_city_id"] integerValue] > 0) {
         // 旧版本选择过城市
         [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
     }

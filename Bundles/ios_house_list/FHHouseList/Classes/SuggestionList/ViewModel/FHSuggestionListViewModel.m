@@ -459,6 +459,32 @@
     return nil;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView.tag == 1) {
+        // 历史记录
+        if (indexPath.row == 0) {
+            return 40;
+        } else {
+            return 41;
+        }
+    } else if (tableView.tag == 2) {
+        // 联想词
+        if (self.houseType == FHHouseTypeNewHouse) {
+            // 新房
+            return 67;
+        } else {
+            if (indexPath.row == self.sugListData.count - 1) {
+                return 61;
+            } else {
+                return 41;
+            }
+        }
+    }
+    
+    return 41;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
@@ -565,6 +591,9 @@
 - (void)reloadSugTableView {
     if (self.listController.suggestTableView != NULL) {
         [self.listController.suggestTableView reloadData];
+        if (self.sugListData.count > 0) {
+            [self.listController.suggestTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }
 }
 
@@ -575,6 +604,9 @@
             self.hasShowKeyboard = YES;
         }
         [self.listController.historyTableView reloadData];
+        if (self.historyData.count > 0) {
+            [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }
     }
 }
 

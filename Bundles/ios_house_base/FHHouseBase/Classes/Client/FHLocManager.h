@@ -35,7 +35,7 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion;
 
-- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess))completion;
+- (void)requestConfigByCityId:(NSInteger)cityId completion:(void(^)(BOOL isSuccess,FHConfigModel * _Nullable model))completion;
 
 - (void)checkUserLocationStatus;
 
@@ -46,6 +46,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 - (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl;
 
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model;
+
+- (void)updateAllConfig:(FHConfigModel * _Nullable) model isNeedDiff:(BOOL)needDiff;
 
 @end
 
