@@ -87,24 +87,21 @@
     }
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
-        [self.viewModel loadListCityData];
+        [self.viewModel loadListCityData:configDataModel];
         [self checkShowLocationErrorAlert];
     } else {
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
-        // 增加第一次加载数据延时判断是否定位未返回判断
-        __weak typeof(self) wSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [wSelf checkConfigDataNoReturn];
-        });
+        // 第一次提前请求config数据
+        [self checkConfigDataNoReturn];
     }
 }
 
 - (void)configDataLoadSuccess:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
     [self.emptyView hideEmptyView];
-    [self.viewModel loadListCityData];
+    [self.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     // 定位当前城市
@@ -128,7 +125,15 @@
 - (void)checkConfigDataNoReturn {
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel == NULL) {
-        [self configDataLoadError:NULL];
+        if ([TTReachability isNetworkConnected]) {
+            __weak typeof(self) wSelf = self;
+            [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+                if (isSuccess) {
+                    [wSelf.emptyView hideEmptyView];
+                    [wSelf.viewModel loadListCityData:model.data];
+                }
+            }];
+        }
     }
 }
 
@@ -314,7 +319,7 @@
             // 定位成功
             [wSelf.emptyView hideEmptyView];
             if (!wSelf.viewModel.hasReloadListData) {
-                [wSelf.viewModel loadListCityData];
+                [wSelf.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
             }
             wSelf.locationBar.cityName = reGeocode.city;
             wSelf.locationBar.isLocationSuccess = YES;

@@ -45,8 +45,6 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl;
 
-- (void)updateAllConfig:(FHConfigModel * _Nullable) model;
-
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model isNeedDiff:(BOOL)needDiff;
 
 @end
