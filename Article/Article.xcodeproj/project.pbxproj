@@ -10128,7 +10128,6 @@
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
 		D479494B21ECC93600548965 /* f100 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy-Info.plist"; sourceTree = "<absolute>"; };
 		D47950BF21ECC94300548965 /* f100 copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy2-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy2-Info.plist"; sourceTree = "<absolute>"; };
-		D47950C021ECC94400548965 /* ErshouPriceMarkerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ErshouPriceMarkerView.xib; path = "Resources-iPad/Bubble/Modules/Bizs/HorseDetailPage/Cells/ErshouPriceMarkerView.xib"; sourceTree = "<group>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D479581621ECC94F00548965 /* f100 copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy3-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy3-Info.plist"; sourceTree = "<absolute>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
@@ -17809,7 +17808,6 @@
 		D47950BE21ECC94200548965 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
-				D47950C021ECC94400548965 /* ErshouPriceMarkerView.xib */,
 			);
 			name = "Resources-iPad";
 			sourceTree = "<group>";
