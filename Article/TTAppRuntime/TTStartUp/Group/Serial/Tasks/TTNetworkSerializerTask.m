@@ -161,6 +161,7 @@
         NSString *cityId = configModel.currentCityId;
         if (cityId.length > 0) {
             [commonParams setValue:cityId forKey:@"f_city_id"];
+            [commonParams setValue:cityId forKey:@"city_id"];
         }
 
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {

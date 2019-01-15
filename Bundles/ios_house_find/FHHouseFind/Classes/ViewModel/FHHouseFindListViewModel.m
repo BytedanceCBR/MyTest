@@ -104,7 +104,8 @@
     }
     [self refreshHouseItemList];
     
-    if (self.itemList.count < 1) {
+    
+    if (self.itemList.count < 1 || ![[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable boolValue]) {
         // 当前城市未开通
         [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
         return;

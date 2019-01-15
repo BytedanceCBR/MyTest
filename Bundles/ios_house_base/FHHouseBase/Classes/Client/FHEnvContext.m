@@ -70,11 +70,9 @@
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             if (isSuccess) {
                 FHConfigDataModel *configModel = model.data;
-                if (configModel.cityAvailability.enable) {
-                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
+                [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
                         if (isSuccess) {
-                            
-                            [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                             
                             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                             
@@ -96,17 +94,6 @@
                             [[ToastManager manager] showToast:@"切换城市失败"];
                         }
                     }];
-                }else
-                {
-                    if(completion)
-                    {
-                        completion(YES);
-                    }
-                    [[ToastManager manager] dismissCustomLoading];
-                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                        
-                    }];
-                }
             }else
             {
                 if(completion)
