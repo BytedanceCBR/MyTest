@@ -37,7 +37,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
-@property (nonatomic, assign) NSTimeInterval stayTime;
 @end
 
 @implementation FHHomeListViewModel

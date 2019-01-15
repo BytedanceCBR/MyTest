@@ -160,6 +160,7 @@
                            @"neighborhoodFilterOrder": @"neighborhood_filter_order",
                            @"rentFilter": @"rent_filter",
                            @"courtFilter": @"court_filter",
+                           @"diffCode": @"diff_code",
                            @"saleHistoryFilter": @"sale_history_filter",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

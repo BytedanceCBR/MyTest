@@ -709,7 +709,8 @@
     if (neighbor.logPb) {
         param[@"log_pb"] = [neighbor.logPb toDictionary];
     }
-    
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
     [FHUserTracker writeEvent:@"house_show" params:param];
 }
 
@@ -749,7 +750,8 @@
     if (logPb) {
         param[@"log_pb"] = logPb;
     }
-    
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
     [FHUserTracker writeEvent:@"house_show" params:param];
     _houseLogs[@(indexPath.row)] = @(1);
 }
@@ -758,7 +760,6 @@
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
-//    param[@"enter_from"] = @"old_list";
     param[@"category_name"] = nil;
     param[@"element_from"] = nil;
     
