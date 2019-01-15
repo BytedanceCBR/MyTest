@@ -798,19 +798,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             self.bottomBar.agencyLabel.text = agencyName
             self.bottomBar.agencyLabel.isHidden = false
-//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-//                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
-//                maker.right.equalTo(self.bottomBar.licenceIcon.snp.left).offset(4)
-//            })
-
         }else {
-            
-//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-//                maker.centerY.equalTo(self.bottomBar.avatarView)
-//                maker.right.equalToSuperview()
-//            })
             self.bottomBar.agencyLabel.isHidden = true
             
         }
@@ -825,17 +813,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             let item = FHLicenceImageItem(url: certificate, title: "从业人员信息卡")
             licenseViews.append(item)
         }
+        if licenseViews.count > 0 {
+            self.bottomBar.displayLicence(isDisplay: true)
+            licenceBrowserViewModel.setImages(images: licenseViews)
+            self.bottomBar.licenceIcon.rx.tap
+                .bind(onNext: { [weak self] in
+                    self?.licenceBrowserViewModel.open()
+                })
+                .disposed(by: disposeBag)
+        } else {
+            self.bottomBar.displayLicence(isDisplay: false)
+        }
 
-        licenceBrowserViewModel.setImages(images: licenseViews)
-
-        self.bottomBar.licenceIcon.rx.tap
-            .bind(onNext: { [weak self] in
-                self?.licenceBrowserViewModel.open()
-            })
-            .disposed(by: disposeBag)
-        
         self.bottomBar.leftView.snp.updateConstraints({ (maker) in
-            
             maker.width.equalTo(leftWidth)
         })
         if leftWidth > 0, let contactPhone = contactPhone {
