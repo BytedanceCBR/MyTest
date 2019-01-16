@@ -51,7 +51,7 @@ class QuickLoginAlertViewModel {
         re.acceptCheckBox.rx.tap.subscribe { [weak re] event in
             re?.acceptCheckBox.isSelected = !(re?.acceptCheckBox.isSelected ?? false)
             if re?.acceptCheckBox.isSelected == false {
-                EnvContext.shared.toast.showToast("请阅读并同意好多房用户协议")
+                EnvContext.shared.toast.showToast("请阅读并同意幸福里用户协议")
             }
             re?.acceptRelay.accept(re?.acceptCheckBox.isSelected ?? true)
 
@@ -92,7 +92,7 @@ class QuickLoginAlertViewModel {
                 .withLatestFrom(mergeInputs)
                 .bind(onNext: { [unowned re] (e) in
                     if re.acceptCheckBox.isSelected == false {
-                        EnvContext.shared.toast.showToast("请阅读并同意好多房用户协议")
+                        EnvContext.shared.toast.showToast("请阅读并同意幸福里用户协议")
                     } else {
                         quickLoginVM.requestLogin.accept(e)
                     }
@@ -289,7 +289,7 @@ class QuickLoginPanel: UIView {
         
 
         
-        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
+        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《幸福里用户使用协议》及《隐私协议》")
         
         let commonTextStyle = {
             return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey2Color),
@@ -303,7 +303,7 @@ class QuickLoginPanel: UIView {
             backgroundColor: nil,
             userInfo: nil,
             tapAction: { (_, text, range, _) in
-                if let url = "\(EnvContext.networkConfig.host)/f100/download/user_agreement.html&title=好多房用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                if let url = "\(EnvContext.networkConfig.host)/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                 }
         })
@@ -322,7 +322,7 @@ class QuickLoginPanel: UIView {
         disclaimer.isUserInteractionEnabled = true
 
         let re = UILabel()
-        re.text = "我已阅读并同意 《好多房用户使用协议》及《隐私协议》"
+        re.text = "我已阅读并同意 《幸福里用户使用协议》及《隐私协议》"
         re.font = CommonUIStyle.Font.pingFangRegular(16)
         re.textColor = hexStringToUIColor(hex: "#8a9299")
         re.numberOfLines = 0

@@ -293,17 +293,17 @@ TTEditUserProfileViewControllerDelegate
     else {
         channel = [NSString stringWithFormat:@"  %@",[TTSandBoxHelper getCurrentChannel]];
     }
-    _aboutLabel.text = [NSString stringWithFormat:NSLocalizedString(@"©好多房%@", nil), channel];
+    _aboutLabel.text = [NSString stringWithFormat:NSLocalizedString(@"©幸福里%@", nil), channel];
     
 #ifdef DEBUG
     
-    NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©好多房 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+    NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
     [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
     
     _aboutLabel.text = string;
 #endif
     if ([TTSandBoxHelper isInHouseApp]) {
-        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©好多房 inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
         [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
         _aboutLabel.text = string;
     }
@@ -371,7 +371,7 @@ TTEditUserProfileViewControllerDelegate
     
     if (self.tapCount > 5) {
         
-        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©好多房 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
         [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
         
         _aboutLabel.text = string;
@@ -656,7 +656,7 @@ TTEditUserProfileViewControllerDelegate
             if (&UIApplicationOpenSettingsURLString != NULL) {
                 detailText = NSLocalizedString(@"你可能错过重要资讯通知，点击去设置允许通知", nil);
             } else {
-                detailText = NSLocalizedString(@"你可能错过重要资讯通知，请在“设置” - “通知” - “好多房”内允许通知", nil);
+                detailText = NSLocalizedString(@"你可能错过重要资讯通知，请在“设置” - “通知” - “幸福里”内允许通知", nil);
             }
             [_pushNotificatoinSwitch setOn:NO];
         } else {
@@ -1436,7 +1436,7 @@ TTEditUserProfileViewControllerDelegate
             _isOpenSettingApp = YES;
         } else {
 //            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"notice_alert");
-//            TTAuthorizeHintView *hintview = [[TTAuthorizeHintView alloc]initAuthorizeHintWithImageName:@"img_popup_notice" title:NSLocalizedString(@"推送设置", nil) message:NSLocalizedString(@"请在系统“设置” - “通知”内，允许“好多房”通知", nil)  confirmBtnTitle:@"我知道了" animated:YES completed:nil];
+//            TTAuthorizeHintView *hintview = [[TTAuthorizeHintView alloc]initAuthorizeHintWithImageName:@"img_popup_notice" title:NSLocalizedString(@"推送设置", nil) message:NSLocalizedString(@"请在系统“设置” - “通知”内，允许“幸福里”通知", nil)  confirmBtnTitle:@"我知道了" animated:YES completed:nil];
 //            [hintview show];
         }
         [_pushNotificatoinSwitch setOn:NO];

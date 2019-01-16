@@ -21,10 +21,10 @@
     BOOL isHighlighted;
     NSTimer *timer;
 }
+@property(nonatomic, strong) UIImageView * bgView;
 @property(nonatomic, strong) UIImageView * triangleImage;
 @property(nonatomic, strong) UIView * verticalLineView;
-@property(nonatomic, strong) UIView * searchIconBackView;
-@property(nonatomic, strong) UIView * searchIcon;
+@property(nonatomic, strong) UIImageView * searchIcon;
 @property(nonatomic, strong) UILabel * categoryPlaceholderLabel;
 @property(nonatomic, strong) UILabel * categoryLabel1;
 @property(nonatomic, strong) UILabel * categoryLabel2;
@@ -69,10 +69,22 @@
     } else {
         self.backgroundColor = [UIColor whiteColor];
     }
-    self.layer.borderWidth = 1;
-    self.layer.borderColor = [UIColor colorWithHexString:kFHBaseColorBlue].CGColor;
-    self.layer.masksToBounds = true;
-    self.layer.cornerRadius = 4;
+    
+    UIImage *oldImage = [UIImage imageNamed:@"home_search_bg"];
+    UIImage *newImage = [oldImage stretchableImageWithLeftCapWidth:oldImage.size.width * 0.5 topCapHeight:oldImage.size.height * 0.5];
+    self.bgView = [[UIImageView alloc] initWithImage:newImage];
+    self.bgView.contentMode = UIViewContentModeScaleToFill;
+    self.bgView.layer.masksToBounds = YES;
+    [self addSubview:self.bgView];
+    
+    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.mas_equalTo(self);
+        make.right.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.bottom.mas_equalTo(self);
+
+    }];
 }
 
 - (void)setupCountryLabel
@@ -128,8 +140,8 @@
     [self addSubview:self.verticalLineView];
     
     [self.verticalLineView  mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.triangleImage.mas_right).offset(11);
-        make.centerY.equalTo(self);
+        make.left.mas_equalTo(self.triangleImage.mas_right).offset(11);
+        make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(1);
         make.height.mas_equalTo(15);
     }];
@@ -150,40 +162,28 @@
 
 - (void)setSearchArea
 {
-    
-    self.searchIconBackView = [UIView new];
-    self.searchIconBackView.backgroundColor =  [UIColor colorWithHexString:kFHBaseColorBlue];
-    [self addSubview:self.searchIconBackView];
-    
-    [self.searchIconBackView  mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.right.height.equalTo(self);
-        make.width.mas_equalTo(50 * [UIScreen mainScreen].bounds.size.width / 375);
-    }];
-    
-    self.searchIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home-icon-search"]];
-    [self.searchIconBackView addSubview:self.searchIcon];
-
+    self.searchIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_icon_search"]];
+    [self addSubview:self.searchIcon];
 
     [self.searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.centerX.equalTo(self.searchIconBackView);
-        make.width.height.mas_equalTo(16);
+        
+        make.left.mas_equalTo(self.verticalLineView.mas_right).offset(10);
+        make.centerY.mas_equalTo(self.verticalLineView);
+        make.width.height.mas_equalTo(20);
     }];
-
 
     self.categoryPlaceholderLabel = [UILabel new];
     self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
-    self.categoryPlaceholderLabel.textColor =  [UIColor colorWithHexString:@"#8a9299"];
+    self.categoryPlaceholderLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
     self.categoryPlaceholderLabel.text = [UIScreen mainScreen].bounds.size.width < 375 ? @"输入小区/商圈/地铁" : @"请输入小区/商圈/地铁";
 
     [self addSubview:self.categoryPlaceholderLabel];
 
-
     [self.categoryPlaceholderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.verticalLineView.mas_right).offset(10);
+        make.left.mas_equalTo(self.searchIcon.mas_right);
         make.height.mas_equalTo(20);
-        make.centerY.equalTo(self);
-        make.right.equalTo(self.searchIconBackView.mas_left).offset(-2);
+        make.centerY.mas_equalTo(self);
+        make.right.mas_equalTo(self).offset(-2);
     }];
 
     self.categoryBgView = [UIView new];
@@ -193,10 +193,10 @@
 
 
     [self.categoryBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.verticalLineView.mas_right).offset(10);
+        make.left.mas_equalTo(self.searchIcon.mas_right);
         make.height.mas_equalTo(38);
-        make.right.equalTo(self.searchIconBackView.mas_left).offset(-2);
-        make.centerY.equalTo(self);
+        make.right.mas_equalTo(self).offset(-2);
+        make.centerY.mas_equalTo(self);
     }];
 
 
@@ -332,6 +332,7 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
+
     if (kIsNSArray(_searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {

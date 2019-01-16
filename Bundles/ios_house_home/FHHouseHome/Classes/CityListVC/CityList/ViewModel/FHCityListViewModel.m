@@ -46,7 +46,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
-        [self loadListCityData];
+        [self loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
     }
     return self;
 }
@@ -68,11 +68,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     return _historyCache;
 }
 
-- (void)loadListCityData {
+- (void)loadListCityData:(FHConfigDataModel *)configDataModel {
     self.cityList = NULL;
     self.hotCityList = NULL;
     self.historyCityList = NULL;
-    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     self.cityList = [configDataModel cityList];
     self.hotCityList = [configDataModel hotCityList];
     [self loadHistoryData];

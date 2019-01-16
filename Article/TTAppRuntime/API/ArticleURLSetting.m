@@ -348,7 +348,7 @@
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=好多房用户协议",EnvContext.networkConfig.host];
+    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",EnvContext.networkConfig.host];
 }
 
 + (NSString*)userPrivateProtocolURLString {

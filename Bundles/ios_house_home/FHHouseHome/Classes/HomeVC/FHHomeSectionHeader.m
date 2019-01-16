@@ -63,18 +63,18 @@ static const float kSegementedPadingTop = 5;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, kSegementedOneWidth * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];
     _segmentedControl.selectionIndicatorHeight = 0;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
+    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#ff5869"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:14],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#979fac"],NSForegroundColorAttributeName,nil];
+                                     [UIColor colorWithHexString:@"#a1aab3"],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontRegular:14],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontMedium:14],NSFontAttributeName,
+                                     [UIColor colorWithHexString:@"#ff5869"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 15, 0, 0);

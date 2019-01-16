@@ -115,9 +115,9 @@ static ArticleShareManager * manager;
     manager.groupModel = model;
     
     manager.weixinTitleText = shareTitle;
-    NSString *detail = isEmptyString(shareDesc)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareDesc;
+    NSString *detail = isEmptyString(shareDesc)?NSLocalizedString(@"好房就在幸福里", nil):shareDesc;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareDesc;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareDesc;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
@@ -257,14 +257,14 @@ static ArticleShareManager * manager;
     }
 
     manager.weixinTitleText = weixinShareTitle;
-    NSString *detail = isEmptyString(article.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.abstract;
+    NSString *detail = isEmptyString(article.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : article.abstract;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(weixinShareTitle) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : weixinShareTitle;
+    manager.weixinMomentText = isEmptyString(weixinShareTitle) ? NSLocalizedString(@"好房就在幸福里", nil) : weixinShareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2) {
-        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.title;
+        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"好房就在幸福里", nil) : article.title;
         manager.weixinMomentText = weixinMomentText;
     }
     
@@ -276,7 +276,7 @@ static ArticleShareManager * manager;
     }
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : article.title;
+        NSString *weixinMomentText = isEmptyString(article.title) ? NSLocalizedString(@"好房就在幸福里", nil) : article.title;
         manager.weixinMomentText = weixinMomentText;
     }
     
@@ -291,7 +291,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * questionMarkOrAmpersand = nil;
     if ([article.shareURL rangeOfString:@"?"].location == NSNotFound) {
@@ -444,14 +444,14 @@ static ArticleShareManager * manager;
     }
 
     manager.weixinTitleText = shareTitle;
-    NSString *detail = isEmptyString(abstract)?NSLocalizedString(@"真房源，好中介，快流通", nil):abstract;
+    NSString *detail = isEmptyString(abstract)?NSLocalizedString(@"好房就在幸福里", nil):abstract;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2) {
-        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : title;
+        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"好房就在幸福里", nil) : title;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -463,7 +463,7 @@ static ArticleShareManager * manager;
     }
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : title;
+        NSString *weixinMomentText = isEmptyString(title) ? NSLocalizedString(@"好房就在幸福里", nil) : title;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -478,7 +478,7 @@ static ArticleShareManager * manager;
 
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
 
     NSString * questionMarkOrAmpersand = nil;
     if ([shareURL rangeOfString:@"?"].location == NSNotFound) {
@@ -690,7 +690,7 @@ static ArticleShareManager * manager;
 
         
         //分割线， 签名
-        NSString * signStr = [NSString stringWithFormat:@"<br></br>%@<p>%@</p><p></p><p></p>%@<br></br>%@ <a href=\"%@\">%@</a><br></br><img src=\"http://s.pstatp.com/r2/image/code/news_article.png?ver=201305241510\"/><br></br>%@<br></br>", NSLocalizedString(@"好多房 - 真房源，好中介，快流通", nil), sepLineStr, NSLocalizedString(@"《好多房》是一款会自动学习的资讯软件，它会聪明地分析你的兴趣爱好，自动为你推荐喜欢的内容，并且越用越懂你。", nil), NSLocalizedString(@"点击下载", nil), downloadAppURL, NSLocalizedString(@"好多房", nil), NSLocalizedString(@"扫描二维码", nil)];
+        NSString * signStr = [NSString stringWithFormat:@"<br></br>%@<p>%@</p><p></p><p></p>%@<br></br>%@ <a href=\"%@\">%@</a><br></br><img src=\"http://s.pstatp.com/r2/image/code/news_article.png?ver=201305241510\"/><br></br>%@<br></br>", NSLocalizedString(@"幸福里 - 真房源，好中介，快流通", nil), sepLineStr, NSLocalizedString(@"《幸福里》是一款会自动学习的资讯软件，它会聪明地分析你的兴趣爱好，自动为你推荐喜欢的内容，并且越用越懂你。", nil), NSLocalizedString(@"点击下载", nil), downloadAppURL, NSLocalizedString(@"幸福里", nil), NSLocalizedString(@"扫描二维码", nil)];
         
         [resultContent appendString:signStr];
         
@@ -772,7 +772,7 @@ static ArticleShareManager * manager;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = shareMsg;
     
-    NSString *mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐好多房中的\"%@\"", nil), shareName];
+    NSString *mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐幸福里中的\"%@\"", nil), shareName];
     manager.mailBody = shareMsgWithUrl;
     manager.mailSubject = mailSubject;
     manager.mailBodyIsHTML = NO;
@@ -858,7 +858,7 @@ static ArticleShareManager * manager;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = shareMsg;
 
-    NSString * mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐好多房中的\"%@\"", nil), screenName];
+    NSString * mailSubject = [NSString stringWithFormat:NSLocalizedString(@"推荐幸福里中的\"%@\"", nil), screenName];
     
     manager.mailBody = shareMsg;
     manager.mailSubject = mailSubject;
@@ -899,7 +899,7 @@ static ArticleShareManager * manager;
 
 + (NSMutableArray *)shareActivityManager:(TTActivityShareManager *)manager shareInfo:(NSDictionary *)shareInfo showReport:(BOOL)report withQQ:(BOOL)qq{
     [manager clearCondition];
-    NSString * const defaultText = NSLocalizedString(@"真房源，好中介，快流通", nil);
+    NSString * const defaultText = NSLocalizedString(@"好房就在幸福里", nil);
     NSString *shareTitle = [shareInfo tt_stringValueForKey:@"share_title"];
     if (isEmptyString(shareTitle)) {
         shareTitle = defaultText;
@@ -935,12 +935,12 @@ static ArticleShareManager * manager;
     
     manager.weixinTitleText = shareTitle;
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
     if (manager.isVideoSubject && ttvs_isShareTimelineOptimize() > 2 && isEmptyString(manager.adID)) {
-        NSString *weixinMomentText = isEmptyString(shareTitle) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : shareTitle;
+        NSString *weixinMomentText = isEmptyString(shareTitle) ? NSLocalizedString(@"好房就在幸福里", nil) : shareTitle;
         manager.weixinMomentText = weixinMomentText;
     }
 
@@ -955,7 +955,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * systemTemplate = [templatesDict objectForKey:@"system"];
     NSString * smsText = [SSCommonLogic parseShareContentWithTemplate:systemTemplate title:shareTitle shareURLString:[NSString stringWithFormat:@"%@%@", shareURL, kShareChannelFromSMS]];
@@ -1040,7 +1040,7 @@ static ArticleShareManager * manager;
 
     }
     manager.weixinText = detail;
-    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"真房源，好中介，快流通", nil):shareTitle;
+    manager.weixinMomentText = isEmptyString(shareTitle)?NSLocalizedString(@"好房就在幸福里", nil):shareTitle;
     manager.qqShareTitleText = shareTitle;
     manager.qqShareText = detail;
     
@@ -1055,7 +1055,7 @@ static ArticleShareManager * manager;
     
     manager.qqZoneText = qqZoneMessage;
     //        王大可说分享到空间 标题为 爱看
-    manager.qqZoneTitleText = NSLocalizedString(@"好多房", nil);
+    manager.qqZoneTitleText = NSLocalizedString(@"幸福里", nil);
     
     NSString * questionMarkOrAmpersand = nil;
     if ([url rangeOfString:@"?"].location == NSNotFound) {

@@ -51,8 +51,8 @@
             copyContent = [NSString stringWithFormat:@"%@在火山星球上分享了视频，快来围观！传送门戳我>>%@", videoModel.author.name, videoModel.shareUrl];
         } else if ([videoModel.groupSource isEqualToString:ToutiaoGroupSource]) {
             contentType = @"shareToutiaoVideo";
-            sinaWeiboContent = [NSString stringWithFormat:@"%@在好多房上分享了视频，快来围观！", videoModel.author.name];
-            copyContent = [NSString stringWithFormat:@"%@在好多房上分享了视频，快来围观！传送门戳我>>%@", videoModel.author.name, videoModel.shareUrl];
+            sinaWeiboContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！", videoModel.author.name];
+            copyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", videoModel.author.name, videoModel.shareUrl];
         } else {
             contentType = @"shareUnknownVideo";
             sinaWeiboContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！", videoModel.author.name];

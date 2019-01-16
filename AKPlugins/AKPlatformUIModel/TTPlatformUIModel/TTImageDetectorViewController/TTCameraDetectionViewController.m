@@ -85,14 +85,14 @@
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
             if (!granted) { // 授权回调非主线程
                 dispatch_main_async_safe(^{
-                    [self showAlertWithTitle:@"无访问权限" msg:@"请在手机的「设置-隐私-相机」选项中，允许好多房访问你的相机" callback:^{
+                    [self showAlertWithTitle:@"无访问权限" msg:@"请在手机的「设置-隐私-相机」选项中，允许幸福里访问你的相机" callback:^{
                         [self dismissSelf];
                     }];
                 });
             }
         }];
     } else if (authStatus == AVAuthorizationStatusDenied) {
-        [self showAlertWithTitle:@"无访问权限" msg:@"请在手机的「设置-隐私-相机」选项中，允许好多房访问你的相机" callback:^{
+        [self showAlertWithTitle:@"无访问权限" msg:@"请在手机的「设置-隐私-相机」选项中，允许幸福里访问你的相机" callback:^{
             [self dismissSelf];
         }];
     } else if (authStatus == AVAuthorizationStatusRestricted) {
@@ -478,7 +478,7 @@
 {
     ALAuthorizationStatus photoAuthStatus = [ALAssetsLibrary authorizationStatus];
     if (photoAuthStatus == ALAuthorizationStatusDenied) {
-        NSString *msg = @"请在手机的「设置-隐私-照片」选项中，允许好多房访问你的相册";
+        NSString *msg = @"请在手机的「设置-隐私-照片」选项中，允许幸福里访问你的相册";
         [self showAlertWithTitle:@"无访问权限" msg:msg callback:nil];
         return NO;
     } else if (photoAuthStatus == ALAuthorizationStatusRestricted) {

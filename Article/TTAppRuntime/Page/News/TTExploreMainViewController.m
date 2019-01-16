@@ -206,7 +206,7 @@
     CGFloat bottomPadding = 0;
     CGFloat topPadding = 0;
     
-    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//好多房设计稿整体topbar高度120
+    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//幸福里设计稿整体topbar高度120
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){
