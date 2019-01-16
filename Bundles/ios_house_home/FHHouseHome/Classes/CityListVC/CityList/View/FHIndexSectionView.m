@@ -111,6 +111,16 @@
     }
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    if (point.x >= 0 && point.y >= 0 && point.y < self.kContentHeight) {
+        if (_delegate) {
+            [_delegate indexSectionViewTouchesBegin];
+        }
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 @interface FHIndexSectionTipView ()
