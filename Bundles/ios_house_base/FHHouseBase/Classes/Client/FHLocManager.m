@@ -105,6 +105,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
+    if (![FHEnvContext isNetworkConnected]) {
+        return;
+    }
+    
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
     [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];

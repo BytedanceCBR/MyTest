@@ -114,11 +114,14 @@ static CGFloat const kSectionHeaderHeight = 38;
     });
     
 }
-
+         
 - (void)retryLoadData
 {
+    //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //to do request config xiefei.xf
+    if (configDataModel) {
+        [self.homeListViewModel requestOriginData:YES];
+    }
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
 }
 
@@ -183,31 +186,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
-//    tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
-//    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 }
-
-//- (void)pullAndRefresh
-//{
-//
-//}
-
 
 - (BOOL)tt_hasValidateData
 {
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     return configModel != nil;
 }
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 #pragma mark - TTUIViewControllerTrackProtocol
 
