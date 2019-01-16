@@ -184,10 +184,10 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
         if (wself.sugesstHouseList.count > 0) {
-            self.fromRecommend = YES;
+            wself.fromRecommend = YES;
             [wself loadData:wself.isRefresh fromRecommend:YES];
         } else {
-            self.fromRecommend = NO;
+            wself.fromRecommend = NO;
             [wself loadData:wself.isRefresh];
         }
     }];
