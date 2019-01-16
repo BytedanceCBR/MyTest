@@ -73,6 +73,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, assign) BOOL nightModeDisable;
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
+@property (nonatomic, strong)   NSDictionary       *fhJSParams;
 
 @end
 
@@ -267,6 +268,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         }
         //透传给下一级
         self.baseCondition = params;
+        if ([[params allKeys] containsObject:@"fhJSParams"]) {
+            self.fhJSParams = [params objectForKey:@"fhJSParams"];
+        }
     }
     return self;
 }
@@ -445,6 +449,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     
     [self refreshBackButton];
     
+    // F项目JS注册
+    [self registerFHJSBridge];
     
     //注册基础服务
 //    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
@@ -456,6 +462,26 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 - (void)registerObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+// F项目JS注册，route参数中要传递：fhJSParams:{} url: title:
+-(void)registerFHJSBridge
+{
+    __weak typeof(self) wSelf = self;
+    [self.fhJSParams enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull methodName, NSDictionary*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([methodName length] > 0) {
+            NSMutableDictionary *callBackData = [NSMutableDictionary dictionaryWithDictionary:obj];
+            [wSelf.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin  registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
+                [callBackData setObject:@(1) forKey:@"code"];
+                if ([params isKindOfClass:[NSDictionary class]]) {
+                    [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull temObj, BOOL * _Nonnull stop) {
+                        [callBackData setObject:temObj forKey:key];
+                    }];
+                }
+                callback(TTRJSBMsgSuccess, callBackData);
+            } forMethodName:methodName];
+        }
+    }];
 }
 
 // 注册JSBridge
