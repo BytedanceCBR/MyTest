@@ -92,6 +92,16 @@
         }
     }
     
+    if (categoryStartName == nil) {
+        BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:kNIHFindHouseCategoryID]];
+        if (isHasFindHouseCategory) {
+            categoryStartName = kNIHFindHouseCategoryID;
+        }else
+        {
+            categoryStartName = kNIHFeedHouseMixedCategoryID;
+        }
+    }
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *openUrl = [NSString stringWithFormat:@"snssdk1370://category_feed?category=%@",categoryStartName];
