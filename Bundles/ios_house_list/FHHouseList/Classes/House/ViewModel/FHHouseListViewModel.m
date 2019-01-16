@@ -66,6 +66,7 @@
 
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
+@property (nonatomic , assign) BOOL fromRecommend;
 
 @end
 
@@ -183,8 +184,10 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
         if (wself.sugesstHouseList.count > 0) {
-            [wself loadData:wself.isRefresh fromRecommend:true];
+            self.fromRecommend = YES;
+            [wself loadData:wself.isRefresh fromRecommend:YES];
         } else {
+            self.fromRecommend = NO;
             [wself loadData:wself.isRefresh];
         }
     }];
@@ -198,7 +201,7 @@
 
 
 -(void)loadData:(BOOL)isRefresh {
-    [self loadData:isRefresh fromRecommend:false];
+    [self loadData:isRefresh fromRecommend:self.fromRecommend];
 }
 
 #pragma mark - 网络请求
@@ -488,9 +491,12 @@
         }
         self.houseListOpenUrl = houseListOpenUrl;
         self.mapFindHouseOpenUrl = mapFindHouseOpenUrl;
-        
-        self.redirectTips = redirectTips;
-        [self updateRedirectTipInfo];
+
+        if (!self.fromRecommend) {
+            
+            self.redirectTips = redirectTips;
+            [self updateRedirectTipInfo];
+        }
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -629,6 +635,7 @@
 
     self.isRefresh = YES;
     [self.tableView triggerPullDown];
+    self.fromRecommend = NO;
     [self loadData:self.isRefresh];
     
 }
