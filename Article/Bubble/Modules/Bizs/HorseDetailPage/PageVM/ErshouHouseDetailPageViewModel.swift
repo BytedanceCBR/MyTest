@@ -129,18 +129,29 @@ import RxCocoa
                     self?.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
-                
-                if let result = self?.processData()([]) {
-                    
-                    self?.dataSource.datas = result
-                    self?.tableView?.reloadData()
-                    DispatchQueue.main.async {
-                        if let tableView = self?.tableView, let datas = self?.dataSource.datas {
-                            self?.traceCellByVisibleRect(tableView: tableView)
-                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                DispatchQueue.global().async {
+                    if let result = self?.processData()([]),
+                        result.count > 0 {
+                        DispatchQueue.main.async {
+                            if let ershouHouseData = self?.ershouHouseData.value {
+                                if let contact = ershouHouseData.data?.highlightedRealtor {
+                                    self?.contactPhone.accept(contact)
+                                } else {
+                                    self?.contactPhone.accept(ershouHouseData.data?.contact)
+                                }
+                            }
+                            self?.dataSource.datas = result
+                            self?.tableView?.reloadData()
+                            self?.onDataArrived?()
+                            DispatchQueue.main.async {
+                                if let tableView = self?.tableView,
+                                    let datas = self?.dataSource.datas {
+                                    self?.traceCellByVisibleRect(tableView: tableView)
+                                    self?.traceDisplayCell(tableView: tableView, datas: datas)
+                                }
+                            }
                         }
                     }
-                    
                 }
             }
             .disposed(by: disposeBag)
@@ -235,16 +246,13 @@ import RxCocoa
             self.showMessageAlert?("正在加载")
         }
         requestErshouHouseDetail(houseId: houseId, logPB: logPB)
+                .observeOn(MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] (response) in
                     if showLoading {
                         self?.dismissMessageAlert?()
                     }
                     if let response = response{
-                        if let contact = response.data?.highlightedRealtor {
-                            self?.contactPhone.accept(contact)
-                        } else {
-                            self?.contactPhone.accept(response.data?.contact)
-                        }
+
 
                         if response.status == 0{
                             if let idStr = response.data?.id
@@ -254,7 +262,6 @@ import RxCocoa
                                     self?.titleValue.accept(response.data?.title)
                                     self?.ershouHouseData.accept(response)
                                     self?.requestReletedData()
-                                    self?.onDataArrived?()
                                 }else
                                 {
                                     self?.onEmptyData?()
