@@ -521,7 +521,7 @@
         [self.tableView reloadData];
         [self updateTableViewWithMoreData:hasMore];
         
-        if (self.isRefresh && self.viewModelDelegate) {
+        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
         
