@@ -38,6 +38,7 @@
 @property (nonatomic, assign)   BOOL       disablePanGesture;
 
 @property (nonatomic, weak)     FHIndexSectionView       *sectionView;
+@property (nonatomic, strong)   FHIndexSectionTipView       *sectionTipView;
 
 @end
 
@@ -75,6 +76,8 @@
         make.bottom.mas_equalTo(self.view);
     }];
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(50, 0, 0, 0)];
+    self.sectionTipView = [[FHIndexSectionTipView alloc] init];
+    [self.sectionTipView addToSuperView:self.view];
 }
 
 - (void)setupData {
@@ -351,6 +354,7 @@
 - (void)indexSectionView:(FHIndexSectionView *)view didSelecteedTitle:(NSString *)title atSectoin:(NSInteger)section {
     if (section >= 0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [self.sectionTipView showWithText:title];
     }
 }
 
@@ -367,6 +371,7 @@
 }
 
 - (void)indexSectionViewTouchesEnd {
+    [self.sectionTipView dismiss];
     if (self.disablePanGesture) {
         // 已经禁止滑动手势
         return;
