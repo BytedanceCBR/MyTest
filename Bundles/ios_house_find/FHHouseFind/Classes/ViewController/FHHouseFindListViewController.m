@@ -83,10 +83,11 @@
     _viewModel = [[FHHouseFindListViewModel alloc]initWithScrollView:_scrollView viewController:self];
     [_viewModel setErrorMaskView:_errorMaskView];
     [_viewModel setSegmentView:_segmentView];
-    [_viewModel addConfigObserver];
     _viewModel.sugSelectBlock = ^(NSString * _Nullable placeholder) {
         [wself.searchBar setPlaceHolder:placeholder];
     };
+    [_viewModel addConfigObserver];
+
 }
 
 - (void)setupUI
