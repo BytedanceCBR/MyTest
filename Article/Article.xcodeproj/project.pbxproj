@@ -3615,7 +3615,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -8837,6 +8837,7 @@
 		6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitApp.release.xcconfig; sourceTree = "<group>"; };
 		6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitExtension.debug.xcconfig; sourceTree = "<group>"; };
 		6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitExtension.release.xcconfig; sourceTree = "<group>"; };
+		6E8B2F64C7E8EB6C5CFB985C /* Pods-f100.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.debug.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.debug.xcconfig"; sourceTree = "<group>"; };
 		70002C701F594ABA00EB810A /* ExploreOrderedADModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreOrderedADModel.h; sourceTree = "<group>"; };
 		70002C711F594ABA00EB810A /* ExploreOrderedADModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreOrderedADModel.m; sourceTree = "<group>"; };
 		706F4A371F5D357B007B533D /* TTAdDetailActionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTAdDetailActionModel.h; sourceTree = "<group>"; };
@@ -9801,6 +9802,7 @@
 		B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindPageControl.swift; sourceTree = "<group>"; };
 		B33B682521B94FCD00AEE447 /* FHAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHAlertView.swift; sourceTree = "<group>"; };
 		B3490F6F21B4C5E500914220 /* FHRentHouseCoreInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentHouseCoreInfoCell.swift; sourceTree = "<group>"; };
+		B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		B362E6F02152614400BD4DF1 /* HouseFindSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindSearchBar.swift; sourceTree = "<group>"; };
 		B362E6F3215337FF00BD4DF1 /* HouseFindHistoryCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindHistoryCollectionCell.swift; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -11027,7 +11029,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -13985,6 +13987,8 @@
 				B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */,
 				98B8EFF5487EFE6706DB6CF6 /* Pods-NewsLiteChannel.debug.xcconfig */,
 				75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */,
+				6E8B2F64C7E8EB6C5CFB985C /* Pods-f100.debug.xcconfig */,
+				B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -19986,7 +19990,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D479581221ECC94E00548965 /* Build configuration list for PBXNativeTarget "NewsLiteChannel" */;
 			buildPhases = (
+				C3025A683322EA631DADD5AC /* [CP] Check Pods Manifest.lock */,
 				D47950C421ECC94E00548965 /* Run Script - build revision */,
+				81A9B409F6443281F8625225 /* [CP-User] sgmpreaction */,
 				D47950C621ECC94E00548965 /* Sources */,
 				D479578C21ECC94E00548965 /* Run Script - delete revision */,
 				D479578D21ECC94E00548965 /* Resources */,
@@ -19997,6 +20003,8 @@
 				D479580D21ECC94E00548965 /* Embed Watch Content */,
 				D479580E21ECC94E00548965 /* ShellScript */,
 				D479581021ECC94E00548965 /* ShellScript */,
+				016207F3529E38B2DCDB9974 /* [CP] Embed Pods Frameworks */,
+				8349818BCB745CDEC3AE61F6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -20473,6 +20481,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		016207F3529E38B2DCDB9974 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		02BD8BE149E5EEA0F6225003 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -20823,6 +20850,211 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81A9B409F6443281F8625225 /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP-User] sgmpreaction";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+			showEnvVarsInLog = 0;
+		};
+		8349818BCB745CDEC3AE61F6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh",
+				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_ali@2x.png",
+				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/pay_logo_weixin@2x.png",
+				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/yy_select_checked@2x.png",
+				"${PODS_ROOT}/../../AKPlugins/AKPay/AKPay/PaySDK/Resource/yy_select_disabled@2x.png",
+				"${PODS_ROOT}/../../AKPlugins/AKShareServicePlugin/Classes/TTShare.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/WDResource.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/wd_iconfont.ttf",
+				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
+				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
+				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_ROOT}/BDAccount/BDAccount/Assets/BDAccountAssets.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Pause@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/Replay@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
+				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
+				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
+				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
+				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
+				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTABManager/TTABResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
+				"${PODS_ROOT}/../../AKPlugins/TTAccountSDK/Classes/Resource/TTAccountAssets.bundle",
+				"${PODS_ROOT}/TTAdModule/TTAdModule/Assets/Images.xcassets",
+				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
+				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
+				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
+				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
+				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
+				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
+				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
+				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
+				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/QQSDK/TencentOpenApi_IOS_Bundle.bundle",
+				"${PODS_ROOT}/TTThirdPartySDKs/TTThirdPartySDKs/WeiboSDK/Resource/WeiboSDK.bundle",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
+				"${PODS_ROOT}/TTVerifyKit/TTVerifyKit/Assets/TTVerify.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
+				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/yy_select_checked@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/yy_select_disabled@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShare.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WDResource.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/wd_iconfont.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDAccountAssets.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTABResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountAssets.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareCopy.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTThemed.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentOpenApi_IOS_Bundle.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WeiboSDK.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UGCImage.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Emoji.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerify.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8E21CC4DC3375EB76689F735 /* [CP] Copy Pods Resources */ = {
@@ -21192,6 +21424,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n\n#/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\n";
+		};
+		C3025A683322EA631DADD5AC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NewsLiteChannel-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		CACE9FE10A51A5B2FF679EC0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -11,6 +11,7 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 
+#define kFHIndexViewBgWidth  40.0
 #define kFHIndexViewWidth  28.0
 
 @interface FHIndexSectionView ()
@@ -38,7 +39,7 @@
             _kContentHeight = kScreenHeight - topOffset - bottomOffset;
             _kIndexRowHeight = _kContentHeight / titles.count;
         }
-        self.frame = CGRectMake(kScreenWidth-kFHIndexViewWidth, topOffset, kFHIndexViewWidth, self.kContentHeight);
+        self.frame = CGRectMake(kScreenWidth-kFHIndexViewBgWidth, topOffset, kFHIndexViewBgWidth, self.kContentHeight);
         _numberOfSections = titles.count;
         _titleArray = titles;
         [self setSubViews];
@@ -52,7 +53,7 @@
     }
     CGFloat labelH = _kIndexRowHeight;
     for (NSUInteger i = 0; i < self.titleArray.count; i++) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, i*labelH, kFHIndexViewWidth, _kIndexRowHeight)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(kFHIndexViewBgWidth - kFHIndexViewWidth, i*labelH, kFHIndexViewWidth, _kIndexRowHeight)];
         label.text = self.titleArray[i];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor colorWithHexString:@"#081f33"];
@@ -67,7 +68,6 @@
         if (section < _numberOfSections && section >= 0) {
             if (_delegate) {
                 [_delegate indexSectionView:self didSelecteedTitle:self.titleArray[_currentSection] atSectoin:_currentSection];
-                [[FHIndexSectionTipView sharedInstance] showWithText:self.titleArray[_currentSection]];
             }
         }
     }
@@ -102,7 +102,6 @@
     if (_delegate) {
         [_delegate indexSectionViewTouchesEnd];
     }
-    [[FHIndexSectionTipView sharedInstance] dismiss];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -110,7 +109,6 @@
     if (_delegate) {
         [_delegate indexSectionViewTouchesEnd];
     }
-    [[FHIndexSectionTipView sharedInstance] dismiss];
 }
 
 @end
@@ -131,17 +129,22 @@
     return _sharedInstance;
 }
 
-- (instancetype)init
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
         self.hidden = YES;
         self.backgroundColor = RGBA(0x08, 0x1f, 0x33,0.4);
         self.layer.cornerRadius = 4.0;
-        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-        [window addSubview:self];
+    }
+    return self;
+}
+
+- (void)addToSuperView:(UIView *)superView {
+    if (superView) {
+        [superView addSubview:self];
         [self mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.mas_equalTo(window);
+            make.center.mas_equalTo(superView);
             make.width.mas_equalTo(40);
             make.height.mas_equalTo(40);
         }];
@@ -156,7 +159,6 @@
         }];
         self.label = label;
     }
-    return self;
 }
 
 - (void)showWithText:(NSString *)text {
@@ -169,6 +171,7 @@
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(size.width + 20);
     }];
+    [self updateConstraints];
 }
 
 - (void)dismiss {
