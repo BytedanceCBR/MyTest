@@ -19,7 +19,7 @@ class DisclaimerCell: BaseUITableViewCell {
         re.numberOfLines = 0
         re.lineBreakMode = NSLineBreakMode.byWordWrapping
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
@@ -226,10 +226,10 @@ fileprivate func rangeOfArray(_ range: [Int]?, originalLength: Int) -> NSRange {
 fileprivate func highLightTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959"),
 //            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid,
-            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }
 
 fileprivate func commonTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey2Color),
-            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }

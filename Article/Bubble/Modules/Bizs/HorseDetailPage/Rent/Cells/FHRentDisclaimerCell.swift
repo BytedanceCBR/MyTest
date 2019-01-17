@@ -36,7 +36,7 @@ class FHRentDisclaimerCell: BaseUITableViewCell {
         let re = YYLabel()
         re.numberOfLines = 0
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
@@ -347,7 +347,7 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
                 if let item = item as? FHRentDetailResponseDataRichTextModel,
                     let ranges = item.highlightRange as? [Int]{
                     attrText.yy_setTextHighlight(
-                        rangeOfArray(ranges),
+                        rangeOfArray(ranges, originalLength:text.count),
                         color: hexStringToUIColor(hex: "#299cff"),
                         backgroundColor: nil,
                         userInfo: nil,
@@ -417,22 +417,25 @@ func fillRentDisclaimerCell(model: FHRentDetailResponseDataModel?, cell: BaseUIT
     }
 }
 
-fileprivate func rangeOfArray(_ range: [Int]?) -> NSRange {
+fileprivate func rangeOfArray(_ range: [Int]?, originalLength: Int) -> NSRange {
     if let range = range, range.count == 2 {
-        return NSRange(location: range[0], length: range[1] - range[0])
+        if originalLength > range[0] && originalLength > range[1] && range[1] > range[0] {
+            return NSRange(location: range[0], length: range[1] - range[0])
+        } else {
+            return NSRange(location: 0, length: 0)
+        }
     } else {
         return NSRange(location: 0, length: 0)
     }
-
 }
 
 fileprivate func highLightTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959"),
             //            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid,
-        NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+        NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }
 
 fileprivate func commonTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey2Color),
-            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }
