@@ -184,10 +184,16 @@ func parseFavoriteNode(
 fileprivate func getFavoriteCategoryLabel(
     title: String,
     userFollowListResponse: UserFollowListResponse?) -> String {
-    if let count = userFollowListResponse?.data?.totalCount {
-        return "\(title) (\(count))"
-    } else {
-        return title
+    if TTAccount.shared().isLogin()
+    {
+        if let count = userFollowListResponse?.data?.totalCount {
+            return "\(title) (\(count))"
+        } else {
+            return title
+        }
+    }else
+    {
+        return title + " (*)"
     }
 }
 

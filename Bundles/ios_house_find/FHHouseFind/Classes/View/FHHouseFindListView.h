@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) BOOL showRedirectTip;
 
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item;
+- (void)refreshData;
 - (void)handleSugSelection:(TTRouteParamObj *)paramObj;
 // findTab过来的houseSearch需要单独处理下埋点数据
 - (void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;

@@ -71,29 +71,21 @@
             if (isSuccess) {
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
+                
                 [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
-                        if (isSuccess) {
-                            
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                            
-                            if(completion)
-                            {
-                                completion(YES);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                
-                            }];
-                        }else
-                        {
-                            if(completion)
-                            {
-                                completion(NO);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[ToastManager manager] showToast:@"切换城市失败"];
-                        }
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                    
+                    if(completion)
+                    {
+                        completion(YES);
+                    }
+                    [[ToastManager manager] dismissCustomLoading];
+                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                        
                     }];
+                }];
+                
             }else
             {
                 if(completion)

@@ -27,7 +27,7 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)requestRecommendHomeList;
 
-- (void)requestOriginData;
+- (void)requestOriginData:(BOOL)isFirstChange;
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType;
 

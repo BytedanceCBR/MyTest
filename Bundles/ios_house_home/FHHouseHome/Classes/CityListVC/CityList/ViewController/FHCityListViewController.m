@@ -38,6 +38,7 @@
 @property (nonatomic, assign)   BOOL       disablePanGesture;
 
 @property (nonatomic, weak)     FHIndexSectionView       *sectionView;
+@property (nonatomic, strong)   FHIndexSectionTipView       *sectionTipView;
 
 @end
 
@@ -75,6 +76,8 @@
         make.bottom.mas_equalTo(self.view);
     }];
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(50, 0, 0, 0)];
+    self.sectionTipView = [[FHIndexSectionTipView alloc] init];
+    [self.sectionTipView addToSuperView:self.view];
 }
 
 - (void)setupData {
@@ -103,11 +106,12 @@
     [self.emptyView hideEmptyView];
     [self.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
-            [self requestCurrentLocationWithToast:NO];
+            [self requestCurrentLocationWithToast:NO needSwitchCity:YES];
         } else {
             [self checkShowLocationErrorAlert];
         }
@@ -143,19 +147,23 @@
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
 }
 
+// 有config数据，进入城市列表
 - (void)checkShowLocationErrorAlert {
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-    if (!hasSelectedCity) {
-        // 定位失败弹窗
-        TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"定位失败，请手动选择城市" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            
+    if (!hasSelectedCity && ![FHLocManager sharedInstance].isLocationSuccess) {
+        // 未选择城市而且定位失败，重新定位
+        __weak typeof(self) wSelf = self;
+        [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+            if (reGeocode && reGeocode.city.length > 0) {
+                // 定位成功
+                wSelf.locationBar.cityName = reGeocode.city;
+                wSelf.locationBar.isLocationSuccess = YES;
+                [FHLocManager sharedInstance].isLocationSuccess = YES;
+            } else {
+                // 定位失败弹窗
+                [[ToastManager manager] showToast:@"定位失败，请手动选择城市"];
+            }
         }];
-        
-        UIViewController *topVC = [TTUIResponderHelper topmostViewController];
-        if (topVC) {
-            [alertVC showFrom:topVC animated:YES];
-        }
     }
 }
 
@@ -279,7 +287,7 @@
             // custom loading
             [[ToastManager manager] showCustomLoading:@"定位中"];
         }
-        [self requestCurrentLocationWithToast:YES];
+        [self requestCurrentLocationWithToast:YES needSwitchCity:NO];
     } else {
         // 无网络
         [[ToastManager manager] showToast:@"网络异常"];
@@ -305,21 +313,27 @@
 - (void)checkLocAuthorization {
     if ([self locAuthorization]) {
         if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
-            [self requestCurrentLocationWithToast:NO];
+            [self requestCurrentLocationWithToast:NO needSwitchCity:NO];
         }
     }
 }
 
 // 请求定位信息
-- (void)requestCurrentLocationWithToast:(BOOL)hasToast {
+- (void)requestCurrentLocationWithToast:(BOOL)hasToast needSwitchCity:(BOOL)isNeedSwitchCity {
     __weak typeof(self) wSelf = self;
     [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
         [[ToastManager manager] dismissCustomLoading];
         if (reGeocode && reGeocode.city.length > 0) {
             // 定位成功
-            [wSelf.emptyView hideEmptyView];
-            if (!wSelf.viewModel.hasReloadListData) {
-                [wSelf.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
+            FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if (model == NULL) {
+                // 没有数据
+                [wSelf configDataLoadError:nil];
+            } else {
+                [wSelf.emptyView hideEmptyView];
+                if (!wSelf.viewModel.hasReloadListData) {
+                    [wSelf.viewModel loadListCityData:model];
+                }
             }
             wSelf.locationBar.cityName = reGeocode.city;
             wSelf.locationBar.isLocationSuccess = YES;
@@ -329,7 +343,7 @@
             }
             //如果用户首次安装，且没有选过城市，自动跳到首页
             BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-            if (!hasSelectedCity) {
+            if (!hasSelectedCity && isNeedSwitchCity) {
                 [self.viewModel cityNameBtnClick];
             }
         } else {
@@ -351,6 +365,7 @@
 - (void)indexSectionView:(FHIndexSectionView *)view didSelecteedTitle:(NSString *)title atSectoin:(NSInteger)section {
     if (section >= 0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [self.sectionTipView showWithText:title];
     }
 }
 
@@ -367,6 +382,7 @@
 }
 
 - (void)indexSectionViewTouchesEnd {
+    [self.sectionTipView dismiss];
     if (self.disablePanGesture) {
         // 已经禁止滑动手势
         return;
