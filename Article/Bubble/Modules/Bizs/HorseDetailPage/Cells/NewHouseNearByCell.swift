@@ -516,7 +516,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             }
             
             segmentedControl.sectionTitleArray = categorys.map { [weak self] in
-                $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "")
+                $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "(0)")
             }
         }
     }

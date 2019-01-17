@@ -338,10 +338,12 @@ import RxCocoa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
-                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
-                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
+            
+            traceExtension = traceExtension <|>
+                toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from")
             
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
@@ -954,7 +956,8 @@ func parseErshouHouseListItemNode(
                         toTracerParams(elementFrom, key: "element_from") <|>
                         toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        traceExtension,
                     navVC: navVC)
         }
         
