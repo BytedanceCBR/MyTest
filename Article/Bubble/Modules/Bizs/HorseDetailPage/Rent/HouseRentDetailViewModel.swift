@@ -354,13 +354,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 self.traceParam
             recordEvent(key: "click_feedback", params: tp.exclude("element_from").exclude("search_id").exclude("group_id"))
             
-            let openUrl = "fschema://webview_oc"
+            let openUrl = "sslocal://webview"
             let pageData: [String: Any] = ["data": detailModel]
             let commonParamsData: [String: Any] = ["data": commonParams]
 
             let jsParams = ["requestPageData": pageData,
                             "getNetCommonParams": commonParamsData]
-            let info: [String: Any] = ["url": jumpUrl, "jsParams": jsParams, "title": "房源问题反馈"]
+            let info: [String: Any] = ["url": jumpUrl, "fhJSParams": jsParams, "title": "房源问题反馈","bounce_disable":"1"]
             let userInfo = TTRouteUserInfo(info: info)
             TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
 

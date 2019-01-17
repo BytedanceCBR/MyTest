@@ -503,11 +503,11 @@ func openEvaluateWebPage(
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
             
             
-            let jumpUrl = "fschema://fh_webview" //route协议
+            let jumpUrl = "sslocal://webview" //route协议
             let parmasMap = openParams.paramsGetter([:]) //埋点参数
             let stayPageTraceEventName = "stay_neighborhood_evaluation" //埋点Event ,不传不上报
             
-            let userInfo = TTRouteUserInfo(info: ["event":stayPageTraceEventName,"tracer": parmasMap, "title": title, "url": urlStr])
+            let userInfo = TTRouteUserInfo(info: ["event":stayPageTraceEventName,"tracer": parmasMap, "title": title, "url": urlStr,"bounce_disable":"1"])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)

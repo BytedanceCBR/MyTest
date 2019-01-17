@@ -5,7 +5,7 @@
 //  Created by leo on 2019/1/7.
 //
 
-#import "FHWebviewViewController.h"
+#import "SSWebViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHRealtorDetailWebViewControllerDelegate <NSObject>
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)followUpAction;
 
 @end
-@interface FHRealtorDetailWebViewController : FHWebviewViewController
+@interface FHRealtorDetailWebViewController : SSWebViewController
 @property (nonatomic, weak) id<FHRealtorDetailWebViewControllerDelegate> delegate;
 @end
 

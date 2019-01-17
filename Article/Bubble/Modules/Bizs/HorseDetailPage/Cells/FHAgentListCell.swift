@@ -462,7 +462,8 @@ func fillAgentListCell(
                                                "title": "经纪人详情页",
                                                "delegate": delegate,
                                                "realtorId": contact.realtorId ?? "",
-                                               "trace": traceModel]
+                                               "trace": traceModel,
+                                               "bounce_disable":"1"]
                     let userInfo = TTRouteUserInfo(info: info)
                     TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }
