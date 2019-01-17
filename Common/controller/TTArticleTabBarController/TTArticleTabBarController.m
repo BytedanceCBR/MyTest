@@ -710,6 +710,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[TTTabBarManager sharedTTTabBarManager] reloadIconAndTitleForItem:item];
 }
 
+- (void)onAccountLogin
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
+- (void)onAccountLogout
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
 #pragma mark - Orientation
 
 - (BOOL)shouldAutorotate

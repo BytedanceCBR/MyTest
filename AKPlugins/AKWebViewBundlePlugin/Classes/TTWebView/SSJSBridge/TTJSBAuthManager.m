@@ -177,6 +177,10 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 
 - (BOOL)isInnerDomain:(NSString *)host {
     
+    if ([[[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+        return YES;
+    }
+    
     for(NSString *innerDomain in self.innerDomains) {
         if([host rangeOfString:[innerDomain lowercaseString]].location != NSNotFound) {
             return YES;

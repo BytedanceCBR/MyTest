@@ -213,6 +213,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             if ([[params allKeys] containsObject:@"hide_back_buttonView"]) {
                 _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_buttonView"];
             }
+            
+            if ([[params allKeys] containsObject:@"hide_back_button"]) {
+                _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_button"];
+            }
         }
         
         _shouldDisableHistory = [params tt_boolValueForKey:@"disableHistory"];

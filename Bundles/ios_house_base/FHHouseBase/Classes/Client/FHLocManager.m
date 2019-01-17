@@ -14,6 +14,7 @@
 #import "FHEnvContext.h"
 #import "YYCache.h"
 #import "TTSandBoxHelper.h"
+#import "FHHomeConfigManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -255,7 +256,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             amapInfo[@"longitude"] = @(location.coordinate.longitude);
         }
         
-        //      [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
         
         if (regeocode) {
             wSelf.currentReGeocode = regeocode;

@@ -389,6 +389,7 @@
     
     if (self.isRefresh) {
         [self.houseList removeAllObjects];
+        [self.sugesstHouseList removeAllObjects];
         [self.tableView.mj_footer endRefreshing];
     }
     
@@ -418,7 +419,6 @@
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
             redirectTips = houseModel.redirectTips;
-            [self.sugesstHouseList removeAllObjects];
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
             if (recommendItemArray.count > 0) {
@@ -521,7 +521,7 @@
         [self.tableView reloadData];
         [self updateTableViewWithMoreData:hasMore];
         
-        if (self.isRefresh && self.viewModelDelegate) {
+        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
         
