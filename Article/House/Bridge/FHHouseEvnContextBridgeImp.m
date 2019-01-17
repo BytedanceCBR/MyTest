@@ -44,7 +44,7 @@
 
 -(BOOL)locationSameAsChooseCity
 {
-    return [[[EnvContext shared] client] locationSameAsChooseCity];
+    return YES;
 }
 
 -(CLLocationCoordinate2D)currentLocation
@@ -54,12 +54,12 @@
 
 -(NSDictionary *_Nullable)appConfig
 {
-    return [[[EnvContext shared]client] appConfig];
+    return nil;
 }
 
 -(NSDictionary *)appConfigRentOpData
 {
-    return [[[EnvContext shared]client] rentOpData];
+    return nil;
 }
 
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view

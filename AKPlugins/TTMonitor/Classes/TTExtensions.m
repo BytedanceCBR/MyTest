@@ -31,11 +31,18 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
 }
 
 + (NSString*)versionName{
-    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [[NSBundle  mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 + (NSString*)buildVersion{
-    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    //    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    
+    //除非误操作info.plist文件，否则版本一直会有
+    if (!buildVersion) {
+        buildVersion = @"65000";
+    }
+    
     if (buildVersion) {
         return [buildVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
     }

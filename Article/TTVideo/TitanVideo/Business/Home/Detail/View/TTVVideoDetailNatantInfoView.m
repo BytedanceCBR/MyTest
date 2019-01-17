@@ -985,6 +985,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     [pramas setValue:self.viewModel.infoModel.groupId forKey:@"group_id"];
     [pramas setValue:self.viewModel.infoModel.authorId forKey:@"author_id"];
     [pramas setValue:@"video" forKey:@"article_type"];
+    [pramas setValue:@"house_app2c_v2" forKey:@"event_type"];
 
     [TTTrackerWrapper eventV3:eventName params:pramas isDoubleSending:isDouble];
     

@@ -216,17 +216,20 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
                                 print("")
                             }
-                            params = EnvContext.shared.homePageParams <|>
+                            params = TracerParams.momoid() <|>
                                 self.traceParam <|>
                                 toTracerParams("same_neighborhood", key: "element_from") <|>
                                 toTracerParams("same_neighborhood_list", key: "category_name") <|>
                                 toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                                toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                                 toTracerParams("same_neighborhood", key: "element_type") <|>
                                 toTracerParams("rent_detail", key: "enter_from")
                             
                             openRentHouseList(
                                 title: "\(title)(\(totalCount))",
                                 neighborhoodId: id,
+                                houseId: "\(self.houseId)",
                                 disposeBag: self.disposeBag,
                                 navVC: self.navVC,
                                 searchSource: .rentDetail,
@@ -256,6 +259,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 //        })
         let relatedErshouItems = relateErshouHouseData.value?.data?.items as? [FHHouseRentRelatedResponseDataItemsModel]
         let params = TracerParams.momoid()
+        var count = 0
+        if let theCount = relatedErshouItems?.count {
+            count = theCount
+        }
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("周边房源", adjustBottomSpace: 0))
 
         var tail:() -> TableSectionNode? = {
@@ -280,29 +287,25 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 
                 params["houseId"] = "\(self.houseId)"
                 params["house_type"] = HouseType.rentHouse.rawValue  // 进入后用于区分房源类型
-                if let title = self.detailData.value?.data?.neighborhoodInfo?.name {
-                    let totalCount = self.relateErshouHouseData.value?.data?.total ?? "0"
-                    params["title"] = title+"(\(totalCount))"
-                }
+
+                params["title"] = "周边房源(\(self.relateErshouHouseData.value?.data?.total ?? "0"))"
                 
                 if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                     params["searchId"] = searchId
                 }
-                let transactionTrace = EnvContext.shared.homePageParams <|>
+                let transactionTrace = TracerParams.momoid() <|>
                     self.traceParam <|>
                     toTracerParams(category_name, key: "category_name") <|>
                     toTracerParams("rent_detail", key: "enter_from") <|>
+                    toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                    toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                     toTracerParams(element_from, key: "element_from") <|>
                     toTracerParams("click", key: "enter_type")
                 
-                params["searchSource"] = SearchSourceKey.neighborhoodDetail.rawValue
-                //            params["followStatus"] = self.followStatus
-                
                 params["tracerParams"] = transactionTrace
-                
-                params["bottomBarBinder"] = bottomBarBinder
-                params["related_house"] = true
+                params["tracer"] = transactionTrace.paramsGetter([:])
                 params["page_type"] = "related_list"
+                params["list_vc_type"] = 8 // FHNeighborListVCTypeRentNearBy
                 let userInfo = TTRouteUserInfo(info: params)
                 TTRoute.shared()?.openURL(byViewController: url, userInfo: userInfo)
             }
@@ -342,12 +345,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     fileprivate func jumpToReportPage(url: String) {
         if let jumpUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let detailModel = self.detailData.value?.data?.toDictionary() as? [String: Any],
-            let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock() {
+            let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String : Any] {
             
-            let tp = EnvContext.shared.homePageParams <|>
+            let tp = TracerParams.momoid() <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
+                toTracerParams(houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 self.traceParam
-            recordEvent(key: "click_feedback", params: tp)
+            recordEvent(key: "click_feedback", params: tp.exclude("element_from").exclude("search_id").exclude("group_id"))
             
             let openUrl = "fschema://webview_oc"
             let pageData: [String: Any] = ["data": detailModel]

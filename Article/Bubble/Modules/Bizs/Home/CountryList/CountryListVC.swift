@@ -88,6 +88,9 @@ class CountryListVC: BaseViewController {
             maker.left.right.bottom.equalToSuperview()
         }
         dataSource.onItemSelect = self.onItemSelect
+        dataSource.onItemClick = { cityId in
+      
+        }
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
         tableView.register(BubbleCell.self, forCellReuseIdentifier: CountryListCellType.bubble.rawValue)
@@ -154,7 +157,10 @@ class CountryListVC: BaseViewController {
 
             let lat = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.latitude
             let lng = EnvContext.shared.client.locationManager.currentLocation.value?.coordinate.longitude
-            let params = TTNetworkManager.shareInstance()?.commonParamsblock() as? [String: Any]
+            
+            let params = FHEnvContext.sharedInstance().getRequestCommonParams() as? [String: Any]
+            
+            
             let locationResponseObv: Observable<GeneralConfigResponse?> = requestGeneralConfig(cityName: cityName,
                                                                                                cityId: nil,
                                                                                                gaodeCityId: gaodeCityId,
@@ -192,7 +198,7 @@ class CountryListVC: BaseViewController {
                     EnvContext.shared.client.generalBizconfig.saveGeneralConfig(response: response)
 
                     //TODO: 暂时的解决方案，需要也加入到switcher中去
-                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
+//                    EnvContext.shared.client.currentCitySwitcher.requestSearchFilterConfigForLocation()
                     }, onError: { error in
                         EnvContext.shared.toast.showToast("加载失败")
                 })
@@ -273,6 +279,8 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     private var filterStr: String? = nil
 
     var onItemSelect: PublishSubject<Int>?
+    
+    var onItemClick: ((Int) -> Void)?
 
     func numberOfSections(in tableView: UITableView) -> Int {
         let theDatas = getDisplayDatas()
@@ -319,13 +327,18 @@ class CountryListDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let node = getDisplayDatas()[indexPath.section]
-        if node.type == .item {
-            if let item = node.children?[indexPath.row], let cityId = item.cityId {
-                onItemSelect?.onNext(cityId)
-                let params = tracerParams <|>
-                    toTracerParams("list", key: "query_type") <|>
-                    toTracerParams(item.label, key: "city")
-                recordEvent(key: "city_filter", params: params)
+        guard let configCache = FHEnvContext.sharedInstance().getConfigFromCache() else { return }
+        var cityList = configCache.cityList as! [FHConfigDataCityListModel]?
+        
+        if (cityList?.count ?? 0) > indexPath.row {
+            if let item = cityList?[0], let cityId = item.cityId {
+                self.onItemClick?(Int(786) ?? 0)
+
+//                onItemSelect?.onNext(cityId)
+//                let params = tracerParams <|>
+//                    toTracerParams("list", key: "query_type") <|>
+//                    toTracerParams(item.label, key: "city")
+//                recordEvent(key: "city_filter", params: params)
             }
         }
 

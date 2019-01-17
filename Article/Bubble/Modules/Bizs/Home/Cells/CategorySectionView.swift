@@ -120,7 +120,7 @@ class CategorySectionView: UIView {
             maker.height.equalTo(20)
         }
         
-        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(1, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
+        EnvContext.shared.client.generalBizconfig.generalCacheSubject.skip(1).throttle(0.6, latest: false, scheduler: MainScheduler.instance).subscribe(onNext: { [weak self] data in
             if let housetypelistV = data?.housetypelist,housetypelistV.count > 0
             {
                 self?.sectionTitleArray.removeAll()
@@ -155,6 +155,18 @@ class CategorySectionView: UIView {
             .disposed(by: disposeBag)
         
         updateSegementLayOut()
+        
+        
+        NotificationCenter.default.rx.notification(.notifyGenConfigUpdate)
+            .subscribe(onNext: { [weak self] (_) in
+                if let dictValue = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value?.toJSON()
+                {
+                    FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+                    EnvContext.shared.client.generalBizconfig.updateConfig()
+//                    FHEnvContext.sharedInstance().acceptConfigDictionary(dictValue)
+                }
+            })
+            .disposed(by: disposeBag)
         
     }
     

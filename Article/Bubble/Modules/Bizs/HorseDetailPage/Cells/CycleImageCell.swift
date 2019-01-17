@@ -103,7 +103,7 @@ class HouseNumberPageControlPlugin: PhotoBrowserPlugin {
         
         if let traceParams = self.traceParams {
             
-            self.theThresholdTracer?(TraceEventName.picture_large_stay, self.stayParams <|> traceParams <|> toTracerParams("large", key: "show_type"))
+            self.theThresholdTracer?(TraceEventName.picture_large_stay, self.stayParams <|> traceParams.exclude("rank") <|> toTracerParams("large", key: "show_type"))
         }
 
     }
@@ -149,7 +149,7 @@ fileprivate func largeImageTracerGen(images: [ImageModel], traceParams: TracerPa
                 
                 theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
 
-                recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                 array.append(offset)
             }
         }
@@ -236,7 +236,7 @@ class CycleImageCell: BaseUITableViewCell {
                 if !array.contains(offset) {
                     
                     theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                     array.append(offset)
                 }
             }
@@ -260,7 +260,7 @@ class CycleImageCell: BaseUITableViewCell {
                 if !array.contains(offset) {
                     
                     theTracerParams = theTracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams)
+                    recordEvent(key: TraceEventName.picture_show, params: theTracerParams.exclude("rank"))
                     array.append(offset)
                 }
             }
@@ -301,13 +301,13 @@ class CycleImageCell: BaseUITableViewCell {
 
             thePageVM.currentPage
                 .observeOn(MainScheduler.asyncInstance)
-                .map { [unowned self] _ in self.count == 0 }
+                .map { [weak self] _ in self?.count ?? 0 == 0 }
                 .bind(to: indexIndicator.rx.isHidden)
                 .disposed(by: disposeBag)
             
             thePageVM.currentPage
                 .observeOn(MainScheduler.asyncInstance)
-                .filter { [unowned self] _ in self.count != 0 }
+                .filter { [weak self] _ in self?.count ?? 0 != 0 }
                 .map { [unowned self] (index) in CycleImageCell.offsetByIndex(index: index, count: self.count) }
                 .map { [unowned self] (index) in "\(index + 1)/\(self.count)" }
                 .bind(to: indexLabel.rx.text)
@@ -315,9 +315,9 @@ class CycleImageCell: BaseUITableViewCell {
             
             thePageVM.currentPage
 //                .debug()
-                .subscribe(onNext: { [unowned self] (index) in
-                    if self.headerImages.count != 0 {
-                        self.smallTracer?(index,TracerParams.momoid() <|> toTracerParams("small", key: "show_type"))
+                .subscribe(onNext: { [weak self] (index) in
+                    if self?.headerImages.count != 0 {
+                        self?.smallTracer?(index,TracerParams.momoid() <|> toTracerParams("small", key: "show_type"))
                     }
                 })
                 .disposed(by: disposeBag)
@@ -449,7 +449,7 @@ class CycleImageCell: BaseUITableViewCell {
                 let imageModel = self.headerImages[selectedIndex]
                 let key = imageModel.url
                 theTraceParams = theTraceParams <|> toTracerParams(key, key: "picture_id")
-                recordEvent(key: TraceEventName.picture_gallery, params: theTraceParams)
+                recordEvent(key: TraceEventName.picture_gallery, params: theTraceParams.exclude("rank"))
                 
                 vc.traceParams = theTraceParams
             }
@@ -718,7 +718,7 @@ extension CycleImageCell: PhotoBrowserDelegate {
         if var tracerParams = self.traceParams {
 
             tracerParams = tracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
-            recordEvent(key: TraceEventName.picture_save, params: tracerParams)
+            recordEvent(key: TraceEventName.picture_save, params: tracerParams.exclude("rank"))
         }
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
         
@@ -731,7 +731,7 @@ extension CycleImageCell: PhotoBrowserDelegate {
             let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
             if status != .authorized {
                 
-                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许好多房访问您的照片", preferredType: .alert)
+                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许幸福里访问您的照片", preferredType: .alert)
                 alert.addAction(withTitle: "取消", actionType: .cancel) {
                 }
                 alert.addAction(withTitle: "立刻前往", actionType: .normal, actionBlock: {

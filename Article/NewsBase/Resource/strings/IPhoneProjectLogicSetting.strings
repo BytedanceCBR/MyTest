@@ -7,19 +7,22 @@
 */
 
 // f100
-"house_list"            = "_TtC6Bubble18CategoryListPageVC";
+//"house_list"            = "_TtC6Bubble18CategoryListPageVC";
+"house_list"            = "FHHouseListViewController";
+
 "flogin"                = "_TtC6Bubble12QuickLoginVC";
 "aboutUs"               = "_TtC6Bubble19AboutViewController";
 "old_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
 "neighborhood_detail"   = "_TtC6Bubble17HorseDetailPageVC";
 "new_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
 "rent_detail"           = "_TtC6Bubble17HouseRentDetailVC";
-"sug_list"              = "_TtC6Bubble16SuggestionListVC";
+"sug_list"              = "FHSuggestionListViewController";
 
 "floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
 "message_detail_list"   = "_TtC6Bubble13MessageListVC";
 "message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
-"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
+//"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
+"house_list_in_neighborhood" = "FHNeighborListViewController";
 "neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
 "fh_webview"            = "_TtC6Bubble19FHWebViewController";
 "fh_house_detail_map"   = "_TtC6Bubble12LBSMapPageVC";
@@ -31,6 +34,8 @@
 ///...
 "detail"                = "TTDetailContainerViewController";
 "comments"              = "TTDetailContainerViewController";
+
+"fhomepage"             = "FHHomePageRoute";
 
 "new_detail"            = "TTDetailContainerViewController";
 "webview"               = "SSWebViewController";
@@ -87,5 +92,7 @@
 
 "renthouse_main"  =  "FHHouseRentHomeVC";
 "rent_main"  =  "FHHouseRentHomeVC";
-
+"realtor_detail"       = "FHRealtorDetailWebViewController";
 "webview_oc"           = "FHWebviewViewController";
+"city_list"            = "FHCityListViewController";
+"city_search"          = "FHCitySearchViewController";

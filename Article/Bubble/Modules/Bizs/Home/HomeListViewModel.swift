@@ -22,6 +22,7 @@ enum RequestSuccessType: Int {
 
 class HomeListViewModel: DetailPageViewModel {
 
+    var tracerModel: HouseRentTracer?
 
     var source: String?
     
@@ -335,7 +336,6 @@ class HomeListViewModel: DetailPageViewModel {
     //生成默认加载图
     func generateDefaultSection() -> [TableSectionNode]
     {
-        
         let config = EnvContext.shared.client.generalBizconfig.generalCacheSubject.value
         
         let entrys = config?.opData?.items
@@ -733,27 +733,7 @@ class HomeListViewModel: DetailPageViewModel {
         self.recordFollowEvent(traceParam)
         
     }
-    
-    private func openCategoryList(
-        houseType: HouseType,
-        traceParams: TracerParams,
-        condition: @escaping (String) -> String) {
-        let vc = CategoryListPageVC(isOpenConditionFilter: true)
-        vc.tracerParams = traceParams
-        vc.houseType.accept(houseType)
-        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator {
-            condition($0)
-        }
-        vc.navBar.isShowTypeSelector = false
-        navVC?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [unowned self] void in
-                self.navVC?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-    }
 
-    
     func isDataAvailable() -> Bool {
         return true
     }
@@ -829,6 +809,7 @@ func parseFHHomeNewHouseListItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
@@ -889,6 +870,7 @@ func paresNewHouseListRowItemNode(
                 toTracerParams("new_list", key: "page_type") <|>
                 beNull(key: "element_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
+                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
@@ -1137,6 +1119,7 @@ func parseFHHomeRentHouseListRowItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
@@ -1321,7 +1304,7 @@ class FHFunctionListDataSourceDelegate: FHListDataSourceDelegate, TableViewTrace
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-           return FHHomeCellHelper.heightForFHHomeHeaderCellViewType()
+           return FHHomeCellHelper.sharedInstance().heightForFHHomeHeaderCellViewType()
         }
         
         if !tableView.fd_indexPathHeightCache.existsHeight(at: indexPath) {

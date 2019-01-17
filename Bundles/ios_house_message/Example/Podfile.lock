@@ -1,0 +1,55 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.3):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - boringssl (0.0.7)
+  - FHHouseMessage (0.1.0)
+  - Godzippa (1.1.2)
+  - TTNetworkManager (2.2.8.35):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+    - boringssl (~> 0.0.6)
+  - TTReachability (0.1.11)
+
+DEPENDENCIES:
+  - FHHouseMessage (from `../`)
+  - TTNetworkManager (= 2.2.8.35)
+  - TTReachability (= 0.1.11)
+
+EXTERNAL SOURCES:
+  FHHouseMessage:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
+  AFNetworking: 2960888b0253924f773cc95d1fffdc363335be4f
+  boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  FHHouseMessage: 95a8a8f0450d0d89a6e120fc1e5eb596330bc352
+  Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
+  TTNetworkManager: adedd4089c4c8d9c8f83c6cec5ca03e1f4060aba
+  TTReachability: e4e403cd571cd96797be6bf9593fb7b082a16e57
+
+PODFILE CHECKSUM: 8ca103a96ed10d4e530eb21982c4f3e58763e9b2
+
+COCOAPODS: 1.4.0

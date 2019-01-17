@@ -225,6 +225,7 @@
 #pragma mark -- YSWebViewDelegate
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
+    NSLog(@"call back request url = %@",request.URL.absoluteString);
     
     if(!TTNetworkConnected())
     {

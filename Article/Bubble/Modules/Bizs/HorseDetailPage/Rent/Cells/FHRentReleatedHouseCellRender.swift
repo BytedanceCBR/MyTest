@@ -29,28 +29,30 @@ func parseRentReleatedHouseListItemNode(
                 let (offset, item) = e
                 return { (params) in
                     if let houseId = item.id {
-                        var tracer = tracerParams.paramsGetter([:])
-                        tracer["card_type"] = "left_pic"
-                        tracer["enter_from"] = "rent_detail"
-                        tracer["element_from"] = "related"
-                        tracer["rank"] = offset
-                        tracer["log_pb"] = item.logPb
-                        let info = ["tracer": tracer]
+                        var tracerRoute = tracerParams.paramsGetter([:])
+                        tracerRoute["card_type"] = "left_pic"
+                        tracerRoute["enter_from"] = "rent_detail"
+                        tracerRoute["element_from"] = "related"
+                        tracerRoute["origin_from"] = tracer.originFrom ?? "be_null"
+                        tracerRoute["origin_search_id"] = tracer.originSearchId ?? "be_null"
+                        tracerRoute["rank"] = offset
+                        tracerRoute["log_pb"] = item.logPb
+                        let info = ["tracer": tracerRoute]
                         let userInfo = TTRouteUserInfo(info: info)
                         let url = URL(string: "fschema://rent_detail?house_id=\(houseId)")
                         TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
                     }
-
-                }
-
+               }
         }
 
         let paramsElement = TracerParams.momoid() <|>
             toTracerParams("related", key: "element_type") <|>
             toTracerParams(tracer.rank, key: "rank") <|>
+            toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
             toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams("rent_detail", key: "page_type") <|>
-        traceExtension
+            traceExtension
 
         let records = data?
             .filter {
@@ -65,6 +67,11 @@ func parseRentReleatedHouseListItemNode(
                     toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams("rent_detail", key: "page_type") <|>
                     toTracerParams("related", key: "element_type") <|>
+                    toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+                    toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                    searchIdTraceParam(item.logPb) <|>
+                    imprIdTraceParam(item.logPb) <|>
+                    groupIdTraceParam(item.logPb) <|>
                     toTracerParams(item.logPb as? [String : Any] ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }

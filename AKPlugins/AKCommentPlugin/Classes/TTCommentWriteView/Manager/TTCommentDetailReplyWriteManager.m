@@ -18,7 +18,7 @@
 #import "TTCommentDefines.h"
 #import "TTCommentDataManager.h"
 #import "TTCommentWriteView.h"
-
+#import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceDraftKey @"PersistenceDraftKey"
@@ -429,7 +429,9 @@ static bool isTTCommentPublishing = NO;
 
     NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
     [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
-    [paramsDict setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
+    [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"item_id"];
+    [paramsDict setValue:self.commentDetailModel.commentID forKey:@"comment_id"];
+    
     if (self.logPb) {
         
         [paramsDict setValue:self.logPb forKey:@"log_pb"];
@@ -440,10 +442,9 @@ static bool isTTCommentPublishing = NO;
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
     if (self.enterFrom.length > 0) {
-
-        [paramsDict setValue:[self enterFromString]  forKey:@"enter_from"];
-        [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
     }
+    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];

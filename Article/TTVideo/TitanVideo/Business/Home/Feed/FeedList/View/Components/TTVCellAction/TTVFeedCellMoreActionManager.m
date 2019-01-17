@@ -660,7 +660,6 @@ typedef void(^TTActivityAction)(NSString *type);
         [self shareTrackEventV3WithActivityType:itemType favouriteButton:button];
         if ([action isKindOfClass:[TTVMoreAction class]]) {
             [action execute:itemType];
-            //埋点3.0
         }
     }
 }
@@ -755,7 +754,6 @@ typedef void(^TTActivityAction)(NSString *type);
         [self showIndicatorViewWithTip:tipMsg andImage:nil dismissHandler:nil];
     }else{
         [self shareTrackEventV3WithActivityType:itemType];
-        
     }
 }
 
@@ -820,7 +818,7 @@ typedef void(^TTActivityAction)(NSString *type);
     if (itemType == TTActivityTypeFavorite)
     {
         BOOL userRepined = [self.model.userRepined boolValue];
-        [extra setValue: !userRepined ? @"rt_favorite" : @"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue: !userRepined ? @"rt_favourite" : @"rt_unfavourite" forKey:@"favorite_name"];
     }
     
     NSString *fromSource = _activityActionManager.clickSource;
@@ -1542,7 +1540,7 @@ typedef void(^TTActivityAction)(NSString *type);
     if (!isEmptyString(self.model.shareModel.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@-%@", self.model.shareModel.title, @""];
     }else{
-        timeLineTitle = NSLocalizedString(@"真房源，好中介，快流通", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -1550,7 +1548,7 @@ typedef void(^TTActivityAction)(NSString *type);
 - (NSString *)shareDesc
 {
     NSString *detail;
-    detail = isEmptyString(self.model.shareModel.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : self.model.shareModel.abstract;
+    detail = isEmptyString(self.model.shareModel.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : self.model.shareModel.abstract;
     return detail;
 }
 

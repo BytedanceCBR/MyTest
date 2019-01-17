@@ -184,10 +184,16 @@ func parseFavoriteNode(
 fileprivate func getFavoriteCategoryLabel(
     title: String,
     userFollowListResponse: UserFollowListResponse?) -> String {
-    if let count = userFollowListResponse?.data?.totalCount {
-        return "\(title) (\(count))"
-    } else {
-        return title
+    if TTAccount.shared().isLogin()
+    {
+        if let count = userFollowListResponse?.data?.totalCount {
+            return "\(title) (\(count))"
+        } else {
+            return title
+        }
+    }else
+    {
+        return title + " (*)"
     }
 }
 
@@ -406,7 +412,6 @@ fileprivate func createSpringBroadItemSelector(item: OpData.Item, disposeBag: Di
     }else
     {
         return {
-            NotificationCenter.default.post(name: .discovery, object: nil)
         }
     }
 
@@ -535,21 +540,7 @@ fileprivate func openTTRouterUrl(
                 TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
             }
         }
-        
-//        let vc = CategoryListPageVC(isOpenConditionFilter: true)
-//        vc.tracerParams = tracerParams <|> params
-//        vc.houseType.accept(houseType)
-//        vc.searchAndConditionFilterVM.queryConditionAggregator = ConditionAggregator.monoid()
-//        vc.navBar.isShowTypeSelector = false
-//        vc.navBar.searchInput.placeholder = searchBarPlaceholder(houseType)
-//
-//        navVC?.pushViewController(vc, animated: true)
-//        vc.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { void in
-//                EnvContext.shared.toast.dismissToast()
-//                navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
+
     }
 }
 

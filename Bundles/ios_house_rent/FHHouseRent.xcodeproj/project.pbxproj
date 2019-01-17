@@ -1,0 +1,1264 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2DF679D3492CA1BDB475B60A /* libPods-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EC68694E6F261B52CAB867C /* libPods-Demo.a */; };
+		6207C5DCF7798ABF0CEFAA73 /* libPods-FHHouseRent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7260E1747264C85048BD4E46 /* libPods-FHHouseRent.a */; };
+		627E516C7F1F981459D6723F /* libPods-DemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47C4FFCA53B82E56817F12E9 /* libPods-DemoTests.a */; };
+		8FEFA63970A8E0BC3CCD36DC /* libPods-FHHouseRentTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB7397274896317A4EF1AD0A /* libPods-FHHouseRentTests.a */; };
+		B32FD29C21A108CF007B9966 /* FHHouseRent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CA0030219E6F0C00DA8789 /* FHHouseRent.framework */; };
+		B32FD2A021A109CA007B9966 /* FHSpringboardView.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD29E21A109CA007B9966 /* FHSpringboardView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD2A121A109CA007B9966 /* FHSpringboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD29F21A109CA007B9966 /* FHSpringboardView.m */; };
+		B32FD2A521A109F4007B9966 /* FHHouseRentHomeVC.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD2A321A109F4007B9966 /* FHHouseRentHomeVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD2A621A109F4007B9966 /* FHHouseRentHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2A421A109F4007B9966 /* FHHouseRentHomeVC.m */; };
+		B32FD2AC21A10FDA007B9966 /* MockRentHouseListDS.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2AB21A10FDA007B9966 /* MockRentHouseListDS.m */; };
+		B32FD2AF21A12244007B9966 /* NestScrollViewControl.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD2AD21A12244007B9966 /* NestScrollViewControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD2B021A12244007B9966 /* NestScrollViewControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2AE21A12244007B9966 /* NestScrollViewControl.m */; };
+		B32FD2B721A13BA3007B9966 /* FHHouseRentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD2B521A13BA3007B9966 /* FHHouseRentCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD2B821A13BA3007B9966 /* FHHouseRentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2B621A13BA3007B9966 /* FHHouseRentCell.m */; };
+		B32FD2BB21A141C9007B9966 /* FHHouseRentCellCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD2B921A141C9007B9966 /* FHHouseRentCellCoordinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD2BC21A141C9007B9966 /* FHHouseRentCellCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2BA21A141C9007B9966 /* FHHouseRentCellCoordinator.m */; };
+		B32FD30B21A3B650007B9966 /* FHHouseRentRoomFacilityCell.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD30921A3B650007B9966 /* FHHouseRentRoomFacilityCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD30C21A3B650007B9966 /* FHHouseRentRoomFacilityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30A21A3B650007B9966 /* FHHouseRentRoomFacilityCell.m */; };
+		B32FD30F21A3BB40007B9966 /* FHRowsView.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD30D21A3BB40007B9966 /* FHRowsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD31021A3BB40007B9966 /* FHRowsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD30E21A3BB40007B9966 /* FHRowsView.m */; };
+		B32FD31421A3BF55007B9966 /* FHHouseRentFacilityItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = B32FD31221A3BF55007B9966 /* FHHouseRentFacilityItemView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B32FD31521A3BF55007B9966 /* FHHouseRentFacilityItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD31321A3BF55007B9966 /* FHHouseRentFacilityItemView.m */; };
+		B32FD31821A3D59C007B9966 /* FacilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD31721A3D59C007B9966 /* FacilityViewController.m */; };
+		B3CA003A219E6F0C00DA8789 /* FHHouseRent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CA0030219E6F0C00DA8789 /* FHHouseRent.framework */; };
+		B3CA003F219E6F0C00DA8789 /* FHHouseRentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA003E219E6F0C00DA8789 /* FHHouseRentTests.m */; };
+		B3CA0041219E6F0C00DA8789 /* FHHouseRent.h in Headers */ = {isa = PBXBuildFile; fileRef = B3CA0033219E6F0C00DA8789 /* FHHouseRent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B3CA0052219E6F1D00DA8789 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA0051219E6F1D00DA8789 /* AppDelegate.m */; };
+		B3CA0055219E6F1D00DA8789 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA0054219E6F1D00DA8789 /* FirstViewController.m */; };
+		B3CA0058219E6F1D00DA8789 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA0057219E6F1D00DA8789 /* SecondViewController.m */; };
+		B3CA005B219E6F1D00DA8789 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3CA0059219E6F1D00DA8789 /* Main.storyboard */; };
+		B3CA005D219E6F1E00DA8789 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3CA005C219E6F1E00DA8789 /* Assets.xcassets */; };
+		B3CA0060219E6F1E00DA8789 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3CA005E219E6F1E00DA8789 /* LaunchScreen.storyboard */; };
+		B3CA0063219E6F1E00DA8789 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA0062219E6F1E00DA8789 /* main.m */; };
+		B3CA006D219E6F1E00DA8789 /* DemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA006C219E6F1E00DA8789 /* DemoTests.m */; };
+		B3CA0078219E6F1E00DA8789 /* DemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B3CA0077219E6F1E00DA8789 /* DemoUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B3CA003B219E6F0C00DA8789 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3CA0027219E6F0C00DA8789 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B3CA002F219E6F0C00DA8789;
+			remoteInfo = FHHouseRent;
+		};
+		B3CA0069219E6F1E00DA8789 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3CA0027219E6F0C00DA8789 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B3CA004D219E6F1D00DA8789;
+			remoteInfo = Demo;
+		};
+		B3CA0074219E6F1E00DA8789 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3CA0027219E6F0C00DA8789 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B3CA004D219E6F1D00DA8789;
+			remoteInfo = Demo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3140A7050A7C72A970F4A75E /* Pods-DemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoTests/Pods-DemoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		47C4FFCA53B82E56817F12E9 /* libPods-DemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A938C48CBB67C132A3B43EC /* Pods-FHHouseRentTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FHHouseRentTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FHHouseRentTests/Pods-FHHouseRentTests.release.xcconfig"; sourceTree = "<group>"; };
+		6150FA0663EE09B41146E348 /* Pods-DemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoTests/Pods-DemoTests.release.xcconfig"; sourceTree = "<group>"; };
+		6B270D018F895663DB7EC470 /* Pods-FHHouseRentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FHHouseRentTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FHHouseRentTests/Pods-FHHouseRentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6EC68694E6F261B52CAB867C /* libPods-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7260E1747264C85048BD4E46 /* libPods-FHHouseRent.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FHHouseRent.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		799F8B9158A621A888817139 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		820808461D469801DD839F63 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		9D15B4500D4AEBE7C39480FC /* Pods-FHHouseRent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FHHouseRent.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FHHouseRent/Pods-FHHouseRent.debug.xcconfig"; sourceTree = "<group>"; };
+		B32FD29E21A109CA007B9966 /* FHSpringboardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHSpringboardView.h; sourceTree = "<group>"; };
+		B32FD29F21A109CA007B9966 /* FHSpringboardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHSpringboardView.m; sourceTree = "<group>"; };
+		B32FD2A321A109F4007B9966 /* FHHouseRentHomeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentHomeVC.h; sourceTree = "<group>"; };
+		B32FD2A421A109F4007B9966 /* FHHouseRentHomeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentHomeVC.m; sourceTree = "<group>"; };
+		B32FD2AA21A10FDA007B9966 /* MockRentHouseListDS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockRentHouseListDS.h; sourceTree = "<group>"; };
+		B32FD2AB21A10FDA007B9966 /* MockRentHouseListDS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockRentHouseListDS.m; sourceTree = "<group>"; };
+		B32FD2AD21A12244007B9966 /* NestScrollViewControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NestScrollViewControl.h; sourceTree = "<group>"; };
+		B32FD2AE21A12244007B9966 /* NestScrollViewControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NestScrollViewControl.m; sourceTree = "<group>"; };
+		B32FD2B521A13BA3007B9966 /* FHHouseRentCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentCell.h; sourceTree = "<group>"; };
+		B32FD2B621A13BA3007B9966 /* FHHouseRentCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentCell.m; sourceTree = "<group>"; };
+		B32FD2B921A141C9007B9966 /* FHHouseRentCellCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentCellCoordinator.h; sourceTree = "<group>"; };
+		B32FD2BA21A141C9007B9966 /* FHHouseRentCellCoordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentCellCoordinator.m; sourceTree = "<group>"; };
+		B32FD30921A3B650007B9966 /* FHHouseRentRoomFacilityCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRoomFacilityCell.h; sourceTree = "<group>"; };
+		B32FD30A21A3B650007B9966 /* FHHouseRentRoomFacilityCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRoomFacilityCell.m; sourceTree = "<group>"; };
+		B32FD30D21A3BB40007B9966 /* FHRowsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRowsView.h; sourceTree = "<group>"; };
+		B32FD30E21A3BB40007B9966 /* FHRowsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRowsView.m; sourceTree = "<group>"; };
+		B32FD31221A3BF55007B9966 /* FHHouseRentFacilityItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentFacilityItemView.h; sourceTree = "<group>"; };
+		B32FD31321A3BF55007B9966 /* FHHouseRentFacilityItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentFacilityItemView.m; sourceTree = "<group>"; };
+		B32FD31621A3D59C007B9966 /* FacilityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacilityViewController.h; sourceTree = "<group>"; };
+		B32FD31721A3D59C007B9966 /* FacilityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacilityViewController.m; sourceTree = "<group>"; };
+		B3CA0030219E6F0C00DA8789 /* FHHouseRent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FHHouseRent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CA0033219E6F0C00DA8789 /* FHHouseRent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRent.h; sourceTree = "<group>"; };
+		B3CA0034219E6F0C00DA8789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3CA0039219E6F0C00DA8789 /* FHHouseRentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FHHouseRentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CA003E219E6F0C00DA8789 /* FHHouseRentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentTests.m; sourceTree = "<group>"; };
+		B3CA0040219E6F0C00DA8789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3CA004E219E6F1D00DA8789 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CA0050219E6F1D00DA8789 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B3CA0051219E6F1D00DA8789 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		B3CA0053219E6F1D00DA8789 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		B3CA0054219E6F1D00DA8789 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		B3CA0056219E6F1D00DA8789 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		B3CA0057219E6F1D00DA8789 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		B3CA005A219E6F1D00DA8789 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B3CA005C219E6F1E00DA8789 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B3CA005F219E6F1E00DA8789 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B3CA0061219E6F1E00DA8789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3CA0062219E6F1E00DA8789 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B3CA0068219E6F1E00DA8789 /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CA006C219E6F1E00DA8789 /* DemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoTests.m; sourceTree = "<group>"; };
+		B3CA006E219E6F1E00DA8789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3CA0073219E6F1E00DA8789 /* DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CA0077219E6F1E00DA8789 /* DemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoUITests.m; sourceTree = "<group>"; };
+		B3CA0079219E6F1E00DA8789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DECE092D76B8C181A7F21B11 /* Pods-FHHouseRent.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FHHouseRent.release.xcconfig"; path = "Pods/Target Support Files/Pods-FHHouseRent/Pods-FHHouseRent.release.xcconfig"; sourceTree = "<group>"; };
+		FB7397274896317A4EF1AD0A /* libPods-FHHouseRentTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FHHouseRentTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B3CA002D219E6F0C00DA8789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6207C5DCF7798ABF0CEFAA73 /* libPods-FHHouseRent.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0036219E6F0C00DA8789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA003A219E6F0C00DA8789 /* FHHouseRent.framework in Frameworks */,
+				8FEFA63970A8E0BC3CCD36DC /* libPods-FHHouseRentTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA004B219E6F1D00DA8789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B32FD29C21A108CF007B9966 /* FHHouseRent.framework in Frameworks */,
+				2DF679D3492CA1BDB475B60A /* libPods-Demo.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0065219E6F1E00DA8789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				627E516C7F1F981459D6723F /* libPods-DemoTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0070219E6F1E00DA8789 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B32FD29D21A1099E007B9966 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD29E21A109CA007B9966 /* FHSpringboardView.h */,
+				B32FD29F21A109CA007B9966 /* FHSpringboardView.m */,
+				B32FD30D21A3BB40007B9966 /* FHRowsView.h */,
+				B32FD30E21A3BB40007B9966 /* FHRowsView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B32FD2A221A109D6007B9966 /* FHHouseRentHome */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD2A321A109F4007B9966 /* FHHouseRentHomeVC.h */,
+				B32FD2A421A109F4007B9966 /* FHHouseRentHomeVC.m */,
+				B32FD2AD21A12244007B9966 /* NestScrollViewControl.h */,
+				B32FD2AE21A12244007B9966 /* NestScrollViewControl.m */,
+				B32FD2B521A13BA3007B9966 /* FHHouseRentCell.h */,
+				B32FD2B621A13BA3007B9966 /* FHHouseRentCell.m */,
+				B32FD2B921A141C9007B9966 /* FHHouseRentCellCoordinator.h */,
+				B32FD2BA21A141C9007B9966 /* FHHouseRentCellCoordinator.m */,
+			);
+			path = FHHouseRentHome;
+			sourceTree = "<group>";
+		};
+		B32FD2F721A3A898007B9966 /* FHHouseDetail */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD31121A3BF10007B9966 /* Views */,
+				B32FD2F821A3A8A7007B9966 /* Cells */,
+			);
+			path = FHHouseDetail;
+			sourceTree = "<group>";
+		};
+		B32FD2F821A3A8A7007B9966 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD30921A3B650007B9966 /* FHHouseRentRoomFacilityCell.h */,
+				B32FD30A21A3B650007B9966 /* FHHouseRentRoomFacilityCell.m */,
+				B32FD31221A3BF55007B9966 /* FHHouseRentFacilityItemView.h */,
+				B32FD31321A3BF55007B9966 /* FHHouseRentFacilityItemView.m */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		B32FD31121A3BF10007B9966 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B3CA0026219E6F0C00DA8789 = {
+			isa = PBXGroup;
+			children = (
+				B3CA0032219E6F0C00DA8789 /* FHHouseRent */,
+				B3CA003D219E6F0C00DA8789 /* FHHouseRentTests */,
+				B3CA004F219E6F1D00DA8789 /* Demo */,
+				B3CA006B219E6F1E00DA8789 /* DemoTests */,
+				B3CA0076219E6F1E00DA8789 /* DemoUITests */,
+				B3CA0031219E6F0C00DA8789 /* Products */,
+				C9917766B12B787ED3C175FD /* Pods */,
+				EA17F5FD69BF94AB88606C26 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		B3CA0031219E6F0C00DA8789 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3CA0030219E6F0C00DA8789 /* FHHouseRent.framework */,
+				B3CA0039219E6F0C00DA8789 /* FHHouseRentTests.xctest */,
+				B3CA004E219E6F1D00DA8789 /* Demo.app */,
+				B3CA0068219E6F1E00DA8789 /* DemoTests.xctest */,
+				B3CA0073219E6F1E00DA8789 /* DemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B3CA0032219E6F0C00DA8789 /* FHHouseRent */ = {
+			isa = PBXGroup;
+			children = (
+				B32FD2F721A3A898007B9966 /* FHHouseDetail */,
+				B32FD2A221A109D6007B9966 /* FHHouseRentHome */,
+				B32FD29D21A1099E007B9966 /* View */,
+				B3CA0033219E6F0C00DA8789 /* FHHouseRent.h */,
+				B3CA0034219E6F0C00DA8789 /* Info.plist */,
+			);
+			path = FHHouseRent;
+			sourceTree = "<group>";
+		};
+		B3CA003D219E6F0C00DA8789 /* FHHouseRentTests */ = {
+			isa = PBXGroup;
+			children = (
+				B3CA003E219E6F0C00DA8789 /* FHHouseRentTests.m */,
+				B3CA0040219E6F0C00DA8789 /* Info.plist */,
+			);
+			path = FHHouseRentTests;
+			sourceTree = "<group>";
+		};
+		B3CA004F219E6F1D00DA8789 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B3CA0050219E6F1D00DA8789 /* AppDelegate.h */,
+				B3CA0051219E6F1D00DA8789 /* AppDelegate.m */,
+				B3CA0053219E6F1D00DA8789 /* FirstViewController.h */,
+				B3CA0054219E6F1D00DA8789 /* FirstViewController.m */,
+				B3CA0056219E6F1D00DA8789 /* SecondViewController.h */,
+				B3CA0057219E6F1D00DA8789 /* SecondViewController.m */,
+				B3CA0059219E6F1D00DA8789 /* Main.storyboard */,
+				B3CA005C219E6F1E00DA8789 /* Assets.xcassets */,
+				B3CA005E219E6F1E00DA8789 /* LaunchScreen.storyboard */,
+				B3CA0061219E6F1E00DA8789 /* Info.plist */,
+				B3CA0062219E6F1E00DA8789 /* main.m */,
+				B32FD2AA21A10FDA007B9966 /* MockRentHouseListDS.h */,
+				B32FD2AB21A10FDA007B9966 /* MockRentHouseListDS.m */,
+				B32FD31621A3D59C007B9966 /* FacilityViewController.h */,
+				B32FD31721A3D59C007B9966 /* FacilityViewController.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		B3CA006B219E6F1E00DA8789 /* DemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				B3CA006C219E6F1E00DA8789 /* DemoTests.m */,
+				B3CA006E219E6F1E00DA8789 /* Info.plist */,
+			);
+			path = DemoTests;
+			sourceTree = "<group>";
+		};
+		B3CA0076219E6F1E00DA8789 /* DemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B3CA0077219E6F1E00DA8789 /* DemoUITests.m */,
+				B3CA0079219E6F1E00DA8789 /* Info.plist */,
+			);
+			path = DemoUITests;
+			sourceTree = "<group>";
+		};
+		C9917766B12B787ED3C175FD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				820808461D469801DD839F63 /* Pods-Demo.debug.xcconfig */,
+				799F8B9158A621A888817139 /* Pods-Demo.release.xcconfig */,
+				3140A7050A7C72A970F4A75E /* Pods-DemoTests.debug.xcconfig */,
+				6150FA0663EE09B41146E348 /* Pods-DemoTests.release.xcconfig */,
+				9D15B4500D4AEBE7C39480FC /* Pods-FHHouseRent.debug.xcconfig */,
+				DECE092D76B8C181A7F21B11 /* Pods-FHHouseRent.release.xcconfig */,
+				6B270D018F895663DB7EC470 /* Pods-FHHouseRentTests.debug.xcconfig */,
+				5A938C48CBB67C132A3B43EC /* Pods-FHHouseRentTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		EA17F5FD69BF94AB88606C26 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6EC68694E6F261B52CAB867C /* libPods-Demo.a */,
+				47C4FFCA53B82E56817F12E9 /* libPods-DemoTests.a */,
+				7260E1747264C85048BD4E46 /* libPods-FHHouseRent.a */,
+				FB7397274896317A4EF1AD0A /* libPods-FHHouseRentTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		B3CA002B219E6F0C00DA8789 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA0041219E6F0C00DA8789 /* FHHouseRent.h in Headers */,
+				B32FD2BB21A141C9007B9966 /* FHHouseRentCellCoordinator.h in Headers */,
+				B32FD2A521A109F4007B9966 /* FHHouseRentHomeVC.h in Headers */,
+				B32FD2AF21A12244007B9966 /* NestScrollViewControl.h in Headers */,
+				B32FD2B721A13BA3007B9966 /* FHHouseRentCell.h in Headers */,
+				B32FD30B21A3B650007B9966 /* FHHouseRentRoomFacilityCell.h in Headers */,
+				B32FD30F21A3BB40007B9966 /* FHRowsView.h in Headers */,
+				B32FD31421A3BF55007B9966 /* FHHouseRentFacilityItemView.h in Headers */,
+				B32FD2A021A109CA007B9966 /* FHSpringboardView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		B3CA002F219E6F0C00DA8789 /* FHHouseRent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3CA0044219E6F0C00DA8789 /* Build configuration list for PBXNativeTarget "FHHouseRent" */;
+			buildPhases = (
+				78FECCB22EE4344354BC89E8 /* [CP] Check Pods Manifest.lock */,
+				B3CA002B219E6F0C00DA8789 /* Headers */,
+				B3CA002C219E6F0C00DA8789 /* Sources */,
+				B3CA002D219E6F0C00DA8789 /* Frameworks */,
+				B3CA002E219E6F0C00DA8789 /* Resources */,
+				8064EB436C9879C8F104CE49 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FHHouseRent;
+			productName = FHHouseRent;
+			productReference = B3CA0030219E6F0C00DA8789 /* FHHouseRent.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		B3CA0038219E6F0C00DA8789 /* FHHouseRentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3CA0047219E6F0C00DA8789 /* Build configuration list for PBXNativeTarget "FHHouseRentTests" */;
+			buildPhases = (
+				18F0DEAAD5DA5EA7D3C2FFA7 /* [CP] Check Pods Manifest.lock */,
+				B3CA0035219E6F0C00DA8789 /* Sources */,
+				B3CA0036219E6F0C00DA8789 /* Frameworks */,
+				B3CA0037219E6F0C00DA8789 /* Resources */,
+				2CE316608F2CF6353D71F404 /* [CP] Embed Pods Frameworks */,
+				777FEAE65CA3A00E844F65F5 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B3CA003C219E6F0C00DA8789 /* PBXTargetDependency */,
+			);
+			name = FHHouseRentTests;
+			productName = FHHouseRentTests;
+			productReference = B3CA0039219E6F0C00DA8789 /* FHHouseRentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B3CA004D219E6F1D00DA8789 /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3CA007A219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				FD1F2424077A1CB38B8DA6C5 /* [CP] Check Pods Manifest.lock */,
+				B3CA004A219E6F1D00DA8789 /* Sources */,
+				B3CA004B219E6F1D00DA8789 /* Frameworks */,
+				B3CA004C219E6F1D00DA8789 /* Resources */,
+				9E6F30193ABD319921159338 /* [CP] Embed Pods Frameworks */,
+				B00BAFF9AEBBB3CF6CBF9C92 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = B3CA004E219E6F1D00DA8789 /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B3CA0067219E6F1E00DA8789 /* DemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3CA007D219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "DemoTests" */;
+			buildPhases = (
+				9E46E66F24F718415D5B599C /* [CP] Check Pods Manifest.lock */,
+				B3CA0064219E6F1E00DA8789 /* Sources */,
+				B3CA0065219E6F1E00DA8789 /* Frameworks */,
+				B3CA0066219E6F1E00DA8789 /* Resources */,
+				8D9573410BF26DA369E777D2 /* [CP] Embed Pods Frameworks */,
+				8250A10B898B96EB6A21AA9A /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B3CA006A219E6F1E00DA8789 /* PBXTargetDependency */,
+			);
+			name = DemoTests;
+			productName = DemoTests;
+			productReference = B3CA0068219E6F1E00DA8789 /* DemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B3CA0072219E6F1E00DA8789 /* DemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3CA0080219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "DemoUITests" */;
+			buildPhases = (
+				B3CA006F219E6F1E00DA8789 /* Sources */,
+				B3CA0070219E6F1E00DA8789 /* Frameworks */,
+				B3CA0071219E6F1E00DA8789 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B3CA0075219E6F1E00DA8789 /* PBXTargetDependency */,
+			);
+			name = DemoUITests;
+			productName = DemoUITests;
+			productReference = B3CA0073219E6F1E00DA8789 /* DemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B3CA0027219E6F0C00DA8789 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = com.haoduofangs;
+				TargetAttributes = {
+					B3CA002F219E6F0C00DA8789 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					B3CA0038219E6F0C00DA8789 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					B3CA004D219E6F1D00DA8789 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					B3CA0067219E6F1E00DA8789 = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = B3CA004D219E6F1D00DA8789;
+					};
+					B3CA0072219E6F1E00DA8789 = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = B3CA004D219E6F1D00DA8789;
+					};
+				};
+			};
+			buildConfigurationList = B3CA002A219E6F0C00DA8789 /* Build configuration list for PBXProject "FHHouseRent" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B3CA0026219E6F0C00DA8789;
+			productRefGroup = B3CA0031219E6F0C00DA8789 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B3CA002F219E6F0C00DA8789 /* FHHouseRent */,
+				B3CA0038219E6F0C00DA8789 /* FHHouseRentTests */,
+				B3CA004D219E6F1D00DA8789 /* Demo */,
+				B3CA0067219E6F1E00DA8789 /* DemoTests */,
+				B3CA0072219E6F1E00DA8789 /* DemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B3CA002E219E6F0C00DA8789 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0037219E6F0C00DA8789 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA004C219E6F1D00DA8789 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA0060219E6F1E00DA8789 /* LaunchScreen.storyboard in Resources */,
+				B3CA005D219E6F1E00DA8789 /* Assets.xcassets in Resources */,
+				B3CA005B219E6F1D00DA8789 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0066219E6F1E00DA8789 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0071219E6F1E00DA8789 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		18F0DEAAD5DA5EA7D3C2FFA7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FHHouseRentTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2CE316608F2CF6353D71F404 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FHHouseRentTests/Pods-FHHouseRentTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		777FEAE65CA3A00E844F65F5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FHHouseRentTests/Pods-FHHouseRentTests-resources.sh",
+				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FHHouseRentTests/Pods-FHHouseRentTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		78FECCB22EE4344354BC89E8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FHHouseRent-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8064EB436C9879C8F104CE49 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FHHouseRent/Pods-FHHouseRent-resources.sh",
+				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FHHouseRent/Pods-FHHouseRent-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8250A10B898B96EB6A21AA9A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DemoTests/Pods-DemoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8D9573410BF26DA369E777D2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DemoTests/Pods-DemoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9E46E66F24F718415D5B599C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DemoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9E6F30193ABD319921159338 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B00BAFF9AEBBB3CF6CBF9C92 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh",
+				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD1F2424077A1CB38B8DA6C5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B3CA002C219E6F0C00DA8789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B32FD2B021A12244007B9966 /* NestScrollViewControl.m in Sources */,
+				B32FD30C21A3B650007B9966 /* FHHouseRentRoomFacilityCell.m in Sources */,
+				B32FD31521A3BF55007B9966 /* FHHouseRentFacilityItemView.m in Sources */,
+				B32FD2A121A109CA007B9966 /* FHSpringboardView.m in Sources */,
+				B32FD2BC21A141C9007B9966 /* FHHouseRentCellCoordinator.m in Sources */,
+				B32FD2A621A109F4007B9966 /* FHHouseRentHomeVC.m in Sources */,
+				B32FD31021A3BB40007B9966 /* FHRowsView.m in Sources */,
+				B32FD2B821A13BA3007B9966 /* FHHouseRentCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0035219E6F0C00DA8789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA003F219E6F0C00DA8789 /* FHHouseRentTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA004A219E6F1D00DA8789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA0058219E6F1D00DA8789 /* SecondViewController.m in Sources */,
+				B32FD2AC21A10FDA007B9966 /* MockRentHouseListDS.m in Sources */,
+				B3CA0052219E6F1D00DA8789 /* AppDelegate.m in Sources */,
+				B3CA0063219E6F1E00DA8789 /* main.m in Sources */,
+				B3CA0055219E6F1D00DA8789 /* FirstViewController.m in Sources */,
+				B32FD31821A3D59C007B9966 /* FacilityViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA0064219E6F1E00DA8789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA006D219E6F1E00DA8789 /* DemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3CA006F219E6F1E00DA8789 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3CA0078219E6F1E00DA8789 /* DemoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B3CA003C219E6F0C00DA8789 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B3CA002F219E6F0C00DA8789 /* FHHouseRent */;
+			targetProxy = B3CA003B219E6F0C00DA8789 /* PBXContainerItemProxy */;
+		};
+		B3CA006A219E6F1E00DA8789 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B3CA004D219E6F1D00DA8789 /* Demo */;
+			targetProxy = B3CA0069219E6F1E00DA8789 /* PBXContainerItemProxy */;
+		};
+		B3CA0075219E6F1E00DA8789 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B3CA004D219E6F1D00DA8789 /* Demo */;
+			targetProxy = B3CA0074219E6F1E00DA8789 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B3CA0059219E6F1D00DA8789 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B3CA005A219E6F1D00DA8789 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B3CA005E219E6F1E00DA8789 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B3CA005F219E6F1E00DA8789 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B3CA0042219E6F0C00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B3CA0043219E6F0C00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		B3CA0045219E6F0C00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9D15B4500D4AEBE7C39480FC /* Pods-FHHouseRent.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = FHHouseRent/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.FHHouseRent;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B3CA0046219E6F0C00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DECE092D76B8C181A7F21B11 /* Pods-FHHouseRent.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = FHHouseRent/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.FHHouseRent;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B3CA0048219E6F0C00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B270D018F895663DB7EC470 /* Pods-FHHouseRentTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = FHHouseRentTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.FHHouseRentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B3CA0049219E6F0C00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A938C48CBB67C132A3B43EC /* Pods-FHHouseRentTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = FHHouseRentTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.FHHouseRentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B3CA007B219E6F1E00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 820808461D469801DD839F63 /* Pods-Demo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = Demo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B3CA007C219E6F1E00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 799F8B9158A621A888817139 /* Pods-Demo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = Demo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B3CA007E219E6F1E00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3140A7050A7C72A970F4A75E /* Pods-DemoTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = DemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.DemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
+			};
+			name = Debug;
+		};
+		B3CA007F219E6F1E00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6150FA0663EE09B41146E348 /* Pods-DemoTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = DemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.DemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
+			};
+			name = Release;
+		};
+		B3CA0081219E6F1E00DA8789 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = DemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.DemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Demo;
+			};
+			name = Debug;
+		};
+		B3CA0082219E6F1E00DA8789 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				INFOPLIST_FILE = DemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haoduofangs.DemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Demo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B3CA002A219E6F0C00DA8789 /* Build configuration list for PBXProject "FHHouseRent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA0042219E6F0C00DA8789 /* Debug */,
+				B3CA0043219E6F0C00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3CA0044219E6F0C00DA8789 /* Build configuration list for PBXNativeTarget "FHHouseRent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA0045219E6F0C00DA8789 /* Debug */,
+				B3CA0046219E6F0C00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3CA0047219E6F0C00DA8789 /* Build configuration list for PBXNativeTarget "FHHouseRentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA0048219E6F0C00DA8789 /* Debug */,
+				B3CA0049219E6F0C00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3CA007A219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA007B219E6F1E00DA8789 /* Debug */,
+				B3CA007C219E6F1E00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3CA007D219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "DemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA007E219E6F1E00DA8789 /* Debug */,
+				B3CA007F219E6F1E00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3CA0080219E6F1E00DA8789 /* Build configuration list for PBXNativeTarget "DemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3CA0081219E6F1E00DA8789 /* Debug */,
+				B3CA0082219E6F1E00DA8789 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B3CA0027219E6F0C00DA8789 /* Project object */;
+}

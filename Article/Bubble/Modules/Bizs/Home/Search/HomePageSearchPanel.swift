@@ -235,7 +235,7 @@ class HomePageSearchPanel: UIView {
     }
 
     private func setSearchArea() {
-
+ 
         addSubview(searchIconBackView)
         searchIconBackView.snp.makeConstraints { maker in
             maker.right.equalToSuperview()

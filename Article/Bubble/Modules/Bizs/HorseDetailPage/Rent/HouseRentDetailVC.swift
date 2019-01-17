@@ -21,6 +21,7 @@ enum MyEnumError: Error {
     }
 }
 
+@objc
 class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewControllerErrorHandler {
 
     fileprivate var pageFrameObv: NSKeyValueObservation?
@@ -98,8 +99,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     var traceParams = TracerParams.momoid()
 
-    var stayPageParams: TracerParams? = TracerParams.momoid()
-
     private var netStateInfoVM : NHErrorViewModel?
 
     lazy var infoMaskView: EmptyMaskView = {
@@ -155,7 +154,6 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                 toTracerParams(houseRentTracer.houseType, key: "house_type") <|>
                 toTracerParams(Int64(Date().timeIntervalSince1970 * 1000), key: "time") <|>
                 toTracerParams(houseRentTracer.queryType ?? "be_null", key: "query_type")
-            recordEvent(key: "go_detail_search", params: params)
             self.staySearchParams = params  <|> traceStayTime()
         }
 
@@ -168,6 +166,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             self.houseRentTracer.elementFrom = tracer["element_from"] as? String ?? "be_null"
             self.houseRentTracer.logPb = tracer["log_pb"]
             self.houseRentTracer.searchId = tracer["search_id"] as? String ?? "be_null"
+            self.houseRentTracer.originSearchId = tracer["origin_search_id"] as? String ?? "be_null"
+            self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
             self.houseRentTracer.enterQuery = tracer["enter_query"] as? String ?? "be_null"
             self.houseRentTracer.searchQuery = tracer["search_query"] as? String ?? "be_null"
             self.houseRentTracer.queryType = tracer["query_type"] as? String ?? "be_null"
@@ -230,6 +230,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         setupNavBar()
         bindNavBarStateMonitor()
@@ -286,6 +288,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         // 发送请求
         requestDetailData()
         bindShareAction()
+        self.panBeginAction = { [weak self] in
+            self?.view.endEditing(false)
+        };
     }
 
     func requestDetailData() {
@@ -356,9 +361,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                         groupId = logpbV["group_id"] as? String
                     }
                     
-                    let tracerParamsFollow = EnvContext.shared.homePageParams <|>
+                    let tracerParamsFollow =
                         self.getTracePamrasFromRent() <|>
                         toTracerParams(imprId ?? "be_null", key: "impr_id") <|>
+                        toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                        toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
                         toTracerParams(groupId ?? "be_null", key: "group_id")
                     
                     if let theDetailModel = detailPageViewModel {
@@ -426,9 +433,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillDisappear(animated)
+        
+        self.houseRentTracer.ttTrackStayTime = self.ttTrackStayTime
         self.houseRentTracer.recordStayPage()
-//        self.recordStayPageSearch()
+        self.tt_resetStayTime()
+        
     }
 
     fileprivate func bindOffSaleCallback() {
@@ -612,7 +622,9 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
 
     fileprivate func openSharePanel() {
         
-        var params = EnvContext.shared.homePageParams <|>
+        var params = TracerParams.momoid() <|>
+            toTracerParams(self.houseRentTracer.originFrom, key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId, key: "origin_search_id") <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
             toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
@@ -674,7 +686,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
+                if let phoneNum = alert.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.bottomBarViewModel?.sendPhoneNumberRequest(houseId: self.houseId,
                                                                     phone: phoneNum,
@@ -701,11 +713,17 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             .disposed(by: disposeBag)
 
 
-        var tracerParams = EnvContext.shared.homePageParams <|>
+        var tracerParams =
             (self.bottomBarViewModel?.traceParams ?? TracerParams.momoid())
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
+            toTracerParams(self.houseRentTracer.pageType, key: "page_type") <|>
+            toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
+            toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
+            toTracerParams("be_null", key: "element_from") <|>
+            toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
             toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
 
@@ -719,22 +737,36 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     func sendClickConfirmTrace()
     {
         let tracerParams = TracerParams.momoid() <|>
-            EnvContext.shared.homePageParams <|>
             toTracerParams(houseRentTracer.pageType, key: "page_type") <|>
             toTracerParams("left_pic", key: "card_type") <|>
             toTracerParams(houseRentTracer.enterFrom, key: "enter_from") <|>
             toTracerParams(houseRentTracer.elementFrom, key: "element_from") <|>
-            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
-            toTracerParams(houseRentTracer.rank, key: "rank")
+            toTracerParams(houseRentTracer.rank, key: "rank") <|>
+            toTracerParams(houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+            toTracerParams(houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
+            toTracerParams(houseRentTracer.logPb ?? "be_null", key: "log_pb")
         recordEvent(key: TraceEventName.click_confirm,
                     params: tracerParams.exclude("element_type"))
     }
 
     deinit {
-        if let staySearchParams = staySearchParams {
-            recordEvent(key: "stay_page_search", params: staySearchParams)
-        }
          UIApplication.shared.statusBarStyle = .default
     }
 
+}
+
+// MARK: TTUIViewControllerTrackProtocol
+extension HouseRentDetailVC {
+    
+    override func trackStartedByAppWillEnterForground() {
+        
+        self.tt_resetStayTime()
+        self.ttTrackStartTime = Date().timeIntervalSince1970
+    }
+    override func trackEndedByAppWillEnterBackground() {
+        
+        self.houseRentTracer.ttTrackStayTime = self.ttTrackStayTime
+        self.houseRentTracer.recordStayPage()
+        self.tt_resetStayTime()
+    }
 }

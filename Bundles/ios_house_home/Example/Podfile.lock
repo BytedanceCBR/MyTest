@@ -1,0 +1,19 @@
+PODS:
+  - FHHouseHome (0.1.1)
+  - JSONModel (1.8.0)
+
+DEPENDENCIES:
+  - FHHouseHome (from `../`)
+  - JSONModel
+
+EXTERNAL SOURCES:
+  FHHouseHome:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FHHouseHome: eae4fc104f38a26aaf6f29bd190c52f6852c78cc
+  JSONModel: 02ab723958366a3fd27da57ea2af2113658762e9
+
+PODFILE CHECKSUM: 61519eace7c5a5ce26d6b8e8283680c2f71031f4
+
+COCOAPODS: 1.4.0

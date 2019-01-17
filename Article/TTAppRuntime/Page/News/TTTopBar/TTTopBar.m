@@ -28,7 +28,14 @@
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAlphaThemedButton.h"
 #import <BDWebImage/SDWebImageAdapter.h>
-#import "Bubble-Swift.h"
+#import "FHHomeSearchPanelView.h"
+//#import "Bubble-Swift.h"
+#import <UIFont+House.h>
+#import "UIImageView+BDWebImage.h"
+
+#import "FHEnvContext.h"
+
+#import "UIImageAdditions.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 
@@ -54,6 +61,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 @property (nonatomic, assign) BOOL shouldRefreshSearchLabel;
 @property (nonatomic, copy) NSString *lastShowPlaceHolder;
 @property (nonatomic, copy) NSString *placeHolder;
+@property (nonatomic, strong) UIView *topUnAvalibleCityContainer;
 
 @end
 
@@ -79,6 +87,118 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     return self;
 }
 
+
+- (void)showUnValibleCity
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
+        self.pageSearchPanel.hidden = YES;
+
+        if (self.topUnAvalibleCityContainer) {
+            [self.topUnAvalibleCityContainer removeFromSuperview];
+            self.topUnAvalibleCityContainer = nil;
+        }
+        
+        self.topUnAvalibleCityContainer = [[UIView alloc] init];
+        [self.backgroundImageView addSubview:self.topUnAvalibleCityContainer];
+        [self.backgroundImageView bringSubviewToFront:self.topUnAvalibleCityContainer];
+        
+        [self.topUnAvalibleCityContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.backgroundImageView);
+        }];
+        if (dataModel.cityAvailability.backgroundColor) {
+            [self.topUnAvalibleCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
+        }
+        
+        CGFloat padingTop = 8;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            padingTop = 20;
+        }
+        UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.topUnAvalibleCityContainer addSubview:citySwichButton];
+        citySwichButton.layer.masksToBounds = YES;
+        citySwichButton.layer.cornerRadius = 12;
+        [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:12]];
+        citySwichButton.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
+        [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
+            make.height.mas_equalTo(24);
+            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.width.mas_equalTo(dataModel.currentCityName.length * 15 + 24);
+        }];
+        [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
+        [citySwichButton addTarget:self withActionBlock:^{
+            NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
+        } forControlEvent:UIControlEventTouchUpInside];
+        
+        UIImageView *imageButtonLeftIcon = [UIImageView new];
+        [citySwichButton addSubview:imageButtonLeftIcon];
+        [imageButtonLeftIcon setImage:[UIImage imageNamed:@"fhhome_topbar_buttonicon"]];
+        [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(citySwichButton).offset(5);
+            make.height.mas_equalTo(16);
+            make.centerY.equalTo(citySwichButton);
+            make.width.mas_equalTo(16);
+        }];
+        
+        
+        UIImageView *imageRightView = [UIImageView new];
+        [self.topUnAvalibleCityContainer addSubview:imageRightView];
+        
+        [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
+            make.height.mas_equalTo(52);
+            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.width.mas_equalTo(108);
+        }];
+        
+        
+        UILabel *topTipForCityLabel = [UILabel new];
+        topTipForCityLabel.text = @"找房服务即将开通,敬请期待";
+        topTipForCityLabel.font = [UIFont themeFontRegular:14];
+        topTipForCityLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+        [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
+        
+        [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(citySwichButton.mas_right).offset(10);
+            make.height.mas_equalTo(20);
+            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.width.mas_equalTo(182);
+        }];
+        
+        
+        if (dataModel.cityAvailability.iconImage.url) {
+            [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
+        }
+        
+    }else
+    {
+        if (self.topUnAvalibleCityContainer) {
+            [self.topUnAvalibleCityContainer removeFromSuperview];
+            self.topUnAvalibleCityContainer = nil;
+        }
+        self.pageSearchPanel.hidden = NO;
+    }
+}
+
+- (void)willAppear
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (dataModel.cityAvailability && [dataModel.cityAvailability.enable respondsToSelector:@selector(boolValue)] &&[dataModel.cityAvailability.enable boolValue] == false) {
+        self.pageSearchPanel.hidden = YES;
+    }else
+    {
+        self.pageSearchPanel.hidden = NO;
+    }
+}
+
+- (void)hideUnValibleCity
+{
+    
+}
+
 - (void)setupSubviews
 {
     ///背景图，支持下发
@@ -95,6 +215,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     }];
     self.backgroundImageView.layer.zPosition = -1;
     self.backgroundImageView.userInteractionEnabled = YES;
+    
     /*
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self.delegate action:@selector(searchActionFired:)];
     [self.backgroundImageView addGestureRecognizer:tap];
@@ -109,7 +230,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
      [self.backgroundImageView addSubview:_searchBarImageView];
      */
     
-    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
+    _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+//    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
     [self.backgroundImageView addSubview:_pageSearchPanel];
     
     /*
@@ -167,6 +289,13 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     [self refreshData];
     [self refreshLayout];
+    
+    
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        [self showUnValibleCity];
+    }];
 }
 
 - (void)refreshLayout {
@@ -200,7 +329,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         make.left.equalTo(self).offset(offset);
         make.centerY.mas_equalTo(_backgroundImageView.mas_bottom).offset(-kNavBarHeight / 2 - 3);
         make.right.equalTo(self).offset(-offset);
-        make.height.mas_equalTo(44.0f);
+        make.height.mas_equalTo(52.0f);
     }];
    
     [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];

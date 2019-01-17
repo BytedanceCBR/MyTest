@@ -1564,7 +1564,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSDictionary *)fhSettings;
 
 + (BOOL)wendaShareEnable;
-
+// 找房tab是否显示房源展现 0 默认筛选器样式，1 房源列表
++ (NSInteger)findTabShowHouse;
 //首页推荐红点请求时间间隔
 + (NSInteger)categoryBadgeTimeInterval;
 

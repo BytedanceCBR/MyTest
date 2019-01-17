@@ -66,6 +66,7 @@
 #import "SSFetchSettingsManager.h"
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
+#import "FHUtils.h"
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -109,6 +110,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+        
+        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
+        htmlBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:htmlBridgeDebugItem];
+        
 
         STTableViewCellItem *shortVideoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"小视频调试选项点这里" target:self action:@selector(_openShortVideoDebug)];
         shortVideoDebugItem.switchStyle = NO;
@@ -636,6 +642,59 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 {
     [self.navigationController pushViewController:[[TSVDebugViewController alloc] init]
                                          animated:YES];
+}
+
+- (void)_openHtmlBridge
+{
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+    
+//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+//        textField.placeholder = @"请输入调试地址";
+//    }];
+    
+    [alertVC addTextViewWithConfigurationHandler:^(UITextView *textView) {
+        
+    }];
+    
+    if ([[FHUtils contentForKey:@"k_fh_debug_h5_bridge_test"] isKindOfClass:[NSString class]]) {
+        [alertVC uniqueTextView].text = [FHUtils contentForKey:@"k_fh_debug_h5_bridge_test"];
+    }
+    
+    alertVC.title = @"请输入调试地址";
+    
+    [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        
+    }];
+    
+    __block TTThemedAlertController *alertVCWeak = alertVC;
+    [alertVC addActionWithTitle:@"前往" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        
+        NSString *urlStrInput = [alertVCWeak uniqueTextView].text;
+        if (!urlStrInput || urlStrInput.length == 0) {
+            return ;
+        }
+        NSString *stringToSave = [NSString stringWithString:urlStrInput];
+        
+        NSString *unencodedString = urlStrInput;
+        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                        (CFStringRef)unencodedString,
+                                                                                                        NULL,
+                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                        kCFStringEncodingUTF8));
+        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+        
+        [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+        
+        NSURL *url = [TTURLUtils URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        
+        alertVCWeak = nil;
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
 }
 
 - (void)_openAdDebug

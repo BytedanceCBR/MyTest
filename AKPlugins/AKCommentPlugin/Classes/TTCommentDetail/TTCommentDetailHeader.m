@@ -358,7 +358,7 @@
 }
 
 - (void)digButtonOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"top_digg_click");
+//    wrapperTrackEvent(self.trackTag, @"top_digg_click");
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:digButtonOnClick:)]) {
         [self.delegate dynamicDetailHeader:self digButtonOnClick:sender];
     }

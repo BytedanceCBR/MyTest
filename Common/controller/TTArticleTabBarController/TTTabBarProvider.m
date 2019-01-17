@@ -30,6 +30,7 @@
 //#import "TTSFResourcesManager.h"
 #import "AKActivityViewController.h"
 #import "Bubble-Swift.h"
+#import "FHHouseFindListViewController.h"
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -113,8 +114,18 @@ static NSString *lastTabIdentifier;
         [vc preloadPage];
         return vc;
     } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
-        HouseFindVC* vc = [[HouseFindVC alloc] init];
-        return vc;
+
+        UIViewController *houseFindVC = nil;
+
+        if ([SSCommonLogic findTabShowHouse] == 1) {
+            houseFindVC = [[FHHouseFindListViewController alloc]init];
+
+        }else {
+           houseFindVC = [[HouseFindVC alloc] init];
+
+        }
+        return houseFindVC;
+
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
         ChatVC* vc = [[ChatVC alloc] init];
         return vc;

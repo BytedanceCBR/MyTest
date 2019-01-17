@@ -13,8 +13,9 @@
 #import "ExploreCellBase.h"
 #import "TTCategoryDefine.h"
 #import "TTMonitor.h"
-#import "Bubble-Swift.h"
-
+//#import "Bubble-Swift.h"
+#import "TTCategoryStayTrackManager.h"
+#import "FHEnvContext.h"
 
 @implementation ExploreMixedListBaseView (TrackEvent)
 
@@ -75,8 +76,9 @@
     [dict setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
     [dict setValue:label forKey:@"refresh_type"];
     
-    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
-
+//    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
+    
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
     
 }

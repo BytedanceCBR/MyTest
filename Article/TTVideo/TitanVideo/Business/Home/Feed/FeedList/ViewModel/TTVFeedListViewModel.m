@@ -288,29 +288,56 @@ typedef void(^Finished)();
 {
     NSMutableArray *entitys = [NSMutableArray array];
     [self prefetchAutoPlayVideoWithFeedItems:[array copy]];
-    for (int i = 0; i < array.count; i ++) {
-        TTVFeedItem *obj = array[i];
-        TTVFeedListItem *entity = [[[self entityClassWithItem:obj] alloc] init];
-        entity.originData = obj;
-        entity.categoryId = parameter.categoryID;
-        entity.refer = [parameter.refer unsignedIntegerValue];
-        entity.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
-        entity.cellAction = [[[self cellActionClassWithItem:obj] alloc] init];
-        entity.isFirstCached = response.isFromLocal;
-        if (obj.videoCell) {
-            entity.followedWhenInit = obj.videoCell.userInfo.follow;
+    if ([SSCommonLogic feedRefreshClearAllEnable] && isAppendTop && !response.isFromLocal) {
+        for (int i = 0; i < response.increasedItems.count; i++) {
+            TTVFeedItem *obj = response.increasedItems[i];
+            TTVFeedListItem *entity = [[[self entityClassWithItem:obj] alloc] init];
+            entity.originData = obj;
+            entity.categoryId = parameter.categoryID;
+            entity.refer = [parameter.refer unsignedIntegerValue];
+            entity.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
+            entity.cellAction = [[[self cellActionClassWithItem:obj] alloc] init];
+            entity.isFirstCached = response.isFromLocal;
+            if (obj.videoCell) {
+                entity.followedWhenInit = obj.videoCell.userInfo.follow;
+            }
+            if (response.isFromLocal) {
+                entity.comefrom = TTVFromOptionFile;
+            } else if (parameter.reloadType == TTReloadTypePreLoadMore) {
+                entity.comefrom = TTVFromOptionPullUp;
+            } else if (parameter.reloadType == TTReloadTypePull) {
+                entity.comefrom = TTVFromOptionPullDown;
+            }
+            [TTVFeedListItemCreator configureItem:entity];
+            [entity calculateCellHeightWithWidth:[UIScreen mainScreen].bounds.size.width];
+            [entity ttv_addShareTrcker];
+            [entitys addObject:entity];
         }
-        if (response.isFromLocal) {
-            entity.comefrom = TTVFromOptionFile;
-        } else if (parameter.reloadType == TTReloadTypePreLoadMore) {
-            entity.comefrom = TTVFromOptionPullUp;
-        } else if (parameter.reloadType == TTReloadTypePull) {
-            entity.comefrom = TTVFromOptionPullDown;
+    } else {
+        for (int i = 0; i < array.count; i ++) {
+            TTVFeedItem *obj = array[i];
+            TTVFeedListItem *entity = [[[self entityClassWithItem:obj] alloc] init];
+            entity.originData = obj;
+            entity.categoryId = parameter.categoryID;
+            entity.refer = [parameter.refer unsignedIntegerValue];
+            entity.cellSeparatorStyle = ttv_feedListCellSeparatorStyleByTotalAndRow(array.count, i);
+            entity.cellAction = [[[self cellActionClassWithItem:obj] alloc] init];
+            entity.isFirstCached = response.isFromLocal;
+            if (obj.videoCell) {
+                entity.followedWhenInit = obj.videoCell.userInfo.follow;
+            }
+            if (response.isFromLocal) {
+                entity.comefrom = TTVFromOptionFile;
+            } else if (parameter.reloadType == TTReloadTypePreLoadMore) {
+                entity.comefrom = TTVFromOptionPullUp;
+            } else if (parameter.reloadType == TTReloadTypePull) {
+                entity.comefrom = TTVFromOptionPullDown;
+            }
+            [TTVFeedListItemCreator configureItem:entity];
+            [entity calculateCellHeightWithWidth:[UIScreen mainScreen].bounds.size.width];
+            [entity ttv_addShareTrcker];
+            [entitys addObject:entity];
         }
-        [TTVFeedListItemCreator configureItem:entity];
-        [entity calculateCellHeightWithWidth:[UIScreen mainScreen].bounds.size.width];
-        [entity ttv_addShareTrcker];
-        [entitys addObject:entity];
     }
     if (isAppendTop) {
         NSArray *temp = [NSArray arrayWithArray:self.dataArr];
@@ -323,10 +350,12 @@ typedef void(^Finished)();
         }
         [self.dataArr removeAllObjects];
         [self.dataArr addObjectsFromArray:entitys];
-        if ([[entitys lastObject] isKindOfClass:[TTVFeedListItem class]] && temp.count > 0) {
-            ((TTVFeedListItem *)[entitys lastObject]).cellSeparatorStyle = TTVFeedListCellSeparatorStyleHas;
+        if (![SSCommonLogic feedRefreshClearAllEnable]) {
+            if ([[entitys lastObject] isKindOfClass:[TTVFeedListItem class]] && temp.count > 0) {
+                ((TTVFeedListItem *)[entitys lastObject]).cellSeparatorStyle = TTVFeedListCellSeparatorStyleHas;
+            }
+            [self.dataArr addObjectsFromArray:temp];
         }
-        [self.dataArr addObjectsFromArray:temp];
     }else{
         if ([[self.dataArr lastObject] isKindOfClass:[TTVFeedListItem class]] && entitys.count > 0) {
             ((TTVFeedListItem *)[self.dataArr lastObject]).cellSeparatorStyle = TTVFeedListCellSeparatorStyleHas;
@@ -677,7 +706,9 @@ typedef void(^Finished)();
 //        NSLog(@"orderIndex = %@, orderIndexArray = %@", orderIndex, orderIndexArray);
 //    }
     BOOL lastReadRefreshEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"last_read_refresh" defaultValue:@YES freeze:NO] boolValue];
-    if (orderIndex == nil || !lastReadRefreshEnabled || !ttsettings_shouldShowLastReadForCategoryID(self.categoryID)) {
+    BOOL lastReadRefreshCellEnable = [SSCommonLogic feedLastReadCellShowEnable];
+    if (orderIndex == nil || !lastReadRefreshEnabled
+        || !ttsettings_shouldShowLastReadForCategoryID(self.categoryID) || !lastReadRefreshCellEnable) {
         return NO;
     }
     else {

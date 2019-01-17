@@ -8,6 +8,8 @@
 
 #import "TTNetwork.h"
 #import "TTNetworkUtilities.h"
+#import <TTNetworkManager/TTNetworkManager.h>
+#import "TTBridgeDefines.h"
 
 @implementation TTNetwork
 
@@ -25,4 +27,67 @@
         callback(TTRJSBMsgSuccess, @{@"data": commonParams});
     }
 }
+
+- (void)fetchWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSString *url = [param tt_stringValueForKey:@"url"];
+    NSString *method = [param stringValueForKey:@"method" defaultValue:@"GET"];
+    method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
+    
+    NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
+    NSDictionary *params = [param tt_dictionaryValueForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
+    
+    BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
+    
+    if (!url.length) {
+        TTBRIDGE_CALLBACK_WITH_MSG(TTBridgeMsgFailed, @"url不能为空");
+        return;
+    }
+    
+    /*
+     if (callback) {
+     callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
+     @"status": @(response.statusCode),
+     @"code": error?@(0): @(1),
+     @"beginReqNetTime": startTime
+     });
+     }
+     */
+    
+    NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (callback && [obj isKindOfClass:[NSData class]]) {
+            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding] ? : @"",
+                                                      @"status": @(response.statusCode),
+                                                      @"code": error?@(0): @(1),
+                                                      @"beginReqNetTime": startTime
+                                                      });
+        }
+    }];
+//    :url
+//                                                          params:params
+//                                                          method:method
+//                                                needCommonParams:needCommonParams
+//                                                     headerField:header
+//                                               requestSerializer:nil
+//                                              responseSerializer:nil
+//                                                      autoResume:YES
+//                                                        callback:^(NSError *error, id obj, TTHttpResponse *response) {
+//                                                            if (callback) {
+//                                                                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
+//                                                                                                                         @"status": @(response.statusCode),
+//                                                                                                                         @"code": error?@(0): @(1),
+//                                                                                                                         @"beginReqNetTime": startTime
+//                                                                                                                         });
+    
+//                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
+//                                                                                                @"status": @(response.statusCode),
+//                                                                                                @"code": error?@(0): @(1),
+//                                                                                                @"beginReqNetTime": startTime
+//                                                                                                });
+//                                                            }
+//
+//                                                        }];
+}
+
 @end

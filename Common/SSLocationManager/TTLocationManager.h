@@ -76,6 +76,10 @@ typedef NS_ENUM(NSInteger, TTLocationCommandResult) {
 
 - (void)reportLocationIfNeeded;
 
+- (void)setUpAmapInfo:(NSDictionary *)locationDict;
+
+- (NSDictionary *)getAmapInfo;
+
 /// 服务器下发命令
 @property(nonatomic, strong, readonly) TTLocationCommandItem  *commandItem;
 /// locations /* TTLocationItem */
@@ -92,6 +96,7 @@ typedef NS_ENUM(NSInteger, TTLocationCommandResult) {
 
 - (TTPlacemarkItem *)getPlacemarkItem;
 
+- (NSNumber *)getLocationResult;
 
 - (void)regeocodeWithCompletionHandler:(void(^)(NSArray *placemarks))completionHandler;
 

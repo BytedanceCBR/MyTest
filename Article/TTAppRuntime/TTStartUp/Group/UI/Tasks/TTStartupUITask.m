@@ -27,6 +27,7 @@
 #import "AKActivityTabManager.h"
 #import "AKTaskSettingHelper.h"
 #import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @implementation TTStartupUITask
 
@@ -71,6 +72,7 @@
     });
 
     [SharedAppDelegate.window makeKeyAndVisible];
+    [[FHEnvContext sharedInstance] onStartApp];
 }
 
 - (void)registerHomePageViewControllers {

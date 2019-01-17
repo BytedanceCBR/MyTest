@@ -23,7 +23,8 @@
 
 - (void)dealloc
 {
-    [_dispatcher unregisterStore:self];
+    // 潘祥老湿说先删了
+    // [_dispatcher unregisterStore:self];
 }
 
 - (instancetype)init {

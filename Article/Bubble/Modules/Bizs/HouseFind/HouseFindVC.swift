@@ -173,14 +173,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         return re
     }()
 
-    private lazy var segmentedNav: FWSegmentedControl = {
-        let re = FWSegmentedControl.segmentedWith(
-            scType: SCType.text,
-            scWidthStyle: SCWidthStyle.dynamicFixedSuper,
-            sectionTitleArray: nil,
-            sectionImageArray: nil,
-            sectionSelectedImageArray: nil,
-            frame: CGRect.zero)
+    private lazy var segmentedNav: HMSegmentedControl = {
+        
+        let re = HMSegmentedControl()
+        re.segmentWidthStyle = .dynamic
+        re.selectionStyle = .textWidthStripe
         re.selectionIndicatorHeight = 0
         re.segmentEdgeInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         let attributes = [NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(20),
@@ -220,9 +217,19 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         re.showsHorizontalScrollIndicator = false
         return re
     }()
-
+    
+    let maskView: FHErrorView = {
+        let re = FHErrorView()
+        re.isHidden = true
+        return re
+    }()
+    
+    
     let disposeBag = DisposeBag()
     fileprivate var contentOffsetDisposeBag : DisposeBag?
+    fileprivate var configDisposable : RACDisposable?
+
+    fileprivate var searchConfig: SearchConfigResponseData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -235,7 +242,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         setupViews()
 
         segmentedNav.indexChangeBlock = { [unowned self] index in
-            if let config = EnvContext.shared.client.configCacheSubject.value {
+            if let config = self.searchConfig {
                 let items = houseTypeSectionByConfig(config: config)
 
                 if items.count > index {
@@ -262,7 +269,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                                            pageView: containerView)
         pageControl?.didPageIndexChanged = { [unowned self] index in
             self.view.endEditing(true)
-            if let config = EnvContext.shared.client.configCacheSubject.value {
+            if let config = self.searchConfig {
                 let items = houseTypeSectionByConfig(config: config)
 
                 if items.count > index {
@@ -277,8 +284,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         bindSearchConfigObv()
 
         self.bindJumpSearchVC()
-        if EnvContext.shared.client.reachability.connection == .none,
-            EnvContext.shared.client.configCacheSubject.value != nil {
+        if EnvContext.shared.client.reachability.connection == .none,let config = self.searchConfig {
             createPageViews()
         }
 
@@ -305,16 +311,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func getSideMargin() -> CGFloat {
-        var sideMargin: CGFloat = 30
-        if let config = EnvContext.shared.client.configCacheSubject.value {
-            if houseTypeSectionByConfig(config: config).count < 3 {
-                if UIScreen.main.bounds.width < 370 {
-                    sideMargin = 90
-                } else {
-                    sideMargin = 100
-                }
-            }
-        }
+        var sideMargin: CGFloat = TTDeviceHelper.isScreenWidthLarge320() ? 45 : 15
         return sideMargin
     }
 
@@ -364,6 +361,11 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             maker.height.equalTo(50)
         }
         self.bindScrollViewObv()
+        
+        self.view.addSubview(maskView)
+        maskView.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview()
+        }
     }
 
     fileprivate func adjustSegmentNav() {
@@ -387,8 +389,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     }
 
     fileprivate func bindSearchConfigObv() {
-        EnvContext.shared.client.configCacheSubject
-            .subscribe(onNext: { [weak self] _ in
+        
+        configDisposable = FHEnvContext.sharedInstance().configDataReplay
+            .subscribeNext({ [weak self] (_) in
+                
+//        EnvContext.shared.client.configCacheSubject
+//            .subscribe(onNext: { [weak self] _ in
+                
                 self?.errorInfoDisplayController.removeAll()
                 self?.adjustSegmentNav()
                 self?.setupSectionLabelByConfig()
@@ -397,41 +404,72 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                     let offset = self?.pageControl?.pageOffsetXByIndex(0) ?? 0
                     containerView.contentOffset = CGPoint(x: offset, y: 0)
                 }
+                
 //                if let houseType = self?.houseType.value {
 //                    self?.handleScroll(houseType: houseType)
 //                }
             })
-            .disposed(by: disposeBag)
+//            .disposed(by: disposeBag)
     }
 
 
     func setupSectionLabelByConfig() {
-        EnvContext.shared.client.loadSearchCondition()
-        if let config = EnvContext.shared.client.configCacheSubject.value {
+        
+        if let configModel = FHEnvContext.sharedInstance().getConfigFromCache() {
+            
+            guard let configStr = configModel.toJSONString() else { return }
+            guard let config = SearchConfigResponseData(JSONString: configStr as String) else { return }
+            self.searchConfig = config
+        
+        // 获取searchConfig
+//        EnvContext.shared.client.loadSearchCondition()
+//        if let config = EnvContext.shared.client.configCacheSubject.value {
             let sections = houseTypeSectionByConfig(config: config)
-            sections.forEach({ (item) in
-                let ds = self.dataSourceByHouseType(houseType: item.houseType)
-                ds.deleteHistory = { [weak self] in
-                    self?.requestDeleteHistory()
-                }
-            })
-            if let first = sections.first {
-                self.houseType.accept(first.houseType)
-            }
+            if sections.count > 0 && (configModel.cityAvailability?.enable ?? false) == true {
 
-            self.cleanAllDatasourceHistoryCache()
-            self.preLoadHistoryData(items: sections)
-            self.segmentedNav.sectionTitleArray = sections.map { $0.label }
-            if self.segmentedNav.segmentWidthsArray?.count ?? 0 > 0 {
-                self.segmentedNav.setSelectedSegmentIndex(index: 0, animated: false)
+                maskView.isHidden = true
+                sections.forEach({ (item) in
+                    let ds = self.dataSourceByHouseType(houseType: item.houseType)
+                    ds.deleteHistory = { [weak self] in
+                        self?.requestDeleteHistory()
+                    }
+                })
+                if let first = sections.first {
+                    self.houseType.accept(first.houseType)
+                }
+                
+                self.cleanAllDatasourceHistoryCache()
+                self.preLoadHistoryData(items: sections)
+                self.segmentedNav.sectionTitles = sections.map { $0.label }
+                if self.segmentedNav.sectionTitles?.count ?? 0 > 0 {
+                    self.segmentedNav.setSelectedSegmentIndex(0, animated: false)
+                }
+            }else {
+                self.segmentedNav.sectionTitles = nil
+                maskView.showEmpty(withTip: "找房服务即将开通，敬请期待", errorImageName: kFHErrorMaskNetWorkErrorImageName, showRetry: false)
             }
+            
         } else {
             if EnvContext.shared.client.reachability.connection == .none {
-                self.segmentedNav.sectionTitleArray = houseTypePlaceHolder().map { $0.label }
+                self.segmentedNav.sectionTitles = houseTypePlaceHolder().map { $0.label }
             } else {
-                self.segmentedNav.sectionTitleArray = []
+                self.segmentedNav.sectionTitles = []
             }
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        var frame = self.segmentedNav.frame
+        if self.segmentedNav.totalSegmentedControlWidth() <= frame.size.width {
+            
+            frame.size.width = self.segmentedNav.totalSegmentedControlWidth()
+            self.segmentedNav.frame = frame
+            self.segmentedNav.centerX = self.containerView.width / 2
+            self.segmentedNav.isUserDraggable = false
+        }
+        
     }
 
     func setSegmentNayBySections(sections: [SectionItem]) {
@@ -445,7 +483,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
 
         EnvContext.shared.client.loadSearchCondition()
         //如果首次进入无网络，需要显示4个category。网络恢复后，拉取config会触发再次c刷新
-        if EnvContext.shared.client.reachability.connection == .none && EnvContext.shared.client.configCacheSubject.value == nil {
+        if EnvContext.shared.client.reachability.connection == .none && self.searchConfig == nil {
             let pages = houseTypePlaceHolder().map { (item) -> FHFindHouseCategoryPageView in
                 let re = FHFindHouseCategoryPageView(collectionView: nil, controler: errorInfoDisplayController)
                 return re
@@ -461,7 +499,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             return
         }
 
-        if let config = EnvContext.shared.client.configCacheSubject.value {
+        if let config = self.searchConfig {
             let items = houseTypeSectionByConfig(config: config)
             let pages = items.map { (item) -> FHFindHouseCategoryPageView in
                 let ds = dataSourceByHouseType(houseType: item.houseType)
@@ -488,13 +526,13 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                 let ds = dataSourceByHouseType(houseType: item.houseType)
                 let priceNode = searchConfigByHouseType(
                     configData: config,
-                    houseType: item.houseType).first(where: { $0.tabStyle ?? -1 == 2 })
+                    houseType: item.houseType).first(where: { $0.tabStyle ?? "-1" == "2" })
 
                 ds.priceNodeItem = priceNode
                 let nodes = searchConfigByHouseType(
                     configData: config,
                     houseType: item.houseType)
-                    .filter { $0.tabStyle ?? -1 != 2 }
+                    .filter { $0.tabStyle ?? "-1" != "2" }
                     .map { (option) -> [Node] in
                         if let options = option.options {
                             return transferSearchConfigOptionToNode(
@@ -544,7 +582,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
             errorInfoDisplayController.onNetworkUnavailable()
             searchBtn.isHidden = true
         } else {
-            if EnvContext.shared.client.configCacheSubject.value != nil {
+            if let config = self.searchConfig {
                 errorInfoDisplayController.onRequestNormalData()
                 searchBtn.isHidden = false
             } else {
@@ -561,6 +599,28 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     fileprivate func bindJumpSearchVC() {
         searchBar.tapGesture.rx.event
             .subscribe(onNext: { [unowned self] (_) in
+                
+                // 新修改入口
+                EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
+                    toTracerParams("findtab_search", key: "origin_from")
+                // 埋点参数需要添加通用参数
+                let tracerParams = TracerParams.momoid() <|>
+                    toTracerParams("click", key: "enter_type") <|>
+                    toTracerParams("findtab_search", key: "element_from") <|>
+                    toTracerParams("findtab", key: "enter_from") <|>
+                    toTracerParams("be_null", key: "log_pb") <|>
+                    toTracerParams("findtab_search", key: "origin_from")
+                
+                var infos:[String:Any] = [:]
+                infos["house_type"] = self.houseType.value.rawValue
+                infos["tracer"] = tracerParams.paramsGetter([:])
+                infos["from_home"] = 2
+                let userInfo = TTRouteUserInfo(info: infos)
+                if let url = URL(string: "sslocal://sug_list") {
+                    TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
+                }
+                
+                /*
                 let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeFindTab)
 
                 EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
@@ -606,6 +666,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
                         houseSearchParams: houseSearchParams.paramsGetter([:]),
                         tracerParams: paramsWithCategoryType)
                 }
+ */
 
                 // click_house_search
                 self.recordClickHouseSearch()
@@ -738,6 +799,10 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.theThresholdTracer?(TraceEventName.stay_tab, self.stayTabParams)
+    }
+    
+    deinit {
+        configDisposable?.dispose()
     }
 
     fileprivate func adjustVerticalPositionToTop() {

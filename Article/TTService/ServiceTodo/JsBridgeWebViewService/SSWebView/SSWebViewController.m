@@ -212,6 +212,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             if ([[params allKeys] containsObject:@"hide_back_buttonView"]) {
                 _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_buttonView"];
             }
+            
+            if ([[params allKeys] containsObject:@"hide_back_button"]) {
+                _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_button"];
+            }
         }
         
         _shouldDisableHistory = [params tt_boolValueForKey:@"disableHistory"];
@@ -269,6 +273,13 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         self.baseCondition = params;
     }
     return self;
+}
+
+- (void)setUpBackBtnControl:(NSNumber *)isControl
+{
+    if (isControl) {
+        self.backButton.userInteractionEnabled = NO;
+    }
 }
 
 - (void)setupAdInfo
@@ -442,6 +453,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     //注册基础服务
 //    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
     [self setupAdInfo];
+    
 }
 
 // 注册全局通知监听器
@@ -619,12 +631,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
--(void) applicationDidEnterBackground:(NSNotification *)notification {
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
     [self _sendStayEventWithTimeInterval];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     _startDate = [NSDate date];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -636,6 +650,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:self.ttStatusBarStyle == UIStatusBarStyleDefault ? [[TTThemeManager sharedInstance_tt] statusBarStyle] : self.ttStatusBarStyle animated:YES];
     }
+    
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -647,6 +663,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     if (_shouldhideStatusBar) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)setDismissType:(SSWebViewDismissType)type
@@ -694,6 +711,24 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             break;
     }
 }
+
+- (void)setupCloseCallBackPreviousVC:(NSDictionary *)params
+{
+    NSString *jsCodeStr = [NSString stringWithFormat:@"ToutiaoJSBridge.trigger('pageResult',%@);",[params tt_JSONRepresentation]];
+    [self.ssWebView.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:jsCodeStr
+                                                        completionHandler:nil];
+}
+
+- (void)setupOpenPageTagStr:(NSString *)tagStr
+{
+    self.tagStr = tagStr;
+}
+
+- (NSString *)getOpenPageTagStr
+{
+    return _tagStr;
+}
+
 
 - (void)refreshBackButtonPosition
 {
@@ -925,6 +960,20 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [dict setValue:[extraDict JSONRepresentation] forKey:@"ad_extra_data"];
         [TTTrackerWrapper eventData:dict];
         
+    }
+}
+
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl
+{
+    if ([isWebControl respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isWebControl = [isWebControl boolValue];
+    }
+}
+
+- (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow
+{
+    if ([isShow respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isShowCloseWebBtn = [isShow boolValue];
     }
 }
 

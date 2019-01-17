@@ -85,6 +85,8 @@ struct UserFollowData: Mappable {
         var houseType: Int?
         var logPB: Any?
         var fhSearchId: String?
+        var imprId: String?
+        var searchId: String?
 
         init?(map: Map) {
 
@@ -102,6 +104,8 @@ struct UserFollowData: Mappable {
             houseType <- map["house_type"]
             logPB <- map["log_pb"]
             fhSearchId <- map["fhSearchId"]
+            imprId <- map["impr_id"]
+            searchId <- map["search_id"]
 
         }
     }

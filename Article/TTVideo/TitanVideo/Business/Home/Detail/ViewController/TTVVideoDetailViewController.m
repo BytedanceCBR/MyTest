@@ -96,6 +96,7 @@
 #import "TTTabBarProvider.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKAwardCoinVideoMonitorManager.h"
+#import "FHTraceEventUtils.h"
 
 #define kTopViewHeight  44.f
 
@@ -775,7 +776,12 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     {
         UIView *view = _toolbarVC.view;
-        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight());
+        // add by zjing safeArea
+        CGFloat safeAreaBottom = 0;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            safeAreaBottom = 34;
+        }
+        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight() + safeAreaBottom);
         view.bottom = self.view.height;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         [self.view addSubview:view];
@@ -1808,26 +1814,31 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)sendCommentDiggActionLogV3WithCommentID:(NSString *) commentId digg:(BOOL )isDigg commentPosition:(NSString *)position
 {
-    NSMutableDictionary *event3Dic = [NSMutableDictionary dictionary];
-    [event3Dic setValue:commentId forKey:@"comment_id"];
-    [event3Dic setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
-    [event3Dic setValue:[self categoryName] forKey:@"category_name"];
-    [event3Dic setValue:[self enterFromString] forKey:@"enter_from"];
-    [event3Dic setValue:[self p_contentID] forKey:@"user_id"];
-    [event3Dic setValue:[self logPb] forKey:@"log_pb"];
-    [event3Dic setValue:@"detail" forKey:@"position"];
-    [event3Dic setValue:position forKey:@"comment_position"];
-    if (isDigg) {
-        [TTTrackerWrapper eventV3:@"comment_digg" params:event3Dic];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
+    [params setValue:self.videoInfo.groupModel.itemID forKey:@"item_id"];
+    [params setValue:commentId forKey:@"comment_id"];
+    //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+    if (self.detailModel.logPb) {
+        [params setValue:self.detailModel.logPb forKey:@"log_pb"];
     }else{
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:event3Dic];
+        [params setValue:self.detailModel.gdExtJsonDict[@"log_pb"] forKey:@"log_pb"];
+    }
+    [params setValue:[self categoryName] forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
+    [params setValue:position forKey:@"position"];
+    if (isDigg) {
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+    }else{
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     }
 }
 
-- (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
+- (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model position:(NSString *)position
 {
     [self p_sendDetailTTLogV2WithEvent:@"click_comment_like" eventContext:@{@"comment_id":model.commentIDNum.stringValue} referContext:nil];
-    [self sendCommentDiggActionLogV3WithCommentID:model.commentIDNum.stringValue digg:model.userDigged commentPosition:@"detail"];
+    [self sendCommentDiggActionLogV3WithCommentID:model.commentIDNum.stringValue digg:model.userDigged commentPosition:position];
 }
 
 - (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
@@ -2094,7 +2105,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)videoDetailFloatCommentViewCellDidDigg:(BOOL)digged withModel:(id<TTVReplyModelProtocol>)model
 {
-    [self sendCommentDiggActionLogV3WithCommentID:model.commentID digg:!model.userDigg commentPosition:@"comment_detail"];
+    [self sendCommentDiggActionLogV3WithCommentID:model.commentID digg:!model.userDigg commentPosition:@"reply"];
 }
 #pragma mark - TTVVideoDetailMovieBannerDelegate
 

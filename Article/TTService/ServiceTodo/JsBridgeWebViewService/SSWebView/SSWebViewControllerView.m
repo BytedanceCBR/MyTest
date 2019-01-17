@@ -92,6 +92,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.shouldInterceptAutoJump = [SSCommonLogic shouldAutoJumpControlEnabled];
         
         self.isRepostWeitoutiaoFromWeb = NO;
+        self.isShowCloseWebBtn = YES;
         
         SSNavigationBar *navigationBar = [[SSNavigationBar alloc] initWithFrame:[self frameForTitleBarView]];
         self.navigationBar = navigationBar;
@@ -452,14 +453,32 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     [super themeChanged:notification];
 }
 
+- (void)showCloseButton
+{
+    NSLog(@"canGoBack = %d",self.ssWebContainer.ssWebView.canGoBack);
+    if (self.isShowCloseWebBtn) {
+        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
+    }else
+    {
+        [self.backButtonView showCloseButton:self.isShowCloseWebBtn];
+    }
+}
+
 - (void)backWebViewActionFired:(id) sender {
     
-    if (![self.backButtonView isCloseButtonShowing]) {
-        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
-    }
+//    if (![self.backButtonView isCloseButtonShowing]) {
+        [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
+//    }
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
         [self.ssWebContainer.ssWebView goBack];
     } else {
+        
+        if (self.isWebControl) {
+            [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"ToutiaoJSBridge.trigger('close');"
+                                                                completionHandler:nil];
+            return;
+        }
+        
         if (self.viewController.navigationController) {
             if (self.viewController.navigationController.viewControllers.count == 1 && self.viewController.navigationController.presentingViewController) {
                 [self.viewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
@@ -473,6 +492,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
 }
+
 
 - (void) backViewControllerActionFired:(id) sender {
     [self.viewController.navigationController popViewControllerAnimated:YES];
@@ -556,9 +576,9 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     BOOL isDayModel = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay;
     NSString *fontSizeType = [TTUserSettingsManager settedFontShortString];
     
-    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
-    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
-    
+//    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
+//    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
+    urlString = origURL.absoluteString;
     return urlString;
 }
 
@@ -589,6 +609,11 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     BOOL result = YES;
+    NSLog(@"request url = %@",[request URL]);
+    
+    if ([self.ssWebContainer.ssWebView canGoBack] && self.isShowCloseWebBtn) {
+        [self.backButtonView showCloseButton:YES];
+    }
     
     //针对WKWebview 的下载做一个特殊处理 主动通过openURL去打开AppStore nick -5.6
     if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString] && [webView isWKWebView]) {
@@ -647,6 +672,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.webTapGesture.enabled = YES;
         [webView stringByEvaluatingJavaScriptFromString:[SSCommonLogic shouldEvaluateActLogJsStringForAdID:self.ssWebContainer.adID] completionHandler:nil];
     }
+    
 }
 
 - (void)_sendJumpEventWithCount:(NSInteger) count {

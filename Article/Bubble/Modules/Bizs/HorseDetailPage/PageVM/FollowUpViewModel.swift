@@ -20,6 +20,10 @@ class FollowUpViewModel {
         statusBehavior: BehaviorRelay<Result<Bool>>,
         isNeedRecord: Bool = true) -> () -> Void {
         return {
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
             requestFollow(
                 houseType: houseType,
                 followId: followId,
@@ -38,7 +42,9 @@ class FollowUpViewModel {
                         //                        assertionFailure()
                     }
                 }, onError: { error in
-                    EnvContext.shared.toast.showToast("关注失败")
+                    EnvContext.shared.toast.showToast("网络异常")
+
+//                    EnvContext.shared.toast.showToast("关注失败")
                 })
                 .disposed(by: disposeBag)
         }
@@ -52,6 +58,10 @@ class FollowUpViewModel {
         statusBehavior: BehaviorRelay<Bool>,
         isNeedRecord: Bool = true) -> () -> Void {
         return {
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
             requestFollow(
                 houseType: houseType,
                 followId: followId,
@@ -70,7 +80,9 @@ class FollowUpViewModel {
                         //                        assertionFailure()
                     }
                 }, onError: { error in
-                    EnvContext.shared.toast.showToast("关注失败")
+//                    EnvContext.shared.toast.showToast("关注失败")
+
+                    EnvContext.shared.toast.showToast("网络异常")
                 })
                 .disposed(by: disposeBag)
         }
@@ -83,6 +95,10 @@ class FollowUpViewModel {
         statusBehavior: BehaviorRelay<Result<Bool>>,
         disposeBag: DisposeBag) -> () -> Void {
         return {
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
             requestCancelFollow(
                 houseType: houseType,
                 followId: followId,
@@ -97,7 +113,8 @@ class FollowUpViewModel {
                         assertionFailure()
                     }
                 }, onError: { error in
-                    EnvContext.shared.toast.showToast("取消关注失败")
+//                    EnvContext.shared.toast.showToast("取消关注失败")
+                    EnvContext.shared.toast.showToast("网络异常")
                 })
                 .disposed(by: disposeBag)
         }
@@ -110,6 +127,10 @@ class FollowUpViewModel {
         statusBehavior: BehaviorRelay<Bool>,
         disposeBag: DisposeBag) -> () -> Void {
         return {
+            if EnvContext.shared.client.reachability.connection == .none {
+                EnvContext.shared.toast.showToast("网络异常")
+                return
+            }
             requestCancelFollow(
                 houseType: houseType,
                 followId: followId,
@@ -124,7 +145,8 @@ class FollowUpViewModel {
                         assertionFailure()
                     }
                 }, onError: { error in
-                    EnvContext.shared.toast.showToast("取消关注失败")
+//                    EnvContext.shared.toast.showToast("取消关注失败")
+                    EnvContext.shared.toast.showToast("网络异常")
                 })
                 .disposed(by: disposeBag)
         }
@@ -226,7 +248,7 @@ class FollowUpViewModel {
                         }else if response?.data?.followStatus ?? 0 == 1 {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {
-                                EnvContext.shared.toast.showToast("提交成功")
+                                EnvContext.shared.toast.showToast("提交成功，经纪人将尽快与您联系")
                             }
                         }
                         NotificationCenter.default.post(name: .followUpDidChange, object: nil)

@@ -99,7 +99,7 @@
         TTPushGuideDialogCategory category = [self.class categoryOfFiringPushGuideDlg:self.authorizeModel.pushFireReason];
         TTPushGuideSettingsModel *alertModel = [TTPushGuideSettings pushGuideDialogModelOfCategory:category];
         NSString *titleString = alertModel.titleString;
-        NSString *defaultMessage = canOpenSettings ? @"第一时间获取重大新闻，去设置中允许好多房通知" : @"第一时间获取重大新闻，请去 设置-通知 内开启好多房访问权限";
+        NSString *defaultMessage = canOpenSettings ? @"第一时间获取重大新闻，去设置中允许幸福里通知" : @"第一时间获取重大新闻，请去 设置-通知 内开启幸福里访问权限";
         NSString *message = alertModel.subtitleString ? : defaultMessage;
         NSString *okBtnTitle = canOpenSettings ? (alertModel.buttonTextString ? : @"去设置") : @"我知道了";
         
@@ -294,7 +294,7 @@
     self.authorizeModel.lastTimeShowPushAuthorizeHint = [[NSDate date] timeIntervalSince1970];
     [self.authorizeModel saveData];
     __weak typeof(self) wself = self;
-    _hintView = [self authorizeHintViewWithTitle:@"开启要闻通知" message:@"允许好多房获取推送权限，第一时间获知重大新闻" imageName:@"img_popup_notice" okButtonTitle:@"确定" okBlock:^{
+    _hintView = [self authorizeHintViewWithTitle:@"开启要闻通知" message:@"允许幸福里获取推送权限，第一时间获知重大新闻" imageName:@"img_popup_notice" okButtonTitle:@"确定" okBlock:^{
         __strong typeof(wself) self = wself;
         ttTrackEvent(@"pop", @"push_permission_guide_confirm");
         if(completionHandler){

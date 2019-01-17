@@ -7,16 +7,22 @@
 
 #import "FHHouseFilterBridgeImp.h"
 #import "Bubble-Swift.h"
-
+#import "FHConditionFilterFactory.h"
+#import "FHSearchConfigModel.h"
+#import "FHFilterModelParser.h"
+#import "FHEnvContext.h"
 @interface FHHouseFilterBridgeImp()
 
-@property(nonatomic , strong) HouseFilterViewModel* houseFilterViewModel;
+@property(nonatomic , strong) FHConditionFilterViewModel* houseFilterViewModel;
 @property(nonatomic , assign) FHHouseType houseType;
 @end
 
 @implementation FHHouseFilterBridgeImp
 
--(id)filterViewModelWithType:(FHHouseType)houseType showAllCondition:(BOOL)showAllCondition showSort:(BOOL)showSort
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort
+          safeBottomPandding:(CGFloat)safeBottomPandding
 {
     HouseType ht = HouseTypeSecondHandHouse;
     switch (houseType) {
@@ -28,19 +34,49 @@
             break;
         case FHHouseTypeNeighborhood:
             ht = HouseTypeNeighborhood;
+            break;
         default:
             ht = HouseTypeSecondHandHouse;
             break;
     }
-    
-    MapFindHouseFilterFactory* factory = [[MapFindHouseFilterFactory alloc] init];
-    _houseFilterViewModel = [factory createFilterPanelViewModelWithHouseType:ht allCondition:showAllCondition isSortable:showSort];
+
+
+    FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
+
+    factory.safeBottomPandding = safeBottomPandding;
+    NSArray<FHFilterNodeModel*>* configs = [FHFilterModelParser getConfigByHouseType:houseType];
+    NSArray<FHFilterNodeModel*>* sortConfig = nil;
+    if (showSort) {
+        sortConfig = [FHFilterModelParser getSortConfigByHouseType:houseType].firstObject.children.firstObject.children;
+    }
+    _houseFilterViewModel = [factory createFilterPanelViewModel:ht
+                                                   allCondition:showAllCondition
+                                                     sortConfig:sortConfig
+                                                         config:configs];
     return _houseFilterViewModel;
+}
+
+-(id)filterViewModelWithType:(FHHouseType)houseType
+            showAllCondition:(BOOL)showAllCondition
+                    showSort:(BOOL)showSort
+{
+    CGFloat safeBottomPandding = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        if (@available(iOS 11.0, *)) {
+            safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    return [self filterViewModelWithType:houseType
+                        showAllCondition:showAllCondition
+                                showSort:showSort
+                      safeBottomPandding:safeBottomPandding];
 }
 
 -(UIView *)filterPannel:(id)viewModel
 {
-    return [_houseFilterViewModel filterPanelView];
+    return [_houseFilterViewModel filterBar];
 }
 
 -(UIView *)filterBgView:(id)viewModel
@@ -53,14 +89,14 @@
     [_houseFilterViewModel resetFilterConditionWithQueryParams:params updateFilterOnly:updateFilterOnly];
 }
 
--(void)setViewModel:(id)viewModel withDelegate:(id<FHHouseFilterDelegate>)delegate
+-(void)setViewModel:(id)viewModel withDelegate:(id<FHConditionFilterViewModelDelegate>)delegate
 {
     _houseFilterViewModel.delegate = delegate;
 }
 
 -(NSString *)getConditions
 {
-    return [_houseFilterViewModel getConditions];
+    return [_houseFilterViewModel conditionQueryString];
 }
 
 -(void)closeConditionFilterPanel
@@ -70,7 +106,8 @@
 
 -(NSString *) getNoneFilterQueryParams:(NSDictionary *) params
 {
-    return [_houseFilterViewModel getNoneFilterQueryWithParams:params];
+    NSString *query =  [_houseFilterViewModel getNoneFilterQueryWithParams:params];
+    return query;
 }
 
 -(void)clearSortCondition
@@ -81,6 +118,20 @@
 -(void)showBottomLine:(BOOL)show
 {
     [_houseFilterViewModel setFilterPanelBottomLineHidden:!show];
+}
+
+-(void)trigerConditionChanged {
+    [_houseFilterViewModel trigerConditionChanged];
+}
+
+-(void)setFilterConditions:(NSDictionary*)params {
+    
+    [_houseFilterViewModel setFilterConditions:params];
+}
+
+-(NSString *)getAllQueryString
+{
+    return [_houseFilterViewModel allQueryString];
 }
 
 @end

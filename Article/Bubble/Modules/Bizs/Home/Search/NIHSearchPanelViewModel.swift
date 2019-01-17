@@ -97,27 +97,27 @@ class NIHSearchPanelViewModel: NSObject {
         vc.onItemSelect
             .subscribe(onNext: { [unowned self] i in
                 EnvContext.shared.toast.showModeLoadingToast("正在切换城市")
-                EnvContext.shared.client.currentCitySwitcher
-                    .switchCity(cityId: i)
-                    .subscribe(onNext: { (state) in
-                        switch state {
-                        case .onFinishedRequestFilterConfig:
-                            EnvContext.shared.toast.dismissToast()
-                            self.baseVC.navigationController?.popViewController(animated: true)
-                            FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
-                            return
-                        case .onError:
-                            DispatchQueue.main
-                                .asyncAfter(deadline: DispatchTime.now() + .milliseconds(500)) {
-                                    EnvContext.shared.toast.dismissToast()
-                                    EnvContext.shared.toast.showToast("网络异常，城市切换失败")
-                            }
-                            return
-                        default:
-                            return
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+//                EnvContext.shared.client.currentCitySwitcher
+//                    .switchCity(cityId: i)
+//                    .subscribe(onNext: { (state) in
+//                        switch state {
+//                        case .onFinishedRequestFilterConfig:
+//                            EnvContext.shared.toast.dismissToast()
+//                            self.baseVC.navigationController?.popViewController(animated: true)
+//                            FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
+//                            return
+//                        case .onError:
+//                            DispatchQueue.main
+//                                .asyncAfter(deadline: DispatchTime.now() + .milliseconds(500)) {
+//                                    EnvContext.shared.toast.dismissToast()
+//                                    EnvContext.shared.toast.showToast("网络异常，城市切换失败")
+//                            }
+//                            return
+//                        default:
+//                            return
+//                        }
+//                    })
+//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: self.disposeBag)
         self.baseVC.navigationController?.pushViewController(vc, animated: true)
@@ -131,43 +131,31 @@ class NIHSearchPanelViewModel: NSObject {
             rollText = self.suspendSearchBar.searchTitles[self.suspendSearchBar.searchTitleIndex]
         }
         self.recordClickHouseSearch(rollText: rollText)
-        let vc = SuggestionListVC(isFromHome: .enterSuggestionTypeHome)
-
+        
+        // 埋点参数需要添加通用参数
         let tracerParams = TracerParams.momoid() <|>
             toTracerParams("click", key: "enter_type") <|>
             toTracerParams("maintab_search", key: "element_from") <|>
             toTracerParams("maintab", key: "enter_from") <|>
-            toTracerParams("be_null", key: "log_pb")
-
-        vc.tracerParams = tracerParams
+            toTracerParams("be_null", key: "log_pb") <|>
+            toTracerParams("maintab_search", key: "origin_from")
         
+        var infos:[String:Any] = [:]
+        infos["house_type"] = HouseType.secondHandHouse.rawValue
+        infos["tracer"] = tracerParams.paramsGetter([:])
+        infos["from_home"] = 1
         let index = self.suspendSearchBar.searchTitleIndex
         if index >= 0 && index < self.homePageRollScreen.count {
-            vc.homePageRollData = self.homePageRollScreen[index]
+            let homePageRollData = self.homePageRollScreen[index]
+            let homePageRollDataDic = ["text":homePageRollData.text ?? "",
+                                       "guess_search_id":homePageRollData.guessSearchId ?? "",
+                                       "house_type":homePageRollData.houseType,
+                                       "open_url":homePageRollData.openUrl ?? ""] as [String : Any]
+            infos["homepage_roll_data"] = homePageRollDataDic
         }
-
-        let nav = self.baseVC.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [weak nav] void in
-                EnvContext.shared.toast.dismissToast()
-                nav?.popViewController(animated: true)
-            })
-            .disposed(by: self.disposeBag)
-        vc.onSuggestSelect = { [weak self, unowned vc] (query, condition, associationalWord, houseSearchParams) in
-
-
-            let paramsWithCategoryType = tracerParams <|>
-                toTracerParams(categoryEnterNameByHouseType(houseType: vc.houseType.value), key: "category_name")
-            let hsp = houseSearchParams <|>
-                toTracerParams("maintab", key: "page_type")
-            self?.openCategoryList(
-                houseType: vc.houseType.value,
-                condition: condition ?? "",
-                query: query,
-                associationalWord: (associationalWord?.isEmpty ?? true) ? nil : associationalWord,
-                houseSearchParams: hsp,
-                tracerParams: paramsWithCategoryType)
+        let userInfo = TTRouteUserInfo(info: infos)
+        if let url = URL(string: "sslocal://sug_list") {
+            TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
         }
     }
 
@@ -177,39 +165,7 @@ class NIHSearchPanelViewModel: NSObject {
             toTracerParams(rollText, key: "hot_word")
         recordEvent(key: "click_house_search", params: params)
     }
-    
-    
-    private func openCategoryList(
-        houseType: HouseType,
-        condition: String,
-        query: String,
-        associationalWord: String? = nil,
-        houseSearchParams: TracerParams,
-        tracerParams: TracerParams) {
-        let vc = CategoryListPageVC(
-            isOpenConditionFilter: true,
-            associationalWord: associationalWord)
-        vc.allParams = ["houseSearch": houseSearchParams.paramsGetter([:])]
-        vc.tracerParams = tracerParams
-        vc.houseType.accept(houseType)
-        vc.suggestionParams = condition
-        vc.queryString = query
-        vc.navBar.isShowTypeSelector = false
-        if associationalWord?.isEmpty ?? true {
-            vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
-        } else {
-            vc.navBar.setSearchPlaceHolderText(text: associationalWord)
-        }
-        let nav = self.baseVC.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-            .subscribe(onNext: { [weak nav] void in
-                EnvContext.shared.toast.dismissToast()
-                nav?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-    }
-    
+
     func registerPullDownNoti() {
         // TTRefreshView+HomePage 进行下拉以及是否是首页判断
         NotificationCenter.default.rx.notification(.homePagePullDown).subscribe(onNext: {[weak self] (noti) in

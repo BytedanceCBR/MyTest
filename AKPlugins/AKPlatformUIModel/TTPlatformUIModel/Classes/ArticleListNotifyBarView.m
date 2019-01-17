@@ -43,7 +43,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         self.bgButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _bgButton.backgroundColors = @[@"d5e9f7",@"788289"];
+        _bgButton.backgroundColors = @[@"e6f3ff",@"788289"]; // @[@"d5e9f7",@"788289"];
         [_bgButton addTarget:self action:@selector(bgButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_bgButton];
         
@@ -55,7 +55,7 @@
         _notifyLabel.font = [UIFont systemFontOfSize:kNotifyLabelFontSize];
         _notifyLabel.backgroundColor = [UIColor clearColor];
         _notifyLabel.textAlignment = NSTextAlignmentCenter;
-        _notifyLabel.textColors = @[@"2a90d7",@"23618e"];
+        _notifyLabel.textColors = @[@"299cff",@"23618e"]; //@[@"2a90d7",@"23618e"];
         [self addSubview:_notifyLabel];
         
         [_notifyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -66,7 +66,7 @@
         _rightActionButton.hidden = YES;
         [_rightActionButton setBackgroundImage:[UIImage themedImageNamed:@"refresh_close"] forState:UIControlStateNormal];
         [_rightActionButton.titleLabel setFont:[UIFont systemFontOfSize:kNotifyLabelFontSize]];
-        _notifyLabel.textColors = @[@"2a90d7",@"23618e"];
+        _notifyLabel.textColors = @[@"299cff",@"23618e"];
         
         [_rightActionButton addTarget:self action:@selector(rightActionButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_bgButton addSubview:_rightActionButton];
@@ -173,6 +173,7 @@ actionButtonClickBlock:(XPNotifyBarButtonBlock)actionButtonBlock
     CGFloat barH = self.bounds.size.height;
     
     if (CGAffineTransformEqualToTransform(self.transform, CGAffineTransformMakeTranslation(0, -barH))) {
+        self.hidden = YES;
         return;
     }
 

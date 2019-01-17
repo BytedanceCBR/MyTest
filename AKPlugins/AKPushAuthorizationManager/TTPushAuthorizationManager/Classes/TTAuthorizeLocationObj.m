@@ -83,7 +83,7 @@
             ttTrackEvent(@"pop", @"locate_local_limit_show");
         }
         
-        NSString *message = canOpenSettings ? @"智能推荐当前城市资讯，去设置中允许好多房定位" : @"智能推荐当前城市资讯，请去 设置-隐私-定位服务 内开启好多房访问权限";
+        NSString *message = canOpenSettings ? @"智能推荐当前城市资讯，去设置中允许幸福里定位" : @"智能推荐当前城市资讯，请去 设置-隐私-定位服务 内开启幸福里访问权限";
         NSString *okBtnTitle = canOpenSettings ? @"去设置" : @"我知道了";
         
         _hintView = [self authorizeHintViewWithTitle:@"开启定位" message:message imageName:@"img_popup_locate" okButtonTitle:okBtnTitle okBlock:^{
@@ -141,7 +141,7 @@
             ttTrackEvent(@"pop", @"locate_change_city_limit_show");
         }
         
-        NSString *message = canOpenSettings ? @"开启定位失败，请去设置项允许好多房获取您的位置" : @"开启定位失败，请去 设置-隐私-定位服务 内开启好多房访问权限";
+        NSString *message = canOpenSettings ? @"开启定位失败，请去设置项允许幸福里获取您的位置" : @"开启定位失败，请去 设置-隐私-定位服务 内开启幸福里访问权限";
         NSString *okBtnTitle = canOpenSettings ? @"去设置" : @"我知道了";
         
         _hintView = [self authorizeHintViewWithTitle:@"开启定位" message:message imageName:@"img_popup_locate" okButtonTitle:okBtnTitle okBlock:^{
@@ -248,7 +248,7 @@
     [self.authorizeModel saveData];
     
     __weak typeof(self) wself = self;
-    _hintView = [self authorizeHintViewWithTitle:@"开启定位" message:@"允许好多房获取定位权限，智能推荐当前城市资讯" imageName:@"img_popup_locate" okButtonTitle:@"确定" okBlock:^{
+    _hintView = [self authorizeHintViewWithTitle:@"开启定位" message:@"允许幸福里获取定位权限，智能推荐当前城市资讯" imageName:@"img_popup_locate" okButtonTitle:@"确定" okBlock:^{
         __strong typeof(wself) self = wself;
         ttTrackEvent(@"pop", @"location_permission_guide_confirm");
         if (authCompleteBlock) {

@@ -173,6 +173,9 @@ class FloorPanCategoryVC: BaseSubPageViewController, UIViewControllerErrorHandle
         self.floorPanCategoryViewModel?.onRequestFinished = { [weak self] in
             self?.tt_endUpdataData()
         }
+        
+        self.floorPanCategoryViewModel?.tracerParams = tracerParams
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {

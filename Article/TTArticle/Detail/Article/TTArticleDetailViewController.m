@@ -104,9 +104,12 @@
 #import "TTCommentViewControllerProtocol.h"
 #import "TTUGCTrackerHelper.h"
 #import <ExploreMomentDefine_Enums.h>
+#import "FHTraceEventUtils.h"
+
 //爱看
 #import "AKHelper.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
 #define SWITCH(s)                       for (NSString *__s__ = (s); ; )
@@ -1213,6 +1216,7 @@
             if ([natantView isKindOfClass:[TTDetailNatantRewardView class]]) {
                 TTDetailNatantRewardView *rewardView = (TTDetailNatantRewardView *)natantView;
                 rewardView.goDetailLabel = self.detailModel.clickLabel;
+                rewardView.hidden = YES;
                 TTActionSheetSourceType source = TTActionSheetSourceTypeDislike;
                 NSString *trackSource = nil;
                 NSString *style = nil;
@@ -1231,12 +1235,19 @@
                     StrongSelf;
                     [self report_showReportOnNatantView:style source:source trackSource:trackSource];
                 };
+            }else
+            {
+                if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
+                    ((ExploreDetailADContainerView*)natantView).delegate = self;
+                }
+          
+                [natantItems addObject:natantView];
+                [natantItems addObject:[self p_natantSpacingItemForClass:className]];
+                
+                if ([natantView isKindOfClass:[TTDetailNatantRelateArticleGroupView class]]) {
+                    [natantItems addObject:[self p_natantSpacingItemForClass:@"topMargin"]];
+                }
             }
-            if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
-                ((ExploreDetailADContainerView*)natantView).delegate = self;
-            }
-            [natantItems addObject:natantView];
-            [natantItems addObject:[self p_natantSpacingItemForClass:className]];
         }
     }];
     
@@ -1283,6 +1294,7 @@
     SWITCH (className) {
         CASE (@"topMargin") {
             paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] topMargin];
+//            paddingHeight = 0;
             break;
         }
         CASE (@"TTDetailNatantRiskWarningView") {
@@ -1295,7 +1307,8 @@
             break;
         }
         CASE (@"TTDetailNatantRewardView") {
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
+            paddingHeight = 0;
+//            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
             break;
         }
         CASE (@"ExploreDetailADContainerView") {
@@ -1303,7 +1316,7 @@
             break;
         }
         CASE (@"TTDetailNatantRelateArticleGroupView"){
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] bottomMargin];
+            paddingHeight = 0;
             break;
         }
         CASE (@"ExploreDetailTextlinkADView"){
@@ -2297,9 +2310,9 @@
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
-    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+//    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
 
-    
+    [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
 //        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
@@ -2638,6 +2651,7 @@
 {
     if (!model.userDigged) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
         [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
         [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
@@ -2646,6 +2660,18 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+//        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }
 

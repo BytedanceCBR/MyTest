@@ -81,7 +81,7 @@ struct SearchConfigFilterItem: Mappable {
 
     var text: String?
     var tabId: Int?
-    var tabStyle: Int?
+    var tabStyle: String?
     var options: [SearchConfigOption]?
     var supportMulti: Bool = false
     var rate: Int = 1

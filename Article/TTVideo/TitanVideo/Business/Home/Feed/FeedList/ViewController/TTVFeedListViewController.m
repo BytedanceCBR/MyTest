@@ -896,6 +896,16 @@ TTRefreshViewDelegate>
 
     [self attachVideoIfNeededForCell:cell data:item];
 
+    NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
+    
+    [dictTraceParams setValue:_categoryID forKey:@"category_name"];
+    [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [dictTraceParams setValue:uniqueID forKey:@"group_id"];
+    [dictTraceParams setValue:itemID forKey:@"item_id"];
+//    [dictTraceParams setValue:item.originData.logPb[@"impr_id"] forKey:@"impr_id"];
+    [dictTraceParams setValue:item.originData.logPb forKey:@"log_pb"];
+    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+    
     /*impression统计相关*/
     SSImpressionStatus impressionStatus = (self.isDisplayView && _isShowing) ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
     [self recordGroupWithItem:item status:impressionStatus];
@@ -1693,7 +1703,7 @@ TTRefreshViewDelegate>
 //        [[TTAuthorizeHintView alloc]
 //         initAuthorizeHintWithImageName:@"img_popup_locate"
 //         title:NSLocalizedString(@"开启定位服务设置", nil)
-//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“好多房”定位服务", nil)
+//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“幸福里”定位服务", nil)
 //         confirmBtnTitle:@"我知道了"
 //         animated:YES
 //         completed:nil];

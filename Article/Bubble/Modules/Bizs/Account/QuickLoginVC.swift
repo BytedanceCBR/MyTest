@@ -484,7 +484,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 .bind(onNext: { [unowned self] (e) in
                     self.view.endEditing(true)
                     if self.acceptCheckBox.isSelected == false {
-                        EnvContext.shared.toast.showToast("请阅读并同意好多房用户协议")
+                        EnvContext.shared.toast.showToast("请阅读并同意幸福里用户协议")
                     } else {
                         self.showLoading(title: "正在登录中")
                         recordEvent(key: TraceEventName.click_login, params: self.tracerParams)
@@ -534,7 +534,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
             self?.acceptCheckBox.isSelected = !(self?.acceptCheckBox.isSelected ?? false)
             if self?.acceptCheckBox.isSelected == false {
-                EnvContext.shared.toast.showToast("请阅读并同意好多房用户协议")
+                EnvContext.shared.toast.showToast("请阅读并同意幸福里用户协议")
             }
             self?.acceptRelay.accept(self?.acceptCheckBox.isSelected ?? true)
             }
@@ -554,7 +554,11 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
 
         let paramsDict = self.tracerParams.paramsGetter([:])
         if paramsDict.count > 0 {
-            recordEvent(key: TraceEventName.login_page, params: tracerParams)
+            let theParams = tracerParams <|>
+                toTracerParams("minetab", key: "orign_from") <|>
+                toTracerParams("be_null", key: "orign_search_id") <|>
+                toTracerParams("be_null", key: "log_pb")
+            recordEvent(key: TraceEventName.login_page, params: theParams)
 
         }
         handleKeyboardState()
@@ -806,7 +810,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
     private func setAgreementContent() {
         
         self.acceptCheckBox.isSelected = true
-        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《好多房用户使用协议》及《隐私协议》")
+        let attrText = NSMutableAttributedString(string: "我已阅读并同意 《幸福里用户使用协议》及《隐私协议》")
         attrText.addAttributes(commonTextStyle(), range: NSRange(location: 0, length: attrText.length))
         attrText.yy_setTextHighlight(
                 NSRange(location: 8, length: 11),
@@ -814,7 +818,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 backgroundColor: nil,
                 userInfo: nil,
                 tapAction: { (_, text, range, _) in
-                    if let url = "\(EnvContext.networkConfig.host)/f100/download/user_agreement.html&title=好多房用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    if let url = "\(EnvContext.networkConfig.host)/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                         TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                     }
                 })
@@ -825,7 +829,7 @@ class QuickLoginVC: BaseViewController, TTRouteInitializeProtocol {
                 backgroundColor: nil,
                 userInfo: nil,
                 tapAction: { (_, text, range, _) in
-                    if let url = "\(EnvContext.networkConfig.host)/f100/download/private_policy.html&title=隐私声明&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    if let url = "\(EnvContext.networkConfig.host)/f100/download/private_policy.html&title=隐私协议&hide_more=1".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                         TTRoute.shared().openURL(byPushViewController: URL(string: "fschema://webview?url=\(url)"))
                     }
                 })

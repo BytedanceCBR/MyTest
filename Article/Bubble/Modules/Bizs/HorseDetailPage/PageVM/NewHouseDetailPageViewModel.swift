@@ -8,6 +8,7 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var tracerModel: HouseRentTracer?
 
     var source: String?
     
@@ -29,7 +30,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     var logPB: Any?
     
     var searchId: String?
-
+    
     var followPage: BehaviorRelay<String> = BehaviorRelay(value: "new_detail")
 
     var followTraceParams: TracerParams = TracerParams.momoid()
@@ -88,7 +89,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     var recordRowIndex: Set<IndexPath> = []
 
-
+    weak var currentVC:UIViewController?
 
     init(tableView: UITableView, infoMaskView: EmptyMaskView, navVC: UINavigationController?){
         self.tableView = tableView
@@ -217,12 +218,13 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         subDisposeBag = DisposeBag()
         if var data = response.data {
             self.shareInfo = data.shareInfo
-            
             let traceParamsDic = traceParams.paramsGetter([:])
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
-                toTracerParams(String(code), key: "rank") <|>
+                    toTracerParams(String(code), key: "rank") <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                 toTracerParams(self.searchId ?? "be_null", key: "search_id")
             }
             
@@ -238,9 +240,6 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                     toTracerParams(logPb, key: "log_pb")
                 logPbVC = logPb
             }
-            
-            
-            
             
             self.informParams = self.informParams <|>
             toTracerParams(data.logPB ?? [:], key: "log_pb") <|>
@@ -267,7 +266,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
   
             let dataParser = DetailDataParser.monoid()
-                <- parseNewHouseCycleImageNode(data,traceParams: pictureParams, disposeBag: disposeBag, navVC: self.navVC)
+                <- parseNewHouseCycleImageNode(data,traceParams: pictureParams <|> traceExtension, disposeBag: disposeBag, navVC: self.navVC)
                 <- parseNewHouseNameNode(data)
                 <- parseNewHouseCoreInfoNode(
                     data,
@@ -301,7 +300,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                             floorPanId: "\(courtId)",
                             logPBVC: data.floorPan?.logPB ?? "be_null",
                             isHiddenBottomBtn: (data.contact?.phone?.count ?? 0 < 1),
-                            traceParams: floorPanTraceParams,
+                            traceParams: floorPanTraceParams <|> traceExtension,
                             disposeBag: self.disposeBag,
                             navVC: self.navVC,
                             followPage: self.followPage,
@@ -524,7 +523,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
             
-            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            self.showSendPhoneAlert(title: "开盘通知", subTitle: "订阅开盘通知，楼盘开盘信息会及时发送到您的手机", confirmBtnTitle: "提交", topView: self.currentVC?.view)
             
             /*
             let informParams = self.informParams
@@ -596,7 +595,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
 
     func handlePriceChangeNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
         return { [unowned self] (isFollowup) in
-            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交")
+            self.showSendPhoneAlert(title: "变价通知", subTitle: "订阅变价通知，楼盘变价信息会及时发送到您的手机", confirmBtnTitle: "提交", topView: self.currentVC?.view)
             /*
             let informParams = self.informParams
                 <|> toTracerParams(self.searchId ?? "be_null", key: "search_id")
@@ -728,13 +727,14 @@ func openRelatedNeighborhoodList(
     searchId: String? = nil,
     disposeBag: DisposeBag,
     tracerParams: TracerParams,
+    traceExtension: TracerParams = TracerParams.momoid(),
     navVC: UINavigationController?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) {
     let listVC = RelatedNeighborhoodListVC(
         neighborhoodId: neighborhoodId,
         searchId: searchId,
         bottomBarBinder: bottomBarBinder)
-    listVC.tracerParams = tracerParams
+    listVC.tracerParams = tracerParams <|> traceExtension
     listVC.navBar.backBtn.rx.tap
             .subscribe(onNext: { void in
                 navVC?.popViewController(animated: true)
@@ -805,7 +805,8 @@ func openFloorPanCategoryPage(
     logPB: Any?,
     bottomBarBinder: @escaping FollowUpBottomBarBinder) -> () -> Void {
     return {
-
+        var traceDict = traceParams.paramsGetter([:])
+        
         let detailPage = FloorPanCategoryVC(
                 isHiddenBottomBar: isHiddenBottomBtn,
                 floorPanId: floorPanId,

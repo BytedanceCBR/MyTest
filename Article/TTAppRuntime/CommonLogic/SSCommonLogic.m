@@ -5433,42 +5433,6 @@ static NSString *const kTTFeedRefreshHistoryStrategy = @"tt_feed_refresh_history
     }
 }
 
-+ (BOOL)feedLoadMoreWithNewData
-{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = NO;
-    if (info && [info[@"load_more_new_data"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)feedLastReadCellShowEnable{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = YES;
-    if (info && [info[@"is_show_last_read_docker"] integerValue] != 1) {
-        res = NO;
-    }
-    
-    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
-        res = NO;
-    }
-    
-    return res;
-}
-
-+ (BOOL)feedRefreshClearAllEnable
-{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = NO;
-    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
 + (BOOL)feedLoadingInitImageEnable
 {
     NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
@@ -6169,6 +6133,12 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return [fhSettings tta_boolForKey:@"f_wenda_share_enable"];
 }
 
++ (NSInteger)findTabShowHouse {
+    
+    NSDictionary *fhSettings = [self fhSettings];
+    return [fhSettings tt_intValueForKey:@"find_tab_show_house"];
+}
+
 + (NSInteger)categoryBadgeTimeInterval
 {
     NSDictionary *fhSettings = [self fhSettings];
@@ -6181,6 +6151,43 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     }
 }
 
+static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
+
++ (BOOL)feedLoadMoreWithNewData
+{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = NO;
+    if (info && [info[@"load_more_new_data"] integerValue] == 1) {
+        res = YES;
+    }
+    
+    return res;
+}
+
++ (BOOL)feedLastReadCellShowEnable{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = YES;
+    if (info && [info.allKeys containsObject:@"is_show_last_read_docker"] && [info[@"is_show_last_read_docker"] integerValue] == 0) {
+        res = NO;
+    }
+    
+    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
+        res = NO;
+    }
+    
+    return res;
+}
+
++ (BOOL)feedRefreshClearAllEnable
+{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = NO;
+    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
+        res = YES;
+    }
+    
+    return res;
+}
 
 @end
 

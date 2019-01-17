@@ -797,6 +797,11 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
     }
 
     override func setSelectedConditions(conditions: [String : Any]) {
+        let ds = priceDataSource()
+        ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+        ds?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
+        ds?.lowerInput = ""
+        ds?.upperInput = ""
         super.setSelectedConditions(conditions: conditions)
 
         //如果没有匹配到列表页中的任何项，则将第一条数据填充到用户自定义输入中
@@ -813,7 +818,7 @@ class PriceBubbleSelectCollectionView: BubbleSelectCollectionView  {
         } else {
             let ds = priceDataSource()
             ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
-            ds?.inputHeaderView?.priceInputView.lowerPriceTextField.text = nil
+            ds?.inputHeaderView?.priceInputView.upperPriceTextField.text = nil
             ds?.lowerInput = ""
             ds?.upperInput = ""
         }

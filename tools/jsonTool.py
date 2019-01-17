@@ -47,7 +47,7 @@ def simpleTypeName(ktype):
     return None
         
     
-def iterItem(item,className):
+def iterItem(item,className,f):
     
     if not str(type(item)) == "<type 'dict'>" :
         print "item type is: " , type(item)
@@ -62,16 +62,18 @@ def iterItem(item,className):
             if ittype == "<type 'dict'>":
                 subname = className + "_" +k
                 subname = underLineToCamel(subname)
-                printProtocol(subname)
+                printProtocol(subname,f)
                 newdict = contactlist(v)
-                iterItem(newdict,subname)
-                
+                iterItem(newdict,subname,f)
+            
+        elif k == "log_pb":
+            pass
         elif ktype == "<type 'dict'>":
             subname = className + "_"+k
             subname = underLineToCamel(subname,True)
-            iterItem(v,subname)
+            iterItem(v,subname,f)
 
-    printHeader(item,className)
+    printHeader(item,className,f)
  
 def contactlist(item):
     newdict = {}
@@ -83,7 +85,7 @@ def contactlist(item):
     return newdict
 
 
-def printHeader(item,className):
+def printHeader(item,className,of):
 
     t = str(type(item))
     if not  t == "<type 'dict'>" :
@@ -94,70 +96,77 @@ def printHeader(item,className):
 
     global classList
     varlist = {}
-    print "@interface " , className + "Model" , " : JSONModel \n"
+
+    s = "@interface %sModel : JSONModel \n" % (className)
+    of.write(s)
 
     for k , v in item.items():
         ktype = str(type(v))
         pname = underLineToCamel(defaultKeyMap(k))
 
+        of.write("\n")
+
         if ktype == "<type 'int'>" or  ktype == "<type 'float'>":
-            print "@property (nonatomic, copy , nullable) NSString *%s;" %  pname
+            of.write( "@property (nonatomic, copy , nullable) NSString *%s;" %  pname)
         elif ktype == "<type 'bool'>":
-            print "@property (nonatomic, assign) BOOL %s;" % pname 
+            of.write( "@property (nonatomic, assign) BOOL %s;" % pname )
         elif ktype == "<type 'str'>" or ktype == "<type 'unicode'>":
-            print "@property (nonatomic, copy , nullable) NSString *%s;" % pname
+            of.write( "@property (nonatomic, copy , nullable) NSString *%s;" % pname)
+        elif ktype == "<type 'dict'>" and k == "log_pb": #for log 
+            of.write( "@property (nonatomic, strong , nullable) NSDictionary *%s;" % pname)
         elif ktype == "<type 'dict'>":
             classType = className + underLineToCamel(pname,True) + "Model"
-            print "@property (nonatomic, strong , nullable) %s *%s ;  " % (classType, pname)
+            of.write( "@property (nonatomic, strong , nullable) %s *%s ;  " % (classType, pname))
         elif ktype == "<type 'list'>":
 
             it = v[0]
             t = str(type(it))
             nn = simpleTypeName(t)
             if nn == None :
-                print "@property (nonatomic, strong , nullable) NSArray<%sModel> *%s;" % (className+underLineToCamel(defaultKeyMap(k),True),pname)
+                of.write( "@property (nonatomic, strong , nullable) NSArray<%sModel> *%s;" % (className+underLineToCamel(defaultKeyMap(k),True),pname))
             else:
-                print "@property (nonatomic, strong , nullable) NSArray *%s;" % (pname)
+                of.write("@property (nonatomic, strong , nullable) NSArray *%s;" % (pname))
                 
         else:
             #print "type is: " , ktype , "for key : " , pname 
-            print "@property (nonatomic)         typename<Optional>* %s;" % pname
+            of.write( "@property (nonatomic)         typename<Optional>* %s;" % pname)
         if not pname == k :
             varlist[k] = pname
 
     classList[className] = varlist
-    print "\n@end\n\n"
+    of.write( "\n@end\n\n")
 
-def printProtocol(className):
-    print "@protocol %sModel<NSObject>\n"%className
-    print "@end\n\n"
+def printProtocol(className,f):
+    f.write("@protocol %sModel<NSObject>\n"%className)
+    f.write("@end\n\n")
 
-def printImplemention(className , mapKeys):
-    print "@implementation ",className+"Model\n"
+def printImplemention(className , mapKeys , of):
+
+    of.write("@implementation %sModel\n" % (className))
     if mapKeys != None and len(mapKeys) > 0:
-        print "+ (JSONKeyMapper*)keyMapper"
-        print "{"
-        print "  NSDictionary *dict = @{"
+        of.write( "+ (JSONKeyMapper*)keyMapper\n")
+        of.write("{\n")
+        of.write("  NSDictionary *dict = @{\n")
         #print "  return [[JSONKeyMapper alloc] initWithDictionary:@{",
         index = 1
         value = ""
         for k,v in mapKeys.items():
             value += "    @\"%s\": @\"%s\",\n" % (v,k)
             index+= 1
-        print value,
-        print "  };"
-        print "  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {"
-        print "     return dict[keyName]?:keyName;"
-        print "  }];"
-        print "}\n"
-
+        of.write( value)
+        of.write( "  };\n")
+        of.write( "  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {\n")
+        of.write( "     return dict[keyName]?:keyName;\n")
+        of.write( "  }];\n")
+        of.write( "}\n")
+        
     #gen option
-    print "+ (BOOL)propertyIsOptional:(NSString *)propertyName"
-    print "{"
-    print "    return YES;"
-    print "}\n"
+    of.write( "+ (BOOL)propertyIsOptional:(NSString *)propertyName\n")
+    of.write( "{\n")
+    of.write( "    return YES;\n")
+    of.write( "}\n")
     
-    print "@end\n\n"
+    of.write("@end\n\n")
     
 def makeJson(path,className):
 
@@ -165,13 +174,29 @@ def makeJson(path,className):
     j = json.load(f,encoding='utf8')
     f.close()
     
-    iterItem(j,className)
+    
+    fileName = "%sModel.h" % (className)
+    of = open(fileName , "w")
 
+    of.write("//GENERATED CODE , DON'T EDIT\n")
+    of.write("#import <JSONModel.h>\n")
+    of.write("NS_ASSUME_NONNULL_BEGIN\n")
+    iterItem(j,className,of)
+    of.write("\nNS_ASSUME_NONNULL_END\n")
+    of.write("//END OF HEADER")
 
     print "\n\n\n\n"
     print "//for implementation"
+
+    mFileName = "%sModel.m" % (className)
+    impF = open(mFileName,"w")
+    impF.write("//GENERATED CODE , DON'T EDIT\n")
+    impF.write("#import \"%s\"\n"%(fileName))
+
     for k , v in classList.items():
-        printImplemention(k,v)
+        printImplemention(k,v,impF)
+
+    impF.close()
     
     
 

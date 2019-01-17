@@ -73,8 +73,11 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
             maker.left.right.equalToSuperview()
             maker.top.equalTo(navBar.snp.bottom)
             if #available(iOS 11, *) {
-
-                maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-49)
+                var bottomOffset = (49 + view.tt_safeAreaInsets.bottom)
+                if let tabBarItem = TTTabBarManager.shared().tabItem(withIdentifier: kFHouseMessageTabKey) {
+                    bottomOffset = tabBarItem.frame.height
+                }
+                maker.bottom.equalToSuperview().offset(-bottomOffset)
             } else {
                 maker.bottom.equalToSuperview().offset(-49)
             }
@@ -225,7 +228,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
     fileprivate func showEmptyInfo() {
         self.emptyMaskView.isHidden = false
         emptyMaskView.icon.image = UIImage(named:"empty_message")
-        self.emptyMaskView.label.text = "阿哦～你还没有收到消息～"
+        self.emptyMaskView.label.text = "啊哦～你还没有收到消息～"
         view.bringSubview(toFront: emptyMaskView)
         self.clearBadgeNumber()
     }
@@ -326,7 +329,17 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
 
             theCell.iconImageView.bd_setImage(with: URL(string: item.icon ?? ""), placeholder: UIImage(named: "default_image"))
             theCell.label.text = item.title
+            
+            var bottomOffset:CGFloat = 0
+            if (indexPath.row == datas.count - 1) {
+                bottomOffset = -20;
+            } else {
+                bottomOffset = 0;
+            }
 
+            theCell.iconImageView.snp.updateConstraints { (maker) in
+                maker.bottom.equalToSuperview().offset(bottomOffset)
+            }
         }
         return cell ?? ChatCell()
     }
@@ -352,84 +365,7 @@ class ChatListTableViewModel: NSObject, UITableViewDataSource, UITableViewDelega
             let encodeUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             TTRoute.shared().openURL(byPushViewController: URL(string: encodeUrl))
         }
-        
-        
-        
-//        if let id = data.id,
-//            id == "308",
-//            let url = data.openUrl,
-//            let encodeUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-//            EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-//                toTracerParams("be_null", key: "origin_from") <|>
-//                toTracerParams("be_null", key: "origin_search_id")
-//            TTRoute.shared().openURL(byPushViewController: URL(string: encodeUrl))
-//            return
-//        }
-//
-//        let vc = MessageListVC()
-//
-//
-//        vc.messageId = datas[indexPath.row].id
-//
-//        var category_name = "be_null"
-//        var origin_from = "be_null"
-//
-//        switch vc.messageId {
-//
-//        case "300":
-//            // "新房"
-//            category_name = "new_message_list"
-//            origin_from = "messagetab_new"
-//
-//        case "301":
-//            // "二手房"
-//            category_name = "old_message_list"
-//            origin_from = "messagetab_old"
-//
-//        case "302":
-//            // "租房"
-//            category_name = "rent_message_list"
-//            origin_from = "messagetab_rent"
-//        case "303":
-//            // "小区"
-//            category_name = "neighborhood_message_list"
-//            origin_from = "messagetab_neighborhood"
-//        case "307":
-//            // "小区"
-//            category_name = "recommend_message_list"
-//            origin_from = "messagetab_recommend"
-//
-//        default:
-//            break
-//
-//        }
-//
-//        let params = TracerParams.momoid() <|>
-//            toTracerParams("click", key: "enter_type") <|>
-//            beNull(key: "log_pb") <|>
-//            toTracerParams(category_name, key: "category_name")
-//        vc.traceParams = params
-//
-//        EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
-//            toTracerParams(origin_from, key: "origin_from")
-//        vc.traceParams = vc.traceParams <|>
-//            toTracerParams("be_null", key: "log_pb") <|>
-//            toTracerParams("messagetab", key: "enter_from") <|>
-//            toTracerParams("be_null", key: "search_id") <|>
-//            toTracerParams(category_name, key: "category_name")
-//
-//
-//        //        vc.navBar.title.text = listIdMap[vc.messageId ?? "301"]
-//        vc.navBar.title.text = datas[indexPath.row].title
-//
-//        vc.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { [unowned self] void in
-//                self.navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
-//        self.navVC?.pushViewController(vc, animated: true)
-        
-        
+ 
     }
 
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {

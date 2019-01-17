@@ -348,7 +348,15 @@
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=好多房用户协议",EnvContext.networkConfig.host];
+    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",EnvContext.networkConfig.host];
+}
+
++ (NSString*)userPrivateProtocolURLString {
+    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私协议",EnvContext.networkConfig.host];
+}
+
++ (NSString*)protectedProtocolURLString {
+    return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",EnvContext.networkConfig.host];
 }
 
 #pragma mark -- 删除

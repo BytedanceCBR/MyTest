@@ -180,6 +180,9 @@ struct UserListMsgInnerItem: Mappable {
     var houseType: Int?
     var logPb: Any?
     var status: Int = 0
+    var houseImageTag: HouseImageTag?
+    var searchId: String?
+    var imprId: String?
 
 
     init?(map: Map) {
@@ -199,6 +202,28 @@ struct UserListMsgInnerItem: Mappable {
         houseType <- map["house_type"]
         status <- map["status"]
         logPb <- map["log_pb"]
+        searchId <- map["search_id"]
+        imprId <- map["impr_id"]
+
+        houseImageTag <- map["house_image_tag"]
+    }
+    
+    struct HouseImageTag: Mappable {
+        var id: String?
+        var text: String?
+        var backgroundColor: String?
+        var textColor: String?
+        
+        init?(map: Map) {
+            
+        }
+        
+        mutating func mapping(map: Map) {
+            id <- map["id"]
+            text <- map["text"]
+            backgroundColor <- map["background_color"]
+            textColor <- map["text_color"]
+        }
     }
 }
 
@@ -242,6 +267,7 @@ struct SystemNotificationResponse: Mappable {
         var timestamp: Int64?
         var dateStr: String?
         var bottonName: String?
+        var logPb: Any?
 
         init?(map: Map) {
 
@@ -256,6 +282,7 @@ struct SystemNotificationResponse: Mappable {
             timestamp <- map["timestamp"]
             dateStr <- map["date_str"]
             bottonName <- map["button_name"]
+            logPb <- map["log_pb"]
         }
     }
 

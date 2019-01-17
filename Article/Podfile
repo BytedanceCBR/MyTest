@@ -20,6 +20,10 @@ def appPods
     pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
     pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
+    pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+    pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
+    #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
     pod 'SecGuard', '0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
@@ -28,8 +32,8 @@ def appPods
 #    pod 'IESSafeGuard', '0.6.5'
 
     #-----视频业务库-----#
-    pod 'TTVideoService', '0.1.40'
-    pod 'TTVideoService/TTBusinessService', '0.1.40'
+    pod 'TTVideoService', '0.1.71'
+    pod 'TTVideoService/TTBusinessService', '0.1.71'
     #-----问答业务库-----#
 #    pod 'TTWenda', '0.14.0'
 #    pod 'TTWenda', :git => 'git@code.byted.org:TTIOS/tt_business_wenda.git', branch: 'feature_aikan_beta'
@@ -59,7 +63,7 @@ def appPods
     pod 'BDTExploreOrderedData', '0.1.6'
 
     pod 'BDTFactoryConfigurator', '0.1.0'
-    pod 'BDTBasePlayer', '0.3.48'
+    pod 'BDTBasePlayer',:git=>'git@code.byted.org:TTIOS/BDTBasePlayer',:branch=>'0.3.48-bugfix'
     pod 'BDTSharedHeaders', :path => '../Vendor/BDTSharedHeaders'
     #-----支付封装库-----  modified 6.2.1 alipay加回来
     pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
@@ -145,10 +149,18 @@ def appPods
     pod 'TTReporter', '0.2.1'
     #-----头条号---
     pod 'TTAdModule', '0.1.25'
-    pod 'TTAdSplashSDK', '0.1.0'
+    pod 'TTAdSplashSDK', '0.4.4'
+#    pod 'TTAdSplashSDK', :git=> 'git@code.byted.org:TTIOS/tt_splash_sdk.git', :branch=> 'feature_multi_log_version_tgq'
 
     pod 'TTEntry', '0.1.6'
-
+    
+    pod 'TTBridgeUnify', '0.3.19',:subspecs => [
+    'TTBridge',#核心模块，必须引入
+    'WebView',#默认实现的 webview engine,具体可参考此文档的 engine 的使用姿势一节
+    # 'React', #默认的 RN engine, 如果业务没有使用 RN，可以不用依赖
+    'TTBridgeAuthManager' #默认的鉴权类，如果业务自身鉴权流程和主端不一致，可以自己实现，初始化 engine 时，修改 engine 的 authorization 为自定义实现即可
+    ]
+    
     #-----朋友关系-----
     pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation', :inhibit_warnings => false
     #-----点赞分享顶踩不感兴趣----
@@ -192,10 +204,10 @@ def appPods
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
 #    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'
     #-----播放器SDK相关-----
-    pod 'TTPlayerSDK', '2.9.3.14'
-    pod 'TTFFmpeg', '1.2.5'
-    pod 'TTVideoEngine', '1.8.3.8'
-    pod 'TTPreloaderSDK', '1.4.16'
+    pod 'TTPlayerSDK', '2.9.9.10'
+    pod 'TTFFmpeg', '1.4.3'
+    pod 'TTVideoEngine', '1.9.3.24'
+    pod 'TTPreloaderSDK', '1.4.20-rc.0'
 #    pod 'TTFileUploadClient', '1.5.1.1'
 
     #----点赞按钮-----
@@ -234,19 +246,23 @@ def appPods
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
-    pod 'TTPushManager', '0.0.10'
+    pod 'TTPushManager', '0.0.13.4'
     pod 'TTReachability', '0.1.8'
     pod 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod 'TTPersistence', '0.2.3'
-    pod 'TTEntityBase', '0.2.1'
+    pod 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod 'TTImage', '0.8.0'
-    pod 'BDWebImage', '0.2.2' , :subspecs => [
+    pod 'BDWebImage', '0.2.2',:subspecs => [
     'Core',
-    'Download',
     'Decoder',
-    'SDAdapter'
+    'Download',
+    'Download/Chromium',
+    'Download/DownloadBase',
+    'Download/URLSession',
+    'SDAdapter',
+    'Monitor'
     ]
     #-----头条交互式退出手势----
     pod 'TTImagePreviewAnimateManager', '1.0.13'
@@ -350,7 +366,7 @@ def appPods
     pod 'CHTCollectionViewWaterfallLayout', '0.9.5'
 #    pod 'CocoaSecurity', '1.2.4'
     pod 'Aspects', '1.4.1'
-    pod 'SSZipArchive', '1.6.2'
+    pod 'SSZipArchive', '1.6.3'
     pod 'libextobjc', '0.4.1'
     ##...
     #pod 'ProtocolBuffers', '1.9.11'
@@ -416,7 +432,13 @@ target 'NewsLiteInHouse' do
 
 end
 
-
+target 'NewsLiteChannel' do
+    pod 'TTDebugAssistant', '0.2.31'
+    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+    
+end
 
 
 # POD POST_INSTALL

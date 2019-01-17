@@ -48,6 +48,9 @@
 #import "ExploreExtenstionDataHelper.h"
 #import <TTAppUpdateHelper.h>
 #import "Bubble-Swift.h"
+#import "FHHomeSearchPanelViewModel.h"
+#import "FHEnvContext.h"
+#import "TTLaunchTracer.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -57,7 +60,8 @@
 @property (nonatomic, copy) NSString *lastRefreshedCategoryID;
 @property (nonatomic, assign) BOOL hasReloadData;
 @property (nonatomic, assign) BOOL hasShownCategoryView;
-@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+//@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) NSArray *guideControlArray;
 @property (nonatomic, strong) TTSeachBarView *searchBar;
@@ -112,6 +116,14 @@
     #if INHOUSE
     [self checkLocalTestUpgradeVersionAlert];
     #endif
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[TTLaunchTracer shareInstance] writeEvent];
 }
 
 - (void)checkLocalTestUpgradeVersionAlert
@@ -194,7 +206,7 @@
     CGFloat bottomPadding = 0;
     CGFloat topPadding = 0;
     
-    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//好多房设计稿整体topbar高度120
+    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//幸福里设计稿整体topbar高度120
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){
@@ -211,8 +223,15 @@
 - (void)setupTopBar {
     [self.view addSubview:self.topBar];
     
-    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+//    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    panelVM.viewController = self;
     self.panelVM = panelVM;
+    
+//    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
+//    {
+//        [self.panelVM fetchSearchPanelRollData];
+//    }
 }
 
 // only get category when local storage only has default category
@@ -380,6 +399,13 @@
         
         NSString *eventStr = @"navigation";
         wrapperTrackEvent(eventStr, [NSString stringWithFormat:@"click_%@", category.categoryID]);
+    }else
+    {
+        id<TTFeedCollectionCell> currentCell = self.collectionVC.currentCollectionPageCell;
+
+        if ([category.categoryID isEqualToString:@"f_find_house"]) {
+            [currentCell refreshDataWithType:ListDataOperationReloadFromTypeClickCategoryWithTip];
+        }
     }
     
     if (![category.categoryID isEqualToString:self.lastRefreshedCategoryID]) {

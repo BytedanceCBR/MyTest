@@ -1,0 +1,32 @@
+[submodule "Bundles/ios_house_base"]
+	path = Bundles/ios_house_base
+	url = git@code.byted.org:fproject/ios_house_base.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_rent"]
+	path = Bundles/ios_house_rent
+	url = git@code.byted.org:fproject/ios_house_rent.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_common_ui"]
+	path = Bundles/ios_common_ui
+	url = git@code.byted.org:fproject/ios_common_ui.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_detail"]
+	path = Bundles/ios_house_detail
+	url = git@code.byted.org:fproject/ios_house_detail.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_home"]
+	path = Bundles/ios_house_home
+	url = git@code.byted.org:fproject/ios_house_home.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_message"]
+	path = Bundles/ios_house_message
+	url = git@code.byted.org:fproject/ios_house_message.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_map_search"]
+	path = Bundles/ios_map_search
+	url = git@code.byted.org:fproject/ios_map_search.git
+	branch = feature/list_to_oc
+[submodule "Bundles/ios_house_list"]
+	path = Bundles/ios_house_list
+	url = git@code.byted.org:fproject/ios_house_list.git
+	branch = feature/list_to_oc

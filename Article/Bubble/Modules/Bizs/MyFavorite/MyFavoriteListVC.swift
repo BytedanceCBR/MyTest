@@ -51,7 +51,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     private var errorVM : NHErrorViewModel?
 
-    var stayTimeParams: TracerParams?
+//    var stayTimeParams: TracerParams?
 
     init(houseType: HouseType) {
         self.houseType = houseType
@@ -66,6 +66,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.ttTrackStayEnable = true
         view.addSubview(navBar)
         navBar.snp.makeConstraints { maker in
             if #available(iOS 11, *) {
@@ -96,7 +97,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         setUpErrorVM()
 
-        let footer: NIHRefreshCustomFooter = NIHRefreshCustomFooter { [weak self] in
+        let footer: FHRefreshCustomFooter = FHRefreshCustomFooter { [weak self] in
             self?.loadMore()
         }
         
@@ -132,6 +133,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             })
             .disposed(by: disposeBag)
         
+        self.categoryListVM?.traceParams = self.tracerParams;
     }
 
     private func refreshRemoteData() { 
@@ -160,6 +162,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
         EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
             toTracerParams(originFromByType(houseType: houseType), key: "origin_from")
+        
+        self.categoryListVM?.sourceOriginFrom = originFromByType(houseType: houseType);
     }
 
     fileprivate func originFromByType(houseType: HouseType) -> String {
@@ -177,11 +181,9 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let stayTimeParams = stayTimeParams {
-            recordEvent(key: TraceEventName.stay_category, params: stayTimeParams)
-        }
-        stayTimeParams = nil
         
+        self.addStayCategoryLog()
+        self.tt_resetStayTime()
     }
 
     private func setTitle(houseType: HouseType) {
@@ -215,7 +217,7 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
             errorMask:emptyMaskView,
             requestRetryText:"网络异常",
             requestNilDataText:nilDataText,
-            requestNilDataImage:"group-4",
+            requestNilDataImage:"group-9",
             isUserClickEnable:false,retryAction:{
             [weak self] in
             if let houseType = self?.houseType{
@@ -262,14 +264,14 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "origin_search_id")
             
-            self?.stayTimeParams = (self?.tracerParams ?? TracerParams.momoid()) <|>
-                traceStayTime()
+//            self?.stayTimeParams = (self?.tracerParams ?? TracerParams.momoid()) <|>
+//                traceStayTime()
             
             self?.tableView.mj_footer.endRefreshing()
             //增加
             if let tracePram = self?.tracerParams , !(self?.isChangeFromFollow ?? false)
             {
-                recordEvent(key: TraceEventName.enter_category, params: tracePram)
+                recordEvent(key: TraceEventName.enter_category, params: tracePram.exclude("log_pb"))
             }
 
             if(isHaveData)
@@ -307,8 +309,31 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         tracerParams = tracerParams.exclude("card_type") <|>
             toTracerParams("pre_load_more", key: "refresh_type")
         
-        recordEvent(key: TraceEventName.category_refresh, params: tracerParams)
+        recordEvent(key: TraceEventName.category_refresh, params: tracerParams.exclude("log_pb"))
         
+    }
+    
+    func addStayCategoryLog() {
+        
+        let trackTime = Int64(self.ttTrackStayTime * 1000)
+        let stayTimeParams = self.tracerParams <|> toTracerParams(trackTime, key: "stay_time")
+        recordEvent(key: TraceEventName.stay_category, params: stayTimeParams.exclude("log_pb"))
     }
 
 }
+
+// MARK: TTUIViewControllerTrackProtocol
+extension MyFavoriteListVC {
+    
+    override func trackStartedByAppWillEnterForground() {
+        
+        self.tt_resetStayTime()
+        self.ttTrackStartTime = Date().timeIntervalSince1970
+    }
+    override func trackEndedByAppWillEnterBackground() {
+        
+        self.addStayCategoryLog()
+        self.tt_resetStayTime()
+    }
+}
+

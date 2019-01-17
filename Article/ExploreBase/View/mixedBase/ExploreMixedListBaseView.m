@@ -527,18 +527,27 @@ TTRefreshViewDelegate
             _animationView.loopAnimation = YES;
         }
         
-        [[FHHomeConfigManager sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             [self reloadFHHomeHeaderCell];
         }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryGotFinished) name:kFHSwitchGetLightFinishedNotification object:nil];
     }
     return self;
+}
+
+- (void)categoryGotFinished
+{
+    if (![[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        [self.listView reloadData];
+    }
 }
 
 - (void)reloadFHHomeHeaderCell
 {
     if ([_categoryID isEqualToString:@"f_house_news"]) {
-        [self.listView reloadSections:[NSIndexSet indexSetWithIndex:ExploreMixedListBaseViewSectionFHouseCells] withRowAnimation:UITableViewRowAnimationNone];
+        [self.listView reloadData];
     }
 }
 
@@ -1273,6 +1282,8 @@ TTRefreshViewDelegate
             BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
             
             if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+                //修改头部类型
+                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
                 return 1;
             }else
             {
@@ -1296,7 +1307,7 @@ TTRefreshViewDelegate
 //    }else {
     
     if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
-        return [ExploreCellHelper heightForFHHomeHeaderCellViewType];
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }else
     {
         if (indexPath.row < [self listViewMaxModelIndex]) {
@@ -1527,7 +1538,7 @@ TTRefreshViewDelegate
             
             [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
             
-            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
+//            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
             
             if ([obj.categoryID isEqualToString:@"f_wenda"])
             {
@@ -2833,7 +2844,7 @@ TTRefreshViewDelegate
 //        [[TTAuthorizeHintView alloc]
 //         initAuthorizeHintWithImageName:@"img_popup_locate"
 //         title:NSLocalizedString(@"开启定位服务设置", nil)
-//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“好多房”定位服务", nil)
+//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“幸福里”定位服务", nil)
 //         confirmBtnTitle:@"我知道了"
 //         animated:YES
 //         completed:nil];

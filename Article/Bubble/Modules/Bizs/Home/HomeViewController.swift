@@ -108,17 +108,12 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
             requestErrorImage: "group-8",
             isUserClickEnable: true,
             retryAction: { [weak self] in
-                if EnvContext.shared.client.generalBizconfig.generalCacheSubject.value == nil {
                     if EnvContext.shared.client.reachability.connection == .none {
                         EnvContext.shared.toast.showToast("网络不给力,请稍后重试")
                     }else
                     {
                         EnvContext.shared.client.generalBizconfig.fetchConfiguration()
                     }
-                } else  {
-                    self?.detailPageViewModel?.requestData(houseId: -1, logPB: nil, showLoading: true)
-                }
-                
             })
         
         self.detailPageViewModel?.onError = { [weak self] (error) in
@@ -247,10 +242,6 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
         enterType = TTCategoryStayTrackManager.share().enterType
         self.detailPageViewModel?.isCurrentShowHome = true
 
-        if FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse {
-            self.tableView?.triggerPullDown()
-            FHHomeConfigManager.sharedInstance().isNeedTriggerPullDownUpdateFowFindHouse = false
-        }
     }
     
     @objc func didAppear() {
@@ -401,8 +392,9 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
 
     private func displayNetworkError() -> (Bool) -> Void {
         return { [weak self] (isDisplay) in
-            UIApplication.shared.statusBarStyle = .default
-            self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
+            // add by zjing 会偷摸修改状态栏颜色，有问题找我，代码就这么被我注释掉了！！！
+//            UIApplication.shared.statusBarStyle = .default
+//            self?.barStyle.accept(UIStatusBarStyle.default.rawValue)
         }
     }
     
@@ -451,54 +443,30 @@ extension HomeViewController {
                 .subscribe(onNext: { [unowned self] i in
 //                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
 //                    EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
-                    self.navigationController?.popViewController(animated: true)
-                    EnvContext.shared.client.currentCitySwitcher
-                        .switchCity(cityId: i)
-//                        .filter({ (s) -> Bool in
-//                            s == CitySwitcherState.onFinishedRequestFilterConfig || s == CitySwitcherState.onError
+//                    self.navigationController?.popViewController(animated: true)
+//                    EnvContext.shared.client.currentCitySwitcher
+//                        .switchCity(cityId: i)
+////                        .filter({ () -> Bool in
+////                            s == CitySwitcherState.onFinishedRequestFilterConfig || s == CitySwitcherState.onError
+////                        })
+//                        .subscribe(onNext: { (state) in
+//                            switch state {
+//                            case .onFinishedRequestFilterConfig:
+////                                self.navigationController?.popViewController(animated: true)
+//                                return
+//                            case .onError:
+////                                self.navigationController?.popViewController(animated: true)
+//                                return
+//                            default:
+//                                return
+//                            }
 //                        })
-                        .subscribe(onNext: { (state) in
-                            switch state {
-                            case .onFinishedRequestFilterConfig:
-//                                self.navigationController?.popViewController(animated: true)
-                                return
-                            case .onError:
-//                                self.navigationController?.popViewController(animated: true)
-                                return
-                            default:
-                                return
-                            }
-                        })
-                        .disposed(by: self.disposeBag)
+//                        .disposed(by: self.disposeBag)
                 })
                 .disposed(by: self.disposeBag)
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    private func openCategoryList(
-        houseType: HouseType,
-        condition: String,
-            query: String,
-        associationalWord: String? = nil,
-        tracerParams: TracerParams) {
-        let vc = CategoryListPageVC(
-            isOpenConditionFilter: true,
-            associationalWord: associationalWord)
-        vc.tracerParams = tracerParams
-        vc.houseType.accept(houseType)
-        vc.suggestionParams = condition
-        vc.queryString = query
-        vc.navBar.isShowTypeSelector = false
-        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
-        let nav = self.navigationController
-        nav?.pushViewController(vc, animated: true)
-        vc.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    EnvContext.shared.toast.dismissToast()
-                    nav?.popViewController(animated: true)
-                })
-                .disposed(by: disposeBag)
-    }
 }
 
 func searchBarPlaceholder(_ houseType: HouseType) -> String {

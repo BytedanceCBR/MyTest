@@ -40,7 +40,7 @@ NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 NSString *kTTTabHomeTabKey = @"tab_stream"; //首页tab 标题key&图片名
 NSString *kTTTabVideoTabKey = @"tab_video"; //视频tab 标题key&图片
 NSString *kTTTabFollowTabKey = @"tab_topic"; //关注tab 标题key&图片
-NSString *kTTTabMineTabKey = @"tab_mine"; //我的tab 图片&标题key
+NSString *kTTTabMineTabKey = @"tab_mine1"; //我的tab 图片&标题key
 NSString *kTTTabWeitoutiaoTabKey = @"tab_weitoutiao"; //微头条tab 图片&标题key
 NSString *kTTTabHTSTabKey = @"tab_huoshan";//火山小视频tab 标题&图片名
 NSString *kTTTabActivityTabKey = @"tab_activity"; //常驻运营活动tab 标题&图片名
@@ -50,7 +50,7 @@ NSString *kTTTabBigActivityTabKey = @"tab_redpackage_big"; //春节运营活动�
 NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&图片名
 NSString *kFHouseFindTabKey = @"tab_f_find";//房产找房key
 NSString *kFHouseMessageTabKey = @"tab_message";
-NSString *kFHouseMineTabKey = @"tab_f_mine"; //房产首页key
+NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
 //Path
 static NSString *kTTTabConfigurationPath = @"tabbar/configuration"; //tab配置信息存储路径
 static NSString *kTTTabImagesPath = @"tabbar/images"; //tab图片资源路径
@@ -316,7 +316,7 @@ SINGLETON_GCD(TTTabBarManager);
             }
         } else {
             item.normalTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleColor"];
-            item.highlightedTitleColor = [UIColor colorWithHexString:@"#299cff"];
+            item.highlightedTitleColor = [UIColor colorWithHexString:@"#ff5869"];
 //            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
             item.ttBadgeView.backgroundColorThemeKey = kColorBackground7;
         }
@@ -681,14 +681,14 @@ SINGLETON_GCD(TTTabBarManager);
     }
     NSString *title = [self.itemTitles tt_stringValueForKey:item.identifier];
     
-    if ([item.identifier isEqualToString:kTTTabMineTabKey] && ![TTAccountManager isLogin] && [TTTabBarProvider isMineTabOnTabBar]) {
-        if (self.tabConfigValid.boolValue && [self isUnloginTextValid]) {
-            title = [self unLoginText];
-        } else {
-            title = NSLocalizedString(@"未登录", nil);
-        }
-    }
-    
+//    if ([item.identifier isEqualToString:kTTTabMineTabKey] && ![TTAccountManager isLogin] && [TTTabBarProvider isMineTabOnTabBar]) {
+//        if (self.tabConfigValid.boolValue && [self isUnloginTextValid]) {
+//            title = [self unLoginText];
+//        } else {
+//            title = NSLocalizedString(@"未登录", nil);
+//        }
+//    }
+
     if (!item.isRegular) {
         NSString *normalImageName = self.middleModel.originalIdentifier;
         NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
@@ -919,7 +919,7 @@ SINGLETON_GCD(TTTabBarManager);
 
 - (UIColor *)customHighlightedColor {
     //f100 暂时去掉云控设置颜色
-    return [UIColor colorWithHexString:@"#299cff"];
+    return [UIColor colorWithHexString:@"#ff5869"];
 //    return [UIColor colorWithDayColorName:[self.customTextColorArray objectAtIndex:2] nightColorName:[self.customTextColorArray objectAtIndex:3]];
 }
 

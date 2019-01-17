@@ -98,6 +98,14 @@ import RxCocoa
 
                     }
                 }
+                var amapInfo: [String : Any] = [:];
+                
+                amapInfo["sub_locality"] = reGeocode?.district;
+                amapInfo["locality"] = reGeocode?.city
+                amapInfo["latitude"] = location?.coordinate.latitude ?? 0.0
+                amapInfo["longitude"] = location?.coordinate.longitude ?? 0.0
+                
+                TTLocationManager.shared().setUpAmapInfo(amapInfo)
 
                 if let _ = reGeocode {
                     EnvContext.shared.client.generalBizconfig.tryClearCityIdForLocation()
@@ -113,7 +121,6 @@ import RxCocoa
                         self?.currentCity.accept(reGeocode)
                     }
                 }
-                
 
                 self?.currentLocation.accept(location)
         })

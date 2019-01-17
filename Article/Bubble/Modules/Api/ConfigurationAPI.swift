@@ -14,7 +14,7 @@ func requestSearchConfig(
     gaodeCityName: String? = nil,
     geoCityId: String? = nil,
     cityId: Int? = nil) -> Observable<SearchConfigResponse?> {
-    let commonParams = TTNetworkManager.shareInstance()?.commonParamsblock()
+    let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams()
     var params = [String: Any]()
     if let commonParams = commonParams as? [String : Any] {
         params.merge(commonParams ) { (left, right) -> Any in
@@ -61,9 +61,11 @@ func requestGeneralConfig(
     lng: Double? = nil,
     needCommonParams: Bool = true,
     params: [String: Any] = [:]) -> Observable<GeneralConfigResponse?> {
+    
+    
     var params: [String: Any] = params
-    let block = TTNetworkManager.shareInstance()?.commonParamsblock
-    let commonParams = block?()
+//    let block = TTNetworkManager.shareInstance()?.commonParamsblock
+    let commonParams = FHEnvContext.sharedInstance().getRequestCommonParams()
     if !needCommonParams {
         if let commonParams = commonParams as? [String : Any] {
             params.merge(commonParams) { (left, right) -> Any in
@@ -94,6 +96,7 @@ func requestGeneralConfig(
     if let gaodeCityId = gaodeCityId {
         params["gaode_city_id"] = gaodeCityId
     }
+    params["cityId"] = "122"
     return requestGeneralConfig(params: params, needCommonParams: needCommonParams)
 }
 

@@ -38,6 +38,7 @@ protocol DetailPageViewModel: class {
     var followPage: BehaviorRelay<String> { get set }
 
     var groupId: String { get }
+    var tracerModel: HouseRentTracer? { get set }
 
     var contactPhone: BehaviorRelay<FHHouseDetailContact?> { get }
     var houseType: HouseType { get set }
@@ -132,7 +133,7 @@ extension DetailPageViewModel {
                     var toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                     if toastCount >= 3 {
                         
-                        EnvContext.shared.toast.showToast("提交成功")
+                        EnvContext.shared.toast.showToast("提交成功，经纪人将尽快与您联系")
                     }
                     success()
                 }
@@ -273,11 +274,14 @@ extension DetailPageViewModel {
                                 UserDefaults.standard.set(toastCount, forKey: kFHToastCountKey)
                                 UserDefaults.standard.synchronize()
                             }
+                            NotificationCenter.default.post(name: .followUpDidChange,
+                                                            object: nil,
+                                                            userInfo: ["status": 1, "followup_id": followId])
                         }else if response?.data?.followStatus ?? 0 == 1 {
                             let toastCount =  UserDefaults.standard.integer(forKey: kFHToastCountKey)
                             if toastCount < 3 && showTip {
                                 
-                                EnvContext.shared.toast.showToast("提交成功")
+                                EnvContext.shared.toast.showToast("提交成功，经纪人将尽快与您联系")
                             }
                         }
                         self?.followStatus.accept(.success(true))
@@ -370,6 +374,11 @@ extension DetailPageViewModel {
                 
             }).disposed(by: self.disposeBag)
         
+            let topVC:UIViewController? = TTUIResponderHelper.topViewController(for: bottomBar)
+            var topView:UIView? = UIApplication.shared.keyWindow?.rootViewController?.view
+            if (topVC != nil) {
+                topView = topVC?.view
+            }
             
             bottomBar.contactBtn.rx.tap
                 .withLatestFrom(self.contactPhone)
@@ -378,12 +387,45 @@ extension DetailPageViewModel {
                     if let phone = contactPhone?.phone, phone.count > 0 {
                         
                         if let houseId = self?.houseId, let houseType = self?.houseType {
-                            
+
+                            var clickCallParams: TracerParams? = nil
+
+                            if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
+
+                                if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
+                                    traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
+                                } else {
+                                    traceParams = traceParams <|>
+                                        toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
+                                }
+
+                                traceParams = traceParams <|> EnvContext.shared.homePageParams
+                                    .exclude("house_type")
+                                    .exclude("element_type")
+                                    .exclude("maintab_search")
+                                    .exclude("search")
+                                    .exclude("filter")
+                                traceParams = traceParams <|>
+                                    toTracerParams(self?.searchId ?? "be_null", key: "search_id")
+                                if let houseId = self?.houseId {
+                                    traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
+                                }else {
+                                    traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
+                                }
+                                clickCallParams = traceParams
+                            }
                             var theImprId: String?
                             if let logPB = self?.logPB as? [String: Any],let imprId = logPB["impr_id"] as? String {
                                 theImprId = imprId
                             }
-                            self?.callRealtorPhone(contactPhone: contactPhone, bottomBar: bottomBar, houseId: houseId, houseType: houseType, searchId: self?.searchId ?? "", imprId: theImprId ?? "", disposeBag: self?.disposeBag ?? DisposeBag())
+                            self?.callRealtorPhone(contactPhone: contactPhone,
+                                                   bottomBar: bottomBar,
+                                                   houseId: houseId,
+                                                   houseType: houseType,
+                                                   searchId: self?.searchId ?? "",
+                                                   imprId: theImprId ?? "",
+                                                   traceParams: clickCallParams,
+                                                   disposeBag: self?.disposeBag ?? DisposeBag())
                             self?.followHouseItem(houseType: houseType,
                                                   followAction: (FollowActionType(rawValue: houseType.rawValue) ?? .newHouse),
                                                   followId: "\(houseId)",
@@ -391,50 +433,26 @@ extension DetailPageViewModel {
                                 isNeedRecord: false)()
                         }
                         
-                        if var traceParams = self?.traceParams, let houseType = self?.houseType, houseType != .neighborhood {
-                            
-                            if let paramsMap = self?.followTraceParams.paramsGetter([:]), let enter_from = paramsMap["enter_from"] as? String, enter_from == "house_model_detail" {
-                                traceParams = traceParams <|> toTracerParams("house_model_detail", key: "page_type")
-                            } else {
-                                traceParams = traceParams <|>
-                                    toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type")
-                            }
-                            
-                            traceParams = traceParams <|> EnvContext.shared.homePageParams
-                                .exclude("house_type")
-                                .exclude("element_type")
-                                .exclude("maintab_search")
-                                .exclude("search")
-                                .exclude("filter")
-                            traceParams = traceParams <|>
-                                toTracerParams(self?.searchId ?? "be_null", key: "search_id")
-                            if let houseId = self?.houseId {
-                                traceParams = traceParams <|> toTracerParams("\(houseId)", key: "group_id")
-                            }else {
-                                traceParams = traceParams <|> toTracerParams("be_null", key: "group_id")
-                            }
-                            recordEvent(key: "click_call", params: traceParams <|> traceParam)
-                        }
-                        
+
                     }else {
                         if let pageType = traceParam.paramsGetter([:])["page_type"] as? String, pageType == "house_model_detail"
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true)
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价",traceParam: traceParam,isHouseModelDetail: true, topView: topView)
                         }else
                         {
-                            self?.showSendPhoneAlert(title: "询底价", subTitle: "随时获取房源最新动态", confirmBtnTitle: "获取底价")
+                            self?.showSendPhoneAlert(title: "询底价", subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "获取底价", topView: topView)
                         }
                     }
                 })
                 .disposed(by: self.disposeBag)
         }
     }
-    
-    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String , traceParam: TracerParams = TracerParams.momoid(), isHouseModelDetail: Bool = false) {
+    // UIApplication.shared.keyWindow?.rootViewController?.view
+    func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String , traceParam: TracerParams = TracerParams.momoid(), isHouseModelDetail: Bool = false, topView:UIView?) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
             .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.phoneTextField.text, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
+                if let phoneNum = alert.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
                         [unowned self]  in
@@ -462,13 +480,13 @@ extension DetailPageViewModel {
             }
             .disposed(by: disposeBag)
         
-        if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+        if let tempView = topView
         {
             let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
                         params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
             
-            alert.showFrom(rootView)
+            alert.showFrom(tempView)
         }
     }
     
@@ -486,30 +504,54 @@ extension DetailPageViewModel {
                           houseType: HouseType,
                           searchId: String,
                           imprId: String,
+                          traceParams: TracerParams?,
                           disposeBag: DisposeBag) {
-        
+
         guard let phone = contactPhone?.phone, phone.count > 0 else {
             return
         }
         
         bottomBar?.contactBtn.startLoading()
         requestVirtualNumber(realtorId: contactPhone?.realtorId ?? "0", houseId: houseId, houseType: houseType, searchId: searchId, imprId: imprId)
-            .subscribe(onNext: { [weak bottomBar] (response) in
+            .subscribe(onNext: { [weak bottomBar, weak self] (response) in
                 
                 bottomBar?.contactBtn.stopLoading()
                 if let contactPhone = response?.data, let virtualNumber = contactPhone.virtualNumber {
-                    
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: true, traceParams: traceParams)
                     Utils.telecall(phoneNumber: virtualNumber)
                 }else {
+                    self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: traceParams)
                     Utils.telecall(phoneNumber: phone)
                 }
                 
-            }, onError: { [weak bottomBar]  (error) in
+            }, onError: { [weak bottomBar, weak self]  (error) in
                 bottomBar?.contactBtn.stopLoading()
+                self?.traceCall(rank: "0", contact: self?.contactPhone.value, isVirtualNumber: false, traceParams: traceParams)
                 Utils.telecall(phoneNumber: phone)
             })
             .disposed(by: disposeBag)
         
+    }
+
+
+    func traceCall(rank: String,
+                   contact: FHHouseDetailContact?,
+                   isVirtualNumber: Bool,
+                   traceParams: TracerParams?) {
+        guard let traceParams = traceParams else {
+            return
+        }
+        let params = traceParams <|>
+            toTracerParams(rank, key: "realtor_rank") <|>
+            toTracerParams(1, key: "has_auth") <|>
+            toTracerParams(contact?.realtorId ?? "be_null", key: "realtor_id") <|>
+            toTracerParams("detail_button", key: "realtor_position") <|>
+            toTracerParams(0, key: "is_dial") <|>
+            toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate")
+
+
+        // 谢飞不打，我就不打has_auth
+        recordEvent(key: "click_call", params: params)
     }
 
 }
@@ -804,4 +846,18 @@ func parseNodeWrapper(preNode: @escaping () -> TableSectionNode?,
     }
 }
 
+func getStringFromLogPb(key: String, logPb: Any?) -> String {
+    if let logPB = logPb as? [String: Any],
+        let result = logPB[key] as? String {
+        return result
+    }
+    return "be_null"
+}
 
+var getSearchIdFromLogPb = curry(getStringFromLogPb)("search_id")
+var getGroupIdFromLogPb = curry(getStringFromLogPb)("group_id")
+var getImprIdFromLogPb = curry(getStringFromLogPb)("impr_id")
+
+var searchIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getSearchIdFromLogPb($0), key: "search_id") }
+var groupIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getGroupIdFromLogPb($0), key: "group_id") }
+var imprIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getImprIdFromLogPb($0), key: "impr_id") }

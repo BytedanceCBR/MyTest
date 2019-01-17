@@ -665,6 +665,16 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+    [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+    [TTTracker eventV3:@"rt_post_comment" params:params];
+    
     [self.currentAnswerCell commentView:commentView sucessWithCommentWriteManager:commentWriteManager responsedData:responseData];
 }
 

@@ -2029,8 +2029,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:answerEntity.ansid forKey:@"group_id"];
     [dict setValue:answerEntity.user.userID forKey:@"user_id"];
     [dict setValue:@(10) forKey:@"group_source"];
-    [dict setValue:@"detail_bottom" forKey:@"position"];
-
+    [dict setValue:@"detail" forKey:@"position"];
+    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+    
     if (self.detailModel.answerEntity.isDigg) {
         [TTTracker eventV3:@"rt_like" params:[dict copy]];
     } else {
@@ -2072,6 +2073,37 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 #pragma mark - TTCommentDelegate
+
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model {
+    if (!model.userDigged) {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+    }
+}
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error 
 {
@@ -2166,8 +2198,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSMutableDictionary *mdict = info.mutableCopy;
     //todo
     [mdict setValue:@"detail_wenda_comment_dig" forKey:@"fromPage"];
-    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category_name"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"enter_from"]  forKey:@"enterFrom"];
     [mdict setValue:self.detailModel.answerEntity.ansid forKey:@"groupId"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"qid"] forKey:@"qid"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];
     
     if (self.isNewVersion) {
         if ([self.wdDelegate respondsToSelector:@selector(wd_commentViewController:didSelectWithInfo:)]) {
@@ -2225,6 +2260,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+    [TTTracker eventV3:@"rt_post_comment" params:params];
+    
     commentWriteManager.delegate = nil;
     self.commentViewController.hasSelfShown = YES;
     if(![responseData objectForKey:@"error"])  {

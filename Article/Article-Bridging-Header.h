@@ -45,7 +45,7 @@
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "MJRefresh.h"
-#import "NIHRefreshCustomFooter.h"
+#import "FHRefreshCustomFooter.h"
 #import "TTAddressBookService.h"
 #import "TTContactsNetworkManager.h"
 #import "TTDeviceHelper.h"
@@ -81,6 +81,7 @@
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "AWEPostDataHttpRequestSerializer.h"
+#import "TTArticleCategoryManager.h"
 
 #import "UIImageAdditions.h"
 
@@ -113,5 +114,16 @@
 
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHHomeCellHelper.h"
+#import <CommonCrypto/CommonDigest.h>
+#import "FHFilterNodeModel.h"
+
+#import "FHEnvContext.h"
+#import "FHMapSearchOpenUrlDelegate.h"
+#import "TTLocationManager.h"
+#import "FHLocManager.h"
+#import "FHRealtorDetailWebViewController.h"
+#import "FHErrorView.h"
+#import "HMSegmentedControl.h"
+#import "UIViewController+Track.h"
 
 #endif /* Article_Bridging_Header_h */

@@ -33,6 +33,8 @@ func parseRentSearchInNeighborhoodNode(
                 toTracerParams(tracer.rank, key: "rank") <|>
                 toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 toTracerParams(tracer.pageType, key: "page_type")
 
 
@@ -76,6 +78,9 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
+                searchIdTraceParam(item.logPb) <|>
+                imprIdTraceParam(item.logPb) <|>
+                groupIdTraceParam(item.logPb) <|>
                 toTracerParams("same_neighborhood", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []

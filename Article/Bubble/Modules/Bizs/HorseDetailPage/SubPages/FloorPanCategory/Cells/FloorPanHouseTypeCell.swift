@@ -169,6 +169,9 @@ func parseFloorPanItemsNode(
                     return curry(openDetailPage)(item.id)(item.logPB)(isHiddenBottomBar)(navVC)(followPage)(disposeBag)(bottomBarBinder)(myParams)
                 }
         
+        var paramsDict = params.paramsGetter([:])
+        
+        
         let records = data
             .filter { $0.id != nil }
             .enumerated()
@@ -179,12 +182,18 @@ func parseFloorPanItemsNode(
                     toTracerParams(offset, key: "rank") <|>
                         toTracerParams("left_pic", key: "card_type") <|>
                         toTracerParams("house_model", key: "element_type") <|>
+                        toTracerParams("house_model", key: "element_type") <|>
                         toTracerParams("house_model", key: "house_type") <|>
                         toTracerParams("house_model_list", key: "page_type") <|>
                         toTracerParams("house_model_list", key: "enter_from") <|>
+                        toTracerParams(paramsDict["origin_from"] ?? "be_null", key: "origin_from") <|>
+                        toTracerParams(paramsDict["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
                         toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        imprIdTraceParam(item.logPB) <|>
+                        searchIdTraceParam(item.logPB) <|>
+                        groupIdTraceParam(item.logPB) <|>
                         toTracerParams(item.id ?? "be_null", key: "group_id")
-                return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("enter_from").exclude("element_from"))
+                return onceRecord(key: TraceEventName.house_show, params: theParams)
         }
         let processors = zip(selector, records)
         return zip(renders, processors).map {

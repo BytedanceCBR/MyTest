@@ -63,101 +63,102 @@ extension Notification.Name {
         return re
     }()
 
-    let currentCitySwitcher: CurrentCitySwitcher
+//    let currentCitySwitcher: CurrentCitySwitcher
 
 //    let anrEye = ANREye()
 
-    var did: String?
-    var iid: String?
+//    var did: String?
+//    var iid: String?
 
-    @objc var commonParamsProvider: (() -> [AnyHashable: Any])?
+//    @objc var commonParamsProvider: (() -> [AnyHashable: Any])?
  
-    @objc var jumpToDiscovery: (() -> Void)?
+//    @objc var jumpToDiscovery: (() -> Void)?
 
     @objc override init() {
-        currentCitySwitcher = CurrentCitySwitcher(currentCityId: nil)
+//        currentCitySwitcher = CurrentCitySwitcher(currentCityId: nil)
         super.init()
-        setCommonNetwork()
-        locationManager.currentLocation
-                .filter { $0 != nil }
-                .subscribe(onNext: { [weak self] (cityId) in
-                    self?.generalBizconfig.fetchConfiguration()
-                    self?.setCommonNetwork()
-                })
-                .disposed(by: disposeBag)
+//        setCommonNetwork()
+//        locationManager.currentLocation
+//                .filter { $0 != nil }
+//                .subscribe(onNext: { [weak self] (cityId) in
+//                    self?.generalBizconfig.fetchConfiguration()
+//                    self?.setCommonNetwork()
+//                })
+//                .disposed(by: disposeBag)
 
 
-        NotificationCenter.default.rx
-                .notification(.discovery)
-                .subscribe(onNext: { [unowned self] notification in
-                    self.jumpToDiscovery?()
-                }).disposed(by: disposeBag)
+//        NotificationCenter.default.rx
+//                .notification(.discovery)
+//                .subscribe(onNext: { [unowned self] notification in
+//                    self.jumpToDiscovery?()
+//                }).disposed(by: disposeBag)
         
         
-        generalBizconfig.generalCacheSubject
-            .skip(1)
-            .throttle(1,
-                      latest: false,
-                      scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] data in
-                if let dictValue = data?.toJSON()
-                {
-                    FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
-                }
-            })
-            .disposed(by: disposeBag)
+//        generalBizconfig.generalCacheSubject
+//            .skip(1)
+//            .throttle(1,
+//                      latest: false,
+//                      scheduler: MainScheduler.instance)
+//            .subscribe(onNext: { [weak self] data in
+//                if let dictValue = data?.toJSON()
+//                {
+//                    FHHomeConfigManager.sharedInstance().acceptConfigDictionary(dictValue)
+////                    FHEnvContext.sharedInstance().acceptConfigDictionary(dictValue)
+//                }
+//            })
+//            .disposed(by: disposeBag)
     }
 
-    @objc func setCommonNetwork() {
-        let commonParams = NetworkCommonParams.monoid()
-                <- locationManager.locationParams()
-                <- generalBizconfig.commonParams()
-                <- self.commonParams()
-        commonParamsProvider = commonParams.params
-    }
+//    @objc func setCommonNetwork() {
+//        let commonParams = NetworkCommonParams.monoid()
+//                <- locationManager.locationParams()
+//                <- generalBizconfig.commonParams()
+//                <- self.commonParams()
+//        commonParamsProvider = commonParams.params
+//    }
 
     @objc func onStart() {
         
         try? reachability.startNotifier()
 
         //TODO leo
-        generalBizconfig.currentSelectCityId
-            .subscribe(onNext: { [weak self] (cityId) in
-//                if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
-////                    self?.generalBizconfig.fetchConfiguration()
-////                    self?.fetchSearchConfig()
-//                }
-                self?.setCommonNetwork()
-            })
-            .disposed(by: disposeBag)
+//        generalBizconfig.currentSelectCityId
+//            .subscribe(onNext: { [weak self] (cityId) in
+////                if let cityId = cityId, self?.generalBizconfig.generalCacheSubject.value?.currentCityId ?? 0 != Int64(cityId){
+//////                    self?.generalBizconfig.fetchConfiguration()
+//////                    self?.fetchSearchConfig()
+////                }
+//                self?.setCommonNetwork()
+//            })
+//            .disposed(by: disposeBag)
 
-        setupLocationManager()
-        generalBizconfig.load()
-        if let searchConfigCache = searchConfigCache {
-            if !searchConfigCache.containsObject(forKey: "config") {
-//                fetchSearchConfig()
-            } else {
-                let configPayload = searchConfigCache.object(forKey: "search_config") as! String
-                let config = SearchConfigResponseData(JSONString: configPayload)
-                assert(config != nil)
-                if let config = config {
-                    configCacheSubject.accept(config)
-                }
-            }
-        }
+//        setupLocationManager()
+//        generalBizconfig.load()
+//        if let searchConfigCache = searchConfigCache {
+//            if !searchConfigCache.containsObject(forKey: "config") {
+////                fetchSearchConfig()
+//            } else {
+//                let configPayload = searchConfigCache.object(forKey: "search_config") as! String
+//                let config = SearchConfigResponseData(JSONString: configPayload)
+//                assert(config != nil)
+//                if let config = config {
+//                    configCacheSubject.accept(config)
+//                }
+//            }
+//        }
        
-        TTInstallIDManager.sharedInstance().start(
-                withAppID: Client.appId,
-                channel: "local_test") { [weak self] (did, iid) in
-            if let did = did, let iid = iid {
-                self?.did = did
-                self?.iid = iid
-                self?.setCommonNetwork()
-                AccountConfig.setupAccountConfig(did: did, iid: iid, appId: Client.appId)
-            } else {
-                assertionFailure()
-            }
-        }
+//        TTInstallIDManager.sharedInstance().start(
+//                withAppID: Client.appId,
+//                channel: "local_test") { [weak self] (did, iid) in
+//            if let did = did, let iid = iid {
+//                self?.did = did
+//                self?.iid = iid
+//                self?.setCommonNetwork()
+//                AccountConfig.setupAccountConfig(did: did, iid: iid, appId: Client.appId)
+//            } else {
+//                assertionFailure()
+//            }
+//        }
 
         accountConfig.loadAccount()
         
@@ -232,28 +233,28 @@ extension Notification.Name {
         }
     }
 
-    func fetchSearchConfig() {
-        requestSearchConfig()
-                .observeOn(CurrentThreadScheduler.instance)
-                .subscribeOn(CurrentThreadScheduler.instance)
-                .retryOnConnect(timeout: 60)
-                .retry(10)
-                .subscribe(onNext: { [unowned self] response in
-                    if response?.data?.filter != nil {
-                        self.configCacheSubject.accept(response?.data)
-                        self.saveSearchConfigToCache(response: response)
-                    }
-                }, onError: { error in
-//                    print(error)
-//                    assertionFailure()
-                })
-                .disposed(by: disposeBag)
-    }
+//    func fetchSearchConfig() {
+//        requestSearchConfig()
+//                .observeOn(CurrentThreadScheduler.instance)
+//                .subscribeOn(CurrentThreadScheduler.instance)
+//                .retryOnConnect(timeout: 60)
+//                .retry(10)
+//                .subscribe(onNext: { [unowned self] response in
+//                    if response?.data?.filter != nil {
+//                        self.configCacheSubject.accept(response?.data)
+//                        self.saveSearchConfigToCache(response: response)
+//                    }
+//                }, onError: { error in
+////                    print(error)
+////                    assertionFailure()
+//                })
+//                .disposed(by: disposeBag)
+//    }
 
-    @objc
-    func setupLocationManager() {
-        locationManager.requestCurrentLocation()
-    }
+//    @objc
+//    func setupLocationManager() {
+//        locationManager.requestCurrentLocation()
+//    }
     
     @objc
     func setUserInfo(user: TTAccountUserEntity?) {
@@ -261,20 +262,20 @@ extension Notification.Name {
     }
 
     // 定位城市和用户选择的是否是同一城市
-    @objc func  locationSameAsChooseCity() -> Bool {
-        
-        
-        guard let selectCityId = self.generalBizconfig.getCurrentSelectCityId() else {
-            return false
-        }
-        
-        guard let cityName = self.generalBizconfig.cityNameById()(selectCityId) else {
-            return false
-        }
-        
-        return LocationManager.shared.isSameCity(cityName: cityName)
-        
-    }
+//    @objc func  locationSameAsChooseCity() -> Bool {
+//
+//
+//        guard let selectCityId = self.generalBizconfig.getCurrentSelectCityId() else {
+//            return false
+//        }
+//
+//        guard let cityName = self.generalBizconfig.cityNameById()(selectCityId) else {
+//            return false
+//        }
+//
+//        return LocationManager.shared.isSameCity(cityName: cityName)
+//
+//    }
     
     @objc func currentLocation() -> CLLocationCoordinate2D {
         
@@ -284,19 +285,19 @@ extension Notification.Name {
         return CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
     
-    @objc func appConfig() -> [String: Any]? {
-     
-        return generalBizconfig.appConfig()
-    }
+//    @objc func appConfig() -> [String: Any]? {
+//
+//        return generalBizconfig.appConfig()
+//    }
     
-    @objc func rentOpData() -> [String : Any]? {
-        
-        return generalBizconfig.rentOpData()
-        
-    }
+//    @objc func rentOpData() -> [String : Any]? {
+//        
+//        return generalBizconfig.rentOpData()
+//        
+//    }
     
     deinit {
-        reachability.stopNotifier()
+//        reachability.stopNotifier()
     }
 }
 

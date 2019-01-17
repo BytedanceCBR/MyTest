@@ -202,7 +202,7 @@
         self.termButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         self.termButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         self.termButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [self.termButton setTitle:NSLocalizedString(@"好多房用户协议", nil) forState:UIControlStateNormal];
+        [self.termButton setTitle:NSLocalizedString(@"幸福里用户协议", nil) forState:UIControlStateNormal];
         self.termButton.titleLabel.font = [UIFont systemFontOfSize:[ArticleMobileNumberViewController fontSizeOfTermButtonTitle]];
         self.termButton.titleColorThemeKey = kColorText4;
         self.termButton.highlightedTitleColorThemeKey = kColorText4Highlighted;
@@ -263,7 +263,7 @@
     /////// 友盟统计
     wrapperTrackEvent(@"login_register", @"click_agreement");
     SSWebViewController *webViewController = [[SSWebViewController alloc] initWithSupportIPhoneRotate:NO];
-    [webViewController setTitleText:NSLocalizedString(@"好多房用户协议", nil)];
+    [webViewController setTitleText:NSLocalizedString(@"幸福里用户协议", nil)];
     [webViewController requestWithURLString:[ArticleURLSetting userProtocolURLString]];
     [self.navigationController pushViewController:webViewController animated:YES];
 }
@@ -332,14 +332,14 @@
 {
     if (self.usingType == ArticleMobileNumberUsingTypeBind) {
         if (self.privacyView && ![self.privacyView isChecked]) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《好多房用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《幸福里用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
             [alert showFrom:self animated:YES];
             return;
         }
     } else {
         if (self.radioButton && !self.radioButton.selected) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《好多房用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《幸福里用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
             [alert showFrom:self animated:YES];
             return;

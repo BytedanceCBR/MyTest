@@ -28,9 +28,9 @@
 #import "TTSettingsManager.h"
 #import "TTRelevantDurationTracker.h"
 #import <TTMonitor.h>
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHHomeConfigManager.h"
-
+#import "FHEnvContext.h"
 @interface MyCollectionView : UICollectionView
 
 @end
@@ -430,11 +430,9 @@ TTFeedCollectionCellDelegate>
             {
                 [dict setValue:@"maintab_list" forKey:@"element_from"];
                 [dict setValue:@"maintab" forKey:@"enter_from"];
-                
-                NSDictionary *homeParams = [[EnvContext shared] homePageParamsMap];
-                
-                NSString * searchId = homeParams[@"origin_search_id"];
-                NSString * categoryName = homeParams[@"origin_from"];
+                                
+                NSString * searchId = [FHEnvContext sharedInstance].getCommonParams.originSearchId;
+                NSString * categoryName = [FHEnvContext sharedInstance].getCommonParams.originFrom;
 
                 [dict setValue:categoryName forKey:@"origin_from"];
                 [dict setValue:searchId forKey:@"search_id"];

@@ -214,19 +214,14 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+    
+    // add by zjing safeArea
     CGFloat safeInsetBottom = 0;
-    CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
-
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        
         safeInsetBottom = 34;
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInsetBottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInsetBottom));
     }
-    CGRect frame = [self.view.superview convertRect:frameInWindow fromView:nil];
-    self.view.frame = frame;
-
-//    NSLog(@"zjing-frame:%@",[NSValue valueWithCGRect:frame]);
+    self.view.height = ExploreDetailGetToolbarHeight() + safeInsetBottom;
+    
     self.toolbarView.frame = self.view.bounds;
 }
 
@@ -1200,9 +1195,9 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)favoriteLog3{
     NSMutableDictionary *extra = [NSMutableDictionary dictionary];
     if (self.videoInfo.userRepined) {
-        [extra setValue:@"rt_favorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_favourite" forKey:@"favorite_name"];
     }else{
-        [extra setValue:@"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_unfavourite" forKey:@"favorite_name"];
     }
     [extra addEntriesFromDictionary:_shareSectionAndEventDic];
     Article *covertArticle = [self.videoInfo ttv_convertedArticle];
@@ -1293,7 +1288,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (itemType == TTActivityTypeFavorite)
     {
         BOOL userRepine = self.detailModel.protocoledArticle.userRepined;
-        [extra setValue: userRepine ? @"rt_favorite" : @"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue: userRepine ? @"rt_favourite" : @"rt_unfavourite" forKey:@"favorite_name"];
     }
     
     NSString *fromSource = _activityActionManager.clickSource;
@@ -1791,7 +1786,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (!isEmptyString(self.videoInfo.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@-%@", self.videoInfo.title, @""];
     }else{
-        timeLineTitle = NSLocalizedString(@"真房源，好中介，快流通", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -1800,7 +1795,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (NSString *)shareDesc
 {
     Article *convertedArticle = [self.videoInfo ttv_convertedArticle];
-    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : convertedArticle.abstract;
+    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : convertedArticle.abstract;
     return detail;
 }
 
