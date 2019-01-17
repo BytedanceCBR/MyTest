@@ -780,7 +780,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
         self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
         
-        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 150 : 0
+        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 160 : 0
         self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
         
         if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
