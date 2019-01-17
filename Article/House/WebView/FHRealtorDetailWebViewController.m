@@ -19,22 +19,31 @@
     NSString* _realtorId;
 //    NSTimeInterval _lastClickCall;
 }
+@property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
 @end
 
 @implementation FHRealtorDetailWebViewController
 static NSString *s_oldAgent = nil;
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        self.realtorUserInfo = paramObj.userInfo;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [[self class] registerUserAgentV2:YES];
     [super viewDidLoad];
     _startTime = [NSDate new].timeIntervalSince1970;
     _phoneCallViewModel = [[FHPhoneCallViewModel alloc] init];
-    _tracerModel = [self.userInfo allInfo][@"trace"];
-    _delegate = [self.userInfo allInfo][@"delegate"];
-    _realtorId = [self.userInfo allInfo][@"realtorId"];
+    _tracerModel = [self.realtorUserInfo allInfo][@"trace"];
+    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
+    _realtorId = [self.realtorUserInfo allInfo][@"realtorId"];
 
     @weakify(self);
-    [self.webview.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         @strongify(self);
 //        if (self->_lastClickCall - [[NSDate new] timeIntervalSince1970] < 3) {
 //            return;

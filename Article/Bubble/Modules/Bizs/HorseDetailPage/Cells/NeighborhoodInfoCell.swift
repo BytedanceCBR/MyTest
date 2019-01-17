@@ -479,6 +479,18 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
 }
 }
 
+func getEvaluateWebParams(parmasMap: [String:Any]?) -> String {
+    if let traceDic = parmasMap {
+        if let data = try? JSONSerialization.data(withJSONObject: traceDic) {
+            return String(bytes: data, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        } else {
+            return ""
+        }
+    } else {
+        return ""
+    }
+}
+
 func openEvaluateWebPage(
     urlStr: String,
     title: String = "小区评测",
@@ -502,12 +514,11 @@ func openEvaluateWebPage(
             
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
             
-            
-            let jumpUrl = "fschema://fh_webview" //route协议
             let parmasMap = openParams.paramsGetter([:]) //埋点参数
-            let stayPageTraceEventName = "stay_neighborhood_evaluation" //埋点Event ,不传不上报
+            let reportParams = getEvaluateWebParams(parmasMap: parmasMap)
+            let jumpUrl = "sslocal://webview?report_params=\(reportParams)" //route协议
             
-            let userInfo = TTRouteUserInfo(info: ["event":stayPageTraceEventName,"tracer": parmasMap, "title": title, "url": urlStr])
+            let userInfo = TTRouteUserInfo(info: ["title": title, "url": urlStr])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)
