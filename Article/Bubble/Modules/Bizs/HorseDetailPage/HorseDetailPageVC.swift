@@ -658,6 +658,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         traceParams = traceParams <|>
                             toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
                             toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originFrom ?? "be_null", key: "origin_from") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
                         self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone,
                                                                    bottomBar: self.bottomBar,
