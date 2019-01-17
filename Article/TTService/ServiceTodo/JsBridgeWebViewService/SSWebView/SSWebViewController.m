@@ -99,7 +99,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
-    NSDictionary *params = paramObj.allParams;
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params addEntriesFromDictionary:paramObj.allParams];
+    params[@"use_wk"] = @"1";  // 添加默认支持使用WKWebView
+    if (![params valueForKey:@"bounce_disable"]) {
+        params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
+    }
     NSString * urlStr = nil;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];

@@ -86,7 +86,7 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
 
                         let jsParams = ["requestPageData": pageData,
                                         "getNetCommonParams": commonParamsData]
-                        let info: [String: Any] = ["url": "\(EnvContext.networkConfig.host)\(urlStr)", "fhJSParams": jsParams,"title": "房源问题反馈","bounce_disable":"1"]
+                        let info: [String: Any] = ["url": "\(EnvContext.networkConfig.host)\(urlStr)", "fhJSParams": jsParams,"title": "房源问题反馈"]
                         let userInfo = TTRouteUserInfo(info: info)
                         TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                     }

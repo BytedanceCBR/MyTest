@@ -853,8 +853,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                            "title": "经纪人详情页",
                                            "realtorId": realtorId,
                                            "delegate": delegate,
-                                           "trace": traceModel,
-                                           "bounce_disable":"1"]
+                                           "trace": traceModel]
                 let userInfo = TTRouteUserInfo(info: info)
                 TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
             }

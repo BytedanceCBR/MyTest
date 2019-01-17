@@ -518,7 +518,7 @@ func openEvaluateWebPage(
             let reportParams = getEvaluateWebParams(parmasMap: parmasMap)
             let jumpUrl = "sslocal://webview?report_params=\(reportParams)" //route协议
             
-            let userInfo = TTRouteUserInfo(info: ["title": title, "url": urlStr,"bounce_disable":"1"])
+            let userInfo = TTRouteUserInfo(info: ["title": title, "url": urlStr])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)

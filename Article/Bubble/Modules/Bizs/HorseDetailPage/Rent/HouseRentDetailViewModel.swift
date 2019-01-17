@@ -360,7 +360,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
             let jsParams = ["requestPageData": pageData,
                             "getNetCommonParams": commonParamsData]
-            let info: [String: Any] = ["url": jumpUrl, "fhJSParams": jsParams, "title": "房源问题反馈","bounce_disable":"1"]
+            let info: [String: Any] = ["url": jumpUrl, "fhJSParams": jsParams, "title": "房源问题反馈"]
             let userInfo = TTRouteUserInfo(info: info)
             TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
 
