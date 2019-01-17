@@ -143,6 +143,7 @@ import RxCocoa
                             self?.dataSource.datas = result
                             self?.tableView?.reloadData()
                             self?.onDataArrived?()
+
                             DispatchQueue.main.async {
                                 if let tableView = self?.tableView,
                                     let datas = self?.dataSource.datas {
@@ -248,12 +249,7 @@ import RxCocoa
         requestErshouHouseDetail(houseId: houseId, logPB: logPB)
                 .observeOn(MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] (response) in
-                    if showLoading {
-                        self?.dismissMessageAlert?()
-                    }
                     if let response = response{
-
-
                         if response.status == 0{
                             if let idStr = response.data?.id
                             {
@@ -277,6 +273,10 @@ import RxCocoa
                     }else
                     {
                         self?.onEmptyData?()
+                    }
+                    //关闭loading
+                    if showLoading {
+                        self?.dismissMessageAlert?()
                     }
                     if let status = response?.data?.userStatus {
                         self?.followStatus.accept(Result.success(status.houseSubStatus == 1))
