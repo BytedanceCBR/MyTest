@@ -131,7 +131,7 @@
     //内测弹窗
     NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
     NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString * channelValue = @"local_test";
+    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
     NSString * aidValue = @"1370";
 //    NSString * baseUrl = [CommonURLSetting baseURL];
     NSString * baseUrl = @"https://i.snssdk.com";

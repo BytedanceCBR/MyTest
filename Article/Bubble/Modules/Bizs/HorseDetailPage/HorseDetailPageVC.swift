@@ -159,7 +159,16 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
         
     
-        
+        func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
+            
+            let jsonData:Data = jsonString.data(using: .utf8)!
+            
+            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+            if dict != nil {
+                return dict as! NSDictionary
+            }
+            return NSDictionary()
+        }
         
         // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
         if let urlStr = paramObj?.sourceURL.absoluteString,
@@ -171,6 +180,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
                     EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                         toTracerParams(origin_from, key: "origin_from")
+                    
+                }
+            
+            
+                if let reportParams = urlParams["report_params"]
+                {
+                    let paramsDict : NSDictionary = getDictionaryFromJSONString(jsonString: reportParams)
+                    if let parmasTrace = paramsDict as? [String : Any]
+                    {
+                        let traceParamsReport = mapTracerParams(parmasTrace)
+                        traceParams = traceParams <|>
+                        traceParamsReport
+                    }
                     
                 }
             
