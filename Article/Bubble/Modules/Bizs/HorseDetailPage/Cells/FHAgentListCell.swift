@@ -496,6 +496,7 @@ func getRealtorReportParams(traceModel: HouseRentTracer?) -> String {
         dict["origin_from"] = traceModel.originFrom ?? "be_null"
         dict["log_pb"] = traceModel.logPb ?? "be_null"
         dict["search_id"] = traceModel.searchId ?? "be_null"
+        dict["origin_search_id"] = traceModel.originSearchId ?? "be_null"
         dict["group_id"] = traceModel.groupId ?? "be_null"
         if let logPb = traceModel.logPb as? [AnyHashable: Any] {
             dict["impr_id"] = (logPb["impr_id"] as? String) ?? "be_null"
