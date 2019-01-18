@@ -516,9 +516,9 @@ func openEvaluateWebPage(
             
             let parmasMap = openParams.paramsGetter([:]) //埋点参数
             let reportParams = getEvaluateWebParams(parmasMap: parmasMap)
-            let jumpUrl = "sslocal://webview?report_params=\(reportParams)" //route协议
-            
-            let userInfo = TTRouteUserInfo(info: ["title": title, "url": urlStr])
+            let jumpUrl = "sslocal://webview" //route协议
+            let openUrl = "\(urlStr)&report_params=\(reportParams)"
+            let userInfo = TTRouteUserInfo(info: ["title": title, "url": openUrl])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)
