@@ -24,6 +24,7 @@
 #import "TTUIResponderHelper.h"
 #import "FHIndexSectionView.h"
 #import "FHUserTracker.h"
+#import "FHEnvContext.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()<FHIndexSectionDelegate>
@@ -96,8 +97,19 @@
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
         // 第一次提前请求config数据
         [self checkConfigDataNoReturn];
+    }
+}
+
+- (void)connectionChanged:(NSNotification *)notification {
+    if ([FHEnvContext isNetworkConnected]) {
+        FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if (!configDataModel) {
+            // 请求config数据
+            [self checkConfigDataNoReturn];
+        }
     }
 }
 
@@ -108,6 +120,7 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
