@@ -36,6 +36,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.isRefreshing = NO;
+    
     self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
         self.mainTableView.estimatedSectionFooterHeight = 0;
@@ -117,6 +119,21 @@ static CGFloat const kSectionHeaderHeight = 38;
          
 - (void)retryLoadData
 {
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
+    if (self.isRefreshing) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isRefreshing = NO;
+            });
+        });
+        return;
+    }
+    
+    self.isRefreshing = YES;
     //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {

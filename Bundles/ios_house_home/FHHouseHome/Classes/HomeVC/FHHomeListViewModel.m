@@ -112,6 +112,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
+            self.dataSource.showPlaceHolder = YES;
+            
             [self reloadHomeTableHeaderSection];
             
             [self resetAllCacheData];
