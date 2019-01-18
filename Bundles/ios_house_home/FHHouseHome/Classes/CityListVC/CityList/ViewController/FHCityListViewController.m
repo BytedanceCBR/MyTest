@@ -106,7 +106,8 @@
 - (void)connectionChanged:(NSNotification *)notification {
     if ([FHEnvContext isNetworkConnected]) {
         FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
-        if (!configDataModel) {
+        BOOL shown = !self.emptyView.hidden;
+        if (shown && configDataModel == NULL) {
             // 请求config数据
             [self checkConfigDataNoReturn];
         }
@@ -120,7 +121,6 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
