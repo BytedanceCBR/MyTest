@@ -17,7 +17,6 @@
     HouseRentTracer* _tracerModel;
     NSTimeInterval _startTime;
     NSString* _realtorId;
-//    NSTimeInterval _lastClickCall;
 }
 @property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
 @end
@@ -45,11 +44,6 @@ static NSString *s_oldAgent = nil;
     @weakify(self);
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         @strongify(self);
-//        if (self->_lastClickCall - [[NSDate new] timeIntervalSince1970] < 3) {
-//            return;
-//        } else {
-//            self->_lastClickCall = [[NSDate new] timeIntervalSince1970];
-//        }
         self->_realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
         if (self->_realtorId != nil && phone != nil) {
@@ -80,15 +74,6 @@ static NSString *s_oldAgent = nil;
                              @"realtor_id": _realtorId ? : @"be_null",
                              };
     return [params mutableCopy];
-}
-
-- (void)dealloc
-{
-    NSTimeInterval stayTime = [NSDate new].timeIntervalSince1970 - _startTime;
-    NSInteger stayTimeInt = stayTime * 1000;
-    NSMutableDictionary* params = [self goDetailParams];
-    params[@"stay_time"] = @(stayTimeInt);
-    [TTTracker eventV3:@"stay_page" params:params];
 }
 
 + (NSString *)toutiaoUA {
