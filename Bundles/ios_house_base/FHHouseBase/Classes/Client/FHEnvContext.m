@@ -72,7 +72,7 @@
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                     
@@ -84,8 +84,11 @@
                     [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
                         
                     }];
+                    
+                    if (!isSuccessed) {
+                        [[TTArticleCategoryManager sharedManager] startGetCategory];
+                    }
                 }];
-                
             }else
             {
                 if(completion)

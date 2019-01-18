@@ -79,14 +79,14 @@ class HouseOutlineHeaderCell: BaseUITableViewCell {
                         }
                         recordEvent(key: "click_feedback", params: traceParam)
                         
-                        let openUrl = "fschema://webview_oc"
+                        let openUrl = "sslocal://webview"
                         let model = ershouHouseData.toJSON()
                         let pageData: [String: Any] = ["data": model]
                         let commonParamsData: [String: Any] = ["data": commonParams]
 
                         let jsParams = ["requestPageData": pageData,
                                         "getNetCommonParams": commonParamsData]
-                        let info: [String: Any] = ["url": "\(EnvContext.networkConfig.host)\(urlStr)", "jsParams": jsParams,"title": "房源问题反馈"]
+                        let info: [String: Any] = ["url": "\(EnvContext.networkConfig.host)\(urlStr)", "fhJSParams": jsParams,"title": "房源问题反馈"]
                         let userInfo = TTRouteUserInfo(info: info)
                         TTRoute.shared().openURL(byPushViewController: URL(string: openUrl), userInfo: userInfo)
                     }

@@ -421,6 +421,7 @@
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
+            searchId = houseModel.searchId;
             if (recommendItemArray.count > 0) {
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 if (!hasMore) {
@@ -430,10 +431,7 @@
                 recommendTitleModel.noDataTip = recommendHouseDataModel.searchHint;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
-            } else {
-                searchId = houseModel.searchId;
             }
-
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -480,13 +478,12 @@
         if (self.isEnterCategory) {
             [self addEnterCategoryLog];
             self.isEnterCategory = NO;
-            
         }
         if (self.isRefresh) {
             [self addHouseSearchLog];
             [self addHouseRankLog];
             [self refreshHouseListUrlCallback:houseListOpenUrl];
-        }else {
+        } else {
             [self addCategoryRefreshLog];
         }
         self.houseListOpenUrl = houseListOpenUrl;
