@@ -178,9 +178,14 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
     /// - Returns:
     func parseRentHouseFacility() -> () -> [TableSectionNode]? {
         let header = combineParser(left: parseFlineNode(), right: parseHeaderNode("房屋配置", adjustBottomSpace: 0))
-        return parseNodeWrapper(preNode: header,
-                                wrapedNode: parseRentFacilityCellNode(model: detailData.value,
-                                                                      tracer: houseRentTracer))
+        if let _ = parseRentFacilityCellNode(model: detailData.value,
+                                                tracer: houseRentTracer)() {
+            return parseNodeWrapper(preNode: header,wrapedNode: parseRentFacilityCellNode(model: detailData.value,
+                                                                                          tracer: houseRentTracer))
+        }
+        return {
+            return nil
+        }
     }
 
     /// 小区测评
