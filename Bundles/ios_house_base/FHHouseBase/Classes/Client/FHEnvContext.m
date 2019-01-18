@@ -86,6 +86,10 @@
                     }];
                 }];
                 
+                if (!isSuccess) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategory];
+                }
+                
             }else
             {
                 if(completion)
