@@ -367,6 +367,15 @@
 
 @implementation  FHConfigDataCityListModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.enable = true; // 默认是开通的
+    }
+    return self;
+}
+
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
