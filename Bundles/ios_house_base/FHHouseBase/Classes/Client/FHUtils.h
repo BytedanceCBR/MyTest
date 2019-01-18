@@ -18,6 +18,21 @@ NS_ASSUME_NONNULL_BEGIN
 //json 字符串转dic
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
 
+/**
+ * @method
+ *
+ * @brief 获取两个日期之间的天数
+ * @param fromDate       起始日期
+ * @param toDate         终止日期
+ * @return    总天数
+ */
++ (NSInteger)numberOfDaysWithFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
+
+
++ (NSDate *)dateFromString:(NSString *)dateStr;
+
++ (NSString *)stringFromNSDate:(NSDate *)date;
+
 @end
 
 NS_ASSUME_NONNULL_END

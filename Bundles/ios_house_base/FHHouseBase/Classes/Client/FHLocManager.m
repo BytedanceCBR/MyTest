@@ -15,6 +15,7 @@
 #import "YYCache.h"
 #import "TTSandBoxHelper.h"
 #import "FHHomeConfigManager.h"
+#import "FHUtils.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -110,6 +111,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
+    //服务端配置频控
+    if (![[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] isNeedSwitchCityCompare]) {
+        return;
+    }
+    
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
     [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
@@ -138,6 +144,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (topVC) {
         [alertVC showFrom:topVC animated:YES];
     }
+    
+    NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
+    
+    [FHUtils setContent:stringCurrentDate forKey:@"f_save_switch_local_time"];
     
     self.isShowSwitch = NO;
 }
@@ -213,6 +223,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
+    [[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] isNeedSwitchCityCompare];
     
     [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
