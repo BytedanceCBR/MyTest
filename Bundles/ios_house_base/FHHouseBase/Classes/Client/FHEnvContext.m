@@ -21,6 +21,8 @@
 #import <objc/runtime.h>
 #import "TTNetworkUtilities.h"
 
+static NSInteger kGetLightRequestRetryCount = 3;
+
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
@@ -66,6 +68,8 @@
             }
         }
         
+        __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
+        
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
@@ -74,19 +78,22 @@
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
                 [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                    
-                    if(completion)
-                    {
-                        completion(YES);
-                    }
-                    [[ToastManager manager] dismissCustomLoading];
-                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                    //首次请求频道无论成功失败都跳转
+                    if (retryGetLightCount == kGetLightRequestRetryCount) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                         
-                    }];
-                    
-                    if (!isSuccessed) {
+                        if(completion)
+                        {
+                            completion(YES);
+                        }
+                        [[ToastManager manager] dismissCustomLoading];
+                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                            
+                        }];
+                    }
+                    //重试3次请求频道
+                    if (!isSuccessed && (retryGetLightCount > 0)) {
+                        retryGetLightCount--;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
                 }];
