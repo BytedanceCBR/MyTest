@@ -25,6 +25,7 @@
 #import "FHIndexSectionView.h"
 #import "FHUserTracker.h"
 #import "FHEnvContext.h"
+#import "TTSandBoxHelper.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()<FHIndexSectionDelegate>
@@ -93,13 +94,18 @@
     if (configDataModel) {
         [self.viewModel loadListCityData:configDataModel];
         [self checkShowLocationErrorAlert];
+        // 兼容重新覆盖安装App逻辑(v0.5.0版本开始，后续如果线上没有0.4版本，可以删除当前track)
+        if ([TTSandBoxHelper isAPPFirstLaunch]) {
+            // 第一次覆盖安装而且未选择城市
+            [self fetchConfigDataFirstLaunch];
+        }
     } else {
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
         // 第一次提前请求config数据
-        [self checkConfigDataNoReturn];
+        [self checkConfigDataWithNoConfigData];
     }
 }
 
@@ -109,7 +115,7 @@
         BOOL shown = !self.emptyView.hidden;
         if (shown && configDataModel == NULL) {
             // 请求config数据
-            [self checkConfigDataNoReturn];
+            [self checkConfigDataWithNoConfigData];
         }
     }
 }
@@ -139,7 +145,7 @@
     }];
 }
 
-- (void)checkConfigDataNoReturn {
+- (void)checkConfigDataWithNoConfigData {
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel == NULL) {
         if ([TTReachability isNetworkConnected]) {
@@ -151,6 +157,18 @@
                 }
             }];
         }
+    }
+}
+
+- (void)fetchConfigDataFirstLaunch {
+    if ([TTReachability isNetworkConnected]) {
+        __weak typeof(self) wSelf = self;
+        [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+            if (isSuccess) {
+                [wSelf.emptyView hideEmptyView];
+                [wSelf.viewModel loadListCityData:model.data];
+            }
+        }];
     }
 }
 
