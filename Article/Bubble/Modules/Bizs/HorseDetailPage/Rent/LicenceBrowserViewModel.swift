@@ -18,7 +18,7 @@ class FHLicenceImageItem {
     }
 }
 
-class LicenceBrowserViewModel {
+class LicenceBrowserViewModel: NSObject {
     fileprivate var headerImages: [FHLicenceImageItem] = []
 
     func open() {
@@ -122,7 +122,6 @@ extension LicenceBrowserViewModel: PhotoBrowserDelegate {
             let errorTip:String = "保存失败"
             let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
             if status != .authorized {
-
                 let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许幸福里访问您的照片", preferredType: .alert)
                 alert.addAction(withTitle: "取消", actionType: .cancel) {
                 }
