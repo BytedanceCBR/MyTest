@@ -115,8 +115,8 @@
         
         FHHouseFindSectionItem *item = self.itemList[index];
         FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectZero];
-        [baseView updateDataWithItem:item];
         baseView.tracerDict = self.tracerDict;
+        [baseView updateDataWithItem:item];
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
             [wself handlePlaceholder:paramObj];
