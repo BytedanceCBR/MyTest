@@ -159,7 +159,16 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
         
     
-        
+        func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
+            
+            let jsonData:Data = jsonString.data(using: .utf8)!
+            
+            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+            if dict != nil {
+                return dict as! NSDictionary
+            }
+            return NSDictionary()
+        }
         
         // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
         if let urlStr = paramObj?.sourceURL.absoluteString,
@@ -171,6 +180,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     // add by zyk, 埋点后续要把EnvContext.shared.homePageParams去除，此处就不用赋值了
                     EnvContext.shared.homePageParams = EnvContext.shared.homePageParams <|>
                         toTracerParams(origin_from, key: "origin_from")
+                    
+                }
+            
+            
+                if let reportParams = urlParams["report_params"]
+                {
+                    let paramsDict : NSDictionary = getDictionaryFromJSONString(jsonString: reportParams)
+                    if let parmasTrace = paramsDict as? [String : Any]
+                    {
+                        let traceParamsReport = mapTracerParams(parmasTrace)
+                        traceParams = traceParams <|>
+                        traceParamsReport
+                    }
                     
                 }
             
@@ -658,6 +680,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         traceParams = traceParams <|>
                             toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
                             toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originFrom ?? "be_null", key: "origin_from") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
                         self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone,
                                                                    bottomBar: self.bottomBar,
@@ -849,11 +873,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 let reportParams = getRealtorReportParams(traceModel: traceModel)
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
+                var theTraceModel = traceModel.copy() as? HouseRentTracer
+                theTraceModel?.elementFrom = "old_detail_button"
+                theTraceModel?.enterFrom = "old_detal"
                 let info: [String: Any] = ["url": jumpUrl,
                                            "title": "经纪人详情页",
                                            "realtorId": realtorId,
                                            "delegate": delegate,
-                                           "trace": traceModel]
+                                           "trace": theTraceModel]
                 let userInfo = TTRouteUserInfo(info: info)
                 TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
             }
@@ -1111,10 +1138,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
 //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
-            toTracerParams(self.searchId ?? "be_null", key: "search_id")
-
+            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb")
         
         recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))

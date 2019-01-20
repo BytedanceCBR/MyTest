@@ -724,12 +724,11 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             toTracerParams(self.houseRentTracer.rank, key: "rank") <|>
             toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
             toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
-            toTracerParams(self.logPB ?? "be_null", key: "log_pb") <|>
-            toTracerParams(self.searchId ?? "be_null", key: "search_id")
+            toTracerParams(self.logPB ?? "be_null", key: "log_pb")
 
 
         recordEvent(key: TraceEventName.inform_show,
-                    params: tracerParams.exclude("element_type"))
+                    params: tracerParams.exclude("element_type").exclude("search_id").exclude("group_id"))
 
         alert.showFrom(self.view)
     }

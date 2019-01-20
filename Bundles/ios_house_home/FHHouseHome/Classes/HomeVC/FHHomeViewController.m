@@ -27,6 +27,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
+@property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 
 @end
@@ -35,6 +36,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isRefreshing = NO;
     
     self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
@@ -117,6 +120,36 @@ static CGFloat const kSectionHeaderHeight = 38;
          
 - (void)retryLoadData
 {
+    if (![FHEnvContext isNetworkConnected]) {
+        
+        if (self.isShowToasting) {
+            return;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isShowToasting = NO;
+            });
+        });
+        
+        if (!self.isShowToasting) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            self.isShowToasting = YES;
+        }
+        
+        return;
+    }
+    
+    if (self.isRefreshing) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isRefreshing = NO;
+            });
+        });
+        return;
+    }
+    
+    self.isRefreshing = YES;
     //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {

@@ -50,7 +50,7 @@
     
     if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
         categoryName = [[self enterFromString] stringByReplacingOccurrencesOfString:@"click_" withString:@""];
-        NSLog(@"%@", categoryName);
+//        NSLog(@"%@", categoryName);
     }else{
         if (![[self enterFromString] isEqualToString:@"click_headline"]) {
             if ([categoryName hasPrefix:@"_"]) {

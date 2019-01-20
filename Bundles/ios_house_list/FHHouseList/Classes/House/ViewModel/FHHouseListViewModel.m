@@ -421,6 +421,7 @@
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
+            searchId = houseModel.searchId;
             if (recommendItemArray.count > 0) {
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 if (!hasMore) {
@@ -430,10 +431,7 @@
                 recommendTitleModel.noDataTip = recommendHouseDataModel.searchHint;
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
-            } else {
-                searchId = houseModel.searchId;
             }
-
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -480,13 +478,12 @@
         if (self.isEnterCategory) {
             [self addEnterCategoryLog];
             self.isEnterCategory = NO;
-            
         }
         if (self.isRefresh) {
             [self addHouseSearchLog];
             [self addHouseRankLog];
             [self refreshHouseListUrlCallback:houseListOpenUrl];
-        }else {
+        } else {
             [self addCategoryRefreshLog];
         }
         self.houseListOpenUrl = houseListOpenUrl;
@@ -643,7 +640,7 @@
 #pragma mark filter将要显示
 -(void)onConditionWillPanelDisplay
 {
-    NSLog(@"onConditionWillPanelDisplay");
+//    NSLog(@"onConditionWillPanelDisplay");
 
 }
 
@@ -898,36 +895,39 @@
         } else {
             if (indexPath.section == 0) {
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                if (indexPath.row < self.houseList.count) {
-                    
-                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-                    if (height < 1) {
-                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-                            
-                            [cell updateWithHouseCellModel:cellModel];
-                            [cell refreshTopMargin: 20];
-                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-                            
-                        }];
-                    }
-                    return height;
-                }
+                return isLastCell ? 125 : 105;
+//                if (indexPath.row < self.houseList.count) {
+//
+//                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+//                    if (height < 1) {
+//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
+//
+//                            [cell updateWithHouseCellModel:cellModel];
+//                            [cell refreshTopMargin: 20];
+//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+//
+//                        }];
+//                    }
+//                    return height;
+//                }
             } else {
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                if (indexPath.row < self.sugesstHouseList.count) {
-                    
-                    FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-                    if (height < 1) {
-                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-                            [cell updateWithHouseCellModel:cellModel];
-                            [cell refreshTopMargin: 20];
-                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-                        }];
-                    }
-                    return height;
-                }
+                return isLastCell ? 125 : 105;
+
+//                if (indexPath.row < self.sugesstHouseList.count) {
+//
+//                    FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
+//                    if (height < 1) {
+//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
+//                            [cell updateWithHouseCellModel:cellModel];
+//                            [cell refreshTopMargin: 20];
+//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+//                        }];
+//                    }
+//                    return height;
+//                }
             }
         }
     }
@@ -1232,7 +1232,6 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_rank",params);
-    self.canChangeHouseSearchDic = YES;
 }
 
 -(NSDictionary *)categoryLogDict {

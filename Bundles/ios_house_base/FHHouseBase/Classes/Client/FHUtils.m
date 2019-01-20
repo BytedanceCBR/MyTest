@@ -46,5 +46,48 @@
     return dic;
 }
 
+/**
+ * @method
+ *
+ * @brief 获取两个日期之间的天数
+ * @param fromDate       起始日期
+ * @param toDate         终止日期
+ * @return    总天数
+ */
++ (NSInteger)numberOfDaysWithFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents    * comp = [calendar components:NSCalendarUnitDay
+                                             fromDate:fromDate
+                                               toDate:toDate
+                                              options:NSCalendarWrapComponents];
+    return comp.day;
+}
+
++ (NSDate *)dateFromString:(NSString *)dateStr
+{
+    if (dateStr == nil) {
+        return nil;
+    }
+    
+    NSDate *date = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *strDate = [dateFormatter stringFromDate:date];
+    NSDate *birthdayDate = [dateFormatter dateFromString:dateStr];
+    return birthdayDate;
+}
+
++ (NSString *)stringFromNSDate:(NSDate *)date
+{
+    if(!date)
+    {
+        return nil;
+    }
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *strDate = [dateFormatter stringFromDate:date];
+    return strDate;
+}
 
 @end
