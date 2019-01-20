@@ -1135,10 +1135,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
 //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
-            toTracerParams(self.searchId ?? "be_null", key: "search_id")
-
+            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb")
         
         recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))

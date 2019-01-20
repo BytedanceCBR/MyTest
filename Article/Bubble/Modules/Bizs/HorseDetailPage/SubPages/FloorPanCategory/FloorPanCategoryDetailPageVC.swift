@@ -206,7 +206,7 @@ class FloorPanCategoryDetailPageVC: BaseSubPageViewController, TTRouteInitialize
         if let tempView = topView
         {
             recordEvent(key: TraceEventName.inform_show,
-                        params: self.tracerParams.exclude("house_type"))
+                        params: self.tracerParams.exclude("house_type").exclude("search_id").exclude("group_id"))
             
             alert.showFrom(tempView)
         }
