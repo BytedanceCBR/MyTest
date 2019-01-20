@@ -213,6 +213,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     let jsonData = log_pb.data(using: .utf8) {
                     if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
                         traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                        self.logPB = log_dic as? [String: Any]
                     }
                 }
         }
