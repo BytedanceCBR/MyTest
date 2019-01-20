@@ -101,7 +101,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
-    var logPB: [String: Any]?
+    var logPB: [String: Any]? {
+        didSet {
+            self.detailPageViewModel?.listLogPB = self.logPB
+        }
+    }
     var searchId: String?
 
     var houseSearchParams: TracerParams? {
@@ -573,7 +577,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
 
         if let detailPageViewModel = detailPageViewModel {
-
+            detailPageViewModel.listLogPB = self.logPB
             detailPageViewModel.followStatus
                 .filter { (result) -> Bool in
                     if case .success(_) = result {
@@ -1138,7 +1142,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
         tracerParams = tracerParams <|>
 //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb")
+            toTracerParams(self.detailPageViewModel?.listLogPB ?? "be_null", key: "log_pb")
         
         recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))
@@ -1152,7 +1156,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.detailPageViewModel?.listLogPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
         recordEvent(key: TraceEventName.click_confirm,
