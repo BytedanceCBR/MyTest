@@ -11,6 +11,7 @@
 #import "Bubble-Swift.h"
 #import "TTRoute.h"
 #import <TTTracker/TTTracker.h>
+#import "FHUserTracker.h"
 @interface FHRealtorDetailWebViewController ()
 {
     FHPhoneCallViewModel* _phoneCallViewModel;
@@ -59,12 +60,12 @@ static NSString *s_oldAgent = nil;
             [self->_delegate followUpAction];
         }
     } forMethodName:@"phoneSwitch"];
-    [TTTracker eventV3:@"go_detail" params:[self goDetailParams]];
+    [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
 
 -(NSMutableDictionary*)goDetailParams {
     NSParameterAssert(_tracerModel);
-    NSDictionary* params = @{@"page_type": _tracerModel.pageType ? : @"be_null",
+    NSDictionary* params = @{@"page_type": @"realtor_detail",
                              @"enter_from": _tracerModel.enterFrom ? : @"be_null",
                              @"element_from": _tracerModel.elementFrom ? : @"be_null",
                              @"rank": _tracerModel.rank ? : @"be_null",

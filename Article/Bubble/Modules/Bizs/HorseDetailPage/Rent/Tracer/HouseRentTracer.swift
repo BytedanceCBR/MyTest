@@ -7,7 +7,8 @@
 
 import Foundation
 @objc
-class HouseRentTracer: NSObject {
+class HouseRentTracer: NSObject, NSCopying {
+
     @objc
     var logPb: Any?
     @objc
@@ -98,4 +99,29 @@ class HouseRentTracer: NSObject {
         }
         
     }
+
+    func copy(with zone: NSZone? = nil) -> Any {
+        let tracer = HouseRentTracer(pageType: self.pageType, houseType: self.houseType, cardType: self.cardType)
+        tracer.logPb = self.logPb
+        tracer.houseId = self.houseId
+        tracer.ttTrackStayTime = self.ttTrackStayTime
+        tracer.stayPageParams = self.stayPageParams
+        tracer.enterFrom = self.enterFrom
+        tracer.elementFrom = self.elementFrom
+        tracer.rank = self.rank
+        tracer.imprId = self.imprId
+        tracer.hasRecordGoDetail = self.hasRecordGoDetail
+        tracer.searchId = self.searchId
+        tracer.groupId = self.groupId
+        tracer.originFrom = self.originFrom
+        tracer.originSearchId = self.originSearchId
+        tracer.enterQuery = self.enterQuery
+        tracer.enterQuery = self.searchQuery
+        tracer.queryType = self.queryType
+        tracer.time = self.time
+        tracer.offset = self.offset
+        tracer.limit = self.limit
+        return tracer
+    }
+
 }
