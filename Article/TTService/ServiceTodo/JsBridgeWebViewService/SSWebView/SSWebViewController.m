@@ -61,6 +61,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, assign)SSWebViewBackButtonColorType backButtonColorType;
 @property(nonatomic, strong)TTAlphaThemedButton *backButton;
 @property(nonatomic, assign)BOOL hideMore;
+@property(nonatomic, assign)BOOL showShareBtn;
 @property(nonatomic, copy)NSDictionary *wapHeaders;
 @property(nonatomic, assign, readwrite) BOOL supportLandscapeOnly;
 @property(nonatomic, assign)BOOL shouldDisableHistory;
@@ -147,8 +148,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
         }
         
+//        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
-
+        self.showShareBtn = [params tt_boolValueForKey:@"share_enable"];
+        
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
             _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"];
@@ -351,6 +354,11 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     return self;
 }
 
+- (void)showShareButtonAcition
+{
+     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.ssWebView.navigationBar.rightBarView];
+}
+
 //- (void)viewDidAppear:(BOOL)animated
 //{
 //    [super viewDidAppear:animated];
@@ -465,6 +473,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 //    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
     [self setupAdInfo];
     
+    [self.ssWebView setupFShareBtn:self.showShareBtn];
+    
+    [self showShareButtonAcition];
 }
 
 // 注册全局通知监听器

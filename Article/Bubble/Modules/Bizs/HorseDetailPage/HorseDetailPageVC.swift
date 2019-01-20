@@ -162,7 +162,10 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self.source = source;
         }
         
-    
+
+        if let userInfo = paramObj?.userInfo.allInfo, let tracer = userInfo["tracer"] as? [String: Any] {
+            self.logPB = tracer["log_pb"] as? [String : Any]
+        }
         func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
             
             let jsonData:Data = jsonString.data(using: .utf8)!
