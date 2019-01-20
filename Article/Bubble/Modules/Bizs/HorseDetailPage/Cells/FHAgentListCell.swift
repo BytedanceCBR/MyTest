@@ -458,11 +458,14 @@ func fillAgentListCell(
 
 //                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
+                    let theTraceModel = traceModel?.copy() as? HouseRentTracer
+                    theTraceModel?.enterFrom = "old_detail"
+                    theTraceModel?.elementFrom = "old_detail_related"
                     let info: [String: Any] = ["url": jumpUrl,
                                                "title": "经纪人详情页",
                                                "delegate": delegate,
                                                "realtorId": contact.realtorId ?? "",
-                                               "trace": traceModel]
+                                               "trace": theTraceModel]
                     let userInfo = TTRouteUserInfo(info: info)
                     TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
                 }
@@ -534,15 +537,11 @@ func getElementRecord(contact: FHHouseDetailContact, traceModel: HouseRentTracer
 
 func shouldShowContact(contact: FHHouseDetailContact) -> Bool {
     var result = false
-    if contact.showRealtorinfo ?? 0 != 0 {
+    if (contact.businessLicense?.isEmpty ?? true) == false {
         result = true
-    } else {
-        if (contact.businessLicense?.isEmpty ?? true) == false {
-            result = true
-        }
-        if (contact.certificate?.isEmpty ?? true) == false {
-            result = true
-        }
+    }
+    if (contact.certificate?.isEmpty ?? true) == false {
+        result = true
     }
     return result
 }
