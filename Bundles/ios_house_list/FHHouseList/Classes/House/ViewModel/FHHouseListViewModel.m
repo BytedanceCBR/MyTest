@@ -1229,7 +1229,6 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_rank",params);
-    self.canChangeHouseSearchDic = YES;
 }
 
 -(NSDictionary *)categoryLogDict {
