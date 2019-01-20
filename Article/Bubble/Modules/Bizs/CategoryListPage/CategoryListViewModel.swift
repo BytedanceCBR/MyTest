@@ -12,6 +12,8 @@ import RxCocoa
 
 class CategoryListViewModel: DetailPageViewModel {
     
+    var listLogPB: Any?
+
     var tracerModel: HouseRentTracer?
 
     var source: String?

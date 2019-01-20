@@ -21,6 +21,7 @@ enum RequestSuccessType: Int {
 
 
 class HomeListViewModel: DetailPageViewModel {
+    var listLogPB: Any?
 
     var tracerModel: HouseRentTracer?
 

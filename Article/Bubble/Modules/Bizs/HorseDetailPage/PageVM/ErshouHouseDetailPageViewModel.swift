@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
  class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var listLogPB: Any?
 
     var source: String?
     
