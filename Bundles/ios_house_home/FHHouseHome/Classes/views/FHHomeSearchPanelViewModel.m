@@ -50,7 +50,7 @@
 {
     [[[self.suspendSearchBar.searchBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
       {
-          NSLog(@"tap search btn");
+//          NSLog(@"tap search btn");
       }];
 }
 
