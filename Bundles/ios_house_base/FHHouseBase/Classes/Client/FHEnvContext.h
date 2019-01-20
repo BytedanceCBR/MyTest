@@ -46,7 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
-@property (nonatomic, assign) NSInteger retryConfigCount;
 
 
 + (instancetype)sharedInstance;

@@ -133,8 +133,8 @@
     NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
     NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
     NSString * aidValue = @"1370";
-//    NSString * baseUrl = [CommonURLSetting baseURL];
-    NSString * baseUrl = @"https://i.snssdk.com";
+    NSString * baseUrl = [CommonURLSetting baseURL];
+//    NSString * baseUrl = @"https://i.snssdk.com";
     
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {

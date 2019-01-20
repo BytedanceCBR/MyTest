@@ -24,6 +24,7 @@
 #import "FHTracerModel.h"
 #import <UIViewController+NavigationBarStyle.h>
 #import "UIViewController+Track.h"
+#import "FHConditionFilterViewModel.h"
 
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
@@ -42,7 +43,7 @@
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
 @property (nonatomic , strong) UIControl *filterBgControl;
-@property (nonatomic , strong) id houseFilterViewModel;
+@property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 @property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
@@ -99,7 +100,6 @@
     self.houseFilterViewModel = [bridge filterViewModelWithType:FHHouseTypeRentHouse showAllCondition:YES showSort:YES];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
-    self.houseFilterViewModel = bridge;
     
     _viewModel = [[FHHouseRentMainViewModel alloc]initWithViewController:self tableView:self.tableView routeParam:self.paramObj];
     __weak typeof(self) wself = self;
@@ -125,6 +125,12 @@
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
         [wself showNotify:message];
+    };
+    _viewModel.getSortTypeString = ^NSString * _Nullable {
+        if ([wself.houseFilterViewModel isLastSearchBySort]) {
+            return [wself.houseFilterViewModel sortType] ? : @"default";
+        }
+        return nil;
     };
     
 //    _viewModel.overwriteFilter = ^(NSString * _Nonnull houseListUrl) {

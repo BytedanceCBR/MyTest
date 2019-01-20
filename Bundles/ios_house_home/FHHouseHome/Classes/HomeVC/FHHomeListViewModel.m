@@ -90,6 +90,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return ;
             }
             
+            //切换城市显示房源默认
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                self.dataSource.showPlaceHolder = YES;
+                [self reloadHomeTableHeaderSection];
+            }
+            
             [self resetCurrentHouseCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];

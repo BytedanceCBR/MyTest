@@ -40,7 +40,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
         manager.configDataReplay = [RACReplaySubject subject];
-        manager.retryConfigCount = 1;
     });
     
     return manager;
