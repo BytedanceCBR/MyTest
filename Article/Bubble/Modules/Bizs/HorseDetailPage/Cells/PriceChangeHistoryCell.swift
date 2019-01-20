@@ -132,8 +132,8 @@ func openPriceChangeHistoryPage(
                 let history  = ["history":historyData]
                 let jsData   = ["data":history,"house_id":houseId] as [String : Any]
                 let jsParams = ["requestPageData":jsData]
-                let userInfo = TTRouteUserInfo(info: ["url":url, "title": "价格变动", "jsParams":jsParams])
-                let jumpUrl = "snssdk1370://webview_oc" //route协议
+                let userInfo = TTRouteUserInfo(info: ["url":url, "title": "价格变动", "fhJSParams":jsParams])
+                let jumpUrl = "sslocal://webview" //route协议
                 TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             }
         }

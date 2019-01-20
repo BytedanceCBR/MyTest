@@ -11,36 +11,40 @@
 #import "Bubble-Swift.h"
 #import "TTRoute.h"
 #import <TTTracker/TTTracker.h>
+#import "FHUserTracker.h"
 @interface FHRealtorDetailWebViewController ()
 {
     FHPhoneCallViewModel* _phoneCallViewModel;
     HouseRentTracer* _tracerModel;
     NSTimeInterval _startTime;
     NSString* _realtorId;
-//    NSTimeInterval _lastClickCall;
 }
+@property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
 @end
 
 @implementation FHRealtorDetailWebViewController
 static NSString *s_oldAgent = nil;
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        self.realtorUserInfo = paramObj.userInfo;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [[self class] registerUserAgentV2:YES];
     [super viewDidLoad];
     _startTime = [NSDate new].timeIntervalSince1970;
     _phoneCallViewModel = [[FHPhoneCallViewModel alloc] init];
-    _tracerModel = [self.userInfo allInfo][@"trace"];
-    _delegate = [self.userInfo allInfo][@"delegate"];
-    _realtorId = [self.userInfo allInfo][@"realtorId"];
+    _tracerModel = [self.realtorUserInfo allInfo][@"trace"];
+    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
+    _realtorId = [self.realtorUserInfo allInfo][@"realtorId"];
 
     @weakify(self);
-    [self.webview.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         @strongify(self);
-//        if (self->_lastClickCall - [[NSDate new] timeIntervalSince1970] < 3) {
-//            return;
-//        } else {
-//            self->_lastClickCall = [[NSDate new] timeIntervalSince1970];
-//        }
         self->_realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
         if (self->_realtorId != nil && phone != nil) {
@@ -56,12 +60,12 @@ static NSString *s_oldAgent = nil;
             [self->_delegate followUpAction];
         }
     } forMethodName:@"phoneSwitch"];
-    [TTTracker eventV3:@"go_detail" params:[self goDetailParams]];
+    [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
 
 -(NSMutableDictionary*)goDetailParams {
     NSParameterAssert(_tracerModel);
-    NSDictionary* params = @{@"page_type": _tracerModel.pageType ? : @"be_null",
+    NSDictionary* params = @{@"page_type": @"realtor_detail",
                              @"enter_from": _tracerModel.enterFrom ? : @"be_null",
                              @"element_from": _tracerModel.elementFrom ? : @"be_null",
                              @"rank": _tracerModel.rank ? : @"be_null",
@@ -71,15 +75,6 @@ static NSString *s_oldAgent = nil;
                              @"realtor_id": _realtorId ? : @"be_null",
                              };
     return [params mutableCopy];
-}
-
-- (void)dealloc
-{
-    NSTimeInterval stayTime = [NSDate new].timeIntervalSince1970 - _startTime;
-    NSInteger stayTimeInt = stayTime * 1000;
-    NSMutableDictionary* params = [self goDetailParams];
-    params[@"stay_time"] = @(stayTimeInt);
-    [TTTracker eventV3:@"stay_page" params:params];
 }
 
 + (NSString *)toutiaoUA {

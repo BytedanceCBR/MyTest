@@ -814,7 +814,7 @@ static BOOL isMovieFullScreen;
         }
         if (isEmptyString(title)) {
             //只有QQ空间写死了title。 TOTO:// 未来改成云控
-            title = NSLocalizedString(@"好多房", nil);
+            title = NSLocalizedString(@"幸福里", nil);
         }
         
         UIImage *shareImage = _shareToWeixinMomentOrQZoneImage ? _shareToWeixinMomentOrQZoneImage : _shareImage;

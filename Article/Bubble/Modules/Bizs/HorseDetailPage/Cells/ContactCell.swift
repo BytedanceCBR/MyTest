@@ -114,7 +114,6 @@ func fillNewHouseContactCell(_ data: NewHouseData, traceParams: TracerParams, co
     if let theCell = cell as? ContactCell {
         
         let traceParamsDic = traceParams.paramsGetter([:])
-        let searchId = traceParamsDic["search_id"]
 
         theCell.phoneNumberLabel.text = data.contact?.phone
         theCell.descLabel.text = data.contact?.noticeDesc
@@ -131,9 +130,7 @@ func fillNewHouseContactCell(_ data: NewHouseData, traceParams: TracerParams, co
                         .exclude("search")
                         .exclude("filter")
                     traceParams = traceParams <|>
-                        toTracerParams("new_detail", key: "page_type") <|>
-                        toTracerParams(searchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(courtId, key: "group_id")
+                        toTracerParams("new_detail", key: "page_type")
 
                     recordEvent(key: "click_call", params: traceParams)
                 })

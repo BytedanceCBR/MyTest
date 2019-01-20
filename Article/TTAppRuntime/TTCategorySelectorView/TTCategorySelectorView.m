@@ -106,9 +106,10 @@
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
         self.maskTitleLabel.backgroundColor = [UIColor clearColor];
         
-        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 2, 32, 2)];
+        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 3, 20, 3)];
         self.bottomSelectView.backgroundColor = [UIColor clearColor];
         self.bottomSelectView.alpha = 0;
+        self.bottomSelectView.layer.cornerRadius = 1.5;
         
         _maskTitleLabel.alpha = 0;
         
@@ -119,9 +120,9 @@
             _titleLabel.textColorThemeKey = kColorText12;
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
-            _titleLabel.textColorThemeKey = kColorText13;
-            _maskTitleLabel.textColorThemeKey = kFHColorClearBlue;
-            self.bottomSelectView.backgroundColorThemeKey = kFHColorClearBlue;
+            _titleLabel.textColorThemeKey = kColorText3;
+            _maskTitleLabel.textColorThemeKey = kFHColorDarkBlue;
+            self.bottomSelectView.backgroundColorThemeKey = kFHColorCoralPink;
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;
@@ -150,9 +151,9 @@
             _maskTitleLabel.glowSize = glowSize;
         }
         
-        _titleLabel.font = [UIFont systemFontOfSize:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
+        _titleLabel.font = [UIFont themeFontRegular:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
-        _maskTitleLabel.font = [UIFont boldSystemFontOfSize:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
+        _maskTitleLabel.font = [UIFont themeFontSemibold:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
         [self addSubview:_maskTitleLabel];
         [self addSubview:_bottomSelectView];
@@ -264,15 +265,15 @@
 {
     CGRect rect = self.frame;
     CGFloat bottomLeft = 0;
-    CGFloat bottomWidth = 32;
-    if (rect.size.width - 32 > 0) {
-        bottomLeft = (rect.size.width - 32)/2.0f;
+    CGFloat bottomWidth = 20;
+    if (rect.size.width - 20 > 0) {
+        bottomLeft = (rect.size.width - 20)/2.0f;
     }else
     {
         bottomLeft = 0;
         bottomWidth = rect.size.width;
     }
-    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 2, bottomWidth, 2);
+    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 3, bottomWidth, 3);
 }
 
 - (void)layoutSubviews

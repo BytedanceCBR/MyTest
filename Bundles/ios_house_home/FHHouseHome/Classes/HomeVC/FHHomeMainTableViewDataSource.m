@@ -172,12 +172,13 @@
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = @"be_null";
         traceParam[@"log_pb"] = theModel.logPb;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(indexPath.row);
         traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        traceParam[@"element_from"] = @"maintab_list";
+        traceParam[@"enter_from"] = @"maintab";
         
         NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
                                @"tracer": traceParam
@@ -282,4 +283,8 @@
     }
 }
 
+- (void)resetTraceCahce
+{
+    [self.traceRecordDict removeAllObjects];
+}
 @end

@@ -27,6 +27,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
+@property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 
 @end
@@ -35,6 +36,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isRefreshing = NO;
     
     self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     if (@available(iOS 7.0, *)) {
@@ -80,6 +83,18 @@ static CGFloat const kSectionHeaderHeight = 38;
         make.top.left.right.equalTo(self.mainTableView);
         make.height.mas_equalTo(32);
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    self.homeListViewModel.stayTime = 0;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 -(void)showNotify:(NSString *)message
@@ -102,11 +117,44 @@ static CGFloat const kSectionHeaderHeight = 38;
     });
     
 }
-
+         
 - (void)retryLoadData
 {
+    if (![FHEnvContext isNetworkConnected]) {
+        
+        if (self.isShowToasting) {
+            return;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isShowToasting = NO;
+            });
+        });
+        
+        if (!self.isShowToasting) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            self.isShowToasting = YES;
+        }
+        
+        return;
+    }
+    
+    if (self.isRefreshing) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isRefreshing = NO;
+            });
+        });
+        return;
+    }
+    
+    self.isRefreshing = YES;
+    //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    //to do request config xiefei.xf
+    if (configDataModel) {
+        [self.homeListViewModel requestOriginData:YES];
+    }
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
 }
 
@@ -152,7 +200,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)didAppear
 {
-    
+    self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)willDisappear
@@ -163,6 +211,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didDisappear
 {
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
+    self.homeListViewModel.stayTime = 0;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
 }
 
@@ -170,31 +219,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
     self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
-//    tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
-//    tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: BottomInset, right: 0)
 }
-
-//- (void)pullAndRefresh
-//{
-//
-//}
-
 
 - (BOOL)tt_hasValidateData
 {
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     return configModel != nil;
 }
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 #pragma mark - TTUIViewControllerTrackProtocol
 
@@ -205,6 +236,11 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

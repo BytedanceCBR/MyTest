@@ -36,9 +36,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
-@property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <NSIndexPath *> *>* itemsTraceCache;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
-@property (nonatomic, assign) NSTimeInterval stayTime;
 @end
 
 @implementation FHHomeListViewModel
@@ -49,7 +47,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (self) {
         [self initItemsCaches];
         
-        self.categoryView = [FHHomeSectionHeader new];
+        self.categoryView = [[FHHomeSectionHeader alloc] init];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
@@ -92,6 +90,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return ;
             }
             
+            //切换城市显示房源默认
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                self.dataSource.showPlaceHolder = YES;
+                [self reloadHomeTableHeaderSection];
+            }
+            
             [self resetCurrentHouseCacheData];
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
@@ -101,6 +105,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         __block BOOL isFirstChange = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
+            //切换城市先隐藏error页
+            [self.homeViewController.emptyView hideEmptyView];
+            
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
@@ -110,6 +117,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
                 return;
             }
+            
+            self.dataSource.showPlaceHolder = YES;
             
             [self reloadHomeTableHeaderSection];
             
@@ -205,7 +214,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.itemsSearchIdCache = [NSMutableDictionary new];
     self.originSearchIdCache = [NSMutableDictionary new];
     self.isItemsHasMoreCache = [NSMutableDictionary new];
-    self.itemsTraceCache = [NSMutableDictionary new];
+    [self.dataSource resetTraceCahce];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange
@@ -396,6 +405,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.itemsSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
     [self.originSearchIdCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
     [self.isItemsHasMoreCache removeObjectForKey:[self getCurrentHouseTypeChacheKey]];
+    [self.dataSource resetTraceCahce];
 }
 
 - (void)updateCategoryViewSegmented:(BOOL)isFirstChange
@@ -503,7 +513,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
+//    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
     
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];

@@ -1046,9 +1046,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.hid,rank];
     TTRouteUserInfo *userInfo = nil;
     if (model.logPb) {
-        NSString *groupId = model.logPb[@"group_id"];
-        NSString *imprId = model.logPb[@"impr_id"];
-        NSString *searchId = model.logPb[@"search_id"];
+        NSString *groupId = model.hid;
+        NSString *imprId = model.imprId;
+        NSString *searchId = model.searchId;
         if (groupId) {
             [strUrl appendFormat:@"&group_id=%@",groupId];
         }
@@ -1118,9 +1118,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     tracer[@"rank"] = [@(rank) description];
     
     if (model.logPb) {
-        NSString *groupId = model.logPb[@"group_id"];
-        NSString *imprId = model.logPb[@"impr_id"];
-        NSString *searchId = model.logPb[@"search_id"];
+        NSString *groupId = model.id;
+        NSString *imprId = model.imprId;
+        NSString *searchId = model.searchId;
         if (groupId) {
             [strUrl appendFormat:@"&group_id=%@",groupId];
         }

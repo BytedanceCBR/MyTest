@@ -136,6 +136,16 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     return self;
 }
 
+- (void)initShareButtonAcition
+{
+     SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+     rightButton.frame = CGRectMake(10, 0, 30, 30);
+    [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [rightButton setImage:[UIImage imageNamed:@"ic-navigation-share-dark"] forState:UIControlStateNormal];
+     [rightButton addTarget:self action:@selector(shareBtnClick)  forControlEvents:UIControlEventTouchUpInside];
+    _navigationBar.rightBarView = rightButton;
+}
+
 //从SSWebViewController透传的condition
 - (void)initBaseCondition:(NSDictionary *)baseCondition {
     NSDictionary *param = baseCondition;
@@ -163,6 +173,19 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)setRightButtonDisplay:(BOOL)rightButtonDisplayed {
     self.navigationBar.rightBarView.hidden = !rightButtonDisplayed;
+}
+
+- (void)setupFShareBtn:(BOOL)isShowBtn
+{
+    if (isShowBtn) {
+        [self initShareButtonAcition];
+        self.navigationBar.rightBarView.hidden = NO;
+    }
+}
+
+- (void)shareBtnClick
+{
+    [self.ssWebContainer.ssWebView ttr_fireEvent:@"clickShare" data:nil];
 }
 
 - (void)getShareInfoFormWap

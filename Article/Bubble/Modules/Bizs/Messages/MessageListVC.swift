@@ -94,9 +94,13 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                 category_name = "neighborhood_message_list"
                 origin_from = "messagetab_neighborhood"
             case "307":
-                // "房源推荐"
+                // "房源推荐-二手房"
                 category_name = "recommend_message_list"
-                origin_from = "messagetab_recommend"
+                origin_from = "messagetab_recommend_old"
+            case "309":
+                // "房源推荐-租房"
+                category_name = "recommend_message_list"
+                origin_from = "messagetab_recommend_rent"
                 
             default:
                 break

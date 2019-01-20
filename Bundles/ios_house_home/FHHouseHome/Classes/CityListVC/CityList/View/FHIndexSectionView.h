@@ -29,4 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHIndexSectionTipView : UIView
+
++ (instancetype)sharedInstance;
+- (void)addToSuperView:(UIView *)superView;
+- (void)showWithText:(NSString *)text;
+- (void)dismiss;
+
+@end
+
 NS_ASSUME_NONNULL_END

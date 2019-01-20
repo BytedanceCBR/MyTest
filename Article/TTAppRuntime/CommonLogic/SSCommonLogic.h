@@ -1287,6 +1287,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setFeedLoadLocalStrategy:(NSDictionary *)dict;
 + (BOOL)showMyAppFansView;
 + (BOOL)useImageVideoNewApi;
++ (NSInteger)configSwitchTimeDaysCount;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;
 + (BOOL)useRealUnixTimeEnable;

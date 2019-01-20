@@ -18,10 +18,9 @@
 #import "FHHouseType.h"
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
-#import "UIView+Refresh_ErrorHandler.h"
 #import "FHHouseListRedirectTipView.h"
 
-@interface FHHouseFindListView () <FHHouseListViewModelDelegate, UIViewControllerErrorHandler>
+@interface FHHouseFindListView () <FHHouseListViewModelDelegate>
 
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIView *filterContainerView;
@@ -40,7 +39,6 @@
 @property (nonatomic , copy) NSString *openUrl;
 @property (nonatomic , strong) FHHouseFindSectionItem *item;
 @property(nonatomic , assign) BOOL needRefresh;
-@property(nonatomic , assign) BOOL hasValidateData;
 
 @end
 
@@ -51,8 +49,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.needRefresh = YES;
-        self.hasValidateData = NO;
-        [self startLoading];
         [self setupUI];
         [self setupConstraints];
 
@@ -78,9 +74,6 @@
 
 - (void)updateDataWithItem: (FHHouseFindSectionItem *)item
 {
-    if (!self.needRefresh) {
-        return;
-    }
     _houseType = item.houseType;
     _openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld",self.houseType];
     self.paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.openUrl]];
@@ -96,34 +89,20 @@
     [self.viewModel setRedirectTipView:self.redirectTipView];
     [self setupViewModelBlock];
     [self resetFilter:self.paramObj];
+}
+
+- (void)refreshData
+{
+    if (!self.needRefresh) {
+        return;
+    }
     [self.houseFilterBridge trigerConditionChanged];
     self.needRefresh = NO;
-    self.hasValidateData = YES;
-//    [self endLoading];
-
 }
 
-#pragma mark - UIViewControllerErrorHandler
-
-- (BOOL)tt_hasValidateData
+- (void)addClickHouseSearchLog
 {
-    return _hasValidateData;
-}
-
-- (void)startLoading
-{
-    [self tt_startUpdate];
-}
-
-- (void)endLoading
-{
-    [self tt_endUpdataData];
-}
-
-- (void)setHasValidateData:(BOOL)hasValidateData
-{
-    _hasValidateData = hasValidateData;
-    [self endLoading];
+    [self.viewModel addClickHouseSearchLog];
 }
 
 - (void)initFilter

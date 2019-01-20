@@ -384,6 +384,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             let transactionTrace = theParams <|>
                                 toTracerParams("neighborhood_trade_list", key: "category_name") <|>
                                 toTracerParams("neighborhood_trade", key: "element_from") <|>
+                                toTracerParams("neighborhood_detail", key: "page_type") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 traceExtension
                             

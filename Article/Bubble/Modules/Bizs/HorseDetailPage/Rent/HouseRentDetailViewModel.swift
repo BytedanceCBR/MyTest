@@ -216,11 +216,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                             let binder : FollowUpBottomBarBinder = { (view , button ,params) -> Void in
                                 print("")
                             }
-                            params = EnvContext.shared.homePageParams <|>
+                            params = TracerParams.momoid() <|>
                                 self.traceParam <|>
                                 toTracerParams("same_neighborhood", key: "element_from") <|>
                                 toTracerParams("same_neighborhood_list", key: "category_name") <|>
                                 toTracerParams("click", key: "enter_type") <|>
+                                toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                                toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                                 toTracerParams("same_neighborhood", key: "element_type") <|>
                                 toTracerParams("rent_detail", key: "enter_from")
                             
@@ -291,10 +293,12 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 if let searchId = self.relateErshouHouseData.value?.data?.searchId {
                     params["searchId"] = searchId
                 }
-                let transactionTrace = EnvContext.shared.homePageParams <|>
+                let transactionTrace = TracerParams.momoid() <|>
                     self.traceParam <|>
                     toTracerParams(category_name, key: "category_name") <|>
                     toTracerParams("rent_detail", key: "enter_from") <|>
+                    toTracerParams(self.houseRentTracer.originFrom ?? "be_null", key: "origin_from") <|>
+                    toTracerParams(self.houseRentTracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                     toTracerParams(element_from, key: "element_from") <|>
                     toTracerParams("click", key: "enter_type")
                 
@@ -350,13 +354,13 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
                 self.traceParam
             recordEvent(key: "click_feedback", params: tp.exclude("element_from").exclude("search_id").exclude("group_id"))
             
-            let openUrl = "fschema://webview_oc"
+            let openUrl = "sslocal://webview"
             let pageData: [String: Any] = ["data": detailModel]
             let commonParamsData: [String: Any] = ["data": commonParams]
 
             let jsParams = ["requestPageData": pageData,
                             "getNetCommonParams": commonParamsData]
-            let info: [String: Any] = ["url": jumpUrl, "jsParams": jsParams, "title": "房源问题反馈"]
+            let info: [String: Any] = ["url": jumpUrl, "fhJSParams": jsParams, "title": "房源问题反馈"]
             let userInfo = TTRouteUserInfo(info: info)
             TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
 

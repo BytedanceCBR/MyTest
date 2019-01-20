@@ -26,6 +26,8 @@
 
 - (BOOL)isCurrentTabFirst;
 
+- (BOOL)isNeedSwitchCityCompare;
+
 @end
 
 #endif /* FHHomeBridgeProtocol_h */

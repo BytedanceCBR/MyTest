@@ -42,10 +42,11 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
 -(instancetype)initWithController:(FHCityListViewController *)viewController tableView:(UITableView *)tableView {
     self = [super init];
     if (self) {
+        self.hasReloadListData = NO;
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
-        [self loadListCityData];
+        [self loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
     }
     return self;
 }
@@ -67,16 +68,16 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     return _historyCache;
 }
 
-- (void)loadListCityData {
+- (void)loadListCityData:(FHConfigDataModel *)configDataModel {
     self.cityList = NULL;
     self.hotCityList = NULL;
     self.historyCityList = NULL;
-    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     self.cityList = [configDataModel cityList];
     self.hotCityList = [configDataModel hotCityList];
     [self loadHistoryData];
     [self configSectionData];
     [self.tableView reloadData];
+    self.hasReloadListData = YES;
 }
 
 // 加载历史数据

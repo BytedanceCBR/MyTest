@@ -1432,7 +1432,7 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
-    :commit: 7852888357dc61e9d8de7abf122c33e9a266384c
+    :commit: ca2820c368d555e3ba2716676a9cf1fb62285fa7
     :git: git@code.byted.org:fproject/ios_house_filter.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1584,6 +1584,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: ae039c102bd3f2b7dfa9ce4f722f2057a87ec9d1
+PODFILE CHECKSUM: a5cb102263a5dbd1ebc4ca30d994566b33583ad9
 
 COCOAPODS: 1.4.0

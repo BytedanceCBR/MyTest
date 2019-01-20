@@ -459,8 +459,18 @@ extension DetailPageViewModel {
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
+                        var informShowParams = isHouseModelDetail ? traceParam : tracerParamsInform
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("search_id")
+                            .exclude("group_id")
+
+                        if let logPb = self.logPB {
+                            informShowParams = informShowParams <|>
+                                toTracerParams(logPb, key: "log_pb")
+                        }
                         recordEvent(key: TraceEventName.inform_show,
-                                    params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                                    params: informShowParams)
                         
                         self.sendClickConfimTrace(traceConfirm: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
                         
@@ -484,7 +494,7 @@ extension DetailPageViewModel {
         {
             let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
-                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type").exclude("search_id").exclude("group_id"))
             
             alert.showFrom(tempView)
         }

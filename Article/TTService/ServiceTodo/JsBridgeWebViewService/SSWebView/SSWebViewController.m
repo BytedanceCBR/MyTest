@@ -61,6 +61,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, assign)SSWebViewBackButtonColorType backButtonColorType;
 @property(nonatomic, strong)TTAlphaThemedButton *backButton;
 @property(nonatomic, assign)BOOL hideMore;
+@property(nonatomic, assign)BOOL showShareBtn;
 @property(nonatomic, copy)NSDictionary *wapHeaders;
 @property(nonatomic, assign, readwrite) BOOL supportLandscapeOnly;
 @property(nonatomic, assign)BOOL shouldDisableHistory;
@@ -73,6 +74,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, assign) BOOL nightModeDisable;
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
+@property (nonatomic, strong)   NSDictionary       *fhJSParams;
 
 @end
 
@@ -98,7 +100,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
-    NSDictionary *params = paramObj.allParams;
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params addEntriesFromDictionary:paramObj.allParams];
+    params[@"use_wk"] = @"1";  // 添加默认支持使用WKWebView
+    if (![params valueForKey:@"bounce_disable"]) {
+        params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
+    }
     NSString * urlStr = nil;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
@@ -141,8 +148,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
         }
         
+//        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
-
+        self.showShareBtn = [params tt_boolValueForKey:@"share_enable"];
+        
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
             _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"];
@@ -212,6 +221,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             if ([[params allKeys] containsObject:@"hide_back_buttonView"]) {
                 _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_buttonView"];
             }
+            
+            if ([[params allKeys] containsObject:@"hide_back_button"]) {
+                _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_button"];
+            }
         }
         
         _shouldDisableHistory = [params tt_boolValueForKey:@"disableHistory"];
@@ -267,6 +280,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         }
         //透传给下一级
         self.baseCondition = params;
+        if ([[params allKeys] containsObject:@"fhJSParams"]) {
+            self.fhJSParams = [params objectForKey:@"fhJSParams"];
+        }
     }
     return self;
 }
@@ -336,6 +352,11 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         self.ttNavBarStyle = @"White";
     }
     return self;
+}
+
+- (void)showShareButtonAcition
+{
+     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.ssWebView.navigationBar.rightBarView];
 }
 
 //- (void)viewDidAppear:(BOOL)animated
@@ -445,16 +466,42 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     
     [self refreshBackButton];
     
+    // F项目JS注册
+    [self registerFHJSBridge];
     
     //注册基础服务
 //    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
     [self setupAdInfo];
+    
+    [self.ssWebView setupFShareBtn:self.showShareBtn];
+    
+    [self showShareButtonAcition];
 }
 
 // 注册全局通知监听器
 - (void)registerObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+// F项目JS注册，route参数中要传递：fhJSParams:{} url: title:
+-(void)registerFHJSBridge
+{
+    __weak typeof(self) wSelf = self;
+    [self.fhJSParams enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull methodName, NSDictionary*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([methodName length] > 0) {
+            NSMutableDictionary *callBackData = [NSMutableDictionary dictionaryWithDictionary:obj];
+            [wSelf.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin  registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
+                [callBackData setObject:@(1) forKey:@"code"];
+                if ([params isKindOfClass:[NSDictionary class]]) {
+                    [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull temObj, BOOL * _Nonnull stop) {
+                        [callBackData setObject:temObj forKey:key];
+                    }];
+                }
+                callback(TTRJSBMsgSuccess, callBackData);
+            } forMethodName:methodName];
+        }
+    }];
 }
 
 // 注册JSBridge
@@ -626,12 +673,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
--(void) applicationDidEnterBackground:(NSNotification *)notification {
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
     [self _sendStayEventWithTimeInterval];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     _startDate = [NSDate date];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -643,6 +692,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:self.ttStatusBarStyle == UIStatusBarStyleDefault ? [[TTThemeManager sharedInstance_tt] statusBarStyle] : self.ttStatusBarStyle animated:YES];
     }
+    
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -654,6 +705,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     if (_shouldhideStatusBar) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)setDismissType:(SSWebViewDismissType)type

@@ -22,22 +22,29 @@ func requestErshouHouseDetail(houseId: Int64, logPB: [String: Any]? = nil) -> Ob
     params["house_type"] = HouseType.secondHandHouse.rawValue
     params["house_id"] = houseId
     return TTNetworkManager.shareInstance().rx
-        .requestForBinary(
+        .requestForBinaryOnBgThread(
             url: url,
 //            params: ["house_type": HouseType.secondHandHouse.rawValue,
 //                     "house_id": houseId],
             params: params,
             method: "GET",
             needCommonParams: true)
-        .map({ (data) -> NSString? in
-            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-        })
-        .map({ (payload) -> ErshouHouseDetailResponse? in
-            if let payload = payload {
-                let response = ErshouHouseDetailResponse(JSONString: payload as String)
-                return response
-            } else {
-                return nil
+        .flatMap({ (data) -> Observable<ErshouHouseDetailResponse?> in
+            if let str = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let response = ErshouHouseDetailResponse(JSONString: str as String)
+                return .just(response)
             }
+            return .empty()
         })
+//        .map({ (data) -> NSString? in
+//            NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+//        })
+//        .map({ (payload) -> ErshouHouseDetailResponse? in
+//            if let payload = payload {
+//                let response = ErshouHouseDetailResponse(JSONString: payload as String)
+//                return response
+//            } else {
+//                return nil
+//            }
+//        })
 }
