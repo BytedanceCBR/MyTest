@@ -460,7 +460,7 @@ extension DetailPageViewModel {
                         alert.dismiss()
                         let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
                         recordEvent(key: TraceEventName.inform_show,
-                                    params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                                    params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type").exclude("search_id").exclude("group_id"))
                         
                         self.sendClickConfimTrace(traceConfirm: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
                         
@@ -484,7 +484,7 @@ extension DetailPageViewModel {
         {
             let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
-                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type").exclude("search_id").exclude("group_id"))
             
             alert.showFrom(tempView)
         }
