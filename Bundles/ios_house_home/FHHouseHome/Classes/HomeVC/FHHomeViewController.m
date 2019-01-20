@@ -27,6 +27,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, strong) FHHomeListViewModel *homeListViewModel;
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
+@property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 
 @end
@@ -120,7 +121,22 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)retryLoadData
 {
     if (![FHEnvContext isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
+        
+        if (self.isShowToasting) {
+            return;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isShowToasting = NO;
+            });
+        });
+        
+        if (!self.isShowToasting) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            self.isShowToasting = YES;
+        }
+        
         return;
     }
     

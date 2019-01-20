@@ -257,7 +257,6 @@ class FHNeighborhoodChartCell: BaseUITableViewCell {
             maker.height.equalTo(180 * CommonUIStyle.Screen.widthScale)
             maker.bottom.equalToSuperview()
         }
-
         
         chartView.delegate = self
         setupChartUI()
@@ -440,7 +439,7 @@ func fillNeighboorhoodPriceChartCell(_ neighboorData: NeighborhoodDetailData, ca
     if let theCell = cell as? FHNeighborhoodChartCell {
         
         if let priceTrend = neighboorData.priceTrend{
-            
+            theCell.clickCallBack = callBack
             theCell.priceTrends = priceTrend
         }
         

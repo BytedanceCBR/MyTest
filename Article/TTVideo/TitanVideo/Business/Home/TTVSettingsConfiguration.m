@@ -35,7 +35,7 @@ BOOL ttvs_isTitanVideoBusiness(void)
 
 BOOL ttvs_isVideoNewRotateEnabled(void)
 {
-    NSDictionary *dict = [[TTSettingsManager sharedManager] settingForKey:@"tt_video_new_rotate" defaultValue:@{} freeze:YES];
+    NSDictionary *dict = [[TTSettingsManager sharedManager] settingForKey:@"tt_video_new_rotate" defaultValue:@{@"tt_video_new_rotate_4" : @(YES)} freeze:YES];
     BOOL isEnabled = [dict tt_boolValueForKey:@"tt_video_new_rotate_4"];
     BOOL osVersionGreaterThan9 = [TTDeviceHelper OSVersionNumber] >= 9;
     return isEnabled && osVersionGreaterThan9;
