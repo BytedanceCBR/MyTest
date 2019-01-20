@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     
+    var listLogPB: Any?
+
     var tracerModel: HouseRentTracer?
 
     var source: String?
