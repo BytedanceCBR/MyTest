@@ -69,6 +69,7 @@ typedef enum SSWebViewDismissType{
 //@property(nonatomic, retain)NSString * groupID;
 ////用于统计， 可以为空
 //@property(nonatomic, retain)NSString * adID;
+- (void)setupFShareBtn:(BOOL)isShowBtn;
 
 - (void)loadWithURL:(NSURL *)requestURL;
 - (void)loadWithURL:(NSURL *)requestURL requestHeaders:(NSDictionary *)requestHeaders;
