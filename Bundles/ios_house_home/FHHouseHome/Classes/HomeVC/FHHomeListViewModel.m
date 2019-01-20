@@ -513,7 +513,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
+//    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
     
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
