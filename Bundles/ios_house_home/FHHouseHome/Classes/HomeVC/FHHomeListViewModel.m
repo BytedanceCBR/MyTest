@@ -245,7 +245,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self.homeViewController.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
             }else
             {
-                [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:NO];
+                [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
             }
             self.tableViewV.hidden = YES;
             return;
@@ -513,7 +513,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
+//    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
     
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
