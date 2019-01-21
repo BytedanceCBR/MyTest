@@ -204,13 +204,13 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         var nilDataText : String? = "暂未关注"
         switch houseType {
         case .newHouse:
-            nilDataText = "暂未关注 新房"
+            nilDataText = "暂未关注新房"
         case .secondHandHouse:
-            nilDataText = "暂未关注 二手房"
+            nilDataText = "暂未关注二手房"
         case .neighborhood:
-            nilDataText = "暂未关注 小区"
+            nilDataText = "暂未关注小区"
         case .rentHouse:
-            nilDataText = "暂未关注 租房"
+            nilDataText = "暂未关注租房"
         }
         
         self.errorVM = NHErrorViewModel(
@@ -290,13 +290,13 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         emptyMaskView.isHidden = false
         switch houseType {
         case .newHouse:
-            emptyMaskView.label.text = "暂未关注 新房"
+            emptyMaskView.label.text = "暂未关注新房"
         case .secondHandHouse:
-            emptyMaskView.label.text = "暂未关注 二手房"
+            emptyMaskView.label.text = "暂未关注二手房"
         case .neighborhood:
-            emptyMaskView.label.text = "暂未关注 小区"
+            emptyMaskView.label.text = "暂未关注小区"
         case .rentHouse:
-            emptyMaskView.label.text = "暂未关注 租房"
+            emptyMaskView.label.text = "暂未关注租房"
         }
         
     }
