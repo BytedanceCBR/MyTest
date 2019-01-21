@@ -71,7 +71,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, strong) NSDictionary *baseCondition;
 @property(nonatomic, strong) UIView *customeNavigationBar;
 @property(nonatomic, assign) NSInteger colorKey;
-@property(nonatomic, assign) NSInteger closeStackCount;
+@property(nonatomic, assign) long long closeStackCount;
 @property(nonatomic, assign) BOOL nightModeDisable;
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
@@ -108,8 +108,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
     }
     NSString * urlStr = nil;
+    self.closeStackCount = 0;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
+        
         if ([params.allKeys containsObject:@"ttencoding"]) {
             if ([[params objectForKey:@"ttencoding"] isEqualToString:@"base64"]) {
                 urlStr = [TTStringHelper decodeStringFromBase64Str:urlStr];
@@ -151,20 +153,22 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
 //        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
-        self.showShareBtn = [params tt_boolValueForKey:@"share_enable"];
+        if ([[params tt_stringValueForKey:@"share_enable"] isKindOfClass:[NSString class]]) {
+            self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"] || [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"1"];
+        }
         
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"];
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
         }
         
         if ([params valueForKey:@"hide_nav_bar"]) {//hide_nav_bar 与 hide_bar 功能一致 王伟老师说要换个名字，但是老版本要兼容
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"];
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"true"];
         }
         
         _shouldHideBackButton = NO;
         if ([params valueForKey:@"hide_back_button"]) {
-            _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"];
+            _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"true"];
         }
         
         _webViewBounceEnable = YES;
@@ -174,6 +178,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
         if ([params valueForKey:@"background_colorkey"]) {
             self.colorKey = [params tt_intValueForKey:@"background_colorkey"];
+        }
+        
+        if ([params valueForKey:@"closeStack"]) {
+            self.closeStackCount = [params tt_intValueForKey:@"closeStack"];
         }
         
         if ([params valueForKey:@"nightbackground_disable"]) {
@@ -477,6 +485,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     [self.ssWebView setupFShareBtn:self.showShareBtn];
     
     [self showShareButtonAcition];
+    
+    self.ssWebView.closeStackCounts = self.closeStackCount;
+    
 }
 
 // 注册全局通知监听器
@@ -695,6 +706,46 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
     
     [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
+    
+    [self setUpCloseCountVC];
+}
+
+- (void)setUpCloseCountVC
+{
+    
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    
+    NSInteger closeStackCouuntResult = self.closeStackCount;
+    
+    if (closeStackCouuntResult == 0) {
+        return;
+    }
+    
+    if (vcStack.count > closeStackCouuntResult + 2) {
+        NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+        if (retainVCs == 0) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+        }else
+        {
+            NSMutableArray *viewControllersArray = [NSMutableArray new];
+            [viewControllersArray addObject:vcStack.firstObject];
+            
+            for (int i = 0; i < retainVCs; i++) {
+                if (vcStack.count > i) {
+                    [viewControllersArray addObject:vcStack[i + 1]];
+                }
+            }
+            
+            [viewControllersArray addObject:vcStack.lastObject];
+            
+            self.navigationController.viewControllers = viewControllersArray;
+        }
+    }else
+    {
+        if (self.navigationController.viewControllers.count >=2) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject, nil];
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -1048,8 +1099,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 - (void)setupCloseStackVCCount:(NSNumber *)count
 {
     if ([count respondsToSelector:@selector(integerValue)]) {
-        self.closeStackCount = [count integerValue];
-        self.ssWebView.closeStackCount = self.closeStackCount;
+        self.closeStackCount = [count longLongValue];
+        self.ssWebView.closeStackCounts = [count longLongValue];;
     }
 }
 

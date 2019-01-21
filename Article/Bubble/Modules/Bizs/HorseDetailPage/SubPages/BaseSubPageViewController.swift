@@ -134,7 +134,7 @@ class BaseSubPageViewController: BaseViewController {
         Reachability.rx.isReachable
                 .bind { [unowned self] reachable in
                     if !reachable {
-                        self.infoMaskView.label.text = "网络不给力，试试刷新页面"
+                        self.infoMaskView.label.text = "网络异常，请检查网络连接"
                     }
                 }
                 .disposed(by: disposeBag)

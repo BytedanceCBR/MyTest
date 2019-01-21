@@ -98,7 +98,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
         self.errorVM = NHErrorViewModel(
             errorMask: emptyMaskView,
             requestRetryText: "网络异常",
-            requestNilDataText: "啊哦～您还没收到相关消息",
+            requestNilDataText: "暂无消息",
             requestNilDataImage: "empty_message",
             requestErrorText: "网络异常",
             isUserClickEnable: false)
@@ -228,7 +228,7 @@ class ChatVC: BaseViewController, UIViewControllerErrorHandler {
     fileprivate func showEmptyInfo() {
         self.emptyMaskView.isHidden = false
         emptyMaskView.icon.image = UIImage(named:"empty_message")
-        self.emptyMaskView.label.text = "啊哦～你还没有收到消息～"
+        self.emptyMaskView.label.text = "暂无消息"
         view.bringSubview(toFront: emptyMaskView)
         self.clearBadgeNumber()
     }
