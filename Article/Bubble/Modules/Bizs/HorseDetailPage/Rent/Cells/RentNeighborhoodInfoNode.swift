@@ -11,7 +11,7 @@ import Foundation
 func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
                                    tracer: HouseRentTracer) -> () -> TableSectionNode? {
     let render = curry(fillRentNeighborhoodInfoCell)(model?.data?.neighborhoodInfo)(tracer)
-    let params = EnvContext.shared.homePageParams <|>
+    let params = TracerParams.momoid() <|>
         toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams("neighborhood_detail", key: "element_type") <|>
         toTracerParams(tracer.pageType, key: "page_type") <|>
@@ -21,11 +21,34 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
         toTracerParams("rent_detail", key: "enter_from")
     
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
+
+    let houseShowParams = TracerParams.momoid() <|>
+        toTracerParams("neighborhood", key: "house_type") <|>
+        toTracerParams(tracer.cardType, key: "card_type") <|>
+        toTracerParams(tracer.pageType, key: "page_type") <|>
+        toTracerParams("be_null", key: "element_type") <|>
+        imprIdTraceParam(tracer.logPb) <|>
+        searchIdTraceParam(tracer.logPb) <|>
+        groupIdTraceParam(tracer.logPb) <|>
+//        toTracerParams("", key: "group_id") <|>
+//        toTracerParams("", key: "impr_id") <|>
+//        toTracerParams("", key: "search_id") <|>
+        toTracerParams(tracer.rank, key: "rank") <|>
+        toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+        toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+        toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id")
+    let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams)
+    let elementRecord: ElementRecord = { (params) in
+        tracer(params)
+        if model?.data?.neighborhoodInfo != nil {
+            tracerEvaluationRecord(params)
+        }
+    }
     return {
         return TableSectionNode(
             items: [render],
             selectors: nil,
-            tracer:[tracerEvaluationRecord],
+            tracer:[elementRecord],
             sectionTracer: nil,
             label: "",
             type: .node(identifier: NeighborhoodInfoCell.identifier))
