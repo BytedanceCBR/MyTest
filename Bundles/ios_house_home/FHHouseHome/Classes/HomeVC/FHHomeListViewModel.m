@@ -242,7 +242,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         if (!model || error) {
             if (![FHEnvContext isNetworkConnected]) {
-                [self.homeViewController.emptyView showEmptyWithTip:@"网络不给力,点击重试" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+                [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
             }else
             {
                 [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
@@ -254,7 +254,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if (model.data.items.count == 0) {
             self.tableViewV.hidden = YES;
             [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
             return;
         }
         
@@ -348,7 +348,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable) {
                 self.tableViewV.hidden = YES;
                 [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通，敬请期待～" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
                 return;
             }
             

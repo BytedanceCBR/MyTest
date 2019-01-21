@@ -305,7 +305,7 @@
         if (wself.houseList.count == 0) {
             NSString *tip;
             if (self.conditionFilter.length > 0) {
-                tip = @"没有找到相关信息，换个条件试试吧~";
+                tip = @"暂无搜索结果";
             }else{
                 tip = @"数据走丢了";
             }

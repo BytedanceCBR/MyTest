@@ -16,12 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 #define kFHErrorMaskNoMessageImageName      @"empty_message"    // 无消息
 
 typedef enum : NSUInteger {
-    FHEmptyMaskViewTypeNoNetWorkAndRefresh,         // 网络不给力，试试刷新页面；刷新按钮        "group-4"
-    FHEmptyMaskViewTypeNoNetWorkNotRefresh,         // 网络不给力，试试刷新页面；无刷新按钮       "group-4"
+    FHEmptyMaskViewTypeNoNetWorkAndRefresh,         // 网络异常，请检查网络连接；刷新按钮        "group-4"
+    FHEmptyMaskViewTypeNoNetWorkNotRefresh,         // 网络异常，请检查网络连接；无刷新按钮       "group-4"
     FHEmptyMaskViewTypeNoData,                      // 数据走丢了                            "group-8"
     FHEmptyMaskViewTypeNetWorkError,                // 网络异常                              "group-9"
-    FHEmptyMaskViewTypeEmptyMessage,                // 啊哦~你还没有收到消息~                  "empty_message"
-    FHEmptyMaskViewTypeNoDataForCondition,          // 没有找到相关的信息，换个条件试试吧~        "group-9"
+    FHEmptyMaskViewTypeEmptyMessage,                // 暂无消息                              "empty_message"
+    FHEmptyMaskViewTypeNoDataForCondition,          // 暂无搜索结果                           "group-9"
 } FHEmptyMaskViewType;
 
 @interface FHErrorView : UIView
