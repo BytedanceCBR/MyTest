@@ -74,13 +74,12 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
-                searchIdTraceParam(item.logPb) <|>
-                imprIdTraceParam(item.logPb) <|>
-                groupIdTraceParam(item.logPb) <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams("same_neighborhood", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []

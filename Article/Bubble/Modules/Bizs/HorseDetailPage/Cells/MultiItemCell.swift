@@ -348,158 +348,158 @@ class NeighborhoodItemView: UIView {
 
 }
 
-func parseRelateCourtNode(
-    _ data: RelatedCourtResponse?,
-    navVC: UINavigationController?) -> () -> TableSectionNode? {
-    return {
-        if let datas = data?.data?.items?.take(5), datas.count > 0 {
-            
-            let theDatas = datas.map({ (item) -> CourtItemInnerEntity in
-                var newItem = item
-                newItem.fhSearchId = data?.searchId
-                return newItem
-            })
-            let params = TracerParams.momoid() <|>
-                toTracerParams("related", key: "element_type")
-            let render = curry(fillSearchInNeighborhoodCell)(theDatas)(params)(navVC)
+//func parseRelateCourtNode(
+//    _ data: RelatedCourtResponse?,
+//    navVC: UINavigationController?) -> () -> TableSectionNode? {
+//    return {
+//        if let datas = data?.data?.items?.take(5), datas.count > 0 {
+//
+//            let theDatas = datas.map({ (item) -> CourtItemInnerEntity in
+//                var newItem = item
+//                newItem.fhSearchId = data?.searchId
+//                return newItem
+//            })
+//            let params = TracerParams.momoid() <|>
+//                toTracerParams("related", key: "element_type")
+//            let render = curry(fillSearchInNeighborhoodCell)(theDatas)(params)(navVC)
+//
+//            return TableSectionNode(
+//                    items: [render],
+//                    selectors: nil,
+//                    tracer: [elementShowOnceRecord(params:params)],
+//                    sectionTracer: nil,
+//                    label: "猜你喜欢",
+//                    type: .node(identifier: MultiItemCell.identifier))
+//        } else {
+//            return nil
+//        }
+//    }
+//}
 
-            return TableSectionNode(
-                    items: [render],
-                    selectors: nil,
-                    tracer: [elementShowOnceRecord(params:params)],
-                    sectionTracer: nil,
-                    label: "猜你喜欢",
-                    type: .node(identifier: MultiItemCell.identifier))
-        } else {
-            return nil
-        }
-    }
-}
+//fileprivate func fillSearchInNeighborhoodCell(
+//    items: [CourtItemInnerEntity],
+//    params: TracerParams,
+//    navVC: UINavigationController?,
+//    cell: BaseUITableViewCell) -> Void {
+//    if let theCell = cell as? MultiItemCell {
+//        let views = items
+//            .enumerated()
+//            .map { (e) -> FloorPanItemView in
+//            let (offset, item) = e
+//            let re = generateearchInNeighborhoodItemView(item)
+//            let theParams = params <|>
+//                toTracerParams("related", key: "element_type") <|>
+//                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+//                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id")
+//
+//                re.tapGesture.rx.event
+//                    .subscribe(onNext: { [unowned re] recognizer in
+//                        if let id = item.id, let houseId = Int64(id) {
+//                            openNewHouseDetailPage(
+//                                houseId: houseId,
+//                                logPB: item.logPB as? [String: Any],
+//                                disposeBag: re.disposeBag,
+//                                tracerParams: theParams  <|>
+//                                    toTracerParams(offset, key: "rank"),
+//                                navVC: navVC)(TracerParams.momoid())
+//                        }
+//                    })
+//                    .disposed(by: re.disposeBag)
+//            return re
+//        }
+//
+//        views.forEach { view in
+//            theCell.groupView.addSubview(view)
+//        }
+//        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+//        views.snp.makeConstraints { maker in
+//            maker.top.bottom.equalToSuperview()
+//        }
+//        if let view = views.last {
+//            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+//                maker.height.equalTo(view.snp.height).offset(16)
+//            }
+//        }
+//    }
+//}
 
-fileprivate func fillSearchInNeighborhoodCell(
-    items: [CourtItemInnerEntity],
-    params: TracerParams,
-    navVC: UINavigationController?,
-    cell: BaseUITableViewCell) -> Void {
-    if let theCell = cell as? MultiItemCell {
-        let views = items
-            .enumerated()
-            .map { (e) -> FloorPanItemView in
-            let (offset, item) = e
-            let re = generateearchInNeighborhoodItemView(item)
-            let theParams = params <|>
-                toTracerParams("related", key: "element_type") <|>
-                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id")
-                
-                re.tapGesture.rx.event
-                    .subscribe(onNext: { [unowned re] recognizer in
-                        if let id = item.id, let houseId = Int64(id) {
-                            openNewHouseDetailPage(
-                                houseId: houseId,
-                                logPB: item.logPB as? [String: Any],
-                                disposeBag: re.disposeBag,
-                                tracerParams: theParams  <|>
-                                    toTracerParams(offset, key: "rank"),
-                                navVC: navVC)(TracerParams.momoid())
-                        }
-                    })
-                    .disposed(by: re.disposeBag)
-            return re
-        }
+//func parseSearchInNeighborhoodNode(
+//    _ data: SameNeighborhoodHouseResponse.Data?,
+//    navVC: UINavigationController?) -> () -> TableSectionNode? {
+//    return {
+//        if let datas = data?.items.take(5), datas.count > 0 {
+//            let theDatas = datas.map({ (item) -> HouseItemInnerEntity in
+//                var newItem = item
+//                newItem.fhSearchId = data?.searchId
+//                return newItem
+//            })
+//            let params = TracerParams.momoid() <|>
+//                toTracerParams("same_neighborhood", key: "element_type")
+//
+//            let openParams = params <|>
+//                toTracerParams("slide", key: "card_type") <|>
+//                toTracerParams("old_detail", key: "enter_from") <|>
+//                toTracerParams("old_detail", key: "element_from")
+//
+//            let render = curry(fillSearchInNeighborhoodCell)(theDatas)(openParams)(navVC)
+//            return TableSectionNode(
+//                    items: [render],
+//                    selectors: nil,
+//                    tracer: [elementShowOnceRecord(params: params)],
+//                    sectionTracer: nil,
+//                    label: "小区房源",
+//                    type: .node(identifier: MultiItemCell.identifier))
+//        } else {
+//            return nil
+//        }
+//    }
+//}
 
-        views.forEach { view in
-            theCell.groupView.addSubview(view)
-        }
-        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-        views.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
-        }
-        if let view = views.last {
-            theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                maker.height.equalTo(view.snp.height).offset(16)
-            }
-        }
-    }
-}
-
-func parseSearchInNeighborhoodNode(
-    _ data: SameNeighborhoodHouseResponse.Data?,
-    navVC: UINavigationController?) -> () -> TableSectionNode? {
-    return {
-        if let datas = data?.items.take(5), datas.count > 0 {
-            let theDatas = datas.map({ (item) -> HouseItemInnerEntity in
-                var newItem = item
-                newItem.fhSearchId = data?.searchId
-                return newItem
-            })
-            let params = TracerParams.momoid() <|>
-                toTracerParams("same_neighborhood", key: "element_type")
-
-            let openParams = params <|>
-                toTracerParams("slide", key: "card_type") <|>
-                toTracerParams("old_detail", key: "enter_from") <|>
-                toTracerParams("old_detail", key: "element_from")
-
-            let render = curry(fillSearchInNeighborhoodCell)(theDatas)(openParams)(navVC)
-            return TableSectionNode(
-                    items: [render],
-                    selectors: nil,
-                    tracer: [elementShowOnceRecord(params: params)],
-                    sectionTracer: nil,
-                    label: "小区房源",
-                    type: .node(identifier: MultiItemCell.identifier))
-        } else {
-            return nil
-        }
-    }
-}
-
-fileprivate func fillSearchInNeighborhoodCell(
-    items: [HouseItemInnerEntity],
-    params: TracerParams,
-    navVC: UINavigationController?,
-    cell: BaseUITableViewCell) -> Void {
-    if let theCell = cell as? MultiItemCell {
-        let views = items
-            .enumerated()
-            .map { (e) -> FloorPanItemView in
-            let (offset, item) = e
-            let re = generateearchInNeighborhoodItemView(item)
-            let theParams = params <|>
-                toTracerParams("slide", key: "card_type") <|>
-                params
-            re.tapGesture.rx.event
-                .subscribe(onNext: { [unowned re] recognizer in
-                    if let id = item.id, let houseId = Int64(id) {
-                        openErshouHouseDetailPage(
-                            houseId: houseId,
-                            disposeBag: re.disposeBag,
-                            tracerParams: theParams <|>
-                                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                                toTracerParams(offset, key: "rank"),
-                            navVC: navVC)(TracerParams.momoid())
-                    }
-                })
-                .disposed(by: re.disposeBag)
-            return re
-        }
-
-        views.forEach { view in
-            theCell.groupView.addSubview(view)
-        }
-        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-        views.snp.makeConstraints { maker in
-            maker.top.bottom.equalToSuperview()
-        }
-        if let view = views.last {
-            theCell.groupView.snp.makeConstraints { [unowned view] maker in
-                maker.height.equalTo(view.snp.height).offset(16)
-            }
-        }
-    }
-}
+//fileprivate func fillSearchInNeighborhoodCell(
+//    items: [HouseItemInnerEntity],
+//    params: TracerParams,
+//    navVC: UINavigationController?,
+//    cell: BaseUITableViewCell) -> Void {
+//    if let theCell = cell as? MultiItemCell {
+//        let views = items
+//            .enumerated()
+//            .map { (e) -> FloorPanItemView in
+//            let (offset, item) = e
+//            let re = generateearchInNeighborhoodItemView(item)
+//            let theParams = params <|>
+//                toTracerParams("slide", key: "card_type") <|>
+//                params
+//            re.tapGesture.rx.event
+//                .subscribe(onNext: { [unowned re] recognizer in
+//                    if let id = item.id, let houseId = Int64(id) {
+//                        openErshouHouseDetailPage(
+//                            houseId: houseId,
+//                            disposeBag: re.disposeBag,
+//                            tracerParams: theParams <|>
+//                                toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+//                                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+//                                toTracerParams(offset, key: "rank"),
+//                            navVC: navVC)(TracerParams.momoid())
+//                    }
+//                })
+//                .disposed(by: re.disposeBag)
+//            return re
+//        }
+//
+//        views.forEach { view in
+//            theCell.groupView.addSubview(view)
+//        }
+//        views.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
+//        views.snp.makeConstraints { maker in
+//            maker.top.bottom.equalToSuperview()
+//        }
+//        if let view = views.last {
+//            theCell.groupView.snp.makeConstraints { [unowned view] maker in
+//                maker.height.equalTo(view.snp.height).offset(16)
+//            }
+//        }
+//    }
+//}
 
 func generateearchInNeighborhoodItemView(_ item: CourtItemInnerEntity) -> FloorPanItemView {
     let re = FloorPanItemView()

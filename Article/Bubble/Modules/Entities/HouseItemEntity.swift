@@ -90,9 +90,10 @@ struct HouseItemInnerEntity: Mappable {
     var images: [ImageItem]?
     var houseImageTag: HouseImageTag?
     var recommendReasons: [ResommendReason]?
-    var fhSearchId: String?
+    var searchId: String?
     var originPrice:String?
-    
+    var fhSearchId: String?
+
     //租房3个字段
     var pricing : String?
     var subtitle : String?
@@ -110,6 +111,9 @@ struct HouseItemInnerEntity: Mappable {
 
         id <- map["id"]
         impr_id <- map["impr_id"]
+        searchId <- map["search_id"]
+        fhSearchId <- map["search_id"]
+
         title <- map["title"]
         uploadAt <- map["upload_at"]
         displayTitle <- map["display_title"]

@@ -288,6 +288,8 @@ struct CourtItemInnerEntity: Mappable {
     var logPB: Any?
     
     var fhSearchId: String?
+    var searchId: String?
+    var imprId: String?
 
     init?(map: Map) {
         
@@ -312,7 +314,9 @@ struct CourtItemInnerEntity: Mappable {
         userStatus <- map["user_status"]
         saleStatus <- map["sale_status"]
         logPB <- map["log_pb"]
-        fhSearchId <- map["fhSearchId"]
+        fhSearchId <- map["search_id"]
+        searchId <- map["search_id"]
+        imprId <- map["impr_id"]
 
     }
 

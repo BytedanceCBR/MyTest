@@ -578,7 +578,7 @@ func parseRelatedHouseListItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams("be_null", key: "element_from") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams("related_list",key: "enter_from"),
                 navVC: navVC)
@@ -602,8 +602,7 @@ func parseRelatedHouseListItemNode(
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             let finalParams = theParams
                 .exclude("category_name")
