@@ -11,7 +11,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.bytedance.fp1</key>
-		<string>combytedancefp1_InHouse</string>
+		<string>combytedancefp1 InHouse</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Distribution</string>
