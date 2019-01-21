@@ -63,11 +63,14 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     }
     NSString * urlStr = [param objectForKey:@"route"];
     NSNumber * closeStack = [param objectForKey:@"closeStack"];
-    
-    if ([controller respondsToSelector:@selector(setupCloseStackVCCount:)]) {
-        [controller performSelector:@selector(setupCloseStackVCCount:) withObject:closeStack];
+   
+    if (!closeStack) {
+        closeStack = @(0);
     }
     
+    urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"&closeStack=%ld",[closeStack integerValue]]];
+    
+
     if (!isEmptyString(urlStr)) {
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:urlStr]];
         callback(TTRJSBMsgSuccess, @{@"code": @1});

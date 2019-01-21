@@ -71,7 +71,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, strong) NSDictionary *baseCondition;
 @property(nonatomic, strong) UIView *customeNavigationBar;
 @property(nonatomic, assign) NSInteger colorKey;
-@property(nonatomic, assign) NSInteger closeStackCount;
+@property(nonatomic, assign) long long closeStackCount;
 @property(nonatomic, assign) BOOL nightModeDisable;
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
@@ -110,6 +110,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     NSString * urlStr = nil;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
+        self.closeStackCount = [params objectForKey:@""];
+        
         if ([params.allKeys containsObject:@"ttencoding"]) {
             if ([[params objectForKey:@"ttencoding"] isEqualToString:@"base64"]) {
                 urlStr = [TTStringHelper decodeStringFromBase64Str:urlStr];
@@ -151,7 +153,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
 //        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
-        self.showShareBtn = [params tt_boolValueForKey:@"share_enable"];
+        if ([[params tt_stringValueForKey:@"share_enable"] isKindOfClass:[NSString class]]) {
+            self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"];
+        }
         
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
@@ -174,6 +178,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
         if ([params valueForKey:@"background_colorkey"]) {
             self.colorKey = [params tt_intValueForKey:@"background_colorkey"];
+        }
+        
+        if ([params valueForKey:@"closeStack"]) {
+            self.closeStackCount = [params tt_intValueForKey:@"closeStack"];
         }
         
         if ([params valueForKey:@"nightbackground_disable"]) {
@@ -477,6 +485,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     [self.ssWebView setupFShareBtn:self.showShareBtn];
     
     [self showShareButtonAcition];
+    
+    self.ssWebView.closeStackCounts = self.closeStackCount;
 }
 
 // 注册全局通知监听器
@@ -1048,8 +1058,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 - (void)setupCloseStackVCCount:(NSNumber *)count
 {
     if ([count respondsToSelector:@selector(integerValue)]) {
-        self.closeStackCount = [count integerValue];
-        self.ssWebView.closeStackCount = self.closeStackCount;
+        self.closeStackCount = [count longLongValue];
+        self.ssWebView.closeStackCounts = [count longLongValue];;
     }
 }
 

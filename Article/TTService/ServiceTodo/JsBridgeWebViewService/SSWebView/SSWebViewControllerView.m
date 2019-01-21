@@ -509,13 +509,15 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
                 
                 NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
                 
-                if (self.closeStackCount == 0) {
+                NSInteger closeStackCouuntResult = self.closeStackCounts;
+                
+                if (closeStackCouuntResult == 0) {
                     [self.navigationController popViewControllerAnimated:YES];
                     return;
                 }
                 
-                if (vcStack.count > self.closeStackCount + 1) {
-                    NSInteger retainVCs = vcStack.count - self.closeStackCount - 1;
+                if (vcStack.count > closeStackCouuntResult + 1) {
+                    NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 1;
                     if (retainVCs == 0) {
                         self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
                     }else
