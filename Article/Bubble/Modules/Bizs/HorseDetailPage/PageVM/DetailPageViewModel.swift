@@ -682,11 +682,11 @@ struct DetailDataParser {
 }
 
 func oneTimeRender(_ parser: @escaping TableCellRender) -> TableCellRender {
-    var executed = false
+    var executed: Int = 0
     return { (cell) in
-        if !executed {
+        if executed != cell.hashValue {
             parser(cell)
-            executed = true
+            executed = cell.hashValue
         }
     }
 }
