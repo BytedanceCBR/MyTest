@@ -10,11 +10,12 @@
 #import "TTNetworkUtilities.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTBridgeDefines.h"
+#import "FHEnvContext.h"
 
 @implementation TTNetwork
 
-- (void)commonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSDictionary *commonParams = [TTNetworkUtilities commonURLParameters];
+- (void)getNetCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
     
     if (!commonParams) {
         if (callback) {

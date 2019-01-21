@@ -25,6 +25,8 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
                            @"schoolInfo": @"school_info",
+                           @"searchId": @"search_id",
+                           @"imprId": @"impr_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

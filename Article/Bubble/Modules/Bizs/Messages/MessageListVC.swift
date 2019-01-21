@@ -183,7 +183,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
             maker.top.bottom.right.left.equalTo(tableView)
         }
         
-        self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常",requestNilDataText:"啊哦～你还没有收到消息～",requestNilDataImage:"empty_message",isUserClickEnable:false)
+        self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常",requestNilDataText:"暂无消息",requestNilDataImage:"empty_message",isUserClickEnable:false)
         self.errorVM?.onRequestViewDidLoad()
     }
     
@@ -659,9 +659,6 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                                 toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
-                                imprIdTraceParam(item.logPb) <|>
-                                groupIdTraceParam(item.logPb) <|>
-                                searchIdTraceParam(item.logPb) <|>
                                 toTracerParams(listType ?? "", key: "page_type")
 
                         recordEvent(key: TraceEventName.house_show, params: params

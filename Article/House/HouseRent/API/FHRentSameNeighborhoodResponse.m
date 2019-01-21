@@ -109,6 +109,7 @@
                            @"logPb": @"log_pb",
                            @"houseType": @"house_type",
                            @"imprId": @"impr_id",
+                           @"searchId": @"search_id",
                            @"houseImageTag": @"house_image_tag",
                            @"houseImage": @"house_image",
                            };

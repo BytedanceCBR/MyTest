@@ -32,12 +32,12 @@
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont themeFontRegular:14];
         _tipLabel.textColor = [UIColor themeGray];
-        _tipLabel.text = @"网络不给力，试试刷新页面";//@"网络异常";
+        _tipLabel.text = @"网络异常，请检查网络连接";//@"网络异常";
         [_tipLabel sizeToFit];
         
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_retryButton setTitleColor:[UIColor themeBlue] forState:UIControlStateNormal];
-        [_retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
+        [_retryButton setTitle:@"刷新" forState:UIControlStateNormal];
         _retryButton.layer.cornerRadius  = 15;
         _retryButton.titleLabel.font = [UIFont themeFontRegular:14];
         _retryButton.layer.borderColor = [[UIColor themeBlue]CGColor];

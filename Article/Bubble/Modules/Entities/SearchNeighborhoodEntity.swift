@@ -86,6 +86,8 @@ struct NeighborhoodInnerItemEntity: Mappable {
     var displayStatusInfo: String?
     var logPB: [String: Any]?
     var fhSearchId: String?
+    var imprId: String?
+    var searchId: String?
 
     init?(map: Map) {
         
@@ -110,6 +112,8 @@ struct NeighborhoodInnerItemEntity: Mappable {
         displayStatusInfo <- map["display_stats_info"]
         logPB <- map["log_pb"]
         fhSearchId <- map["fhSearchId"]
+        imprId <- map["impr_id"]
+        searchId <- map["search_id"]
 
     }
     

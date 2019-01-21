@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *districtName;
 @property (nonatomic, copy , nullable) NSString *monthUp;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataEvaluationInfo* evaluationInfo;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataSchoolInfoModel *schoolInfo;
 
