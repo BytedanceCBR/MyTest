@@ -264,6 +264,8 @@ struct NeighborhoodInfo: Mappable {
     var areaName: String?
 
     var logPB: [String: Any]?
+    var imprId: String?
+    var searchId: String?
 
     
     init?(map: Map) {
@@ -293,6 +295,8 @@ struct NeighborhoodInfo: Mappable {
         schoolInfo <- map["school_info"]
         districtName <- map["district_name"]
         areaName <- map["area_name"]
+        imprId <- map["impr_id"]
+        searchId <- map["search_id"]
 
     }
 }
