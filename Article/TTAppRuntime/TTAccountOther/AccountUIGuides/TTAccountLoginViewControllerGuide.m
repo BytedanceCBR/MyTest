@@ -31,6 +31,7 @@
 
 - (void)showWithContext:(id)context
 {
+    return ;
     UINavigationController *rootNavController = [TTUIResponderHelper topNavigationControllerFor:nil];
     if ([context isKindOfClass:[NewsBaseDelegate class]]) {
         NewsBaseDelegate *contextDelegate = (NewsBaseDelegate *)context;
