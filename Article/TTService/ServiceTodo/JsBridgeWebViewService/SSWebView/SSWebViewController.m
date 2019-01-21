@@ -1049,6 +1049,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 {
     if ([count respondsToSelector:@selector(integerValue)]) {
         self.closeStackCount = [count integerValue];
+        self.ssWebView.closeStackCount = self.closeStackCount;
     }
 }
 

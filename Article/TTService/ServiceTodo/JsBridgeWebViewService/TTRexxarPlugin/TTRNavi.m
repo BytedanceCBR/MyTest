@@ -62,7 +62,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         [controller performSelector:@selector(setupOpenPageTagStr:) withObject:param[@"tag"]];
     }
     NSString * urlStr = [param objectForKey:@"route"];
-    NSNumber * closeStack = [param tt_intValueForKey:@"closeStack"];
+    NSNumber * closeStack = [param objectForKey:@"closeStack"];
     
     if ([controller respondsToSelector:@selector(setupCloseStackVCCount:)]) {
         [controller performSelector:@selector(setupCloseStackVCCount:) withObject:closeStack];
