@@ -31,6 +31,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.fetch" for:@"fetch"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.getNetCommonParams" for:@"getNetCommonParams"];
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.login" for:@"login"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.isLogin" for:@"is_login"];

@@ -154,21 +154,21 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 //        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         if ([[params tt_stringValueForKey:@"share_enable"] isKindOfClass:[NSString class]]) {
-            self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"];
+            self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"] || [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"1"];
         }
         
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"];
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
         }
         
         if ([params valueForKey:@"hide_nav_bar"]) {//hide_nav_bar 与 hide_bar 功能一致 王伟老师说要换个名字，但是老版本要兼容
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"];
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"true"];
         }
         
         _shouldHideBackButton = NO;
         if ([params valueForKey:@"hide_back_button"]) {
-            _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"];
+            _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"true"];
         }
         
         _webViewBounceEnable = YES;
