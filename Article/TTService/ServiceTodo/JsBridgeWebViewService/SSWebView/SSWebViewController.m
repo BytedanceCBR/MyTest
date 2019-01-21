@@ -873,38 +873,6 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             if (self.navigationController.viewControllers.count == 1 && self.navigationController.presentingViewController) {
                 [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
             } else {
-                NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-                
-                if (self.closeStackCount == 0) {
-                    [self.navigationController popViewControllerAnimated:YES];
-                    return;
-                }
-                
-                if (vcStack.count > self.closeStackCount + 1) {
-                    NSInteger retainVCs = vcStack.count - self.closeStackCount - 1;
-                    if (retainVCs == 0) {
-                        self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
-                    }else
-                    {
-                        NSMutableArray *viewControllersArray = [NSMutableArray new];
-                        [viewControllersArray addObject:vcStack.firstObject];
-                        
-                        for (int i = 0; i < retainVCs; i++) {
-                            if (vcStack.count > i) {
-                                [viewControllersArray addObject:vcStack[i + 1]];
-                            }
-                        }
-                        
-                        [viewControllersArray addObject:vcStack.lastObject];
-                        
-                        self.navigationController.viewControllers = viewControllersArray;
-                    }
-                }else
-                {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                    return;
-                }
-
                 [self.navigationController popViewControllerAnimated:YES];
             }
         } else {

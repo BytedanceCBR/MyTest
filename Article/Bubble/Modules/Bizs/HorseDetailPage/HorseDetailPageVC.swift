@@ -166,16 +166,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         if let userInfo = paramObj?.userInfo.allInfo, let tracer = userInfo["tracer"] as? [String: Any] {
             self.logPB = tracer["log_pb"] as? [String : Any]
         }
-        func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
-            
-            let jsonData:Data = jsonString.data(using: .utf8)!
-            
-            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-            if dict != nil {
-                return dict as! NSDictionary
-            }
-            return NSDictionary()
-        }
+
         
         // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
         if let urlStr = paramObj?.sourceURL.absoluteString,
@@ -199,6 +190,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         let traceParamsReport = mapTracerParams(parmasTrace)
                         traceParams = traceParams <|>
                         traceParamsReport
+
+                        self.logPB = parmasTrace["log_pb"] as? [String: Any]
                     }
                     
                 }
@@ -241,6 +234,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
         //TODO 增加push打开详情的original_from
+    }
+
+    fileprivate func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
+
+        let jsonData:Data = jsonString.data(using: .utf8)!
+
+        let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+        if dict != nil {
+            return dict as! NSDictionary
+        }
+        return NSDictionary()
     }
 
     static func getHouseId(_ dict: [AnyHashable: Any]?) -> (String, HouseType) {
@@ -366,7 +370,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     fileprivate func tracerDictToTracerModel(tracerDict: [AnyHashable : Any]) -> HouseRentTracer {
         let houseTypeStr = houseType(houseType: houseType)
         let pageType = pageTypeString(houseType)
-        let tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+
+        var tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+        if tracer.count == 0, let content = tracerDict["report_params"] as? String {
+            let paramsDict : NSDictionary = getDictionaryFromJSONString(jsonString: content)
+            tracer = paramsDict as? [AnyHashable: Any] ?? [:]
+        }
         let cardType = tracer["card_type"] as? String ?? "be_null"
         let result = HouseRentTracer(pageType: pageType,
                                      houseType: houseTypeStr,
@@ -377,6 +386,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             result.rank = rank
         } else {
             if let rank = tracer["rank"] as? Int {
+                result.rank = "\(rank)"
+            } else if let rank = tracer["index"] {
                 result.rank = "\(rank)"
             }
         }
