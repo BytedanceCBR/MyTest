@@ -119,7 +119,7 @@
         [self showMaskView:NO];
     } else {
         [self showMaskView:YES];
-        [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+        [self.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
         [self.maskView showRetry:YES];
     }
 }
@@ -147,7 +147,7 @@
     [self tt_endUpdataData];
 
     [self showMaskView:YES];
-    [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+    [self.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
     [self.maskView showRetry:YES];
 }
 
